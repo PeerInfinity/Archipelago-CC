@@ -40854,6 +40854,7 @@
       "world_directory": "celeste_open_world"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Celeste (Open World)",

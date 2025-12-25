@@ -15412,6 +15412,11 @@
           "display_name": "Randomize Items"
         }
       },
+      "world_directory": "kh1_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
       "end_of_the_world_unlock": 1,
       "super_bosses": 0,
       "atlantica": 0,
@@ -15438,8 +15443,7 @@
       "ap_increase": 18,
       "mp_increase": 7,
       "accessory_slot_increase": 1,
-      "item_slot_increase": 3,
-      "world_directory": "kh1"
+      "item_slot_increase": 3
     }
   },
   "game_info": {

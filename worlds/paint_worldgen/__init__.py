@@ -237,6 +237,12 @@ class PaintWorldGenWorld(RuleWorldMixin, World):
         "Similarity: 80.0%": "Polygon",
     }
 
+    def __init__(self, multiworld: "MultiWorld", player: int):
+        super().__init__(multiworld, player)
+        # Game-specific world attributes
+        self.canvas_size_increment = 100
+        self.logic_percent = 80
+
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
         self._push_starting_items()

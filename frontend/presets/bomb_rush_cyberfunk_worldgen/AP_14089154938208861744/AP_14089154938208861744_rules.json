@@ -7439,9 +7439,10 @@
           "display_name": "Randomize Items"
         }
       },
-      "world_directory": "bomb_rush_cyberfunk"
+      "world_directory": "bomb_rush_cyberfunk_worldgen"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Bomb Rush Cyberfunk WorldGen",

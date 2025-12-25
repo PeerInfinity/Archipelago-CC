@@ -2910,7 +2910,40 @@
           "display_name": "Require Dragon Slayer"
         }
       },
-      "world_directory": "faxanadu"
+      "world_directory": "faxanadu_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "settings": {
+        "game": "Faxanadu",
+        "assume_bidirectional_exits": false,
+        "use_resolved_items": false,
+        "options": {
+          "accessibility": "full",
+          "exclude_locations": [],
+          "include_pendant": "false",
+          "include_poisons": "true",
+          "item_links": [],
+          "keep_shop_red_potions": "false",
+          "local_items": [],
+          "non_local_items": [],
+          "plando_items": [],
+          "priority_locations": [],
+          "progression_balancing": 50,
+          "random_monsters": "vanilla",
+          "random_musics": "false",
+          "random_npcs": "false",
+          "random_rewards": "false",
+          "random_sounds": "false",
+          "require_dragon_slayer": "false",
+          "start_hints": [],
+          "start_inventory": {},
+          "start_inventory_from_pool": {},
+          "start_location_hints": []
+        },
+        "world_directory": "faxanadu"
+      }
     }
   },
   "game_info": {

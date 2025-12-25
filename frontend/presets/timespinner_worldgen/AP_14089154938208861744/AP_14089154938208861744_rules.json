@@ -8601,11 +8601,19 @@
       "flag_eye_spy": false,
       "flag_unchained_keys": false,
       "flag_prism_break": false,
+      "world_directory": "timespinner_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "flag_specific_keycards": false,
+      "flag_eye_spy": false,
+      "flag_unchained_keys": false,
+      "flag_prism_break": false,
       "pyramid_keys_unlock": "GateLakeSereneRight",
       "present_keys_unlock": "GateSealedSirensCave",
       "past_keys_unlock": "GateLakeSereneRight",
-      "time_keys_unlock": "GateRightPyramid",
-      "world_directory": "timespinner"
+      "time_keys_unlock": "GateRightPyramid"
     }
   },
   "game_info": {

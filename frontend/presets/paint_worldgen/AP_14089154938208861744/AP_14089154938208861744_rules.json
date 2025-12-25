@@ -3492,7 +3492,13 @@
       },
       "canvas_size_increment": 100,
       "logic_percent": 80,
-      "world_directory": "paint"
+      "world_directory": "paint_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "canvas_size_increment": 100,
+      "logic_percent": 80
     }
   },
   "game_info": {

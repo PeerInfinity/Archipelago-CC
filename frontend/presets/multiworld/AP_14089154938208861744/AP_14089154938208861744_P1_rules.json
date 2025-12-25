@@ -88,28 +88,28 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 3
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -132,14 +132,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 3
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -162,14 +162,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -241,14 +241,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -353,14 +353,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Burger"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -383,7 +383,7 @@
                     "location": "Act Completion (Picture Perfect)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -406,7 +406,7 @@
                     "location": "Act Completion (The Golden Vault)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -459,14 +459,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Burger"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -489,7 +489,7 @@
                     "location": "Act Completion (Picture Perfect)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -512,7 +512,7 @@
                     "location": "Act Completion (The Golden Vault)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -565,14 +565,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Burger"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -595,7 +595,7 @@
                     "location": "Act Completion (Picture Perfect)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -618,7 +618,7 @@
                     "location": "Act Completion (The Golden Vault)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -664,14 +664,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Burger"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -694,7 +694,7 @@
                     "location": "Act Completion (Picture Perfect)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -717,7 +717,7 @@
                     "location": "Act Completion (The Golden Vault)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -808,14 +808,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -847,14 +847,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -924,7 +924,7 @@
                     "location": "Act Completion (Picture Perfect)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -947,7 +947,7 @@
                     "location": "Act Completion (The Golden Vault)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1008,14 +1008,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Burger"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1038,7 +1038,7 @@
                     "location": "Act Completion (Picture Perfect)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1061,7 +1061,7 @@
                     "location": "Act Completion (The Golden Vault)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1074,14 +1074,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1111,14 +1111,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Burger"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1141,7 +1141,7 @@
                     "location": "Act Completion (Picture Perfect)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1164,7 +1164,7 @@
                     "location": "Act Completion (The Golden Vault)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1286,14 +1286,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Train"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1307,14 +1307,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -1338,14 +1338,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -1391,7 +1391,7 @@
                         "location": "Act Completion (Mail Delivery Service)",
                         "_original_ast_type": "location_rule_ref"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -1410,7 +1410,7 @@
                         "location": "Act Completion (Train Rush)",
                         "_original_ast_type": "location_rule_ref"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -1467,14 +1467,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1561,7 +1561,7 @@
                         "location": "Act Completion (Heating Up Mafia Town)",
                         "_original_ast_type": "location_rule_ref"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -1583,14 +1583,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -1682,14 +1682,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -1719,14 +1719,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -1778,7 +1778,7 @@
                         "location": "Act Completion (Heating Up Mafia Town)",
                         "_original_ast_type": "location_rule_ref"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -1931,14 +1931,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Train"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2450,14 +2450,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -2500,14 +2500,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -2536,14 +2536,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -2641,14 +2641,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "UFO"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2671,7 +2671,7 @@
                     "location": "Act Completion (Down with the Mafia!)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2694,7 +2694,7 @@
                     "location": "Act Completion (Dead Bird Studio Basement)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2768,14 +2768,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "UFO"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2798,7 +2798,7 @@
                     "location": "Act Completion (Down with the Mafia!)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2821,7 +2821,7 @@
                     "location": "Act Completion (Dead Bird Studio Basement)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2922,14 +2922,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "UFO"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2952,7 +2952,7 @@
                     "location": "Act Completion (Down with the Mafia!)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2975,7 +2975,7 @@
                     "location": "Act Completion (Dead Bird Studio Basement)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2995,11 +2995,11 @@
                         "condition": {
                           "rule": "painting_logic",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "True_"
@@ -3022,11 +3022,11 @@
                                     "setting": "NoPaintingSkips",
                                     "_original_ast_type": "setting_value"
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "_original_ast_type": "not"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -3039,7 +3039,7 @@
                                 "left": {
                                   "rule": "get_difficulty",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -3047,11 +3047,11 @@
                                   "args": {
                                     "value": 0
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "_original_ast_type": "compare"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_true": {
                               "rule": "True_"
@@ -3059,7 +3059,7 @@
                             "if_false": null,
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "Has",
@@ -3069,11 +3069,11 @@
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -3087,11 +3087,11 @@
                             "setting": "UmbrellaLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "True_"
@@ -3108,14 +3108,14 @@
                             {
                               "rule": "can_use_hat",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
+                              "_converted_from_ast": true,
                               "args": [
                                 {
                                   "rule": "Constant",
                                   "args": {
                                     "value": 1
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 }
                               ]
                             }
@@ -3131,7 +3131,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -3157,11 +3157,11 @@
                         "condition": {
                           "rule": "painting_logic",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "True_"
@@ -3184,11 +3184,11 @@
                                     "setting": "NoPaintingSkips",
                                     "_original_ast_type": "setting_value"
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "_original_ast_type": "not"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -3201,7 +3201,7 @@
                                 "left": {
                                   "rule": "get_difficulty",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -3209,11 +3209,11 @@
                                   "args": {
                                     "value": 0
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "_original_ast_type": "compare"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_true": {
                               "rule": "True_"
@@ -3221,7 +3221,7 @@
                             "if_false": null,
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "Has",
@@ -3231,11 +3231,11 @@
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -3249,11 +3249,11 @@
                             "setting": "UmbrellaLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "True_"
@@ -3270,14 +3270,14 @@
                             {
                               "rule": "can_use_hat",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
+                              "_converted_from_ast": true,
                               "args": [
                                 {
                                   "rule": "Constant",
                                   "args": {
                                     "value": 1
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 }
                               ]
                             }
@@ -3293,7 +3293,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -3321,11 +3321,11 @@
                         "condition": {
                           "rule": "painting_logic",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "True_"
@@ -3348,11 +3348,11 @@
                                     "setting": "NoPaintingSkips",
                                     "_original_ast_type": "setting_value"
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "_original_ast_type": "not"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -3365,7 +3365,7 @@
                                 "left": {
                                   "rule": "get_difficulty",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "op": ">=",
                                 "right": {
@@ -3373,11 +3373,11 @@
                                   "args": {
                                     "value": 0
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "_original_ast_type": "compare"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_true": {
                               "rule": "True_"
@@ -3385,7 +3385,7 @@
                             "if_false": null,
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "Has",
@@ -3395,11 +3395,11 @@
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -3413,11 +3413,11 @@
                             "setting": "UmbrellaLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "not"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "True_"
@@ -3434,14 +3434,14 @@
                             {
                               "rule": "can_use_hat",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
+                              "_converted_from_ast": true,
                               "args": [
                                 {
                                   "rule": "Constant",
                                   "args": {
                                     "value": 1
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 }
                               ]
                             }
@@ -3457,7 +3457,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -3508,14 +3508,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "UFO"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3538,7 +3538,7 @@
                     "location": "Act Completion (Down with the Mafia!)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3561,7 +3561,7 @@
                     "location": "Act Completion (Dead Bird Studio Basement)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3734,14 +3734,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "UFO"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3764,7 +3764,7 @@
                     "location": "Act Completion (Down with the Mafia!)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3787,7 +3787,7 @@
                     "location": "Act Completion (Dead Bird Studio Basement)",
                     "_original_ast_type": "location_rule_ref"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3815,14 +3815,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -3852,14 +3852,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -3874,14 +3874,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 0
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4083,11 +4083,11 @@
                                 "setting": "UmbrellaLogic",
                                 "_original_ast_type": "setting_value"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "not"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "True_"
@@ -4104,14 +4104,14 @@
                                 {
                                   "rule": "can_use_hat",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
+                                  "_converted_from_ast": true,
                                   "args": [
                                     {
                                       "rule": "Constant",
                                       "args": {
                                         "value": 1
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     }
                                   ]
                                 }
@@ -4127,7 +4127,7 @@
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4140,14 +4140,14 @@
                 {
                   "rule": "has_relic_combo",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": "Crayon"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -4209,14 +4209,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -4258,14 +4258,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 3
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -4317,28 +4317,28 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 0
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 4
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -4372,14 +4372,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4454,11 +4454,11 @@
                                 "setting": "UmbrellaLogic",
                                 "_original_ast_type": "setting_value"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "not"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "True_"
@@ -4475,14 +4475,14 @@
                                 {
                                   "rule": "can_use_hat",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
+                                  "_converted_from_ast": true,
                                   "args": [
                                     {
                                       "rule": "Constant",
                                       "args": {
                                         "value": 1
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     }
                                   ]
                                 }
@@ -4498,7 +4498,7 @@
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4556,14 +4556,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -4660,14 +4660,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5027,14 +5027,14 @@
             "access_rule": {
               "rule": "has_relic_combo",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": "Crayon"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5175,14 +5175,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5206,14 +5206,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5386,14 +5386,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5495,14 +5495,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5726,14 +5726,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5751,14 +5751,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5821,14 +5821,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -6205,11 +6205,11 @@
                     "condition": {
                       "rule": "painting_logic",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "not"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "if_true": {
                   "rule": "True_"
@@ -6232,11 +6232,11 @@
                                 "setting": "NoPaintingSkips",
                                 "_original_ast_type": "setting_value"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "not"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -6249,7 +6249,7 @@
                             "left": {
                               "rule": "get_difficulty",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "op": ">=",
                             "right": {
@@ -6257,11 +6257,11 @@
                               "args": {
                                 "value": 0
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "compare"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "True_"
@@ -6269,7 +6269,7 @@
                         "if_false": null,
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "Has",
@@ -6279,11 +6279,11 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -6399,14 +6399,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6623,14 +6623,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6662,14 +6662,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6687,14 +6687,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6712,14 +6712,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6737,14 +6737,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6776,14 +6776,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6843,14 +6843,14 @@
             "access_rule": {
               "rule": "can_use_hat",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -7187,28 +7187,28 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 3
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -7332,14 +7332,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 3
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -7368,14 +7368,14 @@
                 {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 3
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -9971,8 +9971,16 @@
         "type": "min",
         "args": [
           {
-            "type": "setting_value",
-            "setting": "difficulty_requirements.progressive_bottle_limit"
+            "type": "attribute",
+            "object": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
+              },
+              "attr": "difficulty_requirements"
+            },
+            "attr": "progressive_bottle_limit"
           },
           {
             "type": "group_count",
@@ -11276,16 +11284,24 @@
             "type": "assign",
             "name": "max_heart_pieces",
             "value": {
-              "type": "setting_value",
-              "setting": "logical_heart_pieces"
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
+              },
+              "attr": "logical_heart_pieces"
             }
           },
           {
             "type": "assign",
             "name": "max_heart_containers",
             "value": {
-              "type": "setting_value",
-              "setting": "logical_heart_containers"
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
+              },
+              "attr": "logical_heart_containers"
             }
           },
           {

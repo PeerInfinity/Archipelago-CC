@@ -822,7 +822,7 @@
                         ],
                         "_original_ast_type": "block"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "op": "==",
                     "right": {
@@ -834,23 +834,23 @@
                             "args": {
                               "value": "Storeroom Key"
                             },
-                            "_converted_from_cc": true
+                            "_converted_from_ast": true
                           },
                           {
                             "rule": "Constant",
                             "args": {
                               "value": 1
                             },
-                            "_converted_from_cc": true
+                            "_converted_from_ast": true
                           }
                         ],
                         "_original_ast_type": "list"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "compare"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -950,7 +950,7 @@
                             ],
                             "_original_ast_type": "block"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "op": "==",
                         "right": {
@@ -962,23 +962,23 @@
                                 "args": {
                                   "value": "Storeroom Key"
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               },
                               {
                                 "rule": "Constant",
                                 "args": {
                                   "value": 1
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               }
                             ],
                             "_original_ast_type": "list"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -1078,7 +1078,7 @@
                                 ],
                                 "_original_ast_type": "block"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "op": "==",
                             "right": {
@@ -1090,23 +1090,23 @@
                                     "args": {
                                       "value": "Storeroom Key"
                                     },
-                                    "_converted_from_cc": true
+                                    "_converted_from_ast": true
                                   },
                                   {
                                     "rule": "Constant",
                                     "args": {
                                       "value": 1
                                     },
-                                    "_converted_from_cc": true
+                                    "_converted_from_ast": true
                                   }
                                 ],
                                 "_original_ast_type": "list"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "compare"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -1222,7 +1222,7 @@
                         ],
                         "_original_ast_type": "block"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "op": "==",
                     "right": {
@@ -1234,23 +1234,23 @@
                             "args": {
                               "value": "Archives Key"
                             },
-                            "_converted_from_cc": true
+                            "_converted_from_ast": true
                           },
                           {
                             "rule": "Constant",
                             "args": {
                               "value": 1
                             },
-                            "_converted_from_cc": true
+                            "_converted_from_ast": true
                           }
                         ],
                         "_original_ast_type": "list"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "compare"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -1350,7 +1350,7 @@
                             ],
                             "_original_ast_type": "block"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "op": "==",
                         "right": {
@@ -1362,23 +1362,23 @@
                                 "args": {
                                   "value": "Archives Key"
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               },
                               {
                                 "rule": "Constant",
                                 "args": {
                                   "value": 1
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               }
                             ],
                             "_original_ast_type": "list"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -2832,7 +2832,7 @@
                         ],
                         "_original_ast_type": "block"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "op": "==",
                     "right": {
@@ -2844,23 +2844,23 @@
                             "args": {
                               "value": "Chamber Key"
                             },
-                            "_converted_from_cc": true
+                            "_converted_from_ast": true
                           },
                           {
                             "rule": "Constant",
                             "args": {
                               "value": 1
                             },
-                            "_converted_from_cc": true
+                            "_converted_from_ast": true
                           }
                         ],
                         "_original_ast_type": "list"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "compare"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -2960,7 +2960,7 @@
                             ],
                             "_original_ast_type": "block"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "op": "==",
                         "right": {
@@ -2972,23 +2972,23 @@
                                 "args": {
                                   "value": "Chamber Key"
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               },
                               {
                                 "rule": "Constant",
                                 "args": {
                                   "value": 1
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               }
                             ],
                             "_original_ast_type": "list"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -3088,7 +3088,7 @@
                                 ],
                                 "_original_ast_type": "block"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "op": "==",
                             "right": {
@@ -3100,23 +3100,23 @@
                                     "args": {
                                       "value": "Chamber Key"
                                     },
-                                    "_converted_from_cc": true
+                                    "_converted_from_ast": true
                                   },
                                   {
                                     "rule": "Constant",
                                     "args": {
                                       "value": 1
                                     },
-                                    "_converted_from_cc": true
+                                    "_converted_from_ast": true
                                   }
                                 ],
                                 "_original_ast_type": "list"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "compare"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Or",
@@ -3216,7 +3216,7 @@
                                     ],
                                     "_original_ast_type": "block"
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "op": "==",
                                 "right": {
@@ -3228,23 +3228,23 @@
                                         "args": {
                                           "value": "Chamber Key"
                                         },
-                                        "_converted_from_cc": true
+                                        "_converted_from_ast": true
                                       },
                                       {
                                         "rule": "Constant",
                                         "args": {
                                           "value": 1
                                         },
-                                        "_converted_from_cc": true
+                                        "_converted_from_ast": true
                                       }
                                     ],
                                     "_original_ast_type": "list"
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "_original_ast_type": "compare"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "Has",
@@ -4412,7 +4412,7 @@
                         ],
                         "_original_ast_type": "block"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "op": "==",
                     "right": {
@@ -4424,23 +4424,23 @@
                             "args": {
                               "value": "Science Key1"
                             },
-                            "_converted_from_cc": true
+                            "_converted_from_ast": true
                           },
                           {
                             "rule": "Constant",
                             "args": {
                               "value": 1
                             },
-                            "_converted_from_cc": true
+                            "_converted_from_ast": true
                           }
                         ],
                         "_original_ast_type": "list"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "compare"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4641,7 +4641,7 @@
                         ],
                         "_original_ast_type": "block"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "op": "==",
                     "right": {
@@ -4653,23 +4653,23 @@
                             "args": {
                               "value": "Science Key3"
                             },
-                            "_converted_from_cc": true
+                            "_converted_from_ast": true
                           },
                           {
                             "rule": "Constant",
                             "args": {
                               "value": 1
                             },
-                            "_converted_from_cc": true
+                            "_converted_from_ast": true
                           }
                         ],
                         "_original_ast_type": "list"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "compare"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -4769,7 +4769,7 @@
                             ],
                             "_original_ast_type": "block"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "op": "==",
                         "right": {
@@ -4781,23 +4781,23 @@
                                 "args": {
                                   "value": "Science Key3"
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               },
                               {
                                 "rule": "Constant",
                                 "args": {
                                   "value": 1
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               }
                             ],
                             "_original_ast_type": "list"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -5327,7 +5327,7 @@
                 ],
                 "_original_ast_type": "block"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6375,6 +6375,7 @@
       "world_directory": "cv64"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Castlevania 64",

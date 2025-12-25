@@ -1,23 +1,25 @@
 {
-  "game": "MegaMan Battle Network 3",
-  "assume_bidirectional_exits": false,
-  "use_resolved_items": false,
-  "options": {
-    "accessibility": "full",
-    "exclude_locations": [],
-    "extra_ranks": 0,
-    "include_jobs": "true",
-    "include_secret": "false",
-    "item_links": [],
-    "local_items": [],
-    "non_local_items": [],
-    "plando_items": [],
-    "priority_locations": [],
-    "progression_balancing": 50,
-    "start_hints": [],
-    "start_inventory": {},
-    "start_location_hints": [],
-    "trade_quest_hinting": "full"
-  },
-  "world_directory": "mmbn3"
+  "settings": {
+    "game": "MegaMan Battle Network 3",
+    "assume_bidirectional_exits": false,
+    "use_resolved_items": false,
+    "options": {
+      "accessibility": "full",
+      "exclude_locations": [],
+      "extra_ranks": 0,
+      "include_jobs": "true",
+      "include_secret": "false",
+      "item_links": [],
+      "local_items": [],
+      "non_local_items": [],
+      "plando_items": [],
+      "priority_locations": [],
+      "progression_balancing": 50,
+      "start_hints": [],
+      "start_inventory": {},
+      "start_location_hints": [],
+      "trade_quest_hinting": "full"
+    },
+    "world_directory": "mmbn3"
+  }
 }

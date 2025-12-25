@@ -34,14 +34,14 @@
             "access_rule": {
               "rule": "sp_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -52,14 +52,14 @@
             "access_rule": {
               "rule": "pr_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -70,14 +70,14 @@
             "access_rule": {
               "rule": "tt_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -88,14 +88,14 @@
             "access_rule": {
               "rule": "oc_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -106,14 +106,14 @@
             "access_rule": {
               "rule": "ht_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -124,14 +124,14 @@
             "access_rule": {
               "rule": "lod_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -149,14 +149,14 @@
             "access_rule": {
               "rule": "bc_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -167,14 +167,14 @@
             "access_rule": {
               "rule": "ag_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -185,14 +185,14 @@
             "access_rule": {
               "rule": "pl_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -203,14 +203,14 @@
             "access_rule": {
               "rule": "hb_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -221,14 +221,14 @@
             "access_rule": {
               "rule": "dc_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -239,14 +239,14 @@
             "access_rule": {
               "rule": "stt_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -271,14 +271,14 @@
             "access_rule": {
               "rule": "level_locking_unlock",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -434,7 +434,7 @@
             "access_rule": {
               "rule": "get_shan_yu_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -688,14 +688,14 @@
             "access_rule": {
               "rule": "lod_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -783,7 +783,7 @@
             "access_rule": {
               "rule": "get_ansem_riku_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -798,7 +798,7 @@
             "access_rule": {
               "rule": "get_storm_rider_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -940,7 +940,7 @@
             "access_rule": {
               "rule": "get_data_xigbar_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1035,12 +1035,12 @@
                 {
                   "rule": "get_blizzard_lord_rules",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "get_fire_lord_rules",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1467,21 +1467,21 @@
                 {
                   "rule": "ag_unlocked",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 2
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "kh2_has_all",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "List",
@@ -1492,26 +1492,26 @@
                             "args": {
                               "value": "Fire Element"
                             },
-                            "_converted_from_cc": true
+                            "_converted_from_ast": true
                           },
                           {
                             "rule": "Constant",
                             "args": {
                               "value": "Blizzard Element"
                             },
-                            "_converted_from_cc": true
+                            "_converted_from_ast": true
                           },
                           {
                             "rule": "Constant",
                             "args": {
                               "value": "Thunder Element"
                             },
-                            "_converted_from_cc": true
+                            "_converted_from_ast": true
                           }
                         ],
                         "_original_ast_type": "list"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -1573,7 +1573,7 @@
             "access_rule": {
               "rule": "get_genie_jafar_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1617,7 +1617,7 @@
             "access_rule": {
               "rule": "get_data_lexaeus_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1737,14 +1737,14 @@
             "access_rule": {
               "rule": "dc_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1986,7 +1986,7 @@
             "access_rule": {
               "rule": "get_future_pete_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2117,7 +2117,7 @@
                 {
                   "rule": "get_terra_rules",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2134,7 +2134,7 @@
             "access_rule": {
               "rule": "get_data_marluxia_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2358,14 +2358,14 @@
             "access_rule": {
               "rule": "hundred_acre_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2425,14 +2425,14 @@
             "access_rule": {
               "rule": "hundred_acre_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2492,14 +2492,14 @@
             "access_rule": {
               "rule": "hundred_acre_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2559,14 +2559,14 @@
             "access_rule": {
               "rule": "hundred_acre_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2626,14 +2626,14 @@
             "access_rule": {
               "rule": "hundred_acre_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 5
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -2825,7 +2825,7 @@
             "access_rule": {
               "rule": "get_barbosa_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3107,14 +3107,14 @@
             "access_rule": {
               "rule": "pr_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -3229,7 +3229,7 @@
             "access_rule": {
               "rule": "get_grim_reaper2_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3413,7 +3413,7 @@
             "access_rule": {
               "rule": "get_data_luxord_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3519,7 +3519,7 @@
             "access_rule": {
               "rule": "get_cerberus_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3633,7 +3633,7 @@
             "access_rule": {
               "rule": "get_olympus_pete_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3929,7 +3929,7 @@
             "access_rule": {
               "rule": "get_hydra_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4001,7 +4001,7 @@
             "access_rule": {
               "rule": "get_pain_and_panic_cup_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4010,7 +4010,7 @@
             "access_rule": {
               "rule": "get_cerberus_cup_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4019,14 +4019,14 @@
             "access_rule": {
               "rule": "oc_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4100,7 +4100,7 @@
             "access_rule": {
               "rule": "get_hades_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4130,7 +4130,7 @@
             "access_rule": {
               "rule": "get_titan_cup_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4139,7 +4139,7 @@
             "access_rule": {
               "rule": "get_goddess_of_fate_cup_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4148,7 +4148,7 @@
             "access_rule": {
               "rule": "get_data_zexion_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4370,7 +4370,7 @@
             "access_rule": {
               "rule": "get_hades_cup_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4541,7 +4541,7 @@
             "access_rule": {
               "rule": "get_thresholder_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4893,7 +4893,7 @@
             "access_rule": {
               "rule": "get_dark_thorn_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4965,14 +4965,14 @@
             "access_rule": {
               "rule": "bc_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5046,7 +5046,7 @@
             "access_rule": {
               "rule": "get_xaldin_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5090,7 +5090,7 @@
             "access_rule": {
               "rule": "get_data_xaldin_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5210,7 +5210,7 @@
             "access_rule": {
               "rule": "get_hostile_program_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5394,14 +5394,14 @@
             "access_rule": {
               "rule": "sp_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5489,7 +5489,7 @@
             "access_rule": {
               "rule": "get_mcp_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5589,7 +5589,7 @@
             "access_rule": {
               "rule": "get_data_larxene_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5709,7 +5709,7 @@
             "access_rule": {
               "rule": "get_prison_keeper_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5977,14 +5977,14 @@
             "access_rule": {
               "rule": "ht_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -6058,7 +6058,7 @@
             "access_rule": {
               "rule": "get_experiment_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6130,7 +6130,7 @@
             "access_rule": {
               "rule": "get_data_vexen_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6264,14 +6264,14 @@
             "access_rule": {
               "rule": "hb_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -6450,7 +6450,7 @@
             "access_rule": {
               "rule": "get_demyx_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6648,7 +6648,7 @@
             "access_rule": {
               "rule": "get_thousand_heartless_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6800,7 +6800,7 @@
             "access_rule": {
               "rule": "get_data_demyx_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -6809,7 +6809,7 @@
             "access_rule": {
               "rule": "get_sephiroth_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7056,7 +7056,7 @@
                 {
                   "rule": "get_cor_first_fight_movement_rules",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -7064,12 +7064,12 @@
                     {
                       "rule": "get_cor_first_fight_rules",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "get_cor_skip_first_rules",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -7187,7 +7187,7 @@
             "access_rule": {
               "rule": "get_cor_second_fight_movement_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7315,7 +7315,7 @@
             "access_rule": {
               "rule": "get_transport_movement_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7444,7 +7444,7 @@
             "access_rule": {
               "rule": "get_transport_fight_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Finishing Plus",
@@ -7460,7 +7460,7 @@
             "access_rule": {
               "rule": "get_transport_fight_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Transport to Rememberance Event",
@@ -7481,7 +7481,7 @@
             "access_rule": {
               "rule": "get_scar_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7889,14 +7889,14 @@
             "access_rule": {
               "rule": "pl_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -7970,7 +7970,7 @@
             "access_rule": {
               "rule": "get_groundshaker_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -8014,7 +8014,7 @@
             "access_rule": {
               "rule": "get_data_saix_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -8526,7 +8526,7 @@
             "access_rule": {
               "rule": "get_data_roxas_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -8618,14 +8618,14 @@
             "access_rule": {
               "rule": "tt_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -9021,14 +9021,14 @@
             "access_rule": {
               "rule": "tt_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -9088,7 +9088,7 @@
             "access_rule": {
               "rule": "get_data_axel_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -9449,19 +9449,19 @@
                 {
                   "rule": "get_roxas_rules",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "twtnw_unlocked",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -9537,7 +9537,7 @@
             "access_rule": {
               "rule": "get_xigbar_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -9735,7 +9735,7 @@
             "access_rule": {
               "rule": "get_luxord_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -9863,7 +9863,7 @@
             "access_rule": {
               "rule": "get_saix_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -9935,14 +9935,14 @@
             "access_rule": {
               "rule": "twtnw_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -10002,7 +10002,7 @@
             "access_rule": {
               "rule": "get_xemnas_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10088,7 +10088,7 @@
             "access_rule": {
               "rule": "get_armored_xemnas_one_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -10097,7 +10097,7 @@
             "access_rule": {
               "rule": "get_data_xemnas_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10169,7 +10169,7 @@
             "access_rule": {
               "rule": "get_armored_xemnas_two_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10199,7 +10199,7 @@
             "access_rule": {
               "rule": "get_final_xemnas_rules",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10316,7 +10316,7 @@
             "access_rule": {
               "rule": "at_three_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10331,7 +10331,7 @@
             "access_rule": {
               "rule": "at_four_unlocked",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -10411,7 +10411,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -10446,7 +10446,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -10465,7 +10465,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -10484,7 +10484,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -10577,7 +10577,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -10617,11 +10617,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -10693,11 +10693,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -10737,11 +10737,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10771,7 +10771,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -10806,7 +10806,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -10825,7 +10825,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -10844,7 +10844,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -10937,7 +10937,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -10977,11 +10977,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -11053,11 +11053,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -11097,11 +11097,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -11131,7 +11131,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -11166,7 +11166,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -11185,7 +11185,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -11204,7 +11204,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -11297,7 +11297,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -11337,11 +11337,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -11413,11 +11413,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -11457,11 +11457,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -11491,7 +11491,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -11526,7 +11526,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -11545,7 +11545,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -11564,7 +11564,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -11657,7 +11657,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -11697,11 +11697,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -11773,11 +11773,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -11817,11 +11817,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -11851,7 +11851,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -11886,7 +11886,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -11905,7 +11905,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -11924,7 +11924,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -12017,7 +12017,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -12057,11 +12057,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -12133,11 +12133,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -12177,11 +12177,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -12211,7 +12211,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -12246,7 +12246,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -12265,7 +12265,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -12284,7 +12284,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -12377,7 +12377,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -12417,11 +12417,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -12493,11 +12493,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -12537,11 +12537,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -12577,7 +12577,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -12612,7 +12612,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -12631,7 +12631,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -12650,7 +12650,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -12743,7 +12743,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -12783,11 +12783,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -12859,11 +12859,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -12903,11 +12903,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -12937,7 +12937,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -12972,7 +12972,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -12991,7 +12991,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -13010,7 +13010,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -13103,7 +13103,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -13143,11 +13143,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -13219,11 +13219,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -13263,11 +13263,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -13297,7 +13297,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -13332,7 +13332,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -13351,7 +13351,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -13370,7 +13370,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -13463,7 +13463,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -13503,11 +13503,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -13579,11 +13579,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -13623,11 +13623,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -13657,7 +13657,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -13692,7 +13692,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -13711,7 +13711,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -13730,7 +13730,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -13823,7 +13823,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -13863,11 +13863,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -13939,11 +13939,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -13983,11 +13983,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -14017,7 +14017,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -14052,7 +14052,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -14071,7 +14071,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -14090,7 +14090,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -14183,7 +14183,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -14223,11 +14223,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -14299,11 +14299,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -14343,11 +14343,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -14377,7 +14377,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -14412,7 +14412,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -14431,7 +14431,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -14450,7 +14450,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -14543,7 +14543,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -14583,11 +14583,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -14659,11 +14659,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -14703,11 +14703,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -14743,7 +14743,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -14778,7 +14778,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -14797,7 +14797,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -14816,7 +14816,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -14909,7 +14909,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -14949,11 +14949,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -15025,11 +15025,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -15069,11 +15069,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -15103,7 +15103,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -15138,7 +15138,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -15157,7 +15157,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -15176,7 +15176,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -15269,7 +15269,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -15309,11 +15309,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -15385,11 +15385,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -15429,11 +15429,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -15463,7 +15463,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -15498,7 +15498,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -15517,7 +15517,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -15536,7 +15536,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -15629,7 +15629,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -15669,11 +15669,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -15745,11 +15745,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -15789,11 +15789,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -15823,7 +15823,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -15858,7 +15858,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -15877,7 +15877,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -15896,7 +15896,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -15989,7 +15989,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -16029,11 +16029,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -16105,11 +16105,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -16149,11 +16149,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -16183,7 +16183,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -16218,7 +16218,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -16237,7 +16237,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -16256,7 +16256,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -16349,7 +16349,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -16389,11 +16389,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -16465,11 +16465,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -16509,11 +16509,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -16543,7 +16543,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -16578,7 +16578,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -16597,7 +16597,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -16616,7 +16616,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -16709,7 +16709,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -16749,11 +16749,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -16825,11 +16825,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -16869,11 +16869,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -16909,7 +16909,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -16950,7 +16950,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -16969,7 +16969,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -16988,7 +16988,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -17081,7 +17081,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -17121,11 +17121,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -17197,11 +17197,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -17241,11 +17241,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -17275,7 +17275,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -17316,7 +17316,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -17335,7 +17335,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -17354,7 +17354,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -17447,7 +17447,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -17487,11 +17487,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -17563,11 +17563,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -17607,11 +17607,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -17641,7 +17641,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -17682,7 +17682,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -17701,7 +17701,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -17720,7 +17720,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -17813,7 +17813,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -17853,11 +17853,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -17929,11 +17929,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -17973,11 +17973,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -18007,7 +18007,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -18048,7 +18048,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -18067,7 +18067,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -18086,7 +18086,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -18179,7 +18179,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -18219,11 +18219,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -18295,11 +18295,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -18339,11 +18339,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -18373,7 +18373,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -18414,7 +18414,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -18433,7 +18433,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -18452,7 +18452,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -18545,7 +18545,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -18585,11 +18585,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -18661,11 +18661,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -18705,11 +18705,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -18739,7 +18739,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -18780,7 +18780,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -18799,7 +18799,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -18818,7 +18818,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -18911,7 +18911,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -18951,11 +18951,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -19027,11 +19027,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -19071,11 +19071,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -19111,7 +19111,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -19146,7 +19146,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -19165,7 +19165,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -19184,7 +19184,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -19277,7 +19277,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -19317,11 +19317,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -19393,11 +19393,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -19437,11 +19437,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -19471,7 +19471,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -19506,7 +19506,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -19525,7 +19525,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -19544,7 +19544,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -19637,7 +19637,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -19677,11 +19677,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -19753,11 +19753,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -19797,11 +19797,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -19831,7 +19831,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -19866,7 +19866,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -19885,7 +19885,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -19904,7 +19904,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -19997,7 +19997,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -20037,11 +20037,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -20113,11 +20113,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -20157,11 +20157,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -20191,7 +20191,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -20226,7 +20226,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -20245,7 +20245,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -20264,7 +20264,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -20357,7 +20357,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -20397,11 +20397,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -20473,11 +20473,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -20517,11 +20517,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -20551,7 +20551,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -20586,7 +20586,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -20605,7 +20605,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -20624,7 +20624,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -20717,7 +20717,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -20757,11 +20757,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -20833,11 +20833,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -20877,11 +20877,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -20911,7 +20911,7 @@
                             "setting": "AutoFormLogic",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -20946,7 +20946,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Conditional",
@@ -20965,7 +20965,7 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "Conditional",
@@ -20984,7 +20984,7 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Conditional",
@@ -21077,7 +21077,7 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "if_false": {
                               "rule": "AST_comparison",
@@ -21117,11 +21117,11 @@
                                 },
                                 "_original_ast_type": "comparison"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "conditional"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_false": {
                           "rule": "AST_comparison",
@@ -21193,11 +21193,11 @@
                             },
                             "_original_ast_type": "comparison"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_false": {
                       "rule": "AST_comparison",
@@ -21237,11 +21237,11 @@
                         },
                         "_original_ast_type": "comparison"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -22217,14 +22217,14 @@
             "access_rule": {
               "rule": "level_locking_unlock",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -22312,14 +22312,14 @@
             "access_rule": {
               "rule": "level_locking_unlock",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 6
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -22407,14 +22407,14 @@
             "access_rule": {
               "rule": "level_locking_unlock",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 9
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -22488,14 +22488,14 @@
             "access_rule": {
               "rule": "level_locking_unlock",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 12
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -22583,14 +22583,14 @@
             "access_rule": {
               "rule": "level_locking_unlock",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 15
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -22650,14 +22650,14 @@
             "access_rule": {
               "rule": "level_locking_unlock",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 18
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -22689,14 +22689,14 @@
             "access_rule": {
               "rule": "level_locking_unlock",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 21
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -22713,14 +22713,14 @@
             "access_rule": {
               "rule": "level_locking_unlock",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 24
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -22737,14 +22737,14 @@
             "access_rule": {
               "rule": "level_locking_unlock",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 26
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -27525,6 +27525,7 @@
       "world_directory": "kh2"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Kingdom Hearts 2",
@@ -27755,63 +27756,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "(TT3) Underground Concourse Mythril Gem"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
+                    "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
                   }
                 ]
               },
@@ -27867,7 +27812,63 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
+                    "value": "(TT3) Underground Concourse Mythril Gem"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
                   }
                 ]
               },

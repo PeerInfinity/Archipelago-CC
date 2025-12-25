@@ -158,9 +158,156 @@ class shapezWorldGenWorld(RuleWorldMixin, World):
         "Event": frozenset(["Goal"]),
     }
 
+    # Canonical item placements - where items belong in the "vanilla" game
+    # Used by exporter to distinguish canonical placements from always-locked items
+    canonical_placements: ClassVar[Dict[str, str]] = {
+        "My eyes no longer hurt": "Switch",
+        "Getting into it": "Quad Painter",
+        "GPS": "Small Processors Upgrade",
+        "I need trains": "Big Processors Upgrade",
+        "Level 1": "Balancer",
+        "Level 1 Additional": "Storage",
+        "Level 2": "Small Painting Upgrade",
+        "Level 3": "Big Belt Upgrade",
+        "Belt Upgrade Tier II": "Small Miner Upgrade",
+        "Miner Upgrade Tier II": "Blueprint Shapes Bundle",
+        "Processors Upgrade Tier II": "Wires",
+        "Painting Upgrade Tier II": "Level Shapes Bundle",
+        "It's a mess": "Virtual Processing",
+        "Oops": "Item Filter",
+        "Level 4": "Big Miner Upgrade",
+        "Level 5": "Big Processors Upgrade",
+        "Level 6": "Small Belt Upgrade",
+        "Level 7": "Big Processors Upgrade",
+        "Level 8": "Upgrade Shapes Bundle",
+        "Level 9": "Big Miner Upgrade",
+        "Level 10": "Stacker",
+        "Level 11": "Small Painting Upgrade",
+        "Level 12": "Level Shapes Bundle",
+        "Level 13": "Small Belt Upgrade",
+        "Level 14": "Level Shapes Bundle",
+        "Level 15": "Big Painting Upgrade",
+        "Level 16": "Big Processors Upgrade",
+        "Level 17": "Big Painting Upgrade",
+        "Level 18": "Small Belt Upgrade",
+        "Level 19": "Big Miner Upgrade",
+        "Level 20 Additional": "Small Belt Upgrade",
+        "Level 20 Additional 2": "Tunnel Tier II",
+        "Level 20": "Small Processors Upgrade",
+        "Level 21": "Small Processors Upgrade",
+        "Level 22": "Big Belt Upgrade",
+        "Level 23": "Small Painting Upgrade",
+        "Level 24": "Big Miner Upgrade",
+        "Level 25": "Small Belt Upgrade",
+        "Wires": "Big Belt Upgrade",
+        "Goal": "Goal",
+        "Belt Upgrade Tier III": "Small Belt Upgrade",
+        "Miner Upgrade Tier III": "Small Miner Upgrade",
+        "Processors Upgrade Tier III": "Big Processors Upgrade",
+        "Painting Upgrade Tier III": "Blueprint Shapes Bundle",
+        "Belt Upgrade Tier IV": "Blueprint Shapes Bundle",
+        "Miner Upgrade Tier IV": "Upgrade Shapes Bundle",
+        "Processors Upgrade Tier IV": "Level Shapes Bundle",
+        "Painting Upgrade Tier IV": "Big Processors Upgrade",
+        "Belt Upgrade Tier V": "Small Processors Upgrade",
+        "Miner Upgrade Tier V": "Blueprint Shapes Bundle",
+        "Processors Upgrade Tier V": "Compact Merger",
+        "Painting Upgrade Tier V": "Small Processors Upgrade",
+        "Faster": "Small Miner Upgrade",
+        "Belt Upgrade Tier VI": "Big Miner Upgrade",
+        "Miner Upgrade Tier VI": "Small Belt Upgrade",
+        "Processors Upgrade Tier VI": "Upgrade Shapes Bundle",
+        "Painting Upgrade Tier VI": "Painter",
+        "Belt Upgrade Tier VII": "Big Processors Upgrade",
+        "Miner Upgrade Tier VII": "Level Shapes Bundle",
+        "Processors Upgrade Tier VII": "Chaining Extractor",
+        "Painting Upgrade Tier VII": "Blueprint Shapes Bundle",
+        "Belt Upgrade Tier VIII": "Big Painting Upgrade",
+        "Miner Upgrade Tier VIII": "Rotator (180°)",
+        "Processors Upgrade Tier VIII": "Blueprints",
+        "Painting Upgrade Tier VIII": "Small Processors Upgrade",
+        "Even faster": "Big Processors Upgrade",
+        "Painter": "Blueprint Shapes Bundle",
+        "Cutter": "Big Belt Upgrade",
+        "Rotater": "Small Painting Upgrade",
+        "Wait, they stack?": "Big Miner Upgrade",
+        "Stack overflow": "Level Shapes Bundle",
+        "Storage": "Big Belt Upgrade",
+        "Get rid of them": "Big Painting Upgrade",
+        "Now it's easy": "Big Miner Upgrade",
+        "Copy-Pasta": "Big Painting Upgrade",
+        "Computer Guy": "Color Mixer",
+        "The next dimension": "Big Miner Upgrade",
+        "Perfectionist": "Small Miner Upgrade",
+        "The logo!": "Small Miner Upgrade",
+        "To the moon": "Big Processors Upgrade",
+        "It's piling up": "Small Miner Upgrade",
+        "I'll use it later": "Constant Signal",
+        "I've seen that before ...": "Double Painter",
+        "Memories from the past": "Tunnel",
+        "Preparing to launch": "Big Belt Upgrade",
+        "SpaceY": "Small Processors Upgrade",
+        "Efficiency 1": "Small Painting Upgrade",
+        "Branding specialist 1": "Blueprint Shapes Bundle",
+        "Efficiency 2": "Upgrade Shapes Bundle",
+        "Branding specialist 2": "Compact Splitter",
+        "Shapesanity 1": "Big Miner Upgrade",
+        "Shapesanity 2": "Small Belt Upgrade",
+        "Shapesanity 3": "Blueprint Shapes Bundle",
+        "Shapesanity 22": "Cutter",
+        "Shapesanity 25": "Small Belt Upgrade",
+        "Shapesanity 10": "Small Belt Upgrade",
+        "Shapesanity 17": "Small Painting Upgrade",
+        "Shapesanity 7": "Big Painting Upgrade",
+        "Shapesanity 20": "Logic Gates",
+        "Shapesanity 13": "Quad Cutter",
+        "Shapesanity 14": "Upgrade Shapes Bundle",
+        "Shapesanity 24": "Upgrade Shapes Bundle",
+        "Shapesanity 8": "Small Miner Upgrade",
+        "Shapesanity 9": "Small Belt Upgrade",
+        "Shapesanity 18": "Big Painting Upgrade",
+        "Shapesanity 36": "Blueprint Shapes Bundle",
+        "Shapesanity 11": "Small Miner Upgrade",
+        "Shapesanity 12": "Display",
+        "Shapesanity 19": "Big Miner Upgrade",
+        "Shapesanity 21": "Small Miner Upgrade",
+        "Shapesanity 23": "Small Belt Upgrade",
+        "Shapesanity 29": "Small Miner Upgrade",
+        "Shapesanity 31": "Big Processors Upgrade",
+        "Shapesanity 32": "Big Processors Upgrade",
+        "Shapesanity 6": "Upgrade Shapes Bundle",
+        "Shapesanity 15": "Small Miner Upgrade",
+        "Shapesanity 27": "Big Processors Upgrade",
+        "Shapesanity 30": "Big Miner Upgrade",
+        "Shapesanity 33": "Big Painting Upgrade",
+        "Shapesanity 34": "Belt Reader",
+        "Shapesanity 35": "Rotator",
+        "Shapesanity 38": "Level Shapes Bundle",
+        "Shapesanity 40": "Small Belt Upgrade",
+        "Shapesanity 41": "Small Miner Upgrade",
+        "Shapesanity 42": "Big Belt Upgrade",
+        "Shapesanity 43": "Small Processors Upgrade",
+        "Shapesanity 44": "Trash",
+        "Shapesanity 45": "Level Shapes Bundle",
+        "Shapesanity 46": "Big Miner Upgrade",
+        "Shapesanity 47": "Big Painting Upgrade",
+        "Shapesanity 48": "Big Painting Upgrade",
+        "Shapesanity 4": "Big Belt Upgrade",
+        "Shapesanity 16": "Small Processors Upgrade",
+        "Shapesanity 5": "Small Processors Upgrade",
+        "Shapesanity 37": "Upgrade Shapes Bundle",
+        "Shapesanity 49": "Small Miner Upgrade",
+        "Shapesanity 50": "Small Painting Upgrade",
+        "Shapesanity 26": "Blueprint Shapes Bundle",
+        "Shapesanity 28": "Big Belt Upgrade",
+        "Shapesanity 39": "Rotator (CCW)",
+    }
+
     def generate_early(self) -> None:
-        """Push starting items as precollected."""
+        """Push starting items and disable randomization for seed 1."""
         self._push_starting_items()
+        if self.multiworld.seed == 1:
+            self.options.randomize_items.value = False
 
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
@@ -216,6 +363,29 @@ class shapezWorldGenWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def pre_fill(self) -> None:
+        """Pre-fill items if not randomizing."""
+        if not self.options.randomize_items.value:
+            self._place_original_items()
+
+    def _place_original_items(self) -> None:
+        """Place items in their canonical locations when not randomized."""
+        for location_name, item_name in self.canonical_placements.items():
+            location = self.multiworld.get_location(location_name, self.player)
+
+            # Skip if already filled (e.g., by _place_locked_items or generate_basic)
+            if location.item is not None:
+                continue
+
+            item = self.create_item(item_name)
+            location.place_locked_item(item)
+
+            # Remove the item from the pool if it exists
+            for pool_item in self.multiworld.itempool[:]:
+                if pool_item.name == item_name and pool_item.player == self.player:
+                    self.multiworld.itempool.remove(pool_item)
+                    break
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

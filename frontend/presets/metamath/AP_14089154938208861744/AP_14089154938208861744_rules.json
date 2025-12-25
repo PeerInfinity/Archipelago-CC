@@ -1813,6 +1813,7 @@
       "world_directory": "metamath"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Metamath",

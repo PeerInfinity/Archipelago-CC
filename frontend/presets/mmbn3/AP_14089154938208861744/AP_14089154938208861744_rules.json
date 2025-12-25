@@ -561,7 +561,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -569,11 +569,11 @@
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Spreader *",
@@ -592,7 +592,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -600,11 +600,11 @@
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "SloGauge *",
@@ -623,7 +623,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -631,11 +631,11 @@
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "MiniEnrg",
@@ -654,7 +654,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -662,11 +662,11 @@
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "HPMemory",
@@ -685,7 +685,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -693,11 +693,11 @@
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "CACDCPas",
@@ -716,7 +716,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -724,11 +724,11 @@
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Unlocker",
@@ -747,7 +747,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -755,11 +755,11 @@
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Unlocker",
@@ -778,7 +778,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -786,11 +786,11 @@
                   "args": {
                     "value": 2
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Punk P",
@@ -809,7 +809,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -817,11 +817,11 @@
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "HPMemory",
@@ -840,7 +840,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -848,11 +848,11 @@
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Fountain *",
@@ -871,7 +871,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -879,11 +879,11 @@
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "HPMemory",
@@ -902,7 +902,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -910,11 +910,11 @@
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Navi+40 *",
@@ -933,7 +933,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -941,11 +941,11 @@
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "AirShot3 *",
@@ -964,7 +964,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -972,11 +972,11 @@
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Aura F",
@@ -995,7 +995,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -1003,11 +1003,11 @@
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "30000z",
@@ -1026,7 +1026,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -1034,11 +1034,11 @@
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "HiCannon *",
@@ -1057,7 +1057,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -1065,11 +1065,11 @@
                   "args": {
                     "value": 8
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "CYokaPas",
@@ -1088,7 +1088,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -1096,11 +1096,11 @@
                   "args": {
                     "value": 8
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Recov120 *",
@@ -1119,7 +1119,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -1127,11 +1127,11 @@
                   "args": {
                     "value": 8
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "HPMemory",
@@ -1150,7 +1150,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -1158,11 +1158,11 @@
                   "args": {
                     "value": 8
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "HPMemory",
@@ -1181,7 +1181,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -1189,11 +1189,11 @@
                   "args": {
                     "value": 10
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "BlckMnd",
@@ -1212,7 +1212,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -1220,11 +1220,11 @@
                   "args": {
                     "value": 10
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Geddon1 *",
@@ -1243,7 +1243,7 @@
                 "left": {
                   "rule": "explore_score",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "op": ">",
                 "right": {
@@ -1251,11 +1251,11 @@
                   "args": {
                     "value": 10
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "DynaWave V",
@@ -2645,7 +2645,7 @@
                     "left": {
                       "rule": "explore_score",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "op": ">",
                     "right": {
@@ -2653,11 +2653,11 @@
                       "args": {
                         "value": 12
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "compare"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4550,7 +4550,7 @@
                     "left": {
                       "rule": "explore_score",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "op": ">",
                     "right": {
@@ -4558,11 +4558,11 @@
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "_original_ast_type": "compare"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -8379,6 +8379,7 @@
       "world_directory": "mmbn3"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "MegaMan Battle Network 3",

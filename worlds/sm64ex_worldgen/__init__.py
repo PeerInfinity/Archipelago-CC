@@ -274,6 +274,15 @@ class SuperMario64WorldGenWorld(RuleWorldMixin, World):
         "Bowser in the Sky Red Coins": "Power Star",
     }
 
+    def __init__(self, multiworld: "MultiWorld", player: int):
+        super().__init__(multiworld, player)
+        # Game-specific world attributes
+        self.enable_move_rando = False
+        self.strict_cap_requirements = True
+        self.strict_cannon_requirements = True
+        self.strict_move_requirements = True
+        self.area_rando = 0
+
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
         self._push_starting_items()

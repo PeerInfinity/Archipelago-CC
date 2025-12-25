@@ -5566,10 +5566,10 @@
             "36": "daos",
             "37": "egg_dragon",
             "38": "master",
-            "39": "random-high",
-            "40": "random-sinistral",
-            "41": "random-middle",
-            "42": "random-low"
+            "39": "random-middle",
+            "40": "random-high",
+            "41": "random-low",
+            "42": "random-sinistral"
           },
           "default": 38,
           "display_name": "Boss"
@@ -5833,6 +5833,7 @@
       "world_directory": "lufia2ac"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Lufia II Ancient Cave",

@@ -34,7 +34,7 @@
             "access_rule": {
               "rule": "ultra",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -43,7 +43,7 @@
             "access_rule": {
               "rule": "brooch",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -52,7 +52,7 @@
             "access_rule": {
               "rule": "canCrash",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -64,12 +64,12 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canMini",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -83,12 +83,12 @@
                 {
                   "rule": "canDash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "super",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -106,7 +106,7 @@
             "access_rule": {
               "rule": "rose",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -115,7 +115,7 @@
             "access_rule": {
               "rule": "thunder",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -124,7 +124,7 @@
             "access_rule": {
               "rule": "canDash",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -133,7 +133,7 @@
             "access_rule": {
               "rule": "surfable",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -256,7 +256,7 @@
             "access_rule": {
               "rule": "hammers",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Counter Badge",
@@ -580,7 +580,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -613,12 +613,12 @@
                 {
                   "rule": "canCrash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "super",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -636,7 +636,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Mushroom",
@@ -655,7 +655,7 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -663,12 +663,12 @@
                     {
                       "rule": "canCrash",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "super",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -1024,7 +1024,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -1040,7 +1040,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1056,7 +1056,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1072,7 +1072,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -1088,7 +1088,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1104,7 +1104,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1120,7 +1120,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "1-UP Super",
@@ -1136,7 +1136,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1152,7 +1152,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Peasley's Rose",
@@ -1168,7 +1168,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -1187,7 +1187,7 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -1195,12 +1195,12 @@
                     {
                       "rule": "canCrash",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "super",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -1223,12 +1223,12 @@
                 {
                   "rule": "canCrash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "super",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1246,7 +1246,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1262,7 +1262,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1281,12 +1281,12 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "thunder",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1307,12 +1307,12 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "thunder",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1333,12 +1333,12 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "thunder",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1356,7 +1356,7 @@
             "access_rule": {
               "rule": "super",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1372,7 +1372,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Syrup",
@@ -1388,7 +1388,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1404,7 +1404,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Bean Fruit 3",
@@ -1420,7 +1420,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Bean Trousers",
@@ -1436,7 +1436,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -1452,7 +1452,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1468,7 +1468,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -1484,7 +1484,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beauty Badge",
@@ -1500,7 +1500,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Syrup",
@@ -1516,7 +1516,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1535,12 +1535,12 @@
                 {
                   "rule": "thunder",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "ultra",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1564,19 +1564,19 @@
                     {
                       "rule": "thunder",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "ultra",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1594,7 +1594,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1613,12 +1613,12 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "thunder",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1636,7 +1636,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -1652,7 +1652,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -1671,12 +1671,12 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "thunder",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1694,7 +1694,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1710,7 +1710,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1726,7 +1726,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Nuts",
@@ -1742,7 +1742,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1758,7 +1758,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Super Nuts",
@@ -1774,7 +1774,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1793,7 +1793,7 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -1801,12 +1801,12 @@
                     {
                       "rule": "canDash",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "super",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -1826,7 +1826,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Orange Neon Egg",
@@ -1842,7 +1842,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1858,7 +1858,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "White Chuckola Fruit",
@@ -1874,7 +1874,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1890,7 +1890,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Thunderhand",
@@ -1906,7 +1906,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1922,7 +1922,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Syrup",
@@ -1938,7 +1938,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Nuts",
@@ -1954,7 +1954,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1970,7 +1970,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Red Pearl Bean",
@@ -1986,7 +1986,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -2002,7 +2002,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2018,7 +2018,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Syrup",
@@ -2034,7 +2034,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2050,7 +2050,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Nuts",
@@ -2066,7 +2066,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Mushroom",
@@ -2082,7 +2082,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -2098,7 +2098,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -2114,7 +2114,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2130,7 +2130,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -2149,12 +2149,12 @@
                 {
                   "rule": "super",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "thunder",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2175,12 +2175,12 @@
                 {
                   "rule": "thunder",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "ultra",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2198,7 +2198,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Secret Scroll 2",
@@ -2214,7 +2214,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Nuts",
@@ -2230,7 +2230,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2249,12 +2249,12 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "super",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2275,12 +2275,12 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "super",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2298,7 +2298,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckoccino",
@@ -2317,12 +2317,12 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "teehee",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2340,7 +2340,7 @@
             "access_rule": {
               "rule": "canDash",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2356,7 +2356,7 @@
             "access_rule": {
               "rule": "thunder",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -2386,7 +2386,7 @@
             "access_rule": {
               "rule": "thunder",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Mushroom",
@@ -2405,22 +2405,22 @@
                 {
                   "rule": "castleTown",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "pieces",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "thunder",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2438,7 +2438,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoohoo Blend",
@@ -2454,7 +2454,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2484,7 +2484,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Super Mushroom",
@@ -2500,7 +2500,7 @@
             "access_rule": {
               "rule": "thunder",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Syrup",
@@ -2516,7 +2516,7 @@
             "access_rule": {
               "rule": "thunder",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -2532,7 +2532,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2548,7 +2548,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Golden Mushroom",
@@ -2564,7 +2564,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2580,7 +2580,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Bean Fruit 2",
@@ -2596,7 +2596,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -2612,7 +2612,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -2628,7 +2628,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushluck Pants",
@@ -2644,7 +2644,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -2660,7 +2660,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Membership Card",
@@ -2676,7 +2676,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2692,7 +2692,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2708,7 +2708,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Firebrand",
@@ -2729,7 +2729,7 @@
             "access_rule": {
               "rule": "canDash",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -2741,7 +2741,7 @@
                 {
                   "rule": "fruits",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -2749,17 +2749,17 @@
                     {
                       "rule": "fire",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "hammers",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "thunder",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -2774,7 +2774,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2818,7 +2818,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -2834,7 +2834,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2850,7 +2850,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -2925,12 +2925,12 @@
                 {
                   "rule": "brooch",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2951,12 +2951,12 @@
                 {
                   "rule": "brooch",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2977,12 +2977,12 @@
                 {
                   "rule": "brooch",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3014,7 +3014,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Refreshing Herb",
@@ -3030,7 +3030,7 @@
             "access_rule": {
               "rule": "hammers",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beanstone 4",
@@ -3046,7 +3046,7 @@
             "access_rule": {
               "rule": "hammers",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3062,7 +3062,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -3078,7 +3078,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Brilliant Badge",
@@ -3094,7 +3094,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Syrup",
@@ -3110,7 +3110,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3126,7 +3126,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Super Mushroom",
@@ -3142,7 +3142,7 @@
             "access_rule": {
               "rule": "hammers",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3158,7 +3158,7 @@
             "access_rule": {
               "rule": "hammers",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beanstone 10",
@@ -3174,7 +3174,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3190,7 +3190,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3206,7 +3206,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -3222,7 +3222,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hard Pants",
@@ -3238,7 +3238,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3254,7 +3254,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -3270,7 +3270,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -3286,7 +3286,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Safety Slacks",
@@ -3302,7 +3302,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Nuts",
@@ -3321,12 +3321,12 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canMini",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3347,12 +3347,12 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canMini",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3398,7 +3398,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -3414,7 +3414,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Nuts",
@@ -3430,7 +3430,7 @@
             "access_rule": {
               "rule": "fruits",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -3446,7 +3446,7 @@
             "access_rule": {
               "rule": "fruits",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3462,7 +3462,7 @@
             "access_rule": {
               "rule": "fruits",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3478,7 +3478,7 @@
             "access_rule": {
               "rule": "fruits",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -3494,7 +3494,7 @@
             "access_rule": {
               "rule": "fruits",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Super Syrup",
@@ -3510,7 +3510,7 @@
             "access_rule": {
               "rule": "fruits",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Nuts",
@@ -3554,7 +3554,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -3570,7 +3570,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -3586,7 +3586,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beanstar Piece 3",
@@ -3602,7 +3602,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Charity Badge",
@@ -3618,7 +3618,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Excite Spring",
@@ -3634,7 +3634,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3653,12 +3653,12 @@
                 {
                   "rule": "brooch",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3679,12 +3679,12 @@
                 {
                   "rule": "brooch",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canMini",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3702,7 +3702,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3721,12 +3721,12 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canMini",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3879,12 +3879,12 @@
                 {
                   "rule": "pieces",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3905,12 +3905,12 @@
                 {
                   "rule": "pieces",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3998,7 +3998,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Syrup",
@@ -4014,7 +4014,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mush Badge",
@@ -4030,7 +4030,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -4046,7 +4046,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Secret Scroll 1",
@@ -4062,7 +4062,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -4078,7 +4078,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -4094,7 +4094,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -4110,7 +4110,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Golden Mushroom",
@@ -4126,7 +4126,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beanstar Piece 1",
@@ -4142,7 +4142,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -4354,7 +4354,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Syrup",
@@ -4395,12 +4395,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -4408,17 +4408,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -4430,22 +4430,22 @@
                     {
                       "rule": "birdo_shop",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fungitown_shop",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "piranha_shop",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "star_shop",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -4461,7 +4461,7 @@
                 {
                   "rule": "thunder",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -4469,17 +4469,17 @@
                     {
                       "rule": "birdo_shop",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fungitown_shop",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "star_shop",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -4495,7 +4495,7 @@
                 {
                   "rule": "fungitown",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -4503,12 +4503,12 @@
                     {
                       "rule": "birdo_shop",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "star_shop",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -4527,24 +4527,24 @@
                     {
                       "rule": "castleTown",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "pieces",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "rose",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "birdo_shop",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4558,12 +4558,12 @@
                 {
                   "rule": "canCrash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "postJokes",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "SettingValue",
@@ -4590,12 +4590,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -4603,17 +4603,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -4622,7 +4622,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4646,12 +4646,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -4659,17 +4659,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -4678,7 +4678,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4702,12 +4702,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -4715,17 +4715,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -4734,7 +4734,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4758,12 +4758,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -4771,17 +4771,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -4790,7 +4790,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4814,12 +4814,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -4827,17 +4827,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -4846,7 +4846,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4890,12 +4890,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -4903,17 +4903,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -4922,7 +4922,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4946,12 +4946,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -4959,17 +4959,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -4978,7 +4978,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5002,12 +5002,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -5015,17 +5015,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -5034,7 +5034,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5058,12 +5058,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -5071,17 +5071,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -5090,7 +5090,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5114,12 +5114,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -5127,17 +5127,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -5146,7 +5146,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5170,12 +5170,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -5183,17 +5183,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -5202,7 +5202,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5291,12 +5291,12 @@
                         {
                           "rule": "brooch",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "fruits",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Or",
@@ -5304,17 +5304,17 @@
                             {
                               "rule": "fire",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "hammers",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "thunder",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -5323,7 +5323,7 @@
                     {
                       "rule": "rose",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -5333,12 +5333,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "rose",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -5367,12 +5367,12 @@
                         {
                           "rule": "brooch",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "fruits",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Or",
@@ -5380,17 +5380,17 @@
                             {
                               "rule": "fire",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "hammers",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "thunder",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -5399,7 +5399,7 @@
                     {
                       "rule": "rose",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -5409,12 +5409,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "rose",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -5443,12 +5443,12 @@
                         {
                           "rule": "brooch",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "fruits",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Or",
@@ -5456,17 +5456,17 @@
                             {
                               "rule": "fire",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "hammers",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "thunder",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -5475,7 +5475,7 @@
                     {
                       "rule": "rose",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -5485,12 +5485,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "rose",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -5519,12 +5519,12 @@
                         {
                           "rule": "brooch",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "fruits",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Or",
@@ -5532,17 +5532,17 @@
                             {
                               "rule": "fire",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "hammers",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "thunder",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -5551,7 +5551,7 @@
                     {
                       "rule": "rose",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -5561,12 +5561,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "rose",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -5595,12 +5595,12 @@
                         {
                           "rule": "brooch",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "fruits",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Or",
@@ -5608,17 +5608,17 @@
                             {
                               "rule": "fire",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "hammers",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "thunder",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -5627,7 +5627,7 @@
                     {
                       "rule": "rose",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -5637,12 +5637,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "rose",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -5671,12 +5671,12 @@
                         {
                           "rule": "brooch",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "fruits",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Or",
@@ -5684,17 +5684,17 @@
                             {
                               "rule": "fire",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "hammers",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "thunder",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -5703,7 +5703,7 @@
                     {
                       "rule": "rose",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -5713,12 +5713,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "rose",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -5750,12 +5750,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -5763,17 +5763,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -5782,7 +5782,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5806,12 +5806,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -5819,17 +5819,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -5838,7 +5838,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5862,12 +5862,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -5875,17 +5875,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -5894,7 +5894,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5918,12 +5918,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -5931,17 +5931,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -5950,7 +5950,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5974,12 +5974,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -5987,17 +5987,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -6006,7 +6006,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6030,12 +6030,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -6043,17 +6043,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -6062,7 +6062,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6120,12 +6120,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -6133,17 +6133,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -6152,7 +6152,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6176,12 +6176,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -6189,17 +6189,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -6208,7 +6208,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6232,12 +6232,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -6245,17 +6245,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -6264,7 +6264,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6288,12 +6288,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -6301,17 +6301,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -6320,7 +6320,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6344,12 +6344,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -6357,17 +6357,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -6376,7 +6376,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6400,12 +6400,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -6413,17 +6413,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -6432,7 +6432,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6504,12 +6504,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -6517,17 +6517,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -6536,7 +6536,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6560,12 +6560,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -6573,17 +6573,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -6592,7 +6592,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6616,12 +6616,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -6629,17 +6629,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -6648,7 +6648,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6672,12 +6672,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -6685,17 +6685,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -6704,7 +6704,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6728,12 +6728,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -6741,17 +6741,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -6760,7 +6760,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6784,12 +6784,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -6797,17 +6797,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -6816,7 +6816,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6867,7 +6867,7 @@
             "access_rule": {
               "rule": "fire",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6934,7 +6934,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -6950,7 +6950,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Plaid Trousers",
@@ -6966,7 +6966,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Great Force",
@@ -6982,7 +6982,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Teeheespresso",
@@ -6998,7 +6998,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7014,7 +7014,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Syrup",
@@ -7030,7 +7030,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7046,7 +7046,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7062,7 +7062,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Winkle Card",
@@ -7078,7 +7078,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "High-End Badge",
@@ -7094,7 +7094,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7110,7 +7110,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Syrup",
@@ -7154,7 +7154,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7170,7 +7170,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beanstone 6",
@@ -7186,7 +7186,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Syrup",
@@ -7230,7 +7230,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Bean Fruit 6",
@@ -7302,7 +7302,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Super Syrup",
@@ -7402,7 +7402,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Heart Slacks",
@@ -7418,7 +7418,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mari-Lui Badge",
@@ -7434,7 +7434,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7478,7 +7478,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -7494,7 +7494,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7560,12 +7560,12 @@
                 {
                   "rule": "canCrash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canDash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -7578,7 +7578,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -7594,7 +7594,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Red Pepper",
@@ -7610,7 +7610,7 @@
             "access_rule": {
               "rule": "canDash",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "General Badge",
@@ -7626,7 +7626,7 @@
             "access_rule": {
               "rule": "canDash",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Purple Chuckola Fruit",
@@ -7642,7 +7642,7 @@
             "access_rule": {
               "rule": "canDash",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -7661,12 +7661,12 @@
                 {
                   "rule": "fire",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "thunder",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -7687,12 +7687,12 @@
                 {
                   "rule": "fire",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "thunder",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -7724,7 +7724,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Syrup",
@@ -7746,7 +7746,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -7776,7 +7776,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7792,7 +7792,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Greed Wallet",
@@ -7808,7 +7808,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7824,7 +7824,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7840,7 +7840,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Syrup",
@@ -7912,7 +7912,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beanstar Piece 2",
@@ -7928,7 +7928,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Syrup",
@@ -7944,7 +7944,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Super Mushroom",
@@ -7960,7 +7960,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -7976,7 +7976,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7992,7 +7992,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -8008,7 +8008,7 @@
             "access_rule": {
               "rule": "ultra",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Nuts",
@@ -8024,7 +8024,7 @@
             "access_rule": {
               "rule": "spangle",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -8054,7 +8054,7 @@
             "access_rule": {
               "rule": "ultra",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -8078,12 +8078,12 @@
                 {
                   "rule": "fire",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "membership",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -8097,12 +8097,12 @@
                 {
                   "rule": "fire",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "membership",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -8116,17 +8116,17 @@
                 {
                   "rule": "castleTown",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "thunder",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -8139,7 +8139,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -8155,7 +8155,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -8171,7 +8171,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -8187,7 +8187,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -8203,7 +8203,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Super Syrup",
@@ -8219,7 +8219,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -8235,7 +8235,7 @@
             "access_rule": {
               "rule": "ultra",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Parasol Pants",
@@ -8251,7 +8251,7 @@
             "access_rule": {
               "rule": "ultra",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Purple Neon Egg",
@@ -8270,12 +8270,12 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "ultra",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -8296,12 +8296,12 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "ultra",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -8319,7 +8319,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -8411,7 +8411,7 @@
             "access_rule": {
               "rule": "winkle",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Nuts",
@@ -8427,7 +8427,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -8457,7 +8457,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beanstone 2",
@@ -8473,7 +8473,7 @@
             "access_rule": {
               "rule": "winkle",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -8551,7 +8551,7 @@
             "access_rule": {
               "rule": "hammers",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Shroom Bells",
@@ -8567,7 +8567,7 @@
             "access_rule": {
               "rule": "hammers",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Miracle Badge",
@@ -8659,7 +8659,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -8675,7 +8675,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -8691,7 +8691,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -8707,7 +8707,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Max Syrup",
@@ -8723,7 +8723,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Super Syrup",
@@ -8739,7 +8739,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -8755,7 +8755,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Super Mushroom",
@@ -8771,7 +8771,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Refreshing Herb",
@@ -8787,7 +8787,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Green Pepper",
@@ -8803,7 +8803,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -8819,7 +8819,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -8835,7 +8835,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -8851,7 +8851,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beanstone 1",
@@ -8867,7 +8867,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Super Mushroom",
@@ -8883,7 +8883,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Super Mushroom",
@@ -8899,7 +8899,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -8915,7 +8915,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -8939,12 +8939,12 @@
                 {
                   "rule": "canCrash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -8985,7 +8985,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Mushroom",
@@ -9001,7 +9001,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -9101,7 +9101,7 @@
             "access_rule": {
               "rule": "canCrash",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beanstar Piece 4",
@@ -9117,7 +9117,7 @@
             "access_rule": {
               "rule": "canCrash",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -9133,7 +9133,7 @@
             "access_rule": {
               "rule": "canCrash",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Queen B. Jeans",
@@ -9149,7 +9149,7 @@
             "access_rule": {
               "rule": "canCrash",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -9165,7 +9165,7 @@
             "access_rule": {
               "rule": "canCrash",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beanbean Brooch",
@@ -9184,12 +9184,12 @@
                 {
                   "rule": "canCrash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -9210,12 +9210,12 @@
                 {
                   "rule": "canCrash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -9238,7 +9238,7 @@
             "access_rule": {
               "rule": "postJokes",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "SettingValue",
@@ -9257,7 +9257,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -9273,7 +9273,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -9317,7 +9317,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Azure Neon Egg",
@@ -9375,7 +9375,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -9391,7 +9391,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Peachy Jeans",
@@ -9449,7 +9449,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Wool Trousers",
@@ -9465,7 +9465,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -9537,7 +9537,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -9556,12 +9556,12 @@
                 {
                   "rule": "canDash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -9593,7 +9593,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -9609,7 +9609,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Syrup",
@@ -9625,7 +9625,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -9641,7 +9641,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Mushroom",
@@ -9657,7 +9657,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -9679,7 +9679,7 @@
             "access_rule": {
               "rule": "beanFruit",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Super Syrup",
@@ -9695,7 +9695,7 @@
             "access_rule": {
               "rule": "beanFruit",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -9711,7 +9711,7 @@
             "access_rule": {
               "rule": "beanFruit",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -9727,7 +9727,7 @@
             "access_rule": {
               "rule": "beanFruit",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -9743,7 +9743,7 @@
             "access_rule": {
               "rule": "beanFruit",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Mushroom",
@@ -9759,7 +9759,7 @@
             "access_rule": {
               "rule": "beanFruit",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -9775,7 +9775,7 @@
             "access_rule": {
               "rule": "beanFruit",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Syrup",
@@ -9791,7 +9791,7 @@
             "access_rule": {
               "rule": "neon",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -9815,12 +9815,12 @@
                 {
                   "rule": "fungitown_birdo_shop",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "pieces",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -9834,12 +9834,12 @@
                 {
                   "rule": "canCrash",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "postJokes",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "SettingValue",
@@ -9860,7 +9860,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Max Syrup",
@@ -9910,12 +9910,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -9923,17 +9923,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -9942,7 +9942,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -9966,12 +9966,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -9979,17 +9979,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -9998,7 +9998,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10022,12 +10022,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -10035,17 +10035,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -10054,7 +10054,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10190,12 +10190,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -10203,17 +10203,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -10222,7 +10222,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10246,12 +10246,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -10259,17 +10259,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -10278,7 +10278,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10302,12 +10302,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -10315,17 +10315,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -10334,7 +10334,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10364,12 +10364,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -10377,17 +10377,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -10396,7 +10396,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10420,12 +10420,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -10433,17 +10433,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -10452,7 +10452,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10476,12 +10476,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -10489,17 +10489,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -10508,7 +10508,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10532,12 +10532,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -10545,17 +10545,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -10564,7 +10564,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10622,12 +10622,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -10635,17 +10635,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -10654,7 +10654,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10678,12 +10678,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -10691,17 +10691,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -10710,7 +10710,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10734,12 +10734,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -10747,17 +10747,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -10766,7 +10766,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10790,12 +10790,12 @@
                     {
                       "rule": "brooch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "fruits",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -10803,17 +10803,17 @@
                         {
                           "rule": "fire",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "hammers",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "thunder",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -10822,7 +10822,7 @@
                 {
                   "rule": "rose",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10846,7 +10846,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -10862,7 +10862,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -10895,12 +10895,12 @@
                 {
                   "rule": "canDig",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "canMini",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10932,7 +10932,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -10948,7 +10948,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beanlet 2",
@@ -10978,7 +10978,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -11000,7 +11000,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Blue Jeans",
@@ -11030,7 +11030,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -11046,7 +11046,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ultra Mushroom",
@@ -11062,7 +11062,7 @@
             "access_rule": {
               "rule": "canMini",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -11078,7 +11078,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -11142,7 +11142,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -11172,7 +11172,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Blend",
@@ -11202,7 +11202,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Hoo Bean",
@@ -11218,7 +11218,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -11234,7 +11234,7 @@
             "access_rule": {
               "rule": "thunder",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Refreshing Herb",
@@ -11250,7 +11250,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beanstone 9",
@@ -11266,7 +11266,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Bean Pants",
@@ -11324,12 +11324,12 @@
                 {
                   "rule": "canMini",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "thunder",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -11370,7 +11370,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -11414,7 +11414,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Nuts",
@@ -11444,7 +11444,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beanlet 3",
@@ -11474,7 +11474,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Chuckle Bean",
@@ -11686,7 +11686,7 @@
             "access_rule": {
               "rule": "canDig",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Mushroom",
@@ -13854,6 +13854,7 @@
       "world_directory": "mlss"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Mario & Luigi Superstar Saga",

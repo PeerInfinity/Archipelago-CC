@@ -1342,7 +1342,7 @@
                                 "setting": "early_lightning",
                                 "_original_ast_type": "setting_value"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -1384,7 +1384,7 @@
                 },
                 "_original_ast_type": "compare"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1688,7 +1688,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -1929,7 +1929,7 @@
                         "setting": "early_beth",
                         "_original_ast_type": "setting_value"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -2135,7 +2135,7 @@
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2267,7 +2267,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "CanReachRegion",
@@ -3817,7 +3817,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -6010,6 +6010,7 @@
       "world_directory": "shivers"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Shivers",

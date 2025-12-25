@@ -144,6 +144,11 @@ class Celeste64WorldGenWorld(RuleWorldMixin, World):
         "Badeline Island Checkpoint": "Badeline Island Checkpoint",
     }
 
+    def __init__(self, multiworld: "MultiWorld", player: int):
+        super().__init__(multiworld, player)
+        # Game-specific world attributes
+        self.strawberries_required = 16
+
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
         self._push_starting_items()

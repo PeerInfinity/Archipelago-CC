@@ -369,6 +369,13 @@ class AHatinTimeWorldGenWorld(RuleWorldMixin, World):
         # Game-specific world attributes
         self.hat_yarn_costs = {0: 8, 1: 4, 2: 8, 3: 6, 4: 5}
         self.hat_craft_order = [2, 4, 1, 0, 3]
+        self.use_paren_number_accumulator = True
+        self.HatItems = False
+        self.UmbrellaLogic = False
+        self.ShuffleSubconPaintings = False
+        self.LogicDifficulty = -1
+        self.NoPaintingSkips = False
+        self.ShuffleAlpineZiplines = False
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""

@@ -466,7 +466,7 @@
             "access_rule": {
               "rule": "castle_access",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -609,7 +609,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -723,7 +723,7 @@
             "access_rule": {
               "rule": "_14Clear",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -757,7 +757,7 @@
                     {
                       "rule": "combat_item",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -799,7 +799,7 @@
                     {
                       "rule": "has_midring",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -831,7 +831,7 @@
             "access_rule": {
               "rule": "_14CanFightBoss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Magnifying Glass",
@@ -853,7 +853,7 @@
             "access_rule": {
               "rule": "_14Boss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Boss Clear",
@@ -906,12 +906,12 @@
                 {
                   "rule": "cansee_clouds",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -997,7 +997,7 @@
                         {
                           "rule": "has_midring",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -1013,7 +1013,7 @@
                         {
                           "rule": "has_midring",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -1115,7 +1115,7 @@
                     {
                       "rule": "cansee_clouds",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "HasAll",
@@ -1132,7 +1132,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -1164,7 +1164,7 @@
             "access_rule": {
               "rule": "_17Game",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Bandit Consumables",
@@ -1185,7 +1185,7 @@
             "access_rule": {
               "rule": "_18Clear",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1233,7 +1233,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -1271,7 +1271,7 @@
             "access_rule": {
               "rule": "_18CanFightBoss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Pocket Fire Melon",
@@ -1293,7 +1293,7 @@
             "access_rule": {
               "rule": "_18Boss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Boss Clear",
@@ -1359,7 +1359,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1458,7 +1458,7 @@
                     {
                       "rule": "has_midring",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -1599,7 +1599,7 @@
             "access_rule": {
               "rule": "_24Clear",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1655,7 +1655,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "HasAll",
@@ -1683,7 +1683,7 @@
             "access_rule": {
               "rule": "_24CanFightBoss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Egg Plant",
@@ -1705,7 +1705,7 @@
             "access_rule": {
               "rule": "_24Boss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Boss Clear",
@@ -1842,7 +1842,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1883,7 +1883,7 @@
             "access_rule": {
               "rule": "_26Game",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Bandit Watermelons",
@@ -1911,7 +1911,7 @@
                     {
                       "rule": "combat_item",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "HasAny",
@@ -1952,7 +1952,7 @@
                     {
                       "rule": "combat_item",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -1990,7 +1990,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2034,7 +2034,7 @@
             "access_rule": {
               "rule": "_27Game",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Bandit Consumables",
@@ -2055,7 +2055,7 @@
             "access_rule": {
               "rule": "_28Clear",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2132,7 +2132,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "HasAll",
@@ -2165,7 +2165,7 @@
             "access_rule": {
               "rule": "_28CanFightBoss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "+10 Stars",
@@ -2187,7 +2187,7 @@
             "access_rule": {
               "rule": "_28Boss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Boss Clear",
@@ -2237,7 +2237,7 @@
             "access_rule": {
               "rule": "has_midring",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Anytime Egg",
@@ -2316,7 +2316,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2409,7 +2409,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "HasAll",
@@ -2461,7 +2461,7 @@
             "access_rule": {
               "rule": "_34Clear",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2495,7 +2495,7 @@
                     {
                       "rule": "combat_item",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -2528,7 +2528,7 @@
             "access_rule": {
               "rule": "has_midring",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Winged Cloud Maker",
@@ -2544,7 +2544,7 @@
             "access_rule": {
               "rule": "_34CanFightBoss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Pocket Melon",
@@ -2566,7 +2566,7 @@
             "access_rule": {
               "rule": "_34Boss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Boss Clear",
@@ -2605,7 +2605,7 @@
                 {
                   "rule": "melon_item",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2635,7 +2635,7 @@
                     {
                       "rule": "cansee_clouds",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -2643,7 +2643,7 @@
                         {
                           "rule": "has_midring",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -2661,7 +2661,7 @@
                     {
                       "rule": "has_midring",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -2755,7 +2755,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "HasAll",
@@ -2894,7 +2894,7 @@
             "access_rule": {
               "rule": "_38Clear",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2908,7 +2908,7 @@
                 {
                   "rule": "combat_item",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2936,7 +2936,7 @@
                 {
                   "rule": "combat_item",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2964,7 +2964,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2988,7 +2988,7 @@
             "access_rule": {
               "rule": "_38CanFightBoss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "10-Up",
@@ -3010,7 +3010,7 @@
             "access_rule": {
               "rule": "_38Boss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Boss Clear",
@@ -3072,7 +3072,7 @@
                     {
                       "rule": "cansee_clouds",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -3085,7 +3085,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3257,7 +3257,7 @@
                     {
                       "rule": "has_midring",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -3311,7 +3311,7 @@
             "access_rule": {
               "rule": "_44Clear",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3328,7 +3328,7 @@
                     {
                       "rule": "combat_item",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -3372,7 +3372,7 @@
                     {
                       "rule": "combat_item",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -3415,12 +3415,12 @@
                     {
                       "rule": "cansee_clouds",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "has_midring",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -3452,7 +3452,7 @@
             "access_rule": {
               "rule": "_44CanFightBoss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "2-Up",
@@ -3474,7 +3474,7 @@
             "access_rule": {
               "rule": "_44Boss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Boss Clear",
@@ -3586,7 +3586,7 @@
                     {
                       "rule": "combat_item",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -3627,7 +3627,7 @@
                     {
                       "rule": "combat_item",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -3671,7 +3671,7 @@
                         {
                           "rule": "cansee_clouds",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -3684,7 +3684,7 @@
                     {
                       "rule": "has_midring",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -3694,7 +3694,7 @@
                     {
                       "rule": "combat_item",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -3723,7 +3723,7 @@
                 {
                   "rule": "combat_item",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -3793,7 +3793,7 @@
                     {
                       "rule": "has_midring",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -3842,7 +3842,7 @@
             "access_rule": {
               "rule": "_47Game",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Bandit Consumables",
@@ -3863,7 +3863,7 @@
             "access_rule": {
               "rule": "_48Clear",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3919,7 +3919,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "HasAny",
@@ -3946,7 +3946,7 @@
             "access_rule": {
               "rule": "_48CanFightBoss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "+10 Stars",
@@ -3968,7 +3968,7 @@
             "access_rule": {
               "rule": "_48Boss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Boss Clear",
@@ -4027,7 +4027,7 @@
                 {
                   "rule": "cansee_clouds",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -4038,7 +4038,7 @@
                         {
                           "rule": "has_midring",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -4123,7 +4123,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4173,7 +4173,7 @@
                     {
                       "rule": "melon_item",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4217,7 +4217,7 @@
                     {
                       "rule": "melon_item",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4259,7 +4259,7 @@
                     {
                       "rule": "has_midring",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -4267,7 +4267,7 @@
                         {
                           "rule": "melon_item",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -4327,7 +4327,7 @@
             "access_rule": {
               "rule": "_54Clear",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4386,7 +4386,7 @@
                     {
                       "rule": "cansee_clouds",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -4408,7 +4408,7 @@
                     {
                       "rule": "has_midring",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "HasAll",
@@ -4437,7 +4437,7 @@
             "access_rule": {
               "rule": "_54CanFightBoss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "1-Up",
@@ -4459,7 +4459,7 @@
             "access_rule": {
               "rule": "_54Boss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Boss Clear",
@@ -4521,7 +4521,7 @@
             "access_rule": {
               "rule": "has_midring",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "+20 Stars",
@@ -4594,7 +4594,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4641,7 +4641,7 @@
                 {
                   "rule": "combat_item",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4668,7 +4668,7 @@
                 {
                   "rule": "combat_item",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4692,7 +4692,7 @@
             "access_rule": {
               "rule": "has_midring",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Pocket Melon",
@@ -4727,7 +4727,7 @@
             "access_rule": {
               "rule": "_58Clear",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4781,7 +4781,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4805,7 +4805,7 @@
             "access_rule": {
               "rule": "_58CanFightBoss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "+20 Stars",
@@ -4827,7 +4827,7 @@
             "access_rule": {
               "rule": "_58Boss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Boss Clear",
@@ -4892,7 +4892,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4979,12 +4979,12 @@
                 {
                   "rule": "cansee_clouds",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5086,7 +5086,7 @@
             "access_rule": {
               "rule": "_64Clear",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5103,7 +5103,7 @@
                     {
                       "rule": "combat_item",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -5147,7 +5147,7 @@
                     {
                       "rule": "combat_item",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -5188,7 +5188,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "HasAll",
@@ -5217,7 +5217,7 @@
             "access_rule": {
               "rule": "_64CanFightBoss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "2-Up",
@@ -5239,7 +5239,7 @@
             "access_rule": {
               "rule": "_64Boss",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Boss Clear",
@@ -5267,7 +5267,7 @@
                     {
                       "rule": "combat_item",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -5306,7 +5306,7 @@
                     {
                       "rule": "combat_item",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -5342,7 +5342,7 @@
                 {
                   "rule": "has_midring",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -5350,7 +5350,7 @@
                     {
                       "rule": "combat_item",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -5451,7 +5451,7 @@
                     {
                       "rule": "has_midring",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "HasAll",
@@ -5522,7 +5522,7 @@
                 {
                   "rule": "combat_item",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -5563,7 +5563,7 @@
             "access_rule": {
               "rule": "has_midring",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Anywhere Pow",
@@ -5598,7 +5598,7 @@
             "access_rule": {
               "rule": "castle_clear",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5612,7 +5612,7 @@
                 {
                   "rule": "_68CollectibleRoute",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "HasAll",
@@ -5642,7 +5642,7 @@
                 {
                   "rule": "_68CollectibleRoute",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "HasAll",
@@ -5672,7 +5672,7 @@
                 {
                   "rule": "_68Route",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "HasAll",
@@ -5705,7 +5705,7 @@
             "access_rule": {
               "rule": "_68Clear",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Saved Baby Luigi",
@@ -6989,6 +6989,7 @@
       "world_directory": "yoshisisland"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Yoshi's Island",

@@ -78,7 +78,7 @@
                 {
                   "rule": "can_lift_rocks",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -95,7 +95,7 @@
             "access_rule": {
               "rule": "can_lift_heavy_rocks",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -243,7 +243,7 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -252,7 +252,7 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -333,7 +333,7 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -342,7 +342,7 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -364,7 +364,7 @@
                 {
                   "rule": "can_lift_heavy_rocks",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -384,7 +384,7 @@
                 {
                   "rule": "can_lift_rocks",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -410,7 +410,7 @@
                 {
                   "rule": "can_lift_rocks",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -442,7 +442,7 @@
                         {
                           "rule": "can_lift_rocks",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -455,7 +455,7 @@
                     {
                       "rule": "can_lift_heavy_rocks",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -537,7 +537,7 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -567,7 +567,7 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -613,7 +613,7 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -636,7 +636,7 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -825,7 +825,7 @@
             "access_rule": {
               "rule": "can_lift_heavy_rocks",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -844,7 +844,7 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Seashell",
@@ -1067,7 +1067,7 @@
             "access_rule": {
               "rule": "can_lift_heavy_rocks",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1433,7 +1433,7 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Golden Feather",
@@ -1459,7 +1459,7 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Left Difficulty Switch",
@@ -1485,7 +1485,7 @@
             "access_rule": {
               "rule": "can_bomb_or_bonk",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "25 Pons",
@@ -1502,7 +1502,7 @@
             "access_rule": {
               "rule": "can_bomb_or_bonk",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "The Treasure of Sid Beach Map",
@@ -1519,7 +1519,7 @@
             "access_rule": {
               "rule": "can_bomb_or_bonk",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "32 Coins",
@@ -1571,7 +1571,7 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Seashell",
@@ -1999,7 +1999,7 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Yarn",
@@ -2057,14 +2057,14 @@
             "access_rule": {
               "rule": "can_kill_most_things",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2083,14 +2083,14 @@
             "access_rule": {
               "rule": "can_kill_most_things",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2109,14 +2109,14 @@
             "access_rule": {
               "rule": "can_kill_most_things",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2135,14 +2135,14 @@
             "access_rule": {
               "rule": "can_kill_most_things",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2161,14 +2161,14 @@
             "access_rule": {
               "rule": "can_kill_most_things",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2501,7 +2501,7 @@
             "access_rule": {
               "rule": "can_bomb_or_bonk",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -2510,7 +2510,7 @@
             "access_rule": {
               "rule": "can_bomb_or_bonk",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2568,7 +2568,7 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -2609,7 +2609,7 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2673,7 +2673,7 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2825,14 +2825,14 @@
             "access_rule": {
               "rule": "can_kill_most_things",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 3
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -2894,14 +2894,14 @@
                 {
                   "rule": "can_kill_most_things",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 4
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -2932,14 +2932,14 @@
                 {
                   "rule": "can_kill_most_things",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 4
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -3009,12 +3009,12 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_fire_source",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -3091,12 +3091,12 @@
                         },
                         "_original_ast_type": "function_call"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "has_fire_source",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -3119,7 +3119,7 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3227,14 +3227,14 @@
                     {
                       "rule": "can_kill_most_things",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 1
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -3275,14 +3275,14 @@
                     {
                       "rule": "can_kill_most_things",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 5
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -3301,7 +3301,7 @@
                                     "location": "Eastern Palace - Big Key Chest",
                                     "_original_ast_type": "placement_lookup"
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "op": "==",
                                 "right": {
@@ -3313,23 +3313,23 @@
                                         "args": {
                                           "value": "Big Key (Eastern Palace)"
                                         },
-                                        "_converted_from_cc": true
+                                        "_converted_from_ast": true
                                       },
                                       {
                                         "rule": "Constant",
                                         "args": {
                                           "value": 2
                                         },
-                                        "_converted_from_cc": true
+                                        "_converted_from_ast": true
                                       }
                                     ],
                                     "_original_ast_type": "list"
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "_original_ast_type": "compare"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "Has",
@@ -3426,7 +3426,7 @@
                             },
                             "_original_ast_type": "function_call"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -3439,7 +3439,7 @@
                     {
                       "rule": "can_shoot_arrows",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -3504,7 +3504,7 @@
                             },
                             "_original_ast_type": "function_call"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -3517,7 +3517,7 @@
                     {
                       "rule": "can_shoot_arrows",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -3645,7 +3645,7 @@
                 {
                   "rule": "has_beam_sword",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -3719,19 +3719,19 @@
                 {
                   "rule": "basement_key_rule",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_kill_most_things",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -3803,17 +3803,17 @@
                                     },
                                     "_original_ast_type": "subscript"
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "attr": "options",
                                 "_original_ast_type": "attribute"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "attr": "enemy_health",
                             "_original_ast_type": "attribute"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "op": "in",
                         "right": {
@@ -3825,35 +3825,35 @@
                                 "args": {
                                   "value": "easy"
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               },
                               {
                                 "rule": "Constant",
                                 "args": {
                                   "value": "default"
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               }
                             ],
                             "_original_ast_type": "list"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "can_kill_most_things",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 1
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -3882,14 +3882,14 @@
             "access_rule": {
               "rule": "can_kill_most_things",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 1
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -3911,19 +3911,19 @@
                 {
                   "rule": "basement_key_rule",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_kill_most_things",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 2
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -3954,14 +3954,14 @@
                 {
                   "rule": "can_kill_most_things",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -4020,7 +4020,7 @@
                             "setting": "mode",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "op": "==",
                         "right": {
@@ -4028,11 +4028,11 @@
                           "args": {
                             "value": "standard"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Compare",
@@ -4043,7 +4043,7 @@
                             "setting": "small_key_shuffle",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "op": "==",
                         "right": {
@@ -4051,11 +4051,11 @@
                           "args": {
                             "value": "universal"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -4105,14 +4105,14 @@
                 {
                   "rule": "can_kill_most_things",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -4171,7 +4171,7 @@
             "access_rule": {
               "rule": "can_bomb_or_bonk",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4290,7 +4290,7 @@
                     {
                       "rule": "has_sword",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -4318,14 +4318,14 @@
             "access_rule": {
               "rule": "can_kill_most_things",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "Constant",
                   "args": {
                     "value": 4
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4357,14 +4357,14 @@
                     {
                       "rule": "can_kill_most_things",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 4
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -4406,14 +4406,14 @@
                     {
                       "rule": "can_kill_most_things",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 4
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -4455,14 +4455,14 @@
                     {
                       "rule": "can_kill_most_things",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 4
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -4523,7 +4523,7 @@
                 },
                 "_original_ast_type": "function_call"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Beat Agahnim 1",
@@ -4875,7 +4875,7 @@
             "access_rule": {
               "rule": "can_lift_heavy_rocks",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4891,7 +4891,7 @@
             "access_rule": {
               "rule": "can_lift_heavy_rocks",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -4938,7 +4938,7 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4975,17 +4975,17 @@
                 {
                   "rule": "can_shoot_arrows",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_beam_sword",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "HasAny",
@@ -5016,17 +5016,17 @@
                 {
                   "rule": "can_shoot_arrows",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_beam_sword",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "HasAny",
@@ -5057,17 +5057,17 @@
                 {
                   "rule": "can_shoot_arrows",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_beam_sword",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "HasAny",
@@ -5098,17 +5098,17 @@
                 {
                   "rule": "can_shoot_arrows",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_beam_sword",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "HasAny",
@@ -5139,17 +5139,17 @@
                 {
                   "rule": "can_shoot_arrows",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_beam_sword",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "HasAny",
@@ -5177,7 +5177,7 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Yarn",
@@ -5194,7 +5194,7 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Snatcher's Contract - Toilet of Doom",
@@ -5320,7 +5320,7 @@
                 {
                   "rule": "can_lift_heavy_rocks",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -5565,7 +5565,7 @@
             "access_rule": {
               "rule": "can_retrieve_tablet",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Rupees (20)",
@@ -5625,7 +5625,7 @@
                 {
                   "rule": "can_activate_crystal_switch",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -5639,7 +5639,7 @@
                             "location": "Tower of Hera - Big Key Chest",
                             "_original_ast_type": "placement_lookup"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "op": "==",
                         "right": {
@@ -5651,23 +5651,23 @@
                                 "args": {
                                   "value": "Small Key (Tower of Hera)"
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               },
                               {
                                 "rule": "Constant",
                                 "args": {
                                   "value": 2
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               }
                             ],
                             "_original_ast_type": "list"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -5693,7 +5693,7 @@
                     {
                       "rule": "can_activate_crystal_switch",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -5712,7 +5712,7 @@
                         {
                           "rule": "can_shoot_arrows",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -5725,7 +5725,7 @@
                     {
                       "rule": "has_melee_weapon",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -5759,7 +5759,7 @@
             "access_rule": {
               "rule": "can_activate_crystal_switch",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Compass (Tower of Hera)",
@@ -5776,7 +5776,7 @@
             "access_rule": {
               "rule": "can_activate_crystal_switch",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Big Key (Tower of Hera)",
@@ -5803,7 +5803,7 @@
             "access_rule": {
               "rule": "has_fire_source",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Walkie Talkie",
@@ -5885,7 +5885,7 @@
                 },
                 "_original_ast_type": "function_call"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Small Key (Tower of Hera)",
@@ -5924,7 +5924,7 @@
                 },
                 "_original_ast_type": "function_call"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Crystal 7",
@@ -6002,7 +6002,7 @@
                     {
                       "rule": "cross_peg_bridge",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 }
@@ -6130,7 +6130,7 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -6153,7 +6153,7 @@
                     {
                       "rule": "can_lift_rocks",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -6209,7 +6209,7 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6280,7 +6280,7 @@
                     {
                       "rule": "can_lift_rocks",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -6305,7 +6305,7 @@
             "access_rule": {
               "rule": "can_lift_rocks",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -6384,7 +6384,7 @@
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -6411,7 +6411,7 @@
                 {
                   "rule": "can_lift_heavy_rocks",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -6634,7 +6634,7 @@
             "access_rule": {
               "rule": "can_retrieve_tablet",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "25 Pons",
@@ -6775,7 +6775,7 @@
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -6802,7 +6802,7 @@
                 {
                   "rule": "can_lift_rocks",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -6848,7 +6848,7 @@
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -6876,7 +6876,7 @@
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -6904,7 +6904,7 @@
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -6932,7 +6932,7 @@
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -7011,7 +7011,7 @@
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -7097,7 +7097,7 @@
                 {
                   "rule": "can_lift_rocks",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -7145,7 +7145,7 @@
                 {
                   "rule": "can_lift_heavy_rocks",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -7219,7 +7219,7 @@
                                                 {
                                                   "rule": "can_lift_heavy_rocks",
                                                   "_original_ast_type": "helper",
-                                                  "_converted_from_cc": true
+                                                  "_converted_from_ast": true
                                                 },
                                                 {
                                                   "rule": "Has",
@@ -7387,7 +7387,7 @@
                 {
                   "rule": "can_lift_heavy_rocks",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -8024,12 +8024,12 @@
                 {
                   "rule": "has_misery_mire_medallion",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_sword",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -8216,7 +8216,7 @@
             "access_rule": {
               "rule": "has_crystals",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true,
+              "_converted_from_ast": true,
               "args": [
                 {
                   "rule": "AST_setting_value",
@@ -8224,7 +8224,7 @@
                     "setting": "crystals_needed_for_gt",
                     "_original_ast_type": "setting_value"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -8245,7 +8245,7 @@
                 {
                   "rule": "can_lift_rocks",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -8275,12 +8275,12 @@
                 {
                   "rule": "has_sword",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_turtle_rock_medallion",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "CanReachRegion",
@@ -8529,7 +8529,7 @@
                     {
                       "rule": "can_lift_rocks",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -8540,14 +8540,14 @@
                             {
                               "rule": "can_extend_magic",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true,
+                              "_converted_from_ast": true,
                               "args": [
                                 {
                                   "rule": "Constant",
                                   "args": {
                                     "value": 16
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 {
                                   "rule": "True_"
@@ -8580,14 +8580,14 @@
                                         {
                                           "rule": "has_hearts",
                                           "_original_ast_type": "helper",
-                                          "_converted_from_cc": true,
+                                          "_converted_from_ast": true,
                                           "args": [
                                             {
                                               "rule": "Constant",
                                               "args": {
                                                 "value": 4
                                               },
-                                              "_converted_from_cc": true
+                                              "_converted_from_ast": true
                                             }
                                           ]
                                         },
@@ -8604,14 +8604,14 @@
                                 {
                                   "rule": "can_extend_magic",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
+                                  "_converted_from_ast": true,
                                   "args": [
                                     {
                                       "rule": "Constant",
                                       "args": {
                                         "value": 12
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     },
                                     {
                                       "rule": "True_"
@@ -8682,7 +8682,7 @@
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -8887,7 +8887,7 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -9009,7 +9009,7 @@
                                 "setting": "enemy_health",
                                 "_original_ast_type": "setting_value"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "op": "in",
                             "right": {
@@ -9021,35 +9021,35 @@
                                     "args": {
                                       "value": "easy"
                                     },
-                                    "_converted_from_cc": true
+                                    "_converted_from_ast": true
                                   },
                                   {
                                     "rule": "Constant",
                                     "args": {
                                       "value": "default"
                                     },
-                                    "_converted_from_cc": true
+                                    "_converted_from_ast": true
                                   }
                                 ],
                                 "_original_ast_type": "list"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "compare"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "can_use_bombs",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": 4
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -9058,12 +9058,12 @@
                     {
                       "rule": "can_shoot_arrows",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "has_beam_sword",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -9220,7 +9220,7 @@
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -9349,7 +9349,7 @@
                             "location": "Swamp Palace - Big Chest",
                             "_original_ast_type": "placement_lookup"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "op": "==",
                         "right": {
@@ -9361,23 +9361,23 @@
                                 "args": {
                                   "value": "Big Key (Swamp Palace)"
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               },
                               {
                                 "rule": "Constant",
                                 "args": {
                                   "value": 2
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               }
                             ],
                             "_original_ast_type": "list"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -9638,7 +9638,7 @@
                         },
                         "_original_ast_type": "function_call"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -9700,7 +9700,7 @@
                         },
                         "_original_ast_type": "function_call"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -9846,7 +9846,7 @@
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -9907,7 +9907,7 @@
                                     "location": "Thieves' Town - Big Chest",
                                     "_original_ast_type": "placement_lookup"
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "op": "==",
                                 "right": {
@@ -9919,23 +9919,23 @@
                                         "args": {
                                           "value": "Small Key (Thieves Town)"
                                         },
-                                        "_converted_from_cc": true
+                                        "_converted_from_ast": true
                                       },
                                       {
                                         "rule": "Constant",
                                         "args": {
                                           "value": 2
                                         },
-                                        "_converted_from_cc": true
+                                        "_converted_from_ast": true
                                       }
                                     ],
                                     "_original_ast_type": "list"
                                   },
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 },
                                 "_original_ast_type": "compare"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "Has",
@@ -10099,7 +10099,7 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -10149,7 +10149,7 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -10479,7 +10479,7 @@
                             {
                               "rule": "can_use_bombs",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "Has",
@@ -10498,7 +10498,7 @@
                                 "location": "Skull Woods - Big Chest",
                                 "_original_ast_type": "placement_lookup"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "op": "==",
                             "right": {
@@ -10510,23 +10510,23 @@
                                     "args": {
                                       "value": "Big Key (Skull Woods)"
                                     },
-                                    "_converted_from_cc": true
+                                    "_converted_from_ast": true
                                   },
                                   {
                                     "rule": "Constant",
                                     "args": {
                                       "value": 2
                                     },
-                                    "_converted_from_cc": true
+                                    "_converted_from_ast": true
                                   }
                                 ],
                                 "_original_ast_type": "list"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "compare"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -10705,7 +10705,7 @@
                 {
                   "rule": "has_sword",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -10812,7 +10812,7 @@
                         },
                         "_original_ast_type": "function_call"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -10874,7 +10874,7 @@
                         },
                         "_original_ast_type": "function_call"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -10920,12 +10920,12 @@
                 {
                   "rule": "can_melt_things",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -10948,7 +10948,7 @@
                 {
                   "rule": "can_melt_things",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -10986,7 +10986,7 @@
                     {
                       "rule": "can_melt_things",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -11093,7 +11093,7 @@
                             ],
                             "_original_ast_type": "placement_search"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "if_true": {
                           "rule": "Has",
@@ -11111,7 +11111,7 @@
                         },
                         "_original_ast_type": "conditional"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -11159,7 +11159,7 @@
                 {
                   "rule": "can_lift_rocks",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -11309,7 +11309,7 @@
                 {
                   "rule": "can_lift_rocks",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -11445,7 +11445,7 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -11495,7 +11495,7 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -11535,12 +11535,12 @@
                     {
                       "rule": "can_shoot_arrows",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "has_sword",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -11623,7 +11623,7 @@
                             "location": "Misery Mire - Big Key Chest",
                             "_original_ast_type": "placement_lookup"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "op": "in",
                         "right": {
@@ -11639,28 +11639,28 @@
                                       "args": {
                                         "value": "Big Key (Misery Mire)"
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     },
                                     {
                                       "rule": "Constant",
                                       "args": {
                                         "value": 2
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     }
                                   ],
                                   "_original_ast_type": "list"
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               }
                             ],
                             "_original_ast_type": "list"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Compare",
@@ -11671,7 +11671,7 @@
                             "location": "Misery Mire - Compass Chest",
                             "_original_ast_type": "placement_lookup"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "op": "in",
                         "right": {
@@ -11687,28 +11687,28 @@
                                       "args": {
                                         "value": "Big Key (Misery Mire)"
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     },
                                     {
                                       "rule": "Constant",
                                       "args": {
                                         "value": 2
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     }
                                   ],
                                   "_original_ast_type": "list"
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               }
                             ],
                             "_original_ast_type": "list"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -11728,7 +11728,7 @@
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           },
           {
@@ -11794,7 +11794,7 @@
                         {
                           "rule": "can_activate_crystal_switch",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -11846,7 +11846,7 @@
                         {
                           "rule": "can_activate_crystal_switch",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -11912,14 +11912,14 @@
                         {
                           "rule": "has_hearts",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": 4
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -12036,7 +12036,7 @@
                                 "location": "Misery Mire - Big Key Chest",
                                 "_original_ast_type": "placement_lookup"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "op": "==",
                             "right": {
@@ -12048,23 +12048,23 @@
                                     "args": {
                                       "value": "Big Key (Misery Mire)"
                                     },
-                                    "_converted_from_cc": true
+                                    "_converted_from_ast": true
                                   },
                                   {
                                     "rule": "Constant",
                                     "args": {
                                       "value": 2
                                     },
-                                    "_converted_from_cc": true
+                                    "_converted_from_ast": true
                                   }
                                 ],
                                 "_original_ast_type": "list"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "compare"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Compare",
@@ -12075,7 +12075,7 @@
                                 "location": "Misery Mire - Compass Chest",
                                 "_original_ast_type": "placement_lookup"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "op": "==",
                             "right": {
@@ -12087,23 +12087,23 @@
                                     "args": {
                                       "value": "Big Key (Misery Mire)"
                                     },
-                                    "_converted_from_cc": true
+                                    "_converted_from_ast": true
                                   },
                                   {
                                     "rule": "Constant",
                                     "args": {
                                       "value": 2
                                     },
-                                    "_converted_from_cc": true
+                                    "_converted_from_ast": true
                                   }
                                 ],
                                 "_original_ast_type": "list"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "compare"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Compare",
@@ -12114,7 +12114,7 @@
                                 "location": "Misery Mire - Conveyor Crystal Key Drop",
                                 "_original_ast_type": "placement_lookup"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "op": "==",
                             "right": {
@@ -12126,23 +12126,23 @@
                                     "args": {
                                       "value": "Big Key (Misery Mire)"
                                     },
-                                    "_converted_from_cc": true
+                                    "_converted_from_ast": true
                                   },
                                   {
                                     "rule": "Constant",
                                     "args": {
                                       "value": 2
                                     },
-                                    "_converted_from_cc": true
+                                    "_converted_from_ast": true
                                   }
                                 ],
                                 "_original_ast_type": "list"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "compare"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -12162,7 +12162,7 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -12200,7 +12200,7 @@
                 {
                   "rule": "has_fire_source",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -12228,7 +12228,7 @@
                 {
                   "rule": "has_fire_source",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -12268,7 +12268,7 @@
                     {
                       "rule": "can_use_bombs",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -12329,7 +12329,7 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -12379,7 +12379,7 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -12660,7 +12660,7 @@
                     ],
                     "_original_ast_type": "placement_search"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "if_true": {
                   "rule": "Has",
@@ -12678,7 +12678,7 @@
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12695,14 +12695,14 @@
                     {
                       "rule": "can_kill_most_things",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 5
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -12765,7 +12765,7 @@
                     "locations": [],
                     "_original_ast_type": "placement_search"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "if_true": {
                   "rule": "Has",
@@ -12783,7 +12783,7 @@
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12803,17 +12803,17 @@
                         {
                           "rule": "can_shoot_arrows",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "can_use_bombs",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "has_beam_sword",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "HasAny",
@@ -12886,19 +12886,19 @@
                     {
                       "rule": "can_bomb_or_bonk",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "can_kill_most_things",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 10
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -12931,21 +12931,21 @@
                     {
                       "rule": "can_kill_most_things",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 10
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
                     {
                       "rule": "can_use_bombs",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -12994,7 +12994,7 @@
                                                 "location": "Turtle Rock - Big Key Chest",
                                                 "_original_ast_type": "placement_lookup"
                                               },
-                                              "_converted_from_cc": true
+                                              "_converted_from_ast": true
                                             },
                                             "op": "==",
                                             "right": {
@@ -13006,30 +13006,30 @@
                                                     "args": {
                                                       "value": "Small Key (Turtle Rock)"
                                                     },
-                                                    "_converted_from_cc": true
+                                                    "_converted_from_ast": true
                                                   },
                                                   {
                                                     "rule": "Constant",
                                                     "args": {
                                                       "value": 1
                                                     },
-                                                    "_converted_from_cc": true
+                                                    "_converted_from_ast": true
                                                   }
                                                 ],
                                                 "_original_ast_type": "list"
                                               },
-                                              "_converted_from_cc": true
+                                              "_converted_from_ast": true
                                             },
                                             "_original_ast_type": "compare"
                                           },
-                                          "_converted_from_cc": true
+                                          "_converted_from_ast": true
                                         },
                                         "if_true": {
                                           "rule": "Constant",
                                           "args": {
                                             "value": 0
                                           },
-                                          "_converted_from_cc": true
+                                          "_converted_from_ast": true
                                         },
                                         "if_false": {
                                           "rule": "Conditional",
@@ -13043,7 +13043,7 @@
                                                     "location": "Turtle Rock - Big Key Chest",
                                                     "_original_ast_type": "placement_lookup"
                                                   },
-                                                  "_converted_from_cc": true
+                                                  "_converted_from_ast": true
                                                 },
                                                 "op": "==",
                                                 "right": {
@@ -13055,45 +13055,45 @@
                                                         "args": {
                                                           "value": "Big Key (Turtle Rock)"
                                                         },
-                                                        "_converted_from_cc": true
+                                                        "_converted_from_ast": true
                                                       },
                                                       {
                                                         "rule": "Constant",
                                                         "args": {
                                                           "value": 1
                                                         },
-                                                        "_converted_from_cc": true
+                                                        "_converted_from_ast": true
                                                       }
                                                     ],
                                                     "_original_ast_type": "list"
                                                   },
-                                                  "_converted_from_cc": true
+                                                  "_converted_from_ast": true
                                                 },
                                                 "_original_ast_type": "compare"
                                               },
-                                              "_converted_from_cc": true
+                                              "_converted_from_ast": true
                                             },
                                             "if_true": {
                                               "rule": "Constant",
                                               "args": {
                                                 "value": 4
                                               },
-                                              "_converted_from_cc": true
+                                              "_converted_from_ast": true
                                             },
                                             "if_false": {
                                               "rule": "Constant",
                                               "args": {
                                                 "value": 6
                                               },
-                                              "_converted_from_cc": true
+                                              "_converted_from_ast": true
                                             },
                                             "_original_ast_type": "conditional"
                                           },
-                                          "_converted_from_cc": true
+                                          "_converted_from_ast": true
                                         },
                                         "_original_ast_type": "conditional"
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     }
                                   }
                                 },
@@ -13167,14 +13167,14 @@
                                 {
                                   "rule": "can_kill_most_things",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
+                                  "_converted_from_ast": true,
                                   "args": [
                                     {
                                       "rule": "Constant",
                                       "args": {
                                         "value": 5
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     }
                                   ]
                                 },
@@ -13249,7 +13249,7 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -13488,7 +13488,7 @@
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         ],
@@ -13558,7 +13558,7 @@
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -13884,7 +13884,7 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -13934,7 +13934,7 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -13982,12 +13982,12 @@
                 {
                   "rule": "can_bomb_or_bonk",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_shoot_arrows",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -14037,7 +14037,7 @@
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Or",
@@ -14054,7 +14054,7 @@
                                 "location": "Palace of Darkness - Big Key Chest",
                                 "_original_ast_type": "placement_lookup"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "op": "in",
                             "right": {
@@ -14070,28 +14070,28 @@
                                           "args": {
                                             "value": "Small Key (Palace of Darkness)"
                                           },
-                                          "_converted_from_cc": true
+                                          "_converted_from_ast": true
                                         },
                                         {
                                           "rule": "Constant",
                                           "args": {
                                             "value": 2
                                           },
-                                          "_converted_from_cc": true
+                                          "_converted_from_ast": true
                                         }
                                       ],
                                       "_original_ast_type": "list"
                                     },
-                                    "_converted_from_cc": true
+                                    "_converted_from_ast": true
                                   }
                                 ],
                                 "_original_ast_type": "list"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             "_original_ast_type": "compare"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -14144,7 +14144,7 @@
                     {
                       "rule": "can_shoot_arrows",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -14287,7 +14287,7 @@
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -14351,7 +14351,7 @@
                             "location": "Palace of Darkness - Harmless Hellway",
                             "_original_ast_type": "placement_lookup"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "op": "in",
                         "right": {
@@ -14367,28 +14367,28 @@
                                       "args": {
                                         "value": "Small Key (Palace of Darkness)"
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     },
                                     {
                                       "rule": "Constant",
                                       "args": {
                                         "value": 2
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     }
                                   ],
                                   "_original_ast_type": "list"
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               }
                             ],
                             "_original_ast_type": "list"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -14567,7 +14567,7 @@
                     {
                       "rule": "can_use_bombs",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -14663,7 +14663,7 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -14713,7 +14713,7 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -14792,7 +14792,7 @@
                 {
                   "rule": "can_shoot_arrows",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -14952,7 +14952,7 @@
                             ],
                             "_original_ast_type": "placement_search"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -15048,7 +15048,7 @@
                         ],
                         "_original_ast_type": "placement_search"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -15115,7 +15115,7 @@
                                 ],
                                 "_original_ast_type": "placement_search"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -15134,7 +15134,7 @@
                         {
                           "rule": "can_use_bombs",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -15220,7 +15220,7 @@
                                 ],
                                 "_original_ast_type": "placement_search"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -15239,7 +15239,7 @@
                         {
                           "rule": "can_use_bombs",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -15325,7 +15325,7 @@
                                 ],
                                 "_original_ast_type": "placement_search"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -15344,7 +15344,7 @@
                         {
                           "rule": "can_use_bombs",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -15430,7 +15430,7 @@
                                 ],
                                 "_original_ast_type": "placement_search"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -15449,7 +15449,7 @@
                         {
                           "rule": "can_use_bombs",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -15535,7 +15535,7 @@
                                 ],
                                 "_original_ast_type": "placement_search"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -15554,7 +15554,7 @@
                         {
                           "rule": "can_use_bombs",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -15616,7 +15616,7 @@
                             "location": "Ganons Tower - Map Chest",
                             "_original_ast_type": "placement_lookup"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "op": "in",
                         "right": {
@@ -15632,28 +15632,28 @@
                                       "args": {
                                         "value": "Big Key (Ganons Tower)"
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     },
                                     {
                                       "rule": "Constant",
                                       "args": {
                                         "value": 2
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     }
                                   ],
                                   "_original_ast_type": "list"
                                 },
-                                "_converted_from_cc": true
+                                "_converted_from_ast": true
                               }
                             ],
                             "_original_ast_type": "list"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         "_original_ast_type": "compare"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -15826,7 +15826,7 @@
                     {
                       "rule": "can_use_bombs",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -15951,7 +15951,7 @@
                         ],
                         "_original_ast_type": "placement_search"
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -16014,7 +16014,7 @@
                                 ],
                                 "_original_ast_type": "placement_search"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "AST_placement_search",
@@ -16029,7 +16029,7 @@
                                 ],
                                 "_original_ast_type": "placement_search"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -16091,7 +16091,7 @@
                     {
                       "rule": "can_use_bombs",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -16131,7 +16131,7 @@
                                 ],
                                 "_original_ast_type": "placement_search"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -16175,7 +16175,7 @@
                     {
                       "rule": "can_use_bombs",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -16215,7 +16215,7 @@
                                 ],
                                 "_original_ast_type": "placement_search"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -16259,7 +16259,7 @@
                     {
                       "rule": "can_use_bombs",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -16299,7 +16299,7 @@
                                 ],
                                 "_original_ast_type": "placement_search"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -16343,7 +16343,7 @@
                     {
                       "rule": "can_use_bombs",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Or",
@@ -16383,7 +16383,7 @@
                                 ],
                                 "_original_ast_type": "placement_search"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -16509,28 +16509,28 @@
                         {
                           "rule": "can_defeat_boss",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": "Ganons Tower - Big Key Room - Left"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": "bottom"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
                         {
                           "rule": "can_use_bombs",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -16574,28 +16574,28 @@
                         {
                           "rule": "can_defeat_boss",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": "Ganons Tower - Big Key Room - Right"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": "bottom"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
                         {
                           "rule": "can_use_bombs",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -16639,28 +16639,28 @@
                         {
                           "rule": "can_defeat_boss",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": "Ganons Tower - Big Key Chest"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": "bottom"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
                         {
                           "rule": "can_use_bombs",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -16753,26 +16753,26 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "can_kill_most_things",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 8
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "has_fire_source",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -16803,7 +16803,7 @@
                 {
                   "rule": "can_use_bombs",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -16865,7 +16865,7 @@
                     {
                       "rule": "can_use_bombs",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -16895,14 +16895,14 @@
                 {
                   "rule": "can_kill_most_things",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 1
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -16987,7 +16987,7 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -17058,7 +17058,7 @@
                     },
                     "_original_ast_type": "function_call"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -17095,7 +17095,7 @@
                 {
                   "rule": "has_beam_sword",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -17123,12 +17123,12 @@
                         {
                           "rule": "GanonDefeatRule",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "has_crystals",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "AST_setting_value",
@@ -17136,7 +17136,7 @@
                                 "setting": "crystals_needed_for_ganon",
                                 "_original_ast_type": "setting_value"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         }
@@ -17248,12 +17248,12 @@
                 {
                   "rule": "can_shoot_arrows",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_melee_weapon",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -17302,14 +17302,14 @@
                     {
                       "rule": "can_extend_magic",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 10
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -17327,14 +17327,14 @@
                     {
                       "rule": "can_extend_magic",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 16
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -17352,14 +17352,14 @@
                     {
                       "rule": "can_extend_magic",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 32
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -17377,14 +17377,14 @@
                     {
                       "rule": "can_extend_magic",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 32
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -17399,12 +17399,12 @@
                 {
                   "rule": "can_shoot_arrows",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_melee_weapon",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -17451,7 +17451,7 @@
                 {
                   "rule": "has_sword",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -17484,7 +17484,7 @@
             "defeat_rule": {
               "rule": "has_melee_weapon",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         }
@@ -17517,7 +17517,7 @@
                     },
                     "_original_ast_type": "not"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "if_true": {
                   "rule": "False_"
@@ -17528,7 +17528,7 @@
                     "test": {
                       "rule": "has_melee_weapon",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     "if_true": {
                       "rule": "True_"
@@ -17545,21 +17545,21 @@
                                 {
                                   "rule": "can_extend_magic",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
+                                  "_converted_from_ast": true,
                                   "args": [
                                     {
                                       "rule": "Constant",
                                       "args": {
                                         "value": 12
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     }
                                   ]
                                 },
                                 {
                                   "rule": "can_shoot_arrows",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 }
                               ]
                             },
@@ -17580,21 +17580,21 @@
                                 {
                                   "rule": "can_extend_magic",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true,
+                                  "_converted_from_ast": true,
                                   "args": [
                                     {
                                       "rule": "Constant",
                                       "args": {
                                         "value": 16
                                       },
-                                      "_converted_from_cc": true
+                                      "_converted_from_ast": true
                                     }
                                   ]
                                 },
                                 {
                                   "rule": "can_shoot_arrows",
                                   "_original_ast_type": "helper",
-                                  "_converted_from_cc": true
+                                  "_converted_from_ast": true
                                 }
                               ]
                             },
@@ -17610,11 +17610,11 @@
                     },
                     "_original_ast_type": "conditional"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         }
@@ -17636,7 +17636,7 @@
                 {
                   "rule": "has_melee_weapon",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -17680,14 +17680,14 @@
                     {
                       "rule": "can_extend_magic",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 10
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -17705,14 +17705,14 @@
                     {
                       "rule": "can_extend_magic",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 16
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -17730,14 +17730,14 @@
                     {
                       "rule": "can_extend_magic",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 16
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -17752,12 +17752,12 @@
                 {
                   "rule": "can_get_good_bee",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_melee_weapon",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -17790,14 +17790,14 @@
                         {
                           "rule": "can_extend_magic",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": 16
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -17807,7 +17807,7 @@
                             "setting": "swordless",
                             "_original_ast_type": "setting_value"
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -17829,14 +17829,14 @@
                         {
                           "rule": "can_extend_magic",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": 20
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -17851,7 +17851,7 @@
                     {
                       "rule": "has_melee_weapon",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -17867,7 +17867,7 @@
                             {
                               "rule": "has_sword",
                               "_original_ast_type": "helper",
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             },
                             {
                               "rule": "AST_setting_value",
@@ -17875,7 +17875,7 @@
                                 "setting": "swordless",
                                 "_original_ast_type": "setting_value"
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -17922,19 +17922,19 @@
                     {
                       "rule": "can_shoot_arrows",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "can_use_bombs",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 10
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     }
@@ -17943,21 +17943,21 @@
                 {
                   "rule": "can_shoot_arrows",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true,
+                  "_converted_from_ast": true,
                   "args": [
                     {
                       "rule": "Constant",
                       "args": {
                         "value": 35
                       },
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
                 {
                   "rule": "has_melee_weapon",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -18013,7 +18013,7 @@
                     },
                     "_original_ast_type": "not"
                   },
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 "if_true": {
                   "rule": "False_"
@@ -18027,14 +18027,14 @@
                         {
                           "rule": "can_extend_magic",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": 16
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -18052,21 +18052,21 @@
                         {
                           "rule": "can_extend_magic",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true,
+                          "_converted_from_ast": true,
                           "args": [
                             {
                               "rule": "Constant",
                               "args": {
                                 "value": 32
                               },
-                              "_converted_from_cc": true
+                              "_converted_from_ast": true
                             }
                           ]
                         },
                         {
                           "rule": "has_sword",
                           "_original_ast_type": "helper",
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -18092,7 +18092,7 @@
                 },
                 "_original_ast_type": "conditional"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         }
@@ -18122,12 +18122,12 @@
                     {
                       "rule": "can_shoot_arrows",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "has_sword",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -18137,14 +18137,14 @@
                     {
                       "rule": "can_use_bombs",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 5
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -18187,7 +18187,7 @@
                 {
                   "rule": "has_sword",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -18215,14 +18215,14 @@
                     {
                       "rule": "can_extend_magic",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 10
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -18240,14 +18240,14 @@
                     {
                       "rule": "can_extend_magic",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 16
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -18265,14 +18265,14 @@
                     {
                       "rule": "can_extend_magic",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 32
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -18290,14 +18290,14 @@
                     {
                       "rule": "can_extend_magic",
                       "_original_ast_type": "helper",
-                      "_converted_from_cc": true,
+                      "_converted_from_ast": true,
                       "args": [
                         {
                           "rule": "Constant",
                           "args": {
                             "value": 32
                           },
-                          "_converted_from_cc": true
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -18312,12 +18312,12 @@
                 {
                   "rule": "can_shoot_arrows",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_melee_weapon",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -18342,12 +18342,12 @@
                 {
                   "rule": "can_shoot_arrows",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "has_melee_weapon",
                   "_original_ast_type": "helper",
-                  "_converted_from_cc": true
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -18381,7 +18381,7 @@
             "defeat_rule": {
               "rule": "has_melee_weapon",
               "_original_ast_type": "helper",
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             }
           }
         }
@@ -21544,7 +21544,7 @@
           "type": "choice",
           "name_lookup": {
             "0": "normal",
-            "(1,)": "instant",
+            "1": "instant",
             "2": "double",
             "3": "triple",
             "4": "quadruple",
@@ -21875,6 +21875,11 @@
           "display_name": "Underworld Palette"
         }
       },
+      "world_directory": "alttp"
+    }
+  },
+  "world_attributes": {
+    "2": {
       "treasure_hunt_required": 0,
       "can_take_damage": true,
       "logical_heart_pieces": 24,
@@ -22017,8 +22022,7 @@
             "Capacity Upgrade"
           ]
         }
-      },
-      "world_directory": "alttp"
+      }
     }
   },
   "game_info": {
@@ -22616,8 +22620,16 @@
         "type": "min",
         "args": [
           {
-            "type": "setting_value",
-            "setting": "difficulty_requirements.progressive_bottle_limit"
+            "type": "attribute",
+            "object": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
+              },
+              "attr": "difficulty_requirements"
+            },
+            "attr": "progressive_bottle_limit"
           },
           {
             "type": "group_count",
@@ -23921,16 +23933,24 @@
             "type": "assign",
             "name": "max_heart_pieces",
             "value": {
-              "type": "setting_value",
-              "setting": "logical_heart_pieces"
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
+              },
+              "attr": "logical_heart_pieces"
             }
           },
           {
             "type": "assign",
             "name": "max_heart_containers",
             "value": {
-              "type": "setting_value",
-              "setting": "logical_heart_containers"
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
+              },
+              "attr": "logical_heart_containers"
             }
           },
           {

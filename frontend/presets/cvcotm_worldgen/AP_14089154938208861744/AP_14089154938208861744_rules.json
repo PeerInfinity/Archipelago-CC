@@ -3488,7 +3488,16 @@
       "iron_maiden_behavior": 0,
       "required_last_keys": 1,
       "completion_goal": 0,
-      "world_directory": "cvcotm"
+      "world_directory": "cvcotm_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "nerf_roc_wing": 0,
+      "ignore_cleansing": 0,
+      "iron_maiden_behavior": 0,
+      "required_last_keys": 1,
+      "completion_goal": 0
     }
   },
   "game_info": {
@@ -3632,8 +3641,15 @@
         }
       },
       "can_open_ceremonial_door": {
-        "type": "constant",
-        "value": true
+        "type": "item_check",
+        "item": {
+          "type": "constant",
+          "value": "Last Key"
+        },
+        "count": {
+          "type": "constant",
+          "value": 1
+        }
       }
     }
   }

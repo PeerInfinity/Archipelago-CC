@@ -5546,9 +5546,10 @@
           "display_name": "Randomize Items"
         }
       },
-      "world_directory": "lufia2ac"
+      "world_directory": "lufia2ac_worldgen"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Lufia II Ancient Cave WorldGen",

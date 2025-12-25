@@ -1034,7 +1034,7 @@
                 "description": "Requires ability to defeat enough rbms",
                 "_original_ast_type": "capability"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "E-Tank",
@@ -1055,7 +1055,7 @@
                 "description": "Requires ability to defeat enough rbms",
                 "_original_ast_type": "capability"
               },
-              "_converted_from_cc": true
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Wily Stage 5 - Completed",
@@ -1671,6 +1671,7 @@
       "world_directory": "mm2"
     }
   },
+  "world_attributes": {},
   "game_info": {
     "1": {
       "name": "Mega Man 2",

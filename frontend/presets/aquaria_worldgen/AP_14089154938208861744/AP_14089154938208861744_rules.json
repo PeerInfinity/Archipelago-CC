@@ -10161,7 +10161,46 @@
           "display_name": "Unconfine Home Waters Area"
         }
       },
-      "world_directory": "aquaria"
+      "world_directory": "aquaria_worldgen"
+    }
+  },
+  "world_attributes": {
+    "1": {
+      "settings": {
+        "game": "Aquaria",
+        "assume_bidirectional_exits": false,
+        "use_resolved_items": false,
+        "options": {
+          "accessibility": "full",
+          "aquarian_translation": "false",
+          "big_bosses_to_beat": 0,
+          "bind_song_needed_to_get_under_rock_bulb": "true",
+          "blind_goal": "false",
+          "dish_randomizer": "false",
+          "early_bind_song": "early",
+          "early_energy_form": "early",
+          "exclude_locations": [],
+          "ingredient_randomizer": "off",
+          "item_links": [],
+          "light_needed_to_get_to_dark_places": "true",
+          "local_items": [],
+          "mini_bosses_to_beat": 0,
+          "no_progression_hard_or_hidden_locations": "false",
+          "non_local_items": [],
+          "objective": "kill_the_creator",
+          "plando_items": [],
+          "priority_locations": [],
+          "progression_balancing": 50,
+          "skip_first_vision": "false",
+          "start_hints": [],
+          "start_inventory": {},
+          "start_inventory_from_pool": {},
+          "start_location_hints": [],
+          "turtle_randomizer": "all_except_final",
+          "unconfine_home_water": "off"
+        },
+        "world_directory": "aquaria"
+      }
     }
   },
   "game_info": {
