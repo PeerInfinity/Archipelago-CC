@@ -50,5 +50,326 @@
     "start_inventory": {},
     "start_location_hints": []
   },
+  "option_definitions": {
+    "accessibility": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "full",
+        "2": "minimal"
+      },
+      "default": 0,
+      "display_name": "Accessibility"
+    },
+    "blue_chest_chance": {
+      "type": "range",
+      "range_start": 5,
+      "range_end": 75,
+      "default": 25,
+      "display_name": "Blue chest chance"
+    },
+    "blue_chest_count": {
+      "type": "range",
+      "range_start": 10,
+      "range_end": 100,
+      "default": 25,
+      "display_name": "Blue chest count"
+    },
+    "boss": {
+      "type": "choice",
+      "name_lookup": {
+        "1": "lizard_man",
+        "2": "big_catfish",
+        "5": "regal_goblin",
+        "6": "follower_x2",
+        "7": "camu",
+        "8": "tarantula",
+        "9": "pierre",
+        "10": "daniele",
+        "11": "gades_a",
+        "12": "mummy_x4",
+        "13": "troll_x3",
+        "14": "gades_b",
+        "15": "idura_a",
+        "18": "lion_x2",
+        "19": "idura_b",
+        "20": "idura_c",
+        "21": "rogue_flower",
+        "22": "soldier_x4",
+        "23": "gargoyle_x4",
+        "24": "venge_ghost",
+        "25": "white_dragon_x3",
+        "26": "fire_dragon",
+        "27": "ghost_ship",
+        "30": "tank",
+        "31": "gades_c",
+        "32": "amon",
+        "35": "erim",
+        "36": "daos",
+        "37": "egg_dragon",
+        "38": "master",
+        "39": "random-high",
+        "40": "random-sinistral",
+        "41": "random-middle",
+        "42": "random-low"
+      },
+      "default": 38,
+      "display_name": "Boss"
+    },
+    "capsule_cravings_jp_style": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Capsule cravings JP style"
+    },
+    "capsule_starting_form": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 5,
+      "default": 1,
+      "display_name": "Capsule monster starting form"
+    },
+    "capsule_starting_level": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 99,
+      "default": 1,
+      "display_name": "Capsule monster starting level"
+    },
+    "crowded_floor_chance": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 255,
+      "default": 16,
+      "display_name": "Crowded floor chance"
+    },
+    "death_link": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Death Link"
+    },
+    "default_capsule": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "jelze",
+        "1": "flash",
+        "2": "gusto",
+        "3": "zeppy",
+        "4": "darbi",
+        "5": "sully",
+        "6": "blaze"
+      },
+      "default": 0,
+      "display_name": "Default capsule monster"
+    },
+    "default_party": {
+      "type": "choice",
+      "name_lookup": {
+        "random-2p": "random-2p",
+        "random-3p": "random-3p",
+        "random-4p": "random-4p",
+        "M": "m",
+        "MA": "ma",
+        "MD": "md",
+        "MG": "mg",
+        "ML": "ml",
+        "MS": "ms",
+        "MT": "mt",
+        "MAD": "mad",
+        "MAG": "mag",
+        "MAL": "mal",
+        "MAS": "mas",
+        "MAT": "mat",
+        "MDG": "mdg",
+        "MDL": "mdl",
+        "MDS": "mds",
+        "MDT": "mdt",
+        "MGL": "mgl",
+        "MGS": "mgs",
+        "MGT": "mgt",
+        "MLS": "mls",
+        "MLT": "mlt",
+        "MST": "mst",
+        "MADG": "madg",
+        "MADL": "madl",
+        "MADS": "mads",
+        "MADT": "madt",
+        "MAGL": "magl",
+        "MAGS": "mags",
+        "MAGT": "magt",
+        "MALS": "mals",
+        "MALT": "malt",
+        "MAST": "mast",
+        "MDGL": "mdgl",
+        "MDGS": "mdgs",
+        "MDGT": "mdgt",
+        "MDLS": "mdls",
+        "MDLT": "mdlt",
+        "MDST": "mdst",
+        "MGLS": "mgls",
+        "MGLT": "mglt",
+        "MGST": "mgst",
+        "MLST": "mlst"
+      },
+      "default": "M",
+      "display_name": "Default party lineup"
+    },
+    "enemy_floor_numbers": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "shuffle",
+        "2": "randomize"
+      },
+      "default": 0,
+      "display_name": "Enemy floor numbers"
+    },
+    "enemy_movement_patterns": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "shuffle_by_pattern",
+        "2": "randomize_by_pattern",
+        "3": "shuffle_by_sprite",
+        "4": "randomize_by_sprite",
+        "5": "singularity"
+      },
+      "default": 0,
+      "display_name": "Enemy movement patterns"
+    },
+    "enemy_sprites": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "vanilla",
+        "1": "shuffle",
+        "2": "randomize",
+        "3": "singularity"
+      },
+      "default": 0,
+      "display_name": "Enemy sprites"
+    },
+    "exp_modifier": {
+      "type": "range",
+      "range_start": 100,
+      "range_end": 500,
+      "default": 100,
+      "display_name": "EXP modifier"
+    },
+    "final_floor": {
+      "type": "range",
+      "range_start": 2,
+      "range_end": 99,
+      "default": 99,
+      "display_name": "Final floor"
+    },
+    "gear_variety_after_b9": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Increase gear variety after B9"
+    },
+    "goal": {
+      "type": "choice",
+      "name_lookup": {
+        "1": "boss",
+        "2": "iris_treasure_hunt",
+        "3": "boss_iris_treasure_hunt",
+        "4": "final_floor"
+      },
+      "default": 1,
+      "display_name": "Goal"
+    },
+    "gold_modifier": {
+      "type": "range",
+      "range_start": 25,
+      "range_end": 400,
+      "default": 100,
+      "display_name": "Gold modifier"
+    },
+    "healing_floor_chance": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 255,
+      "default": 16,
+      "display_name": "Healing tile floor chance"
+    },
+    "inactive_exp_gain": {
+      "type": "choice",
+      "name_lookup": {
+        "0": "disabled",
+        "50": "half",
+        "100": "full"
+      },
+      "default": 0,
+      "display_name": "Inactive character EXP gain"
+    },
+    "initial_floor": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 98,
+      "default": 1,
+      "display_name": "Initial floor"
+    },
+    "iris_floor_chance": {
+      "type": "range",
+      "range_start": 5,
+      "range_end": 255,
+      "default": 5,
+      "display_name": "Iris treasure floor chance"
+    },
+    "iris_treasures_required": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 9,
+      "default": 9,
+      "display_name": "Iris treasures required"
+    },
+    "master_hp": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 9980,
+      "default": 9980,
+      "display_name": "Master HP"
+    },
+    "party_starting_level": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 99,
+      "default": 1,
+      "display_name": "Party starting level"
+    },
+    "progression_balancing": {
+      "type": "range",
+      "range_start": 0,
+      "range_end": 99,
+      "default": 50,
+      "display_name": "Progression Balancing"
+    },
+    "run_speed": {
+      "type": "choice",
+      "name_lookup": {
+        "8": "disabled",
+        "16": "double",
+        "22": "triple",
+        "32": "quadruple"
+      },
+      "default": 8,
+      "display_name": "Run speed"
+    },
+    "shop_interval": {
+      "type": "range",
+      "range_start": 1,
+      "range_end": 10,
+      "default": 0,
+      "display_name": "Shop interval"
+    },
+    "shuffle_capsule_monsters": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Shuffle capsule monsters"
+    },
+    "shuffle_party_members": {
+      "type": "toggle",
+      "default": 0,
+      "display_name": "Shuffle party members"
+    }
+  },
   "world_directory": "lufia2ac"
 }

@@ -1,4 +1,4 @@
-# Lufia II Ancient Cave WorldGen Setup Guide
+# Lufia II Ancient Cave Setup Guide
 
 ## Required Software
 
@@ -8,7 +8,7 @@
 
 1. Download the game's .apworld file
 2. Place it in your Archipelago/lib/worlds folder
-3. Generate a multiworld with Lufia II Ancient Cave WorldGen
+3. Generate a multiworld with Lufia II Ancient Cave
 
 ## Joining a Game
 

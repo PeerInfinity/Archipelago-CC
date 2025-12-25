@@ -5566,10 +5566,10 @@
             "36": "daos",
             "37": "egg_dragon",
             "38": "master",
-            "39": "random-high",
+            "39": "random-low",
             "40": "random-sinistral",
-            "41": "random-middle",
-            "42": "random-low"
+            "41": "random-high",
+            "42": "random-middle"
           },
           "default": 38,
           "display_name": "Boss"
