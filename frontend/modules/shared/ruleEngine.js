@@ -1259,6 +1259,25 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           baseObject = evaluateRule(rule.object, context, depth + 1, localScope);
         }
 
+        // Special case: If we're accessing world.* and the property doesn't exist on the world object,
+        // check the settings for game-specific runtime data (like auto_scroll_levels, sprite_data).
+        // Some games export runtime data via get_settings_data() which ends up in settings,
+        // but the rule references world.attribute_name.
+        if (rule.object?.type === 'name' && rule.object?.name === 'world' &&
+            baseObject && typeof baseObject === 'object' && baseObject[rule.attr] === undefined) {
+          if (context.getStaticData) {
+            const staticData = context.getStaticData();
+            const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+
+            if (staticData?.settings && staticData.settings[playerId]) {
+              const settingValue = staticData.settings[playerId][rule.attr];
+              if (settingValue !== undefined) {
+                return settingValue;
+              }
+            }
+          }
+        }
+
         // Special case: if baseObject is undefined and the object was "self",
         // try to resolve from game settings (self in Python rules = world/rules class instance with options)
         if (baseObject === undefined && rule.object && rule.object.type === 'name' && rule.object.name === 'self') {
