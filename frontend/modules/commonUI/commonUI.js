@@ -2049,6 +2049,70 @@ class CommonUI {
           } else {
             root.appendChild(document.createTextNode('()'));
           }
+
+          // Try to look up helper definition from static data for expand/collapse
+          let helperDef = null;
+          if (stateSnapshotInterface && typeof stateSnapshotInterface.getStaticData === 'function') {
+            const staticData = stateSnapshotInterface.getStaticData();
+            if (staticData?.helpers) {
+              // helpers is keyed by player ID, try common player IDs
+              const playerIds = ['1', '0', 1, 0];
+              for (const pid of playerIds) {
+                if (staticData.helpers[pid]?.[ruleName]) {
+                  helperDef = staticData.helpers[pid][ruleName];
+                  break;
+                }
+              }
+            }
+          }
+
+          // If we found a helper definition, add expand/collapse button
+          if (helperDef) {
+            const bodyContainer = document.createElement('div');
+            bodyContainer.style.marginLeft = '10px';
+            bodyContainer.style.marginTop = '4px';
+
+            const expandBtn = document.createElement('button');
+            expandBtn.textContent = '[+] Show helper body';
+            expandBtn.style.fontSize = '12px';
+            expandBtn.style.padding = '0 4px';
+            expandBtn.style.cursor = 'pointer';
+            expandBtn.style.border = '1px solid #666';
+            expandBtn.style.backgroundColor = '#333';
+            expandBtn.style.color = '#ccc';
+
+            let isExpanded = false;
+            const bodyTreeContainer = document.createElement('div');
+            bodyTreeContainer.style.display = 'none';
+            bodyTreeContainer.style.marginTop = '4px';
+
+            expandBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              isExpanded = !isExpanded;
+              if (isExpanded) {
+                expandBtn.textContent = '[-] Hide helper body';
+                bodyTreeContainer.style.display = 'block';
+                // Render body on first expand
+                if (bodyTreeContainer.children.length === 0) {
+                  // Helper definition can be in different formats:
+                  // 1. { body: {...}, params: [...] } - parameterized helper
+                  // 2. { type: 'or', conditions: [...] } - direct rule
+                  // 3. { statements: [...], type: 'block' } - block
+                  const bodyRule = helperDef.body || helperDef;
+                  bodyTreeContainer.appendChild(
+                    this.renderLogicTree(bodyRule, useColorblind, stateSnapshotInterface)
+                  );
+                }
+              } else {
+                expandBtn.textContent = '[+] Show helper body';
+                bodyTreeContainer.style.display = 'none';
+              }
+            });
+
+            bodyContainer.appendChild(expandBtn);
+            bodyContainer.appendChild(bodyTreeContainer);
+            root.appendChild(bodyContainer);
+          }
         } else {
           root.appendChild(document.createTextNode(' [unhandled Rule Builder type]'));
           // Show args if any
