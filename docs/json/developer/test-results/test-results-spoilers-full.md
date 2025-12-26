@@ -6,32 +6,32 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-26 07:20:10
+**Generated:** 2025-12-26 18:51:52
 
-**Source Data Created:** 2025-12-25T23:46:45.765789
+**Source Data Created:** 2025-12-26T18:10:12.190012
 
-**Source Data Last Updated:** 2025-12-25T23:46:45.765795
+**Source Data Last Updated:** 2025-12-26T18:10:12.190018
 
 ## Summary
 
 - **Total Games:** 72
-- **Passed:** 72 (100.0%)
-- **Failed:** 0 (0.0%)
-- **Games with Intermittent Failures:** 1
-- **Total Intermittent Failures:** 1
+- **Passed:** 62 (86.1%)
+- **Failed:** 10 (13.9%)
+- **Games with Intermittent Failures:** 0
+- **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/72 (40.3% of passed)
-- **Passing with Generic Logic:** 64/72 (88.9% of passed)
-- **Passing with Both Generic:** 29/72 (40.3% of passed)
+- **Passing with Generic Exporter:** 29/62 (46.8% of passed)
+- **Passing with Generic Logic:** 57/62 (91.9% of passed)
+- **Passing with Both Generic:** 29/62 (46.8% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 11.2KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 36.9KB | ✅ |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 33.2KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -46,7 +46,7 @@
 | ChocolateChipCookies | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
 | Civilization VI | ✅ Passed | 0 | 8.15 | 8.15 | 🟢 Complete | 7.8KB | ✅ |
-| DLCQuest | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 9.5KB | ✅ |
+| DLCQuest | ❌ Failed | 0 | 1.1 | 8.1 | 🟡 13.6% | 9.5KB | ✅ |
 | DOOM 1993 | ✅ Passed | 0 | 18.5 | 18.5 | 🟢 Complete | ✅ | ✅ |
 | DOOM II | ✅ Passed | 0 | 21.4 | 21.4 | 🟢 Complete | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | 4.5KB | ✅ |
@@ -57,12 +57,12 @@
 | Heretic | ✅ Passed | 0 | 24.4 | 24.4 | 🟢 Complete | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | 10.2 | 10.2 | 🟢 Complete | 8.0KB | ✅ |
-| Kingdom Hearts | ✅ Passed | 0 | 10.8 | 10.8 | 🟢 Complete | 57.9KB | 5.6KB |
+| Kingdom Hearts | ❌ Failed | 0 | 1.19 | 10.8 | 🟡 11.0% | 57.9KB | 5.6KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 33.8KB | 105.3KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 18.7KB | 9.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 16.0KB | ✅ |
-| Lingo | ✅ Passed | 0 | 6.12 | 6.12 | 🟢 Complete | 41.3KB | 10.7KB |
-| Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 17.5KB | ✅ |
+| Lingo | ❌ Failed | 0 | 0 | 6.12 | 🔴 0.0% | 41.3KB | 10.7KB |
+| Links Awakening DX | ❌ Failed | 1 | 15.1 | 15.1 | 🟡 100.0% | 17.5KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.16 | 4.16 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 8.8 | 8.8 | 🟢 Complete | 0.3KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
@@ -72,7 +72,7 @@
 | Metamath | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Muse Dash | ✅ Passed | 0 | 8.6 | 8.6 | 🟢 Complete | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | 0.117 | 0.117 | 🟢 Complete | ✅ | ✅ |
-| Old School Runescape | ✅ Passed | 0 | 7.6 | 7.6 | 🟢 Complete | 6.0KB | ✅ |
+| Old School Runescape | ❌ Failed | 0 | 2.1 | 7.6 | 🟡 27.6% | 6.0KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | 18.3 | 18.3 | 🟢 Complete | 30.0KB | 6.7KB |
 | Paint | ✅ Passed | 0 | 13.2 | 13.2 | 🟢 Complete | 7.1KB | ✅ |
 | Raft | ✅ Passed | 0 | 11.6 | 11.6 | 🟢 Complete | 12.0KB | ✅ |
@@ -83,11 +83,11 @@
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.18 | 7.18 | 🟢 Complete | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 86.8KB | 86.3KB |
 | Stardew Valley | ✅ Passed | 0 | 44.2 | 44.2 | 🟢 Complete | 20.9KB | 10.7KB |
-| Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 7.5KB | ✅ |
+| Subnautica | ❌ Failed | 0 | 0 | 6.1 | 🔴 0.0% | 7.5KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 13.9KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.12 | 8.12 | 🟢 Complete | ✅ | ✅ |
-| Super Metroid | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 71.9KB | 114.6KB |
+| Super Metroid | ❌ Failed | 0 | 0.2 | 7.3 | 🟠 2.7% | 71.9KB | 114.6KB |
 | TOEM original | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | ✅ | ✅ |
 | Terraria | ✅ Passed | 0 | 9.6 | 9.6 | 🟢 Complete | 19.3KB | ✅ |
@@ -95,22 +95,13 @@
 | The Messenger | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 11.6KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 5.4KB | ✅ |
 | The Witness | ✅ Passed | 0 | 9.15 | 9.15 | 🟢 Complete | 28.4KB | ✅ |
-| Timespinner | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 4.5KB | ✅ |
+| Timespinner | ❌ Failed | 0 | 2.7 | 7.3 | 🟡 37.0% | 4.5KB | ✅ |
 | Undertale | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
-| VVVVVV | ✅ Passed | 0 | 3.4 | 3.4 | 🟢 Complete | 5.4KB | ✅ |
+| VVVVVV | ❌ Failed | 0 | 0 | 3.4 | 🔴 0.0% | 5.4KB | ✅ |
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 9.3KB | ✅ |
 | WebDevJourney | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
-| Yoshi's Island | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 11.7KB | ✅ |
+| Yoshi's Island | ❌ Failed | 0 | 0 | 13.1 | 🔴 0.0% | 11.7KB | ✅ |
 | shapez | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
-
-## Intermittent Failures
-
-These seeds were previously failing but passed during a retest run:
-
-| Template | Seed | Timestamp | Notes |
-|----------|------|-----------|-------|
-| Kirby's Dream Land 3 | 1 | 2025-12-25 23:46 | Previously failed, now passing |
-
 
 ## Notes
 
