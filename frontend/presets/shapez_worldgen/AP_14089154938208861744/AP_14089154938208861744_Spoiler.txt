@@ -17,6 +17,27 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Allow floating layers:           No
+Early balancer, tunnel, and trash:3 Buildings
+Exclude long playtime achievements:No
+Exclude progression items in softlock and long playtime achievements:No
+Exclude softlock achievements:   No
+Goal:                            Vanilla
+Goal amount:                     27
+Include Achievements:            No
+Include Whacky Upgrades:         No
+Lock Belt and Extractor:         No
+Randomize level logic:           Stretched
+Randomize level requirements:    No
+Randomize upgrade logic:         Linear
+Randomize upgrade requirements:  No
+Required shapes multiplier:      10
+Same late upgrade requirements:  No
+Shapesanity amount:              50
+Split Inventory Draining Trap:   No
+Throughput levels ratio:         0
+Toolbar Shuffling:               No
+Traps Percentage:                0
 
 
 Starting Items:

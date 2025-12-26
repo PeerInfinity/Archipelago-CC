@@ -19,7 +19,7 @@
   },
   "A Link to the Past": {
     "exporter_path": "exporter/games/alttp.py",
-    "exporter_size": 37386,
+    "exporter_size": 37739,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -827,6 +827,15 @@
     "has_custom_game_logic": false,
     "world_directory": "osrs"
   },
+  "Old School Runescape WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "osrs_worldgen"
+  },
   "Overcooked! 2": {
     "exporter_path": "exporter/games/overcooked2.py",
     "exporter_size": 30674,
@@ -1027,12 +1036,21 @@
   },
   "Starcraft 2": {
     "exporter_path": "exporter/games/sc2.py",
-    "exporter_size": 74682,
+    "exporter_size": 81350,
     "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
     "game_logic_size": 88384,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "sc2"
+  },
+  "Starcraft 2 WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "sc2_worldgen"
   },
   "Stardew Valley": {
     "exporter_path": "exporter/games/stardew_valley.py",
@@ -1105,6 +1123,15 @@
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "marioland2"
+  },
+  "Super Mario Land 2 WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "marioland2_worldgen"
   },
   "Super Mario World": {
     "exporter_path": null,
@@ -1339,6 +1366,15 @@
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "v6"
+  },
+  "VVVVVV WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "v6_worldgen"
   },
   "Wargroove": {
     "exporter_path": "exporter/games/wargroove.py",
