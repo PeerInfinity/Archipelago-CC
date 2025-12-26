@@ -25,14 +25,14 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     COMPUTED_HELPERS = {'can_buy', 'can_buy_unlimited', 'can_defeat_boss'}
     AUTO_PRESERVE_COMPUTED_HELPERS = True
 
-    # Simple world attributes that can be automatically exported via base class
-    # These are runtime-computed values on the world instance, not user-configurable options
-    WORLD_ATTRIBUTES = {
-        'treasure_hunt_required': lambda w, m, p: getattr(w, 'treasure_hunt_required', 0),
-        'can_take_damage': lambda w, m, p: getattr(w, 'can_take_damage', True),
-        'logical_heart_pieces': lambda w, m, p: getattr(w, 'logical_heart_pieces', 24),
-        'logical_heart_containers': lambda w, m, p: getattr(w, 'logical_heart_containers', 10),
-    }
+    # NOTE: Simple world attributes are now auto-discovered by the base exporter.
+    # Previously defined here but no longer needed:
+    # WORLD_ATTRIBUTES = {
+    #     'treasure_hunt_required': lambda w, m, p: getattr(w, 'treasure_hunt_required', 0),
+    #     'can_take_damage': lambda w, m, p: getattr(w, 'can_take_damage', True),
+    #     'logical_heart_pieces': lambda w, m, p: getattr(w, 'logical_heart_pieces', 24),
+    #     'logical_heart_containers': lambda w, m, p: getattr(w, 'logical_heart_containers', 10),
+    # }
 
     # Complex helpers that can't be exported (need JavaScript implementations)
     # NOTE: Use set() for empty blacklist - {} creates an empty dict!
@@ -494,41 +494,18 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     def get_world_attributes(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract ALTTP world attributes (computed runtime values).
 
-        These are values computed at runtime on the world instance, not
-        user-configurable options.
+        Most attributes are now auto-discovered by the base exporter:
+        - Simple types (int, bool, str, float) from world instance
+        - Class-level annotated attributes with defaults
+        - Nested objects with simple attributes (e.g., difficulty_requirements)
+        - Enum values (serialized to their .value)
+        - Lists of simple types or enums (e.g., required_medallions)
+
+        This override only handles shop_items which requires custom logic
+        to iterate over world.shops and build a structured data format.
         """
-        # Get base world attributes (from WORLD_ATTRIBUTES: treasure_hunt_required,
-        # can_take_damage, logical_heart_pieces, logical_heart_containers)
+        # Get base world attributes (auto-discovered from world instance)
         world_attributes = super().get_world_attributes(world, multiworld, player)
-
-        # Difficulty requirements
-        if hasattr(world, 'difficulty_requirements'):
-            world_attributes['difficulty_requirements'] = {
-                'progressive_bottle_limit': getattr(world.difficulty_requirements, 'progressive_bottle_limit', None),
-                'boss_heart_container_limit': getattr(world.difficulty_requirements, 'boss_heart_container_limit', None),
-                'heart_piece_limit': getattr(world.difficulty_requirements, 'heart_piece_limit', None),
-            }
-        else:
-            world_attributes['difficulty_requirements'] = {}
-
-        # Medallions
-        if hasattr(world, 'required_medallions'):
-            medallion_names = []
-            for med in world.required_medallions:
-                med_name = getattr(med, 'name', None)
-                if med_name is None:
-                    med_name = getattr(med, 'value', str(med))
-                medallion_names.append(med_name)
-
-            world_attributes['required_medallions'] = medallion_names
-            mire_med = getattr(world, 'misery_mire_medallion', medallion_names[0] if medallion_names else None)
-            tr_med = getattr(world, 'turtle_rock_medallion', medallion_names[1] if len(medallion_names) > 1 else None)
-            world_attributes['misery_mire_medallion'] = getattr(mire_med, 'value', str(mire_med))
-            world_attributes['turtle_rock_medallion'] = getattr(tr_med, 'value', str(tr_med))
-        else:
-            world_attributes['required_medallions'] = []
-            world_attributes['misery_mire_medallion'] = None
-            world_attributes['turtle_rock_medallion'] = None
 
         # Shop item data - maps items to regions where shops sell them
         # Enables can_buy and can_buy_unlimited helper implementation

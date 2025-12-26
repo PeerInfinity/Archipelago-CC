@@ -803,6 +803,144 @@ class BaseGameExportHandler:
                 except Exception as e:
                     logger.warning(f"Failed to compute world attribute '{attr_name}': {e}")
 
+        # Auto-discover simple world attributes from the world instance
+        # This extracts runtime-computed values without requiring explicit WORLD_ATTRIBUTES entries
+        skip_attrs = {
+            # Internal/infrastructure attributes
+            'player', 'multiworld', 'options', 'random', 'options_dataclass',
+            # World class infrastructure
+            'game', 'topology_present', 'web', 'required_client_version',
+            'origin_region_name', 'explicit_indirect_conditions',
+            # Item/location infrastructure
+            'item_name_to_id', 'location_name_to_id', 'item_id_to_name', 'location_id_to_name',
+            'item_names', 'location_names', 'item_name_groups', 'location_name_groups',
+            # Other common internal attributes
+            'slot_data', 'settings_key', 'hint_blacklist',
+        }
+
+        def get_serializable_value(value: Any) -> Any:
+            """Convert a value to a JSON-serializable form, or return None if not possible."""
+            # Check bool before int (bool is subclass of int)
+            if isinstance(value, bool):
+                return value
+            elif isinstance(value, (int, float, str)):
+                return value
+            elif isinstance(value, enum.Enum):
+                # For enums, prefer .value (usually the serializable form)
+                return value.value if hasattr(value, 'value') else str(value)
+            elif isinstance(value, (list, tuple)):
+                # Namedtuples should be handled by extract_nested_attributes, not as lists
+                if hasattr(value, '_fields'):
+                    return None
+                result = []
+                for v in value:
+                    converted = get_serializable_value(v)
+                    if converted is None:
+                        return None  # Can't serialize this list
+                    result.append(converted)
+                return result
+            return None
+
+        def extract_nested_attributes(obj: Any) -> Optional[Dict[str, Any]]:
+            """Extract simple attributes from an object as a nested dict."""
+            if obj is None:
+                return None
+
+            result = {}
+
+            # Check for namedtuple FIRST (before tuple check, since namedtuples are tuples)
+            if hasattr(obj, '_fields'):
+                for field in obj._fields:
+                    if field.startswith('_'):
+                        continue
+                    try:
+                        val = getattr(obj, field, None)
+                        if val is None:
+                            continue
+                        serialized = get_serializable_value(val)
+                        if serialized is not None:
+                            result[field] = serialized
+                    except Exception:
+                        pass
+                return result if result else None
+
+            # Skip if it's a simple type (already handled by get_serializable_value)
+            if isinstance(obj, (bool, int, float, str, list, tuple, enum.Enum)):
+                return None
+            # Skip common complex types that shouldn't be extracted
+            if isinstance(obj, (type, collections.abc.Callable)):
+                return None
+
+            # Try to get attributes from __dict__ or __slots__
+            attrs_to_check = []
+            if hasattr(obj, '__dict__'):
+                attrs_to_check = list(obj.__dict__.keys())
+            elif hasattr(obj, '__slots__'):
+                attrs_to_check = list(obj.__slots__)
+
+            for attr in attrs_to_check:
+                if attr.startswith('_'):
+                    continue
+                try:
+                    val = getattr(obj, attr, None)
+                    if val is None:
+                        continue
+                    serialized = get_serializable_value(val)
+                    if serialized is not None:
+                        result[attr] = serialized
+                except Exception:
+                    pass
+
+            return result if result else None
+
+        def try_add_attribute(attr_name: str, value: Any) -> bool:
+            """Try to add an attribute if it's a simple JSON-serializable type."""
+            if attr_name.startswith('_'):
+                return False
+            if attr_name in skip_attrs:
+                return False
+            if attr_name in world_attributes:
+                return False
+
+            # Try to get a serializable value
+            serialized = get_serializable_value(value)
+            if serialized is not None:
+                world_attributes[attr_name] = serialized
+                logger.debug(f"Auto-discovered world attribute '{attr_name}': {serialized}")
+                return True
+
+            # Try to extract nested attributes (one level deep)
+            nested = extract_nested_attributes(value)
+            if nested is not None:
+                world_attributes[attr_name] = nested
+                logger.debug(f"Auto-discovered nested world attribute '{attr_name}': {nested}")
+                return True
+
+            return False
+
+        # Get instance attributes (set on self)
+        if hasattr(world, '__dict__'):
+            for attr_name, value in world.__dict__.items():
+                try_add_attribute(attr_name, value)
+
+        # Also check class-level attributes with type annotations (e.g., can_take_damage: bool = True)
+        # These are defaults that may not be set on the instance
+        world_class = type(world)
+        if hasattr(world_class, '__annotations__'):
+            for attr_name, attr_type in world_class.__annotations__.items():
+                if attr_name in world_attributes:
+                    continue  # Already discovered from instance
+                if attr_name in skip_attrs:
+                    continue
+                # Only include simple annotated types
+                if attr_type in (bool, int, float, str):
+                    try:
+                        value = getattr(world, attr_name, None)
+                        if value is not None:
+                            try_add_attribute(attr_name, value)
+                    except Exception:
+                        pass
+
         # For worldgen worlds, load world_attributes from _worldgen_settings.json
         # This is needed because worldgen worlds store computed attributes there
         module_path = type(world).__module__
