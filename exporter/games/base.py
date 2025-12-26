@@ -53,6 +53,16 @@ class BaseGameExportHandler:
     # Games must explicitly set this to True to enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS: bool = False
 
+    # Whether to auto-discover and export all simple region attributes
+    # When False (default), only dynamically_added is exported
+    # When True, all simple attributes (bool, int, float, str) are exported
+    AUTO_DISCOVER_REGION_ATTRIBUTES: bool = False
+
+    # Whether to auto-discover and export all simple location attributes
+    # When False (default), no attributes are exported
+    # When True, all simple attributes (bool, int, float, str) are exported
+    AUTO_DISCOVER_LOCATION_ATTRIBUTES: bool = False
+
     # Set of helper function names to export as definitions (manual whitelist)
     # These helpers are always exported regardless of AUTO_EXPORT_DISCOVERED_HELPERS
     HELPERS_TO_EXPORT_WHITELIST: Set[str] = set()
@@ -941,8 +951,17 @@ class BaseGameExportHandler:
             'slot_data', 'settings_key', 'hint_blacklist',
         }
 
-        def get_serializable_value(value: Any) -> Any:
-            """Convert a value to a JSON-serializable form, or return None if not possible."""
+        def get_serializable_value(value: Any, depth: int = 0) -> Any:
+            """Convert a value to a JSON-serializable form, or return None if not possible.
+
+            Args:
+                value: The value to serialize
+                depth: Current recursion depth (to prevent infinite recursion)
+            """
+            # Prevent infinite recursion (5 levels: list -> object -> list -> dict -> value)
+            if depth > 5:
+                return None
+
             # Check bool before int (bool is subclass of int)
             if isinstance(value, bool):
                 return value
@@ -951,22 +970,51 @@ class BaseGameExportHandler:
             elif isinstance(value, enum.Enum):
                 # For enums, prefer .value (usually the serializable form)
                 return value.value if hasattr(value, 'value') else str(value)
+            elif isinstance(value, dict):
+                # Serialize dicts recursively
+                result = {}
+                for k, v in value.items():
+                    if not isinstance(k, str):
+                        continue  # Skip non-string keys
+                    converted = get_serializable_value(v, depth + 1)
+                    if converted is not None:
+                        result[k] = converted
+                return result if result else None
             elif isinstance(value, (list, tuple)):
                 # Namedtuples should be handled by extract_nested_attributes, not as lists
                 if hasattr(value, '_fields'):
                     return None
                 result = []
                 for v in value:
-                    converted = get_serializable_value(v)
+                    # None elements are valid in JSON (as null)
+                    if v is None:
+                        result.append(None)
+                        continue
+                    converted = get_serializable_value(v, depth + 1)
+                    if converted is None:
+                        # Try extracting as a complex object
+                        converted = extract_nested_attributes(v, depth + 1)
                     if converted is None:
                         return None  # Can't serialize this list
                     result.append(converted)
                 return result
+            # For objects with a 'name' attribute (like Region, Location), just use the name
+            elif hasattr(value, 'name') and isinstance(getattr(value, 'name', None), str):
+                return value.name
             return None
 
-        def extract_nested_attributes(obj: Any) -> Optional[Dict[str, Any]]:
-            """Extract simple attributes from an object as a nested dict."""
+        def extract_nested_attributes(obj: Any, depth: int = 0) -> Optional[Dict[str, Any]]:
+            """Extract simple attributes from an object as a nested dict.
+
+            Args:
+                obj: The object to extract attributes from
+                depth: Current recursion depth (to prevent infinite recursion)
+            """
             if obj is None:
+                return None
+
+            # Prevent infinite recursion (5 levels: list -> object -> list -> dict -> value)
+            if depth > 5:
                 return None
 
             result = {}
@@ -980,7 +1028,7 @@ class BaseGameExportHandler:
                         val = getattr(obj, field, None)
                         if val is None:
                             continue
-                        serialized = get_serializable_value(val)
+                        serialized = get_serializable_value(val, depth + 1)
                         if serialized is not None:
                             result[field] = serialized
                     except Exception:
@@ -988,7 +1036,7 @@ class BaseGameExportHandler:
                 return result if result else None
 
             # Skip if it's a simple type (already handled by get_serializable_value)
-            if isinstance(obj, (bool, int, float, str, list, tuple, enum.Enum)):
+            if isinstance(obj, (bool, int, float, str, list, tuple, dict, enum.Enum)):
                 return None
             # Skip common complex types that shouldn't be extracted
             if isinstance(obj, (type, collections.abc.Callable)):
@@ -1008,7 +1056,7 @@ class BaseGameExportHandler:
                     val = getattr(obj, attr, None)
                     if val is None:
                         continue
-                    serialized = get_serializable_value(val)
+                    serialized = get_serializable_value(val, depth + 1)
                     if serialized is not None:
                         result[attr] = serialized
                 except Exception:
@@ -1171,8 +1219,13 @@ class BaseGameExportHandler:
 
     def get_region_attributes(self, region) -> Dict[str, Any]:
         """
-        Get game-specific region attributes to include in the export.
-        This is called for each region during processing.
+        Get region attributes to include in the export.
+
+        When AUTO_DISCOVER_REGION_ATTRIBUTES is True, auto-discovers simple attributes
+        (bool, int, float, str) from the region object, including class-level annotated
+        attributes with defaults.
+
+        When False (default), only exports dynamically_added if set.
 
         Args:
             region: The region object being processed
@@ -1182,17 +1235,64 @@ class BaseGameExportHandler:
         """
         attributes = {}
 
-        # Check for dynamically_added attribute (set by worldgen for regions
-        # that were added after sphere calculation in the original world)
+        # Always check for dynamically_added attribute
         if getattr(region, 'dynamically_added', False):
             attributes['dynamically_added'] = True
+
+        # Only do full auto-discovery if enabled
+        if not self.AUTO_DISCOVER_REGION_ATTRIBUTES:
+            return attributes
+
+        # Attributes to skip (base Region class infrastructure)
+        skip_attrs = {
+            'name', 'player', 'multiworld',  # Already exported or known
+            'entrances', 'exits', 'locations',  # Complex objects, exported separately
+            'entrance_type',  # Class variable
+            'dynamically_added',  # Already handled above
+        }
+
+        # Collect attributes to check from multiple sources
+        attrs_to_check = set()
+
+        # Instance attributes (set on self)
+        if hasattr(region, '__dict__'):
+            attrs_to_check.update(region.__dict__.keys())
+
+        # Class-level annotated attributes (e.g., is_light_world: bool = False)
+        for cls in type(region).__mro__:
+            if hasattr(cls, '__annotations__'):
+                attrs_to_check.update(cls.__annotations__.keys())
+
+        for attr_name in sorted(attrs_to_check):
+            if attr_name.startswith('_'):
+                continue
+            if attr_name in skip_attrs:
+                continue
+
+            try:
+                value = getattr(region, attr_name, None)
+                if value is None:
+                    continue
+
+                # Only export simple JSON-serializable types
+                if isinstance(value, bool):
+                    attributes[attr_name] = value
+                elif isinstance(value, (int, float, str)):
+                    attributes[attr_name] = value
+            except Exception:
+                pass
 
         return attributes
 
     def get_location_attributes(self, location, world) -> Dict[str, Any]:
         """
-        Get game-specific location attributes to include in the export.
-        This is called for each location during processing.
+        Get location attributes to include in the export.
+
+        When AUTO_DISCOVER_LOCATION_ATTRIBUTES is True, auto-discovers simple attributes
+        (bool, int, float, str) from the location object, including class-level annotated
+        attributes with defaults.
+
+        When False (default), no attributes are exported.
 
         Args:
             location: The location object being processed
@@ -1201,8 +1301,54 @@ class BaseGameExportHandler:
         Returns:
             A dictionary of attributes to add to the location data
         """
-        # Base implementation returns no additional attributes
-        return {}
+        attributes = {}
+
+        # Only do full auto-discovery if enabled
+        if not self.AUTO_DISCOVER_LOCATION_ATTRIBUTES:
+            return attributes
+
+        # Attributes to skip (base Location class infrastructure)
+        skip_attrs = {
+            'name', 'player', 'game',  # Already exported or known
+            'address',  # Internal implementation detail
+            'parent_region',  # Complex object, exported separately
+            'locked', 'show_in_spoiler', 'progress_type',  # Internal state
+            'always_allow', 'access_rule', 'item_rule',  # Rules, exported separately
+            'item',  # Complex object
+        }
+
+        # Collect attributes to check from multiple sources
+        attrs_to_check = set()
+
+        # Instance attributes (set on self)
+        if hasattr(location, '__dict__'):
+            attrs_to_check.update(location.__dict__.keys())
+
+        # Class-level annotated attributes (e.g., some_flag: bool = False)
+        for cls in type(location).__mro__:
+            if hasattr(cls, '__annotations__'):
+                attrs_to_check.update(cls.__annotations__.keys())
+
+        for attr_name in sorted(attrs_to_check):
+            if attr_name.startswith('_'):
+                continue
+            if attr_name in skip_attrs:
+                continue
+
+            try:
+                value = getattr(location, attr_name, None)
+                if value is None:
+                    continue
+
+                # Only export simple JSON-serializable types
+                if isinstance(value, bool):
+                    attributes[attr_name] = value
+                elif isinstance(value, (int, float, str)):
+                    attributes[attr_name] = value
+            except Exception:
+                pass
+
+        return attributes
 
     def preprocess_world_data(self, world, export_data: Dict[str, Any], player: int) -> None:
         """
