@@ -225,6 +225,35 @@ def extract_game_name_from_content(content: str, filename: str = "<string>") -> 
     try:
         tree = ast.parse(content, filename=filename)
 
+        # First, build a dictionary of module-level dict definitions
+        # to handle patterns like: game = json_world["game_name"]
+        module_dicts = {}
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Assign):
+                for target in node.targets:
+                    if isinstance(target, ast.Name) and isinstance(node.value, ast.Dict):
+                        # Extract string keys and their string values
+                        dict_values = {}
+                        for key, val in zip(node.value.keys, node.value.values):
+                            if key is not None:
+                                key_str = None
+                                if isinstance(key, ast.Constant) and isinstance(key.value, str):
+                                    key_str = key.value
+                                elif isinstance(key, ast.Str):
+                                    key_str = key.s
+
+                                if key_str:
+                                    val_str = None
+                                    if isinstance(val, ast.Constant) and isinstance(val.value, str):
+                                        val_str = val.value
+                                    elif isinstance(val, ast.Str):
+                                        val_str = val.s
+                                    if val_str:
+                                        dict_values[key_str] = val_str
+
+                        if dict_values:
+                            module_dicts[target.id] = dict_values
+
         # Look for World class and its 'game' attribute
         for node in ast.walk(tree):
             if isinstance(node, ast.ClassDef):
@@ -237,22 +266,44 @@ def extract_game_name_from_content(content: str, filename: str = "<string>") -> 
                 if is_world_class:
                     # Look for 'game' attribute in the class
                     for item in node.body:
+                        game_value = None
                         if isinstance(item, ast.AnnAssign):
                             # Handle: game: str = "value" or game: ClassVar[str] = "value"
                             if isinstance(item.target, ast.Name) and item.target.id == 'game':
-                                if item.value:
-                                    if isinstance(item.value, ast.Constant) and isinstance(item.value.value, str):
-                                        return item.value.value
-                                    elif isinstance(item.value, ast.Str):
-                                        return item.value.s
+                                game_value = item.value
                         elif isinstance(item, ast.Assign):
                             # Handle: game = "value"
                             for target in item.targets:
                                 if isinstance(target, ast.Name) and target.id == 'game':
-                                    if isinstance(item.value, ast.Constant) and isinstance(item.value.value, str):
-                                        return item.value.value
-                                    elif isinstance(item.value, ast.Str):
-                                        return item.value.s
+                                    game_value = item.value
+                                    break
+
+                        if game_value:
+                            # Direct string literal
+                            if isinstance(game_value, ast.Constant) and isinstance(game_value.value, str):
+                                return game_value.value
+                            elif isinstance(game_value, ast.Str):
+                                return game_value.s
+                            # Dictionary subscript: game = some_dict["key"]
+                            elif isinstance(game_value, ast.Subscript):
+                                if isinstance(game_value.value, ast.Name):
+                                    dict_name = game_value.value.id
+                                    if dict_name in module_dicts:
+                                        # Get the key being accessed
+                                        key = None
+                                        if isinstance(game_value.slice, ast.Constant) and isinstance(game_value.slice.value, str):
+                                            key = game_value.slice.value
+                                        elif isinstance(game_value.slice, ast.Str):
+                                            key = game_value.slice.s
+                                        elif isinstance(game_value.slice, ast.Index):  # Python 3.8 compatibility
+                                            idx = game_value.slice.value
+                                            if isinstance(idx, ast.Constant) and isinstance(idx.value, str):
+                                                key = idx.value
+                                            elif isinstance(idx, ast.Str):
+                                                key = idx.s
+
+                                        if key and key in module_dicts[dict_name]:
+                                            return module_dicts[dict_name][key]
 
         return None
     except (SyntaxError, ValueError) as e:
