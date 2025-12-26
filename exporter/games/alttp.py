@@ -20,6 +20,11 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     # ALTTP exits are bidirectional - going through an entrance implies being able to return
     ASSUME_BIDIRECTIONAL_EXITS = True
 
+    # Computed helpers defined in get_helper_definitions() rather than from helper modules
+    # These are auto-preserved when AUTO_PRESERVE_COMPUTED_HELPERS is True
+    COMPUTED_HELPERS = {'can_buy', 'can_buy_unlimited', 'can_defeat_boss'}
+    AUTO_PRESERVE_COMPUTED_HELPERS = True
+
     # Simple world attributes that can be automatically exported via base class
     COMPUTED_SETTINGS = {
         'treasure_hunt_required': lambda w, m, p: getattr(w, 'treasure_hunt_required', 0),
@@ -69,16 +74,11 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     }
 
     # Helpers that should be preserved as helper calls (not inlined by generic pattern matching)
-    # These are either:
-    # - Complex helpers that are exported as definitions via get_helper_definitions()
-    # - Computed helpers defined directly in get_helper_definitions()
-    # All discovered helpers are automatically exported as definitions when
-    # AUTO_EXPORT_DISCOVERED_HELPERS = True, so this set just controls which
-    # helpers are preserved as calls vs potentially inlined by pattern matching.
+    # These are complex helpers exported as definitions via get_helper_definitions().
+    # Note: Computed helpers (can_buy, can_buy_unlimited, can_defeat_boss) are now
+    # auto-preserved via COMPUTED_HELPERS + AUTO_PRESERVE_COMPUTED_HELPERS.
     HELPERS_TO_PRESERVE = {
         'GanonDefeatRule',
-        'can_buy',  # Computed helper using shop_items data
-        'can_buy_unlimited',  # Computed helper using shop_items data
         'can_extend_magic',
         'can_get_good_bee',  # Uses region_reference and is_not_bunny
         'is_not_bunny',  # Takes region parameter, uses region_attribute
@@ -89,7 +89,6 @@ class ALttPGameExportHandler(BaseGameExportHandler):
         'has_hearts',  # Exported with logical_heart settings
         'has_misery_mire_medallion',  # Exported with setting_value index support
         'has_turtle_rock_medallion',  # Exported with setting_value index support
-        'can_defeat_boss',  # Computed helper for GT multi-boss locations
         'orig_rule',  # Internal helper that doesn't appear in final export
     }
     
