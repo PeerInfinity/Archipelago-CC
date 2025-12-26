@@ -34,10 +34,19 @@
             "name": "Old Man S&Q",
             "connected_region": "Old Man House",
             "access_rule": {
-              "rule": "CanReachLocation",
+              "rule": "AST_function_call",
               "args": {
-                "location_name": "Old Man"
-              }
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "can_reach"
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -12976,116 +12985,8 @@
                                   "args": {
                                     "item_name": "Small Key (Turtle Rock)",
                                     "count": {
-                                      "rule": "Conditional",
-                                      "args": {
-                                        "test": {
-                                          "rule": "Compare",
-                                          "args": {
-                                            "left": {
-                                              "rule": "AST_placement_lookup",
-                                              "args": {
-                                                "location": "Turtle Rock - Big Key Chest",
-                                                "_original_ast_type": "placement_lookup"
-                                              },
-                                              "_converted_from_ast": true
-                                            },
-                                            "op": "==",
-                                            "right": {
-                                              "rule": "List",
-                                              "args": {
-                                                "value": [
-                                                  {
-                                                    "rule": "Constant",
-                                                    "args": {
-                                                      "value": "Small Key (Turtle Rock)"
-                                                    },
-                                                    "_converted_from_ast": true
-                                                  },
-                                                  {
-                                                    "rule": "Constant",
-                                                    "args": {
-                                                      "value": 1
-                                                    },
-                                                    "_converted_from_ast": true
-                                                  }
-                                                ],
-                                                "_original_ast_type": "list"
-                                              },
-                                              "_converted_from_ast": true
-                                            },
-                                            "_original_ast_type": "compare"
-                                          },
-                                          "_converted_from_ast": true
-                                        },
-                                        "if_true": {
-                                          "rule": "Constant",
-                                          "args": {
-                                            "value": 0
-                                          },
-                                          "_converted_from_ast": true
-                                        },
-                                        "if_false": {
-                                          "rule": "Conditional",
-                                          "args": {
-                                            "test": {
-                                              "rule": "Compare",
-                                              "args": {
-                                                "left": {
-                                                  "rule": "AST_placement_lookup",
-                                                  "args": {
-                                                    "location": "Turtle Rock - Big Key Chest",
-                                                    "_original_ast_type": "placement_lookup"
-                                                  },
-                                                  "_converted_from_ast": true
-                                                },
-                                                "op": "==",
-                                                "right": {
-                                                  "rule": "List",
-                                                  "args": {
-                                                    "value": [
-                                                      {
-                                                        "rule": "Constant",
-                                                        "args": {
-                                                          "value": "Big Key (Turtle Rock)"
-                                                        },
-                                                        "_converted_from_ast": true
-                                                      },
-                                                      {
-                                                        "rule": "Constant",
-                                                        "args": {
-                                                          "value": 1
-                                                        },
-                                                        "_converted_from_ast": true
-                                                      }
-                                                    ],
-                                                    "_original_ast_type": "list"
-                                                  },
-                                                  "_converted_from_ast": true
-                                                },
-                                                "_original_ast_type": "compare"
-                                              },
-                                              "_converted_from_ast": true
-                                            },
-                                            "if_true": {
-                                              "rule": "Constant",
-                                              "args": {
-                                                "value": 4
-                                              },
-                                              "_converted_from_ast": true
-                                            },
-                                            "if_false": {
-                                              "rule": "Constant",
-                                              "args": {
-                                                "value": 6
-                                              },
-                                              "_converted_from_ast": true
-                                            },
-                                            "_original_ast_type": "conditional"
-                                          },
-                                          "_converted_from_ast": true
-                                        },
-                                        "_original_ast_type": "conditional"
-                                      },
+                                      "rule": "tr_big_key_chest_keys_needed",
+                                      "_original_ast_type": "helper",
                                       "_converted_from_ast": true
                                     }
                                   }
@@ -21529,6 +21430,10 @@
           "display_name": "Underworld Palette"
         }
       },
+      "treasure_hunt_required": 0,
+      "can_take_damage": true,
+      "logical_heart_pieces": 24,
+      "logical_heart_containers": 10,
       "has_progressive_bows": true,
       "waterfall_fairy_bottle_fill": "Bottle (Red Potion)",
       "pyramid_fairy_bottle_fill": "Bottle (Good Bee)",
@@ -21541,345 +21446,14 @@
         "Ether"
       ],
       "escape_assist": [],
-      "logical_heart_containers": 10,
-      "logical_heart_pieces": 24,
       "er_seed": "vanilla",
       "difficulty_requirements": {
-        "baseitems": [
-          "Single Arrow",
-          "Sanctuary Heart Container",
-          "Arrows (10)",
-          "Bombs (10)",
-          "Rupees (300)",
-          "Rupees (300)",
-          "Rupees (300)",
-          "Boss Heart Container",
-          "Boss Heart Container",
-          "Boss Heart Container",
-          "Boss Heart Container",
-          "Boss Heart Container",
-          "Boss Heart Container",
-          "Boss Heart Container",
-          "Boss Heart Container",
-          "Boss Heart Container",
-          "Boss Heart Container",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart",
-          "Piece of Heart"
-        ],
-        "bottles": [
-          "Bottle",
-          "Bottle (Red Potion)",
-          "Bottle (Green Potion)",
-          "Bottle (Blue Potion)",
-          "Bottle (Fairy)",
-          "Bottle (Bee)",
-          "Bottle (Good Bee)"
-        ],
-        "bottle_count": 4,
-        "same_bottle": false,
-        "progressiveshield": [
-          "Progressive Shield",
-          "Progressive Shield",
-          "Progressive Shield"
-        ],
-        "basicshield": [
-          "Blue Shield",
-          "Red Shield",
-          "Mirror Shield"
-        ],
-        "progressivearmor": [
-          "Progressive Mail",
-          "Progressive Mail"
-        ],
-        "basicarmor": [
-          "Blue Mail",
-          "Red Mail"
-        ],
-        "swordless": [
-          "Rupees (20)",
-          "Rupees (20)",
-          "Rupees (20)",
-          "Rupees (20)"
-        ],
-        "progressivemagic": [
-          "Magic Upgrade (1/2)",
-          "Rupees (300)"
-        ],
-        "basicmagic": [
-          "Magic Upgrade (1/2)",
-          "Rupees (300)"
-        ],
-        "progressivesword": [
-          "Progressive Sword",
-          "Progressive Sword",
-          "Progressive Sword",
-          "Progressive Sword"
-        ],
-        "basicsword": [
-          "Fighter Sword",
-          "Master Sword",
-          "Tempered Sword",
-          "Golden Sword"
-        ],
-        "progressivebow": [
-          "Progressive Bow",
-          "Progressive Bow"
-        ],
-        "basicbow": [
-          "Bow",
-          "Silver Bow"
-        ],
-        "timedohko": [
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock"
-        ],
-        "timedother": [
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Green Clock",
-          "Blue Clock",
-          "Blue Clock",
-          "Blue Clock",
-          "Blue Clock",
-          "Blue Clock",
-          "Blue Clock",
-          "Blue Clock",
-          "Blue Clock",
-          "Blue Clock",
-          "Blue Clock",
-          "Red Clock",
-          "Red Clock",
-          "Red Clock",
-          "Red Clock",
-          "Red Clock",
-          "Red Clock",
-          "Red Clock",
-          "Red Clock",
-          "Red Clock",
-          "Red Clock"
-        ],
-        "progressiveglove": [
-          "Progressive Glove",
-          "Progressive Glove"
-        ],
-        "basicglove": [
-          "Power Glove",
-          "Titans Mitts"
-        ],
-        "alwaysitems": [
-          "Bombos",
-          "Book of Mudora",
-          "Cane of Somaria",
-          "Ether",
-          "Fire Rod",
-          "Flippers",
-          "Flute",
-          "Hammer",
-          "Hookshot",
-          "Ice Rod",
-          "Lamp",
-          "Cape",
-          "Magic Powder",
-          "Mushroom",
-          "Pegasus Boots",
-          "Quake",
-          "Shovel",
-          "Bug Catching Net",
-          "Cane of Byrna",
-          "Blue Boomerang",
-          "Red Boomerang"
-        ],
-        "legacyinsanity": [
-          "Magic Mirror",
-          "Moon Pearl"
-        ],
-        "universal_keys": [
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Small Key (Universal)",
-          "Rupees (20)",
-          "Rupees (20)",
-          "Rupees (20)",
-          "Rupees (20)",
-          "Rupees (20)",
-          "Rupees (20)",
-          "Rupees (20)",
-          "Rupees (20)",
-          "Rupees (20)",
-          "Rupees (20)"
-        ],
-        "extras": [
-          [
-            "Rupees (100)",
-            "Rupees (300)",
-            "Rupees (50)",
-            "Arrows (10)",
-            "Arrows (10)",
-            "Arrows (10)",
-            "Arrows (10)",
-            "Arrows (10)",
-            "Arrows (10)",
-            "Bombs (3)",
-            "Bombs (3)",
-            "Bombs (3)",
-            "Bombs (3)",
-            "Bombs (3)",
-            "Bombs (3)"
-          ],
-          [
-            "Bombs (3)",
-            "Bombs (3)",
-            "Bombs (3)",
-            "Bombs (3)",
-            "Bombs (3)",
-            "Bombs (3)",
-            "Bombs (3)",
-            "Bombs (3)",
-            "Bombs (3)",
-            "Bombs (3)",
-            "Rupees (50)",
-            "Rupees (50)",
-            "Arrows (10)",
-            "Arrows (10)",
-            "Rupee (1)"
-          ],
-          [
-            "Rupees (50)",
-            "Rupees (50)",
-            "Rupees (50)",
-            "Rupees (50)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Arrows (10)",
-            "Rupee (1)",
-            "Rupees (5)"
-          ],
-          [
-            "Arrows (10)",
-            "Arrows (10)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (5)"
-          ],
-          [
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (20)",
-            "Rupees (5)",
-            "Rupees (5)"
-          ]
-        ],
-        "progressive_sword_limit": 4,
-        "progressive_shield_limit": 3,
-        "progressive_armor_limit": 2,
         "progressive_bottle_limit": 4,
-        "progressive_bow_limit": 2,
-        "heart_piece_limit": 24,
-        "boss_heart_container_limit": 10
+        "boss_heart_container_limit": 10,
+        "heart_piece_limit": 24
       },
-      "treasure_hunt_required": 0,
       "treasure_hunt_total": 0,
       "rom_name": "ALTTP_ROM_NOT_GENERATED",
-      "can_take_damage": true,
       "swamp_patch_required": false,
       "powder_patch_required": false,
       "ganon_at_pyramid": true,
@@ -21890,6 +21464,8 @@
       "dark_world_light_cone": false,
       "save_and_quit_from_boss": true,
       "rupoor_cost": 10,
+      "misery_mire_medallion": "Quake",
+      "turtle_rock_medallion": "Ether",
       "shop_items": {
         "Red Potion": {
           "unlimited": [
@@ -23822,6 +23398,105 @@
             }
           }
         }
+      },
+      "tr_big_key_chest_keys_needed": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "item",
+            "value": {
+              "type": "placement_lookup",
+              "location": {
+                "type": "constant",
+                "value": "Turtle Rock - Big Key Chest"
+              }
+            }
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "item"
+              },
+              "op": "in",
+              "right": {
+                "type": "list",
+                "value": [
+                  {
+                    "type": "list",
+                    "value": [
+                      {
+                        "type": "constant",
+                        "value": "Small Key (Turtle Rock)"
+                      },
+                      {
+                        "type": "constant",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "body": [
+              {
+                "type": "return",
+                "value": {
+                  "type": "constant",
+                  "value": 0
+                }
+              }
+            ]
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "item"
+              },
+              "op": "in",
+              "right": {
+                "type": "list",
+                "value": [
+                  {
+                    "type": "list",
+                    "value": [
+                      {
+                        "type": "constant",
+                        "value": "Big Key (Turtle Rock)"
+                      },
+                      {
+                        "type": "constant",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "body": [
+              {
+                "type": "return",
+                "value": {
+                  "type": "constant",
+                  "value": 4
+                }
+              }
+            ]
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "constant",
+              "value": 6
+            }
+          }
+        ]
       },
       "can_defeat_boss": {
         "params": [

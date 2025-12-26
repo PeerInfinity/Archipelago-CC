@@ -350,14 +350,49 @@ class BaseGameExportHandler:
     def handle_special_function_call(self, func_name: str, processed_args: list) -> dict:
         """
         Handle game-specific special function calls that should be converted to helpers.
-        
+
         Args:
             func_name: The name of the function being called
             processed_args: The processed arguments to the function
-            
+
         Returns:
             A dict with the rule structure, or None if this function should not be handled specially
         """
+        # Convert location_item_name calls to placement_lookup rule type
+        # This is a generic function from worlds/generic/Rules.py used by multiple games
+        # location_item_name(state, location_name, player) -> (item_name, player) tuple
+        if func_name == 'location_item_name':
+            logging.debug(f"BaseGameExportHandler: Converting {func_name} to placement_lookup rule")
+            # location_item_name takes (state, location_name, player) - we only need location_name
+            if processed_args:
+                return {
+                    'type': 'placement_lookup',
+                    'location': processed_args[0]  # First arg is location name
+                }
+            else:
+                logging.warning(f"BaseGameExportHandler: location_item_name called without location argument")
+                return None
+
+        # Convert item_name_in_location_names calls to placement_search rule type
+        # This is a generic function from worlds/generic/Rules.py used by multiple games
+        # item_name_in_location_names(state, item, player, location_pairs) -> bool
+        # After state/player filtering, processed_args contains: [item, location_pairs]
+        if func_name == 'item_name_in_location_names':
+            logging.debug(f"BaseGameExportHandler: Converting {func_name} to placement_search rule")
+            if len(processed_args) >= 2:
+                item_arg = processed_args[0]
+                locations_arg = processed_args[1]
+                # Player is filtered out; use player 1 for single-player exports
+                return {
+                    'type': 'placement_search',
+                    'item': item_arg,
+                    'player': {'type': 'constant', 'value': 1},
+                    'locations': locations_arg
+                }
+            else:
+                logging.warning(f"BaseGameExportHandler: item_name_in_location_names missing arguments: {processed_args}")
+                return None
+
         return None
     
     def should_preserve_as_helper(self, func_name: str) -> bool:

@@ -25,14 +25,14 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     COMPUTED_HELPERS = {'can_buy', 'can_buy_unlimited', 'can_defeat_boss'}
     AUTO_PRESERVE_COMPUTED_HELPERS = True
 
-    # NOTE: Simple world attributes are now auto-discovered by the base exporter.
-    # Previously defined here but no longer needed:
-    # WORLD_ATTRIBUTES = {
-    #     'treasure_hunt_required': lambda w, m, p: getattr(w, 'treasure_hunt_required', 0),
-    #     'can_take_damage': lambda w, m, p: getattr(w, 'can_take_damage', True),
-    #     'logical_heart_pieces': lambda w, m, p: getattr(w, 'logical_heart_pieces', 24),
-    #     'logical_heart_containers': lambda w, m, p: getattr(w, 'logical_heart_containers', 10),
-    # }
+    # Simple world attributes that can be automatically exported via base class
+    # These are runtime-computed values on the world instance, not user-configurable options
+    WORLD_ATTRIBUTES = {
+        'treasure_hunt_required': lambda w, m, p: getattr(w, 'treasure_hunt_required', 0),
+        'can_take_damage': lambda w, m, p: getattr(w, 'can_take_damage', True),
+        'logical_heart_pieces': lambda w, m, p: getattr(w, 'logical_heart_pieces', 24),
+        'logical_heart_containers': lambda w, m, p: getattr(w, 'logical_heart_containers', 10),
+    }
 
     # Complex helpers that can't be exported (need JavaScript implementations)
     # NOTE: Use set() for empty blacklist - {} creates an empty dict!
@@ -124,88 +124,12 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     # Note: No __init__ override needed - base class handles initialization
     # Note: No should_preserve_as_helper override needed - base class checks HELPERS_TO_PRESERVE
     # Note: No expand_rule override needed - base class handles rule expansion
+    # Note: No replace_name override needed - Location objects in closures are automatically
+    #       detected and replaced with 'location' keyword by the base AST visitor
+    # Note: No handle_special_function_call override needed - base class handles generic functions
+    #       (location_item_name, item_name_in_location_names) and tr_big_key_chest_keys_needed
+    #       is exported as a helper
 
-    def replace_name(self, name: str) -> str:
-        """Replace ALTTP-specific name references with standard equivalents."""
-        if name == 'ep_boss' or name == 'ep_prize':
-            logger.debug(f"ALTTP: Replacing '{name}' with 'location'")
-            return 'location'
-        return name
-        
-    def handle_special_function_call(self, func_name: str, processed_args: list) -> dict:
-        """Handle ALTTP-specific special function calls."""
-        if func_name == 'tr_big_key_chest_keys_needed':
-            # Inline the tr_big_key_chest_keys_needed logic using placement_lookup
-            # Original logic:
-            #   item = location_item_name(state, 'Turtle Rock - Big Key Chest', player)
-            #   if item == ('Small Key (Turtle Rock)', player): return 0
-            #   if item == ('Big Key (Turtle Rock)', player): return 4
-            #   return 6
-            logger.debug(f"ALTTP: Inlining {func_name} logic with placement_lookup")
-            return {
-                'type': 'conditional',
-                'test': {
-                    'type': 'compare',
-                    'left': {'type': 'placement_lookup', 'location': {'type': 'constant', 'value': 'Turtle Rock - Big Key Chest'}},
-                    'op': '==',
-                    'right': {'type': 'list', 'value': [
-                        {'type': 'constant', 'value': 'Small Key (Turtle Rock)'},
-                        {'type': 'constant', 'value': 1}
-                    ]}
-                },
-                'if_true': {'type': 'constant', 'value': 0},
-                'if_false': {
-                    'type': 'conditional',
-                    'test': {
-                        'type': 'compare',
-                        'left': {'type': 'placement_lookup', 'location': {'type': 'constant', 'value': 'Turtle Rock - Big Key Chest'}},
-                        'op': '==',
-                        'right': {'type': 'list', 'value': [
-                            {'type': 'constant', 'value': 'Big Key (Turtle Rock)'},
-                            {'type': 'constant', 'value': 1}
-                        ]}
-                    },
-                    'if_true': {'type': 'constant', 'value': 4},
-                    'if_false': {'type': 'constant', 'value': 6}
-                }
-            }
-
-        # Convert location_item_name calls to placement_lookup rule type
-        if func_name == 'location_item_name':
-            logger.debug(f"ALTTP: Converting {func_name} to placement_lookup rule")
-            # location_item_name takes (state, location_name, player) - we only need location_name
-            if processed_args:
-                return {
-                    'type': 'placement_lookup',
-                    'location': processed_args[0]  # First arg is location name
-                }
-            else:
-                logger.warning(f"ALTTP: location_item_name called without location argument")
-                return None
-
-        # Convert item_name_in_location_names calls to placement_search rule type
-        if func_name == 'item_name_in_location_names':
-            logger.debug(f"ALTTP: Converting {func_name} to placement_search rule")
-            # item_name_in_location_names takes (state, item, player, location_pairs)
-            # After filtering state/player, we have: [item, location_pairs]
-            if len(processed_args) >= 2:
-                item_arg = processed_args[0]
-                locations_arg = processed_args[1]
-
-                # Extract the player ID from the context if available
-                # For now, assume player 1 (single-player mode)
-                return {
-                    'type': 'placement_search',
-                    'item': item_arg,
-                    'player': {'type': 'constant', 'value': 1},
-                    'locations': locations_arg
-                }
-            else:
-                logger.warning(f"ALTTP: item_name_in_location_names missing arguments: {processed_args}")
-                return None
-
-        return None
-    
     def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Post-process rules to fix specific complex patterns that can't be handled by the frontend.
@@ -494,18 +418,41 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     def get_world_attributes(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract ALTTP world attributes (computed runtime values).
 
-        Most attributes are now auto-discovered by the base exporter:
-        - Simple types (int, bool, str, float) from world instance
-        - Class-level annotated attributes with defaults
-        - Nested objects with simple attributes (e.g., difficulty_requirements)
-        - Enum values (serialized to their .value)
-        - Lists of simple types or enums (e.g., required_medallions)
-
-        This override only handles shop_items which requires custom logic
-        to iterate over world.shops and build a structured data format.
+        These are values computed at runtime on the world instance, not
+        user-configurable options.
         """
-        # Get base world attributes (auto-discovered from world instance)
+        # Get base world attributes (from WORLD_ATTRIBUTES: treasure_hunt_required,
+        # can_take_damage, logical_heart_pieces, logical_heart_containers)
         world_attributes = super().get_world_attributes(world, multiworld, player)
+
+        # Difficulty requirements
+        if hasattr(world, 'difficulty_requirements'):
+            world_attributes['difficulty_requirements'] = {
+                'progressive_bottle_limit': getattr(world.difficulty_requirements, 'progressive_bottle_limit', None),
+                'boss_heart_container_limit': getattr(world.difficulty_requirements, 'boss_heart_container_limit', None),
+                'heart_piece_limit': getattr(world.difficulty_requirements, 'heart_piece_limit', None),
+            }
+        else:
+            world_attributes['difficulty_requirements'] = {}
+
+        # Medallions
+        if hasattr(world, 'required_medallions'):
+            medallion_names = []
+            for med in world.required_medallions:
+                med_name = getattr(med, 'name', None)
+                if med_name is None:
+                    med_name = getattr(med, 'value', str(med))
+                medallion_names.append(med_name)
+
+            world_attributes['required_medallions'] = medallion_names
+            mire_med = getattr(world, 'misery_mire_medallion', medallion_names[0] if medallion_names else None)
+            tr_med = getattr(world, 'turtle_rock_medallion', medallion_names[1] if len(medallion_names) > 1 else None)
+            world_attributes['misery_mire_medallion'] = getattr(mire_med, 'value', str(mire_med))
+            world_attributes['turtle_rock_medallion'] = getattr(tr_med, 'value', str(tr_med))
+        else:
+            world_attributes['required_medallions'] = []
+            world_attributes['misery_mire_medallion'] = None
+            world_attributes['turtle_rock_medallion'] = None
 
         # Shop item data - maps items to regions where shops sell them
         # Enables can_buy and can_buy_unlimited helper implementation
