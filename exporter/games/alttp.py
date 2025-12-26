@@ -496,17 +496,6 @@ class ALttPGameExportHandler(BaseGameExportHandler):
 
         return dict(sorted(itempool_counts.items()))
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extract ALTTP settings.
-
-        Uses base class to export all options with their definitions.
-        Note: World attributes (difficulty_requirements, medallions, shop_items)
-        are now in get_world_attributes() instead.
-        """
-        # Get all options and option_definitions from base class
-        # Note: assume_bidirectional_exits is set via ASSUME_BIDIRECTIONAL_EXITS class attribute
-        return super().get_settings_data(world, multiworld, player)
-
     def get_world_attributes(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract ALTTP world attributes (computed runtime values).
 
@@ -583,36 +572,6 @@ class ALttPGameExportHandler(BaseGameExportHandler):
             world_attributes['shop_items'] = shop_items
 
         return world_attributes
-
-    def get_game_info(self, world) -> Dict[str, Any]:
-         """ Gets ALTTP game info. """
-         return {
-             "name": "A Link to the Past",
-             "rule_format": { "version": "1.0" } # Or update if specific format version needed
-         }
-
-    def cleanup_settings(self, settings_dict: Dict[str, Any]) -> Dict[str, Any]:
-        """Clean up ALTTP settings.
-
-        Note: Most cleanup is no longer needed since the base exporter now exports
-        Choice options as strings (via current_key) and includes option_definitions.
-        This method is kept for any edge case cleanup.
-        """
-        cleaned_settings = settings_dict.copy()
-
-        # Cleanup medallion names if they were extracted directly from enum objects
-        for med_key in ['misery_mire_medallion', 'turtle_rock_medallion']:
-            current_value = cleaned_settings.get(med_key)
-            if isinstance(current_value, str) and '(' in current_value and 'Medallion' in current_value:
-                try:
-                    # Extract from format like 'Medallion(Bombos)'
-                    extracted = current_value.split('(', 1)[1].split(')', 1)[0]
-                    cleaned_settings[med_key] = extracted
-                    logger.debug(f"Cleaned medallion '{med_key}' to '{extracted}'")
-                except Exception as e:
-                    logger.warning(f"Could not clean medallion value: {current_value} - Error: {e}")
-
-        return cleaned_settings
 
     def get_region_attributes(self, region) -> Dict[str, Any]:
         """
