@@ -275,18 +275,18 @@ class ALttPGameExportHandler(BaseGameExportHandler):
                             break
                     parent_obj = parent_obj.get('object') or parent_obj.get('value')
         
-        # Check for world.can_take_damage pattern - convert to setting_value
-        # since can_take_damage is already exported in settings
+        # Check for world.can_take_damage pattern - convert to world_attribute
+        # since can_take_damage is exported in world_attributes
         if (rule.get('type') == 'attribute' and
             rule.get('attr') == 'can_take_damage' and
             isinstance(rule.get('object'), dict) and
             rule['object'].get('type') == 'name' and
             rule['object'].get('name') == 'world'):
 
-            # Replace with setting_value to use the exported setting
+            # Replace with world_attribute to use the exported value
             return {
-                'type': 'setting_value',
-                'setting': 'can_take_damage'
+                'type': 'world_attribute',
+                'attribute': 'can_take_damage'
             }
         
         # Recursively process nested rules
@@ -473,14 +473,9 @@ class ALttPGameExportHandler(BaseGameExportHandler):
                          if big_key_name not in itempool_counts:
                             itempool_counts[big_key_name] = 1
 
-        # Add ALTTP-specific max counts
-        if hasattr(world, 'difficulty_requirements'):
-             if hasattr(world.difficulty_requirements, 'progressive_bottle_limit'):
-                 itempool_counts['__max_progressive_bottle'] = world.difficulty_requirements.progressive_bottle_limit
-             if hasattr(world.difficulty_requirements, 'boss_heart_container_limit'):
-                itempool_counts['__max_boss_heart_container'] = world.difficulty_requirements.boss_heart_container_limit
-             if hasattr(world.difficulty_requirements, 'heart_piece_limit'):
-                itempool_counts['__max_heart_piece'] = world.difficulty_requirements.heart_piece_limit
+        # Note: difficulty_requirements (progressive_bottle_limit, boss_heart_container_limit,
+        # heart_piece_limit) are now exported via get_world_attributes() instead of as
+        # __max_* values in itempool. The frontend reads them from world_attributes.
 
         # For vanilla placement, report only plain bottles (no variants)
         import os
@@ -693,7 +688,7 @@ class ALttPGameExportHandler(BaseGameExportHandler):
                         'type': 'subscript',
                         'value': {
                             'type': 'subscript',
-                            'value': {'type': 'setting_value', 'setting': 'shop_items'},
+                            'value': {'type': 'world_attribute', 'attribute': 'shop_items'},
                             'index': {'type': 'name', 'name': 'item'}
                         },
                         'index': {'type': 'constant', 'value': 'limited'}
@@ -718,7 +713,7 @@ class ALttPGameExportHandler(BaseGameExportHandler):
                         'type': 'subscript',
                         'value': {
                             'type': 'subscript',
-                            'value': {'type': 'setting_value', 'setting': 'shop_items'},
+                            'value': {'type': 'world_attribute', 'attribute': 'shop_items'},
                             'index': {'type': 'name', 'name': 'item'}
                         },
                         'index': {'type': 'constant', 'value': 'unlimited'}
