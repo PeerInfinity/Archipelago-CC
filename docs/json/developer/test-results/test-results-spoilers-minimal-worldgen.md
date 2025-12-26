@@ -6,19 +6,19 @@
 
 [View Original Template Results](./test-results-spoilers-minimal.md)
 
-**Generated:** 2025-12-26 00:20:25
+**Generated:** 2025-12-26 06:58:26
 
-**Source Data Created:** 2025-12-24T06:02:59.255855
+**Source Data Created:** 2025-12-26T06:58:25.584747
 
-**Source Data Last Updated:** 2025-12-24T06:02:59.255862
+**Source Data Last Updated:** 2025-12-26T06:58:25.584752
 
 ## Summary
 
 - **Total Games:** 63
 - **Passed:** 62 (98.4%)
 - **Failed:** 1 (1.6%)
-- **Games with Intermittent Failures:** 0
-- **Total Intermittent Failures:** 0
+- **Games with Intermittent Failures:** 1
+- **Total Intermittent Failures:** 1
 
 ### Generic Exporter/Logic Statistics
 
@@ -30,7 +30,7 @@
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
-| A Hat in Time WorldGen | ❌ Failed | 0 | 0.21 | 5.11 | 🟠 4.1% | ✅ | ✅ |
+| A Hat in Time WorldGen | ✅ Passed | 0 | 5.11 | 5.11 | 🟢 Complete | ✅ | ✅ |
 | A Link to the Past WorldGen | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | ✅ | ✅ |
 | A Short Hike WorldGen | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest WorldGen | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
@@ -69,14 +69,14 @@
 | Muse Dash WorldGen | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
 | Noita WorldGen | ✅ Passed | 0 | 0.15 | 0.15 | 🟢 Complete | ✅ | ✅ |
 | Old School Runescape WorldGen | ✅ Passed | 0 | 7.5 | 7.5 | 🟢 Complete | ✅ | ✅ |
-| Overcooked\! 2 WorldGen | ✅ Passed | 0 | 18.8 | 18.8 | 🟢 Complete | ✅ | ✅ |
+| Overcooked! 2 WorldGen | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ✅ |
 | Paint WorldGen | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | ✅ | ✅ |
 | Risk of Rain 2 WorldGen | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | ✅ | ✅ |
 | Saving Princess WorldGen | ✅ Passed | 0 | 4.2 | 4.2 | 🟢 Complete | ✅ | ✅ |
 | Shivers WorldGen | ✅ Passed | 0 | 16.1 | 16.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle WorldGen | ✅ Passed | 0 | 6.8 | 6.8 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 WorldGen | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | ✅ | ✅ |
-| Subnautica WorldGen | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
+| Starcraft 2 WorldGen | ✅ Passed | 0 | 13.5 | 13.5 | 🟢 Complete | ✅ | ✅ |
+| Subnautica WorldGen | ❌ Failed | 3 | 0 | 0 | 🔴 0.0% | ✅ | ✅ |
 | Super Mario 64 WorldGen | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | ✅ | ✅ |
 | Super Mario Land 2 WorldGen | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario World WorldGen | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
@@ -86,13 +86,22 @@
 | The Legend of Zelda WorldGen | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | The Messenger WorldGen | ✅ Passed | 0 | 6.3 | 6.3 | 🟢 Complete | ✅ | ✅ |
 | The Wind Waker WorldGen | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | ✅ | ✅ |
-| Timespinner WorldGen | ✅ Passed | 0 | 7.4 | 7.4 | 🟢 Complete | ✅ | ✅ |
+| Timespinner WorldGen | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | ✅ | ✅ |
 | Undertale WorldGen | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
 | VVVVVV WorldGen | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | ✅ | ✅ |
 | Wargroove WorldGen | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | WebDevJourney WorldGen | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island WorldGen | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | ✅ | ✅ |
-| shapez WorldGen | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
+| shapez WorldGen | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
+
+## Intermittent Failures
+
+These seeds were previously failing but passed during a retest run:
+
+| Template | Seed | Timestamp | Notes |
+|----------|------|-----------|-------|
+| Old School Runescape WorldGen | 1 | 2025-12-26 06:57 | Previously failed, now passing |
+
 
 ## Notes
 

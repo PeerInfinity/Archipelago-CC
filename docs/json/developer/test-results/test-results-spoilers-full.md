@@ -4,9 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-[View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
-
-**Generated:** 2025-12-26 00:20:25
+**Generated:** 2025-12-26 06:58:26
 
 **Source Data Created:** 2025-12-25T23:46:45.765789
 
@@ -59,7 +57,7 @@
 | Inscryption | ✅ Passed | 0 | 10.2 | 10.2 | 🟢 Complete | 8.0KB | ✅ |
 | Kingdom Hearts | ✅ Passed | 0 | 10.8 | 10.8 | 🟢 Complete | 57.9KB | 5.6KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 33.8KB | 105.3KB |
-| Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 9.5KB | 9.0KB |
+| Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 18.7KB | 9.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 16.0KB | ✅ |
 | Lingo | ✅ Passed | 0 | 6.12 | 6.12 | 🟢 Complete | 41.3KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 17.5KB | ✅ |
@@ -81,7 +79,7 @@
 | Secret of Evermore | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 13.5KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.18 | 7.18 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 79.4KB | 86.3KB |
+| Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 86.8KB | 86.3KB |
 | Stardew Valley | ✅ Passed | 0 | 44.2 | 44.2 | 🟢 Complete | 20.9KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 7.5KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | 14.6KB | ✅ |
