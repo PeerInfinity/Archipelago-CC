@@ -2119,6 +2119,13 @@ class ASTVisitorMixin:
                     logging.debug(f"visit_Name: Found Region object '{name}' in closure, keeping as name reference for attribute access")
                     # Don't convert to string here - let attribute access or other operations handle it
                     pass
+                # Handle Location objects - replace with 'location' keyword
+                # Location objects have 'name' and 'parent_region' but NOT 'entrances'
+                # Using 'location' keyword allows the frontend to resolve the current location
+                # and access its attributes (e.g., location.parent_region.dungeon.boss)
+                elif hasattr(value, 'name') and hasattr(value, 'parent_region') and not hasattr(value, 'entrances'):
+                    logging.debug(f"visit_Name: Found Location object '{name}' in closure with location name '{value.name}', replacing with 'location'")
+                    return {'type': 'name', 'name': 'location'}
 
             # Also check function defaults and module globals
             # When preserve_parameter_names is True, skip resolution for actual function parameters
