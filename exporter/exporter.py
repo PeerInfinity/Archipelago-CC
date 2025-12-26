@@ -346,16 +346,32 @@ def resolve_attribute_nodes_in_rule(rule: Dict[str, Any], world) -> Dict[str, An
 @lru_cache(maxsize=128)
 def get_world_directory_name(game_name: str) -> str:
     """
-    Get the world directory name for a given game name by scanning worlds directory.
-    This replicates the logic from build-world-mapping.py but only returns the directory name.
+    Get the world directory name for a given game name.
+    First tries to read from the pre-built world-mapping.json file (which includes apworld files),
+    then falls back to scanning the worlds directory.
     Falls back to the old naming logic if no matching world is found.
 
     Results are cached to avoid repeated filesystem access.
     """
     try:
+        # First, try to read from the pre-built world-mapping.json
+        mapping_file = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'data', 'world-mapping.json')
+        if os.path.exists(mapping_file):
+            try:
+                with open(mapping_file, 'r', encoding='utf-8') as f:
+                    import json
+                    mapping = json.load(f)
+                    if game_name in mapping:
+                        world_dir = mapping[game_name].get('world_directory')
+                        if world_dir:
+                            return world_dir
+            except (IOError, json.JSONDecodeError) as e:
+                logger.debug(f"Could not read world mapping file: {e}")
+
+        # Fall back to scanning worlds directory
         # Get path to worlds directory relative to this file (exporter/exporter.py)
         worlds_dir = os.path.join(os.path.dirname(__file__), '..', 'worlds')
-        
+
         if not os.path.exists(worlds_dir):
             logger.warning(f"Worlds directory not found: {worlds_dir}")
             return game_name.lower().replace(' ', '_').replace(':', '_')
