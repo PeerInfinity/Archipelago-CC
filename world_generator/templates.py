@@ -727,6 +727,8 @@ def _generate_option_class_from_definition(setting_name: str, option_def: Dict[s
     """
     class_name = ''.join(word.capitalize() for word in setting_name.split('_'))
     display_name = option_def.get('display_name', ' '.join(word.capitalize() for word in setting_name.split('_')))
+    # Escape double quotes in display names to generate valid Python code
+    display_name_escaped = display_name.replace('"', '\\"')
     option_type = option_def.get('type')
     default = option_def.get('default', 0)
 
@@ -745,7 +747,7 @@ def _generate_option_class_from_definition(setting_name: str, option_def: Dict[s
             class_code = f'''
 class {class_name}(TextChoice):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
 
     default = {default_repr}
 '''
@@ -761,7 +763,7 @@ class {class_name}(TextChoice):
             class_code = f'''
 class {class_name}(TextChoice):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
 
     default = {default_repr}
 '''
@@ -777,7 +779,7 @@ class {class_name}(TextChoice):
         class_code = f'''
 class {class_name}(Choice):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
 {options_code}
     default = {default_repr}
 '''
@@ -804,7 +806,7 @@ class {class_name}(Choice):
             class_code = f'''
 class {class_name}(NamedRange):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
     range_start = {range_start}
     range_end = {range_end}
     default = {default_repr}
@@ -815,7 +817,7 @@ class {class_name}(NamedRange):
             class_code = f'''
 class {class_name}(Range):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
     range_start = {range_start}
     range_end = {range_end}
     default = {default_repr}
@@ -826,7 +828,7 @@ class {class_name}(Range):
         class_code = f'''
 class {class_name}(DefaultOnToggle):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
 '''
         return class_code, f'    {setting_name}: {class_name}', 'DefaultOnToggle'
 
@@ -834,7 +836,7 @@ class {class_name}(DefaultOnToggle):
         class_code = f'''
 class {class_name}(Toggle):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
 '''
         return class_code, f'    {setting_name}: {class_name}', 'Toggle'
 
@@ -1198,7 +1200,8 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
                 has_nested_values = not any(isinstance(v, dict) for v in attr_value.values())
 
                 # Check if all keys are valid Python identifiers for SimpleNamespace
-                all_valid_identifiers = all(k.isidentifier() for k in attr_value.keys())
+                # Only check isidentifier() if we know all keys are strings (has_string_keys)
+                all_valid_identifiers = has_string_keys and all(k.isidentifier() for k in attr_value.keys())
 
                 if has_string_keys and has_nested_values and attr_value and all_valid_identifiers:
                     # Use SimpleNamespace for dicts with valid identifier keys (attribute access pattern)

@@ -2771,6 +2771,136 @@ class MinValue(Rule[TWorld], game="Archipelago"):
 
 
 @dataclasses.dataclass()
+class MaxValue(Rule[TWorld], game="Archipelago"):
+    """
+    Returns the maximum of two numeric values/rules.
+
+    Used in arithmetic expressions where the largest value is needed.
+    Returns the maximum value via get_value().
+
+    Usage:
+        # Get maximum depth from multiple sources
+        rule = MaxValue(seamoth_depth, cyclops_depth)
+
+        # Combined with Arithmetic for complex rules
+        rule = Compare(
+            Arithmetic(swim_depth, "+", MaxValue(seamoth_depth, cyclops_depth)),
+            ">=", 1444
+        )
+    """
+    left: "Rule[TWorld] | int | float" = dataclasses.field(default=0)
+    right: "Rule[TWorld] | int | float" = dataclasses.field(default=0)
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        resolved_left: Any
+        resolved_right: Any
+
+        if isinstance(self.left, Rule):
+            resolved_left = self.left._instantiate(world)
+        else:
+            resolved_left = self.left
+
+        if isinstance(self.right, Rule):
+            resolved_right = self.right._instantiate(world)
+        else:
+            resolved_right = self.right
+
+        return self.Resolved(
+            resolved_left,
+            resolved_right,
+            player=world.player,
+            caching_enabled=False,
+        )
+
+    @override
+    def __str__(self) -> str:
+        return f"max({self.left}, {self.right})"
+
+    class Resolved(Rule.Resolved):
+        left: Any  # Rule.Resolved or literal value
+        right: Any  # Rule.Resolved or literal value
+        skip_cache: ClassVar[bool] = True
+
+        def _get_operand_value(self, operand: Any, state: CollectionState) -> float | int:
+            """Get the numeric value of an operand."""
+            if isinstance(operand, Rule.Resolved):
+                if hasattr(operand, 'get_value'):
+                    return operand.get_value(state)
+                if hasattr(operand, 'get_count'):
+                    return operand.get_count(state)
+                # Boolean rules: True=1, False=0
+                return 1 if operand(state) else 0
+            return operand
+
+        def get_value(self, state: CollectionState) -> float | int:
+            """Get the maximum of the two operands."""
+            left_val = self._get_operand_value(self.left, state)
+            right_val = self._get_operand_value(self.right, state)
+            return max(left_val, right_val)
+
+        # Alias for Compare compatibility
+        get_count = get_value
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # When used as boolean, true if value is truthy (non-zero)
+            return bool(self.get_value(state))
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            deps: dict[str, set[int]] = {}
+            if isinstance(self.left, Rule.Resolved):
+                for name, ids in self.left.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            if isinstance(self.right, Rule.Resolved):
+                for name, ids in self.right.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            return deps
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = [{"type": "text", "text": "max("}]
+
+            if isinstance(self.left, Rule.Resolved):
+                messages.extend(self.left.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.left)})
+
+            messages.append({"type": "text", "text": ", "})
+
+            if isinstance(self.right, Rule.Resolved):
+                messages.extend(self.right.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.right)})
+
+            messages.append({"type": "text", "text": ")"})
+
+            if state is not None:
+                value = self.get_value(state)
+                messages.append({"type": "text", "text": f" = {value}"})
+
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            left_str = self.left.explain_str(state) if isinstance(self.left, Rule.Resolved) else str(self.left)
+            right_str = self.right.explain_str(state) if isinstance(self.right, Rule.Resolved) else str(self.right)
+            result = f"max({left_str}, {right_str})"
+            if state is not None:
+                result += f" = {self.get_value(state)}"
+            return result
+
+        @override
+        def __str__(self) -> str:
+            return f"max({self.left}, {self.right})"
+
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            return {"left": self.left, "right": self.right}
+
+
+@dataclasses.dataclass()
 class Conditional(Rule[TWorld], game="Archipelago"):
     """
     Conditional (ternary) rule: if test then if_true else if_false.
@@ -2783,15 +2913,29 @@ class Conditional(Rule[TWorld], game="Archipelago"):
         )
     """
     test: "Rule[TWorld]" = dataclasses.field(default_factory=lambda: True_())
-    if_true: "Rule[TWorld]" = dataclasses.field(default_factory=lambda: True_())
-    if_false: "Rule[TWorld]" = dataclasses.field(default_factory=lambda: True_())
+    if_true: "Rule[TWorld] | int | float" = dataclasses.field(default_factory=lambda: True_())
+    if_false: "Rule[TWorld] | int | float" = dataclasses.field(default_factory=lambda: True_())
 
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        resolved_test = self.test._instantiate(world)
+
+        # Handle if_true - can be a Rule or a numeric value
+        if isinstance(self.if_true, Rule):
+            resolved_if_true = self.if_true._instantiate(world)
+        else:
+            resolved_if_true = self.if_true
+
+        # Handle if_false - can be a Rule or a numeric value
+        if isinstance(self.if_false, Rule):
+            resolved_if_false = self.if_false._instantiate(world)
+        else:
+            resolved_if_false = self.if_false
+
         return self.Resolved(
-            self.test._instantiate(world),
-            self.if_true._instantiate(world),
-            self.if_false._instantiate(world),
+            resolved_test,
+            resolved_if_true,
+            resolved_if_false,
             player=world.player,
             caching_enabled=False,
         )
@@ -2802,30 +2946,56 @@ class Conditional(Rule[TWorld], game="Archipelago"):
 
     class Resolved(Rule.Resolved):
         test: "Rule.Resolved"
-        if_true: "Rule.Resolved"
-        if_false: "Rule.Resolved"
+        if_true: Any  # Rule.Resolved or literal value
+        if_false: Any  # Rule.Resolved or literal value
         skip_cache: ClassVar[bool] = True
+
+        def _get_branch_value(self, branch: Any, state: CollectionState) -> float | int:
+            """Get the numeric value of a branch."""
+            if isinstance(branch, Rule.Resolved):
+                if hasattr(branch, 'get_value'):
+                    return branch.get_value(state)
+                if hasattr(branch, 'get_count'):
+                    return branch.get_count(state)
+                # Boolean rules: True=1, False=0
+                return 1 if branch(state) else 0
+            return branch
+
+        def get_value(self, state: CollectionState) -> float | int:
+            """Get the numeric value based on condition."""
+            if self.test(state):
+                return self._get_branch_value(self.if_true, state)
+            return self._get_branch_value(self.if_false, state)
+
+        # Alias for Compare compatibility
+        get_count = get_value
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
             if self.test(state):
-                return self.if_true(state)
-            return self.if_false(state)
+                if isinstance(self.if_true, Rule.Resolved):
+                    return self.if_true(state)
+                return bool(self.if_true)
+            if isinstance(self.if_false, Rule.Resolved):
+                return self.if_false(state)
+            return bool(self.if_false)
 
         @override
         def item_dependencies(self) -> dict[str, set[int]]:
             deps: dict[str, set[int]] = {}
             for rule in [self.test, self.if_true, self.if_false]:
-                for name, ids in rule.item_dependencies().items():
-                    deps.setdefault(name, set()).update(ids)
+                if isinstance(rule, Rule.Resolved):
+                    for name, ids in rule.item_dependencies().items():
+                        deps.setdefault(name, set()).update(ids)
             return deps
 
         @override
         def region_dependencies(self) -> dict[str, set[int]]:
             deps: dict[str, set[int]] = {}
             for rule in [self.test, self.if_true, self.if_false]:
-                for name, ids in rule.region_dependencies().items():
-                    deps.setdefault(name, set()).update(ids)
+                if isinstance(rule, Rule.Resolved):
+                    for name, ids in rule.region_dependencies().items():
+                        deps.setdefault(name, set()).update(ids)
             return deps
 
         @override
@@ -2833,15 +3003,23 @@ class Conditional(Rule[TWorld], game="Archipelago"):
             messages: list[JSONMessagePart] = [{"type": "text", "text": "If ("}]
             messages.extend(self.test.explain_json(state))
             messages.append({"type": "text", "text": ") then ("})
-            messages.extend(self.if_true.explain_json(state))
+            if isinstance(self.if_true, Rule.Resolved):
+                messages.extend(self.if_true.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.if_true)})
             messages.append({"type": "text", "text": ") else ("})
-            messages.extend(self.if_false.explain_json(state))
+            if isinstance(self.if_false, Rule.Resolved):
+                messages.extend(self.if_false.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.if_false)})
             messages.append({"type": "text", "text": ")"})
             return messages
 
         @override
         def explain_str(self, state: CollectionState | None = None) -> str:
-            return f"If ({self.test.explain_str(state)}) then ({self.if_true.explain_str(state)}) else ({self.if_false.explain_str(state)})"
+            if_true_str = self.if_true.explain_str(state) if isinstance(self.if_true, Rule.Resolved) else str(self.if_true)
+            if_false_str = self.if_false.explain_str(state) if isinstance(self.if_false, Rule.Resolved) else str(self.if_false)
+            return f"If ({self.test.explain_str(state)}) then ({if_true_str}) else ({if_false_str})"
 
         @override
         def __str__(self) -> str:

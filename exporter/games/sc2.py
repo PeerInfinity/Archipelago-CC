@@ -1605,3 +1605,160 @@ class SC2GameExportHandler(GenericGameExportHandler):
             logger.debug(f"[SC2] Exported {len(kerrigan_groups)} kerrigan item groups to game_info")
 
         return game_info
+
+    def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Post-process exported data to inline blacklisted helper references.
+
+        AST-converted rules may contain helper references (with _original_ast_type: "helper")
+        that weren't inlined during normal rule export. This method walks through all
+        location access rules and inlines any blacklisted helper references with their
+        simplified versions.
+        """
+        regions = data.get('regions', {})
+
+        for player_id, player_regions in regions.items():
+            for region_name, region_data in player_regions.items():
+                # Process location access rules
+                for location in region_data.get('locations', []):
+                    if 'access_rule' in location and location['access_rule']:
+                        location['access_rule'] = self._inline_blacklisted_helpers(location['access_rule'])
+                    # Some exporters use 'rule' instead of 'access_rule'
+                    if 'rule' in location and location['rule']:
+                        location['rule'] = self._inline_blacklisted_helpers(location['rule'])
+
+                # Process region entry rules
+                if 'entry_rule' in region_data and region_data['entry_rule']:
+                    region_data['entry_rule'] = self._inline_blacklisted_helpers(region_data['entry_rule'])
+
+                # Process connection rules
+                for conn in region_data.get('connects_to', []):
+                    if 'rule' in conn and conn['rule']:
+                        conn['rule'] = self._inline_blacklisted_helpers(conn['rule'])
+
+        return data
+
+    def _inline_blacklisted_helpers(self, rule: Any) -> Any:
+        """
+        Recursively inline blacklisted helper references in a rule.
+
+        Handles both AST format (type/conditions) and Rule Builder format (rule/children).
+        Looks for helper references and replaces them with simplified versions
+        if the helper is blacklisted.
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        # Detect format: AST uses 'type', Rule Builder uses 'rule'
+        is_ast_format = 'type' in rule and 'rule' not in rule
+        rule_type = rule.get('type' if is_ast_format else 'rule', '')
+        children_key = 'conditions' if is_ast_format else 'children'
+
+        # Check if this is a helper reference that should be inlined
+        # AST format: {'type': 'helper', 'name': 'helper_name'}
+        # RB format: {'rule': 'helper_name', '_original_ast_type': 'helper'}
+        is_helper_ast = rule_type == 'helper'
+        is_helper_rb = rule.get('_original_ast_type') == 'helper'
+
+        if is_helper_ast:
+            helper_name = rule.get('name', '')
+        elif is_helper_rb:
+            helper_name = rule.get('rule', '')
+        else:
+            helper_name = ''
+
+        if helper_name in self.HELPERS_TO_EXPORT_BLACKLIST:
+            # Get simplified version of this helper
+            simplified = self._get_simplified_helper(helper_name)
+            if simplified:
+                logger.debug(f"[SC2] Post-process: Inlined blacklisted helper '{helper_name}'")
+                # Return simplified in same format as input
+                return simplified
+            else:
+                # No simplified version available - return True as fallback
+                logger.debug(f"[SC2] Post-process: No simplified version for '{helper_name}', using True")
+                return {'type': 'constant', 'value': True} if is_ast_format else {'rule': 'True'}
+
+        # Recursively process children/conditions
+        if rule_type in ('and', 'or', 'And', 'Or'):
+            children = rule.get(children_key, [])
+            processed_children = [self._inline_blacklisted_helpers(child) for child in children]
+            # Filter out True constants from And
+            if rule_type.lower() == 'and':
+                processed_children = [c for c in processed_children
+                    if not (isinstance(c, dict) and (
+                        (c.get('type') == 'constant' and c.get('value') == True) or
+                        c.get('rule') == 'True'
+                    ))]
+                if not processed_children:
+                    return {'type': 'constant', 'value': True} if is_ast_format else {'rule': 'True'}
+                if len(processed_children) == 1:
+                    return processed_children[0]
+            return {**rule, children_key: processed_children}
+
+        # Process any other dict values that might contain rules
+        processed = {}
+        for key, value in rule.items():
+            if key in ('children', 'conditions') and isinstance(value, list):
+                processed[key] = [self._inline_blacklisted_helpers(v) for v in value]
+            elif isinstance(value, dict):
+                processed[key] = self._inline_blacklisted_helpers(value)
+            elif isinstance(value, list):
+                processed[key] = [self._inline_blacklisted_helpers(v) if isinstance(v, dict) else v for v in value]
+            else:
+                processed[key] = value
+
+        return processed
+
+    def _convert_simplified_to_rule_builder(self, simplified: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert simplified AST format rule to Rule Builder format.
+
+        The simplified rules from _get_simplified_helper use AST format with
+        'type' key, but we need Rule Builder format with 'rule' key.
+        """
+        if not isinstance(simplified, dict):
+            return simplified
+
+        rule_type = simplified.get('type', '')
+
+        if rule_type == 'constant':
+            value = simplified.get('value', True)
+            return {'rule': 'True' if value else 'False'}
+
+        if rule_type == 'and':
+            conditions = simplified.get('conditions', [])
+            children = [self._convert_simplified_to_rule_builder(c) for c in conditions]
+            return {'rule': 'And', 'children': children}
+
+        if rule_type == 'or':
+            conditions = simplified.get('conditions', [])
+            children = [self._convert_simplified_to_rule_builder(c) for c in conditions]
+            return {'rule': 'Or', 'children': children}
+
+        if rule_type == 'item_check':
+            item = simplified.get('item', '')
+            count = simplified.get('count', 1)
+            if count > 1:
+                return {'rule': 'Has', 'args': {'item_name': item, 'count': count}}
+            return {'rule': 'Has', 'args': {'item_name': item}}
+
+        if rule_type == 'helper':
+            helper_name = simplified.get('name', '')
+            # Check if this nested helper is also blacklisted
+            if helper_name in self.HELPERS_TO_EXPORT_BLACKLIST:
+                nested_simplified = self._get_simplified_helper(helper_name)
+                if nested_simplified:
+                    return self._convert_simplified_to_rule_builder(nested_simplified)
+            # Keep as helper reference
+            return {'rule': helper_name, '_original_ast_type': 'helper'}
+
+        if rule_type == 'count':
+            conditions = simplified.get('conditions', [])
+            count = simplified.get('count', 1)
+            children = [self._convert_simplified_to_rule_builder(c) for c in conditions]
+            return {'rule': 'CountTrue', 'count': count, 'children': children}
+
+        # Unknown type - return as-is with some cleanup
+        logger.debug(f"[SC2] Unknown simplified rule type: {rule_type}")
+        return simplified

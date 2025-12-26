@@ -148,10 +148,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -299,10 +299,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Name",
+                  "rule": "AST_setting_value",
                   "args": {
-                    "name": "calamity",
-                    "_original_ast_type": "name"
+                    "setting": "calamity",
+                    "_original_ast_type": "setting_value"
                   },
                   "_converted_from_ast": true
                 },
@@ -1729,10 +1729,10 @@
                   "rule": "Not",
                   "args": {
                     "condition": {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -1896,10 +1896,10 @@
                       "rule": "Not",
                       "args": {
                         "condition": {
-                          "rule": "Name",
+                          "rule": "AST_setting_value",
                           "args": {
-                            "name": "getfixedboi",
-                            "_original_ast_type": "name"
+                            "setting": "getfixedboi",
+                            "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
                         },
@@ -2063,10 +2063,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -2113,10 +2113,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -2563,10 +2563,10 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -2667,10 +2667,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -3155,10 +3155,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -3259,14 +3259,6 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
-                      "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
                       "rule": "Or",
                       "children": [
                         {
@@ -3296,10 +3288,10 @@
                               ]
                             },
                             {
-                              "rule": "Name",
+                              "rule": "AST_setting_value",
                               "args": {
-                                "name": "getfixedboi",
-                                "_original_ast_type": "name"
+                                "setting": "getfixedboi",
+                                "_original_ast_type": "setting_value"
                               },
                               "_converted_from_ast": true
                             }
@@ -3315,6 +3307,14 @@
                           }
                         }
                       ]
+                    },
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -3486,18 +3486,18 @@
                       ]
                     },
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "getfixedboi",
-                        "_original_ast_type": "name"
+                        "setting": "getfixedboi",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     }
@@ -3636,10 +3636,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -3711,10 +3711,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -3829,10 +3829,10 @@
                       "rule": "Not",
                       "args": {
                         "condition": {
-                          "rule": "Name",
+                          "rule": "AST_setting_value",
                           "args": {
-                            "name": "calamity",
-                            "_original_ast_type": "name"
+                            "setting": "calamity",
+                            "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
                         },
@@ -3926,14 +3926,6 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
-                      "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
                       "rule": "Or",
                       "children": [
                         {
@@ -3955,6 +3947,14 @@
                           }
                         }
                       ]
+                    },
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -3990,10 +3990,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -4128,10 +4128,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -4208,10 +4208,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -4258,10 +4258,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Name",
+                  "rule": "AST_setting_value",
                   "args": {
-                    "name": "calamity",
-                    "_original_ast_type": "name"
+                    "setting": "calamity",
+                    "_original_ast_type": "setting_value"
                   },
                   "_converted_from_ast": true
                 },
@@ -4325,10 +4325,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -4378,10 +4378,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -4431,10 +4431,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -4532,10 +4532,10 @@
                   ]
                 },
                 {
-                  "rule": "Name",
+                  "rule": "AST_setting_value",
                   "args": {
-                    "name": "getfixedboi",
-                    "_original_ast_type": "name"
+                    "setting": "getfixedboi",
+                    "_original_ast_type": "setting_value"
                   },
                   "_converted_from_ast": true
                 }
@@ -4714,32 +4714,13 @@
                           "rule": "And",
                           "children": [
                             {
-                              "rule": "Name",
-                              "args": {
-                                "name": "calamity",
-                                "_original_ast_type": "name"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Hardmode"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
                               "rule": "Not",
                               "args": {
                                 "condition": {
-                                  "rule": "Name",
+                                  "rule": "AST_setting_value",
                                   "args": {
-                                    "name": "calamity",
-                                    "_original_ast_type": "name"
+                                    "setting": "calamity",
+                                    "_original_ast_type": "setting_value"
                                   },
                                   "_converted_from_ast": true
                                 },
@@ -4751,6 +4732,25 @@
                               "rule": "Has",
                               "args": {
                                 "item_name": "Altar"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "AST_setting_value",
+                              "args": {
+                                "setting": "calamity",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Hardmode"
                               }
                             }
                           ]
@@ -4956,10 +4956,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -5017,10 +5017,10 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Name",
+                  "rule": "AST_setting_value",
                   "args": {
-                    "name": "calamity",
-                    "_original_ast_type": "name"
+                    "setting": "calamity",
+                    "_original_ast_type": "setting_value"
                   },
                   "_converted_from_ast": true
                 },
@@ -5090,10 +5090,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -5177,10 +5177,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -5344,27 +5344,11 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
-                      "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
                       "rule": "Or",
                       "children": [
                         {
                           "rule": "And",
                           "children": [
-                            {
-                              "rule": "Name",
-                              "args": {
-                                "name": "getfixedboi",
-                                "_original_ast_type": "name"
-                              },
-                              "_converted_from_ast": true
-                            },
                             {
                               "rule": "Or",
                               "children": [
@@ -5389,18 +5373,18 @@
                                   "rule": "And",
                                   "children": [
                                     {
-                                      "rule": "Name",
+                                      "rule": "AST_setting_value",
                                       "args": {
-                                        "name": "calamity",
-                                        "_original_ast_type": "name"
+                                        "setting": "calamity",
+                                        "_original_ast_type": "setting_value"
                                       },
                                       "_converted_from_ast": true
                                     },
                                     {
-                                      "rule": "Name",
+                                      "rule": "AST_setting_value",
                                       "args": {
-                                        "name": "getfixedboi",
-                                        "_original_ast_type": "name"
+                                        "setting": "getfixedboi",
+                                        "_original_ast_type": "setting_value"
                                       },
                                       "_converted_from_ast": true
                                     },
@@ -5413,6 +5397,14 @@
                                   ]
                                 }
                               ]
+                            },
+                            {
+                              "rule": "AST_setting_value",
+                              "args": {
+                                "setting": "getfixedboi",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -5423,6 +5415,14 @@
                           }
                         }
                       ]
+                    },
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -5520,10 +5520,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -5589,27 +5589,11 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
-                      "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
                       "rule": "Or",
                       "children": [
                         {
                           "rule": "And",
                           "children": [
-                            {
-                              "rule": "Name",
-                              "args": {
-                                "name": "getfixedboi",
-                                "_original_ast_type": "name"
-                              },
-                              "_converted_from_ast": true
-                            },
                             {
                               "rule": "Or",
                               "children": [
@@ -5634,18 +5618,18 @@
                                   "rule": "And",
                                   "children": [
                                     {
-                                      "rule": "Name",
+                                      "rule": "AST_setting_value",
                                       "args": {
-                                        "name": "calamity",
-                                        "_original_ast_type": "name"
+                                        "setting": "calamity",
+                                        "_original_ast_type": "setting_value"
                                       },
                                       "_converted_from_ast": true
                                     },
                                     {
-                                      "rule": "Name",
+                                      "rule": "AST_setting_value",
                                       "args": {
-                                        "name": "getfixedboi",
-                                        "_original_ast_type": "name"
+                                        "setting": "getfixedboi",
+                                        "_original_ast_type": "setting_value"
                                       },
                                       "_converted_from_ast": true
                                     },
@@ -5658,6 +5642,14 @@
                                   ]
                                 }
                               ]
+                            },
+                            {
+                              "rule": "AST_setting_value",
+                              "args": {
+                                "setting": "getfixedboi",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_ast": true
                             }
                           ]
                         },
@@ -5703,18 +5695,18 @@
                                   ]
                                 },
                                 {
-                                  "rule": "Name",
+                                  "rule": "AST_setting_value",
                                   "args": {
-                                    "name": "calamity",
-                                    "_original_ast_type": "name"
+                                    "setting": "calamity",
+                                    "_original_ast_type": "setting_value"
                                   },
                                   "_converted_from_ast": true
                                 },
                                 {
-                                  "rule": "Name",
+                                  "rule": "AST_setting_value",
                                   "args": {
-                                    "name": "getfixedboi",
-                                    "_original_ast_type": "name"
+                                    "setting": "getfixedboi",
+                                    "_original_ast_type": "setting_value"
                                   },
                                   "_converted_from_ast": true
                                 }
@@ -5729,6 +5721,14 @@
                           ]
                         }
                       ]
+                    },
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -6038,10 +6038,10 @@
                                       "rule": "And",
                                       "children": [
                                         {
-                                          "rule": "Name",
+                                          "rule": "AST_setting_value",
                                           "args": {
-                                            "name": "calamity",
-                                            "_original_ast_type": "name"
+                                            "setting": "calamity",
+                                            "_original_ast_type": "setting_value"
                                           },
                                           "_converted_from_ast": true
                                         },
@@ -6142,14 +6142,6 @@
                   ]
                 },
                 {
-                  "rule": "Name",
-                  "args": {
-                    "name": "grindy_achievements",
-                    "_original_ast_type": "name"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "Or",
                   "children": [
                     {
@@ -6191,18 +6183,18 @@
                           ]
                         },
                         {
-                          "rule": "Name",
+                          "rule": "AST_setting_value",
                           "args": {
-                            "name": "calamity",
-                            "_original_ast_type": "name"
+                            "setting": "calamity",
+                            "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
                         },
                         {
-                          "rule": "Name",
+                          "rule": "AST_setting_value",
                           "args": {
-                            "name": "getfixedboi",
-                            "_original_ast_type": "name"
+                            "setting": "getfixedboi",
+                            "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
                         }
@@ -6215,10 +6207,10 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "Name",
+                              "rule": "AST_setting_value",
                               "args": {
-                                "name": "calamity",
-                                "_original_ast_type": "name"
+                                "setting": "calamity",
+                                "_original_ast_type": "setting_value"
                               },
                               "_converted_from_ast": true
                             },
@@ -6270,18 +6262,18 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "Name",
+                          "rule": "AST_setting_value",
                           "args": {
-                            "name": "calamity",
-                            "_original_ast_type": "name"
+                            "setting": "calamity",
+                            "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
                         },
                         {
-                          "rule": "Name",
+                          "rule": "AST_setting_value",
                           "args": {
-                            "name": "getfixedboi",
-                            "_original_ast_type": "name"
+                            "setting": "getfixedboi",
+                            "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
                         },
@@ -6294,6 +6286,14 @@
                       ]
                     }
                   ]
+                },
+                {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "grindy_achievements",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -6503,18 +6503,18 @@
                       ]
                     },
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "getfixedboi",
-                        "_original_ast_type": "name"
+                        "setting": "getfixedboi",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     }
@@ -6581,18 +6581,18 @@
                       ]
                     },
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "getfixedboi",
-                        "_original_ast_type": "name"
+                        "setting": "getfixedboi",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     }
@@ -6736,10 +6736,10 @@
                               ]
                             },
                             {
-                              "rule": "Name",
+                              "rule": "AST_setting_value",
                               "args": {
-                                "name": "calamity",
-                                "_original_ast_type": "name"
+                                "setting": "calamity",
+                                "_original_ast_type": "setting_value"
                               },
                               "_converted_from_ast": true
                             }
@@ -6752,10 +6752,10 @@
                               "rule": "Not",
                               "args": {
                                 "condition": {
-                                  "rule": "Name",
+                                  "rule": "AST_setting_value",
                                   "args": {
-                                    "name": "calamity",
-                                    "_original_ast_type": "name"
+                                    "setting": "calamity",
+                                    "_original_ast_type": "setting_value"
                                   },
                                   "_converted_from_ast": true
                                 },
@@ -6920,10 +6920,10 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -7012,32 +7012,13 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
-                      "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hallowed Ore"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
                       "rule": "Not",
                       "args": {
                         "condition": {
-                          "rule": "Name",
+                          "rule": "AST_setting_value",
                           "args": {
-                            "name": "calamity",
-                            "_original_ast_type": "name"
+                            "setting": "calamity",
+                            "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
                         },
@@ -7088,10 +7069,10 @@
                               ]
                             },
                             {
-                              "rule": "Name",
+                              "rule": "AST_setting_value",
                               "args": {
-                                "name": "calamity",
-                                "_original_ast_type": "name"
+                                "setting": "calamity",
+                                "_original_ast_type": "setting_value"
                               },
                               "_converted_from_ast": true
                             }
@@ -7104,10 +7085,10 @@
                               "rule": "Not",
                               "args": {
                                 "condition": {
-                                  "rule": "Name",
+                                  "rule": "AST_setting_value",
                                   "args": {
-                                    "name": "calamity",
-                                    "_original_ast_type": "name"
+                                    "setting": "calamity",
+                                    "_original_ast_type": "setting_value"
                                   },
                                   "_converted_from_ast": true
                                 },
@@ -7225,6 +7206,25 @@
                           }
                         }
                       ]
+                    }
+                  ]
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Hallowed Ore"
+                      }
                     }
                   ]
                 },
@@ -7395,10 +7395,10 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -7436,10 +7436,10 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -7477,10 +7477,10 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "Name",
+                      "rule": "AST_setting_value",
                       "args": {
-                        "name": "calamity",
-                        "_original_ast_type": "name"
+                        "setting": "calamity",
+                        "_original_ast_type": "setting_value"
                       },
                       "_converted_from_ast": true
                     },
@@ -7530,32 +7530,13 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
-                      "args": {
-                        "name": "getfixedboi",
-                        "_original_ast_type": "name"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ocram's Razor"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
                       "rule": "Not",
                       "args": {
                         "condition": {
-                          "rule": "Name",
+                          "rule": "AST_setting_value",
                           "args": {
-                            "name": "getfixedboi",
-                            "_original_ast_type": "name"
+                            "setting": "getfixedboi",
+                            "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
                         },
@@ -7567,6 +7548,25 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Mechanical Eye"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "getfixedboi",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ocram's Razor"
                       }
                     }
                   ]
@@ -7591,32 +7591,13 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
-                      "args": {
-                        "name": "getfixedboi",
-                        "_original_ast_type": "name"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ocram's Razor"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
                       "rule": "Not",
                       "args": {
                         "condition": {
-                          "rule": "Name",
+                          "rule": "AST_setting_value",
                           "args": {
-                            "name": "getfixedboi",
-                            "_original_ast_type": "name"
+                            "setting": "getfixedboi",
+                            "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
                         },
@@ -7628,6 +7609,25 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Mechanical Worm"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "getfixedboi",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ocram's Razor"
                       }
                     }
                   ]
@@ -7652,32 +7652,13 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Name",
-                      "args": {
-                        "name": "getfixedboi",
-                        "_original_ast_type": "name"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ocram's Razor"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
                       "rule": "Not",
                       "args": {
                         "condition": {
-                          "rule": "Name",
+                          "rule": "AST_setting_value",
                           "args": {
-                            "name": "getfixedboi",
-                            "_original_ast_type": "name"
+                            "setting": "getfixedboi",
+                            "_original_ast_type": "setting_value"
                           },
                           "_converted_from_ast": true
                         },
@@ -7689,6 +7670,25 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Mechanical Skull"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "getfixedboi",
+                        "_original_ast_type": "setting_value"
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ocram's Razor"
                       }
                     }
                   ]
