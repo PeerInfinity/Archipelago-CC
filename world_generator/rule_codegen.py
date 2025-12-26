@@ -1045,7 +1045,18 @@ class RuleCodeGenerator:
         # Preserve numeric values for use in arithmetic/comparison contexts
         if isinstance(value, bool):
             return self._make_bool_constant(value)
-        elif isinstance(value, (int, float)):
+        elif isinstance(value, int):
+            # Integer 0 and 1 are often boolean toggle values from options
+            # These need to be converted to False_()/True_() when used in boolean contexts
+            # (e.g., inside Not(), And(), Or())
+            # Other integers are preserved for arithmetic operations
+            if value == 0:
+                return self._make_bool_constant(False)
+            elif value == 1:
+                return self._make_bool_constant(True)
+            else:
+                return repr(value)
+        elif isinstance(value, float):
             return repr(value)
         else:
             # For other types (strings, etc.), use boolean interpretation
