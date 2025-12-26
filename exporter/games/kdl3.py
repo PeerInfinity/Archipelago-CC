@@ -28,7 +28,48 @@ class KDL3GameExportHandler(GenericGameExportHandler):
 
     # Preserve these helpers as helper calls (don't inline them - use JavaScript instead)
     # These helpers have loops/iterators that can't be evaluated by the frontend rule engine
+    # Note: These are now expanded at export time when called with constant args via expand_helper()
     HELPERS_TO_PRESERVE = {'can_assemble_rob', 'can_fix_angel_wings'}
+
+    # The restrictive enemy/ability pairs for Sand Canyon 6 (R.O.B. assembly)
+    # Matches enemy_abilities.enemy_restrictive[1:5] from Python and JS implementations
+    ENEMY_RESTRICTIVE_ROB = [
+        (["Parasol Ability", "Cutter Ability"], ["Bukiset (Parasol)", "Bukiset (Cutter)"]),
+        (["Spark Ability", "Clean Ability"], ["Bukiset (Spark)", "Bukiset (Clean)"]),
+        (["Ice Ability", "Needle Ability"], ["Bukiset (Ice)", "Bukiset (Needle)"]),
+        (["Stone Ability", "Burning Ability"], ["Bukiset (Stone)", "Bukiset (Burning)"]),
+    ]
+
+    # Enemies required for fixing angel wings (Iceberg 6 - Angel location)
+    ANGEL_WINGS_ENEMIES = [
+        "Sparky", "Blocky", "Jumper Shoot", "Yuki",
+        "Sir Kibble", "Haboki", "Boboo", "Captain Stitch"
+    ]
+
+    # Map ability names to item requirements
+    # Each ability requires the base item and the ability item
+    ABILITY_REQUIREMENTS = {
+        "No Ability": None,  # Always reachable
+        "Burning Ability": ("Burning", "Burning Ability"),
+        "Stone Ability": ("Stone", "Stone Ability"),
+        "Ice Ability": ("Ice", "Ice Ability"),
+        "Needle Ability": ("Needle", "Needle Ability"),
+        "Clean Ability": ("Clean", "Clean Ability"),
+        "Parasol Ability": ("Parasol", "Parasol Ability"),
+        "Spark Ability": ("Spark", "Spark Ability"),
+        "Cutter Ability": ("Cutter", "Cutter Ability"),
+    }
+
+    # Map animal names to item requirements
+    # Each animal requires the animal item and the spawn item
+    ANIMAL_REQUIREMENTS = {
+        "Coo": ("Coo", "Coo Spawn"),
+        "Kine": ("Kine", "Kine Spawn"),
+        "Rick": ("Rick", "Rick Spawn"),
+        "Nago": ("Nago", "Nago Spawn"),
+        "ChuChu": ("ChuChu", "ChuChu Spawn"),
+        "Pitch": ("Pitch", "Pitch Spawn"),
+    }
 
     # Map parameter names used in inlined functions to actual setting names
     # When can_reach_boss is inlined, it uses parameter name 'ow_boss_req' but the
@@ -90,6 +131,24 @@ class KDL3GameExportHandler(GenericGameExportHandler):
         """Recursively expand and convert KDL3 rules, including f-strings."""
         if not rule:
             return rule
+
+        # Handle helper expansion for complex helpers with constant args
+        # This expands can_assemble_rob and can_fix_angel_wings at export time
+        # Check both AST format (type='helper') and rule builder format (rule=helper_name)
+        helper_name = None
+        if rule.get('type') == 'helper':
+            helper_name = rule.get('name', '')
+        elif rule.get('_original_ast_type') == 'helper':
+            helper_name = rule.get('rule', '')
+
+        if helper_name and helper_name in self.HELPERS_TO_PRESERVE:
+            # Normalize to AST format for expand_helper
+            normalized = {'type': 'helper', 'name': helper_name, 'args': rule.get('args', [])}
+            expanded = self.expand_helper(normalized)
+            if expanded:
+                # Recursively expand the result
+                return self.expand_rule(expanded, _depth + 1)
+            # If expansion failed, keep as helper call for JS fallback
 
         # Handle name remapping and conversion to setting_value type
         if rule.get('type') == 'name':
@@ -212,3 +271,157 @@ class KDL3GameExportHandler(GenericGameExportHandler):
     
     # NOTE: post_process_data removed - f-string resolution now happens during
     # the initial export pass via safe_expand_rule() -> expand_rule() -> _convert_f_string()
+
+    def expand_helper(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Expand complex KDL3 helpers with constant arguments into simplified rules.
+
+        This method handles can_assemble_rob and can_fix_angel_wings which have
+        loop logic that can't be directly converted to AST format. When these
+        helpers are called with constant copy_abilities arguments, we can evaluate
+        the logic at export time and produce a simplified rule.
+
+        Args:
+            rule: A helper call rule with type='helper' and name in HELPERS_TO_PRESERVE
+
+        Returns:
+            A simplified rule dict if expansion was successful, None otherwise
+        """
+        helper_name = rule.get('name', '')
+        args = rule.get('args', [])
+
+        # Get copy_abilities from the first argument if it's a constant
+        copy_abilities = None
+        if args and isinstance(args[0], dict):
+            arg = args[0]
+            # Handle constant wrapped in rule format
+            if arg.get('type') == 'constant':
+                copy_abilities = arg.get('value', {})
+            elif arg.get('rule') == 'Constant':
+                copy_abilities = arg.get('args', {}).get('value', {})
+
+        if copy_abilities is None:
+            logger.debug(f"Could not extract copy_abilities from {helper_name} args")
+            return None
+
+        if helper_name == 'can_assemble_rob':
+            return self._expand_can_assemble_rob(copy_abilities)
+        elif helper_name == 'can_fix_angel_wings':
+            return self._expand_can_fix_angel_wings(copy_abilities)
+
+        return None
+
+    def _make_ability_check(self, ability_name: str) -> Optional[Dict[str, Any]]:
+        """Create an item check rule for an ability."""
+        reqs = self.ABILITY_REQUIREMENTS.get(ability_name)
+        if reqs is None:
+            return {'type': 'constant', 'value': True}  # No Ability is always true
+        base_item, ability_item = reqs
+        return {
+            'type': 'and',
+            'conditions': [
+                {'type': 'item_check', 'item': base_item},
+                {'type': 'item_check', 'item': ability_item}
+            ]
+        }
+
+    def _make_animal_check(self, animal_name: str) -> Optional[Dict[str, Any]]:
+        """Create an item check rule for an animal."""
+        reqs = self.ANIMAL_REQUIREMENTS.get(animal_name)
+        if reqs is None:
+            return None
+        animal_item, spawn_item = reqs
+        return {
+            'type': 'and',
+            'conditions': [
+                {'type': 'item_check', 'item': animal_item},
+                {'type': 'item_check', 'item': spawn_item}
+            ]
+        }
+
+    def _expand_can_assemble_rob(self, copy_abilities: Dict[str, str]) -> Dict[str, Any]:
+        """
+        Expand can_assemble_rob helper with specific copy_abilities into a rule.
+
+        The logic requires:
+        1. can_reach_coo AND can_reach_kine (animal requirements)
+        2. For each of 4 Bukiset pairs, at least one Bukiset must have a reachable
+           ability from the allowed list
+        3. can_reach_parasol AND can_reach_stone (final ability requirements)
+
+        Args:
+            copy_abilities: Map from enemy name to ability name
+
+        Returns:
+            A rule dict representing the simplified logic
+        """
+        conditions = []
+
+        # Animal requirements: need both Coo and Kine
+        conditions.append(self._make_animal_check('Coo'))
+        conditions.append(self._make_animal_check('Kine'))
+
+        # For each restrictive pair, find which abilities we need to check
+        for allowed_abilities, bukisets in self.ENEMY_RESTRICTIVE_ROB:
+            pair_conditions = []
+
+            for bukiset in bukisets:
+                enemy_ability = copy_abilities.get(bukiset)
+                if enemy_ability and enemy_ability in allowed_abilities:
+                    # This bukiset has an allowed ability - add its item check
+                    ability_check = self._make_ability_check(enemy_ability)
+                    if ability_check:
+                        pair_conditions.append(ability_check)
+
+            if pair_conditions:
+                if len(pair_conditions) == 1:
+                    conditions.append(pair_conditions[0])
+                else:
+                    # OR together all valid bukisets for this pair
+                    conditions.append({'type': 'or', 'conditions': pair_conditions})
+            else:
+                # No bukiset in this pair has an allowed ability - this should never happen
+                # for valid copy_abilities, but return False if it does
+                logger.warning(f"No valid bukiset for pair {allowed_abilities} in can_assemble_rob")
+                return {'type': 'constant', 'value': False}
+
+        # Final ability requirements: need Parasol and Stone
+        conditions.append(self._make_ability_check('Parasol Ability'))
+        conditions.append(self._make_ability_check('Stone Ability'))
+
+        logger.debug(f"Expanded can_assemble_rob to {len(conditions)} conditions")
+        return {'type': 'and', 'conditions': conditions}
+
+    def _expand_can_fix_angel_wings(self, copy_abilities: Dict[str, str]) -> Dict[str, Any]:
+        """
+        Expand can_fix_angel_wings helper with specific copy_abilities into a rule.
+
+        Requires being able to reach ALL abilities from specific enemies:
+        Sparky, Blocky, Jumper Shoot, Yuki, Sir Kibble, Haboki, Boboo, Captain Stitch
+
+        Args:
+            copy_abilities: Map from enemy name to ability name
+
+        Returns:
+            A rule dict representing the simplified logic
+        """
+        conditions = []
+
+        for enemy in self.ANGEL_WINGS_ENEMIES:
+            enemy_ability = copy_abilities.get(enemy)
+            if enemy_ability:
+                ability_check = self._make_ability_check(enemy_ability)
+                if ability_check:
+                    # Only add non-trivial checks (skip "No Ability" which returns constant True)
+                    if ability_check.get('type') != 'constant':
+                        conditions.append(ability_check)
+            else:
+                logger.warning(f"No ability mapping for enemy '{enemy}' in copy_abilities")
+                return {'type': 'constant', 'value': False}
+
+        if not conditions:
+            # All enemies have "No Ability" - always reachable
+            return {'type': 'constant', 'value': True}
+
+        logger.debug(f"Expanded can_fix_angel_wings to {len(conditions)} conditions")
+        return {'type': 'and', 'conditions': conditions}
