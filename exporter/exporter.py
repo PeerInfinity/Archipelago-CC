@@ -844,13 +844,8 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         except Exception as e:
             error_msg = f"Error getting game_info from handler for player {player}: {str(e)}"
             logger.error(error_msg)
-            # Fallback to default
-            export_data['game_info'][player_str] = {
-                "name": game_name,
-                "rule_format": {
-                    "version": "1.0"
-                }
-            }
+            # Fallback to empty dict (game name is in world[player].game)
+            export_data['game_info'][player_str] = {}
 
         # Store the pre-calculated itempool counts
         export_data['itempool_counts'][player_str] = itempool_counts
@@ -1971,30 +1966,14 @@ def cleanup_export_data(data):
     player_games = {}
     
     # Get player game mapping (needed for handler selection)
-    # We need this info before cleaning world data, so iterate over world first
-    # even if world data itself isn't cleaned until later
+    # Game name is in world[player].game
     if 'world' in data and isinstance(data['world'], dict):
         for player_id, world_data in data['world'].items():
             if isinstance(world_data, dict) and 'game' in world_data:
                 player_games[player_id] = world_data['game']
             else:
-                # Attempt to get game name from game_info as a fallback
-                if 'game_info' in data and player_id in data['game_info'] and 'name' in data['game_info'][player_id]:
-                    player_games[player_id] = data['game_info'][player_id]['name']
-                else:
-                    logger.warning(f"Could not determine game for player {player_id} in cleanup")
-                    player_games[player_id] = "unknown" # Default if not found
-                    
-    # Ensure game_info is properly structured (this might still be useful)
-    if 'game_info' in data:
-        for player_id, game_info in data['game_info'].items():
-            # Make sure game_info has the game name
-            if 'name' not in game_info and player_id in player_games:
-                game_info['name'] = player_games[player_id]
-            
-            # Ensure rule_format exists
-            if 'rule_format' not in game_info:
-                game_info['rule_format'] = {"version": "1.0"}
+                logger.warning(f"Could not determine game for player {player_id} in cleanup")
+                player_games[player_id] = "unknown"
 
     # Clean up world data fields
     if 'world' in data:

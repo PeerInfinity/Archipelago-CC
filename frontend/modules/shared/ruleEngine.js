@@ -179,9 +179,11 @@ export function resolveHelperScope(helperDefinition, args, staticData, playerIdS
     return helperScope;
   }
 
-  const playerSettings = staticData?.settings?.[playerIdStr] || {};
-  const playerSlotData = staticData?.game_info?.[playerIdStr]?.slot_data || {};
-  const playerOptions = playerSettings.options || playerSettings;
+  // Use world with fallback to settings for backwards compatibility
+  const playerWorld = staticData?.world?.[playerIdStr] || staticData?.settings?.[playerIdStr] || {};
+  // slot_data now in world, with fallback to game_info for backwards compatibility
+  const playerSlotData = playerWorld?.slot_data || staticData?.game_info?.[playerIdStr]?.slot_data || {};
+  const playerOptions = playerWorld.options || playerWorld;
   // Get param_mappings from the helper definition (exported from Python game handler)
   const paramMappings = helperDefinition.param_mappings || {};
 

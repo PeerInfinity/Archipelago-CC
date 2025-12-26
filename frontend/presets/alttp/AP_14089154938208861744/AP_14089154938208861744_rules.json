@@ -22018,115 +22018,6 @@
           ]
         }
       },
-      "world_directory": "alttp"
-    }
-  },
-  "exporter": {
-    "1": {
-      "assume_bidirectional_exits": true,
-      "use_resolved_items": false
-    }
-  },
-  "game_info": {
-    "1": {
-      "name": "A Link to the Past",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "grass",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
-          "language": "English",
-          "file_name": "multiworld_en.md",
-          "link": "multiworld/en",
-          "authors": [
-            "Farrak Kilhn",
-            "Berserker"
-          ]
-        },
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
-          "language": "Deutsch",
-          "file_name": "multiworld_de.md",
-          "link": "multiworld/de",
-          "authors": [
-            "Fischfilet"
-          ]
-        },
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
-          "language": "Espa\u00f1ol",
-          "file_name": "multiworld_es.md",
-          "link": "multiworld/es",
-          "authors": [
-            "Edos"
-          ]
-        },
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
-          "language": "Fran\u00e7ais",
-          "file_name": "multiworld_fr.md",
-          "link": "multiworld/fr",
-          "authors": [
-            "Coxla"
-          ]
-        },
-        {
-          "name": "MSU-1 Setup Guide",
-          "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
-          "language": "English",
-          "file_name": "msu1_en.md",
-          "link": "msu1/en",
-          "authors": [
-            "Farrak Kilhn"
-          ]
-        },
-        {
-          "name": "MSU-1 Setup Guide",
-          "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
-          "language": "Espa\u00f1ol",
-          "file_name": "msu1_es.md",
-          "link": "msu1/es",
-          "authors": [
-            "Edos"
-          ]
-        },
-        {
-          "name": "MSU-1 Setup Guide",
-          "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
-          "language": "Fran\u00e7ais",
-          "file_name": "msu1_fr.md",
-          "link": "msu1/fr",
-          "authors": [
-            "Coxla"
-          ]
-        },
-        {
-          "name": "Plando Guide",
-          "description": "A guide to creating Multiworld Plandos with LTTP",
-          "language": "English",
-          "file_name": "plando_en.md",
-          "link": "plando/en",
-          "authors": [
-            "Berserker"
-          ]
-        },
-        {
-          "name": "'OOF' Sound Replacement",
-          "description": "A guide to customizing Link's 'oof' sound",
-          "language": "English",
-          "file_name": "oof_sound_en.md",
-          "link": "oof_sound/en",
-          "authors": [
-            "Nyx Edelstein"
-          ]
-        }
-      ],
       "world_description": "The Legend of Zelda: A Link to the Past is an action/adventure game. Take on the role of\nLink, a boy who is destined to save the land of Hyrule. Delve through three palaces and nine\ndungeons on your quest to rescue the descendents of the seven wise men and defeat the evil\nGanon!",
       "slot_data": {
         "crystals_needed_for_gt": 7,
@@ -22160,8 +22051,117 @@
         "triforce_pieces_extra": 10,
         "mm_medalion": "Quake",
         "tr_medalion": "Ether"
-      }
+      },
+      "web": {
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "English",
+            "file_name": "multiworld_en.md",
+            "link": "multiworld/en",
+            "authors": [
+              "Farrak Kilhn",
+              "Berserker"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "Deutsch",
+            "file_name": "multiworld_de.md",
+            "link": "multiworld/de",
+            "authors": [
+              "Fischfilet"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "Espa\u00f1ol",
+            "file_name": "multiworld_es.md",
+            "link": "multiworld/es",
+            "authors": [
+              "Edos"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "Fran\u00e7ais",
+            "file_name": "multiworld_fr.md",
+            "link": "multiworld/fr",
+            "authors": [
+              "Coxla"
+            ]
+          },
+          {
+            "name": "MSU-1 Setup Guide",
+            "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
+            "language": "English",
+            "file_name": "msu1_en.md",
+            "link": "msu1/en",
+            "authors": [
+              "Farrak Kilhn"
+            ]
+          },
+          {
+            "name": "MSU-1 Setup Guide",
+            "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
+            "language": "Espa\u00f1ol",
+            "file_name": "msu1_es.md",
+            "link": "msu1/es",
+            "authors": [
+              "Edos"
+            ]
+          },
+          {
+            "name": "MSU-1 Setup Guide",
+            "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
+            "language": "Fran\u00e7ais",
+            "file_name": "msu1_fr.md",
+            "link": "msu1/fr",
+            "authors": [
+              "Coxla"
+            ]
+          },
+          {
+            "name": "Plando Guide",
+            "description": "A guide to creating Multiworld Plandos with LTTP",
+            "language": "English",
+            "file_name": "plando_en.md",
+            "link": "plando/en",
+            "authors": [
+              "Berserker"
+            ]
+          },
+          {
+            "name": "'OOF' Sound Replacement",
+            "description": "A guide to customizing Link's 'oof' sound",
+            "language": "English",
+            "file_name": "oof_sound_en.md",
+            "link": "oof_sound/en",
+            "authors": [
+              "Nyx Edelstein"
+            ]
+          }
+        ]
+      },
+      "world_directory": "alttp"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": true,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {
     "1": {

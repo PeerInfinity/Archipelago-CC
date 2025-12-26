@@ -640,6 +640,9 @@ class BaseGameExportHandler:
         """
         exporter_settings = {}
 
+        # rule_format: Version metadata for the exported rules
+        exporter_settings['rule_format'] = {"version": "1.0"}
+
         # assume_bidirectional_exits: Whether region connections are bidirectional by default
         exporter_settings['assume_bidirectional_exits'] = self.ASSUME_BIDIRECTIONAL_EXITS
 
@@ -792,6 +795,63 @@ class BaseGameExportHandler:
         for attr_name, attr_value in world_attributes.items():
             if attr_name not in world_data:  # Don't override existing values
                 world_data[attr_name] = attr_value
+
+        # Export base_id if available (used for ID allocation)
+        # This mirrors Archipelago's world.base_id
+        if hasattr(world, 'base_id') and world.base_id is not None:
+            world_data['base_id'] = world.base_id
+
+        # Export world class docstring if available
+        # This provides a description of the world/game
+        world_class = world.__class__
+        if world_class.__doc__:
+            # Clean up the docstring (strip leading/trailing whitespace from each line)
+            docstring = world_class.__doc__
+            # Normalize whitespace
+            lines = [line.strip() for line in docstring.strip().split('\n')]
+            world_data['world_description'] = '\n'.join(lines)
+
+        # Export fill_slot_data return value if available
+        # This captures the data the world sends to the client
+        if hasattr(world, 'fill_slot_data') and callable(world.fill_slot_data):
+            try:
+                slot_data = world.fill_slot_data()
+                if slot_data and isinstance(slot_data, dict):
+                    world_data['slot_data'] = slot_data
+            except Exception as e:
+                logger.debug(f"Could not call fill_slot_data for {world.game}: {e}")
+
+        # Export WebWorld metadata if available
+        # This mirrors Archipelago's world.web structure
+        if hasattr(world, 'web') and world.web:
+            web = world.web
+            web_data = {}
+            # Theme
+            if hasattr(web, 'theme') and web.theme:
+                web_data['theme'] = web.theme
+            # Tutorials
+            if hasattr(web, 'tutorials') and web.tutorials:
+                tutorials_data = []
+                for tutorial in web.tutorials:
+                    tutorial_info = {}
+                    if hasattr(tutorial, 'tutorial_name'):
+                        tutorial_info['name'] = tutorial.tutorial_name
+                    if hasattr(tutorial, 'description'):
+                        tutorial_info['description'] = tutorial.description
+                    if hasattr(tutorial, 'language'):
+                        tutorial_info['language'] = tutorial.language
+                    if hasattr(tutorial, 'file_name'):
+                        tutorial_info['file_name'] = tutorial.file_name
+                    if hasattr(tutorial, 'link'):
+                        tutorial_info['link'] = tutorial.link
+                    if hasattr(tutorial, 'authors'):
+                        tutorial_info['authors'] = tutorial.authors
+                    if tutorial_info:
+                        tutorials_data.append(tutorial_info)
+                if tutorials_data:
+                    web_data['tutorials'] = tutorials_data
+            if web_data:
+                world_data['web'] = web_data
 
         return world_data
 
@@ -1007,21 +1067,20 @@ class BaseGameExportHandler:
         
     def get_game_info(self, world) -> Dict[str, Any]:
         """
-        Get information about the game's rule formats and structure.
-        This can be overridden by game-specific expanders to provide more detailed information.
+        Get game-specific information for the frontend.
 
-        The base handler checks for accumulator_rules and prog_items_init class attributes
-        on the world, allowing generated worlds to define state counter patterns.
+        This method is for game-specific custom data and accumulator patterns.
+        Game-specific expanders can override this to add custom data.
+
+        Note: Base fields have been moved to other methods:
+        - name (game) -> world[player].game in get_world_data()
+        - slot_data, base_id, world_description, web -> get_world_data()
+        - rule_format -> get_exporter_settings()
 
         Returns:
-            A dictionary with game information for the frontend.
+            A dictionary with game-specific information for the frontend.
         """
-        game_info = {
-            "name": world.game,
-            "rule_format": {
-                "version": "1.0"
-            }
-        }
+        game_info = {}
 
         # Check if the world defines accumulator rules (for state counter patterns like coins)
         # This allows generated worlds from AST format to export accumulator rules
@@ -1031,57 +1090,6 @@ class BaseGameExportHandler:
         # Check if the world defines initial values for prog_items accumulators
         if hasattr(world, 'prog_items_init') and world.prog_items_init:
             game_info['prog_items_init'] = world.prog_items_init
-
-        # Export base_id if available (used for ID allocation)
-        if hasattr(world, 'base_id') and world.base_id is not None:
-            game_info['base_id'] = world.base_id
-
-        # Export WebWorld metadata if available
-        if hasattr(world, 'web') and world.web:
-            web = world.web
-            # Theme
-            if hasattr(web, 'theme') and web.theme:
-                game_info['web_theme'] = web.theme
-            # Tutorials
-            if hasattr(web, 'tutorials') and web.tutorials:
-                tutorials_data = []
-                for tutorial in web.tutorials:
-                    tutorial_info = {}
-                    if hasattr(tutorial, 'tutorial_name'):
-                        tutorial_info['name'] = tutorial.tutorial_name
-                    if hasattr(tutorial, 'description'):
-                        tutorial_info['description'] = tutorial.description
-                    if hasattr(tutorial, 'language'):
-                        tutorial_info['language'] = tutorial.language
-                    if hasattr(tutorial, 'file_name'):
-                        tutorial_info['file_name'] = tutorial.file_name
-                    if hasattr(tutorial, 'link'):
-                        tutorial_info['link'] = tutorial.link
-                    if hasattr(tutorial, 'authors'):
-                        tutorial_info['authors'] = tutorial.authors
-                    if tutorial_info:
-                        tutorials_data.append(tutorial_info)
-                if tutorials_data:
-                    game_info['web_tutorials'] = tutorials_data
-
-        # Export world class docstring if available
-        world_class = world.__class__
-        if world_class.__doc__:
-            # Clean up the docstring (strip leading/trailing whitespace from each line)
-            docstring = world_class.__doc__
-            # Normalize whitespace
-            lines = [line.strip() for line in docstring.strip().split('\n')]
-            game_info['world_description'] = '\n'.join(lines)
-
-        # Export fill_slot_data return value if available
-        # This captures the data the world sends to the client
-        if hasattr(world, 'fill_slot_data') and callable(world.fill_slot_data):
-            try:
-                slot_data = world.fill_slot_data()
-                if slot_data and isinstance(slot_data, dict):
-                    game_info['slot_data'] = slot_data
-            except Exception as e:
-                logger.debug(f"Could not call fill_slot_data for {world.game}: {e}")
 
         return game_info
         
