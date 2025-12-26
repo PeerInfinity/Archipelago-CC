@@ -179,9 +179,11 @@ export function resolveHelperScope(helperDefinition, args, staticData, playerIdS
     return helperScope;
   }
 
-  const playerSettings = staticData?.settings?.[playerIdStr] || {};
-  const playerSlotData = staticData?.game_info?.[playerIdStr]?.slot_data || {};
-  const playerOptions = playerSettings.options || playerSettings;
+  // Use world with fallback to settings for backwards compatibility
+  const playerWorld = staticData?.world?.[playerIdStr] || staticData?.settings?.[playerIdStr] || {};
+  // slot_data now in world, with fallback to game_info for backwards compatibility
+  const playerSlotData = playerWorld?.slot_data || staticData?.game_info?.[playerIdStr]?.slot_data || {};
+  const playerOptions = playerWorld.options || playerWorld;
   // Get param_mappings from the helper definition (exported from Python game handler)
   const paramMappings = helperDefinition.param_mappings || {};
 
@@ -1269,8 +1271,10 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             const staticData = context.getStaticData();
             const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
-            if (staticData?.settings && staticData.settings[playerId]) {
-              const settingValue = staticData.settings[playerId][rule.attr];
+            // Check world (new) or settings (legacy) for backwards compatibility
+            const worldData = staticData?.world || staticData?.settings;
+            if (worldData && worldData[playerId]) {
+              const settingValue = worldData[playerId][rule.attr];
               if (settingValue !== undefined) {
                 return settingValue;
               }
@@ -1286,14 +1290,17 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             const staticData = context.getStaticData ? context.getStaticData() : context.staticData;
             const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
-            // Special case: if accessing self.options, return the settings object so nested attributes work
-            if (rule.attr === 'options' && staticData?.settings && staticData.settings[playerId]) {
-              return staticData.settings[playerId];
+            // Check world (new) or settings (legacy) for backwards compatibility
+            const worldData = staticData?.world || staticData?.settings;
+
+            // Special case: if accessing self.options, return the world data so nested attributes work
+            if (rule.attr === 'options' && worldData && worldData[playerId]) {
+              return worldData[playerId];
             }
 
-            // Check if the setting exists
-            if (staticData?.settings && staticData.settings[playerId]) {
-              const settingValue = staticData.settings[playerId][rule.attr];
+            // Check if the setting/attribute exists
+            if (worldData && worldData[playerId]) {
+              const settingValue = worldData[playerId][rule.attr];
               if (settingValue !== undefined) {
                 return settingValue;
               }
@@ -1304,16 +1311,17 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // Special case: if baseObject is undefined and the object was "options",
-        // try to resolve from game settings
+        // try to resolve from game world/settings
         if (baseObject === undefined && rule.object && rule.object.type === 'name' && rule.object.name === 'options') {
           // Try to get the setting value from context
           if (context.getStaticData) {
             const staticData = context.getStaticData();
             const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
-            // Check if the setting exists
-            if (staticData.settings && staticData.settings[playerId]) {
-              const settingValue = staticData.settings[playerId][rule.attr];
+            // Check world (new) or settings (legacy) for backwards compatibility
+            const worldData = staticData?.world || staticData?.settings;
+            if (worldData && worldData[playerId]) {
+              const settingValue = worldData[playerId][rule.attr];
               if (settingValue !== undefined) {
                 return settingValue;
               }
@@ -1331,16 +1339,19 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           return undefined;
         }
 
-        // Special case: if baseObject is undefined and the object was "settings",
-        // return the setting value from the player's settings object
-        // This allows exported helpers to reference settings.door_reqs, settings.item_by_door, etc.
-        if (baseObject === undefined && rule.object && rule.object.type === 'name' && rule.object.name === 'settings') {
+        // Special case: if baseObject is undefined and the object was "settings" or "world",
+        // return the value from the player's world/settings object
+        // This allows exported helpers to reference settings.door_reqs, world.difficulty_requirements, etc.
+        if (baseObject === undefined && rule.object && rule.object.type === 'name' &&
+            (rule.object.name === 'settings' || rule.object.name === 'world')) {
           if (context.getStaticData) {
             const staticData = context.getStaticData();
             const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
-            if (staticData?.settings && staticData.settings[playerId]) {
-              const settingValue = staticData.settings[playerId][rule.attr];
+            // Check world (new) or settings (legacy) for backwards compatibility
+            const worldData = staticData?.world || staticData?.settings;
+            if (worldData && worldData[playerId]) {
+              const settingValue = worldData[playerId][rule.attr];
               if (settingValue !== undefined) {
                 return settingValue;
               }
@@ -2700,12 +2711,17 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      // world_attribute is an alias for setting_value - both use getSetting() which
+      // checks settings first, then falls back to world_attributes
+      case 'world_attribute':
       case 'setting_value': {
-        // Retrieve a setting value (e.g. for self.world.options.difficulty)
+        // Retrieve a setting or world attribute value
+        // - setting_value: for user-configurable options (e.g. world.options.difficulty)
+        // - world_attribute: for runtime-computed values (e.g. world.shop_items, world.difficulty_requirements)
         // Supports dot notation for nested access (e.g. "difficulty_requirements.progressive_bottle_limit")
         // Note: Choice options in Python use 0 for "off"/"none" states, which are exported
         // as strings like 'off', 'none', 'false'. These should be treated as falsy in JS.
-        let settingName = rule.setting;
+        let settingName = rule.setting || rule.attribute;
         if (typeof settingName === 'string') {
           let rawValue;
           // Handle dot notation for nested property access
@@ -2724,7 +2740,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             if (Array.isArray(rawValue)) {
               result = rawValue[rule.index];
             } else {
-              log('warn', '[evaluateRule] setting_value has index but value is not an array', {
+              log('warn', `[evaluateRule] ${rule.type} has index but value is not an array`, {
                 rule,
                 rawValue,
               });
@@ -2737,7 +2753,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             result = rawValue;
           }
         } else {
-          log('warn', '[evaluateRule] Invalid setting name for setting_value', {
+          log('warn', `[evaluateRule] Invalid name for ${rule.type}`, {
             rule,
             settingName,
           });
@@ -5346,15 +5362,17 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       if (context.getStaticData || context.staticData) {
         const staticData = context.getStaticData ? context.getStaticData() : context.staticData;
         const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
-        if (staticData?.settings && staticData.settings[playerId]) {
-          const playerSettings = staticData.settings[playerId];
+        // Check world (new) or settings (legacy) for backwards compatibility
+        const worldData = staticData?.world || staticData?.settings;
+        if (worldData && worldData[playerId]) {
+          const playerWorld = worldData[playerId];
 
           // Check direct setting first
-          let settingValue = playerSettings[settingName];
+          let settingValue = playerWorld[settingName];
 
           // If not found, check in options sub-object
-          if (settingValue === undefined && playerSettings.options) {
-            settingValue = playerSettings.options[settingName];
+          if (settingValue === undefined && playerWorld.options) {
+            settingValue = playerWorld.options[settingName];
           }
 
           if (settingValue !== undefined) {

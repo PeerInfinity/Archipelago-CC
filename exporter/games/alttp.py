@@ -20,13 +20,19 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     # ALTTP exits are bidirectional - going through an entrance implies being able to return
     ASSUME_BIDIRECTIONAL_EXITS = True
 
-    # Simple world attributes that can be automatically exported via base class
-    COMPUTED_SETTINGS = {
-        'treasure_hunt_required': lambda w, m, p: getattr(w, 'treasure_hunt_required', 0),
-        'can_take_damage': lambda w, m, p: getattr(w, 'can_take_damage', True),
-        'logical_heart_pieces': lambda w, m, p: getattr(w, 'logical_heart_pieces', 24),
-        'logical_heart_containers': lambda w, m, p: getattr(w, 'logical_heart_containers', 10),
-    }
+    # Computed helpers defined in get_helper_definitions() rather than from helper modules
+    # These are auto-preserved when AUTO_PRESERVE_COMPUTED_HELPERS is True
+    COMPUTED_HELPERS = {'can_buy', 'can_buy_unlimited', 'can_defeat_boss'}
+    AUTO_PRESERVE_COMPUTED_HELPERS = True
+
+    # NOTE: Simple world attributes are now auto-discovered by the base exporter.
+    # Previously defined here but no longer needed:
+    # WORLD_ATTRIBUTES = {
+    #     'treasure_hunt_required': lambda w, m, p: getattr(w, 'treasure_hunt_required', 0),
+    #     'can_take_damage': lambda w, m, p: getattr(w, 'can_take_damage', True),
+    #     'logical_heart_pieces': lambda w, m, p: getattr(w, 'logical_heart_pieces', 24),
+    #     'logical_heart_containers': lambda w, m, p: getattr(w, 'logical_heart_containers', 10),
+    # }
 
     # Complex helpers that can't be exported (need JavaScript implementations)
     # NOTE: Use set() for empty blacklist - {} creates an empty dict!
@@ -69,16 +75,11 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     }
 
     # Helpers that should be preserved as helper calls (not inlined by generic pattern matching)
-    # These are either:
-    # - Complex helpers that are exported as definitions via get_helper_definitions()
-    # - Computed helpers defined directly in get_helper_definitions()
-    # All discovered helpers are automatically exported as definitions when
-    # AUTO_EXPORT_DISCOVERED_HELPERS = True, so this set just controls which
-    # helpers are preserved as calls vs potentially inlined by pattern matching.
+    # These are complex helpers exported as definitions via get_helper_definitions().
+    # Note: Computed helpers (can_buy, can_buy_unlimited, can_defeat_boss) are now
+    # auto-preserved via COMPUTED_HELPERS + AUTO_PRESERVE_COMPUTED_HELPERS.
     HELPERS_TO_PRESERVE = {
         'GanonDefeatRule',
-        'can_buy',  # Computed helper using shop_items data
-        'can_buy_unlimited',  # Computed helper using shop_items data
         'can_extend_magic',
         'can_get_good_bee',  # Uses region_reference and is_not_bunny
         'is_not_bunny',  # Takes region parameter, uses region_attribute
@@ -89,7 +90,6 @@ class ALttPGameExportHandler(BaseGameExportHandler):
         'has_hearts',  # Exported with logical_heart settings
         'has_misery_mire_medallion',  # Exported with setting_value index support
         'has_turtle_rock_medallion',  # Exported with setting_value index support
-        'can_defeat_boss',  # Computed helper for GT multi-boss locations
         'orig_rule',  # Internal helper that doesn't appear in final export
     }
     
@@ -275,18 +275,18 @@ class ALttPGameExportHandler(BaseGameExportHandler):
                             break
                     parent_obj = parent_obj.get('object') or parent_obj.get('value')
         
-        # Check for world.can_take_damage pattern - convert to setting_value
-        # since can_take_damage is already exported in settings
+        # Check for world.can_take_damage pattern - convert to world_attribute
+        # since can_take_damage is exported in world_attributes
         if (rule.get('type') == 'attribute' and
             rule.get('attr') == 'can_take_damage' and
             isinstance(rule.get('object'), dict) and
             rule['object'].get('type') == 'name' and
             rule['object'].get('name') == 'world'):
 
-            # Replace with setting_value to use the exported setting
+            # Replace with world_attribute to use the exported value
             return {
-                'type': 'setting_value',
-                'setting': 'can_take_damage'
+                'type': 'world_attribute',
+                'attribute': 'can_take_damage'
             }
         
         # Recursively process nested rules
@@ -473,14 +473,9 @@ class ALttPGameExportHandler(BaseGameExportHandler):
                          if big_key_name not in itempool_counts:
                             itempool_counts[big_key_name] = 1
 
-        # Add ALTTP-specific max counts
-        if hasattr(world, 'difficulty_requirements'):
-             if hasattr(world.difficulty_requirements, 'progressive_bottle_limit'):
-                 itempool_counts['__max_progressive_bottle'] = world.difficulty_requirements.progressive_bottle_limit
-             if hasattr(world.difficulty_requirements, 'boss_heart_container_limit'):
-                itempool_counts['__max_boss_heart_container'] = world.difficulty_requirements.boss_heart_container_limit
-             if hasattr(world.difficulty_requirements, 'heart_piece_limit'):
-                itempool_counts['__max_heart_piece'] = world.difficulty_requirements.heart_piece_limit
+        # Note: difficulty_requirements (progressive_bottle_limit, boss_heart_container_limit,
+        # heart_piece_limit) are now exported via get_world_attributes() instead of as
+        # __max_* values in itempool. The frontend reads them from world_attributes.
 
         # For vanilla placement, report only plain bottles (no variants)
         import os
@@ -496,55 +491,21 @@ class ALttPGameExportHandler(BaseGameExportHandler):
 
         return dict(sorted(itempool_counts.items()))
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extract ALTTP settings.
-
-        Uses base class to export all options with their definitions.
-        Note: World attributes (difficulty_requirements, medallions, shop_items)
-        are now in get_world_attributes() instead.
-        """
-        # Get all options and option_definitions from base class
-        # Note: assume_bidirectional_exits is set via ASSUME_BIDIRECTIONAL_EXITS class attribute
-        return super().get_settings_data(world, multiworld, player)
-
     def get_world_attributes(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract ALTTP world attributes (computed runtime values).
 
-        These are values computed at runtime on the world instance, not
-        user-configurable options.
+        Most attributes are now auto-discovered by the base exporter:
+        - Simple types (int, bool, str, float) from world instance
+        - Class-level annotated attributes with defaults
+        - Nested objects with simple attributes (e.g., difficulty_requirements)
+        - Enum values (serialized to their .value)
+        - Lists of simple types or enums (e.g., required_medallions)
+
+        This override only handles shop_items which requires custom logic
+        to iterate over world.shops and build a structured data format.
         """
-        # Get base world attributes (from COMPUTED_SETTINGS: treasure_hunt_required,
-        # can_take_damage, logical_heart_pieces, logical_heart_containers)
+        # Get base world attributes (auto-discovered from world instance)
         world_attributes = super().get_world_attributes(world, multiworld, player)
-
-        # Difficulty requirements
-        if hasattr(world, 'difficulty_requirements'):
-            world_attributes['difficulty_requirements'] = {
-                'progressive_bottle_limit': getattr(world.difficulty_requirements, 'progressive_bottle_limit', None),
-                'boss_heart_container_limit': getattr(world.difficulty_requirements, 'boss_heart_container_limit', None),
-                'heart_piece_limit': getattr(world.difficulty_requirements, 'heart_piece_limit', None),
-            }
-        else:
-            world_attributes['difficulty_requirements'] = {}
-
-        # Medallions
-        if hasattr(world, 'required_medallions'):
-            medallion_names = []
-            for med in world.required_medallions:
-                med_name = getattr(med, 'name', None)
-                if med_name is None:
-                    med_name = getattr(med, 'value', str(med))
-                medallion_names.append(med_name)
-
-            world_attributes['required_medallions'] = medallion_names
-            mire_med = getattr(world, 'misery_mire_medallion', medallion_names[0] if medallion_names else None)
-            tr_med = getattr(world, 'turtle_rock_medallion', medallion_names[1] if len(medallion_names) > 1 else None)
-            world_attributes['misery_mire_medallion'] = getattr(mire_med, 'value', str(mire_med))
-            world_attributes['turtle_rock_medallion'] = getattr(tr_med, 'value', str(tr_med))
-        else:
-            world_attributes['required_medallions'] = []
-            world_attributes['misery_mire_medallion'] = None
-            world_attributes['turtle_rock_medallion'] = None
 
         # Shop item data - maps items to regions where shops sell them
         # Enables can_buy and can_buy_unlimited helper implementation
@@ -583,36 +544,6 @@ class ALttPGameExportHandler(BaseGameExportHandler):
             world_attributes['shop_items'] = shop_items
 
         return world_attributes
-
-    def get_game_info(self, world) -> Dict[str, Any]:
-         """ Gets ALTTP game info. """
-         return {
-             "name": "A Link to the Past",
-             "rule_format": { "version": "1.0" } # Or update if specific format version needed
-         }
-
-    def cleanup_settings(self, settings_dict: Dict[str, Any]) -> Dict[str, Any]:
-        """Clean up ALTTP settings.
-
-        Note: Most cleanup is no longer needed since the base exporter now exports
-        Choice options as strings (via current_key) and includes option_definitions.
-        This method is kept for any edge case cleanup.
-        """
-        cleaned_settings = settings_dict.copy()
-
-        # Cleanup medallion names if they were extracted directly from enum objects
-        for med_key in ['misery_mire_medallion', 'turtle_rock_medallion']:
-            current_value = cleaned_settings.get(med_key)
-            if isinstance(current_value, str) and '(' in current_value and 'Medallion' in current_value:
-                try:
-                    # Extract from format like 'Medallion(Bombos)'
-                    extracted = current_value.split('(', 1)[1].split(')', 1)[0]
-                    cleaned_settings[med_key] = extracted
-                    logger.debug(f"Cleaned medallion '{med_key}' to '{extracted}'")
-                except Exception as e:
-                    logger.warning(f"Could not clean medallion value: {current_value} - Error: {e}")
-
-        return cleaned_settings
 
     def get_region_attributes(self, region) -> Dict[str, Any]:
         """
@@ -734,7 +665,7 @@ class ALttPGameExportHandler(BaseGameExportHandler):
                         'type': 'subscript',
                         'value': {
                             'type': 'subscript',
-                            'value': {'type': 'setting_value', 'setting': 'shop_items'},
+                            'value': {'type': 'world_attribute', 'attribute': 'shop_items'},
                             'index': {'type': 'name', 'name': 'item'}
                         },
                         'index': {'type': 'constant', 'value': 'limited'}
@@ -759,7 +690,7 @@ class ALttPGameExportHandler(BaseGameExportHandler):
                         'type': 'subscript',
                         'value': {
                             'type': 'subscript',
-                            'value': {'type': 'setting_value', 'setting': 'shop_items'},
+                            'value': {'type': 'world_attribute', 'attribute': 'shop_items'},
                             'index': {'type': 'name', 'name': 'item'}
                         },
                         'index': {'type': 'constant', 'value': 'unlimited'}

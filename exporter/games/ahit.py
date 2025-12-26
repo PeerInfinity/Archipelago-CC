@@ -217,23 +217,20 @@ class AHitGameExportHandler(GenericGameExportHandler):
 
     def get_game_info(self, world):
         """Get A Hat in Time specific game information."""
+        # Get base game info (includes name, accumulator_rules, prog_items_init)
+        game_info = super().get_game_info(world)
+
         try:
-            return {
-                "name": "A Hat in Time",
-                "rule_format": {"version": "1.0"},
-                "chapter_costs": self.get_chapter_costs(world),
-                "hat_info": self.get_hat_costs(world),
-                "relic_groups": self.get_relic_groups(world)
-            }
+            game_info["chapter_costs"] = self.get_chapter_costs(world)
+            game_info["hat_info"] = self.get_hat_costs(world)
+            game_info["relic_groups"] = self.get_relic_groups(world)
         except Exception as e:
             logger.error(f"Error getting A Hat in Time game info: {e}")
-            return {
-                "name": "A Hat in Time",
-                "rule_format": {"version": "1.0"},
-                "chapter_costs": {},
-                "hat_info": {},
-                "relic_groups": {}
-            }
+            game_info["chapter_costs"] = {}
+            game_info["hat_info"] = {}
+            game_info["relic_groups"] = {}
+
+        return game_info
 
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """Return A Hat in Time item data with classifications."""

@@ -20698,10 +20698,7 @@
       "Small Key (Thieves Town)": 3,
       "Small Key (Tower of Hera)": 1,
       "Small Key (Turtle Rock)": 6,
-      "Triforce": 1,
-      "__max_boss_heart_container": 10,
-      "__max_heart_piece": 24,
-      "__max_progressive_bottle": 4
+      "Triforce": 1
     }
   },
   "canonical_placements": {
@@ -20791,11 +20788,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "A Link to the Past",
-      "assume_bidirectional_exits": true,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "items",
         "allow_collect": "true",
@@ -21534,26 +21529,367 @@
           "display_name": "Underworld Palette"
         }
       },
-      "world_directory": "alttp"
-    }
-  },
-  "world_attributes": {
-    "1": {
-      "treasure_hunt_required": 0,
-      "can_take_damage": true,
-      "logical_heart_pieces": 24,
-      "logical_heart_containers": 10,
-      "difficulty_requirements": {
-        "progressive_bottle_limit": 4,
-        "boss_heart_container_limit": 10,
-        "heart_piece_limit": 24
-      },
+      "has_progressive_bows": true,
+      "waterfall_fairy_bottle_fill": "Bottle (Red Potion)",
+      "pyramid_fairy_bottle_fill": "Bottle (Good Bee)",
+      "fix_trock_doors": false,
+      "fix_skullwoods_exit": false,
+      "fix_palaceofdarkness_exit": false,
+      "fix_trock_exit": false,
       "required_medallions": [
         "Quake",
         "Ether"
       ],
-      "misery_mire_medallion": "Quake",
-      "turtle_rock_medallion": "Ether",
+      "escape_assist": [],
+      "logical_heart_containers": 10,
+      "logical_heart_pieces": 24,
+      "er_seed": "vanilla",
+      "difficulty_requirements": {
+        "baseitems": [
+          "Single Arrow",
+          "Sanctuary Heart Container",
+          "Arrows (10)",
+          "Bombs (10)",
+          "Rupees (300)",
+          "Rupees (300)",
+          "Rupees (300)",
+          "Boss Heart Container",
+          "Boss Heart Container",
+          "Boss Heart Container",
+          "Boss Heart Container",
+          "Boss Heart Container",
+          "Boss Heart Container",
+          "Boss Heart Container",
+          "Boss Heart Container",
+          "Boss Heart Container",
+          "Boss Heart Container",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart",
+          "Piece of Heart"
+        ],
+        "bottles": [
+          "Bottle",
+          "Bottle (Red Potion)",
+          "Bottle (Green Potion)",
+          "Bottle (Blue Potion)",
+          "Bottle (Fairy)",
+          "Bottle (Bee)",
+          "Bottle (Good Bee)"
+        ],
+        "bottle_count": 4,
+        "same_bottle": false,
+        "progressiveshield": [
+          "Progressive Shield",
+          "Progressive Shield",
+          "Progressive Shield"
+        ],
+        "basicshield": [
+          "Blue Shield",
+          "Red Shield",
+          "Mirror Shield"
+        ],
+        "progressivearmor": [
+          "Progressive Mail",
+          "Progressive Mail"
+        ],
+        "basicarmor": [
+          "Blue Mail",
+          "Red Mail"
+        ],
+        "swordless": [
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)"
+        ],
+        "progressivemagic": [
+          "Magic Upgrade (1/2)",
+          "Rupees (300)"
+        ],
+        "basicmagic": [
+          "Magic Upgrade (1/2)",
+          "Rupees (300)"
+        ],
+        "progressivesword": [
+          "Progressive Sword",
+          "Progressive Sword",
+          "Progressive Sword",
+          "Progressive Sword"
+        ],
+        "basicsword": [
+          "Fighter Sword",
+          "Master Sword",
+          "Tempered Sword",
+          "Golden Sword"
+        ],
+        "progressivebow": [
+          "Progressive Bow",
+          "Progressive Bow"
+        ],
+        "basicbow": [
+          "Bow",
+          "Silver Bow"
+        ],
+        "timedohko": [
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock"
+        ],
+        "timedother": [
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Green Clock",
+          "Blue Clock",
+          "Blue Clock",
+          "Blue Clock",
+          "Blue Clock",
+          "Blue Clock",
+          "Blue Clock",
+          "Blue Clock",
+          "Blue Clock",
+          "Blue Clock",
+          "Blue Clock",
+          "Red Clock",
+          "Red Clock",
+          "Red Clock",
+          "Red Clock",
+          "Red Clock",
+          "Red Clock",
+          "Red Clock",
+          "Red Clock",
+          "Red Clock",
+          "Red Clock"
+        ],
+        "progressiveglove": [
+          "Progressive Glove",
+          "Progressive Glove"
+        ],
+        "basicglove": [
+          "Power Glove",
+          "Titans Mitts"
+        ],
+        "alwaysitems": [
+          "Bombos",
+          "Book of Mudora",
+          "Cane of Somaria",
+          "Ether",
+          "Fire Rod",
+          "Flippers",
+          "Flute",
+          "Hammer",
+          "Hookshot",
+          "Ice Rod",
+          "Lamp",
+          "Cape",
+          "Magic Powder",
+          "Mushroom",
+          "Pegasus Boots",
+          "Quake",
+          "Shovel",
+          "Bug Catching Net",
+          "Cane of Byrna",
+          "Blue Boomerang",
+          "Red Boomerang"
+        ],
+        "legacyinsanity": [
+          "Magic Mirror",
+          "Moon Pearl"
+        ],
+        "universal_keys": [
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Small Key (Universal)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)",
+          "Rupees (20)"
+        ],
+        "extras": [
+          [
+            "Rupees (100)",
+            "Rupees (300)",
+            "Rupees (50)",
+            "Arrows (10)",
+            "Arrows (10)",
+            "Arrows (10)",
+            "Arrows (10)",
+            "Arrows (10)",
+            "Arrows (10)",
+            "Bombs (3)",
+            "Bombs (3)",
+            "Bombs (3)",
+            "Bombs (3)",
+            "Bombs (3)",
+            "Bombs (3)"
+          ],
+          [
+            "Bombs (3)",
+            "Bombs (3)",
+            "Bombs (3)",
+            "Bombs (3)",
+            "Bombs (3)",
+            "Bombs (3)",
+            "Bombs (3)",
+            "Bombs (3)",
+            "Bombs (3)",
+            "Bombs (3)",
+            "Rupees (50)",
+            "Rupees (50)",
+            "Arrows (10)",
+            "Arrows (10)",
+            "Rupee (1)"
+          ],
+          [
+            "Rupees (50)",
+            "Rupees (50)",
+            "Rupees (50)",
+            "Rupees (50)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Arrows (10)",
+            "Rupee (1)",
+            "Rupees (5)"
+          ],
+          [
+            "Arrows (10)",
+            "Arrows (10)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (5)"
+          ],
+          [
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (20)",
+            "Rupees (5)",
+            "Rupees (5)"
+          ]
+        ],
+        "progressive_sword_limit": 4,
+        "progressive_shield_limit": 3,
+        "progressive_armor_limit": 2,
+        "progressive_bottle_limit": 4,
+        "progressive_bow_limit": 2,
+        "heart_piece_limit": 24,
+        "boss_heart_container_limit": 10
+      },
+      "treasure_hunt_required": 0,
+      "treasure_hunt_total": 0,
+      "rom_name": "ALTTP_ROM_NOT_GENERATED",
+      "can_take_damage": true,
+      "swamp_patch_required": false,
+      "powder_patch_required": false,
+      "ganon_at_pyramid": true,
+      "ganonstower_vanilla": true,
+      "fix_fake_world": true,
+      "clock_mode": "",
+      "light_world_light_cone": false,
+      "dark_world_light_cone": false,
+      "save_and_quit_from_boss": true,
+      "rupoor_cost": 10,
       "shop_items": {
         "Red Potion": {
           "unlimited": [
@@ -21681,16 +22017,151 @@
             "Capacity Upgrade"
           ]
         }
-      }
+      },
+      "world_description": "The Legend of Zelda: A Link to the Past is an action/adventure game. Take on the role of\nLink, a boy who is destined to save the land of Hyrule. Delve through three palaces and nine\ndungeons on your quest to rescue the descendents of the seven wise men and defeat the evil\nGanon!",
+      "slot_data": {
+        "crystals_needed_for_gt": 7,
+        "crystals_needed_for_ganon": 7,
+        "open_pyramid": 2,
+        "big_key_shuffle": 0,
+        "small_key_shuffle": 0,
+        "compass_shuffle": 0,
+        "map_shuffle": 0,
+        "progressive": 2,
+        "swordless": 0,
+        "retro_bow": 0,
+        "retro_caves": 0,
+        "shop_item_slots": 0,
+        "boss_shuffle": 0,
+        "pot_shuffle": 0,
+        "enemy_shuffle": 0,
+        "key_drop_shuffle": 1,
+        "bombless_start": 0,
+        "randomize_shop_inventories": 0,
+        "shuffle_shop_inventories": 0,
+        "shuffle_capacity_upgrades": 0,
+        "entrance_shuffle": 0,
+        "dark_room_logic": 0,
+        "goal": 0,
+        "mode": 1,
+        "triforce_pieces_mode": 2,
+        "triforce_pieces_percentage": 150,
+        "triforce_pieces_required": 20,
+        "triforce_pieces_available": 30,
+        "triforce_pieces_extra": 10,
+        "mm_medalion": "Quake",
+        "tr_medalion": "Ether"
+      },
+      "web": {
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "English",
+            "file_name": "multiworld_en.md",
+            "link": "multiworld/en",
+            "authors": [
+              "Farrak Kilhn",
+              "Berserker"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "Deutsch",
+            "file_name": "multiworld_de.md",
+            "link": "multiworld/de",
+            "authors": [
+              "Fischfilet"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "Espa\u00f1ol",
+            "file_name": "multiworld_es.md",
+            "link": "multiworld/es",
+            "authors": [
+              "Edos"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "Fran\u00e7ais",
+            "file_name": "multiworld_fr.md",
+            "link": "multiworld/fr",
+            "authors": [
+              "Coxla"
+            ]
+          },
+          {
+            "name": "MSU-1 Setup Guide",
+            "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
+            "language": "English",
+            "file_name": "msu1_en.md",
+            "link": "msu1/en",
+            "authors": [
+              "Farrak Kilhn"
+            ]
+          },
+          {
+            "name": "MSU-1 Setup Guide",
+            "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
+            "language": "Espa\u00f1ol",
+            "file_name": "msu1_es.md",
+            "link": "msu1/es",
+            "authors": [
+              "Edos"
+            ]
+          },
+          {
+            "name": "MSU-1 Setup Guide",
+            "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
+            "language": "Fran\u00e7ais",
+            "file_name": "msu1_fr.md",
+            "link": "msu1/fr",
+            "authors": [
+              "Coxla"
+            ]
+          },
+          {
+            "name": "Plando Guide",
+            "description": "A guide to creating Multiworld Plandos with LTTP",
+            "language": "English",
+            "file_name": "plando_en.md",
+            "link": "plando/en",
+            "authors": [
+              "Berserker"
+            ]
+          },
+          {
+            "name": "'OOF' Sound Replacement",
+            "description": "A guide to customizing Link's 'oof' sound",
+            "language": "English",
+            "file_name": "oof_sound_en.md",
+            "link": "oof_sound/en",
+            "authors": [
+              "Nyx Edelstein"
+            ]
+          }
+        ]
+      },
+      "world_directory": "alttp"
+    }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": true,
+      "use_resolved_items": false
     }
   },
   "game_info": {
-    "1": {
-      "name": "A Link to the Past",
-      "rule_format": {
-        "version": "1.0"
-      }
-    }
+    "1": {}
   },
   "helpers": {
     "1": {
@@ -21976,8 +22447,8 @@
               "value": {
                 "type": "subscript",
                 "value": {
-                  "type": "setting_value",
-                  "setting": "shop_items"
+                  "type": "world_attribute",
+                  "attribute": "shop_items"
                 },
                 "index": {
                   "type": "name",
@@ -22015,8 +22486,8 @@
               "value": {
                 "type": "subscript",
                 "value": {
-                  "type": "setting_value",
-                  "setting": "shop_items"
+                  "type": "world_attribute",
+                  "attribute": "shop_items"
                 },
                 "index": {
                   "type": "name",

@@ -103,6 +103,15 @@ class BaseGameExportHandler:
     # Helpers with more than this many nodes will be preserved as helper calls
     HELPER_INLINE_THRESHOLD: int = 0
 
+    # Set of helper names that are defined as computed helpers in get_helper_definitions()
+    # rather than discovered from helper modules. Used with AUTO_PRESERVE_COMPUTED_HELPERS.
+    COMPUTED_HELPERS: Set[str] = set()
+
+    # When True, helpers listed in COMPUTED_HELPERS are automatically preserved
+    # (not inlined during rule analysis). This allows games to avoid manually
+    # listing computed helpers in HELPERS_TO_PRESERVE.
+    AUTO_PRESERVE_COMPUTED_HELPERS: bool = False
+
     def __init__(self, world=None):
         """Initialize the handler with an empty set of discovered helpers.
 
@@ -360,7 +369,8 @@ class BaseGameExportHandler:
 
         Games can either:
         1. Set the HELPERS_TO_PRESERVE class attribute with a set of helper names
-        2. Override this method for custom logic
+        2. Set AUTO_PRESERVE_COMPUTED_HELPERS = True and list helpers in COMPUTED_HELPERS
+        3. Override this method for custom logic
 
         Args:
             func_name: The name of the function being analyzed
@@ -369,7 +379,14 @@ class BaseGameExportHandler:
             True if the function should be preserved as a helper, False otherwise
         """
         # Check the class attribute for preserved helpers
-        return func_name in self.HELPERS_TO_PRESERVE
+        if func_name in self.HELPERS_TO_PRESERVE:
+            return True
+
+        # Check computed helpers if auto-preservation is enabled
+        if self.AUTO_PRESERVE_COMPUTED_HELPERS and func_name in self.COMPUTED_HELPERS:
+            return True
+
+        return False
 
     def should_process_multistatement_if_bodies(self) -> bool:
         """
@@ -616,38 +633,57 @@ class BaseGameExportHandler:
 
         return dict(sorted(itempool_counts.items()))
         
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extracts game settings relevant for export."""
-        settings_dict = {'game': multiworld.game[player]}
+    def get_exporter_settings(self) -> Dict[str, Any]:
+        """Get exporter-specific settings (not part of the Archipelago world).
+
+        These settings control how the frontend processes the exported data.
+        """
+        exporter_settings = {}
+
+        # rule_format: Version metadata for the exported rules
+        exporter_settings['rule_format'] = {"version": "1.0"}
+
+        # assume_bidirectional_exits: Whether region connections are bidirectional by default
+        exporter_settings['assume_bidirectional_exits'] = self.ASSUME_BIDIRECTIONAL_EXITS
+
+        # use_resolved_items: When false (default), eventProcessor uses only base_items from sphere log
+        # When true, eventProcessor uses resolved_items (e.g., for games with complex event items)
+        exporter_settings['use_resolved_items'] = self.USE_RESOLVED_ITEMS
+
+        # add_sphere_items_upfront: When true, adds items at the start of each sphere before accessibility checks
+        if self.ADD_SPHERE_ITEMS_UPFRONT:
+            exporter_settings['add_sphere_items_upfront'] = True
+
+        # use_auto_indirect_conditions: When true, use auto sweep for indirect region dependencies
+        if self.USE_AUTO_INDIRECT_CONDITIONS:
+            exporter_settings['use_auto_indirect_conditions'] = True
+
+        return exporter_settings
+
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Extracts world data for export.
+
+        This mirrors Archipelago's world structure:
+        - world.game -> world_data['game']
+        - world.options.X -> world_data['options']['X']
+        - world.X (runtime attributes) -> world_data['X']
+
+        Note: Exporter-specific settings are now in get_exporter_settings().
+        """
+        world_data = {'game': multiworld.game[player]}
+
+        # Common multiworld settings (like accessibility)
         common_settings = [
             'accessibility',
         ]
         for setting in common_settings:
             if hasattr(multiworld, setting) and player in getattr(multiworld, setting, {}):
                 value = getattr(multiworld, setting)[player]
-                settings_dict[setting] = getattr(value, 'value', value)
+                world_data[setting] = getattr(value, 'value', value)
 
         if hasattr(multiworld, 'mode') and player in multiworld.mode:
             mode_val = multiworld.mode[player]
-            settings_dict['mode'] = getattr(mode_val, 'value', str(mode_val))
-
-        # Add assume_bidirectional_exits setting from class attribute
-        settings_dict['assume_bidirectional_exits'] = self.ASSUME_BIDIRECTIONAL_EXITS
-
-        # Add use_resolved_items setting from class attribute
-        # When false (default), eventProcessor uses only base_items from sphere log
-        # When true, eventProcessor uses resolved_items (e.g., for games with complex event items)
-        settings_dict['use_resolved_items'] = self.USE_RESOLVED_ITEMS
-
-        # Add add_sphere_items_upfront setting from class attribute
-        # When true, adds items at the start of each sphere before accessibility checks
-        if self.ADD_SPHERE_ITEMS_UPFRONT:
-            settings_dict['add_sphere_items_upfront'] = True
-
-        # Add use_auto_indirect_conditions setting from class attribute
-        # When true, use auto sweep for indirect region dependencies
-        if self.USE_AUTO_INDIRECT_CONDITIONS:
-            settings_dict['use_auto_indirect_conditions'] = True
+            world_data['mode'] = getattr(mode_val, 'value', str(mode_val))
 
         # Export all game-specific options from the world
         # This allows the world generator to recreate fill_slot_data behavior
@@ -681,7 +717,7 @@ class BaseGameExportHandler:
                 except Exception:
                     pass
             if options_dict:
-                settings_dict['options'] = options_dict
+                world_data['options'] = options_dict
 
         # Export option definitions for world generator to recreate proper Option classes
         # This captures the option type (Choice, Range, Toggle, etc.) and metadata
@@ -740,20 +776,89 @@ class BaseGameExportHandler:
                     logger.debug(f"Failed to export option definition for '{option_name}': {e}")
 
             if option_definitions:
-                settings_dict['option_definitions'] = option_definitions
+                world_data['option_definitions'] = option_definitions
 
-        # Process EXPORTED_OPTIONS - simple option value extractions
+        # Process EXPORTED_OPTIONS - simple option value extractions at top level
         if self.EXPORTED_OPTIONS:
             for option_name in self.EXPORTED_OPTIONS:
                 try:
                     if hasattr(world, 'options') and hasattr(world.options, option_name):
                         option = getattr(world.options, option_name)
                         if hasattr(option, 'value'):
-                            settings_dict[option_name] = option.value
+                            world_data[option_name] = option.value
                 except Exception as e:
                     logger.warning(f"Failed to export option '{option_name}': {e}")
 
-        return settings_dict
+        # Merge in world attributes (runtime-computed values)
+        # These are values like treasure_hunt_required, difficulty_requirements, etc.
+        world_attributes = self.get_world_attributes(world, multiworld, player)
+        for attr_name, attr_value in world_attributes.items():
+            if attr_name not in world_data:  # Don't override existing values
+                world_data[attr_name] = attr_value
+
+        # Export base_id if available (used for ID allocation)
+        # This mirrors Archipelago's world.base_id
+        if hasattr(world, 'base_id') and world.base_id is not None:
+            world_data['base_id'] = world.base_id
+
+        # Export world class docstring if available
+        # This provides a description of the world/game
+        world_class = world.__class__
+        if world_class.__doc__:
+            # Clean up the docstring (strip leading/trailing whitespace from each line)
+            docstring = world_class.__doc__
+            # Normalize whitespace
+            lines = [line.strip() for line in docstring.strip().split('\n')]
+            world_data['world_description'] = '\n'.join(lines)
+
+        # Export fill_slot_data return value if available
+        # This captures the data the world sends to the client
+        if hasattr(world, 'fill_slot_data') and callable(world.fill_slot_data):
+            try:
+                slot_data = world.fill_slot_data()
+                if slot_data and isinstance(slot_data, dict):
+                    world_data['slot_data'] = slot_data
+            except Exception as e:
+                logger.debug(f"Could not call fill_slot_data for {world.game}: {e}")
+
+        # Export WebWorld metadata if available
+        # This mirrors Archipelago's world.web structure
+        if hasattr(world, 'web') and world.web:
+            web = world.web
+            web_data = {}
+            # Theme
+            if hasattr(web, 'theme') and web.theme:
+                web_data['theme'] = web.theme
+            # Tutorials
+            if hasattr(web, 'tutorials') and web.tutorials:
+                tutorials_data = []
+                for tutorial in web.tutorials:
+                    tutorial_info = {}
+                    if hasattr(tutorial, 'tutorial_name'):
+                        tutorial_info['name'] = tutorial.tutorial_name
+                    if hasattr(tutorial, 'description'):
+                        tutorial_info['description'] = tutorial.description
+                    if hasattr(tutorial, 'language'):
+                        tutorial_info['language'] = tutorial.language
+                    if hasattr(tutorial, 'file_name'):
+                        tutorial_info['file_name'] = tutorial.file_name
+                    if hasattr(tutorial, 'link'):
+                        tutorial_info['link'] = tutorial.link
+                    if hasattr(tutorial, 'authors'):
+                        tutorial_info['authors'] = tutorial.authors
+                    if tutorial_info:
+                        tutorials_data.append(tutorial_info)
+                if tutorials_data:
+                    web_data['tutorials'] = tutorials_data
+            if web_data:
+                world_data['web'] = web_data
+
+        return world_data
+
+    # Keep get_settings_data as an alias for backwards compatibility
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Deprecated: Use get_world_data instead."""
+        return self.get_world_data(world, multiworld, player)
 
     def get_world_attributes(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract world attributes (computed runtime values) for export.
@@ -785,6 +890,144 @@ class BaseGameExportHandler:
                     world_attributes[attr_name] = value
                 except Exception as e:
                     logger.warning(f"Failed to compute world attribute '{attr_name}': {e}")
+
+        # Auto-discover simple world attributes from the world instance
+        # This extracts runtime-computed values without requiring explicit WORLD_ATTRIBUTES entries
+        skip_attrs = {
+            # Internal/infrastructure attributes
+            'player', 'multiworld', 'options', 'random', 'options_dataclass',
+            # World class infrastructure
+            'game', 'topology_present', 'web', 'required_client_version',
+            'origin_region_name', 'explicit_indirect_conditions',
+            # Item/location infrastructure
+            'item_name_to_id', 'location_name_to_id', 'item_id_to_name', 'location_id_to_name',
+            'item_names', 'location_names', 'item_name_groups', 'location_name_groups',
+            # Other common internal attributes
+            'slot_data', 'settings_key', 'hint_blacklist',
+        }
+
+        def get_serializable_value(value: Any) -> Any:
+            """Convert a value to a JSON-serializable form, or return None if not possible."""
+            # Check bool before int (bool is subclass of int)
+            if isinstance(value, bool):
+                return value
+            elif isinstance(value, (int, float, str)):
+                return value
+            elif isinstance(value, enum.Enum):
+                # For enums, prefer .value (usually the serializable form)
+                return value.value if hasattr(value, 'value') else str(value)
+            elif isinstance(value, (list, tuple)):
+                # Namedtuples should be handled by extract_nested_attributes, not as lists
+                if hasattr(value, '_fields'):
+                    return None
+                result = []
+                for v in value:
+                    converted = get_serializable_value(v)
+                    if converted is None:
+                        return None  # Can't serialize this list
+                    result.append(converted)
+                return result
+            return None
+
+        def extract_nested_attributes(obj: Any) -> Optional[Dict[str, Any]]:
+            """Extract simple attributes from an object as a nested dict."""
+            if obj is None:
+                return None
+
+            result = {}
+
+            # Check for namedtuple FIRST (before tuple check, since namedtuples are tuples)
+            if hasattr(obj, '_fields'):
+                for field in obj._fields:
+                    if field.startswith('_'):
+                        continue
+                    try:
+                        val = getattr(obj, field, None)
+                        if val is None:
+                            continue
+                        serialized = get_serializable_value(val)
+                        if serialized is not None:
+                            result[field] = serialized
+                    except Exception:
+                        pass
+                return result if result else None
+
+            # Skip if it's a simple type (already handled by get_serializable_value)
+            if isinstance(obj, (bool, int, float, str, list, tuple, enum.Enum)):
+                return None
+            # Skip common complex types that shouldn't be extracted
+            if isinstance(obj, (type, collections.abc.Callable)):
+                return None
+
+            # Try to get attributes from __dict__ or __slots__
+            attrs_to_check = []
+            if hasattr(obj, '__dict__'):
+                attrs_to_check = list(obj.__dict__.keys())
+            elif hasattr(obj, '__slots__'):
+                attrs_to_check = list(obj.__slots__)
+
+            for attr in attrs_to_check:
+                if attr.startswith('_'):
+                    continue
+                try:
+                    val = getattr(obj, attr, None)
+                    if val is None:
+                        continue
+                    serialized = get_serializable_value(val)
+                    if serialized is not None:
+                        result[attr] = serialized
+                except Exception:
+                    pass
+
+            return result if result else None
+
+        def try_add_attribute(attr_name: str, value: Any) -> bool:
+            """Try to add an attribute if it's a simple JSON-serializable type."""
+            if attr_name.startswith('_'):
+                return False
+            if attr_name in skip_attrs:
+                return False
+            if attr_name in world_attributes:
+                return False
+
+            # Try to get a serializable value
+            serialized = get_serializable_value(value)
+            if serialized is not None:
+                world_attributes[attr_name] = serialized
+                logger.debug(f"Auto-discovered world attribute '{attr_name}': {serialized}")
+                return True
+
+            # Try to extract nested attributes (one level deep)
+            nested = extract_nested_attributes(value)
+            if nested is not None:
+                world_attributes[attr_name] = nested
+                logger.debug(f"Auto-discovered nested world attribute '{attr_name}': {nested}")
+                return True
+
+            return False
+
+        # Get instance attributes (set on self)
+        if hasattr(world, '__dict__'):
+            for attr_name, value in world.__dict__.items():
+                try_add_attribute(attr_name, value)
+
+        # Also check class-level attributes with type annotations (e.g., can_take_damage: bool = True)
+        # These are defaults that may not be set on the instance
+        world_class = type(world)
+        if hasattr(world_class, '__annotations__'):
+            for attr_name, attr_type in world_class.__annotations__.items():
+                if attr_name in world_attributes:
+                    continue  # Already discovered from instance
+                if attr_name in skip_attrs:
+                    continue
+                # Only include simple annotated types
+                if attr_type in (bool, int, float, str):
+                    try:
+                        value = getattr(world, attr_name, None)
+                        if value is not None:
+                            try_add_attribute(attr_name, value)
+                    except Exception:
+                        pass
 
         # For worldgen worlds, load world_attributes from _worldgen_settings.json
         # This is needed because worldgen worlds store computed attributes there
@@ -824,21 +1067,20 @@ class BaseGameExportHandler:
         
     def get_game_info(self, world) -> Dict[str, Any]:
         """
-        Get information about the game's rule formats and structure.
-        This can be overridden by game-specific expanders to provide more detailed information.
+        Get game-specific information for the frontend.
 
-        The base handler checks for accumulator_rules and prog_items_init class attributes
-        on the world, allowing generated worlds to define state counter patterns.
+        This method is for game-specific custom data and accumulator patterns.
+        Game-specific expanders can override this to add custom data.
+
+        Note: Base fields have been moved to other methods:
+        - name (game) -> world[player].game in get_world_data()
+        - slot_data, base_id, world_description, web -> get_world_data()
+        - rule_format -> get_exporter_settings()
 
         Returns:
-            A dictionary with game information for the frontend.
+            A dictionary with game-specific information for the frontend.
         """
-        game_info = {
-            "name": world.game,
-            "rule_format": {
-                "version": "1.0"
-            }
-        }
+        game_info = {}
 
         # Check if the world defines accumulator rules (for state counter patterns like coins)
         # This allows generated worlds from AST format to export accumulator rules
@@ -848,57 +1090,6 @@ class BaseGameExportHandler:
         # Check if the world defines initial values for prog_items accumulators
         if hasattr(world, 'prog_items_init') and world.prog_items_init:
             game_info['prog_items_init'] = world.prog_items_init
-
-        # Export base_id if available (used for ID allocation)
-        if hasattr(world, 'base_id') and world.base_id is not None:
-            game_info['base_id'] = world.base_id
-
-        # Export WebWorld metadata if available
-        if hasattr(world, 'web') and world.web:
-            web = world.web
-            # Theme
-            if hasattr(web, 'theme') and web.theme:
-                game_info['web_theme'] = web.theme
-            # Tutorials
-            if hasattr(web, 'tutorials') and web.tutorials:
-                tutorials_data = []
-                for tutorial in web.tutorials:
-                    tutorial_info = {}
-                    if hasattr(tutorial, 'tutorial_name'):
-                        tutorial_info['name'] = tutorial.tutorial_name
-                    if hasattr(tutorial, 'description'):
-                        tutorial_info['description'] = tutorial.description
-                    if hasattr(tutorial, 'language'):
-                        tutorial_info['language'] = tutorial.language
-                    if hasattr(tutorial, 'file_name'):
-                        tutorial_info['file_name'] = tutorial.file_name
-                    if hasattr(tutorial, 'link'):
-                        tutorial_info['link'] = tutorial.link
-                    if hasattr(tutorial, 'authors'):
-                        tutorial_info['authors'] = tutorial.authors
-                    if tutorial_info:
-                        tutorials_data.append(tutorial_info)
-                if tutorials_data:
-                    game_info['web_tutorials'] = tutorials_data
-
-        # Export world class docstring if available
-        world_class = world.__class__
-        if world_class.__doc__:
-            # Clean up the docstring (strip leading/trailing whitespace from each line)
-            docstring = world_class.__doc__
-            # Normalize whitespace
-            lines = [line.strip() for line in docstring.strip().split('\n')]
-            game_info['world_description'] = '\n'.join(lines)
-
-        # Export fill_slot_data return value if available
-        # This captures the data the world sends to the client
-        if hasattr(world, 'fill_slot_data') and callable(world.fill_slot_data):
-            try:
-                slot_data = world.fill_slot_data()
-                if slot_data and isinstance(slot_data, dict):
-                    game_info['slot_data'] = slot_data
-            except Exception as e:
-                logger.debug(f"Could not call fill_slot_data for {world.game}: {e}")
 
         return game_info
         
@@ -921,8 +1112,8 @@ class BaseGameExportHandler:
         """
         return []
         
-    def cleanup_settings(self, settings_dict: Dict[str, Any]) -> Dict[str, Any]:
-        """Perform game-specific cleanup/mapping on exported settings.
+    def cleanup_world_data(self, world_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Perform game-specific cleanup/mapping on exported world data.
 
         Converts numeric option values to string names to match how Python
         helpers compare against option values.
@@ -930,13 +1121,18 @@ class BaseGameExportHandler:
         common_setting_mappings = {
             'accessibility': {0: 'items', 1: 'locations', 2: 'none'},
         }
-        for setting_name, value in settings_dict.items():
+        for setting_name, value in world_data.items():
             if setting_name in common_setting_mappings and isinstance(value, int):
                 if value in common_setting_mappings[setting_name]:
-                    settings_dict[setting_name] = common_setting_mappings[setting_name][value]
+                    world_data[setting_name] = common_setting_mappings[setting_name][value]
                 else:
-                    settings_dict[setting_name] = f"unknown_{value}"
-        return settings_dict
+                    world_data[setting_name] = f"unknown_{value}"
+        return world_data
+
+    # Keep cleanup_settings as an alias for backwards compatibility
+    def cleanup_settings(self, settings_dict: Dict[str, Any]) -> Dict[str, Any]:
+        """Deprecated: Use cleanup_world_data instead."""
+        return self.cleanup_world_data(settings_dict)
 
     def get_region_attributes(self, region) -> Dict[str, Any]:
         """
