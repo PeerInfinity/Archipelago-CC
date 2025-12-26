@@ -5267,6 +5267,24 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       return Math.min(leftValue, rightValue);
     }
 
+    // MaxValue: returns the maximum of two values (used for max depth calculations)
+    // Rule Builder: {"rule": "MaxValue", "args": {"left": ..., "right": ...}}
+    case 'MaxValue': {
+      const left = args.left;
+      const right = args.right;
+
+      // Recursively evaluate operands
+      const leftValue = evaluateRule(left, context, depth + 1, localScope);
+      const rightValue = evaluateRule(right, context, depth + 1, localScope);
+
+      // If either operand is undefined, we can't compute
+      if (leftValue === undefined || rightValue === undefined) {
+        return undefined;
+      }
+
+      return Math.max(leftValue, rightValue);
+    }
+
     // Count/CountItem: get the count of an item (used as operand in Compare/Arithmetic)
     // Rule Builder: {"rule": "Count", "args": {"item_name": "Key"}}
     // Rule Builder: {"rule": "CountItem", "args": {"item_name": "Key"}}
