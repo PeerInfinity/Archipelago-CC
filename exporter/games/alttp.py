@@ -26,7 +26,8 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     AUTO_PRESERVE_COMPUTED_HELPERS = True
 
     # Simple world attributes that can be automatically exported via base class
-    COMPUTED_SETTINGS = {
+    # These are runtime-computed values on the world instance, not user-configurable options
+    WORLD_ATTRIBUTES = {
         'treasure_hunt_required': lambda w, m, p: getattr(w, 'treasure_hunt_required', 0),
         'can_take_damage': lambda w, m, p: getattr(w, 'can_take_damage', True),
         'logical_heart_pieces': lambda w, m, p: getattr(w, 'logical_heart_pieces', 24),
@@ -512,7 +513,7 @@ class ALttPGameExportHandler(BaseGameExportHandler):
         These are values computed at runtime on the world instance, not
         user-configurable options.
         """
-        # Get base world attributes (from COMPUTED_SETTINGS: treasure_hunt_required,
+        # Get base world attributes (from WORLD_ATTRIBUTES: treasure_hunt_required,
         # can_take_damage, logical_heart_pieces, logical_heart_containers)
         world_attributes = super().get_world_attributes(world, multiworld, player)
 
