@@ -5,9 +5,11 @@ world directory names by scanning the worlds directory for game class variables.
 """
 
 import ast
+import io
 import json
 import os
 import sys
+import zipfile
 from pathlib import Path
 from typing import Dict, Optional
 
@@ -214,6 +216,77 @@ def find_variable_definition(var_name: str, content: str, init_path: str) -> Opt
         return None
 
 
+def extract_game_name_from_content(content: str, filename: str = "<string>") -> Optional[str]:
+    """
+    Extract the game name from Python source content using AST parsing.
+    This is used for parsing files from .apworld archives.
+    Returns None if no game name is found.
+    """
+    try:
+        tree = ast.parse(content, filename=filename)
+
+        # Look for World class and its 'game' attribute
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef):
+                # Check if this is a World subclass
+                is_world_class = any(
+                    isinstance(base, ast.Name) and base.id == 'World'
+                    for base in node.bases
+                )
+
+                if is_world_class:
+                    # Look for 'game' attribute in the class
+                    for item in node.body:
+                        if isinstance(item, ast.AnnAssign):
+                            # Handle: game: str = "value" or game: ClassVar[str] = "value"
+                            if isinstance(item.target, ast.Name) and item.target.id == 'game':
+                                if item.value:
+                                    if isinstance(item.value, ast.Constant) and isinstance(item.value.value, str):
+                                        return item.value.value
+                                    elif isinstance(item.value, ast.Str):
+                                        return item.value.s
+                        elif isinstance(item, ast.Assign):
+                            # Handle: game = "value"
+                            for target in item.targets:
+                                if isinstance(target, ast.Name) and target.id == 'game':
+                                    if isinstance(item.value, ast.Constant) and isinstance(item.value.value, str):
+                                        return item.value.value
+                                    elif isinstance(item.value, ast.Str):
+                                        return item.value.s
+
+        return None
+    except (SyntaxError, ValueError) as e:
+        return None
+
+
+def extract_game_name_from_apworld(apworld_path: str) -> Optional[tuple]:
+    """
+    Extract the game name and world directory from a .apworld file.
+    Returns tuple of (game_name, world_directory) or None if not found.
+    """
+    try:
+        with zipfile.ZipFile(apworld_path, 'r') as zf:
+            # Find all __init__.py files in the archive
+            init_files = [name for name in zf.namelist() if name.endswith('__init__.py')]
+
+            for init_file in init_files:
+                # Extract the world directory name from the path (e.g., "clique/__init__.py" -> "clique")
+                parts = init_file.split('/')
+                if len(parts) == 2 and parts[1] == '__init__.py':
+                    world_dir = parts[0]
+
+                    # Read and parse the __init__.py content
+                    content = zf.read(init_file).decode('utf-8')
+                    game_name = extract_game_name_from_content(content, init_file)
+
+                    if game_name:
+                        return (game_name, world_dir)
+
+        return None
+    except (zipfile.BadZipFile, IOError, UnicodeDecodeError) as e:
+        return None
+
+
 def get_file_size(file_path: Path) -> int:
     """Get the size of a file in bytes, or 0 if it doesn't exist."""
     if file_path.exists():
@@ -289,33 +362,86 @@ def build_world_mapping(worlds_dir: str) -> Dict[str, Dict[str, any]]:
     return mapping
 
 
+def build_apworld_mapping(custom_worlds_dir: str) -> Dict[str, Dict[str, any]]:
+    """
+    Build a mapping from game names to world information for .apworld files.
+    Returns dict with game names as keys and world info as values.
+    """
+    mapping = {}
+
+    custom_worlds_path = Path(custom_worlds_dir)
+    if not custom_worlds_path.exists():
+        print(f"Note: Custom worlds directory not found: {custom_worlds_dir}")
+        return mapping
+
+    for apworld_file in custom_worlds_path.glob('*.apworld'):
+        result = extract_game_name_from_apworld(str(apworld_file))
+
+        if result:
+            game_name, world_name = result
+
+            # Check for custom exporter and get file size
+            exporter_path = Path('exporter/games') / f'{world_name}.py'
+            has_custom_exporter = exporter_path.exists()
+            exporter_size = get_file_size(exporter_path)
+
+            # Check for custom gameLogic directory and get total size of all files
+            game_logic_dir = Path('frontend/modules/shared/gameLogic') / world_name
+            game_logic_main_file = game_logic_dir / f'{world_name}Logic.js'
+            has_custom_game_logic = game_logic_main_file.exists()
+            game_logic_size = get_directory_total_size(game_logic_dir)
+
+            mapping[game_name] = {
+                'world_directory': world_name,
+                'has_custom_exporter': has_custom_exporter,
+                'has_custom_game_logic': has_custom_game_logic,
+                'exporter_path': f'exporter/games/{world_name}.py' if has_custom_exporter else None,
+                'exporter_size': exporter_size,
+                'game_logic_path': f'frontend/modules/shared/gameLogic/{world_name}/{world_name}Logic.js' if has_custom_game_logic else None,
+                'game_logic_size': game_logic_size,
+                'apworld_path': str(apworld_file.relative_to(Path.cwd())) if apworld_file.is_relative_to(Path.cwd()) else str(apworld_file)
+            }
+
+            print(f"Found (apworld): '{game_name}' -> {world_name} (exporter: {exporter_size}B, gameLogic: {game_logic_size}B)")
+
+    return mapping
+
+
 def main():
     # Script is now in scripts/build/, so go up two levels to reach project root
     project_root = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
     worlds_dir = os.path.join(project_root, 'worlds')
+    custom_worlds_dir = os.path.join(project_root, 'custom_worlds')
     output_file = os.path.join(project_root, 'scripts', 'data', 'world-mapping.json')
-    
+
     print(f"Scanning worlds directory: {worlds_dir}")
-    
     mapping = build_world_mapping(worlds_dir)
-    
+
+    # Also scan custom_worlds directory for .apworld files
+    print(f"Scanning custom worlds directory: {custom_worlds_dir}")
+    apworld_mapping = build_apworld_mapping(custom_worlds_dir)
+
+    # Merge apworld mappings into the main mapping
+    # apworld entries will override regular world entries if there's a conflict
+    mapping.update(apworld_mapping)
+
     if not mapping:
         print("No world mappings found!")
         return 1
-    
+
     # Ensure output directory exists
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
-    
+
     # Save to JSON file
     try:
         with open(output_file, 'w') as f:
             json.dump(mapping, f, indent=2, sort_keys=True)
         print(f"\nWorld mapping saved to: {output_file}")
-        print(f"Found {len(mapping)} game mappings")
+        print(f"Found {len(mapping)} game mappings ({len(apworld_mapping)} from apworld files)")
     except IOError as e:
         print(f"Error saving mapping file: {e}")
         return 1
-    
+
     return 0
 
 

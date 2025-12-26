@@ -174,12 +174,19 @@ def _rule_needs_lambda(rule: dict) -> bool:
     Check if a rule needs to use lambda-based generation instead of Rule Builder.
 
     Returns True if the rule contains:
-    - Block statements (loops, assignments, etc.)
+    - Block statements (loops, assignments, etc.) that aren't AST_block
 
     Note: Most rule types including helpers, not, compare, and conditional
     can now be handled by RuleCodeGenerator with the new Rule Builder classes.
+    AST_block rules can also be handled by RuleCodeGenerator.
     """
     if not isinstance(rule, dict):
+        return False
+
+    # AST_block rules can be handled by RuleCodeGenerator
+    # even if they contain nested block types
+    rule_name = rule.get('rule', '')
+    if rule_name == 'AST_block':
         return False
 
     rule_type = rule.get('type', '')
