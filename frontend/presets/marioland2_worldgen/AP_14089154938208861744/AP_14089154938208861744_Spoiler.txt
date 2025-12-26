@@ -17,6 +17,22 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Auto Scroll Chance:              -1
+Auto Scroll Mode:                Always
+Coinsanity:                      No
+Coinsanity Checks:               150
+Difficulty Mode:                 Normal
+Energy Link:                     No
+Mario Coin Fragment Percentage:  20
+Mario Coin Fragments Required Percentage:75
+Mario's Castle Midway Bell:      No
+Randomize Enemies:               No
+Randomize Music:                 No
+Randomize Platforms:             No
+Golden Coins Required:           6
+Shuffle Golden Coins:            Vanilla
+Shuffle Midway Bells:            No
+Shuffle Pipe Traversal:          Off
 
 
 Starting Items:
