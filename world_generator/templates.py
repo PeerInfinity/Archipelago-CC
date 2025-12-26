@@ -1200,7 +1200,8 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
                 has_nested_values = not any(isinstance(v, dict) for v in attr_value.values())
 
                 # Check if all keys are valid Python identifiers for SimpleNamespace
-                all_valid_identifiers = all(k.isidentifier() for k in attr_value.keys())
+                # Only check isidentifier() if we know all keys are strings (has_string_keys)
+                all_valid_identifiers = has_string_keys and all(k.isidentifier() for k in attr_value.keys())
 
                 if has_string_keys and has_nested_values and attr_value and all_valid_identifiers:
                     # Use SimpleNamespace for dicts with valid identifier keys (attribute access pattern)
