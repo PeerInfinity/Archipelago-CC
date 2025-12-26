@@ -103,6 +103,15 @@ class BaseGameExportHandler:
     # Helpers with more than this many nodes will be preserved as helper calls
     HELPER_INLINE_THRESHOLD: int = 0
 
+    # Set of helper names that are defined as computed helpers in get_helper_definitions()
+    # rather than discovered from helper modules. Used with AUTO_PRESERVE_COMPUTED_HELPERS.
+    COMPUTED_HELPERS: Set[str] = set()
+
+    # When True, helpers listed in COMPUTED_HELPERS are automatically preserved
+    # (not inlined during rule analysis). This allows games to avoid manually
+    # listing computed helpers in HELPERS_TO_PRESERVE.
+    AUTO_PRESERVE_COMPUTED_HELPERS: bool = False
+
     def __init__(self, world=None):
         """Initialize the handler with an empty set of discovered helpers.
 
@@ -360,7 +369,8 @@ class BaseGameExportHandler:
 
         Games can either:
         1. Set the HELPERS_TO_PRESERVE class attribute with a set of helper names
-        2. Override this method for custom logic
+        2. Set AUTO_PRESERVE_COMPUTED_HELPERS = True and list helpers in COMPUTED_HELPERS
+        3. Override this method for custom logic
 
         Args:
             func_name: The name of the function being analyzed
@@ -369,7 +379,14 @@ class BaseGameExportHandler:
             True if the function should be preserved as a helper, False otherwise
         """
         # Check the class attribute for preserved helpers
-        return func_name in self.HELPERS_TO_PRESERVE
+        if func_name in self.HELPERS_TO_PRESERVE:
+            return True
+
+        # Check computed helpers if auto-preservation is enabled
+        if self.AUTO_PRESERVE_COMPUTED_HELPERS and func_name in self.COMPUTED_HELPERS:
+            return True
+
+        return False
 
     def should_process_multistatement_if_bodies(self) -> bool:
         """
