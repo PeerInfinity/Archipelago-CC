@@ -633,38 +633,54 @@ class BaseGameExportHandler:
 
         return dict(sorted(itempool_counts.items()))
         
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extracts game settings relevant for export."""
-        settings_dict = {'game': multiworld.game[player]}
+    def get_exporter_settings(self) -> Dict[str, Any]:
+        """Get exporter-specific settings (not part of the Archipelago world).
+
+        These settings control how the frontend processes the exported data.
+        """
+        exporter_settings = {}
+
+        # assume_bidirectional_exits: Whether region connections are bidirectional by default
+        exporter_settings['assume_bidirectional_exits'] = self.ASSUME_BIDIRECTIONAL_EXITS
+
+        # use_resolved_items: When false (default), eventProcessor uses only base_items from sphere log
+        # When true, eventProcessor uses resolved_items (e.g., for games with complex event items)
+        exporter_settings['use_resolved_items'] = self.USE_RESOLVED_ITEMS
+
+        # add_sphere_items_upfront: When true, adds items at the start of each sphere before accessibility checks
+        if self.ADD_SPHERE_ITEMS_UPFRONT:
+            exporter_settings['add_sphere_items_upfront'] = True
+
+        # use_auto_indirect_conditions: When true, use auto sweep for indirect region dependencies
+        if self.USE_AUTO_INDIRECT_CONDITIONS:
+            exporter_settings['use_auto_indirect_conditions'] = True
+
+        return exporter_settings
+
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Extracts world data for export.
+
+        This mirrors Archipelago's world structure:
+        - world.game -> world_data['game']
+        - world.options.X -> world_data['options']['X']
+        - world.X (runtime attributes) -> world_data['X']
+
+        Note: Exporter-specific settings are now in get_exporter_settings().
+        """
+        world_data = {'game': multiworld.game[player]}
+
+        # Common multiworld settings (like accessibility)
         common_settings = [
             'accessibility',
         ]
         for setting in common_settings:
             if hasattr(multiworld, setting) and player in getattr(multiworld, setting, {}):
                 value = getattr(multiworld, setting)[player]
-                settings_dict[setting] = getattr(value, 'value', value)
+                world_data[setting] = getattr(value, 'value', value)
 
         if hasattr(multiworld, 'mode') and player in multiworld.mode:
             mode_val = multiworld.mode[player]
-            settings_dict['mode'] = getattr(mode_val, 'value', str(mode_val))
-
-        # Add assume_bidirectional_exits setting from class attribute
-        settings_dict['assume_bidirectional_exits'] = self.ASSUME_BIDIRECTIONAL_EXITS
-
-        # Add use_resolved_items setting from class attribute
-        # When false (default), eventProcessor uses only base_items from sphere log
-        # When true, eventProcessor uses resolved_items (e.g., for games with complex event items)
-        settings_dict['use_resolved_items'] = self.USE_RESOLVED_ITEMS
-
-        # Add add_sphere_items_upfront setting from class attribute
-        # When true, adds items at the start of each sphere before accessibility checks
-        if self.ADD_SPHERE_ITEMS_UPFRONT:
-            settings_dict['add_sphere_items_upfront'] = True
-
-        # Add use_auto_indirect_conditions setting from class attribute
-        # When true, use auto sweep for indirect region dependencies
-        if self.USE_AUTO_INDIRECT_CONDITIONS:
-            settings_dict['use_auto_indirect_conditions'] = True
+            world_data['mode'] = getattr(mode_val, 'value', str(mode_val))
 
         # Export all game-specific options from the world
         # This allows the world generator to recreate fill_slot_data behavior
@@ -698,7 +714,7 @@ class BaseGameExportHandler:
                 except Exception:
                     pass
             if options_dict:
-                settings_dict['options'] = options_dict
+                world_data['options'] = options_dict
 
         # Export option definitions for world generator to recreate proper Option classes
         # This captures the option type (Choice, Range, Toggle, etc.) and metadata
@@ -757,20 +773,32 @@ class BaseGameExportHandler:
                     logger.debug(f"Failed to export option definition for '{option_name}': {e}")
 
             if option_definitions:
-                settings_dict['option_definitions'] = option_definitions
+                world_data['option_definitions'] = option_definitions
 
-        # Process EXPORTED_OPTIONS - simple option value extractions
+        # Process EXPORTED_OPTIONS - simple option value extractions at top level
         if self.EXPORTED_OPTIONS:
             for option_name in self.EXPORTED_OPTIONS:
                 try:
                     if hasattr(world, 'options') and hasattr(world.options, option_name):
                         option = getattr(world.options, option_name)
                         if hasattr(option, 'value'):
-                            settings_dict[option_name] = option.value
+                            world_data[option_name] = option.value
                 except Exception as e:
                     logger.warning(f"Failed to export option '{option_name}': {e}")
 
-        return settings_dict
+        # Merge in world attributes (runtime-computed values)
+        # These are values like treasure_hunt_required, difficulty_requirements, etc.
+        world_attributes = self.get_world_attributes(world, multiworld, player)
+        for attr_name, attr_value in world_attributes.items():
+            if attr_name not in world_data:  # Don't override existing values
+                world_data[attr_name] = attr_value
+
+        return world_data
+
+    # Keep get_settings_data as an alias for backwards compatibility
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Deprecated: Use get_world_data instead."""
+        return self.get_world_data(world, multiworld, player)
 
     def get_world_attributes(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract world attributes (computed runtime values) for export.
@@ -1076,8 +1104,8 @@ class BaseGameExportHandler:
         """
         return []
         
-    def cleanup_settings(self, settings_dict: Dict[str, Any]) -> Dict[str, Any]:
-        """Perform game-specific cleanup/mapping on exported settings.
+    def cleanup_world_data(self, world_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Perform game-specific cleanup/mapping on exported world data.
 
         Converts numeric option values to string names to match how Python
         helpers compare against option values.
@@ -1085,13 +1113,18 @@ class BaseGameExportHandler:
         common_setting_mappings = {
             'accessibility': {0: 'items', 1: 'locations', 2: 'none'},
         }
-        for setting_name, value in settings_dict.items():
+        for setting_name, value in world_data.items():
             if setting_name in common_setting_mappings and isinstance(value, int):
                 if value in common_setting_mappings[setting_name]:
-                    settings_dict[setting_name] = common_setting_mappings[setting_name][value]
+                    world_data[setting_name] = common_setting_mappings[setting_name][value]
                 else:
-                    settings_dict[setting_name] = f"unknown_{value}"
-        return settings_dict
+                    world_data[setting_name] = f"unknown_{value}"
+        return world_data
+
+    # Keep cleanup_settings as an alias for backwards compatibility
+    def cleanup_settings(self, settings_dict: Dict[str, Any]) -> Dict[str, Any]:
+        """Deprecated: Use cleanup_world_data instead."""
+        return self.cleanup_world_data(settings_dict)
 
     def get_region_attributes(self, region) -> Dict[str, Any]:
         """

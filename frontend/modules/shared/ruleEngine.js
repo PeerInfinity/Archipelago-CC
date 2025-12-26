@@ -1269,8 +1269,10 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             const staticData = context.getStaticData();
             const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
-            if (staticData?.settings && staticData.settings[playerId]) {
-              const settingValue = staticData.settings[playerId][rule.attr];
+            // Check world (new) or settings (legacy) for backwards compatibility
+            const worldData = staticData?.world || staticData?.settings;
+            if (worldData && worldData[playerId]) {
+              const settingValue = worldData[playerId][rule.attr];
               if (settingValue !== undefined) {
                 return settingValue;
               }
@@ -1286,14 +1288,17 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             const staticData = context.getStaticData ? context.getStaticData() : context.staticData;
             const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
-            // Special case: if accessing self.options, return the settings object so nested attributes work
-            if (rule.attr === 'options' && staticData?.settings && staticData.settings[playerId]) {
-              return staticData.settings[playerId];
+            // Check world (new) or settings (legacy) for backwards compatibility
+            const worldData = staticData?.world || staticData?.settings;
+
+            // Special case: if accessing self.options, return the world data so nested attributes work
+            if (rule.attr === 'options' && worldData && worldData[playerId]) {
+              return worldData[playerId];
             }
 
-            // Check if the setting exists
-            if (staticData?.settings && staticData.settings[playerId]) {
-              const settingValue = staticData.settings[playerId][rule.attr];
+            // Check if the setting/attribute exists
+            if (worldData && worldData[playerId]) {
+              const settingValue = worldData[playerId][rule.attr];
               if (settingValue !== undefined) {
                 return settingValue;
               }
@@ -1304,16 +1309,17 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // Special case: if baseObject is undefined and the object was "options",
-        // try to resolve from game settings
+        // try to resolve from game world/settings
         if (baseObject === undefined && rule.object && rule.object.type === 'name' && rule.object.name === 'options') {
           // Try to get the setting value from context
           if (context.getStaticData) {
             const staticData = context.getStaticData();
             const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
-            // Check if the setting exists
-            if (staticData.settings && staticData.settings[playerId]) {
-              const settingValue = staticData.settings[playerId][rule.attr];
+            // Check world (new) or settings (legacy) for backwards compatibility
+            const worldData = staticData?.world || staticData?.settings;
+            if (worldData && worldData[playerId]) {
+              const settingValue = worldData[playerId][rule.attr];
               if (settingValue !== undefined) {
                 return settingValue;
               }
@@ -1331,16 +1337,19 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           return undefined;
         }
 
-        // Special case: if baseObject is undefined and the object was "settings",
-        // return the setting value from the player's settings object
-        // This allows exported helpers to reference settings.door_reqs, settings.item_by_door, etc.
-        if (baseObject === undefined && rule.object && rule.object.type === 'name' && rule.object.name === 'settings') {
+        // Special case: if baseObject is undefined and the object was "settings" or "world",
+        // return the value from the player's world/settings object
+        // This allows exported helpers to reference settings.door_reqs, world.difficulty_requirements, etc.
+        if (baseObject === undefined && rule.object && rule.object.type === 'name' &&
+            (rule.object.name === 'settings' || rule.object.name === 'world')) {
           if (context.getStaticData) {
             const staticData = context.getStaticData();
             const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
-            if (staticData?.settings && staticData.settings[playerId]) {
-              const settingValue = staticData.settings[playerId][rule.attr];
+            // Check world (new) or settings (legacy) for backwards compatibility
+            const worldData = staticData?.world || staticData?.settings;
+            if (worldData && worldData[playerId]) {
+              const settingValue = worldData[playerId][rule.attr];
               if (settingValue !== undefined) {
                 return settingValue;
               }
@@ -5351,15 +5360,17 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       if (context.getStaticData || context.staticData) {
         const staticData = context.getStaticData ? context.getStaticData() : context.staticData;
         const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
-        if (staticData?.settings && staticData.settings[playerId]) {
-          const playerSettings = staticData.settings[playerId];
+        // Check world (new) or settings (legacy) for backwards compatibility
+        const worldData = staticData?.world || staticData?.settings;
+        if (worldData && worldData[playerId]) {
+          const playerWorld = worldData[playerId];
 
           // Check direct setting first
-          let settingValue = playerSettings[settingName];
+          let settingValue = playerWorld[settingName];
 
           // If not found, check in options sub-object
-          if (settingValue === undefined && playerSettings.options) {
-            settingValue = playerSettings.options[settingName];
+          if (settingValue === undefined && playerWorld.options) {
+            settingValue = playerWorld.options[settingName];
           }
 
           if (settingValue !== undefined) {

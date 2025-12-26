@@ -353,24 +353,27 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
       const playerIdKey = String(sm.playerId);
       let rawValue;
 
-      // Check settings if available
-      if (sm.settings) {
-        // Check if settings is keyed by player ID (multiworld case)
+      // Check world data (new structure) or settings (legacy) if available
+      // sm.world and sm.settings now point to the same object for backwards compatibility
+      const worldData = sm.world || sm.settings;
+      if (worldData) {
+        // Check if world data is keyed by player ID (multiworld case)
         // JSON keys are always strings, so convert playerId to string for lookup
-        let settingsToUse = sm.settings;
-        if (sm.settings[playerIdKey] && typeof sm.settings[playerIdKey] === 'object') {
-          settingsToUse = sm.settings[playerIdKey];
+        let worldToUse = worldData;
+        if (worldData[playerIdKey] && typeof worldData[playerIdKey] === 'object') {
+          worldToUse = worldData[playerIdKey];
         }
-        // First check direct lookup at top level
-        rawValue = settingsToUse[settingName];
+        // First check direct lookup at top level (includes runtime attributes in new structure)
+        rawValue = worldToUse[settingName];
         // If not found at top level, check inside 'options' object
         // Many settings like dk_coins_for_gyrocopter are nested in options
-        if (rawValue === undefined && settingsToUse?.options) {
-          rawValue = settingsToUse.options[settingName];
+        if (rawValue === undefined && worldToUse?.options) {
+          rawValue = worldToUse.options[settingName];
         }
       }
 
-      // If still not found, check world_attributes (for computed runtime values like difficulty_requirements, required_medallions)
+      // Legacy fallback: check world_attributes for computed runtime values
+      // In new structure, these are merged into 'world' directly, but check here for backwards compatibility
       if (rawValue === undefined && sm.rules?.world_attributes) {
         let worldAttrsToUse = sm.rules.world_attributes;
         // Check if world_attributes is keyed by player ID
@@ -450,16 +453,16 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
 
       // World object (commonly used in helper functions)
       if (name === 'world') {
-        // sm.settings is typically the player-specific settings object directly (not keyed by player ID)
-        // The settings structure may have game options nested under settings.options
-        // (for games like Shivers with options like early_beth) or directly on settings
-        // Also handle case where settings might be keyed by player ID
-        let settingsToUse = sm.settings;
-        // Check if settings is keyed by player ID (multiworld case)
-        if (sm.settings?.[sm.playerId] && typeof sm.settings[sm.playerId] === 'object') {
-          settingsToUse = sm.settings[sm.playerId];
+        // sm.world contains world data (game, options, runtime attributes)
+        // sm.settings is an alias for backwards compatibility
+        // The structure has game options nested under world.options
+        const worldData = sm.world || sm.settings;
+        let worldToUse = worldData;
+        // Check if world is keyed by player ID (multiworld case)
+        if (worldData?.[sm.playerId] && typeof worldData[sm.playerId] === 'object') {
+          worldToUse = worldData[sm.playerId];
         }
-        const gameOptions = settingsToUse?.options || settingsToUse || {};
+        const gameOptions = worldToUse?.options || worldToUse || {};
 
         // Get game-specific info from game_info (e.g., AHIT hat_yarn_costs)
         const playerIdKey = String(sm.playerId);
@@ -481,8 +484,17 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
           item_name_groups: itemNameGroups
         };
 
-        // Merge in world_attributes (computed runtime values like difficulty_requirements, required_medallions)
-        // These are accessed via world.difficulty_requirements, world.required_medallions, etc.
+        // In new structure, world attributes are directly on worldToUse
+        // Copy all attributes except 'options' and 'option_definitions' which are handled separately
+        if (worldToUse) {
+          for (const [key, value] of Object.entries(worldToUse)) {
+            if (key !== 'options' && key !== 'option_definitions' && key !== 'game' && !(key in worldObj)) {
+              worldObj[key] = value;
+            }
+          }
+        }
+
+        // Legacy fallback: check world_attributes for older exports
         if (sm.rules?.world_attributes) {
           let worldAttrs = sm.rules.world_attributes;
           // Check if world_attributes is keyed by player ID
@@ -510,10 +522,11 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
       // Logic object (game-specific helper functions)
       if (name === 'logic') {
         // Get game-specific helpers from the game logic module
-        // For multiworld, use the player-specific game from settings instead of the top-level game_name
+        // For multiworld, use the player-specific game from world data instead of the top-level game_name
+        const worldData = sm.world || sm.settings;
         let gameName = sm.rules?.game_name;
-        if (gameName === 'Multiworld' && sm.settings?.game) {
-          gameName = sm.settings.game;
+        if (gameName === 'Multiworld' && worldData?.game) {
+          gameName = worldData.game;
         }
         if (gameName) {
           const gameLogic = getGameLogic(gameName);
@@ -884,8 +897,12 @@ export function getStaticGameData(sm) {
     mode: sm.mode,
     // Game-specific information
     game_info: sm.gameInfo,
-    settings: sm.rules?.settings,  // Full settings object (keyed by player ID for multiworld)
-    world_attributes: sm.rules?.world_attributes,  // Computed runtime values like difficulty_requirements (keyed by player ID for multiworld)
+    // World data (new structure) with backwards compatibility for settings/world_attributes
+    world: sm.rules?.world || sm.rules?.settings,  // Full world object (game, options, runtime attributes) keyed by player ID
+    exporter: sm.rules?.exporter,  // Exporter-specific settings (keyed by player ID for multiworld)
+    // Legacy aliases for backwards compatibility
+    settings: sm.rules?.world || sm.rules?.settings,  // Alias for world
+    world_attributes: sm.rules?.world_attributes,  // Legacy: now merged into world
     helpers: sm.rules?.helpers,  // Helper function definitions (keyed by player ID for multiworld)
     // Starting items (precollected items)
     starting_items: sm.rules?.starting_items,

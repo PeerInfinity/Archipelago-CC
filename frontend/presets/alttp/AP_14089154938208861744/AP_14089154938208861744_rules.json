@@ -20788,11 +20788,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "A Link to the Past",
-      "assume_bidirectional_exits": true,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "items",
         "allow_collect": "true",
@@ -21531,11 +21529,6 @@
           "display_name": "Underworld Palette"
         }
       },
-      "world_directory": "alttp"
-    }
-  },
-  "world_attributes": {
-    "1": {
       "has_progressive_bows": true,
       "waterfall_fairy_bottle_fill": "Bottle (Red Potion)",
       "pyramid_fairy_bottle_fill": "Bottle (Good Bee)",
@@ -22024,7 +22017,14 @@
             "Capacity Upgrade"
           ]
         }
-      }
+      },
+      "world_directory": "alttp"
+    }
+  },
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true,
+      "use_resolved_items": false
     }
   },
   "game_info": {

@@ -26,7 +26,7 @@
  *     ├─> Calls getSnapshot() to get current state
  *     │     └─> Returns: { inventory, flags, events, regionReachability, player, ... }
  *     ├─> Calls getStaticGameData() to get static data
- *     │     └─> Returns: { items, regions, locations, settings, progressionMapping, ... }
+ *     │     └─> Returns: { items, regions, locations, world, exporter, progressionMapping, ... }
  *     ├─> Calls createStateSnapshotInterface(snapshot, staticData, contextVars)
  *     │
  *   Output: SnapshotInterface object
@@ -36,7 +36,7 @@
  *     ├─> snapshot: Current game state from StateManager
  *     │     └─> { inventory: Map, flags: [], events: [], regionReachability: {}, ... }
  *     ├─> staticData: Static game data from StateManager
- *     │     └─> { items: Map, regions: Map, locations: Map, settings: {}, ... }
+ *     │     └─> { items: Map, regions: Map, locations: Map, world: {}, exporter: {}, ... }
  *     ├─> contextVariables: Optional context (e.g., { location: currentLocation })
  *     │
  *   Processing:
@@ -93,7 +93,7 @@
  *     ├─> snapshot: Cached snapshot from proxy
  *     │     └─> { inventory: {}, flags: [], events: [], regionReachability: {}, ... }
  *     ├─> staticData: Cached static data from proxy
- *     │     └─> { items: Map, regions: Map, locations: Map, settings: {}, ... }
+ *     │     └─> { items: Map, regions: Map, locations: Map, world: {}, exporter: {}, ... }
  *     ├─> contextVariables: Optional context (e.g., { location: locationObj })
  *     │
  *   Processing:
@@ -247,10 +247,10 @@ export function createStateSnapshotInterface(
   if (gameName === 'Multiworld') {
     const rawPlayerId = snapshot?.player?.id || snapshot?.player?.slot ||
                      staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
-    // Normalize to string since settings keys are strings ('1', '2', etc.)
+    // Normalize to string since world keys are strings ('1', '2', etc.)
     const playerId = String(rawPlayerId);
-    if (staticData?.settings?.[playerId]?.game) {
-      gameName = staticData.settings[playerId].game;
+    if (staticData?.world?.[playerId]?.game) {
+      gameName = staticData.world[playerId].game;
     }
   }
 
@@ -307,10 +307,11 @@ export function createStateSnapshotInterface(
         case 'inventory':
           return snapshot?.inventory;
         case 'settings': {
-          // Return current player's settings, not all players' settings
-          // This allows helpers to reference settings.X directly for player-specific options
+          // Return current player's world data (game, options, runtime attributes)
+          // This allows helpers to reference settings.X directly for player-specific values
+          // 'settings' is kept as an alias for backwards compatibility with 'world'
           const settingsPlayerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
-          return staticData?.settings?.[settingsPlayerId] || staticData?.settings || {};
+          return staticData?.world?.[settingsPlayerId] || staticData?.world || {};
         }
         case 'flags':
           return snapshot?.flags;
@@ -329,9 +330,9 @@ export function createStateSnapshotInterface(
         case 'self':
           // In Python rules, 'self' refers to the game's rules class instance
           // which has attributes like nerf_roc_wing from the world options
-          // We return the settings for the current player from staticData
+          // We return the world data for the current player from staticData
           const selfPlayerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
-          return staticData?.settings?.[selfPlayerId] || staticData?.settings || {};
+          return staticData?.world?.[selfPlayerId] || staticData?.world || {};
         case 'regions':
           return staticData?.regions;
         case 'locations':
@@ -349,10 +350,10 @@ export function createStateSnapshotInterface(
           // Return an object with player, options, and game-specific properties
           // This matches the Python world object structure used in helper definitions
           const playerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
-          // The settings structure may have game options nested under settings[playerId].options
-          // (for games like Shivers with options like early_beth) or directly on settings[playerId]
-          const playerSettings = staticData?.settings?.[playerId];
-          const gameOptions = playerSettings?.options || playerSettings || staticData?.settings || {};
+          // The world structure has game options nested under world[playerId].options
+          // or directly on world[playerId] (for games like Shivers with options like early_beth)
+          const playerWorld = staticData?.world?.[playerId];
+          const gameOptions = playerWorld?.options || playerWorld || staticData?.world || {};
 
           // Get game-specific info from game_info (e.g., AHIT hat_yarn_costs, hat_craft_order)
           const gameInfo = staticData?.game_info?.[playerId] || {};
@@ -407,15 +408,16 @@ export function createStateSnapshotInterface(
             }
           };
 
-          // Merge in world_attributes (computed runtime values like difficulty_requirements, required_medallions)
-          // These are accessed via world.difficulty_requirements, world.required_medallions, etc.
-          if (staticData?.world_attributes) {
-            let worldAttrs = staticData.world_attributes;
-            // Check if world_attributes is keyed by player ID
-            if (worldAttrs[playerId] && typeof worldAttrs[playerId] === 'object') {
-              worldAttrs = worldAttrs[playerId];
+          // Merge in world attributes (computed runtime values like difficulty_requirements, required_medallions)
+          // These are now part of the world data directly (previously in separate world_attributes section)
+          // They are accessed via world.difficulty_requirements, world.required_medallions, etc.
+          if (playerWorld) {
+            // Copy all world attributes except 'options' and 'option_definitions' which are handled separately
+            for (const [key, value] of Object.entries(playerWorld)) {
+              if (key !== 'options' && key !== 'option_definitions' && key !== 'game' && !(key in worldObj)) {
+                worldObj[key] = value;
+              }
             }
-            Object.assign(worldObj, worldAttrs);
           }
 
           // Merge in game-specific properties from game_info
@@ -660,35 +662,24 @@ export function createStateSnapshotInterface(
     hasFlag: (flagName) =>
       !!(snapshot?.flags && snapshot.flags.includes(flagName)),
     getSetting: (settingName) => {
-      // Settings may be in snapshot OR staticData, keyed by player ID (multiworld) or directly
+      // World data may be in snapshot OR staticData, keyed by player ID (multiworld) or directly
       // Try snapshot first, then staticData
-      let settingsToUse = snapshot?.settings || staticData?.settings;
+      let worldToUse = snapshot?.world || staticData?.world;
       const rawPlayerId = snapshot?.player?.id || snapshot?.player?.slot ||
                        staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
       const playerIdKey = String(rawPlayerId);
-      if (settingsToUse) {
-        // Check if settings is keyed by player ID
-        if (settingsToUse[playerIdKey] && typeof settingsToUse[playerIdKey] === 'object') {
-          settingsToUse = settingsToUse[playerIdKey];
+      if (worldToUse) {
+        // Check if world is keyed by player ID
+        if (worldToUse[playerIdKey] && typeof worldToUse[playerIdKey] === 'object') {
+          worldToUse = worldToUse[playerIdKey];
         }
       }
-      // First check direct lookup at top level of settings
-      let rawValue = settingsToUse?.[settingName];
+      // First check direct lookup at top level of world (includes runtime attributes)
+      let rawValue = worldToUse?.[settingName];
       // If not found at top level, check inside 'options' object
       // Many settings like LuckyEmblemsRequired are nested in options
-      if (rawValue === undefined && settingsToUse?.options) {
-        rawValue = settingsToUse.options[settingName];
-      }
-      // If still not found, check world_attributes (for computed runtime values like difficulty_requirements)
-      if (rawValue === undefined) {
-        let worldAttrsToUse = snapshot?.world_attributes || staticData?.world_attributes;
-        if (worldAttrsToUse) {
-          // Check if world_attributes is keyed by player ID
-          if (worldAttrsToUse[playerIdKey] && typeof worldAttrsToUse[playerIdKey] === 'object') {
-            worldAttrsToUse = worldAttrsToUse[playerIdKey];
-          }
-          rawValue = worldAttrsToUse?.[settingName];
-        }
+      if (rawValue === undefined && worldToUse?.options) {
+        rawValue = worldToUse.options[settingName];
       }
       // Normalize "off"/"none" type strings to falsy values
       // Choice options in Python use 0 for "off"/"none" which get exported as strings
@@ -806,7 +797,8 @@ export function createStateSnapshotInterface(
       dungeons: staticData.dungeonData || staticData.dungeons,
       game_info: staticData.game_info, // Include game_info for variable resolution
       helpers: staticData.helpers, // Include helper definitions for rule engine
-      settings: staticData.settings, // Include settings for helper evaluation
+      world: staticData.world, // Include world data for helper evaluation (game, options, runtime attributes)
+      exporter: staticData.exporter, // Include exporter settings for processing behavior
     }),
     getStateValue: (pathString) => {
       if (!snapshot) return undefined;

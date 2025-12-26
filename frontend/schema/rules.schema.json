@@ -143,9 +143,38 @@
       },
       "additionalProperties": false
     },
+    "world": {
+      "type": "object",
+      "description": "World data mirroring Archipelago's world structure, keyed by player slot ID (string). Contains game name, options, and runtime attributes.",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "properties": {
+            "game": {
+              "type": "string",
+              "description": "Name of the game this world is for."
+            }
+          },
+          "required": ["game"],
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "exporter": {
+      "type": "object",
+      "description": "Exporter-specific settings, keyed by player slot ID (string). Contains processing flags and metadata not from the Archipelago world.",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
     "settings": {
       "type": "object",
-      "description": "Game-specific settings, keyed by player slot ID (string). The structure within each player's settings varies by game.",
+      "description": "DEPRECATED: Use 'world' instead. Kept for backwards compatibility.",
       "patternProperties": {
         "^[0-9]+$": {
           "type": "object",
@@ -155,7 +184,6 @@
               "description": "Name of the game these settings apply to."
             }
           },
-          "required": ["game"],
           "additionalProperties": true
         }
       },
@@ -195,7 +223,7 @@
     "items",
     "item_groups",
     "itempool_counts",
-    "settings",
+    "world",
     "game_info"
   ],
   "$defs": {

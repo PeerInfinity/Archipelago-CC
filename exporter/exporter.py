@@ -715,7 +715,7 @@ def write_field_by_field(export_data, filepath):
     fields_written = []
     
     # Try each field separately
-    for field in ["regions", "helpers", "items", "item_groups", "progression_mapping", "settings", "world_attributes", "start_regions", "game_info", "itempool_counts"]:
+    for field in ["regions", "helpers", "items", "item_groups", "progression_mapping", "world", "exporter", "start_regions", "game_info", "itempool_counts"]:
         if field in export_data:
             try:
                 serializable_field = make_serializable(export_data[field])
@@ -728,7 +728,7 @@ def write_field_by_field(export_data, filepath):
                 logger.error(error_msg)
                 
                 # For complex fields, try to process each player separately
-                if field in ["settings", "world_attributes", "game_info"] and isinstance(export_data.get(field, {}), dict):
+                if field in ["world", "exporter", "game_info"] and isinstance(export_data.get(field, {}), dict):
                     # Initialize with empty dict
                     serializable_data[field] = {}
                     
@@ -771,8 +771,8 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'items': {},    # Item data by player
         'item_groups': {},  # Item groups by player
         'progression_mapping': {},  # Progressive item info
-        'settings': {}, # Game settings by player (options, option_definitions, internal flags)
-        'world_attributes': {},  # World attributes by player (computed runtime values like difficulty_requirements)
+        'world': {},    # World data by player (mirrors Archipelago's world structure: game, options, runtime attributes)
+        'exporter': {}, # Exporter-specific settings by player (controls frontend processing behavior)
         'start_regions': {},  # Start regions by player
         'itempool_counts': {},  # Complete itempool counts by player
         'game_info': {},  # Game-specific information for frontend
@@ -855,36 +855,36 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         # Store the pre-calculated itempool counts
         export_data['itempool_counts'][player_str] = itempool_counts
 
-        # Get Settings using handler
+        # Get world data using handler (includes options and runtime-computed attributes)
         try:
-            settings_data = game_handler.get_settings_data(world, multiworld, player) # Call the handler method
+            world_data = game_handler.get_world_data(world, multiworld, player)
             # Add world_directory for handler lookup during cleanup (in case handler didn't add it)
-            if 'world_directory' not in settings_data:
+            if 'world_directory' not in world_data:
                 try:
                     module_path = type(world).__module__
                     parts = module_path.split('.')
                     if len(parts) >= 2 and parts[0] == 'worlds':
-                        settings_data['world_directory'] = parts[1]
+                        world_data['world_directory'] = parts[1]
                 except Exception:
                     pass
-            export_data['settings'][player_str] = settings_data
+            export_data['world'][player_str] = world_data
         except Exception as e:
-            error_msg = f"Error exporting settings for player {player}: {str(e)}"
+            error_msg = f"Error exporting world data for player {player}: {str(e)}"
             logger.error(error_msg)
-            export_data['settings'][player_str] = {
+            export_data['world'][player_str] = {
                 'error': error_msg,
-                'details': "Failed to read game settings. Check logs for more information."
+                'details': "Failed to read world data. Check logs for more information."
             }
 
-        # Get world attributes using handler
+        # Get exporter-specific settings
         try:
-            world_attributes_data = game_handler.get_world_attributes(world, multiworld, player)
-            if world_attributes_data:
-                export_data['world_attributes'][player_str] = world_attributes_data
+            exporter_settings = game_handler.get_exporter_settings()
+            if exporter_settings:
+                export_data['exporter'][player_str] = exporter_settings
         except Exception as e:
-            error_msg = f"Error exporting world attributes for player {player}: {str(e)}"
+            error_msg = f"Error exporting exporter settings for player {player}: {str(e)}"
             logger.error(error_msg)
-            # Don't add error to export_data - world_attributes is optional
+            # Don't add error to export_data - exporter settings can fall back to defaults
 
         # Get helper definitions using handler
         try:
@@ -1971,12 +1971,12 @@ def cleanup_export_data(data):
     player_games = {}
     
     # Get player game mapping (needed for handler selection)
-    # We need this info before cleaning settings, so iterate over settings first
-    # even if settings themselves aren't cleaned until later
-    if 'settings' in data and isinstance(data['settings'], dict):
-        for player_id, settings_data in data['settings'].items():
-            if isinstance(settings_data, dict) and 'game' in settings_data:
-                player_games[player_id] = settings_data['game']
+    # We need this info before cleaning world data, so iterate over world first
+    # even if world data itself isn't cleaned until later
+    if 'world' in data and isinstance(data['world'], dict):
+        for player_id, world_data in data['world'].items():
+            if isinstance(world_data, dict) and 'game' in world_data:
+                player_games[player_id] = world_data['game']
             else:
                 # Attempt to get game name from game_info as a fallback
                 if 'game_info' in data and player_id in data['game_info'] and 'name' in data['game_info'][player_id]:
@@ -1996,22 +1996,22 @@ def cleanup_export_data(data):
             if 'rule_format' not in game_info:
                 game_info['rule_format'] = {"version": "1.0"}
 
-    # Clean up settings fields
-    if 'settings' in data:
-        for player, settings in data['settings'].items():
-            if not isinstance(settings, dict) or 'error' in settings: # Skip if not dict or already an error
+    # Clean up world data fields
+    if 'world' in data:
+        for player, world_data in data['world'].items():
+            if not isinstance(world_data, dict) or 'error' in world_data: # Skip if not dict or already an error
                 continue
-            # Get world_directory from settings (added during export) for handler lookup
-            world_dir = settings.get('world_directory')
+            # Get world_directory from world data (added during export) for handler lookup
+            world_dir = world_data.get('world_directory')
             game_handler = get_game_export_handler(world_directory=world_dir)  # World not available during cleanup
             try:
                 # Delegate cleanup to the specific handler
                 # Pass a copy to avoid modifying the original dict used elsewhere if cleanup fails partially
-                cleaned_settings = game_handler.cleanup_settings(settings.copy())
-                data['settings'][player] = cleaned_settings # Update with cleaned settings
+                cleaned_world_data = game_handler.cleanup_world_data(world_data.copy())
+                data['world'][player] = cleaned_world_data # Update with cleaned world data
             except Exception as e:
-                logger.error(f"Error cleaning settings via handler for player {player} ({world_dir}): {e}")
-                # Keep original settings in case of error during cleanup
+                logger.error(f"Error cleaning world data via handler for player {player} ({world_dir}): {e}")
+                # Keep original world data in case of error during cleanup
 
     # Clean up region types
     if 'regions' in data:
@@ -2112,8 +2112,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'canonical_placements',
         'progression_mapping',
         'starting_items',
-        'settings',
-        'world_attributes',
+        'world',
+        'exporter',
         'game_info',
         'metamath_data'
     ]
@@ -2121,7 +2121,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     # Player-specific keys contain data nested under player IDs
     player_specific_keys = [
         'regions', 'dungeons', 'items', 'item_groups', 'progression_mapping',
-        'settings', 'world_attributes', 'start_regions', 'itempool_counts',
+        'world', 'exporter', 'start_regions', 'itempool_counts',
         'canonical_placements', 'game_info', 'starting_items', 'metamath_data'
     ]
 
