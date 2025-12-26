@@ -6,7 +6,7 @@
 
 [View Original Template Results](./test-results-multiclient.md)
 
-**Generated:** 2025-12-26 00:20:25
+**Generated:** 2025-12-26 07:20:10
 
 ## Summary
 
@@ -26,7 +26,7 @@
 
 | Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |
 |-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|
-| A Hat in Time WorldGen | ❌ Failed | 0 | ❌ | 112/232 | 111/223 | 1/9 | ❌ | 110/232 | ✅ | ✅ |
+| A Hat in Time WorldGen | ✅ Passed | 0 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | ✅ | ✅ |
 | A Link to the Past WorldGen | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 19/19 | ✅ | 268/268 | ✅ | ✅ |
 | A Short Hike WorldGen | ✅ Passed | 0 | ✅ | 131/131 | 131/131 | 0/0 | ✅ | 131/131 | ✅ | ✅ |
 | APQuest WorldGen | ✅ Passed | 0 | ✅ | 8/8 | 6/6 | 2/2 | ✅ | 8/8 | ✅ | ✅ |
@@ -65,14 +65,14 @@
 | Muse Dash WorldGen | ✅ Passed | 0 | ✅ | 90/90 | 90/90 | 0/0 | ✅ | 90/90 | ✅ | ✅ |
 | Noita WorldGen | ✅ Passed | 0 | ✅ | 117/117 | 109/109 | 8/8 | ✅ | 117/117 | ✅ | ✅ |
 | Old School Runescape WorldGen | ✅ Passed | 0 | ✅ | 76/76 | 54/54 | 22/22 | ✅ | 76/76 | ✅ | ✅ |
-| Overcooked\! 2 WorldGen | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | ✅ | ✅ |
+| Overcooked! 2 WorldGen | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | ✅ | ✅ |
 | Paint WorldGen | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | ✅ | ✅ |
 | Risk of Rain 2 WorldGen | ✅ Passed | 0 | ✅ | 223/223 | 221/221 | 2/2 | ✅ | 223/223 | ✅ | ✅ |
 | Saving Princess WorldGen | ✅ Passed | 0 | ✅ | 37/37 | 36/36 | 1/1 | ✅ | 37/37 | ✅ | ✅ |
 | Shivers WorldGen | ✅ Passed | 0 | ✅ | 114/114 | 76/76 | 38/38 | ✅ | 114/114 | ✅ | ✅ |
 | Sonic Adventure 2 Battle WorldGen | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | ✅ | ✅ |
 | Starcraft 2 WorldGen | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | ✅ | ✅ |
-| Subnautica WorldGen | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | ✅ | ✅ |
+| Subnautica WorldGen | ❌ Failed | 3 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Super Mario 64 WorldGen | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | ✅ | ✅ |
 | Super Mario Land 2 WorldGen | ✅ Passed | 0 | ✅ | 60/60 | 53/53 | 7/7 | ✅ | 60/60 | ✅ | ✅ |
 | Super Mario World WorldGen | ✅ Passed | 0 | ✅ | 108/108 | 108/108 | 0/0 | ✅ | 108/108 | ✅ | ✅ |

@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-26 00:20:25
+**Generated:** 2025-12-26 07:20:10
 
 ## Summary
 
@@ -59,7 +59,7 @@
 | Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 8.0KB | ✅ |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 57.9KB | 5.6KB |
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 33.8KB | 105.3KB |
-| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 3 | 3 | 9.5KB | 9.0KB |
+| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 3 | 3 | 18.7KB | 9.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 16.0KB | ✅ |
 | Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 41.3KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | 4 | 4 | 17.5KB | ✅ |
@@ -81,7 +81,7 @@
 | Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 13.5KB | 6.9KB |
 | Shivers | ✅ Passed | ❌ Failed | 5 | 5 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 79.4KB | 86.3KB |
+| Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 86.8KB | 86.3KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 20.9KB | 10.7KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 7.5KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 14.6KB | ✅ |
