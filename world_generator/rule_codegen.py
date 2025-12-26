@@ -965,6 +965,22 @@ class RuleCodeGenerator:
                 return f'MinValue({left_code}, {right_code})'
             return 'MinValue(0, 0)'
 
+        # Handle AST_max rule (max operation from AST export)
+        if rb_rule == 'AST_max':
+            # The args are nested under args.args
+            max_args = args.get('args', [])
+            if len(max_args) >= 2:
+                self.required_imports.add('MaxValue')
+                # Chain multiple args: MaxValue(MaxValue(a, b), c)
+                result = self._convert_arithmetic_operand(max_args[0])
+                for arg in max_args[1:]:
+                    arg_code = self._convert_arithmetic_operand(arg)
+                    result = f'MaxValue({result}, {arg_code})'
+                return result
+            elif len(max_args) == 1:
+                return self._convert_arithmetic_operand(max_args[0])
+            return '0'
+
         # Handle AST_prog_item_count rule (for state counter items like coins)
         # This converts {"rule": "AST_prog_item_count", "args": {"key": " coins"}}
         # to CountItem(" coins") for use in Compare expressions
@@ -1024,9 +1040,16 @@ class RuleCodeGenerator:
         return self._resolve_setting_to_bool(name, default=False)
 
     def _convert_constant(self, rule: Dict[str, Any]) -> str:
-        """Convert constant true/false rule."""
+        """Convert constant rule - preserves type (bool, int, float, etc.)."""
         value = rule.get('value', True)
-        return self._make_bool_constant(bool(value))
+        # Preserve numeric values for use in arithmetic/comparison contexts
+        if isinstance(value, bool):
+            return self._make_bool_constant(value)
+        elif isinstance(value, (int, float)):
+            return repr(value)
+        else:
+            # For other types (strings, etc.), use boolean interpretation
+            return self._make_bool_constant(bool(value))
 
     def _convert_list(self, rule: Dict[str, Any]) -> str:
         """Convert list rule to Python list literal.
@@ -1773,6 +1796,21 @@ class RuleCodeGenerator:
                 return f'MinValue({left_code}, {right_code})'
             return 'MinValue(0, 0)'
 
+        if rb_rule == 'AST_max':
+            # Handle AST_max with nested args
+            max_args = rb_args.get('args', [])
+            if len(max_args) >= 2:
+                self.required_imports.add('MaxValue')
+                # Chain multiple args: MaxValue(MaxValue(a, b), c)
+                result = self._convert_arithmetic_operand(max_args[0])
+                for arg in max_args[1:]:
+                    arg_code = self._convert_arithmetic_operand(arg)
+                    result = f'MaxValue({result}, {arg_code})'
+                return result
+            elif len(max_args) == 1:
+                return self._convert_arithmetic_operand(max_args[0])
+            return '0'
+
         if rb_rule == 'SettingValue':
             # Handle SettingValue in Compare operand - preserve numeric value
             # Unlike _convert_setting_value which converts to boolean rules,
@@ -1917,6 +1955,35 @@ class RuleCodeGenerator:
         if op_type == 'min':
             return self._convert_min(operand)
 
+        # Handle Rule Builder format rules with 'rule' key (for arithmetic operands)
+        rb_rule = operand.get('rule', '')
+        rb_args = operand.get('args', {})
+
+        if rb_rule == 'AST_min':
+            # Handle AST_min with nested args
+            min_args = rb_args.get('args', [])
+            if len(min_args) >= 2:
+                self.required_imports.add('MinValue')
+                left_code = self._convert_arithmetic_operand(min_args[0])
+                right_code = self._convert_arithmetic_operand(min_args[1])
+                return f'MinValue({left_code}, {right_code})'
+            return 'MinValue(0, 0)'
+
+        if rb_rule == 'AST_max':
+            # Handle AST_max with nested args
+            max_args = rb_args.get('args', [])
+            if len(max_args) >= 2:
+                self.required_imports.add('MaxValue')
+                # Chain multiple args: MaxValue(MaxValue(a, b), c)
+                result = self._convert_arithmetic_operand(max_args[0])
+                for arg in max_args[1:]:
+                    arg_code = self._convert_arithmetic_operand(arg)
+                    result = f'MaxValue({result}, {arg_code})'
+                return result
+            elif len(max_args) == 1:
+                return self._convert_arithmetic_operand(max_args[0])
+            return '0'
+
         # Fall back to converting as a rule
         return self._convert_rule(operand)
 
@@ -2051,8 +2118,61 @@ class RuleCodeGenerator:
                 # Track variable assignment
                 name = stmt.get('name', '')
                 value = stmt.get('value', {})
-                if value.get('type') == 'constant':
+                value_type = value.get('type', '')
+
+                if value_type == 'constant':
                     local_vars[name] = value.get('value')
+                elif value_type == 'setting_value':
+                    # Look up setting value from resolved settings
+                    setting_name = value.get('setting', '')
+                    if setting_name in self.settings:
+                        local_vars[name] = self.settings[setting_name]
+                    else:
+                        has_missing_settings = True
+                        local_vars[name] = 0
+                elif value_type == 'subscript':
+                    # Evaluate subscript (e.g., [200, 400, 600][swim_rule % 3])
+                    subscript_value = value.get('value', {})
+                    subscript_index = value.get('index', {})
+
+                    # Get the array/value
+                    arr = None
+                    if subscript_value.get('type') == 'constant':
+                        arr = subscript_value.get('value')
+
+                    # Get the index
+                    idx = self._try_evaluate_expr(subscript_index, local_vars)
+
+                    # Handle binary_op index (e.g., swim_rule % 3)
+                    if idx is None and subscript_index.get('type') == 'binary_op':
+                        left = self._try_evaluate_expr(subscript_index.get('left', {}), local_vars)
+                        right = self._try_evaluate_expr(subscript_index.get('right', {}), local_vars)
+                        op = subscript_index.get('op', '')
+                        if left is not None and right is not None:
+                            try:
+                                if op == '%':
+                                    idx = left % right
+                                elif op == '+':
+                                    idx = left + right
+                                elif op == '-':
+                                    idx = left - right
+                                elif op == '*':
+                                    idx = left * right
+                                elif op == '//':
+                                    idx = left // right
+                            except (TypeError, ZeroDivisionError):
+                                pass
+
+                    if arr is not None and idx is not None:
+                        try:
+                            if isinstance(arr, (list, tuple)):
+                                local_vars[name] = arr[int(idx)]
+                            elif isinstance(arr, dict):
+                                local_vars[name] = arr[idx]
+                        except (IndexError, KeyError, TypeError):
+                            local_vars[name] = 0
+                    else:
+                        local_vars[name] = 0
                 else:
                     # Complex assignment - check if it references missing settings
                     if self._references_missing_setting(value):
@@ -2128,6 +2248,16 @@ class RuleCodeGenerator:
             if inner.get('type') == 'name' and inner.get('name') in local_vars:
                 return True
 
+        # Handle compare type (e.g., swim_rule > 2)
+        if test_type == 'compare':
+            left = test.get('left', {})
+            right = test.get('right', {})
+            # Can evaluate if both operands can be resolved
+            left_val = self._try_evaluate_expr(left, local_vars)
+            right_val = self._try_evaluate_expr(right, local_vars)
+            if left_val is not None and right_val is not None:
+                return True
+
         return False
 
     def _evaluate_if_test(self, test: Dict[str, Any], local_vars: Dict[str, Any]) -> bool:
@@ -2155,6 +2285,16 @@ class RuleCodeGenerator:
                 var_val = local_vars.get(var_name, 0)
                 return not var_val
 
+        # Handle compare type (e.g., swim_rule > 2)
+        if test_type == 'compare':
+            left = test.get('left', {})
+            right = test.get('right', {})
+            op = test.get('op', '')
+            left_val = self._try_evaluate_expr(left, local_vars)
+            right_val = self._try_evaluate_expr(right, local_vars)
+            if left_val is not None and right_val is not None:
+                return self._evaluate_comparison(left_val, op, right_val)
+
         return False
 
     def _evaluate_ast_return_value(self, value: Dict[str, Any], local_vars: Dict[str, Any]) -> str:
@@ -2167,6 +2307,19 @@ class RuleCodeGenerator:
                 self.required_imports.add('True_' if const_val else 'False_')
                 return 'True_()' if const_val else 'False_()'
             return repr(const_val)
+
+        # Handle variable references - look up in local_vars
+        if value_type == 'name':
+            var_name = value.get('name', '')
+            if var_name in local_vars:
+                var_val = local_vars[var_name]
+                if isinstance(var_val, bool):
+                    self.required_imports.add('True_' if var_val else 'False_')
+                    return 'True_()' if var_val else 'False_()'
+                elif isinstance(var_val, (int, float)):
+                    return repr(var_val)
+            # Variable not found - return 0 as safe numeric default
+            return '0'
 
         if value_type == 'compare':
             # Comparison like: auto_scroll_levels[level_id] > 0
