@@ -1228,17 +1228,87 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
                     dict_items = ', '.join(f'{k!r}: {v!r}' for k, v in attr_value.items())
                     init_attrs.append(f'        self.{attr_name} = {{{dict_items}}}')
             elif isinstance(attr_value, list):
-                init_attrs.append(f'        self.{attr_name} = {attr_value!r}')
+                # Special handling for shops - convert dicts to ShopWrapper objects
+                if attr_name == 'shops' and attr_value and isinstance(attr_value[0], dict):
+                    # Shops need special handling - convert to ShopWrapper objects in __init__
+                    init_attrs.append(f'        self.{attr_name} = self._create_shops({attr_value!r})')
+                else:
+                    init_attrs.append(f'        self.{attr_name} = {attr_value!r}')
             else:
                 init_attrs.append(f'        self.{attr_name} = {attr_value!r}')
 
         init_attrs_content = '\n'.join(init_attrs)
+
+        # Check if we need the ShopWrapper class (for games with shops)
+        has_shops = 'shops' in data.world_attributes and data.world_attributes['shops']
+        shop_wrapper_section = ''
+        create_shops_method = ''
+        if has_shops:
+            shop_wrapper_section = '''
+
+class _RegionWrapper:
+    """Wrapper for region to provide can_reach interface for worldgen shops."""
+    def __init__(self, region_name: str, world):
+        self.name = region_name
+        self._world = world
+
+    def can_reach(self, state) -> bool:
+        """Check if the region is reachable."""
+        try:
+            region = self._world.multiworld.get_region(self.name, self._world.player)
+            return state.can_reach_region(self.name, self._world.player)
+        except KeyError:
+            return False
+
+
+class _ShopWrapper:
+    """Wrapper for shop data to provide has/has_unlimited interface for worldgen."""
+    def __init__(self, shop_data: dict, world):
+        self._data = shop_data
+        self.region = _RegionWrapper(shop_data.get('region', ''), world)
+        self.inventory = shop_data.get('inventory', [])
+        self.room_id = shop_data.get('room_id', 0)
+        self.shopkeeper_config = shop_data.get('shopkeeper_config', 0)
+        self.custom = shop_data.get('custom', False)
+        self.locked = shop_data.get('locked', False)
+        self.sram_offset = shop_data.get('sram_offset', 0)
+
+    def has_unlimited(self, item: str) -> bool:
+        """Check if the shop has unlimited supply of an item."""
+        for inv in self.inventory:
+            if inv is None:
+                continue
+            if inv.get('max'):
+                if inv.get('replacement') == item:
+                    return True
+            elif inv.get('item') == item:
+                return True
+        return False
+
+    def has(self, item: str) -> bool:
+        """Check if the shop has an item."""
+        for inv in self.inventory:
+            if inv is None:
+                continue
+            if inv.get('item') == item:
+                return True
+            if inv.get('replacement') == item:
+                return True
+        return False
+
+'''
+            create_shops_method = '''
+    def _create_shops(self, shops_data: list) -> list:
+        """Convert shop data dicts to ShopWrapper objects."""
+        return [_ShopWrapper(shop, self) for shop in shops_data]
+'''
+
         init_section = f'''
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
 {init_attrs_content}
-'''
+{create_shops_method}'''
 
     # Build itempool_counts dictionary
     # When canonical_placements is available, we use the full itempool_counts
@@ -1430,7 +1500,7 @@ LOCKED_PLACEMENTS: Dict[str, str] = {{
 STARTING_ITEMS: Dict[str, int] = {{
 {starting_content}
 }}
-
+{shop_wrapper_section}
 
 class {class_name}Web(WebWorld):
     """Web interface for {game_name}."""
