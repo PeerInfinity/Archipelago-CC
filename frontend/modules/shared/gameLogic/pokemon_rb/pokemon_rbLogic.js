@@ -80,7 +80,7 @@ export function has_any(snapshot, staticData, items) {
 function getOptions(staticData) {
   // Settings are nested by player ID
   const playerId = staticData?.playerId || DEFAULT_PLAYER_ID;
-  const settings = staticData?.settings?.[playerId] || staticData?.settings || {};
+  const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId] ?? staticData?.world ?? staticData?.settings ?? {};
   return settings;
 }
 

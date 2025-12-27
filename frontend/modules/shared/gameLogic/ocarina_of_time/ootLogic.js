@@ -88,7 +88,7 @@ function parse_oot_rule(snapshot, staticData, ruleString) {
  * Create evaluation context with all helper functions and data
  */
 function createEvaluationContext(snapshot, staticData) {
-  const settings = staticData?.settings?.[1] || {};
+  const settings = staticData?.world?.[1] ?? staticData?.settings?.[1] ?? {};
 
   // Create context object and store in variable so helper functions can reference it
   const context = {

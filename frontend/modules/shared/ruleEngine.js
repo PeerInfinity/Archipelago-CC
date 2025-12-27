@@ -2926,10 +2926,11 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             }
           }
 
-          const settingValue = staticData?.settings?.[playerId]?.[rule.name];
+          // Check world first (current), then settings (deprecated) for backwards compatibility
+          const settingValue = staticData?.world?.[playerId]?.[rule.name] ?? staticData?.settings?.[playerId]?.[rule.name];
           if (settingValue !== undefined) {
             result = settingValue;
-            log('debug', `[evaluateRule] Resolved name '${rule.name}' from settings: ${typeof result === 'object' ? 'object' : result}`);
+            log('debug', `[evaluateRule] Resolved name '${rule.name}' from world/settings: ${typeof result === 'object' ? 'object' : result}`);
           }
         }
 
