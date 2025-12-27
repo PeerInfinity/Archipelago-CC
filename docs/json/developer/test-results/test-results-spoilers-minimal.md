@@ -6,11 +6,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-26 18:51:52
+**Generated:** 2025-12-27 00:22:35
 
-**Source Data Created:** 2025-12-26T18:00:39.299413
+**Source Data Created:** 2025-12-26T23:30:53.558578
 
-**Source Data Last Updated:** 2025-12-26T18:00:39.299418
+**Source Data Last Updated:** 2025-12-26T23:30:53.558585
 
 ## Summary
 
@@ -31,7 +31,7 @@
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed | 0 | 5.11 | 5.11 | 🟢 Complete | 11.2KB | ✅ |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 33.2KB | ✅ |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 12.1KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -72,7 +72,7 @@
 | Metamath | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Muse Dash | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | 0.15 | 0.15 | 🟢 Complete | ✅ | ✅ |
-| Old School Runescape | ❌ Failed | 0 | 2.7 | 7.5 | 🟡 36.0% | 6.0KB | ✅ |
+| Old School Runescape | ❌ Failed | 0 | 0.2 | 7.5 | 🟠 2.7% | 6.0KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 30.0KB | 6.7KB |
 | Paint | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 7.1KB | ✅ |
 | Raft | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 12.0KB | ✅ |
@@ -109,7 +109,7 @@ These seeds were previously failing but passed during a retest run:
 
 | Template | Seed | Timestamp | Notes |
 |----------|------|-----------|-------|
-| Kingdom Hearts 2 | 1 | 2025-12-26 17:57 | Previously failed, now passing |
+| Super Mario World | 1 | 2025-12-26 23:26 | Previously failed, now passing |
 
 
 ## Notes
