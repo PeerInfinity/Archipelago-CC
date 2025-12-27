@@ -2312,7 +2312,7 @@
     "1": {
       "game": "WebDevJourney",
       "options": {
-        "accessibility": "full",
+        "accessibility": 0,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -2320,7 +2320,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": "false",
+        "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []

@@ -1740,9 +1740,9 @@
     "1": {
       "game": "Metamath",
       "options": {
-        "accessibility": "full",
-        "auto_download_database": "true",
-        "complexity": "moderate",
+        "accessibility": 0,
+        "auto_download_database": true,
+        "complexity": 1,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -1750,7 +1750,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": "false",
+        "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],

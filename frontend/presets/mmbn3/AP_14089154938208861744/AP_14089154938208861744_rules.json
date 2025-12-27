@@ -8261,11 +8261,11 @@
     "1": {
       "game": "MegaMan Battle Network 3",
       "options": {
-        "accessibility": "full",
+        "accessibility": 0,
         "exclude_locations": [],
         "extra_ranks": 0,
-        "include_jobs": "true",
-        "include_secret": "false",
+        "include_jobs": true,
+        "include_secret": false,
         "item_links": [],
         "local_items": [],
         "non_local_items": [],
@@ -8275,7 +8275,7 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
-        "trade_quest_hinting": "full"
+        "trade_quest_hinting": 2
       },
       "option_definitions": {
         "accessibility": {

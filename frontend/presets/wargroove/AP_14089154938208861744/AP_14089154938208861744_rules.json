@@ -1917,12 +1917,12 @@
     "1": {
       "game": "Wargroove",
       "options": {
-        "accessibility": "full",
+        "accessibility": 0,
         "ai_sacrifice_limit": 0,
         "ai_summon_limit": 0,
-        "commander_choice": "locked_random",
+        "commander_choice": 0,
         "commander_defense_boost": 2,
-        "death_link": "false",
+        "death_link": false,
         "exclude_locations": [],
         "income_boost": 25,
         "item_links": [],
