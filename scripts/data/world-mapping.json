@@ -1360,7 +1360,7 @@
   },
   "VVVVVV": {
     "exporter_path": "exporter/games/v6.py",
-    "exporter_size": 5505,
+    "exporter_size": 5499,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,

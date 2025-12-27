@@ -16,7 +16,7 @@
       ],
       "last_updated": "2025-12-26T23:30:53.558588"
     },
-    "last_updated": "2025-12-26T23:30:53.558585",
+    "last_updated": "2025-12-27T04:00:15.064446",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3979,50 +3979,38 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "a23a184a9bf8567761acfdc0ad8d74a73e984d0134bcd672814447ba0d677698",
-          "new_sphere_log_hash": "129bee49c43c038dc76d7e793ae2e585d1b35500d990319e84b746ef7001b630",
-          "original_rules_hash": "a23a184a9bf8567761acfdc0ad8d74a73e984d0134bcd672814447ba0d677698",
-          "original_sphere_log_hash": "129bee49c43c038dc76d7e793ae2e585d1b35500d990319e84b746ef7001b630",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-26T23:28:35.899104"
-        }
-      },
       "game_name_from_filename": "v6",
       "game_name_from_yaml": "VVVVVV",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.4,
+        "processing_time_seconds": 6.58,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/v6/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 34282,
-        "size_mb": 0.03
+        "size_bytes": 24597,
+        "size_mb": 0.02
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 14.23,
-        "return_code": 1,
-        "sphere_reached": 0.0,
-        "success": false,
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 8.52,
+        "return_code": 0,
+        "sphere_reached": 2.4,
+        "success": true,
         "total_spheres": 2.4,
         "warning_count": 0
       },
       "template_filename": "VVVVVV.yaml",
-      "timestamp": "2025-12-26T23:27:38.077861",
+      "timestamp": "2025-12-27T03:59:59.565949",
       "world_info": {
         "exporter_path": "exporter/games/v6.py",
-        "exporter_size": 5505,
+        "exporter_size": 5499,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "v6",
