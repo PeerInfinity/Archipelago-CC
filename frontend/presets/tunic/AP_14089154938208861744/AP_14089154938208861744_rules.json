@@ -168,7 +168,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "medium"
+                        "value": 2
                       },
                       "_converted_from_ast": true
                     }
@@ -221,7 +221,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -261,7 +261,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "hard"
+                        "value": 3
                       },
                       "_converted_from_ast": true
                     }
@@ -307,7 +307,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -417,7 +417,7 @@
                 {
                   "rule": "Constant",
                   "args": {
-                    "value": "medium"
+                    "value": 2
                   },
                   "_converted_from_ast": true
                 }
@@ -451,7 +451,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "hard"
+                        "value": 3
                       },
                       "_converted_from_ast": true
                     }
@@ -498,7 +498,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "medium"
+                        "value": 2
                       },
                       "_converted_from_ast": true
                     }
@@ -544,7 +544,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "hard"
+                        "value": 3
                       },
                       "_converted_from_ast": true
                     }
@@ -584,7 +584,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "medium"
+                        "value": 2
                       },
                       "_converted_from_ast": true
                     }
@@ -695,7 +695,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "medium"
+                        "value": 2
                       },
                       "_converted_from_ast": true
                     }
@@ -748,7 +748,7 @@
                 {
                   "rule": "Constant",
                   "args": {
-                    "value": "hard"
+                    "value": 3
                   },
                   "_converted_from_ast": true
                 }
@@ -807,7 +807,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "hard"
+                        "value": 3
                       },
                       "_converted_from_ast": true
                     }
@@ -927,7 +927,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "hard"
+                        "value": 3
                       },
                       "_converted_from_ast": true
                     }
@@ -1254,7 +1254,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "hard"
+                        "value": 3
                       },
                       "_converted_from_ast": true
                     }
@@ -1436,7 +1436,7 @@
                 {
                   "rule": "Constant",
                   "args": {
-                    "value": "easy"
+                    "value": 1
                   },
                   "_converted_from_ast": true
                 }
@@ -1499,7 +1499,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -1589,7 +1589,7 @@
                 {
                   "rule": "Constant",
                   "args": {
-                    "value": "easy"
+                    "value": 1
                   },
                   "_converted_from_ast": true
                 }
@@ -1620,7 +1620,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -1827,7 +1827,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "medium"
+                        "value": 2
                       },
                       "_converted_from_ast": true
                     }
@@ -1986,7 +1986,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -2145,7 +2145,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -2227,7 +2227,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -2555,7 +2555,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -4210,7 +4210,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -4312,7 +4312,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -4362,7 +4362,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -4465,7 +4465,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "hard"
+                        "value": 3
                       },
                       "_converted_from_ast": true
                     }
@@ -4530,7 +4530,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -5019,7 +5019,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "hard"
+                        "value": 3
                       },
                       "_converted_from_ast": true
                     }
@@ -5100,7 +5100,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -5153,7 +5153,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -5304,7 +5304,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "hard"
+                        "value": 3
                       },
                       "_converted_from_ast": true
                     }
@@ -6237,7 +6237,7 @@
                 {
                   "rule": "Constant",
                   "args": {
-                    "value": "medium"
+                    "value": 2
                   },
                   "_converted_from_ast": true
                 }
@@ -6523,7 +6523,7 @@
                 {
                   "rule": "Constant",
                   "args": {
-                    "value": "easy"
+                    "value": 1
                   },
                   "_converted_from_ast": true
                 }
@@ -6601,7 +6601,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "medium"
+                        "value": 2
                       },
                       "_converted_from_ast": true
                     }
@@ -6694,7 +6694,7 @@
                         {
                           "rule": "Constant",
                           "args": {
-                            "value": "easy"
+                            "value": 1
                           },
                           "_converted_from_ast": true
                         }
@@ -6718,7 +6718,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "medium"
+                        "value": 2
                       },
                       "_converted_from_ast": true
                     }
@@ -6805,7 +6805,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -6978,7 +6978,7 @@
                                     "right": {
                                       "rule": "Constant",
                                       "args": {
-                                        "value": "hard"
+                                        "value": 3
                                       },
                                       "_converted_from_ast": true
                                     },
@@ -7138,7 +7138,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "hard"
+                        "value": 3
                       },
                       "_converted_from_ast": true
                     }
@@ -7233,7 +7233,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "medium"
+                        "value": 2
                       },
                       "_converted_from_ast": true
                     }
@@ -7279,7 +7279,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "medium"
+                        "value": 2
                       },
                       "_converted_from_ast": true
                     }
@@ -7567,7 +7567,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -8965,7 +8965,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -9108,7 +9108,7 @@
                 {
                   "rule": "Constant",
                   "args": {
-                    "value": "hard"
+                    "value": 3
                   },
                   "_converted_from_ast": true
                 }
@@ -9237,7 +9237,7 @@
                 {
                   "rule": "Constant",
                   "args": {
-                    "value": "easy"
+                    "value": 1
                   },
                   "_converted_from_ast": true
                 }
@@ -9644,7 +9644,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "medium"
+                        "value": 2
                       },
                       "_converted_from_ast": true
                     }
@@ -9730,7 +9730,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "hard"
+                        "value": 3
                       },
                       "_converted_from_ast": true
                     }
@@ -9872,7 +9872,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -9935,7 +9935,7 @@
                 {
                   "rule": "Constant",
                   "args": {
-                    "value": "easy"
+                    "value": 1
                   },
                   "_converted_from_ast": true
                 }
@@ -10094,7 +10094,7 @@
                 {
                   "rule": "Constant",
                   "args": {
-                    "value": "easy"
+                    "value": 1
                   },
                   "_converted_from_ast": true
                 }
@@ -10618,7 +10618,7 @@
                 {
                   "rule": "Constant",
                   "args": {
-                    "value": "hard"
+                    "value": 3
                   },
                   "_converted_from_ast": true
                 }
@@ -10947,7 +10947,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "hard"
+                        "value": 3
                       },
                       "_converted_from_ast": true
                     }
@@ -11199,7 +11199,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -11409,7 +11409,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "hard"
+                        "value": 3
                       },
                       "_converted_from_ast": true
                     }
@@ -11978,7 +11978,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -12030,7 +12030,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "medium"
+                        "value": 2
                       },
                       "_converted_from_ast": true
                     }
@@ -12214,7 +12214,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "hard"
+                        "value": 3
                       },
                       "_converted_from_ast": true
                     }
@@ -12418,7 +12418,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "hard"
+                        "value": 3
                       },
                       "_converted_from_ast": true
                     }
@@ -12531,7 +12531,7 @@
                                 "right": {
                                   "rule": "Constant",
                                   "args": {
-                                    "value": "hard"
+                                    "value": 3
                                   },
                                   "_converted_from_ast": true
                                 },
@@ -12644,7 +12644,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "medium"
+                        "value": 2
                       },
                       "_converted_from_ast": true
                     }
@@ -12670,7 +12670,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "hard"
+                        "value": 3
                       },
                       "_converted_from_ast": true
                     }
@@ -12846,7 +12846,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -12974,7 +12974,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "easy"
+                        "value": 1
                       },
                       "_converted_from_ast": true
                     }
@@ -13102,7 +13102,7 @@
                         {
                           "rule": "Constant",
                           "args": {
-                            "value": "easy"
+                            "value": 1
                           },
                           "_converted_from_ast": true
                         }
@@ -13196,7 +13196,7 @@
                         {
                           "rule": "Constant",
                           "args": {
-                            "value": "medium"
+                            "value": 2
                           },
                           "_converted_from_ast": true
                         }
@@ -16794,48 +16794,48 @@
     "1": {
       "game": "TUNIC",
       "options": {
-        "ability_shuffling": "true",
-        "accessibility": "full",
-        "all_random": "false",
-        "breakable_shuffle": "false",
-        "combat_logic": "off",
-        "decoupled": "false",
-        "entrance_layout": "standard",
-        "entrance_rando": "no",
+        "ability_shuffling": true,
+        "accessibility": 0,
+        "all_random": false,
+        "breakable_shuffle": false,
+        "combat_logic": 0,
+        "decoupled": false,
+        "entrance_layout": 0,
+        "entrance_rando": 0,
         "exclude_locations": [],
         "extra_hexagon_percentage": 50,
         "fixed_shop": "",
-        "fool_traps": "normal",
-        "grass_randomizer": "false",
+        "fool_traps": 1,
+        "grass_randomizer": false,
         "hexagon_goal": 20,
-        "hexagon_quest": "false",
-        "hexagon_quest_ability_type": "hexagons",
-        "ice_grappling": "off",
+        "hexagon_quest": false,
+        "hexagon_quest_ability_type": 0,
+        "ice_grappling": 0,
         "item_links": [],
-        "keys_behind_bosses": "false",
-        "ladder_storage": "off",
-        "ladder_storage_without_items": "false",
-        "lanternless": "false",
-        "laurels_location": "anywhere",
-        "laurels_zips": "false",
+        "keys_behind_bosses": false,
+        "ladder_storage": 0,
+        "ladder_storage_without_items": false,
+        "lanternless": false,
+        "laurels_location": 0,
+        "laurels_zips": false,
         "local_fill": 0,
         "local_items": [],
         "logic_rules": "",
-        "maskless": "false",
+        "maskless": false,
         "non_local_items": [],
         "plando_connections": [],
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "shuffle_bells": "false",
-        "shuffle_fuses": "false",
-        "shuffle_ladders": "false",
+        "shuffle_bells": false,
+        "shuffle_fuses": false,
+        "shuffle_ladders": false,
         "start_hints": [],
         "start_inventory": {},
         "start_inventory_from_pool": {},
         "start_location_hints": [],
-        "start_with_sword": "false",
-        "sword_progression": "true"
+        "start_with_sword": false,
+        "sword_progression": true
       },
       "option_definitions": {
         "ability_shuffling": {
@@ -19332,7 +19332,7 @@
                     "op": "==",
                     "right": {
                       "type": "constant",
-                      "value": "hexagons"
+                      "value": 0
                     }
                   }
                 ]
