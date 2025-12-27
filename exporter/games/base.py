@@ -905,10 +905,23 @@ class BaseGameExportHandler:
 
         return world_data
 
-    # Keep get_settings_data as an alias for backwards compatibility
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Deprecated: Use get_world_data instead."""
-        return self.get_world_data(world, multiworld, player)
+        """Get game-specific settings for the frontend.
+
+        This returns settings that affect rule evaluation in the frontend,
+        such as hardRooms, knows, hellRuns for Super Metroid.
+
+        Override this in game-specific handlers to add game-specific settings.
+
+        Args:
+            world: The world instance
+            multiworld: The multiworld instance
+            player: The player ID
+
+        Returns:
+            Dict containing game-specific settings
+        """
+        return {}
 
     def get_world_attributes(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract world attributes (computed runtime values) for export.

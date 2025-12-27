@@ -900,6 +900,7 @@ export function getStaticGameData(sm) {
     // World data (new structure) with backwards compatibility for settings/world_attributes
     world: sm.rules?.world || sm.rules?.settings,  // Full world object (game, options, runtime attributes) keyed by player ID
     exporter: sm.rules?.exporter,  // Exporter-specific settings (keyed by player ID for multiworld)
+    game_settings: sm.rules?.game_settings,  // Game-specific settings (hardRooms, knows, hellRuns for SM)
     // Legacy aliases for backwards compatibility
     settings: sm.rules?.world || sm.rules?.settings,  // Alias for world
     world_attributes: sm.rules?.world_attributes,  // Legacy: now merged into world

@@ -1372,6 +1372,12 @@ class SMGameExportHandler(GenericGameExportHandler):
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Export Super Metroid specific settings including hardRooms and ROM patches.
 
+        These settings affect rule evaluation in the frontend:
+        - hardRooms: Energy requirements for hard rooms (Gauntlet, etc.)
+        - knows: Technique knowledge settings (which tricks are enabled)
+        - hellRuns: Energy requirements for heated areas
+        - romPatches: Active ROM patches that affect logic
+
         Args:
             world: The world instance
             multiworld: The multiworld instance
@@ -1380,12 +1386,7 @@ class SMGameExportHandler(GenericGameExportHandler):
         Returns:
             Dict containing game settings
         """
-        # Get base settings
-        settings = super().get_settings_data(world, multiworld, player)
-
-        # Super Metroid uses base_items (default), not resolved_items
-        # All SM items appear in both base_items and resolved_items with identical values
-        # Using the default (False) allows items to be added via location checks
+        settings = {}
 
         # Super Metroid needs non-advancement items (Missiles, Supers, Power Bombs) for logic
         # These items open colored doors and are essential for progression

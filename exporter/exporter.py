@@ -773,6 +773,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'progression_mapping': {},  # Progressive item info
         'world': {},    # World data by player (mirrors Archipelago's world structure: game, options, runtime attributes)
         'exporter': {}, # Exporter-specific settings by player (controls frontend processing behavior)
+        'game_settings': {},  # Game-specific settings by player (hardRooms, knows, hellRuns for SM, etc.)
         'start_regions': {},  # Start regions by player
         'itempool_counts': {},  # Complete itempool counts by player
         'game_info': {},  # Game-specific information for frontend
@@ -880,6 +881,19 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
             error_msg = f"Error exporting exporter settings for player {player}: {str(e)}"
             logger.error(error_msg)
             # Don't add error to export_data - exporter settings can fall back to defaults
+
+        # Get game-specific settings (hardRooms, knows, hellRuns for SM, etc.)
+        # This is separate from exporter settings which control frontend processing behavior
+        try:
+            if hasattr(game_handler, 'get_settings_data'):
+                settings_data = game_handler.get_settings_data(world, multiworld, player)
+                if settings_data:
+                    export_data['game_settings'][player_str] = settings_data
+                    logger.debug(f"Exported game settings for player {player}: {list(settings_data.keys())}")
+        except Exception as e:
+            error_msg = f"Error exporting game settings for player {player}: {str(e)}"
+            logger.error(error_msg)
+            # Don't add error to export_data - game settings can fall back to defaults
 
         # Get helper definitions using handler
         try:
