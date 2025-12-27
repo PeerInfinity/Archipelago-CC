@@ -933,6 +933,7 @@ def extract_world_attributes(json_data: Dict[str, Any]) -> Dict[str, Any]:
             'assume_bidirectional_exits',
             'use_resolved_items',
             'use_auto_indirect_conditions',
+            'player_name',  # Read-only property on base World class
         }
 
         for key, value in settings.items():
