@@ -1,6 +1,6 @@
 """Civilization VI export handler."""
 
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Callable
 import logging
 
 from .generic import GenericGameExportHandler
@@ -8,9 +8,36 @@ from .generic import GenericGameExportHandler
 logger = logging.getLogger(__name__)
 
 
+def _get_era_non_progressive_items(world, multiworld, player) -> Dict[str, List[str]]:
+    """Extract era_required_non_progressive_items from the world."""
+    result = {}
+    if hasattr(world, 'era_required_non_progressive_items'):
+        for era, items in world.era_required_non_progressive_items.items():
+            era_name = era.value if hasattr(era, 'value') else str(era)
+            result[era_name] = list(items)
+    return result
+
+
+def _get_era_progressive_items_counts(world, multiworld, player) -> Dict[str, Dict[str, int]]:
+    """Extract era_required_progressive_items_counts from the world."""
+    result = {}
+    if hasattr(world, 'era_required_progressive_items_counts'):
+        for era, counts in world.era_required_progressive_items_counts.items():
+            era_name = era.value if hasattr(era, 'value') else str(era)
+            result[era_name] = dict(counts)
+    return result
+
+
 class Civ6GameExportHandler(GenericGameExportHandler):
     """Handler for Civilization VI - fixes era region access rules."""
 
+    # Export era requirements as world attributes so helper functions can access them
+    # The helpers reference world.era_required_non_progressive_items[era] and
+    # world.era_required_progressive_items_counts[era] at runtime
+    WORLD_ATTRIBUTES: Dict[str, Callable] = {
+        'era_required_non_progressive_items': _get_era_non_progressive_items,
+        'era_required_progressive_items_counts': _get_era_progressive_items_counts,
+    }
 
     def __init__(self):
         """Initialize the handler with era requirements storage."""
@@ -51,17 +78,10 @@ class Civ6GameExportHandler(GenericGameExportHandler):
         except Exception as e:
             logger.warning(f"Could not capture era requirements: {e}")
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extract game settings and era requirements for export."""
-        settings = super().get_settings_data(world, multiworld, player)
-
-        # Export era requirements data to settings for frontend use
-        if self._era_requirements:
-            settings['era_non_progressive_items'] = self._era_requirements.get('non_progressive', {})
-            settings['era_progressive_item_counts'] = self._era_requirements.get('progressive_counts', {})
-            logger.info(f"Exported era requirements to settings for Civilization VI player {player}")
-
-        return settings
+    # NOTE: Era requirements are now exported via WORLD_ATTRIBUTES above.
+    # The helpers reference world.era_required_non_progressive_items[era]
+    # and world.era_required_progressive_items_counts[era] at runtime,
+    # so the data must be in the world section with those exact names.
 
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand rules with era subscript resolution.
