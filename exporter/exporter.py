@@ -1195,7 +1195,15 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
             # Directly call analyze_rule, which handles recursion internally for combined rules
             context_info = f"{target_type} '{rule_target_name or 'unknown'}'"
-            analysis_result = analyze_rule(rule_func=rule_func, closure_vars=closure_vars, game_handler=game_handler, player_context=player, context_info=context_info)
+            analysis_result = analyze_rule(
+                rule_func=rule_func,
+                closure_vars=closure_vars,
+                game_handler=game_handler,
+                player_context=player,
+                context_info=context_info,
+                rule_target_name=rule_target_name,
+                target_type=target_type
+            )
             
             if analysis_result and analysis_result.get('type') != 'error':
 
