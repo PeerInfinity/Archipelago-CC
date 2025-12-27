@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2025-12-27 04:33:51
+**Generated:** 2025-12-27 04:58:56
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -105,8 +105,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Subnautica | 31.0s | 5 | APQuest.yaml, ChocolateChipCookies.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml, Subnautica.yaml |
+| 2 | Starcraft 2 | 23.2s | 5 | A Link to the Past.yaml, Celeste 64.yaml, Factorio.yaml, Noita.yaml, Starcraft 2.yaml |
+| 3 | shapez | 21.7s | 6 | A Link to the Past.yaml, Celeste 64.yaml, Factorio.yaml, Noita.yaml, The Legend of Zelda.yaml (+1 more) |
+| 4 | The Wind Waker | 19.8s | 5 | APQuest.yaml, ChocolateChipCookies.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml, The Wind Waker.yaml |
+| 5 | Lingo | 19.7s | 4 | A Link to the Past.yaml, Celeste 64.yaml, Factorio.yaml, Lingo.yaml |
+| 6 | The Legend of Zelda | 19.5s | 5 | A Link to the Past.yaml, Celeste 64.yaml, Factorio.yaml, Noita.yaml, The Legend of Zelda.yaml |
+| 7 | Super Metroid | 19.3s | 5 | Bumper Stickers.yaml, DOOM 1993.yaml, Kingdom Hearts 2.yaml, Saving Princess.yaml, Super Metroid.yaml |
+| 8 | Factorio | 18.2s | 3 | A Link to the Past.yaml, Celeste 64.yaml, Factorio.yaml |
+| 9 | The Messenger | 18.0s | 6 | A Short Hike.yaml, ChecksFinder.yaml, Faxanadu.yaml, Links Awakening DX.yaml, Stardew Valley.yaml (+1 more) |
+| 10 | Noita | 17.9s | 4 | A Link to the Past.yaml, Celeste 64.yaml, Factorio.yaml, Noita.yaml |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Lingo | 193.4s | 4 | A Link to the Past.yaml, Celeste 64.yaml, Factorio.yaml, Lingo.yaml |
+| 2 | Kirby's Dream Land 3 | 90.2s | 3 | Castlevania 64.yaml, Dark Souls III.yaml, Kirby's Dream Land 3.yaml |
+| 3 | Stardew Valley | 77.2s | 5 | A Short Hike.yaml, ChecksFinder.yaml, Faxanadu.yaml, Links Awakening DX.yaml, Stardew Valley.yaml |
+| 4 | The Wind Waker | 66.5s | 5 | APQuest.yaml, ChocolateChipCookies.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml, The Wind Waker.yaml |
+| 5 | Starcraft 2 | 66.0s | 5 | A Link to the Past.yaml, Celeste 64.yaml, Factorio.yaml, Noita.yaml, Starcraft 2.yaml |
+| 6 | Super Metroid | 56.7s | 5 | Bumper Stickers.yaml, DOOM 1993.yaml, Kingdom Hearts 2.yaml, Saving Princess.yaml, Super Metroid.yaml |
+| 7 | Final Fantasy Mystic Quest | 53.9s | 3 | APQuest.yaml, ChocolateChipCookies.yaml, Final Fantasy Mystic Quest.yaml |
+| 8 | MegaMan Battle Network 3 | 53.6s | 4 | Bumper Stickers.yaml, DOOM 1993.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml |
+| 9 | Kingdom Hearts 2 | 48.9s | 3 | Bumper Stickers.yaml, DOOM 1993.yaml, Kingdom Hearts 2.yaml |
+| 10 | Kingdom Hearts | 44.6s | 3 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts.yaml |
