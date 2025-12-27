@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2025-12-27 19:57:42
+**Generated:** 2025-12-27 20:25:39
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -107,8 +107,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | The Messenger | 32.6s | 7 | Adventure.yaml, Choo-Choo Charles.yaml, Heretic.yaml, Mario & Luigi Superstar Saga.yaml, Paint.yaml (+2 more) |
+| 2 | Subnautica | 31.3s | 6 | Adventure.yaml, Choo-Choo Charles.yaml, Heretic.yaml, Mario & Luigi Superstar Saga.yaml, Paint.yaml (+1 more) |
+| 3 | TUNIC | 25.4s | 7 | A Link to the Past.yaml, Celeste 64.yaml, Factorio.yaml, Lingo.yaml, Noita.yaml (+2 more) |
+| 4 | WebDevJourney | 22.3s | 7 | A Link to the Past.yaml, Celeste 64.yaml, Factorio.yaml, Lingo.yaml, Noita.yaml (+2 more) |
+| 5 | Undertale | 22.2s | 7 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts.yaml, Meritous.yaml, Saving Princess.yaml (+2 more) |
+| 6 | Sonic Adventure 2 Battle | 21.8s | 6 | A Link to the Past.yaml, Celeste 64.yaml, Factorio.yaml, Lingo.yaml, Noita.yaml (+1 more) |
+| 7 | Super Metroid | 21.8s | 6 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts.yaml, Meritous.yaml, Saving Princess.yaml (+1 more) |
+| 8 | The Wind Waker | 21.5s | 6 | Aquaria.yaml, Civilization VI.yaml, Hylics 2.yaml, MathProof2p2e4.yaml, Super Mario 64.yaml (+1 more) |
+| 9 | Pokemon Red and Blue | 20.8s | 5 | Aquaria.yaml, Civilization VI.yaml, Hylics 2.yaml, MathProof2p2e4.yaml, Pokemon Red and Blue.yaml |
+| 10 | The Witness | 20.2s | 7 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Inscryption.yaml, Mega Man 2.yaml, Raft.yaml (+2 more) |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Starcraft 2 | 116.5s | 6 | A Short Hike.yaml, ChecksFinder.yaml, Faxanadu.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+1 more) |
+| 2 | TUNIC | 87.0s | 7 | A Link to the Past.yaml, Celeste 64.yaml, Factorio.yaml, Lingo.yaml, Noita.yaml (+2 more) |
+| 3 | Pokemon Red and Blue | 74.2s | 5 | Aquaria.yaml, Civilization VI.yaml, Hylics 2.yaml, MathProof2p2e4.yaml, Pokemon Red and Blue.yaml |
+| 4 | Stardew Valley | 71.3s | 6 | APQuest.yaml, ChocolateChipCookies.yaml, Final Fantasy Mystic Quest.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+1 more) |
+| 5 | Kirby's Dream Land 3 | 71.3s | 3 | Castlevania 64.yaml, Dark Souls III.yaml, Kirby's Dream Land 3.yaml |
+| 6 | Kingdom Hearts 2 | 51.2s | 3 | Bumper Stickers.yaml, DOOM 1993.yaml, Kingdom Hearts 2.yaml |
+| 7 | Kingdom Hearts | 40.1s | 3 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts.yaml |
+| 8 | Secret of Evermore | 39.9s | 5 | Castlevania 64.yaml, Dark Souls III.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml, Secret of Evermore.yaml |
+| 9 | shapez | 32.3s | 8 | APQuest.yaml, ChocolateChipCookies.yaml, Final Fantasy Mystic Quest.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+3 more) |
+| 10 | Terraria | 31.8s | 6 | A Short Hike.yaml, ChecksFinder.yaml, Faxanadu.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+1 more) |
