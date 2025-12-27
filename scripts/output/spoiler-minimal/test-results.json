@@ -16,7 +16,7 @@
       ],
       "last_updated": "2025-12-26T23:30:53.558588"
     },
-    "last_updated": "2025-12-26T23:30:53.558585",
+    "last_updated": "2025-12-27T04:04:36.132452",
     "script_version": "1.0.0"
   },
   "results": {
@@ -970,27 +970,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "0b9d17067fd319974b66e388e0c8388c985731eaedbc1d6014acfec398890568",
-          "new_sphere_log_hash": "89b2a869ad7b109d5193504f5744b7807b24b064a7010432a8b7698cdb19d5e8",
-          "original_rules_hash": "0b9d17067fd319974b66e388e0c8388c985731eaedbc1d6014acfec398890568",
-          "original_sphere_log_hash": "89b2a869ad7b109d5193504f5744b7807b24b064a7010432a8b7698cdb19d5e8",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-26T23:26:58.473407"
-        }
-      },
       "game_name_from_filename": "dlcquest",
       "game_name_from_yaml": "DLCQuest",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.89,
+        "processing_time_seconds": 6.75,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/dlcquest/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -1000,17 +988,17 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
-        "error_count": 9,
-        "pass_fail": "failed",
-        "processing_time_seconds": 14.26,
-        "return_code": 1,
-        "sphere_reached": 1.1,
-        "success": false,
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 8.27,
+        "return_code": 0,
+        "sphere_reached": 8.1,
+        "success": true,
         "total_spheres": 8.1,
         "warning_count": 0
       },
       "template_filename": "DLCQuest.yaml",
-      "timestamp": "2025-12-26T23:26:24.486138",
+      "timestamp": "2025-12-27T04:04:20.718767",
       "world_info": {
         "exporter_path": "exporter/games/dlcquest.py",
         "exporter_size": 9678,
