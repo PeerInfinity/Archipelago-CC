@@ -152,6 +152,12 @@ export const moduleMetadata = {
     name: 'exits',
     column: 3
   },
+  helpersPanel: {
+    title: 'Helpers',
+    icon: 'fn',
+    name: 'helpers',
+    column: 3
+  },
   dungeonsPanel: {
     title: 'Dungeons',
     icon: '🏰',

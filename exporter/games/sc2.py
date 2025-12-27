@@ -51,8 +51,8 @@ class SC2GameExportHandler(GenericGameExportHandler):
         'terran_competent_comp', 'protoss_competent_comp', 'zerg_competent_comp',
         # defense_rating helpers - now exported with game_info support
         # 'terran_defense_rating', 'protoss_defense_rating', 'zerg_defense_rating',
-        # power_rating helpers - testing export (uses soa_power_rating with loops/break)
-        # 'terran_power_rating', 'protoss_power_rating', 'zerg_power_rating',
+        # power_rating helpers - complex iteration patterns that frontend can't evaluate
+        'terran_power_rating', 'protoss_power_rating', 'zerg_power_rating',
         # Mission requirements that call power_rating or other complex helpers
         'terran_havens_fall_requirement', 'terran_great_train_robbery_train_stopper',
         'terran_welcome_to_the_jungle_requirement', 'zerg_welcome_to_the_jungle_requirement',
@@ -60,6 +60,7 @@ class SC2GameExportHandler(GenericGameExportHandler):
         'terran_engine_of_destruction_requirement', 'engine_of_destruction_requirement',
         'terran_trouble_in_paradise_requirement', 'terran_media_blitz_requirement',
         'terran_gates_of_hell_requirement', 'terran_all_in_requirement',
+        'terran_supernova_requirement',  # calls power_rating
         # Kerrigan helpers - kerrigan_levels uses get_full_item_list(), two_kerrigan_actives has a bug
         'kerrigan_levels', 'two_kerrigan_actives',
         # basic_kerrigan - testing if it can be exported (iterates over imported list)
@@ -127,17 +128,53 @@ class SC2GameExportHandler(GenericGameExportHandler):
             # If we can't extract the item name, return None to fall back to True_
             return None
 
-        # terran_competent_ground_to_air: Common paths include having Goliath or Cyclone
+        # terran_competent_ground_to_air: Ground units that can attack air effectively
         # Full logic: has(Goliath) OR (has_any(Marine, Dominion Trooper) AND bio_heal AND weapons >= 2)
         #             OR (advanced_tactics AND (has(Cyclone) OR has_all(Thor, Payload)))
-        # We use has_any(Goliath, Cyclone, Thor) to cover multiple progression paths
+        # We include all paths but wrap Cyclone/Thor in advanced_tactics setting check
         if helper_name == 'terran_competent_ground_to_air':
             return {
                 'type': 'or',
                 'conditions': [
+                    # Goliath is always competent ground-to-air
                     {'type': 'item_check', 'item': 'Goliath'},
-                    {'type': 'item_check', 'item': 'Cyclone'},
-                    {'type': 'item_check', 'item': 'Thor'}
+                    # Marine/Dominion Trooper with upgrades and healing
+                    {
+                        'type': 'and',
+                        'conditions': [
+                            {
+                                'type': 'or',
+                                'conditions': [
+                                    {'type': 'item_check', 'item': 'Marine'},
+                                    {'type': 'item_check', 'item': 'Dominion Trooper'}
+                                ]
+                            },
+                            {'type': 'helper', 'name': 'terran_bio_heal'},
+                            {
+                                'type': 'compare',
+                                'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Weapon'},
+                                'op': '>=',
+                                'right': {'type': 'constant', 'value': 2}
+                            }
+                        ]
+                    },
+                    # Cyclone requires advanced_tactics
+                    {
+                        'type': 'and',
+                        'conditions': [
+                            {'type': 'setting_check', 'setting': {'type': 'constant', 'value': 'advanced_tactics'}, 'value': {'type': 'constant', 'value': True}},
+                            {'type': 'item_check', 'item': 'Cyclone'}
+                        ]
+                    },
+                    # Thor with High Impact Payload requires advanced_tactics
+                    {
+                        'type': 'and',
+                        'conditions': [
+                            {'type': 'setting_check', 'setting': {'type': 'constant', 'value': 'advanced_tactics'}, 'value': {'type': 'constant', 'value': True}},
+                            {'type': 'item_check', 'item': 'Thor'},
+                            {'type': 'item_check', 'item': 'Progressive High Impact Payload (Thor)'}
+                        ]
+                    }
                 ]
             }
 
@@ -210,62 +247,225 @@ class SC2GameExportHandler(GenericGameExportHandler):
                 ]
             }
 
+        # Power rating helpers - return a high constant value to pass all comparisons
+        # These are complex integer-returning helpers that sum up item ratings
+        # By returning a high value, all power_rating >= X comparisons will pass
+        if helper_name in ('terran_power_rating', 'protoss_power_rating', 'zerg_power_rating'):
+            return {'type': 'constant', 'value': 100}
+
+        # terran_respond_to_colony_infestations: Responds to colony infestations in Haven's Fall
+        # Original: terran_havens_fall_requirement AND (terran_air_anti_air OR
+        #           ((Battlecruiser OR Valkyrie) AND ship_weapon >= 2))
+        if helper_name == 'terran_respond_to_colony_infestations':
+            return {
+                'type': 'and',
+                'conditions': [
+                    # Requires Haven's Fall capability
+                    {'type': 'helper', 'name': 'terran_havens_fall_requirement'},
+                    {
+                        'type': 'or',
+                        'conditions': [
+                            # Path 1: Air-to-air capability
+                            {'type': 'helper', 'name': 'terran_air_anti_air'},
+                            # Path 2: Strong air unit with weapons upgrade
+                            {
+                                'type': 'and',
+                                'conditions': [
+                                    {
+                                        'type': 'or',
+                                        'conditions': [
+                                            {'type': 'item_check', 'item': 'Battlecruiser'},
+                                            {'type': 'item_check', 'item': 'Valkyrie'}
+                                        ]
+                                    },
+                                    {
+                                        'type': 'compare',
+                                        'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Weapon'},
+                                        'op': '>=',
+                                        'right': {'type': 'constant', 'value': 2}
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+
+        # terran_havens_fall_requirement: Mission requirement for Haven's Fall
+        # Original: terran_common_unit AND (terran_competent_comp OR
+        #           (terran_competent_anti_air AND (Viking OR Battlecruiser OR Wraith+AdvLaser OR Liberator+RaidArtillery)))
+        # We simplify by including common_unit + anti_air + strong unit paths
+        if helper_name == 'terran_havens_fall_requirement':
+            return {
+                'type': 'and',
+                'conditions': [
+                    # Requires common unit capability
+                    {'type': 'helper', 'name': 'terran_common_unit'},
+                    {
+                        'type': 'or',
+                        'conditions': [
+                            # Path 1: terran_competent_comp (simplified as anti-air + composition)
+                            # We use competent_anti_air here as it's a key requirement
+                            {'type': 'helper', 'name': 'terran_competent_comp'},
+                            # Path 2: Anti-air plus specific strong units
+                            {
+                                'type': 'and',
+                                'conditions': [
+                                    {'type': 'helper', 'name': 'terran_competent_anti_air'},
+                                    {
+                                        'type': 'or',
+                                        'conditions': [
+                                            {'type': 'item_check', 'item': 'Viking'},
+                                            {'type': 'item_check', 'item': 'Battlecruiser'},
+                                            {
+                                                'type': 'and',
+                                                'conditions': [
+                                                    {'type': 'item_check', 'item': 'Wraith'},
+                                                    {'type': 'item_check', 'item': 'Advanced Laser Technology (Wraith)'}
+                                                ]
+                                            },
+                                            {
+                                                'type': 'and',
+                                                'conditions': [
+                                                    {'type': 'item_check', 'item': 'Liberator'},
+                                                    {'type': 'item_check', 'item': 'Raid Artillery (Liberator)'}
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+
+        # terran_great_train_robbery_train_stopper: Requires units that can stop moving trains
+        # Original: has_any(Siege Tank, Diamondback, Marauder, Cyclone, Banshee) OR
+        #           (advanced_tactics AND (Reaper+G4 Clusterbomb OR Spectre+Psionic Lash OR Vulture OR Liberator))
+        # We include all paths since some may be enabled with advanced_tactics
+        if helper_name == 'terran_great_train_robbery_train_stopper':
+            return {
+                'type': 'or',
+                'conditions': [
+                    # Primary units that can stop trains
+                    {'type': 'item_check', 'item': 'Siege Tank'},
+                    {'type': 'item_check', 'item': 'Diamondback'},
+                    {'type': 'item_check', 'item': 'Marauder'},
+                    {'type': 'item_check', 'item': 'Cyclone'},
+                    {'type': 'item_check', 'item': 'Banshee'},
+                    # Advanced tactics paths (guarded by settings check)
+                    {
+                        'type': 'and',
+                        'conditions': [
+                            {'type': 'setting_check', 'setting': {'type': 'constant', 'value': 'advanced_tactics'}, 'value': {'type': 'constant', 'value': True}},
+                            {
+                                'type': 'or',
+                                'conditions': [
+                                    {
+                                        'type': 'and',
+                                        'conditions': [
+                                            {'type': 'item_check', 'item': 'Reaper'},
+                                            {'type': 'item_check', 'item': 'G-4 Clusterbomb (Reaper)'}
+                                        ]
+                                    },
+                                    {
+                                        'type': 'and',
+                                        'conditions': [
+                                            {'type': 'item_check', 'item': 'Spectre'},
+                                            {'type': 'item_check', 'item': 'Psionic Lash (Spectre)'}
+                                        ]
+                                    },
+                                    {'type': 'item_check', 'item': 'Vulture'},
+                                    {'type': 'item_check', 'item': 'Liberator'}
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+
         # terran_beats_protoss_deathball: Requires air attack capability + anti-air + weapon/armor min >= 2
         # Original: ((Banshee OR Battlecruiser OR (Liberator+Raid Artillery)) AND competent_anti_air)
         #           OR (competent_comp AND air_anti_air)
         #           AND terran_army_weapon_armor_upgrade_min_level >= 2
-        # The weapon_armor_min requirement checks that ALL weapon AND armor upgrades are >= 2
-        # Simplified: (Banshee OR Battlecruiser) AND competent_anti_air AND all upgrade types >= 2
+        # Simplified: Two paths - air-to-ground OR strong mech comp with air_anti_air
         if helper_name == 'terran_beats_protoss_deathball':
             return {
                 'type': 'and',
                 'conditions': [
-                    # Air-to-ground capability
                     {
                         'type': 'or',
                         'conditions': [
-                            {'type': 'item_check', 'item': 'Banshee'},
-                            {'type': 'item_check', 'item': 'Battlecruiser'}
+                            # Path 1: Air-to-ground capability + competent_anti_air
+                            {
+                                'type': 'and',
+                                'conditions': [
+                                    {
+                                        'type': 'or',
+                                        'conditions': [
+                                            {'type': 'item_check', 'item': 'Banshee'},
+                                            {'type': 'item_check', 'item': 'Battlecruiser'},
+                                            {
+                                                'type': 'and',
+                                                'conditions': [
+                                                    {'type': 'item_check', 'item': 'Liberator'},
+                                                    {'type': 'item_check', 'item': 'Raid Artillery (Liberator)'}
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {'type': 'helper', 'name': 'terran_competent_anti_air'}
+                                ]
+                            },
+                            # Path 2: Strong mech comp + air_anti_air (simplified competent_comp)
+                            # competent_comp Strong Mech path: (Thor OR Siege Tank) + light frontline + vehicle upgrades
+                            {
+                                'type': 'and',
+                                'conditions': [
+                                    {'type': 'helper', 'name': 'terran_air_anti_air'},
+                                    # Strong vehicle (Thor or Siege Tank)
+                                    {
+                                        'type': 'or',
+                                        'conditions': [
+                                            {'type': 'item_check', 'item': 'Siege Tank'},
+                                            {'type': 'item_check', 'item': 'Thor'}
+                                        ]
+                                    },
+                                    # Light frontline unit
+                                    {
+                                        'type': 'or',
+                                        'conditions': [
+                                            {'type': 'item_check', 'item': 'Marine'},
+                                            {'type': 'item_check', 'item': 'Dominion Trooper'},
+                                            {'type': 'item_check', 'item': 'Hellion'},
+                                            {'type': 'item_check', 'item': 'Vulture'}
+                                        ]
+                                    },
+                                    # Vehicle weapon >= 1
+                                    {
+                                        'type': 'compare',
+                                        'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Weapon'},
+                                        'op': '>=',
+                                        'right': {'type': 'constant', 'value': 1}
+                                    },
+                                    # Vehicle armor >= 1
+                                    {
+                                        'type': 'compare',
+                                        'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Armor'},
+                                        'op': '>=',
+                                        'right': {'type': 'constant', 'value': 1}
+                                    },
+                                    # Also need competent_anti_air for competent_comp
+                                    {'type': 'helper', 'name': 'terran_competent_anti_air'}
+                                ]
+                            }
                         ]
                     },
-                    # Anti-air capability (required to survive against Protoss air support)
-                    {'type': 'helper', 'name': 'terran_competent_anti_air'},
-                    # All weapon AND armor upgrades must be >= 2
-                    # This is a simplified approximation of terran_army_weapon_armor_upgrade_min_level >= 2
-                    # We check all three types to be safe
-                    {
-                        'type': 'compare',
-                        'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Weapon'},
-                        'op': '>=',
-                        'right': {'type': 'constant', 'value': 2}
-                    },
-                    {
-                        'type': 'compare',
-                        'left': {'type': 'count_item', 'item': 'Progressive Terran Infantry Armor'},
-                        'op': '>=',
-                        'right': {'type': 'constant', 'value': 2}
-                    },
-                    {
-                        'type': 'compare',
-                        'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Weapon'},
-                        'op': '>=',
-                        'right': {'type': 'constant', 'value': 2}
-                    },
-                    {
-                        'type': 'compare',
-                        'left': {'type': 'count_item', 'item': 'Progressive Terran Vehicle Armor'},
-                        'op': '>=',
-                        'right': {'type': 'constant', 'value': 2}
-                    },
+                    # All weapon upgrades >= 2 (simplified - we just check ship since that's typical)
                     {
                         'type': 'compare',
                         'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Weapon'},
-                        'op': '>=',
-                        'right': {'type': 'constant', 'value': 2}
-                    },
-                    {
-                        'type': 'compare',
-                        'left': {'type': 'count_item', 'item': 'Progressive Terran Ship Armor'},
                         'op': '>=',
                         'right': {'type': 'constant', 'value': 2}
                     }
@@ -347,13 +547,14 @@ class SC2GameExportHandler(GenericGameExportHandler):
         # Original: terran_very_hard_mission_weapon_armor_level (all >= 3) AND beats_kerrigan AND terran_competent_comp
         # beats_kerrigan options: Marine/Dominion Trooper/Banshee OR Reaper+Resource Efficiency
         #                         OR Valkyrie+Flechette (air map) OR Ghost+EMP (advanced tactics)
-        # Simplified: all upgrades >= 3 AND beats_kerrigan (all options) AND anti_air
+        # For Air map also requires: competent_anti_air + (Viking/BC/Valkyrie) + (HME/Psi Disrupter/Missile Turret)
+        # Simplified: all upgrades >= 3 AND beats_kerrigan (all options) AND competent_comp AND air map requirements
         if helper_name == 'terran_all_in_requirement':
             return {
                 'type': 'and',
                 'conditions': [
-                    # terran_competent_anti_air (inlined from competent_comp) - this helper exists
-                    {'type': 'helper', 'name': 'terran_competent_anti_air'},
+                    # terran_competent_comp (has simplified version) - required for All-In
+                    {'type': 'helper', 'name': 'terran_competent_comp'},
                     # very_hard_weapon_armor_level requires all upgrades >= 3
                     {
                         'type': 'compare',
@@ -395,11 +596,11 @@ class SC2GameExportHandler(GenericGameExportHandler):
                     {
                         'type': 'or',
                         'conditions': [
-                            # Primary units
+                            # Primary units (always available)
                             {'type': 'item_check', 'item': 'Marine'},
                             {'type': 'item_check', 'item': 'Dominion Trooper'},
                             {'type': 'item_check', 'item': 'Banshee'},
-                            # Reaper path
+                            # Reaper path (always available)
                             {
                                 'type': 'and',
                                 'conditions': [
@@ -407,20 +608,63 @@ class SC2GameExportHandler(GenericGameExportHandler):
                                     {'type': 'item_check', 'item': 'Resource Efficiency (Reaper)'}
                                 ]
                             },
-                            # Valkyrie path (for air map)
+                            # Valkyrie path (for air map only - all_in_map == 1)
                             {
                                 'type': 'and',
                                 'conditions': [
+                                    {'type': 'setting_check', 'setting': {'type': 'constant', 'value': 'all_in_map'}, 'value': {'type': 'constant', 'value': 1}},
                                     {'type': 'item_check', 'item': 'Valkyrie'},
                                     {'type': 'item_check', 'item': 'Flechette Missiles (Valkyrie)'}
                                 ]
                             },
-                            # Ghost path (for advanced tactics)
+                            # Ghost path (requires advanced_tactics)
                             {
                                 'type': 'and',
                                 'conditions': [
+                                    {'type': 'setting_check', 'setting': {'type': 'constant', 'value': 'advanced_tactics'}, 'value': {'type': 'constant', 'value': True}},
                                     {'type': 'item_check', 'item': 'Ghost'},
                                     {'type': 'item_check', 'item': 'EMP Rounds (Ghost)'}
+                                ]
+                            }
+                        ]
+                    },
+                    # competent_anti_air is required for All-In (both Ground and Air maps)
+                    {'type': 'helper', 'name': 'terran_competent_anti_air'}
+                ]
+            }
+
+        # terran_supernova_requirement: terran_beats_protoss_deathball AND power_rating >= 6
+        # power_rating is complex (sums item ratings), so we approximate with passive item check
+        # Main passive items: Automated Refinery (4), MULE (4), Orbital Depots (2), Tech Reactor (2), etc.
+        # Requiring a 4-point item AND beats_protoss_deathball should approximate power_rating >= 6
+        if helper_name == 'terran_supernova_requirement':
+            return {
+                'type': 'and',
+                'conditions': [
+                    # terran_beats_protoss_deathball (use helper reference since it's also blacklisted)
+                    {'type': 'helper', 'name': 'terran_beats_protoss_deathball'},
+                    # power_rating >= 6 approximation: require a high-value passive item
+                    # Automated Refinery (4) + any 2-pointer = 6, or MULE (4) + any 2-pointer = 6
+                    {
+                        'type': 'or',
+                        'conditions': [
+                            # One 4-point item is enough if they have any other passive
+                            {'type': 'item_check', 'item': 'Automated Refinery (Terran)'},
+                            {'type': 'item_check', 'item': 'MULE (Command Center)'},
+                            # Or three 2-point items = 6 (being more permissive since items common)
+                            {
+                                'type': 'and',
+                                'conditions': [
+                                    {'type': 'item_check', 'item': 'Tech Reactor (Terran)'},
+                                    {
+                                        'type': 'or',
+                                        'conditions': [
+                                            {'type': 'item_check', 'item': 'Orbital Depots (Terran)'},
+                                            {'type': 'item_check', 'item': 'Command Center Reactor (Command Center)'},
+                                            {'type': 'item_check', 'item': 'Extra Supplies (Command Center)'},
+                                            {'type': 'item_check', 'item': 'Micro-Filtering (Terran)'}
+                                        ]
+                                    }
                                 ]
                             }
                         ]
@@ -488,15 +732,30 @@ class SC2GameExportHandler(GenericGameExportHandler):
                 },
                 # Path 2: Mass Air-To-Ground
                 # Requires: air unit + ship_weapons >= 1 + ship_armor >= 1 + mineral_dump
+                # Air units: Banshee, Battlecruiser, Liberator+Raid Artillery, Wraith+Advanced Laser, Valkyrie+Flechette (with ship_weapons >= 2)
                 {
                     'type': 'and',
                     'conditions': [
-                        # Air-to-ground unit
+                        # Air-to-ground unit (expanded to include all options)
                         {
                             'type': 'or',
                             'conditions': [
                                 {'type': 'item_check', 'item': 'Banshee'},
-                                {'type': 'item_check', 'item': 'Battlecruiser'}
+                                {'type': 'item_check', 'item': 'Battlecruiser'},
+                                {
+                                    'type': 'and',
+                                    'conditions': [
+                                        {'type': 'item_check', 'item': 'Liberator'},
+                                        {'type': 'item_check', 'item': 'Raid Artillery (Liberator)'}
+                                    ]
+                                },
+                                {
+                                    'type': 'and',
+                                    'conditions': [
+                                        {'type': 'item_check', 'item': 'Wraith'},
+                                        {'type': 'item_check', 'item': 'Advanced Laser Technology (Wraith)'}
+                                    ]
+                                }
                             ]
                         },
                         # Ship weapons >= upgrade_level
@@ -513,8 +772,24 @@ class SC2GameExportHandler(GenericGameExportHandler):
                             'op': '>=',
                             'right': {'type': 'constant', 'value': armor_req}
                         },
-                        # Mineral dump capability
-                        {'type': 'helper', 'name': 'terran_mineral_dump'}
+                        # Mineral dump capability (inlined)
+                        # Original: has_any(Marine, Vulture, Hellion, Son of Korhal) OR Reaper+Resource Efficiency
+                        {
+                            'type': 'or',
+                            'conditions': [
+                                {'type': 'item_check', 'item': 'Marine'},
+                                {'type': 'item_check', 'item': 'Vulture'},
+                                {'type': 'item_check', 'item': 'Hellion'},
+                                {'type': 'item_check', 'item': 'Son of Korhal'},
+                                {
+                                    'type': 'and',
+                                    'conditions': [
+                                        {'type': 'item_check', 'item': 'Reaper'},
+                                        {'type': 'item_check', 'item': 'Resource Efficiency (Reaper)'}
+                                    ]
+                                }
+                            ]
+                        }
                     ]
                 },
                 # Path 3: Strong Mech
@@ -1330,3 +1605,160 @@ class SC2GameExportHandler(GenericGameExportHandler):
             logger.debug(f"[SC2] Exported {len(kerrigan_groups)} kerrigan item groups to game_info")
 
         return game_info
+
+    def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Post-process exported data to inline blacklisted helper references.
+
+        AST-converted rules may contain helper references (with _original_ast_type: "helper")
+        that weren't inlined during normal rule export. This method walks through all
+        location access rules and inlines any blacklisted helper references with their
+        simplified versions.
+        """
+        regions = data.get('regions', {})
+
+        for player_id, player_regions in regions.items():
+            for region_name, region_data in player_regions.items():
+                # Process location access rules
+                for location in region_data.get('locations', []):
+                    if 'access_rule' in location and location['access_rule']:
+                        location['access_rule'] = self._inline_blacklisted_helpers(location['access_rule'])
+                    # Some exporters use 'rule' instead of 'access_rule'
+                    if 'rule' in location and location['rule']:
+                        location['rule'] = self._inline_blacklisted_helpers(location['rule'])
+
+                # Process region entry rules
+                if 'entry_rule' in region_data and region_data['entry_rule']:
+                    region_data['entry_rule'] = self._inline_blacklisted_helpers(region_data['entry_rule'])
+
+                # Process connection rules
+                for conn in region_data.get('connects_to', []):
+                    if 'rule' in conn and conn['rule']:
+                        conn['rule'] = self._inline_blacklisted_helpers(conn['rule'])
+
+        return data
+
+    def _inline_blacklisted_helpers(self, rule: Any) -> Any:
+        """
+        Recursively inline blacklisted helper references in a rule.
+
+        Handles both AST format (type/conditions) and Rule Builder format (rule/children).
+        Looks for helper references and replaces them with simplified versions
+        if the helper is blacklisted.
+        """
+        if not isinstance(rule, dict):
+            return rule
+
+        # Detect format: AST uses 'type', Rule Builder uses 'rule'
+        is_ast_format = 'type' in rule and 'rule' not in rule
+        rule_type = rule.get('type' if is_ast_format else 'rule', '')
+        children_key = 'conditions' if is_ast_format else 'children'
+
+        # Check if this is a helper reference that should be inlined
+        # AST format: {'type': 'helper', 'name': 'helper_name'}
+        # RB format: {'rule': 'helper_name', '_original_ast_type': 'helper'}
+        is_helper_ast = rule_type == 'helper'
+        is_helper_rb = rule.get('_original_ast_type') == 'helper'
+
+        if is_helper_ast:
+            helper_name = rule.get('name', '')
+        elif is_helper_rb:
+            helper_name = rule.get('rule', '')
+        else:
+            helper_name = ''
+
+        if helper_name in self.HELPERS_TO_EXPORT_BLACKLIST:
+            # Get simplified version of this helper
+            simplified = self._get_simplified_helper(helper_name)
+            if simplified:
+                logger.debug(f"[SC2] Post-process: Inlined blacklisted helper '{helper_name}'")
+                # Return simplified in same format as input
+                return simplified
+            else:
+                # No simplified version available - return True as fallback
+                logger.debug(f"[SC2] Post-process: No simplified version for '{helper_name}', using True")
+                return {'type': 'constant', 'value': True} if is_ast_format else {'rule': 'True'}
+
+        # Recursively process children/conditions
+        if rule_type in ('and', 'or', 'And', 'Or'):
+            children = rule.get(children_key, [])
+            processed_children = [self._inline_blacklisted_helpers(child) for child in children]
+            # Filter out True constants from And
+            if rule_type.lower() == 'and':
+                processed_children = [c for c in processed_children
+                    if not (isinstance(c, dict) and (
+                        (c.get('type') == 'constant' and c.get('value') == True) or
+                        c.get('rule') == 'True'
+                    ))]
+                if not processed_children:
+                    return {'type': 'constant', 'value': True} if is_ast_format else {'rule': 'True'}
+                if len(processed_children) == 1:
+                    return processed_children[0]
+            return {**rule, children_key: processed_children}
+
+        # Process any other dict values that might contain rules
+        processed = {}
+        for key, value in rule.items():
+            if key in ('children', 'conditions') and isinstance(value, list):
+                processed[key] = [self._inline_blacklisted_helpers(v) for v in value]
+            elif isinstance(value, dict):
+                processed[key] = self._inline_blacklisted_helpers(value)
+            elif isinstance(value, list):
+                processed[key] = [self._inline_blacklisted_helpers(v) if isinstance(v, dict) else v for v in value]
+            else:
+                processed[key] = value
+
+        return processed
+
+    def _convert_simplified_to_rule_builder(self, simplified: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert simplified AST format rule to Rule Builder format.
+
+        The simplified rules from _get_simplified_helper use AST format with
+        'type' key, but we need Rule Builder format with 'rule' key.
+        """
+        if not isinstance(simplified, dict):
+            return simplified
+
+        rule_type = simplified.get('type', '')
+
+        if rule_type == 'constant':
+            value = simplified.get('value', True)
+            return {'rule': 'True' if value else 'False'}
+
+        if rule_type == 'and':
+            conditions = simplified.get('conditions', [])
+            children = [self._convert_simplified_to_rule_builder(c) for c in conditions]
+            return {'rule': 'And', 'children': children}
+
+        if rule_type == 'or':
+            conditions = simplified.get('conditions', [])
+            children = [self._convert_simplified_to_rule_builder(c) for c in conditions]
+            return {'rule': 'Or', 'children': children}
+
+        if rule_type == 'item_check':
+            item = simplified.get('item', '')
+            count = simplified.get('count', 1)
+            if count > 1:
+                return {'rule': 'Has', 'args': {'item_name': item, 'count': count}}
+            return {'rule': 'Has', 'args': {'item_name': item}}
+
+        if rule_type == 'helper':
+            helper_name = simplified.get('name', '')
+            # Check if this nested helper is also blacklisted
+            if helper_name in self.HELPERS_TO_EXPORT_BLACKLIST:
+                nested_simplified = self._get_simplified_helper(helper_name)
+                if nested_simplified:
+                    return self._convert_simplified_to_rule_builder(nested_simplified)
+            # Keep as helper reference
+            return {'rule': helper_name, '_original_ast_type': 'helper'}
+
+        if rule_type == 'count':
+            conditions = simplified.get('conditions', [])
+            count = simplified.get('count', 1)
+            children = [self._convert_simplified_to_rule_builder(c) for c in conditions]
+            return {'rule': 'CountTrue', 'count': count, 'children': children}
+
+        # Unknown type - return as-is with some cleanup
+        logger.debug(f"[SC2] Unknown simplified rule type: {rule_type}")
+        return simplified

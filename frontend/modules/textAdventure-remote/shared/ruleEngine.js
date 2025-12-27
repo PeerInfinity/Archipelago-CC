@@ -2625,12 +2625,17 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      // world_attribute is an alias for setting_value - both use getSetting() which
+      // checks settings first, then falls back to world_attributes
+      case 'world_attribute':
       case 'setting_value': {
-        // Retrieve a setting value (e.g. for self.world.options.difficulty)
+        // Retrieve a setting or world attribute value
+        // - setting_value: for user-configurable options (e.g. world.options.difficulty)
+        // - world_attribute: for runtime-computed values (e.g. world.shop_items, world.difficulty_requirements)
         // Supports dot notation for nested access (e.g. "difficulty_requirements.progressive_bottle_limit")
         // Note: Choice options in Python use 0 for "off"/"none" states, which are exported
         // as strings like 'off', 'none', 'false'. These should be treated as falsy in JS.
-        let settingName = rule.setting;
+        let settingName = rule.setting || rule.attribute;
         if (typeof settingName === 'string') {
           let rawValue;
           // Handle dot notation for nested property access
@@ -2649,7 +2654,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             if (Array.isArray(rawValue)) {
               result = rawValue[rule.index];
             } else {
-              log('warn', '[evaluateRule] setting_value has index but value is not an array', {
+              log('warn', `[evaluateRule] ${rule.type} has index but value is not an array`, {
                 rule,
                 rawValue,
               });
@@ -2662,7 +2667,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             result = rawValue;
           }
         } else {
-          log('warn', '[evaluateRule] Invalid setting name for setting_value', {
+          log('warn', `[evaluateRule] Invalid name for ${rule.type}`, {
             rule,
             settingName,
           });
@@ -3217,7 +3222,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         if (!Array.isArray(iterable)) {
-          log('warn', '[evaluateRule] any_of iterator is not an array', { rule, iterable });
+          log('debug', '[evaluateRule] any_of iterator is not an array (treating as empty)', { rule, iterable });
           result = false;
           break;
         }
@@ -3516,7 +3521,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         } else if (regionExpr?.__regionRef) {
           regionName = regionExpr.regionName;
         } else {
-          log('warn', '[evaluateRule] region_attribute: cannot determine region name', { regionExpr, rule });
+          log('debug', '[evaluateRule] region_attribute: cannot determine region name (returning undefined)', { regionExpr, rule });
           result = undefined;
           break;
         }
@@ -4928,6 +4933,24 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       }
 
       return Math.min(leftValue, rightValue);
+    }
+
+    // MaxValue: returns the maximum of two values (used for max depth calculations)
+    // Rule Builder: {"rule": "MaxValue", "args": {"left": ..., "right": ...}}
+    case 'MaxValue': {
+      const left = args.left;
+      const right = args.right;
+
+      // Recursively evaluate operands
+      const leftValue = evaluateRule(left, context, depth + 1, localScope);
+      const rightValue = evaluateRule(right, context, depth + 1, localScope);
+
+      // If either operand is undefined, we can't compute
+      if (leftValue === undefined || rightValue === undefined) {
+        return undefined;
+      }
+
+      return Math.max(leftValue, rightValue);
     }
 
     // Count: get the count of an item (used as operand in Compare/Arithmetic)

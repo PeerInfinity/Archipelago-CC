@@ -23,10 +23,10 @@ class TimespinnerGameExportHandler(GenericGameExportHandler):
         # Keep 'self' as-is so frontend can resolve self.flag_* to settings
         return name
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Export Timespinner-specific settings including option flags and warp unlocks."""
-        # Get base settings (this also loads _worldgen_settings.json for worldgen worlds)
-        settings_dict = super().get_settings_data(world, multiworld, player)
+        # Get base world data (this also loads _worldgen_settings.json for worldgen worlds)
+        settings_dict = super().get_world_data(world, multiworld, player)
 
         # Export option flags needed by helper functions
         # Use flag_ prefix to match TimespinnerLogic attribute names (e.g., self.flag_specific_keycards)

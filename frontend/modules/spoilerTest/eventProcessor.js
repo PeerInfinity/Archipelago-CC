@@ -230,9 +230,9 @@ export class EventProcessor {
         }
 
         // Use accumulated data from sphereState
-        // Check game settings to determine which items to use
+        // Check exporter settings to determine which items to use
         const staticData = stateManager.getStaticData();
-        const useResolvedItems = staticData?.settings?.[this.playerIdKey]?.use_resolved_items || false;
+        const useResolvedItems = staticData?.exporter?.[this.playerIdKey]?.use_resolved_items || false;
 
         const base_items = sphereData.inventoryDetails?.base_items || {};
         const resolved_items = sphereData.inventoryDetails?.resolved_items || {};
@@ -346,9 +346,9 @@ export class EventProcessor {
           }
 
           // Add newly discovered items from the sphere log to the state manager
-          // This is only done for games that set add_sphere_items_upfront flag (like Blasphemous)
+          // This is only done for games that set add_sphere_items_upfront flag (like DLCQuest, Blasphemous)
           // Most games get items naturally from checking locations
-          const addItemsUpfront = staticData?.settings?.[this.playerIdKey]?.add_sphere_items_upfront || false;
+          const addItemsUpfront = staticData?.exporter?.[this.playerIdKey]?.add_sphere_items_upfront || false;
 
           if (addItemsUpfront) {
             // For upfront mode with incremental sub-spheres:
@@ -846,7 +846,7 @@ export class EventProcessor {
       const sphereData = this._getSphereDataFromSphereState(this.currentSphereIndex);
       if (sphereData) {
         const staticData = stateManager.getStaticData();
-        const useResolvedItems = staticData?.settings?.[this.playerIdKey]?.use_resolved_items || false;
+        const useResolvedItems = staticData?.exporter?.[this.playerIdKey]?.use_resolved_items || false;
 
         if (useResolvedItems) {
           this.previousInventory = JSON.parse(JSON.stringify(sphereData.inventoryDetails?.resolved_items || {}));
@@ -1117,9 +1117,9 @@ export class EventProcessor {
       }
     }
 
-    // Step 3: Process resolved_items (behavior depends on game settings)
+    // Step 3: Process resolved_items (behavior depends on exporter settings)
     // Check if this game wants to use resolved_items
-    const useResolvedItems = staticData.settings?.[this.playerIdKey]?.use_resolved_items ?? false;
+    const useResolvedItems = staticData.exporter?.[this.playerIdKey]?.use_resolved_items ?? false;
 
     if (useResolvedItems) {
       // Old logic: Process resolved_items for games that need them (e.g., Blasphemous)

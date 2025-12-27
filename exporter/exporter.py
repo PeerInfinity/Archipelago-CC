@@ -346,16 +346,32 @@ def resolve_attribute_nodes_in_rule(rule: Dict[str, Any], world) -> Dict[str, An
 @lru_cache(maxsize=128)
 def get_world_directory_name(game_name: str) -> str:
     """
-    Get the world directory name for a given game name by scanning worlds directory.
-    This replicates the logic from build-world-mapping.py but only returns the directory name.
+    Get the world directory name for a given game name.
+    First tries to read from the pre-built world-mapping.json file (which includes apworld files),
+    then falls back to scanning the worlds directory.
     Falls back to the old naming logic if no matching world is found.
 
     Results are cached to avoid repeated filesystem access.
     """
     try:
+        # First, try to read from the pre-built world-mapping.json
+        mapping_file = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'data', 'world-mapping.json')
+        if os.path.exists(mapping_file):
+            try:
+                with open(mapping_file, 'r', encoding='utf-8') as f:
+                    import json
+                    mapping = json.load(f)
+                    if game_name in mapping:
+                        world_dir = mapping[game_name].get('world_directory')
+                        if world_dir:
+                            return world_dir
+            except (IOError, json.JSONDecodeError) as e:
+                logger.debug(f"Could not read world mapping file: {e}")
+
+        # Fall back to scanning worlds directory
         # Get path to worlds directory relative to this file (exporter/exporter.py)
         worlds_dir = os.path.join(os.path.dirname(__file__), '..', 'worlds')
-        
+
         if not os.path.exists(worlds_dir):
             logger.warning(f"Worlds directory not found: {worlds_dir}")
             return game_name.lower().replace(' ', '_').replace(':', '_')
@@ -699,7 +715,7 @@ def write_field_by_field(export_data, filepath):
     fields_written = []
     
     # Try each field separately
-    for field in ["regions", "helpers", "items", "item_groups", "progression_mapping", "settings", "world_attributes", "start_regions", "game_info", "itempool_counts"]:
+    for field in ["regions", "helpers", "items", "item_groups", "progression_mapping", "world", "exporter", "start_regions", "game_info", "itempool_counts"]:
         if field in export_data:
             try:
                 serializable_field = make_serializable(export_data[field])
@@ -712,7 +728,7 @@ def write_field_by_field(export_data, filepath):
                 logger.error(error_msg)
                 
                 # For complex fields, try to process each player separately
-                if field in ["settings", "world_attributes", "game_info"] and isinstance(export_data.get(field, {}), dict):
+                if field in ["world", "exporter", "game_info"] and isinstance(export_data.get(field, {}), dict):
                     # Initialize with empty dict
                     serializable_data[field] = {}
                     
@@ -755,8 +771,8 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'items': {},    # Item data by player
         'item_groups': {},  # Item groups by player
         'progression_mapping': {},  # Progressive item info
-        'settings': {}, # Game settings by player (options, option_definitions, internal flags)
-        'world_attributes': {},  # World attributes by player (computed runtime values like difficulty_requirements)
+        'world': {},    # World data by player (mirrors Archipelago's world structure: game, options, runtime attributes)
+        'exporter': {}, # Exporter-specific settings by player (controls frontend processing behavior)
         'start_regions': {},  # Start regions by player
         'itempool_counts': {},  # Complete itempool counts by player
         'game_info': {},  # Game-specific information for frontend
@@ -828,47 +844,42 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         except Exception as e:
             error_msg = f"Error getting game_info from handler for player {player}: {str(e)}"
             logger.error(error_msg)
-            # Fallback to default
-            export_data['game_info'][player_str] = {
-                "name": game_name,
-                "rule_format": {
-                    "version": "1.0"
-                }
-            }
+            # Fallback to empty dict (game name is in world[player].game)
+            export_data['game_info'][player_str] = {}
 
         # Store the pre-calculated itempool counts
         export_data['itempool_counts'][player_str] = itempool_counts
 
-        # Get Settings using handler
+        # Get world data using handler (includes options and runtime-computed attributes)
         try:
-            settings_data = game_handler.get_settings_data(world, multiworld, player) # Call the handler method
+            world_data = game_handler.get_world_data(world, multiworld, player)
             # Add world_directory for handler lookup during cleanup (in case handler didn't add it)
-            if 'world_directory' not in settings_data:
+            if 'world_directory' not in world_data:
                 try:
                     module_path = type(world).__module__
                     parts = module_path.split('.')
                     if len(parts) >= 2 and parts[0] == 'worlds':
-                        settings_data['world_directory'] = parts[1]
+                        world_data['world_directory'] = parts[1]
                 except Exception:
                     pass
-            export_data['settings'][player_str] = settings_data
+            export_data['world'][player_str] = world_data
         except Exception as e:
-            error_msg = f"Error exporting settings for player {player}: {str(e)}"
+            error_msg = f"Error exporting world data for player {player}: {str(e)}"
             logger.error(error_msg)
-            export_data['settings'][player_str] = {
+            export_data['world'][player_str] = {
                 'error': error_msg,
-                'details': "Failed to read game settings. Check logs for more information."
+                'details': "Failed to read world data. Check logs for more information."
             }
 
-        # Get world attributes using handler
+        # Get exporter-specific settings
         try:
-            world_attributes_data = game_handler.get_world_attributes(world, multiworld, player)
-            if world_attributes_data:
-                export_data['world_attributes'][player_str] = world_attributes_data
+            exporter_settings = game_handler.get_exporter_settings()
+            if exporter_settings:
+                export_data['exporter'][player_str] = exporter_settings
         except Exception as e:
-            error_msg = f"Error exporting world attributes for player {player}: {str(e)}"
+            error_msg = f"Error exporting exporter settings for player {player}: {str(e)}"
             logger.error(error_msg)
-            # Don't add error to export_data - world_attributes is optional
+            # Don't add error to export_data - exporter settings can fall back to defaults
 
         # Get helper definitions using handler
         try:
@@ -1350,13 +1361,26 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             expanded_rule = None
                             entrance_name = getattr(entrance, 'name', None)
                             if hasattr(entrance, 'access_rule') and entrance.access_rule is not None:
-                                expanded_rule = safe_expand_rule(
-                                    game_handler,
-                                    entrance.access_rule,
-                                    entrance_name,
-                                    target_type='Entrance',
-                                    world=world
-                                )
+                                rule_to_analyze = entrance.access_rule
+
+                                # Try special handling first for complex entrance rules
+                                # (e.g., LADX which uses custom entrance classes with condition attributes)
+                                if game_handler and hasattr(game_handler, 'handle_complex_entrance_rule'):
+                                    special_rule = game_handler.handle_complex_entrance_rule(entrance_name, rule_to_analyze)
+                                    if special_rule:
+                                        expanded_rule = game_handler.expand_rule(special_rule)
+                                        # Resolve any attribute nodes in item_check rules
+                                        expanded_rule = resolve_attribute_nodes_in_rule(expanded_rule, world)
+
+                                # If no special handling, use normal analysis
+                                if expanded_rule is None:
+                                    expanded_rule = safe_expand_rule(
+                                        game_handler,
+                                        rule_to_analyze,
+                                        entrance_name,
+                                        target_type='Entrance',
+                                        world=world
+                                    )
 
                                 # Post-process the entrance rule if the game handler supports it
                                 if expanded_rule and game_handler and hasattr(game_handler, 'postprocess_entrance_rule'):
@@ -1955,47 +1979,31 @@ def cleanup_export_data(data):
     player_games = {}
     
     # Get player game mapping (needed for handler selection)
-    # We need this info before cleaning settings, so iterate over settings first
-    # even if settings themselves aren't cleaned until later
-    if 'settings' in data and isinstance(data['settings'], dict):
-        for player_id, settings_data in data['settings'].items():
-            if isinstance(settings_data, dict) and 'game' in settings_data:
-                player_games[player_id] = settings_data['game']
+    # Game name is in world[player].game
+    if 'world' in data and isinstance(data['world'], dict):
+        for player_id, world_data in data['world'].items():
+            if isinstance(world_data, dict) and 'game' in world_data:
+                player_games[player_id] = world_data['game']
             else:
-                # Attempt to get game name from game_info as a fallback
-                if 'game_info' in data and player_id in data['game_info'] and 'name' in data['game_info'][player_id]:
-                    player_games[player_id] = data['game_info'][player_id]['name']
-                else:
-                    logger.warning(f"Could not determine game for player {player_id} in cleanup")
-                    player_games[player_id] = "unknown" # Default if not found
-                    
-    # Ensure game_info is properly structured (this might still be useful)
-    if 'game_info' in data:
-        for player_id, game_info in data['game_info'].items():
-            # Make sure game_info has the game name
-            if 'name' not in game_info and player_id in player_games:
-                game_info['name'] = player_games[player_id]
-            
-            # Ensure rule_format exists
-            if 'rule_format' not in game_info:
-                game_info['rule_format'] = {"version": "1.0"}
+                logger.warning(f"Could not determine game for player {player_id} in cleanup")
+                player_games[player_id] = "unknown"
 
-    # Clean up settings fields
-    if 'settings' in data:
-        for player, settings in data['settings'].items():
-            if not isinstance(settings, dict) or 'error' in settings: # Skip if not dict or already an error
+    # Clean up world data fields
+    if 'world' in data:
+        for player, world_data in data['world'].items():
+            if not isinstance(world_data, dict) or 'error' in world_data: # Skip if not dict or already an error
                 continue
-            # Get world_directory from settings (added during export) for handler lookup
-            world_dir = settings.get('world_directory')
+            # Get world_directory from world data (added during export) for handler lookup
+            world_dir = world_data.get('world_directory')
             game_handler = get_game_export_handler(world_directory=world_dir)  # World not available during cleanup
             try:
                 # Delegate cleanup to the specific handler
                 # Pass a copy to avoid modifying the original dict used elsewhere if cleanup fails partially
-                cleaned_settings = game_handler.cleanup_settings(settings.copy())
-                data['settings'][player] = cleaned_settings # Update with cleaned settings
+                cleaned_world_data = game_handler.cleanup_world_data(world_data.copy())
+                data['world'][player] = cleaned_world_data # Update with cleaned world data
             except Exception as e:
-                logger.error(f"Error cleaning settings via handler for player {player} ({world_dir}): {e}")
-                # Keep original settings in case of error during cleanup
+                logger.error(f"Error cleaning world data via handler for player {player} ({world_dir}): {e}")
+                # Keep original world data in case of error during cleanup
 
     # Clean up region types
     if 'regions' in data:
@@ -2096,8 +2104,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'canonical_placements',
         'progression_mapping',
         'starting_items',
-        'settings',
-        'world_attributes',
+        'world',
+        'exporter',
         'game_info',
         'metamath_data'
     ]
@@ -2105,7 +2113,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     # Player-specific keys contain data nested under player IDs
     player_specific_keys = [
         'regions', 'dungeons', 'items', 'item_groups', 'progression_mapping',
-        'settings', 'world_attributes', 'start_regions', 'itempool_counts',
+        'world', 'exporter', 'start_regions', 'itempool_counts',
         'canonical_placements', 'game_info', 'starting_items', 'metamath_data'
     ]
 

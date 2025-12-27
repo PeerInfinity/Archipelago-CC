@@ -17,8 +17,36 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
-Open World:                      1
-Ow Boss Requirement:             3
+Ability Trap Percentage:         50
+Allow Boss Butch Bosses:         Disabled
+Animal Randomization:            Disabled
+Randomize Purification Requirement:No
+Boss Shuffle:                    None
+Consumable-sanity:               No
+Copy Ability Randomization:      Disabled
+Death Link:                      No
+Filler Percentage:               50
+Game Language:                   English
+Gifting:                         No
+Goal:                            Zero
+Goal Speed:                      Normal
+Gooey Flavor:                    Default
+Gooey Trap Percentage:           50
+Required Heart Stars:            50
+Jumping Target Score:            10
+Kirby Flavor:                    Default
+Max Heart Stars:                 30
+Music Randomization:             None
+Open World:                      Yes
+Open World Boss Requirement:     3
+Remote Items:                    Yes
+Slowness Trap Percentage:        50
+Stage Shuffle:                   None
+Starsanity:                      No
+Strict Bosses:                   Yes
+Total Heart Stars:               -1
+Trap Percentage:                 50
+Virtual Console Changes:         Flash Reduction
 
 
 Locations:

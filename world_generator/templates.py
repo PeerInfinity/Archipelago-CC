@@ -21,6 +21,30 @@ def sanitize_class_name(name: str) -> str:
     return re.sub(r'[^a-zA-Z0-9]', '', name)
 
 
+def sanitize_option_name(name: str) -> str:
+    """Sanitize an option name to be a valid Python identifier.
+
+    Replaces non-alphanumeric characters (except underscores) with underscores.
+    Collapses multiple consecutive underscores into one.
+    """
+    # Replace any non-alphanumeric character (except underscore) with underscore
+    sanitized = re.sub(r'[^a-zA-Z0-9_]', '_', name)
+    # Collapse multiple underscores into one
+    sanitized = re.sub(r'_+', '_', sanitized)
+    # Remove leading/trailing underscores
+    return sanitized.strip('_')
+
+
+def is_valid_identifier(name: str) -> bool:
+    """Check if a string is a valid Python identifier.
+
+    Python identifiers must start with a letter or underscore, and contain
+    only letters, digits, and underscores. They also cannot be keywords.
+    """
+    import keyword
+    return name.isidentifier() and not keyword.iskeyword(name)
+
+
 def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = None, visited_helpers: Set[str] = None) -> List[str]:
     """Extract region names from can_reach calls in a rule.
 
@@ -150,12 +174,19 @@ def _rule_needs_lambda(rule: dict) -> bool:
     Check if a rule needs to use lambda-based generation instead of Rule Builder.
 
     Returns True if the rule contains:
-    - Block statements (loops, assignments, etc.)
+    - Block statements (loops, assignments, etc.) that aren't AST_block
 
     Note: Most rule types including helpers, not, compare, and conditional
     can now be handled by RuleCodeGenerator with the new Rule Builder classes.
+    AST_block rules can also be handled by RuleCodeGenerator.
     """
     if not isinstance(rule, dict):
+        return False
+
+    # AST_block rules can be handled by RuleCodeGenerator
+    # even if they contain nested block types
+    rule_name = rule.get('rule', '')
+    if rule_name == 'AST_block':
         return False
 
     rule_type = rule.get('type', '')
@@ -703,16 +734,14 @@ def _generate_option_class_from_definition(setting_name: str, option_def: Dict[s
     """
     class_name = ''.join(word.capitalize() for word in setting_name.split('_'))
     display_name = option_def.get('display_name', ' '.join(word.capitalize() for word in setting_name.split('_')))
+    # Escape double quotes in display names to generate valid Python code
+    display_name_escaped = display_name.replace('"', '\\"')
     option_type = option_def.get('type')
     default = option_def.get('default', 0)
 
     if option_type == 'choice':
         # Generate Choice option with option_<name> = <value> for each choice
         name_lookup = option_def.get('name_lookup', {})
-        option_lines = []
-        for value_str, name in sorted(name_lookup.items(), key=lambda x: int(x[0])):
-            option_lines.append(f'    option_{name} = {value_str}')
-        options_code = '\n'.join(option_lines)
 
         # Properly quote string default values
         if isinstance(default, str):
@@ -720,10 +749,44 @@ def _generate_option_class_from_definition(setting_name: str, option_def: Dict[s
         else:
             default_repr = default
 
+        # If name_lookup is empty, this is a TextChoice (accepts arbitrary text)
+        if not name_lookup:
+            class_code = f'''
+class {class_name}(TextChoice):
+    """Option for {display_name}."""
+    display_name = "{display_name_escaped}"
+
+    default = {default_repr}
+'''
+            return class_code, f'    {setting_name}: {class_name}', 'TextChoice'
+
+        # Check if all keys are numeric (convertible to int)
+        # Some games use TextChoice with string keys (e.g., "random-2p", "M", "MA")
+        try:
+            sorted_items = sorted(name_lookup.items(), key=lambda x: int(x[0]))
+        except ValueError:
+            # Non-numeric keys indicate a TextChoice or similar complex option
+            # Fall back to TextChoice for these cases
+            class_code = f'''
+class {class_name}(TextChoice):
+    """Option for {display_name}."""
+    display_name = "{display_name_escaped}"
+
+    default = {default_repr}
+'''
+            return class_code, f'    {setting_name}: {class_name}', 'TextChoice'
+
+        option_lines = []
+        for value_str, name in sorted_items:
+            # Sanitize the option name to be a valid Python identifier
+            safe_name = sanitize_option_name(name)
+            option_lines.append(f'    option_{safe_name} = {value_str}')
+        options_code = '\n'.join(option_lines)
+
         class_code = f'''
 class {class_name}(Choice):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
 {options_code}
     default = {default_repr}
 '''
@@ -739,21 +802,40 @@ class {class_name}(Choice):
         else:
             default_repr = default
 
-        class_code = f'''
+        # Check if default is outside the range - need to use NamedRange with special_range_names
+        default_outside_range = (
+            isinstance(default, (int, float)) and
+            (default < range_start or default > range_end)
+        )
+
+        if default_outside_range:
+            # Use NamedRange with special_range_names for defaults outside the range
+            class_code = f'''
+class {class_name}(NamedRange):
+    """Option for {display_name}."""
+    display_name = "{display_name_escaped}"
+    range_start = {range_start}
+    range_end = {range_end}
+    default = {default_repr}
+    special_range_names = {{"default": {default_repr}}}
+'''
+            return class_code, f'    {setting_name}: {class_name}', 'NamedRange'
+        else:
+            class_code = f'''
 class {class_name}(Range):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
     range_start = {range_start}
     range_end = {range_end}
     default = {default_repr}
 '''
-        return class_code, f'    {setting_name}: {class_name}', 'Range'
+            return class_code, f'    {setting_name}: {class_name}', 'Range'
 
     elif option_type == 'default_on_toggle':
         class_code = f'''
 class {class_name}(DefaultOnToggle):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
 '''
         return class_code, f'    {setting_name}: {class_name}', 'DefaultOnToggle'
 
@@ -761,7 +843,7 @@ class {class_name}(DefaultOnToggle):
         class_code = f'''
 class {class_name}(Toggle):
     """Option for {display_name}."""
-    display_name = "{display_name}"
+    display_name = "{display_name_escaped}"
 '''
         return class_code, f'    {setting_name}: {class_name}', 'Toggle'
 
@@ -1124,11 +1206,23 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
                 has_string_keys = all(isinstance(k, str) for k in attr_value.keys())
                 has_nested_values = not any(isinstance(v, dict) for v in attr_value.values())
 
-                if has_string_keys and has_nested_values and attr_value:
-                    # Use SimpleNamespace for dicts with string keys (attribute access pattern)
+                # Check if all keys are valid Python identifiers for SimpleNamespace
+                # Only check isidentifier() if we know all keys are strings (has_string_keys)
+                all_valid_identifiers = has_string_keys and all(k.isidentifier() for k in attr_value.keys())
+
+                if has_string_keys and has_nested_values and attr_value and all_valid_identifiers:
+                    # Use SimpleNamespace for dicts with valid identifier keys (attribute access pattern)
                     needs_types_import = True
-                    dict_items = ', '.join(f'{k}={v!r}' for k, v in attr_value.items())
-                    init_attrs.append(f'        self.{attr_name} = types.SimpleNamespace({dict_items})')
+                    # Check if all keys are valid Python identifiers
+                    all_valid_identifiers = all(is_valid_identifier(k) for k in attr_value.keys())
+                    if all_valid_identifiers:
+                        # Use keyword argument form: SimpleNamespace(key=val, ...)
+                        dict_items = ', '.join(f'{k}={v!r}' for k, v in attr_value.items())
+                        init_attrs.append(f'        self.{attr_name} = types.SimpleNamespace({dict_items})')
+                    else:
+                        # Use dictionary unpacking: SimpleNamespace(**{"key with space": val, ...})
+                        dict_items = ', '.join(f'{k!r}: {v!r}' for k, v in attr_value.items())
+                        init_attrs.append(f'        self.{attr_name} = types.SimpleNamespace(**{{{dict_items}}})')
                 else:
                     # Keep as dict for integer keys or nested dicts
                     dict_items = ', '.join(f'{k!r}: {v!r}' for k, v in attr_value.items())

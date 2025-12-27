@@ -110,7 +110,11 @@ class RuleCodeGenerator:
                 return rule
             # Only expand helpers at depth 0 (top level rules)
             # Nested helpers (depth > 0) are left as references for frontend lookup
-            if depth == 0 and helper_name in self.helper_bodies:
+            # Also don't expand helpers that have block bodies - they're too complex
+            # and will be handled as Python helper functions instead
+            helper_body = self.helper_bodies.get(helper_name)
+            is_block_body = helper_body and helper_body.get('type') == 'block'
+            if depth == 0 and helper_name in self.helper_bodies and not is_block_body:
                 # Expand the helper body, marking this helper as visited
                 new_visited = visited | {helper_name}
                 # Use depth + 1 so nested helper references won't be expanded
@@ -965,6 +969,22 @@ class RuleCodeGenerator:
                 return f'MinValue({left_code}, {right_code})'
             return 'MinValue(0, 0)'
 
+        # Handle AST_max rule (max operation from AST export)
+        if rb_rule == 'AST_max':
+            # The args are nested under args.args
+            max_args = args.get('args', [])
+            if len(max_args) >= 2:
+                self.required_imports.add('MaxValue')
+                # Chain multiple args: MaxValue(MaxValue(a, b), c)
+                result = self._convert_arithmetic_operand(max_args[0])
+                for arg in max_args[1:]:
+                    arg_code = self._convert_arithmetic_operand(arg)
+                    result = f'MaxValue({result}, {arg_code})'
+                return result
+            elif len(max_args) == 1:
+                return self._convert_arithmetic_operand(max_args[0])
+            return '0'
+
         # Handle AST_prog_item_count rule (for state counter items like coins)
         # This converts {"rule": "AST_prog_item_count", "args": {"key": " coins"}}
         # to CountItem(" coins") for use in Compare expressions
@@ -1024,9 +1044,27 @@ class RuleCodeGenerator:
         return self._resolve_setting_to_bool(name, default=False)
 
     def _convert_constant(self, rule: Dict[str, Any]) -> str:
-        """Convert constant true/false rule."""
+        """Convert constant rule - preserves type (bool, int, float, etc.)."""
         value = rule.get('value', True)
-        return self._make_bool_constant(bool(value))
+        # Preserve numeric values for use in arithmetic/comparison contexts
+        if isinstance(value, bool):
+            return self._make_bool_constant(value)
+        elif isinstance(value, int):
+            # Integer 0 and 1 are often boolean toggle values from options
+            # These need to be converted to False_()/True_() when used in boolean contexts
+            # (e.g., inside Not(), And(), Or())
+            # Other integers are preserved for arithmetic operations
+            if value == 0:
+                return self._make_bool_constant(False)
+            elif value == 1:
+                return self._make_bool_constant(True)
+            else:
+                return repr(value)
+        elif isinstance(value, float):
+            return repr(value)
+        else:
+            # For other types (strings, etc.), use boolean interpretation
+            return self._make_bool_constant(bool(value))
 
     def _convert_list(self, rule: Dict[str, Any]) -> str:
         """Convert list rule to Python list literal.
@@ -1773,6 +1811,21 @@ class RuleCodeGenerator:
                 return f'MinValue({left_code}, {right_code})'
             return 'MinValue(0, 0)'
 
+        if rb_rule == 'AST_max':
+            # Handle AST_max with nested args
+            max_args = rb_args.get('args', [])
+            if len(max_args) >= 2:
+                self.required_imports.add('MaxValue')
+                # Chain multiple args: MaxValue(MaxValue(a, b), c)
+                result = self._convert_arithmetic_operand(max_args[0])
+                for arg in max_args[1:]:
+                    arg_code = self._convert_arithmetic_operand(arg)
+                    result = f'MaxValue({result}, {arg_code})'
+                return result
+            elif len(max_args) == 1:
+                return self._convert_arithmetic_operand(max_args[0])
+            return '0'
+
         if rb_rule == 'SettingValue':
             # Handle SettingValue in Compare operand - preserve numeric value
             # Unlike _convert_setting_value which converts to boolean rules,
@@ -1917,6 +1970,35 @@ class RuleCodeGenerator:
         if op_type == 'min':
             return self._convert_min(operand)
 
+        # Handle Rule Builder format rules with 'rule' key (for arithmetic operands)
+        rb_rule = operand.get('rule', '')
+        rb_args = operand.get('args', {})
+
+        if rb_rule == 'AST_min':
+            # Handle AST_min with nested args
+            min_args = rb_args.get('args', [])
+            if len(min_args) >= 2:
+                self.required_imports.add('MinValue')
+                left_code = self._convert_arithmetic_operand(min_args[0])
+                right_code = self._convert_arithmetic_operand(min_args[1])
+                return f'MinValue({left_code}, {right_code})'
+            return 'MinValue(0, 0)'
+
+        if rb_rule == 'AST_max':
+            # Handle AST_max with nested args
+            max_args = rb_args.get('args', [])
+            if len(max_args) >= 2:
+                self.required_imports.add('MaxValue')
+                # Chain multiple args: MaxValue(MaxValue(a, b), c)
+                result = self._convert_arithmetic_operand(max_args[0])
+                for arg in max_args[1:]:
+                    arg_code = self._convert_arithmetic_operand(arg)
+                    result = f'MaxValue({result}, {arg_code})'
+                return result
+            elif len(max_args) == 1:
+                return self._convert_arithmetic_operand(max_args[0])
+            return '0'
+
         # Fall back to converting as a rule
         return self._convert_rule(operand)
 
@@ -2039,6 +2121,12 @@ class RuleCodeGenerator:
         - Defaulting to True means locations are accessible when we can't evaluate
         - This matches the original game behavior with default settings
         """
+        # Check if this block contains state_method calls that need runtime evaluation
+        if self._contains_state_method(statements):
+            result = self._generate_runtime_ast_block(statements)
+            if result is not None:
+                return result
+
         # Track variable assignments for substitution
         local_vars: Dict[str, Any] = {}
         # Track if block references missing settings
@@ -2051,8 +2139,61 @@ class RuleCodeGenerator:
                 # Track variable assignment
                 name = stmt.get('name', '')
                 value = stmt.get('value', {})
-                if value.get('type') == 'constant':
+                value_type = value.get('type', '')
+
+                if value_type == 'constant':
                     local_vars[name] = value.get('value')
+                elif value_type == 'setting_value':
+                    # Look up setting value from resolved settings
+                    setting_name = value.get('setting', '')
+                    if setting_name in self.settings:
+                        local_vars[name] = self.settings[setting_name]
+                    else:
+                        has_missing_settings = True
+                        local_vars[name] = 0
+                elif value_type == 'subscript':
+                    # Evaluate subscript (e.g., [200, 400, 600][swim_rule % 3])
+                    subscript_value = value.get('value', {})
+                    subscript_index = value.get('index', {})
+
+                    # Get the array/value
+                    arr = None
+                    if subscript_value.get('type') == 'constant':
+                        arr = subscript_value.get('value')
+
+                    # Get the index
+                    idx = self._try_evaluate_expr(subscript_index, local_vars)
+
+                    # Handle binary_op index (e.g., swim_rule % 3)
+                    if idx is None and subscript_index.get('type') == 'binary_op':
+                        left = self._try_evaluate_expr(subscript_index.get('left', {}), local_vars)
+                        right = self._try_evaluate_expr(subscript_index.get('right', {}), local_vars)
+                        op = subscript_index.get('op', '')
+                        if left is not None and right is not None:
+                            try:
+                                if op == '%':
+                                    idx = left % right
+                                elif op == '+':
+                                    idx = left + right
+                                elif op == '-':
+                                    idx = left - right
+                                elif op == '*':
+                                    idx = left * right
+                                elif op == '//':
+                                    idx = left // right
+                            except (TypeError, ZeroDivisionError):
+                                pass
+
+                    if arr is not None and idx is not None:
+                        try:
+                            if isinstance(arr, (list, tuple)):
+                                local_vars[name] = arr[int(idx)]
+                            elif isinstance(arr, dict):
+                                local_vars[name] = arr[idx]
+                        except (IndexError, KeyError, TypeError):
+                            local_vars[name] = 0
+                    else:
+                        local_vars[name] = 0
                 else:
                     # Complex assignment - check if it references missing settings
                     if self._references_missing_setting(value):
@@ -2128,6 +2269,16 @@ class RuleCodeGenerator:
             if inner.get('type') == 'name' and inner.get('name') in local_vars:
                 return True
 
+        # Handle compare type (e.g., swim_rule > 2)
+        if test_type == 'compare':
+            left = test.get('left', {})
+            right = test.get('right', {})
+            # Can evaluate if both operands can be resolved
+            left_val = self._try_evaluate_expr(left, local_vars)
+            right_val = self._try_evaluate_expr(right, local_vars)
+            if left_val is not None and right_val is not None:
+                return True
+
         return False
 
     def _evaluate_if_test(self, test: Dict[str, Any], local_vars: Dict[str, Any]) -> bool:
@@ -2155,6 +2306,16 @@ class RuleCodeGenerator:
                 var_val = local_vars.get(var_name, 0)
                 return not var_val
 
+        # Handle compare type (e.g., swim_rule > 2)
+        if test_type == 'compare':
+            left = test.get('left', {})
+            right = test.get('right', {})
+            op = test.get('op', '')
+            left_val = self._try_evaluate_expr(left, local_vars)
+            right_val = self._try_evaluate_expr(right, local_vars)
+            if left_val is not None and right_val is not None:
+                return self._evaluate_comparison(left_val, op, right_val)
+
         return False
 
     def _evaluate_ast_return_value(self, value: Dict[str, Any], local_vars: Dict[str, Any]) -> str:
@@ -2167,6 +2328,19 @@ class RuleCodeGenerator:
                 self.required_imports.add('True_' if const_val else 'False_')
                 return 'True_()' if const_val else 'False_()'
             return repr(const_val)
+
+        # Handle variable references - look up in local_vars
+        if value_type == 'name':
+            var_name = value.get('name', '')
+            if var_name in local_vars:
+                var_val = local_vars[var_name]
+                if isinstance(var_val, bool):
+                    self.required_imports.add('True_' if var_val else 'False_')
+                    return 'True_()' if var_val else 'False_()'
+                elif isinstance(var_val, (int, float)):
+                    return repr(var_val)
+            # Variable not found - return 0 as safe numeric default
+            return '0'
 
         if value_type == 'compare':
             # Comparison like: auto_scroll_levels[level_id] > 0
@@ -2253,6 +2427,754 @@ class RuleCodeGenerator:
         except TypeError:
             pass
         return False
+
+    def _contains_state_method(self, statements: List[Dict[str, Any]]) -> bool:
+        """Check if any statement contains runtime-dependent checks like item_check or state_method."""
+        # Types that require runtime evaluation (player state)
+        runtime_types = {'state_method', 'item_check', 'count_check', 'group_check'}
+
+        def check_value(value: Any) -> bool:
+            if not isinstance(value, dict):
+                return False
+            if value.get('type') in runtime_types:
+                return True
+            # Check nested structures
+            for v in value.values():
+                if isinstance(v, dict) and check_value(v):
+                    return True
+                elif isinstance(v, list):
+                    for item in v:
+                        if isinstance(item, dict) and check_value(item):
+                            return True
+            return False
+
+        for stmt in statements:
+            stmt_type = stmt.get('type', '')
+            if stmt_type == 'for_range':
+                # Check count expression and body
+                if check_value(stmt.get('count', {})):
+                    return True
+                for body_stmt in stmt.get('body', []):
+                    if check_value(body_stmt):
+                        return True
+            elif stmt_type == 'assign':
+                if check_value(stmt.get('value', {})):
+                    return True
+            elif stmt_type == 'return':
+                if check_value(stmt.get('value', {})):
+                    return True
+        return False
+
+    def _generate_runtime_ast_block(self, statements: List[Dict[str, Any]],
+                                       initial_vars: Dict[str, str] = None,
+                                       is_nested: bool = False) -> Optional[str]:
+        """Generate a Rule Builder expression for AST blocks with runtime-dependent state_method calls.
+
+        This handles patterns like shapez belt speed calculation:
+        - multiplier = 1.0
+        - for _ in range(count("Rising Belt Upgrade")): multiplier *= 2
+        - multiplier += count("Gigantic Belt Upgrade") * 10
+        - multiplier += count("Big Belt Upgrade")
+        - multiplier += count("Small Belt Upgrade") * 0.1
+        - return multiplier >= 1.6
+
+        This is converted to:
+        Compare(
+            Arithmetic(Arithmetic(2, "**", CountItem("Rising Belt Upgrade")), "+", ...),
+            ">=",
+            1.6
+        )
+
+        Args:
+            statements: List of statement dicts in AST format
+            initial_vars: Optional dict of variable names to their current expression values
+                         (for processing nested blocks that need access to outer scope)
+            is_nested: If True, this is a nested block within an expression. In this case,
+                      we should NOT accumulate conditions from "if condition: return False" patterns,
+                      as those only make sense at the top level for accessibility rules.
+        """
+        # Track symbolic expressions for variables
+        # Each variable maps to a string representing its Rule Builder expression
+        var_expressions: Dict[str, str] = dict(initial_vars) if initial_vars else {}
+
+        for stmt in statements:
+            stmt_type = stmt.get('type', '')
+
+            if stmt_type == 'assign':
+                name = stmt.get('name', '')
+                value = stmt.get('value', {})
+                op = stmt.get('op', None)  # None for =, "*=" for *=, "+=" for +=
+
+                if op is None:
+                    # Simple assignment: var = expr
+                    expr = self._expr_to_rule_builder(value, var_expressions)
+                    if expr is None:
+                        return None
+                    var_expressions[name] = expr
+                elif op == '+=':
+                    # Augmented addition: var += expr
+                    if name not in var_expressions:
+                        return None
+                    right_expr = self._expr_to_rule_builder(value, var_expressions)
+                    if right_expr is None:
+                        return None
+                    self.required_imports.add('Arithmetic')
+                    var_expressions[name] = f'Arithmetic({var_expressions[name]}, "+", {right_expr})'
+                elif op == '*=':
+                    # Augmented multiplication: var *= expr
+                    if name not in var_expressions:
+                        return None
+                    right_expr = self._expr_to_rule_builder(value, var_expressions)
+                    if right_expr is None:
+                        return None
+                    self.required_imports.add('Arithmetic')
+                    var_expressions[name] = f'Arithmetic({var_expressions[name]}, "*", {right_expr})'
+                else:
+                    # Unsupported operator
+                    return None
+
+            elif stmt_type == 'for_range':
+                # Handle: for _ in range(count): body
+                # Special case: for _ in range(count("Item")): var *= constant
+                # This is equivalent to: var = var * (constant ** count("Item"))
+                count_expr = stmt.get('count', {})
+                body = stmt.get('body', [])
+                loop_var = stmt.get('var', '_')
+
+                # We only handle simple bodies with a single *= assignment
+                if len(body) != 1:
+                    return None
+                body_stmt = body[0]
+                if body_stmt.get('type') != 'assign' or body_stmt.get('op') != '*=':
+                    return None
+
+                var_name = body_stmt.get('name', '')
+                mult_value = body_stmt.get('value', {})
+
+                if mult_value.get('type') != 'constant':
+                    return None
+
+                multiplier = mult_value.get('value')
+                if var_name not in var_expressions:
+                    return None
+
+                # Convert: var *= multiplier (n times) to: var = (multiplier ** n) * initial_value
+                # But we need the base value before the for loop
+                # Since for_range multiplies n times, the result is: initial * (multiplier ** n)
+                # If initial is a constant (like 1.0), this simplifies to: multiplier ** n
+
+                count_rule = self._expr_to_rule_builder(count_expr, var_expressions)
+                if count_rule is None:
+                    return None
+
+                # Check if current var value is a simple constant we can handle
+                current_expr = var_expressions[var_name]
+                try:
+                    initial_val = float(current_expr)
+                except (ValueError, TypeError):
+                    # Current expression is not a simple constant
+                    # Generate: initial_expr * (multiplier ** count)
+                    self.required_imports.add('Arithmetic')
+                    var_expressions[var_name] = f'Arithmetic({current_expr}, "*", Arithmetic({multiplier}, "**", {count_rule}))'
+                    continue
+
+                # Initial value is a constant
+                if initial_val == 1.0:
+                    # 1.0 * (multiplier ** n) = multiplier ** n
+                    self.required_imports.add('Arithmetic')
+                    var_expressions[var_name] = f'Arithmetic({multiplier}, "**", {count_rule})'
+                else:
+                    # initial * (multiplier ** n)
+                    self.required_imports.add('Arithmetic')
+                    var_expressions[var_name] = f'Arithmetic({initial_val}, "*", Arithmetic({multiplier}, "**", {count_rule}))'
+
+            elif stmt_type == 'if_statement':
+                # Handle if_statement with early returns
+                # We need to check if the condition can be evaluated at codegen time
+                # If the condition involves only constants and known variables, evaluate it
+                # If it involves item_checks, generate a conditional rule
+                test = stmt.get('test', {})
+                body = stmt.get('body', [])
+                orelse = stmt.get('orelse', [])
+
+                # Try to evaluate the test as a constant
+                test_result = self._try_evaluate_if_test_constant(test, var_expressions)
+
+                if test_result is True:
+                    # Test is always true, process the body
+                    for body_stmt in body:
+                        if body_stmt.get('type') == 'return':
+                            return self._expr_to_rule_builder(body_stmt.get('value', {}), var_expressions)
+                    # Continue to process remaining statements if no return in body
+                elif test_result is False:
+                    # Test is always false, skip the body and process orelse
+                    for orelse_stmt in orelse:
+                        if orelse_stmt.get('type') == 'return':
+                            return self._expr_to_rule_builder(orelse_stmt.get('value', {}), var_expressions)
+                    # Continue to process remaining statements
+                else:
+                    # Test contains runtime-dependent parts, we need to generate conditional logic
+                    # Check if body contains a return False
+                    body_returns_false = (
+                        len(body) == 1 and
+                        body[0].get('type') == 'return' and
+                        body[0].get('value', {}).get('type') == 'constant' and
+                        body[0].get('value', {}).get('value') is False
+                    )
+
+                    if body_returns_false and not is_nested:
+                        # Pattern: if condition: return False
+                        # This means: not condition is required for accessibility
+                        # Note: only accumulate conditions at top level, not in nested blocks
+                        test_expr = self._expr_to_rule_builder(test, var_expressions)
+                        if test_expr is not None:
+                            # We'll need to incorporate this check later
+                            # For now, store it as a required condition (negated)
+                            self.required_imports.add('Not')
+                            if 'required_conditions' not in var_expressions:
+                                var_expressions['required_conditions'] = []
+                            # Add the negated condition to requirements
+                            var_expressions.setdefault('_conditions', []).append(f'Not({test_expr})')
+
+            elif stmt_type == 'return':
+                value = stmt.get('value', {})
+                # Use the general expression converter
+                result_expr = self._expr_to_rule_builder(value, var_expressions)
+                if result_expr is not None:
+                    # If we accumulated conditions, combine them with the result
+                    # but only at top level (not in nested blocks)
+                    conditions = var_expressions.get('_conditions', [])
+                    if conditions and not is_nested:
+                        # Combine all conditions with And, filtering True/False values
+                        all_conditions = conditions + [result_expr]
+                        # Filter out True values and short-circuit on False
+                        filtered = []
+                        for c in all_conditions:
+                            if c == 'False' or c == 'False_()':
+                                self.required_imports.add('False_')
+                                return 'False_()'
+                            if c == 'True' or c == 'True_()':
+                                continue
+                            filtered.append(c)
+                        if not filtered:
+                            self.required_imports.add('True_')
+                            return 'True_()'
+                        if len(filtered) == 1:
+                            return filtered[0]
+                        return ' & '.join(f'({c})' for c in filtered)
+                    return result_expr
+                return None
+
+        # No return statement found
+        return None
+
+    def _try_evaluate_if_test_constant(self, test: Dict[str, Any], var_expressions: Dict[str, str]) -> Optional[bool]:
+        """Try to evaluate an if test as a constant boolean.
+
+        Returns True if test is always true, False if always false, None if it depends on runtime state.
+        """
+        test_type = test.get('type', '')
+
+        if test_type == 'constant':
+            return bool(test.get('value'))
+
+        if test_type == 'name':
+            name = test.get('name', '')
+            if name in var_expressions:
+                # Try to evaluate the variable's value as a constant
+                try:
+                    val = eval(var_expressions[name])
+                    return bool(val)
+                except:
+                    pass
+            return None
+
+        if test_type == 'and':
+            conditions = test.get('conditions', [])
+            all_true = True
+            for cond in conditions:
+                result = self._try_evaluate_if_test_constant(cond, var_expressions)
+                if result is False:
+                    return False  # Short-circuit: any False means and is False
+                if result is None:
+                    all_true = False  # Can't determine this condition
+            return True if all_true else None
+
+        if test_type == 'or':
+            conditions = test.get('conditions', [])
+            all_false = True
+            for cond in conditions:
+                result = self._try_evaluate_if_test_constant(cond, var_expressions)
+                if result is True:
+                    return True  # Short-circuit: any True means or is True
+                if result is None:
+                    all_false = False  # Can't determine this condition
+            return False if all_false else None
+
+        if test_type == 'not':
+            inner = self._try_evaluate_if_test_constant(test.get('condition', {}), var_expressions)
+            if inner is None:
+                return None
+            return not inner
+
+        if test_type == 'compare':
+            left = self._try_eval_constant(test.get('left', {}), var_expressions)
+            right = self._try_eval_constant(test.get('right', {}), var_expressions)
+            op = test.get('op', '')
+            if left is None or right is None:
+                return None
+            try:
+                if op == '==':
+                    return left == right
+                elif op == '!=':
+                    return left != right
+                elif op == '<':
+                    return left < right
+                elif op == '<=':
+                    return left <= right
+                elif op == '>':
+                    return left > right
+                elif op == '>=':
+                    return left >= right
+            except:
+                pass
+            return None
+
+        # Types that depend on runtime state
+        if test_type in ('item_check', 'state_method', 'count_check', 'group_check'):
+            return None
+
+        return None
+
+    def _try_eval_constant(self, expr: Dict[str, Any], var_expressions: Dict[str, str]) -> Optional[Any]:
+        """Try to evaluate an expression to a Python value at codegen time.
+
+        Returns the evaluated value, or None if the expression contains runtime dependencies.
+        This is used for compile-time evaluation of constant expressions like math.sqrt(x**2 + z**2).
+        """
+        if not isinstance(expr, dict):
+            return expr
+
+        expr_type = expr.get('type', '')
+
+        if expr_type == 'constant':
+            return expr.get('value')
+
+        if expr_type == 'name':
+            name = expr.get('name', '')
+            if name in var_expressions:
+                try:
+                    return eval(var_expressions[name])
+                except:
+                    pass
+            # Also check settings for name lookups (for setting names like 'swim_rule')
+            if name in self.settings:
+                return self.settings[name]
+            return None
+
+        if expr_type == 'binary_op':
+            left = self._try_eval_constant(expr.get('left', {}), var_expressions)
+            right = self._try_eval_constant(expr.get('right', {}), var_expressions)
+            if left is None or right is None:
+                return None
+            op = expr.get('op', '')
+            try:
+                if op == '+':
+                    return left + right
+                elif op == '-':
+                    return left - right
+                elif op == '*':
+                    return left * right
+                elif op == '/':
+                    return left / right
+                elif op == '//':
+                    return left // right
+                elif op == '%':
+                    return left % right
+                elif op == '**':
+                    return left ** right
+            except:
+                pass
+            return None
+
+        if expr_type == 'negate':
+            operand = self._try_eval_constant(expr.get('operand', {}), var_expressions)
+            if operand is not None:
+                return -operand
+            return None
+
+        if expr_type == 'subscript':
+            value = self._try_eval_constant(expr.get('value', {}), var_expressions)
+            index = self._try_eval_constant(expr.get('index', {}), var_expressions)
+            if value is not None and index is not None:
+                try:
+                    return value[index]
+                except:
+                    pass
+            return None
+
+        if expr_type == 'setting_value':
+            setting_name = expr.get('setting', '')
+            if setting_name in self.settings:
+                return self.settings[setting_name]
+            return 0
+
+        # For item_check, state_method, etc. - these are runtime dependent
+        return None
+
+    def _expr_to_rule_builder(self, expr: Dict[str, Any], var_expressions: Dict[str, str]) -> Optional[str]:
+        """Convert an AST expression to a Rule Builder expression string.
+
+        Returns None if the expression cannot be converted.
+        """
+        if not isinstance(expr, dict):
+            return repr(expr)
+
+        expr_type = expr.get('type', '')
+
+        if expr_type == 'constant':
+            value = expr.get('value')
+            return repr(value)
+
+        if expr_type == 'name':
+            name = expr.get('name', '')
+            if name in var_expressions:
+                return var_expressions[name]
+            return None
+
+        if expr_type == 'state_method':
+            method = expr.get('method', '')
+            args = expr.get('args', [])
+
+            if method == 'count' and len(args) == 1:
+                item_arg = args[0]
+                if item_arg.get('type') == 'constant':
+                    item_name = item_arg.get('value', '')
+                    self.required_imports.add('CountItem')
+                    return f'CountItem("{item_name}")'
+            # Unsupported state_method
+            return None
+
+        if expr_type == 'binary_op':
+            left = expr.get('left', {})
+            op = expr.get('op', '')
+            right = expr.get('right', {})
+
+            left_expr = self._expr_to_rule_builder(left, var_expressions)
+            right_expr = self._expr_to_rule_builder(right, var_expressions)
+
+            if left_expr is None or right_expr is None:
+                return None
+
+            self.required_imports.add('Arithmetic')
+            return f'Arithmetic({left_expr}, "{op}", {right_expr})'
+
+        # Handle item_check - convert to Has()
+        if expr_type == 'item_check':
+            item = expr.get('item', '')
+            count = expr.get('count')
+            item_escaped = self._escape_string(item, '"')
+            self.required_imports.add('Has')
+
+            if count is not None:
+                # Handle count which could be a dict (expression) or a value
+                if isinstance(count, dict):
+                    count_expr = self._expr_to_rule_builder(count, var_expressions)
+                    if count_expr is None:
+                        return None
+                    return f'Has("{item_escaped}", {count_expr})'
+                else:
+                    return f'Has("{item_escaped}", {count})'
+            else:
+                return f'Has("{item_escaped}")'
+
+        # Handle conditional - convert to Conditional()
+        if expr_type == 'conditional':
+            test = expr.get('test', {})
+            if_true = expr.get('if_true', {})
+            if_false = expr.get('if_false', {})
+
+            test_expr = self._expr_to_rule_builder(test, var_expressions)
+            true_expr = self._expr_to_rule_builder(if_true, var_expressions)
+            false_expr = self._expr_to_rule_builder(if_false, var_expressions)
+
+            if test_expr is None or true_expr is None or false_expr is None:
+                return None
+
+            self.required_imports.add('Conditional')
+            return f'Conditional(test={test_expr}, if_true={true_expr}, if_false={false_expr})'
+
+        # Handle max - convert to MaxValue()
+        if expr_type == 'max':
+            args = expr.get('args', [])
+            if not args:
+                return '0'
+
+            arg_exprs = []
+            for arg in args:
+                arg_expr = self._expr_to_rule_builder(arg, var_expressions)
+                if arg_expr is None:
+                    return None
+                arg_exprs.append(arg_expr)
+
+            # Build nested MaxValue calls for multiple args
+            self.required_imports.add('MaxValue')
+            if len(arg_exprs) == 1:
+                return arg_exprs[0]
+            elif len(arg_exprs) == 2:
+                return f'MaxValue({arg_exprs[0]}, {arg_exprs[1]})'
+            else:
+                # Nest MaxValue calls: MaxValue(MaxValue(a, b), c)
+                result = f'MaxValue({arg_exprs[0]}, {arg_exprs[1]})'
+                for i in range(2, len(arg_exprs)):
+                    result = f'MaxValue({result}, {arg_exprs[i]})'
+                return result
+
+        # Handle compare - convert to Compare()
+        if expr_type == 'compare':
+            left = expr.get('left', {})
+            op = expr.get('op', '')
+            right = expr.get('right', {})
+
+            left_expr = self._expr_to_rule_builder(left, var_expressions)
+            right_expr = self._expr_to_rule_builder(right, var_expressions)
+
+            if left_expr is None or right_expr is None:
+                return None
+
+            self.required_imports.add('Compare')
+            return f'Compare({left_expr}, "{op}", {right_expr})'
+
+        # Handle and - convert to And() or & operator
+        if expr_type == 'and':
+            conditions = expr.get('conditions', [])
+            if not conditions:
+                self.required_imports.add('True_')
+                return 'True_()'
+
+            cond_exprs = []
+            for cond in conditions:
+                cond_expr = self._expr_to_rule_builder(cond, var_expressions)
+                if cond_expr is None:
+                    return None
+                # Short-circuit on False (False & X = False)
+                if cond_expr == 'False' or cond_expr == 'False_()':
+                    self.required_imports.add('False_')
+                    return 'False_()'
+                # Skip True conditions (True & X = X)
+                if cond_expr == 'True' or cond_expr == 'True_()':
+                    continue
+                cond_exprs.append(cond_expr)
+
+            if not cond_exprs:
+                # All conditions were True
+                self.required_imports.add('True_')
+                return 'True_()'
+
+            if len(cond_exprs) == 1:
+                return cond_exprs[0]
+
+            # Use & operator for combining
+            return ' & '.join(f'({c})' for c in cond_exprs)
+
+        # Handle or - convert to Or() or | operator
+        if expr_type == 'or':
+            conditions = expr.get('conditions', [])
+            if not conditions:
+                self.required_imports.add('False_')
+                return 'False_()'
+
+            cond_exprs = []
+            for cond in conditions:
+                cond_expr = self._expr_to_rule_builder(cond, var_expressions)
+                if cond_expr is None:
+                    return None
+                # Short-circuit on True (True | X = True)
+                if cond_expr == 'True' or cond_expr == 'True_()':
+                    self.required_imports.add('True_')
+                    return 'True_()'
+                # Skip False conditions (False | X = X)
+                if cond_expr == 'False' or cond_expr == 'False_()':
+                    continue
+                cond_exprs.append(cond_expr)
+
+            if not cond_exprs:
+                # All conditions were False
+                self.required_imports.add('False_')
+                return 'False_()'
+
+            if len(cond_exprs) == 1:
+                return cond_exprs[0]
+
+            # Use | operator for combining
+            return ' | '.join(f'({c})' for c in cond_exprs)
+
+        # Handle not - convert to Not()
+        if expr_type == 'not':
+            condition = expr.get('condition', {})
+            cond_expr = self._expr_to_rule_builder(condition, var_expressions)
+            if cond_expr is None:
+                return None
+
+            # Simplify Not(True) → False and Not(False) → True
+            if cond_expr == 'True' or cond_expr == 'True_()':
+                self.required_imports.add('False_')
+                return 'False_()'
+            if cond_expr == 'False' or cond_expr == 'False_()':
+                self.required_imports.add('True_')
+                return 'True_()'
+
+            self.required_imports.add('Not')
+            return f'Not({cond_expr})'
+
+        # Handle negate - convert to negative number
+        if expr_type == 'negate':
+            operand = expr.get('operand', {})
+            operand_expr = self._expr_to_rule_builder(operand, var_expressions)
+            if operand_expr is None:
+                return None
+
+            # If operand is a simple number, just negate it
+            try:
+                val = float(operand_expr)
+                return repr(-val)
+            except (ValueError, TypeError):
+                # Need to use arithmetic
+                self.required_imports.add('Arithmetic')
+                return f'Arithmetic(0, "-", {operand_expr})'
+
+        # Handle block - evaluate statements and return result
+        if expr_type == 'block':
+            statements = expr.get('statements', [])
+            # Process the block recursively, passing current scope for variable access
+            # Mark as nested so we don't accumulate conditions (only make sense at top level)
+            return self._generate_runtime_ast_block(statements, var_expressions.copy(), is_nested=True)
+
+        # Handle function_call - specifically for dict.get() and math.sqrt patterns
+        if expr_type == 'function_call':
+            function = expr.get('function', {})
+            args = expr.get('args', [])
+
+            # Check for attribute access pattern like constant_dict.get(key, default)
+            if function.get('type') == 'attribute':
+                attr = function.get('attr', '')
+                obj = function.get('object', {})
+
+                if attr == 'get' and obj.get('type') == 'constant' and len(args) >= 1:
+                    constant_dict = obj.get('value', {})
+                    # Get the key
+                    key_arg = args[0]
+                    if key_arg.get('type') == 'constant':
+                        key = key_arg.get('value')
+                        # Get the default value (if provided)
+                        default = None
+                        if len(args) >= 2 and args[1].get('type') == 'constant':
+                            default = args[1].get('value')
+                        # Lookup the value
+                        if isinstance(constant_dict, dict):
+                            result = constant_dict.get(key, default)
+                            return repr(result)
+
+                # Handle math.sqrt pattern
+                if attr == 'sqrt' and obj.get('type') == 'name' and obj.get('name') == 'math' and len(args) == 1:
+                    # Try to evaluate the argument as a constant
+                    val = self._try_eval_constant(args[0], var_expressions)
+                    if val is not None:
+                        import math
+                        result = math.sqrt(val)
+                        return repr(result)
+            return None
+
+        # Handle subscript - dict/array element access
+        if expr_type == 'subscript':
+            value = expr.get('value', {})
+            index = expr.get('index', {})
+
+            # First try to evaluate both as constants
+            val = self._try_eval_constant(value, var_expressions)
+            idx = self._try_eval_constant(index, var_expressions)
+
+            if val is not None and idx is not None:
+                try:
+                    if isinstance(val, (dict, list)):
+                        result = val[idx]
+                        return repr(result)
+                except:
+                    pass
+
+            # If constant evaluation failed, try to convert to Rule Builder expressions
+            value_expr = self._expr_to_rule_builder(value, var_expressions)
+            index_expr = self._expr_to_rule_builder(index, var_expressions)
+
+            if value_expr is None or index_expr is None:
+                return None
+
+            # Try to evaluate if both produce evaluable strings
+            try:
+                val = eval(value_expr)
+                idx = eval(index_expr)
+                if isinstance(val, (dict, list)):
+                    result = val[idx]
+                    return repr(result)
+            except:
+                pass
+
+            # Can't evaluate, return as expression
+            return f'{value_expr}[{index_expr}]'
+
+        # Handle setting_value - lookup game option values
+        if expr_type == 'setting_value':
+            setting_name = expr.get('setting', '')
+            if setting_name in self.settings:
+                return repr(self.settings[setting_name])
+            # Default to 0 if setting not found
+            return '0'
+
+        # Handle helper - helper function calls
+        if expr_type == 'helper':
+            name = expr.get('name', '')
+            args = expr.get('args', [])
+
+            # First try to evaluate the helper with constant args
+            arg_vals = []
+            all_constants = True
+            for arg in args:
+                val = self._try_eval_constant(arg, var_expressions)
+                if val is not None:
+                    arg_vals.append(val)
+                else:
+                    all_constants = False
+                    break
+
+            # Try to evaluate if this is a known helper with all constant args
+            # For is_radiated helper with coordinates
+            if all_constants and name == 'is_radiated' and len(arg_vals) == 3:
+                try:
+                    x = float(arg_vals[0])
+                    y = float(arg_vals[1])
+                    z = float(arg_vals[2])
+                    # Calculate is_radiated: aurora_dist < 950
+                    import math
+                    aurora_dist = math.sqrt((x - 1038.0) ** 2 + y ** 2 + (z - -163.1) ** 2)
+                    return repr(aurora_dist < 950)
+                except:
+                    pass
+
+            # For other helpers or non-constant args, generate a HelperCall
+            arg_exprs = []
+            for arg in args:
+                arg_expr = self._expr_to_rule_builder(arg, var_expressions)
+                if arg_expr is None:
+                    return None
+                arg_exprs.append(arg_expr)
+
+            self.required_imports.add('HelperCall')
+            helper_func_name = self.get_function_name(name)
+            args_str = ', '.join(arg_exprs)
+            return f'HelperCall("{helper_func_name}", [{args_str}])'
+
+        # Unsupported expression type
+        return None
 
     def _convert_ast_all_of(self, rule: Dict[str, Any]) -> str:
         """Convert an AST_all_of rule to Python Rule Builder expression.

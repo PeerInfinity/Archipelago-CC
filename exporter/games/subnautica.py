@@ -14,8 +14,8 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
     # Helpers that should always be exported (used in access rules)
     HELPERS_TO_EXPORT_WHITELIST: Set[str] = {'is_radiated'}
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Get settings data with swim_rule exported as integer.
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Get world data with swim_rule exported as integer.
 
         The SwimRule option class has computed properties that use the integer value:
         - base_depth: returns [200, 400, 600][value % 3]
@@ -25,7 +25,7 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
         expansion relies on swim_rule being an integer for arithmetic operations.
         We override the options export to use the integer value for swim_rule.
         """
-        settings_data = super().get_settings_data(world, multiworld, player)
+        settings_data = super().get_world_data(world, multiworld, player)
 
         # Ensure swim_rule is exported as integer value, not string key
         if 'options' in settings_data and 'swim_rule' in settings_data['options']:
@@ -142,13 +142,18 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
         self._expand_swim_rule_attrs(rule)
 
         # Handle location.can_reach() pattern (e.g., room.can_reach())
-        if rule.get('type') == 'function_call':
-            func = rule.get('function', {})
+        # Check both AST format (type: 'function_call') and Rule Builder format (rule: 'AST_function_call')
+        rule_type = rule.get('type') or rule.get('rule')
+        if rule_type in ('function_call', 'AST_function_call'):
+            # Function info may be in rule directly (AST) or in rule['args'] (Rule Builder)
+            func = rule.get('function') or rule.get('args', {}).get('function', {})
             if (func.get('type') == 'attribute' and
                 func.get('attr') == 'can_reach' and
                 func.get('object', {}).get('type') == 'name'):
                 var_name = func['object'].get('name')
-                if var_name == 'room':
+                # Handle both 'room' and 'location' variable names
+                # The analyzer may use 'location' for closure variables
+                if var_name in ('room', 'location'):
                     # Replace with the same access rule as "Aurora Drive Room - Upgrade Console"
                     return {
                         'type': 'helper',

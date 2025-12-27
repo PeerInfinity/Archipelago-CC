@@ -23,17 +23,21 @@ logger = logging.getLogger(__name__)
 class AHitGameExportHandler(GenericGameExportHandler):
     """A Hat in Time export handler with automatic helper export."""
 
+    # For now, treat all exits as bidirectional
+    # This setting is currently only used for region navigation in the frontend
+    ASSUME_BIDIRECTIONAL_EXITS = True
+
+    # Auto-discover region attributes
+    AUTO_DISCOVER_REGION_ATTRIBUTES = False
+
+    # Auto-discover location attributes
+    AUTO_DISCOVER_LOCATION_ATTRIBUTES = False
+
+    # Auto-discover world attributes
+    AUTO_DISCOVER_WORLD_ATTRIBUTES = False
+
     # Module containing helper functions for definition export
     HELPER_MODULES = ['worlds.ahit.Rules']
-
-    # Preserve these helpers as helper calls (don't inline their bodies)
-    # This is necessary for complex helpers that reference runtime objects
-    HELPERS_TO_PRESERVE: Set[str] = {
-        'can_clear_required_act',
-        'can_use_hat',
-        'get_hat_cost',
-        'has_relic_combo',
-    }
 
     def __init__(self, world=None):
         super().__init__(world=world)
@@ -127,35 +131,6 @@ class AHitGameExportHandler(GenericGameExportHandler):
         # Let the parent class handle recursive expansion and other processing
         return super().expand_rule(rule, _depth)
 
-    def get_settings_data(self, world, multiworld, player):
-        """Extract A Hat in Time settings."""
-        settings = super().get_settings_data(world, multiworld, player)
-
-        # Enable Pattern 4 accumulator for "Time Shard (N)" items -> "Shards" counter
-        settings['use_paren_number_accumulator'] = True
-
-        # Add AHIT-specific settings used by helpers
-        options_map = {
-            'HatItems': ('HatItems', bool, False),
-            'UmbrellaLogic': ('UmbrellaLogic', bool, False),
-            'ShuffleSubconPaintings': ('ShuffleSubconPaintings', bool, False),
-            'LogicDifficulty': ('LogicDifficulty', int, -1),
-            'NoPaintingSkips': ('NoPaintingSkips', bool, False),
-            'ShuffleAlpineZiplines': ('ShuffleAlpineZiplines', bool, False),
-        }
-
-        for setting_key, (option_name, converter, default) in options_map.items():
-            try:
-                if hasattr(world, 'options') and hasattr(world.options, option_name):
-                    settings[setting_key] = converter(getattr(world.options, option_name).value)
-                else:
-                    settings[setting_key] = default
-            except Exception as e:
-                logger.error(f"Error extracting {option_name} option: {e}")
-                settings[setting_key] = default
-
-        return settings
-
     def get_chapter_costs(self, world):
         """Extract A Hat in Time chapter costs for telescope access rules."""
         try:
@@ -217,23 +192,20 @@ class AHitGameExportHandler(GenericGameExportHandler):
 
     def get_game_info(self, world):
         """Get A Hat in Time specific game information."""
+        # Get base game info (includes name, accumulator_rules, prog_items_init)
+        game_info = super().get_game_info(world)
+
         try:
-            return {
-                "name": "A Hat in Time",
-                "rule_format": {"version": "1.0"},
-                "chapter_costs": self.get_chapter_costs(world),
-                "hat_info": self.get_hat_costs(world),
-                "relic_groups": self.get_relic_groups(world)
-            }
+            game_info["chapter_costs"] = self.get_chapter_costs(world)
+            game_info["hat_info"] = self.get_hat_costs(world)
+            game_info["relic_groups"] = self.get_relic_groups(world)
         except Exception as e:
             logger.error(f"Error getting A Hat in Time game info: {e}")
-            return {
-                "name": "A Hat in Time",
-                "rule_format": {"version": "1.0"},
-                "chapter_costs": {},
-                "hat_info": {},
-                "relic_groups": {}
-            }
+            game_info["chapter_costs"] = {}
+            game_info["hat_info"] = {}
+            game_info["relic_groups"] = {}
+
+        return game_info
 
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """Return A Hat in Time item data with classifications."""
