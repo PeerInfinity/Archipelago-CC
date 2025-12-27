@@ -746,19 +746,18 @@ class BaseGameExportHandler:
                     option = getattr(world.options, option_name)
                     # Check if it's an Option object with a value attribute
                     if hasattr(option, 'value'):
-                        # For Choice options (which have name_lookup mapping values to string keys),
-                        # use the string key since helpers often use dict subscript with string
-                        # keys like 'easy', 'normal', 'hard'. For other options (Range, etc.),
-                        # use raw value since they don't have named options.
-                        # Note: dict/list values are unhashable so we catch TypeError.
-                        try:
-                            use_string_key = hasattr(option, 'name_lookup') and option.value in option.name_lookup
-                        except TypeError:
-                            use_string_key = False
-                        if use_string_key:
-                            value = option.current_key
-                        else:
-                            value = option.value
+                        # Export option values as their native types for proper JavaScript evaluation:
+                        # - Toggle options: export as booleans (true/false)
+                        # - Choice/Range options: export as integers for proper ordered comparisons
+                        #
+                        # Previously, Choice options used string keys (e.g., "off", "medium") which
+                        # broke ordered comparisons in JavaScript (e.g., "off" < "medium" is wrong).
+                        # Now we export numeric values consistently with how Python evaluates them.
+                        from Options import Toggle
+                        value = option.value
+                        # Convert Toggle int values (0/1) to actual booleans
+                        if isinstance(option, Toggle):
+                            value = bool(value)
                         # Only export simple types (int, bool, str, list, dict)
                         if isinstance(value, (int, bool, str, list, dict)):
                             options_dict[option_name] = value
