@@ -16,10 +16,10 @@ class TWWGameExportHandler(GenericGameExportHandler):
     # rule analysis and no longer need to be whitelisted explicitly.
 
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract The Wind Waker settings including logic configuration values."""
-        # Get base settings
-        settings = super().get_settings_data(world, multiworld, player)
+        # Get base world data
+        settings = super().get_world_data(world, multiworld, player)
 
         # Add TWW-specific logic values that are used in state_method calls
         # These are calculated during world initialization and stored as world attributes
