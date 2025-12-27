@@ -19,7 +19,7 @@
   },
   "A Link to the Past": {
     "exporter_path": "exporter/games/alttp.py",
-    "exporter_size": 12381,
+    "exporter_size": 6006,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
