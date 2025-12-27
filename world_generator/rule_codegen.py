@@ -4115,6 +4115,7 @@ class HelperCodeGenerator:
             'placement_lookup': self._expr_placement_lookup,
             'f_string': self._expr_f_string,
             'formatted_value': self._expr_formatted_value,
+            'generator_expression': self._expr_generator_expression,
         }
 
         handler = handlers.get(expr_type)
@@ -4191,11 +4192,17 @@ class HelperCodeGenerator:
         # If the setting was captured during export, use its value
         if setting in self.settings:
             value = self.settings[setting]
-            # Handle indexed access into list settings (e.g., required_medallions[0])
-            if 'index' in expr and isinstance(value, list):
+            # Handle indexed access into settings
+            if 'index' in expr:
                 index = expr['index']
-                if 0 <= index < len(value):
-                    value = value[index]
+                # Handle list indexing (e.g., required_medallions[0])
+                if isinstance(value, list):
+                    if isinstance(index, int) and 0 <= index < len(value):
+                        value = value[index]
+                # Handle dict key access (e.g., sprite_data["Turtle Zone 1"])
+                elif isinstance(value, dict):
+                    if index in value:
+                        value = value[index]
             if isinstance(value, bool):
                 return 'True' if value else 'False'
             elif isinstance(value, str):
@@ -4206,7 +4213,7 @@ class HelperCodeGenerator:
                     return 'False'
                 return repr(value)
             else:
-                return str(value)
+                return repr(value)
         # If not found in settings, default to False for safety
         # This prevents inaccessible regions from being created with always-True rules
         return 'False'
@@ -4645,6 +4652,7 @@ class HelperCodeGenerator:
 
         For variable references (name type), returns the variable name.
         For constants, returns repr() of the value.
+        For other expression types (binary_op, state_method, etc.), generates the expression.
         """
         if isinstance(arg, dict):
             arg_type = arg.get('type', '')
@@ -4658,6 +4666,9 @@ class HelperCodeGenerator:
             if arg_type == 'value':
                 value = arg.get('value', default)
                 return repr(value)
+            # Handle other expression types (binary_op, state_method, helper, etc.)
+            if arg_type:
+                return self._generate_expression(arg)
         # Raw value
         return repr(arg) if arg is not None else repr(default)
 
@@ -4810,6 +4821,14 @@ class HelperCodeGenerator:
             obj = func.get('object', {})
             if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'math':
                 self.uses_math = True
+
+            # Special handling for calling .count() on a generator expression
+            # Generator objects don't have .count(), need to wrap in tuple()
+            if (isinstance(obj, dict) and obj.get('type') == 'generator_expression' and
+                    func.get('attr') == 'count'):
+                gen_code = self._generate_expression(obj)
+                arg_exprs = [self._generate_expression(a) for a in args]
+                return f"tuple({gen_code}).count({', '.join(arg_exprs)})"
 
         func_code = self._generate_expression(func)
         arg_exprs = [self._generate_expression(a) for a in args]
@@ -5110,3 +5129,33 @@ class HelperCodeGenerator:
         """
         value = expr.get('value', {})
         return self._generate_expression(value)
+
+    def _expr_generator_expression(self, expr: Dict[str, Any]) -> str:
+        """Generate a Python generator expression.
+
+        Generator expressions are used for things like:
+        (x for x in iterable if condition)
+        """
+        element = self._generate_expression(expr.get('element', {}))
+        comprehension = expr.get('comprehension', {})
+
+        # Get the loop variable (target)
+        target = comprehension.get('target', {})
+        if isinstance(target, dict) and target.get('type') == 'name':
+            target_name = target.get('name', '_')
+        else:
+            target_name = self._generate_expression(target)
+
+        # Get the iterator
+        iterator = self._generate_expression(comprehension.get('iterator', {}))
+
+        # Build the generator expression
+        result = f"({element} for {target_name} in {iterator})"
+
+        # Handle optional if condition
+        condition = comprehension.get('condition')
+        if condition:
+            cond_expr = self._generate_expression(condition)
+            result = f"({element} for {target_name} in {iterator} if {cond_expr})"
+
+        return result
