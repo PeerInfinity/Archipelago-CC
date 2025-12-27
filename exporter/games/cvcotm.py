@@ -39,7 +39,7 @@ class CvCotMGameExportHandler(GenericGameExportHandler):
 
         return item_data
 
-    def expand_helper(self, helper_name: str):
+    def expand_helper(self, helper_name: str, args=None):
         """Expand CvCotM-specific helper functions."""
         # For now, preserve helper nodes as-is
         return None

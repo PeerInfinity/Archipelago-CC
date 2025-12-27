@@ -24032,21 +24032,9 @@
                   }
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "River Coin"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Sand Coin"
-                      }
-                    }
-                  ]
+                  "rule": "hard_boss_logic",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -30305,11 +30293,9 @@
       "Steel Armor"
     ]
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Final Fantasy Mystic Quest",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "items",
         "available_companions": 4,
@@ -30681,41 +30667,62 @@
           "display_name": "Tweak Frustrating Dungeons"
         }
       },
+      "world_description": "Final Fantasy: Mystic Quest is a simple, humorous RPG for the Super Nintendo. You travel across four continents,\nlinked in the middle of the world by the Focus Tower, which has been locked by four magical coins. Make your way to\nthe bottom of the Focus Tower, then straight up through the top!",
+      "web": {
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to playing Final Fantasy Mystic Quest with Archipelago.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Alchav"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to playing Final Fantasy Mystic Quest with Archipelago.",
+            "language": "Fran\u00e7ais",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "Artea"
+            ]
+          }
+        ]
+      },
       "world_directory": "ffmq"
     }
   },
-  "world_attributes": {},
-  "game_info": {
+  "exporter": {
     "1": {
-      "name": "Final Fantasy Mystic Quest",
       "rule_format": {
         "version": "1.0"
       },
-      "web_theme": "grass",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to playing Final Fantasy Mystic Quest with Archipelago.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Alchav"
-          ]
-        },
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to playing Final Fantasy Mystic Quest with Archipelago.",
-          "language": "Fran\u00e7ais",
-          "file_name": "setup_fr.md",
-          "link": "setup/fr",
-          "authors": [
-            "Artea"
-          ]
-        }
-      ],
-      "world_description": "Final Fantasy: Mystic Quest is a simple, humorous RPG for the Super Nintendo. You travel across four continents,\nlinked in the middle of the world by the Focus Tower, which has been locked by four magical coins. Make your way to\nthe bottom of the Focus Tower, then straight up through the top!"
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
   },
-  "helpers": {}
+  "game_info": {
+    "1": {}
+  },
+  "helpers": {
+    "1": {
+      "hard_boss_logic": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "River Coin"
+          },
+          {
+            "type": "item_check",
+            "item": "Sand Coin"
+          }
+        ]
+      }
+    }
+  }
 }

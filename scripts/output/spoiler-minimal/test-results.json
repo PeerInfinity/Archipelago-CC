@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-27T05:56:40.115748",
-    "last_updated": "2025-12-27T05:56:40.115753",
+    "last_updated": "2025-12-27T18:13:57.925405",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1370,47 +1370,35 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "a6c955c198dfca944b1c0baffda065f359aadf8a7a7db76bc17ffe5f54311b86",
-          "new_sphere_log_hash": "d8a256813915f623031bc028c84d8aae8f14eb24645bc4997d98037c6d34c962",
-          "original_rules_hash": "a6c955c198dfca944b1c0baffda065f359aadf8a7a7db76bc17ffe5f54311b86",
-          "original_sphere_log_hash": "d8a256813915f623031bc028c84d8aae8f14eb24645bc4997d98037c6d34c962",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-27T05:55:23.853527"
-        }
-      },
       "game_name_from_filename": "ffmq",
       "game_name_from_yaml": "Final Fantasy Mystic Quest",
       "generation": {
-        "error_count": 2,
+        "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.0,
+        "processing_time_seconds": 8.78,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/ffmq/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 1089653,
+        "size_bytes": 1090079,
         "size_mb": 1.04
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 11.77,
-        "return_code": 1,
-        "sphere_reached": 4.1,
-        "success": false,
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 14.73,
+        "return_code": 0,
+        "sphere_reached": 18.2,
+        "success": true,
         "total_spheres": 18.2,
         "warning_count": 0
       },
       "template_filename": "Final Fantasy Mystic Quest.yaml",
-      "timestamp": "2025-12-27T05:54:16.784710",
+      "timestamp": "2025-12-27T18:13:34.004389",
       "world_info": {
         "exporter_path": "exporter/games/ffmq.py",
         "exporter_size": 7625,
