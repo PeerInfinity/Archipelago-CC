@@ -4643,28 +4643,10 @@
             "name": "Repair Aurora Drive",
             "id": null,
             "access_rule": {
-              "rule": "can_access_location",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": {
-                      "can_slip_through": false,
-                      "name": "Aurora Drive Room - Upgrade Console",
-                      "need_laser_cutter": false,
-                      "need_propulsion_cannon": true,
-                      "position": {
-                        "x": 872.5,
-                        "y": 2.7,
-                        "z": -0.7
-                      }
-                    }
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Aurora Drive Room - Upgrade Console"
+              }
             },
             "item": {
               "name": "Repair Aurora Drive",
@@ -6091,6 +6073,7 @@
           "display_name": "Swim Rule"
         }
       },
+      "creatures_to_scan": [],
       "world_description": "Subnautica is an undersea exploration game. Stranded on an alien world, you become infected by\nan unknown bacteria. The planet's automatic quarantine will shoot you down if you try to leave.\nYou must find a cure for yourself, build an escape rocket, and leave the planet.",
       "slot_data": {
         "goal": "launch",

@@ -810,7 +810,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Ninja Village"
       },
       "Ninja Village - Nest": {
         "name": "Ninja Village - Nest",
@@ -875,7 +876,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Ninja Village"
       },
       "Autumn Hills - Left": {
         "name": "Autumn Hills - Left",
@@ -895,7 +897,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Autumn Hills"
       },
       "Autumn Hills - Right": {
         "name": "Autumn Hills - Right",
@@ -915,7 +918,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Autumn Hills"
       },
       "Autumn Hills - Bottom": {
         "name": "Autumn Hills - Bottom",
@@ -935,7 +939,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Autumn Hills"
       },
       "Autumn Hills - Portal": {
         "name": "Autumn Hills - Portal",
@@ -983,7 +988,8 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "parent": "Autumn Hills"
       },
       "Autumn Hills - Climbing Claws Shop": {
         "name": "Autumn Hills - Climbing Claws Shop",
@@ -1052,7 +1058,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Autumn Hills"
       },
       "Autumn Hills - Hope Path Shop": {
         "name": "Autumn Hills - Hope Path Shop",
@@ -1152,7 +1159,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Autumn Hills"
       },
       "Autumn Hills - Dimension Climb Shop": {
         "name": "Autumn Hills - Dimension Climb Shop",
@@ -1192,7 +1200,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Autumn Hills"
       },
       "Autumn Hills - Leaf Golem Shop": {
         "name": "Autumn Hills - Leaf Golem Shop",
@@ -1227,7 +1236,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Autumn Hills"
       },
       "Autumn Hills - Hope Latch Checkpoint": {
         "name": "Autumn Hills - Hope Latch Checkpoint",
@@ -1285,7 +1295,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Autumn Hills"
       },
       "Autumn Hills - Key of Hope Checkpoint": {
         "name": "Autumn Hills - Key of Hope Checkpoint",
@@ -1320,7 +1331,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Autumn Hills"
       },
       "Autumn Hills - Lakeside Checkpoint": {
         "name": "Autumn Hills - Lakeside Checkpoint",
@@ -1340,7 +1352,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Autumn Hills"
       },
       "Autumn Hills - Double Swing Checkpoint": {
         "name": "Autumn Hills - Double Swing Checkpoint",
@@ -1395,7 +1408,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Autumn Hills"
       },
       "Autumn Hills - Spike Ball Swing Checkpoint": {
         "name": "Autumn Hills - Spike Ball Swing Checkpoint",
@@ -1458,7 +1472,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Autumn Hills"
       },
       "Forlorn Temple - Left": {
         "name": "Forlorn Temple - Left",
@@ -1478,7 +1493,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Forlorn Temple"
       },
       "Forlorn Temple - Right": {
         "name": "Forlorn Temple - Right",
@@ -1498,7 +1514,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Forlorn Temple"
       },
       "Forlorn Temple - Bottom": {
         "name": "Forlorn Temple - Bottom",
@@ -1518,7 +1535,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Forlorn Temple"
       },
       "Forlorn Temple - Outside Shop": {
         "name": "Forlorn Temple - Outside Shop",
@@ -1571,7 +1589,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Forlorn Temple"
       },
       "Forlorn Temple - Entrance Shop": {
         "name": "Forlorn Temple - Entrance Shop",
@@ -1664,7 +1683,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Forlorn Temple"
       },
       "Forlorn Temple - Climb Shop": {
         "name": "Forlorn Temple - Climb Shop",
@@ -1684,7 +1704,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Forlorn Temple"
       },
       "Forlorn Temple - Rocket Sunset Shop": {
         "name": "Forlorn Temple - Rocket Sunset Shop",
@@ -1765,7 +1786,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Forlorn Temple"
       },
       "Forlorn Temple - Descent Shop": {
         "name": "Forlorn Temple - Descent Shop",
@@ -1785,7 +1807,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Forlorn Temple"
       },
       "Forlorn Temple - Saw Gauntlet Shop": {
         "name": "Forlorn Temple - Saw Gauntlet Shop",
@@ -1811,7 +1834,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Forlorn Temple"
       },
       "Forlorn Temple - Demon King Shop": {
         "name": "Forlorn Temple - Demon King Shop",
@@ -1859,7 +1883,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Forlorn Temple"
       },
       "Forlorn Temple - Sunny Day Checkpoint": {
         "name": "Forlorn Temple - Sunny Day Checkpoint",
@@ -1885,7 +1910,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Forlorn Temple"
       },
       "Forlorn Temple - Rocket Maze Checkpoint": {
         "name": "Forlorn Temple - Rocket Maze Checkpoint",
@@ -1926,7 +1952,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Forlorn Temple"
       },
       "Catacombs - Top Left": {
         "name": "Catacombs - Top Left",
@@ -1961,7 +1988,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Catacombs"
       },
       "Catacombs - Bottom Left": {
         "name": "Catacombs - Bottom Left",
@@ -1988,7 +2016,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Catacombs"
       },
       "Catacombs - Bottom": {
         "name": "Catacombs - Bottom",
@@ -2008,7 +2037,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Catacombs"
       },
       "Catacombs - Right": {
         "name": "Catacombs - Right",
@@ -2028,7 +2058,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Catacombs"
       },
       "Catacombs - Triple Spike Crushers Shop": {
         "name": "Catacombs - Triple Spike Crushers Shop",
@@ -2063,7 +2094,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Catacombs"
       },
       "Catacombs - Ruxxtin Shop": {
         "name": "Catacombs - Ruxxtin Shop",
@@ -2112,7 +2144,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Catacombs"
       },
       "Catacombs - Death Trap Checkpoint": {
         "name": "Catacombs - Death Trap Checkpoint",
@@ -2139,7 +2172,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Catacombs"
       },
       "Catacombs - Crusher Gauntlet Checkpoint": {
         "name": "Catacombs - Crusher Gauntlet Checkpoint",
@@ -2152,7 +2186,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Catacombs"
       },
       "Catacombs - Dirty Pond Checkpoint": {
         "name": "Catacombs - Dirty Pond Checkpoint",
@@ -2215,7 +2250,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Catacombs"
       },
       "Bamboo Creek - Bottom Left": {
         "name": "Bamboo Creek - Bottom Left",
@@ -2235,7 +2271,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Bamboo Creek"
       },
       "Bamboo Creek - Top Left": {
         "name": "Bamboo Creek - Top Left",
@@ -2255,7 +2292,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Bamboo Creek"
       },
       "Bamboo Creek - Right": {
         "name": "Bamboo Creek - Right",
@@ -2275,7 +2313,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Bamboo Creek"
       },
       "Bamboo Creek - Spike Crushers Shop": {
         "name": "Bamboo Creek - Spike Crushers Shop",
@@ -2310,7 +2349,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Bamboo Creek"
       },
       "Bamboo Creek - Abandoned Shop": {
         "name": "Bamboo Creek - Abandoned Shop",
@@ -2330,7 +2370,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Bamboo Creek"
       },
       "Bamboo Creek - Time Loop Shop": {
         "name": "Bamboo Creek - Time Loop Shop",
@@ -2425,7 +2466,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Bamboo Creek"
       },
       "Bamboo Creek - Spike Ball Pits Checkpoint": {
         "name": "Bamboo Creek - Spike Ball Pits Checkpoint",
@@ -2456,7 +2498,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Bamboo Creek"
       },
       "Bamboo Creek - Spike Doors Checkpoint": {
         "name": "Bamboo Creek - Spike Doors Checkpoint",
@@ -2483,7 +2526,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Bamboo Creek"
       },
       "Howling Grotto - Left": {
         "name": "Howling Grotto - Left",
@@ -2503,7 +2547,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Howling Grotto"
       },
       "Howling Grotto - Top": {
         "name": "Howling Grotto - Top",
@@ -2523,7 +2568,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Howling Grotto"
       },
       "Howling Grotto - Right": {
         "name": "Howling Grotto - Right",
@@ -2543,7 +2589,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Howling Grotto"
       },
       "Howling Grotto - Bottom": {
         "name": "Howling Grotto - Bottom",
@@ -2563,7 +2610,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Howling Grotto"
       },
       "Howling Grotto - Portal": {
         "name": "Howling Grotto - Portal",
@@ -2601,7 +2649,8 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "parent": "Howling Grotto"
       },
       "Howling Grotto - Wingsuit Shop": {
         "name": "Howling Grotto - Wingsuit Shop",
@@ -2659,7 +2708,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Howling Grotto"
       },
       "Howling Grotto - Crushing Pits Shop": {
         "name": "Howling Grotto - Crushing Pits Shop",
@@ -2757,7 +2807,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Howling Grotto"
       },
       "Howling Grotto - Emerald Golem Shop": {
         "name": "Howling Grotto - Emerald Golem Shop",
@@ -2798,7 +2849,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Howling Grotto"
       },
       "Howling Grotto - Lost Woods Checkpoint": {
         "name": "Howling Grotto - Lost Woods Checkpoint",
@@ -2828,7 +2880,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Howling Grotto"
       },
       "Howling Grotto - Breezy Crushers Checkpoint": {
         "name": "Howling Grotto - Breezy Crushers Checkpoint",
@@ -2928,7 +2981,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Howling Grotto"
       },
       "Quillshroom Marsh - Top Left": {
         "name": "Quillshroom Marsh - Top Left",
@@ -2955,7 +3009,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Quillshroom Marsh"
       },
       "Quillshroom Marsh - Bottom Left": {
         "name": "Quillshroom Marsh - Bottom Left",
@@ -2975,7 +3030,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Quillshroom Marsh"
       },
       "Quillshroom Marsh - Top Right": {
         "name": "Quillshroom Marsh - Top Right",
@@ -2995,7 +3051,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Quillshroom Marsh"
       },
       "Quillshroom Marsh - Bottom Right": {
         "name": "Quillshroom Marsh - Bottom Right",
@@ -3015,7 +3072,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Quillshroom Marsh"
       },
       "Quillshroom Marsh - Spikey Window Shop": {
         "name": "Quillshroom Marsh - Spikey Window Shop",
@@ -3057,7 +3115,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Quillshroom Marsh"
       },
       "Quillshroom Marsh - Sand Trap Shop": {
         "name": "Quillshroom Marsh - Sand Trap Shop",
@@ -3106,7 +3165,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Quillshroom Marsh"
       },
       "Quillshroom Marsh - Queen of Quills Shop": {
         "name": "Quillshroom Marsh - Queen of Quills Shop",
@@ -3141,7 +3201,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Quillshroom Marsh"
       },
       "Quillshroom Marsh - Seashell Checkpoint": {
         "name": "Quillshroom Marsh - Seashell Checkpoint",
@@ -3176,7 +3237,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Quillshroom Marsh"
       },
       "Quillshroom Marsh - Quicksand Checkpoint": {
         "name": "Quillshroom Marsh - Quicksand Checkpoint",
@@ -3196,7 +3258,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Quillshroom Marsh"
       },
       "Quillshroom Marsh - Spike Wave Checkpoint": {
         "name": "Quillshroom Marsh - Spike Wave Checkpoint",
@@ -3231,7 +3294,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Quillshroom Marsh"
       },
       "Searing Crags - Left": {
         "name": "Searing Crags - Left",
@@ -3251,7 +3315,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Searing Crags"
       },
       "Searing Crags - Top": {
         "name": "Searing Crags - Top",
@@ -3271,7 +3336,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Searing Crags"
       },
       "Searing Crags - Bottom": {
         "name": "Searing Crags - Bottom",
@@ -3294,7 +3360,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Searing Crags"
       },
       "Searing Crags - Right": {
         "name": "Searing Crags - Right",
@@ -3328,7 +3395,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Searing Crags"
       },
       "Searing Crags - Portal": {
         "name": "Searing Crags - Portal",
@@ -3410,7 +3478,8 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "parent": "Searing Crags"
       },
       "Searing Crags - Rope Dart Shop": {
         "name": "Searing Crags - Rope Dart Shop",
@@ -3458,7 +3527,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Searing Crags"
       },
       "Searing Crags - Falling Rocks Shop": {
         "name": "Searing Crags - Falling Rocks Shop",
@@ -3481,7 +3551,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Searing Crags"
       },
       "Searing Crags - Searing Mega Shard Shop": {
         "name": "Searing Crags - Searing Mega Shard Shop",
@@ -3524,7 +3595,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Searing Crags"
       },
       "Searing Crags - Before Final Climb Shop": {
         "name": "Searing Crags - Before Final Climb Shop",
@@ -3554,7 +3626,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Searing Crags"
       },
       "Searing Crags - Colossuses Shop": {
         "name": "Searing Crags - Colossuses Shop",
@@ -3672,7 +3745,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Searing Crags"
       },
       "Searing Crags - Key of Strength Shop": {
         "name": "Searing Crags - Key of Strength Shop",
@@ -3700,7 +3774,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Searing Crags"
       },
       "Searing Crags - Triple Ball Spinner Checkpoint": {
         "name": "Searing Crags - Triple Ball Spinner Checkpoint",
@@ -3760,7 +3835,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Searing Crags"
       },
       "Searing Crags - Raining Rocks Checkpoint": {
         "name": "Searing Crags - Raining Rocks Checkpoint",
@@ -3795,7 +3871,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Searing Crags"
       },
       "Glacial Peak - Bottom": {
         "name": "Glacial Peak - Bottom",
@@ -3815,7 +3892,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Glacial Peak"
       },
       "Glacial Peak - Left": {
         "name": "Glacial Peak - Left",
@@ -3859,7 +3937,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Glacial Peak"
       },
       "Glacial Peak - Top": {
         "name": "Glacial Peak - Top",
@@ -3879,7 +3958,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Glacial Peak"
       },
       "Glacial Peak - Portal": {
         "name": "Glacial Peak - Portal",
@@ -3927,7 +4007,8 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "parent": "Glacial Peak"
       },
       "Glacial Peak - Ice Climbers' Shop": {
         "name": "Glacial Peak - Ice Climbers' Shop",
@@ -3965,7 +4046,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Glacial Peak"
       },
       "Glacial Peak - Glacial Mega Shard Shop": {
         "name": "Glacial Peak - Glacial Mega Shard Shop",
@@ -3985,7 +4067,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Glacial Peak"
       },
       "Glacial Peak - Tower Entrance Shop": {
         "name": "Glacial Peak - Tower Entrance Shop",
@@ -4015,7 +4098,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Glacial Peak"
       },
       "Glacial Peak - Projectile Spike Pit Checkpoint": {
         "name": "Glacial Peak - Projectile Spike Pit Checkpoint",
@@ -4099,7 +4183,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Glacial Peak"
       },
       "Glacial Peak - Air Swag Checkpoint": {
         "name": "Glacial Peak - Air Swag Checkpoint",
@@ -4134,7 +4219,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Glacial Peak"
       },
       "Glacial Peak - Free Climbing Checkpoint": {
         "name": "Glacial Peak - Free Climbing Checkpoint",
@@ -4154,7 +4240,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Glacial Peak"
       },
       "Tower of Time - Left": {
         "name": "Tower of Time - Left",
@@ -4170,7 +4257,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Tower of Time"
       },
       "Tower of Time - Final Chance Shop": {
         "name": "Tower of Time - Final Chance Shop",
@@ -4183,7 +4271,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Tower of Time"
       },
       "Tower of Time - Arcane Golem Shop": {
         "name": "Tower of Time - Arcane Golem Shop",
@@ -4196,7 +4285,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Tower of Time"
       },
       "Tower of Time - First Checkpoint": {
         "name": "Tower of Time - First Checkpoint",
@@ -4227,7 +4317,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Tower of Time"
       },
       "Tower of Time - Second Checkpoint": {
         "name": "Tower of Time - Second Checkpoint",
@@ -4286,7 +4377,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Tower of Time"
       },
       "Tower of Time - Third Checkpoint": {
         "name": "Tower of Time - Third Checkpoint",
@@ -4335,7 +4427,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Tower of Time"
       },
       "Tower of Time - Fourth Checkpoint": {
         "name": "Tower of Time - Fourth Checkpoint",
@@ -4376,7 +4469,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Tower of Time"
       },
       "Tower of Time - Fifth Checkpoint": {
         "name": "Tower of Time - Fifth Checkpoint",
@@ -4407,7 +4501,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Tower of Time"
       },
       "Tower of Time - Sixth Checkpoint": {
         "name": "Tower of Time - Sixth Checkpoint",
@@ -4420,7 +4515,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Tower of Time"
       },
       "Cloud Ruins - Left": {
         "name": "Cloud Ruins - Left",
@@ -4440,7 +4536,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Cloud Ruins"
       },
       "Cloud Ruins - Cloud Entrance Shop": {
         "name": "Cloud Ruins - Cloud Entrance Shop",
@@ -4463,7 +4560,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Cloud Ruins"
       },
       "Cloud Ruins - Pillar Glide Shop": {
         "name": "Cloud Ruins - Pillar Glide Shop",
@@ -4591,7 +4689,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Cloud Ruins"
       },
       "Cloud Ruins - Crushers' Descent Shop": {
         "name": "Cloud Ruins - Crushers' Descent Shop",
@@ -4611,7 +4710,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Cloud Ruins"
       },
       "Cloud Ruins - Seeing Spikes Shop": {
         "name": "Cloud Ruins - Seeing Spikes Shop",
@@ -4634,7 +4734,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Cloud Ruins"
       },
       "Cloud Ruins - Sliding Spikes Shop": {
         "name": "Cloud Ruins - Sliding Spikes Shop",
@@ -4670,7 +4771,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Cloud Ruins"
       },
       "Cloud Ruins - Final Flight Shop": {
         "name": "Cloud Ruins - Final Flight Shop",
@@ -4718,7 +4820,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Cloud Ruins"
       },
       "Cloud Ruins - Manfred's Shop": {
         "name": "Cloud Ruins - Manfred's Shop",
@@ -4782,7 +4885,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Cloud Ruins"
       },
       "Cloud Ruins - Spike Float Checkpoint": {
         "name": "Cloud Ruins - Spike Float Checkpoint",
@@ -4896,7 +5000,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Cloud Ruins"
       },
       "Cloud Ruins - Ghost Pit Checkpoint": {
         "name": "Cloud Ruins - Ghost Pit Checkpoint",
@@ -4937,7 +5042,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Cloud Ruins"
       },
       "Cloud Ruins - Toothbrush Alley Checkpoint": {
         "name": "Cloud Ruins - Toothbrush Alley Checkpoint",
@@ -4988,7 +5094,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Cloud Ruins"
       },
       "Cloud Ruins - Saw Pit Checkpoint": {
         "name": "Cloud Ruins - Saw Pit Checkpoint",
@@ -5036,7 +5143,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Cloud Ruins"
       },
       "Underworld - Left": {
         "name": "Underworld - Left",
@@ -5059,7 +5167,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Underworld"
       },
       "Underworld - Left Shop": {
         "name": "Underworld - Left Shop",
@@ -5100,7 +5209,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Underworld"
       },
       "Underworld - Fireball Wave Shop": {
         "name": "Underworld - Fireball Wave Shop",
@@ -5194,7 +5304,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Underworld"
       },
       "Underworld - Long Climb Shop": {
         "name": "Underworld - Long Climb Shop",
@@ -5299,7 +5410,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Underworld"
       },
       "Underworld - Barm'athaziel Shop": {
         "name": "Underworld - Barm'athaziel Shop",
@@ -5312,7 +5424,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Underworld"
       },
       "Underworld - Key of Chaos Shop": {
         "name": "Underworld - Key of Chaos Shop",
@@ -5332,7 +5445,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Underworld"
       },
       "Underworld - Hot Dip Checkpoint": {
         "name": "Underworld - Hot Dip Checkpoint",
@@ -5362,7 +5476,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Underworld"
       },
       "Underworld - Hot Tub Checkpoint": {
         "name": "Underworld - Hot Tub Checkpoint",
@@ -5430,7 +5545,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Underworld"
       },
       "Underworld - Lava Run Checkpoint": {
         "name": "Underworld - Lava Run Checkpoint",
@@ -5450,7 +5566,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Underworld"
       },
       "Dark Cave - Right": {
         "name": "Dark Cave - Right",
@@ -5483,7 +5600,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Dark Cave"
       },
       "Dark Cave - Left": {
         "name": "Dark Cave - Left",
@@ -5496,7 +5614,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Dark Cave"
       },
       "Riviere Turquoise - Right": {
         "name": "Riviere Turquoise - Right",
@@ -5509,7 +5628,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Riviere Turquoise"
       },
       "Riviere Turquoise - Portal": {
         "name": "Riviere Turquoise - Portal",
@@ -5544,7 +5664,8 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "parent": "Riviere Turquoise"
       },
       "Riviere Turquoise - Waterfall Shop": {
         "name": "Riviere Turquoise - Waterfall Shop",
@@ -5628,7 +5749,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Riviere Turquoise"
       },
       "Riviere Turquoise - Launch of Faith Shop": {
         "name": "Riviere Turquoise - Launch of Faith Shop",
@@ -5712,7 +5834,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Riviere Turquoise"
       },
       "Riviere Turquoise - Log Flume Shop": {
         "name": "Riviere Turquoise - Log Flume Shop",
@@ -5725,7 +5848,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Riviere Turquoise"
       },
       "Riviere Turquoise - Log Climb Shop": {
         "name": "Riviere Turquoise - Log Climb Shop",
@@ -5738,7 +5862,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Riviere Turquoise"
       },
       "Riviere Turquoise - Restock Shop": {
         "name": "Riviere Turquoise - Restock Shop",
@@ -5766,7 +5891,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Riviere Turquoise"
       },
       "Riviere Turquoise - Butterfly Matriarch Shop": {
         "name": "Riviere Turquoise - Butterfly Matriarch Shop",
@@ -5786,7 +5912,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Riviere Turquoise"
       },
       "Riviere Turquoise - Flower Flight Checkpoint": {
         "name": "Riviere Turquoise - Flower Flight Checkpoint",
@@ -5806,7 +5933,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Riviere Turquoise"
       },
       "Elemental Skylands - Air Shmup": {
         "name": "Elemental Skylands - Air Shmup",
@@ -5819,7 +5947,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Elemental Skylands"
       },
       "Elemental Skylands - Air Intro Shop": {
         "name": "Elemental Skylands - Air Intro Shop",
@@ -5845,7 +5974,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Elemental Skylands"
       },
       "Elemental Skylands - Air Seal Checkpoint": {
         "name": "Elemental Skylands - Air Seal Checkpoint",
@@ -5883,7 +6013,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Elemental Skylands"
       },
       "Elemental Skylands - Air Generator Shop": {
         "name": "Elemental Skylands - Air Generator Shop",
@@ -5896,7 +6027,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Elemental Skylands"
       },
       "Elemental Skylands - Earth Shmup": {
         "name": "Elemental Skylands - Earth Shmup",
@@ -5909,7 +6041,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Elemental Skylands"
       },
       "Elemental Skylands - Earth Intro Shop": {
         "name": "Elemental Skylands - Earth Intro Shop",
@@ -5922,7 +6055,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Elemental Skylands"
       },
       "Elemental Skylands - Earth Generator Shop": {
         "name": "Elemental Skylands - Earth Generator Shop",
@@ -5935,7 +6069,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Elemental Skylands"
       },
       "Elemental Skylands - Water Shmup": {
         "name": "Elemental Skylands - Water Shmup",
@@ -5948,7 +6083,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Elemental Skylands"
       },
       "Elemental Skylands - Water Intro Shop": {
         "name": "Elemental Skylands - Water Intro Shop",
@@ -5989,7 +6125,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Elemental Skylands"
       },
       "Elemental Skylands - Water Generator Shop": {
         "name": "Elemental Skylands - Water Generator Shop",
@@ -6002,7 +6139,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Elemental Skylands"
       },
       "Elemental Skylands - Fire Shmup": {
         "name": "Elemental Skylands - Fire Shmup",
@@ -6015,7 +6153,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Elemental Skylands"
       },
       "Elemental Skylands - Fire Intro Shop": {
         "name": "Elemental Skylands - Fire Intro Shop",
@@ -6073,7 +6212,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Elemental Skylands"
       },
       "Elemental Skylands - Fire Generator Shop": {
         "name": "Elemental Skylands - Fire Generator Shop",
@@ -6086,7 +6226,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Elemental Skylands"
       },
       "Elemental Skylands - Right": {
         "name": "Elemental Skylands - Right",
@@ -6117,7 +6258,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Elemental Skylands"
       },
       "Sunken Shrine - Left": {
         "name": "Sunken Shrine - Left",
@@ -6137,7 +6279,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Sunken Shrine"
       },
       "Sunken Shrine - Portal": {
         "name": "Sunken Shrine - Portal",
@@ -6227,7 +6370,8 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "parent": "Sunken Shrine"
       },
       "Sunken Shrine - Above Portal Shop": {
         "name": "Sunken Shrine - Above Portal Shop",
@@ -6247,7 +6391,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Sunken Shrine"
       },
       "Sunken Shrine - Lifeguard Shop": {
         "name": "Sunken Shrine - Lifeguard Shop",
@@ -6282,7 +6427,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Sunken Shrine"
       },
       "Sunken Shrine - Sun Path Shop": {
         "name": "Sunken Shrine - Sun Path Shop",
@@ -6302,7 +6448,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Sunken Shrine"
       },
       "Sunken Shrine - Tabi Gauntlet Shop": {
         "name": "Sunken Shrine - Tabi Gauntlet Shop",
@@ -6375,7 +6522,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Sunken Shrine"
       },
       "Sunken Shrine - Moon Path Shop": {
         "name": "Sunken Shrine - Moon Path Shop",
@@ -6398,7 +6546,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "parent": "Sunken Shrine"
       },
       "Sunken Shrine - Lightfoot Tabi Checkpoint": {
         "name": "Sunken Shrine - Lightfoot Tabi Checkpoint",
@@ -6426,7 +6575,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Sunken Shrine"
       },
       "Sunken Shrine - Sun Crest Checkpoint": {
         "name": "Sunken Shrine - Sun Crest Checkpoint",
@@ -6461,7 +6611,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Sunken Shrine"
       },
       "Sunken Shrine - Waterfall Paradise Checkpoint": {
         "name": "Sunken Shrine - Waterfall Paradise Checkpoint",
@@ -6502,7 +6653,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Sunken Shrine"
       },
       "Sunken Shrine - Moon Crest Checkpoint": {
         "name": "Sunken Shrine - Moon Crest Checkpoint",
@@ -6537,7 +6689,8 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "parent": "Sunken Shrine"
       }
     }
   },
@@ -7604,6 +7757,66 @@
           "display_name": "Include Traps"
         }
       },
+      "shop_prices": {
+        "Karuta Plates": 27,
+        "Serendipitous Bodies": 291,
+        "Path of Resilience": 149,
+        "Kusari Jacket": 357,
+        "Energy Shuriken": 92,
+        "Serendipitous Minds": 109,
+        "Prepared Mind": 345,
+        "Meditation": 147,
+        "Rejuvenative Spirit": 513,
+        "Centered Mind": 772,
+        "Strike of the Ninja": 67,
+        "Second Wind": 170,
+        "Currents Master": 506,
+        "Aerobatics Warrior": 381,
+        "Demon's Bane": 527,
+        "Devil's Due": 56,
+        "Time Sense": 142,
+        "Power Sense": 479,
+        "Focused Power Sense": 413
+      },
+      "figurine_prices": {
+        "Green Kappa Figurine": 236,
+        "Blue Kappa Figurine": 106,
+        "Ountarde Figurine": 264,
+        "Red Kappa Figurine": 348,
+        "Demon King Figurine": 1271,
+        "Quillshroom Figurine": 193,
+        "Jumping Quillshroom Figurine": 208,
+        "Scurubu Figurine": 108,
+        "Jumping Scurubu Figurine": 267,
+        "Wallaxer Figurine": 265,
+        "Barmath'azel Figurine": 714,
+        "Queen of Quills Figurine": 406,
+        "Demon Hive Figurine": 357
+      },
+      "starting_portals": [
+        "Autumn Hills Portal",
+        "Howling Grotto Portal",
+        "Glacial Peak Portal",
+        "Sunken Shrine Portal",
+        "Riviere Turquoise Portal",
+        "Searing Crags Portal"
+      ],
+      "filler": {
+        "Time Shard": 5,
+        "Time Shard (10)": 10,
+        "Time Shard (50)": 20,
+        "Time Shard (100)": 20,
+        "Time Shard (300)": 10,
+        "Time Shard (500)": 5
+      },
+      "plando_portals": [],
+      "portal_mapping": [],
+      "transitions": [],
+      "total_shards": 7600,
+      "total_seals": 0,
+      "required_seals": 0,
+      "created_seals": 0,
+      "reachable_locs": false,
       "world_description": "As a demon army besieges his village, a young ninja ventures through a cursed world, to deliver a scroll paramount\nto his clan\u2019s survival. What begins as a classic action platformer soon unravels into an expansive time-traveling\nadventure full of thrills, surprises, and humor.",
       "slot_data": {
         "shop": {

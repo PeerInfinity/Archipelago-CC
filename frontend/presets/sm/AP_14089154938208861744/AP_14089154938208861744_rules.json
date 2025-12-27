@@ -17859,6 +17859,1171 @@
           "display_name": "Varia Tweaks"
         }
       },
+      "locations": {
+        "Energy Tank, Gauntlet": "Energy Tank, Gauntlet",
+        "Bomb": "Bomb",
+        "Energy Tank, Terminator": "Energy Tank, Terminator",
+        "Reserve Tank, Brinstar": "Reserve Tank, Brinstar",
+        "Charge Beam": "Charge Beam",
+        "Morphing Ball": "Morphing Ball",
+        "Energy Tank, Brinstar Ceiling": "Energy Tank, Brinstar Ceiling",
+        "Energy Tank, Etecoons": "Energy Tank, Etecoons",
+        "Energy Tank, Waterway": "Energy Tank, Waterway",
+        "Energy Tank, Brinstar Gate": "Energy Tank, Brinstar Gate",
+        "X-Ray Scope": "X-Ray Scope",
+        "Spazer": "Spazer",
+        "Energy Tank, Kraid": "Energy Tank, Kraid",
+        "Kraid": "Kraid",
+        "Varia Suit": "Varia Suit",
+        "Ice Beam": "Ice Beam",
+        "Energy Tank, Crocomire": "Energy Tank, Crocomire",
+        "Hi-Jump Boots": "Hi-Jump Boots",
+        "Grapple Beam": "Grapple Beam",
+        "Reserve Tank, Norfair": "Reserve Tank, Norfair",
+        "Speed Booster": "Speed Booster",
+        "Wave Beam": "Wave Beam",
+        "Ridley": "Ridley",
+        "Energy Tank, Ridley": "Energy Tank, Ridley",
+        "Screw Attack": "Screw Attack",
+        "Energy Tank, Firefleas": "Energy Tank, Firefleas",
+        "Reserve Tank, Wrecked Ship": "Reserve Tank, Wrecked Ship",
+        "Energy Tank, Wrecked Ship": "Energy Tank, Wrecked Ship",
+        "Phantoon": "Phantoon",
+        "Right Super, Wrecked Ship": "Right Super, Wrecked Ship",
+        "Gravity Suit": "Gravity Suit",
+        "Energy Tank, Mama turtle": "Energy Tank, Mama turtle",
+        "Plasma Beam": "Plasma Beam",
+        "Reserve Tank, Maridia": "Reserve Tank, Maridia",
+        "Spring Ball": "Spring Ball",
+        "Energy Tank, Botwoon": "Energy Tank, Botwoon",
+        "Draygon": "Draygon",
+        "Space Jump": "Space Jump",
+        "Mother Brain": "Mother Brain",
+        "Spore Spawn": "Spore Spawn",
+        "Botwoon": "Botwoon",
+        "Crocomire": "Crocomire",
+        "Golden Torizo": "Golden Torizo",
+        "Power Bomb (Crateria surface)": "Power Bomb (Crateria surface)",
+        "Missile (outside Wrecked Ship bottom)": "Missile (outside Wrecked Ship bottom)",
+        "Missile (outside Wrecked Ship top)": "Missile (outside Wrecked Ship top)",
+        "Missile (outside Wrecked Ship middle)": "Missile (outside Wrecked Ship middle)",
+        "Missile (Crateria moat)": "Missile (Crateria moat)",
+        "Missile (Crateria bottom)": "Missile (Crateria bottom)",
+        "Missile (Crateria gauntlet right)": "Missile (Crateria gauntlet right)",
+        "Missile (Crateria gauntlet left)": "Missile (Crateria gauntlet left)",
+        "Super Missile (Crateria)": "Super Missile (Crateria)",
+        "Missile (Crateria middle)": "Missile (Crateria middle)",
+        "Power Bomb (green Brinstar bottom)": "Power Bomb (green Brinstar bottom)",
+        "Super Missile (pink Brinstar)": "Super Missile (pink Brinstar)",
+        "Missile (green Brinstar below super missile)": "Missile (green Brinstar below super missile)",
+        "Super Missile (green Brinstar top)": "Super Missile (green Brinstar top)",
+        "Missile (green Brinstar behind missile)": "Missile (green Brinstar behind missile)",
+        "Missile (green Brinstar behind reserve tank)": "Missile (green Brinstar behind reserve tank)",
+        "Missile (pink Brinstar top)": "Missile (pink Brinstar top)",
+        "Missile (pink Brinstar bottom)": "Missile (pink Brinstar bottom)",
+        "Power Bomb (pink Brinstar)": "Power Bomb (pink Brinstar)",
+        "Missile (green Brinstar pipe)": "Missile (green Brinstar pipe)",
+        "Power Bomb (blue Brinstar)": "Power Bomb (blue Brinstar)",
+        "Missile (blue Brinstar middle)": "Missile (blue Brinstar middle)",
+        "Super Missile (green Brinstar bottom)": "Super Missile (green Brinstar bottom)",
+        "Missile (blue Brinstar bottom)": "Missile (blue Brinstar bottom)",
+        "Missile (blue Brinstar top)": "Missile (blue Brinstar top)",
+        "Missile (blue Brinstar behind missile)": "Missile (blue Brinstar behind missile)",
+        "Power Bomb (red Brinstar sidehopper room)": "Power Bomb (red Brinstar sidehopper room)",
+        "Power Bomb (red Brinstar spike room)": "Power Bomb (red Brinstar spike room)",
+        "Missile (red Brinstar spike room)": "Missile (red Brinstar spike room)",
+        "Missile (Kraid)": "Missile (Kraid)",
+        "Missile (lava room)": "Missile (lava room)",
+        "Missile (below Ice Beam)": "Missile (below Ice Beam)",
+        "Missile (above Crocomire)": "Missile (above Crocomire)",
+        "Missile (Hi-Jump Boots)": "Missile (Hi-Jump Boots)",
+        "Energy Tank (Hi-Jump Boots)": "Energy Tank (Hi-Jump Boots)",
+        "Power Bomb (Crocomire)": "Power Bomb (Crocomire)",
+        "Missile (below Crocomire)": "Missile (below Crocomire)",
+        "Missile (Grapple Beam)": "Missile (Grapple Beam)",
+        "Missile (Norfair Reserve Tank)": "Missile (Norfair Reserve Tank)",
+        "Missile (bubble Norfair green door)": "Missile (bubble Norfair green door)",
+        "Missile (bubble Norfair)": "Missile (bubble Norfair)",
+        "Missile (Speed Booster)": "Missile (Speed Booster)",
+        "Missile (Wave Beam)": "Missile (Wave Beam)",
+        "Missile (Gold Torizo)": "Missile (Gold Torizo)",
+        "Super Missile (Gold Torizo)": "Super Missile (Gold Torizo)",
+        "Missile (Mickey Mouse room)": "Missile (Mickey Mouse room)",
+        "Missile (lower Norfair above fire flea room)": "Missile (lower Norfair above fire flea room)",
+        "Power Bomb (lower Norfair above fire flea room)": "Power Bomb (lower Norfair above fire flea room)",
+        "Power Bomb (Power Bombs of shame)": "Power Bomb (Power Bombs of shame)",
+        "Missile (lower Norfair near Wave Beam)": "Missile (lower Norfair near Wave Beam)",
+        "Missile (Wrecked Ship middle)": "Missile (Wrecked Ship middle)",
+        "Missile (Gravity Suit)": "Missile (Gravity Suit)",
+        "Missile (Wrecked Ship top)": "Missile (Wrecked Ship top)",
+        "Super Missile (Wrecked Ship left)": "Super Missile (Wrecked Ship left)",
+        "Missile (green Maridia shinespark)": "Missile (green Maridia shinespark)",
+        "Super Missile (green Maridia)": "Super Missile (green Maridia)",
+        "Missile (green Maridia tatori)": "Missile (green Maridia tatori)",
+        "Super Missile (yellow Maridia)": "Super Missile (yellow Maridia)",
+        "Missile (yellow Maridia super missile)": "Missile (yellow Maridia super missile)",
+        "Missile (yellow Maridia false wall)": "Missile (yellow Maridia false wall)",
+        "Missile (left Maridia sand pit room)": "Missile (left Maridia sand pit room)",
+        "Missile (right Maridia sand pit room)": "Missile (right Maridia sand pit room)",
+        "Power Bomb (right Maridia sand pit room)": "Power Bomb (right Maridia sand pit room)",
+        "Missile (pink Maridia)": "Missile (pink Maridia)",
+        "Super Missile (pink Maridia)": "Super Missile (pink Maridia)",
+        "Missile (Draygon)": "Missile (Draygon)"
+      },
+      "variaRando": {
+        "player": 1,
+        "optErrMsgs": [],
+        "seed": 1,
+        "maxDifficulty": 50,
+        "gravityBehaviour": "Balanced",
+        "energyQty": "vanilla",
+        "ctrlDict": {
+          "Jump": "A",
+          "Dash": "B",
+          "Shoot": "X",
+          "Item Cancel": "Y",
+          "Angle Down": "L",
+          "Angle Up": "R",
+          "Item Select": "Select"
+        },
+        "doors": [
+          {
+            "ID": "[Crateria] Lower Mushrooms Left -> [GreenPinkBrinstar] Green Brinstar Elevator",
+            "DoorPtr": 35874,
+            "RoomPtr": 39224,
+            "doorAsmPtr": 0,
+            "direction": 5,
+            "bitFlag": 0,
+            "cap": [
+              14,
+              6
+            ],
+            "screen": [
+              0,
+              0
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[GreenPinkBrinstar] Green Brinstar Elevator -> [Crateria] Lower Mushrooms Left",
+            "DoorPtr": 35838,
+            "RoomPtr": 39273,
+            "doorAsmPtr": 0,
+            "direction": 4,
+            "bitFlag": 0,
+            "cap": [
+              1,
+              6
+            ],
+            "screen": [
+              0,
+              0
+            ],
+            "distanceToSpawn": 32768,
+            "song": 9,
+            "songs": [
+              39290
+            ]
+          },
+          {
+            "ID": "[Crateria] Morph Ball Room Left -> [GreenPinkBrinstar] Green Hill Zone Top Right",
+            "DoorPtr": 36510,
+            "RoomPtr": 40530,
+            "doorAsmPtr": 0,
+            "direction": 5,
+            "bitFlag": 0,
+            "cap": [
+              30,
+              6
+            ],
+            "screen": [
+              1,
+              0
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[GreenPinkBrinstar] Green Hill Zone Top Right -> [Crateria] Morph Ball Room Left",
+            "DoorPtr": 36486,
+            "RoomPtr": 40607,
+            "doorAsmPtr": 0,
+            "direction": 4,
+            "bitFlag": 0,
+            "cap": [
+              1,
+              38
+            ],
+            "screen": [
+              0,
+              2
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[Crateria] Moat Right -> [WreckedShip] West Ocean Left",
+            "DoorPtr": 35562,
+            "RoomPtr": 37886,
+            "doorAsmPtr": 0,
+            "direction": 4,
+            "bitFlag": 0,
+            "cap": [
+              1,
+              70
+            ],
+            "screen": [
+              0,
+              4
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[WreckedShip] West Ocean Left -> [Crateria] Moat Right",
+            "DoorPtr": 35274,
+            "RoomPtr": 38399,
+            "doorAsmPtr": 0,
+            "direction": 5,
+            "bitFlag": 0,
+            "cap": [
+              30,
+              6
+            ],
+            "screen": [
+              1,
+              0
+            ],
+            "distanceToSpawn": 32768,
+            "song": 12,
+            "songs": [
+              38416
+            ]
+          },
+          {
+            "ID": "[Crateria] Keyhunter Room Bottom -> [RedBrinstar] Red Brinstar Elevator",
+            "DoorPtr": 35394,
+            "RoomPtr": 38442,
+            "doorAsmPtr": 0,
+            "direction": 6,
+            "bitFlag": 0,
+            "cap": [
+              6,
+              2
+            ],
+            "screen": [
+              0,
+              0
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[RedBrinstar] Red Brinstar Elevator -> [Crateria] Keyhunter Room Bottom",
+            "DoorPtr": 35574,
+            "RoomPtr": 38028,
+            "doorAsmPtr": 47601,
+            "direction": 7,
+            "bitFlag": 0,
+            "cap": [
+              22,
+              45
+            ],
+            "screen": [
+              1,
+              2
+            ],
+            "distanceToSpawn": 448,
+            "song": 12,
+            "songs": [
+              38045
+            ]
+          },
+          {
+            "ID": "[GreenPinkBrinstar] Noob Bridge Right -> [RedBrinstar] Red Tower Top Left",
+            "DoorPtr": 36618,
+            "RoomPtr": 41555,
+            "doorAsmPtr": 0,
+            "direction": 4,
+            "bitFlag": 0,
+            "cap": [
+              1,
+              70
+            ],
+            "screen": [
+              0,
+              4
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[RedBrinstar] Red Tower Top Left -> [GreenPinkBrinstar] Noob Bridge Right",
+            "DoorPtr": 36906,
+            "RoomPtr": 40890,
+            "doorAsmPtr": 0,
+            "direction": 5,
+            "bitFlag": 0,
+            "cap": [
+              94,
+              6
+            ],
+            "screen": [
+              5,
+              0
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[WreckedShip] Crab Maze Left -> [EastMaridia] Le Coude Right",
+            "DoorPtr": 35502,
+            "RoomPtr": 38312,
+            "doorAsmPtr": 0,
+            "direction": 5,
+            "bitFlag": 0,
+            "cap": [
+              14,
+              6
+            ],
+            "screen": [
+              0,
+              0
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[EastMaridia] Le Coude Right -> [WreckedShip] Crab Maze Left",
+            "DoorPtr": 35490,
+            "RoomPtr": 38269,
+            "doorAsmPtr": 0,
+            "direction": 4,
+            "bitFlag": 0,
+            "cap": [
+              1,
+              22
+            ],
+            "screen": [
+              0,
+              1
+            ],
+            "distanceToSpawn": 32768,
+            "song": 12,
+            "songs": [
+              38286
+            ]
+          },
+          {
+            "ID": "[Norfair] Kronic Boost Room Bottom Left -> [LowerNorfair] Lava Dive Right",
+            "DoorPtr": 38526,
+            "RoomPtr": 44820,
+            "doorAsmPtr": 0,
+            "direction": 5,
+            "bitFlag": 0,
+            "cap": [
+              62,
+              6
+            ],
+            "screen": [
+              3,
+              0
+            ],
+            "distanceToSpawn": 32768,
+            "song": 21,
+            "songs": [
+              44837
+            ]
+          },
+          {
+            "ID": "[LowerNorfair] Lava Dive Right -> [Norfair] Kronic Boost Room Bottom Left",
+            "DoorPtr": 38610,
+            "RoomPtr": 44660,
+            "doorAsmPtr": 0,
+            "direction": 4,
+            "bitFlag": 0,
+            "cap": [
+              17,
+              38
+            ],
+            "screen": [
+              1,
+              2
+            ],
+            "distanceToSpawn": 32768,
+            "song": 21,
+            "songs": [
+              44677
+            ]
+          },
+          {
+            "ID": "[Norfair] Crocomire Speedway Bottom -> [Crocomire] Crocomire Room Top",
+            "DoorPtr": 37842,
+            "RoomPtr": 43405,
+            "doorAsmPtr": 0,
+            "direction": 6,
+            "bitFlag": 0,
+            "cap": [
+              54,
+              2
+            ],
+            "screen": [
+              3,
+              0
+            ],
+            "distanceToSpawn": 32768,
+            "song": 21,
+            "songs": [
+              43453
+            ]
+          },
+          {
+            "ID": "[Crocomire] Crocomire Room Top -> [Norfair] Crocomire Speedway Bottom",
+            "DoorPtr": 37866,
+            "RoomPtr": 43299,
+            "doorAsmPtr": 0,
+            "exitAsmPtr": 63472,
+            "direction": 7,
+            "bitFlag": 0,
+            "cap": [
+              198,
+              45
+            ],
+            "screen": [
+              12,
+              2
+            ],
+            "distanceToSpawn": 448
+          },
+          {
+            "ID": "[LowerNorfair] Three Muskateers Room Left -> [Norfair] Single Chamber Top Right",
+            "DoorPtr": 39498,
+            "RoomPtr": 44382,
+            "doorAsmPtr": 0,
+            "direction": 5,
+            "bitFlag": 0,
+            "cap": [
+              94,
+              6
+            ],
+            "screen": [
+              5,
+              0
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[Norfair] Single Chamber Top Right -> [LowerNorfair] Three Muskateers Room Left",
+            "DoorPtr": 38394,
+            "RoomPtr": 46678,
+            "doorAsmPtr": 0,
+            "direction": 4,
+            "bitFlag": 0,
+            "cap": [
+              17,
+              6
+            ],
+            "screen": [
+              1,
+              0
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[Norfair] Warehouse Entrance Left -> [RedBrinstar] East Tunnel Right",
+            "DoorPtr": 37422,
+            "RoomPtr": 53120,
+            "doorAsmPtr": 48593,
+            "direction": 5,
+            "bitFlag": 64,
+            "cap": [
+              14,
+              22
+            ],
+            "screen": [
+              0,
+              1
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[RedBrinstar] East Tunnel Right -> [Norfair] Warehouse Entrance Left",
+            "DoorPtr": 41860,
+            "RoomPtr": 42657,
+            "doorAsmPtr": 0,
+            "direction": 4,
+            "bitFlag": 64,
+            "cap": [
+              1,
+              6
+            ],
+            "screen": [
+              0,
+              0
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[RedBrinstar] East Tunnel Top Right -> [WestMaridia] Crab Hole Bottom Left",
+            "DoorPtr": 41872,
+            "RoomPtr": 53788,
+            "doorAsmPtr": 58198,
+            "direction": 4,
+            "bitFlag": 0,
+            "cap": [
+              1,
+              22
+            ],
+            "screen": [
+              0,
+              1
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[WestMaridia] Crab Hole Bottom Left -> [RedBrinstar] East Tunnel Top Right",
+            "DoorPtr": 42256,
+            "RoomPtr": 53120,
+            "doorAsmPtr": 0,
+            "direction": 5,
+            "bitFlag": 0,
+            "cap": [
+              62,
+              6
+            ],
+            "screen": [
+              3,
+              0
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[RedBrinstar] Caterpillar Room Top Right -> [WestMaridia] Red Fish Room Left",
+            "DoorPtr": 37062,
+            "RoomPtr": 53508,
+            "doorAsmPtr": 48559,
+            "direction": 4,
+            "bitFlag": 64,
+            "cap": [
+              1,
+              6
+            ],
+            "screen": [
+              0,
+              0
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[WestMaridia] Red Fish Room Left -> [RedBrinstar] Caterpillar Room Top Right",
+            "DoorPtr": 42112,
+            "RoomPtr": 41762,
+            "doorAsmPtr": 58215,
+            "direction": 5,
+            "bitFlag": 64,
+            "cap": [
+              46,
+              54
+            ],
+            "screen": [
+              2,
+              3
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[RedBrinstar] Glass Tunnel Top -> [WestMaridia] Main Street Bottom",
+            "DoorPtr": 41776,
+            "RoomPtr": 53193,
+            "doorAsmPtr": 0,
+            "direction": 7,
+            "bitFlag": 0,
+            "cap": [
+              22,
+              125
+            ],
+            "screen": [
+              1,
+              7
+            ],
+            "distanceToSpawn": 512
+          },
+          {
+            "ID": "[WestMaridia] Main Street Bottom -> [RedBrinstar] Glass Tunnel Top",
+            "DoorPtr": 41884,
+            "RoomPtr": 52987,
+            "doorAsmPtr": 0,
+            "direction": 6,
+            "bitFlag": 0,
+            "cap": [
+              6,
+              2
+            ],
+            "screen": [
+              0,
+              0
+            ],
+            "distanceToSpawn": 368
+          },
+          {
+            "ID": "[Crateria] Green Pirates Shaft Bottom Right -> [Tourian] Golden Four",
+            "DoorPtr": 35922,
+            "RoomPtr": 42477,
+            "doorAsmPtr": 0,
+            "direction": 4,
+            "bitFlag": 0,
+            "cap": [
+              1,
+              6
+            ],
+            "screen": [
+              0,
+              0
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[Tourian] Golden Four -> [Crateria] Green Pirates Shaft Bottom Right",
+            "DoorPtr": 37350,
+            "RoomPtr": 39357,
+            "doorAsmPtr": 0,
+            "direction": 5,
+            "bitFlag": 0,
+            "cap": [
+              14,
+              102
+            ],
+            "screen": [
+              0,
+              6
+            ],
+            "distanceToSpawn": 32768,
+            "song": 9,
+            "songs": [
+              39374
+            ]
+          },
+          {
+            "ID": "[Norfair] Warehouse Entrance Right -> [Kraid] Warehouse Zeela Room Left",
+            "DoorPtr": 37434,
+            "RoomPtr": 42097,
+            "doorAsmPtr": 0,
+            "direction": 4,
+            "bitFlag": 0,
+            "cap": [
+              1,
+              6
+            ],
+            "screen": [
+              0,
+              0
+            ],
+            "distanceToSpawn": 32768,
+            "song": 18,
+            "songs": [
+              42114
+            ]
+          },
+          {
+            "ID": "[Kraid] Warehouse Zeela Room Left -> [Norfair] Warehouse Entrance Right",
+            "DoorPtr": 37182,
+            "RoomPtr": 42657,
+            "doorAsmPtr": 48447,
+            "direction": 5,
+            "bitFlag": 0,
+            "cap": [
+              46,
+              6
+            ],
+            "screen": [
+              2,
+              0
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[WestMaridia] Crab Shaft Right -> [EastMaridia] Aqueduct Top Left",
+            "DoorPtr": 42184,
+            "RoomPtr": 54695,
+            "doorAsmPtr": 0,
+            "direction": 4,
+            "bitFlag": 0,
+            "cap": [
+              1,
+              22
+            ],
+            "screen": [
+              0,
+              1
+            ],
+            "distanceToSpawn": 32768
+          },
+          {
+            "ID": "[EastMaridia] Aqueduct Top Left -> [WestMaridia] Crab Shaft Right",
+            "DoorPtr": 42760,
+            "RoomPtr": 53667,
+            "doorAsmPtr": 58264,
+            "direction": 5,
+            "bitFlag": 0,
+            "cap": [
+              30,
+              54
+            ],
+            "screen": [
+              1,
+              3
+            ],
+            "distanceToSpawn": 32768
+          }
+        ]
+      },
+      "remote_items": {
+        "value": 0
+      },
+      "startItems": [],
+      "locked_items": {
+        "Kraid": "Kraid",
+        "Ridley": "Ridley",
+        "Phantoon": "Phantoon",
+        "Draygon": "Draygon",
+        "Mother Brain": "Mother Brain",
+        "Spore Spawn": "Spore Spawn",
+        "Botwoon": "Botwoon",
+        "Crocomire": "Crocomire",
+        "Golden Torizo": "Golden Torizo"
+      },
+      "NothingPool": [],
+      "itemLocs": [
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        },
+        {
+          "Accessible": true,
+          "player": 1
+        }
+      ],
       "world_description": "This is Very Adaptive Randomizer of Items and Areas for Super Metroid (VARIA SM). It supports\na wide range of options to randomize Item locations, required skills and even the connections\nbetween the main Areas!",
       "slot_data": {
         "start_location": 1,
@@ -18513,6 +19678,460 @@
             ]
           }
         ]
+      },
+      "count_non_advancement_items": true,
+      "hardRooms": {
+        "X-Ray": [
+          [
+            8,
+            10
+          ],
+          [
+            10,
+            5
+          ],
+          [
+            14,
+            1
+          ]
+        ],
+        "Gauntlet": [
+          [
+            1,
+            25
+          ],
+          [
+            2,
+            10
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            10,
+            1
+          ]
+        ]
+      },
+      "romPatches": {
+        "NoGravityEnvProtection": true,
+        "ProgressiveSuits": false,
+        "AreaRandoBlueDoors": false,
+        "LNChozoSJCheckDisabled": false
+      },
+      "knows": {
+        "WallJump": [
+          false,
+          0
+        ],
+        "ShineSpark": [
+          false,
+          0
+        ],
+        "MidAirMorph": [
+          false,
+          0
+        ],
+        "CrouchJump": [
+          false,
+          0
+        ],
+        "UnequipItem": [
+          true,
+          1
+        ],
+        "Mockball": [
+          true,
+          1
+        ],
+        "SimpleShortCharge": [
+          true,
+          1
+        ],
+        "InfiniteBombJump": [
+          true,
+          5
+        ],
+        "GreenGateGlitch": [
+          true,
+          5
+        ],
+        "ShortCharge": [
+          false,
+          0
+        ],
+        "GravityJump": [
+          true,
+          10
+        ],
+        "SpringBallJump": [
+          true,
+          10
+        ],
+        "SpringBallJumpFromWall": [
+          false,
+          0
+        ],
+        "GetAroundWallJump": [
+          true,
+          10
+        ],
+        "DraygonGrappleKill": [
+          true,
+          5
+        ],
+        "DraygonSparkKill": [
+          false,
+          0
+        ],
+        "MicrowaveDraygon": [
+          true,
+          1
+        ],
+        "MicrowavePhantoon": [
+          true,
+          5
+        ],
+        "LowAmmoCroc": [
+          false,
+          0
+        ],
+        "LowStuffBotwoon": [
+          false,
+          0
+        ],
+        "LowStuffGT": [
+          false,
+          0
+        ],
+        "IceZebSkip": [
+          false,
+          0
+        ],
+        "SpeedZebSkip": [
+          false,
+          0
+        ],
+        "HiJumpMamaTurtle": [
+          false,
+          0
+        ],
+        "MaridiaWallJumps": [
+          true,
+          5
+        ],
+        "MtEverestGravJump": [
+          false,
+          0
+        ],
+        "GravLessLevel1": [
+          true,
+          50
+        ],
+        "GravLessLevel2": [
+          false,
+          0
+        ],
+        "GravLessLevel3": [
+          false,
+          0
+        ],
+        "CeilingDBoost": [
+          true,
+          1
+        ],
+        "BillyMays": [
+          true,
+          1
+        ],
+        "AlcatrazEscape": [
+          true,
+          25
+        ],
+        "ReverseGateGlitch": [
+          true,
+          5
+        ],
+        "ReverseGateGlitchHiJumpLess": [
+          false,
+          0
+        ],
+        "EarlyKraid": [
+          true,
+          1
+        ],
+        "XrayDboost": [
+          false,
+          0
+        ],
+        "XrayIce": [
+          true,
+          10
+        ],
+        "RedTowerClimb": [
+          true,
+          25
+        ],
+        "RonPopeilScrew": [
+          false,
+          0
+        ],
+        "OldMBWithSpeed": [
+          false,
+          0
+        ],
+        "Moondance": [
+          false,
+          0
+        ],
+        "HiJumpLessGauntletAccess": [
+          true,
+          50
+        ],
+        "HiJumpGauntletAccess": [
+          true,
+          25
+        ],
+        "LowGauntlet": [
+          false,
+          0
+        ],
+        "IceEscape": [
+          false,
+          0
+        ],
+        "WallJumpCathedralExit": [
+          true,
+          5
+        ],
+        "BubbleMountainWallJump": [
+          true,
+          5
+        ],
+        "DoubleChamberWallJump": [
+          true,
+          1
+        ],
+        "NovaBoost": [
+          false,
+          0
+        ],
+        "NorfairReserveDBoost": [
+          false,
+          0
+        ],
+        "CrocPBsDBoost": [
+          false,
+          0
+        ],
+        "CrocPBsIce": [
+          false,
+          0
+        ],
+        "IceMissileFromCroc": [
+          false,
+          0
+        ],
+        "FrogSpeedwayWithoutSpeed": [
+          false,
+          0
+        ],
+        "LavaDive": [
+          true,
+          50
+        ],
+        "LavaDiveNoHiJump": [
+          false,
+          0
+        ],
+        "WorstRoomIceCharge": [
+          false,
+          0
+        ],
+        "WorstRoomWallJump": [
+          false,
+          0
+        ],
+        "ScrewAttackExit": [
+          false,
+          0
+        ],
+        "ScrewAttackExitWithoutScrew": [
+          false,
+          0
+        ],
+        "FirefleasWalljump": [
+          true,
+          25
+        ],
+        "DodgeLowerNorfairEnemies": [
+          false,
+          0
+        ],
+        "ContinuousWallJump": [
+          false,
+          0
+        ],
+        "DiagonalBombJump": [
+          false,
+          0
+        ],
+        "MockballWs": [
+          false,
+          0
+        ],
+        "SpongeBathBombJump": [
+          false,
+          0
+        ],
+        "SpongeBathHiJump": [
+          true,
+          1
+        ],
+        "SpongeBathSpeed": [
+          true,
+          5
+        ],
+        "TediousMountEverest": [
+          false,
+          0
+        ],
+        "DoubleSpringBallJump": [
+          false,
+          0
+        ],
+        "BotwoonToDraygonWithIce": [
+          false,
+          0
+        ],
+        "WestSandHoleSuitlessWallJumps": [
+          false,
+          0
+        ],
+        "DraygonRoomGrappleExit": [
+          false,
+          0
+        ],
+        "DraygonRoomCrystalFlash": [
+          false,
+          0
+        ],
+        "PreciousRoomXRayExit": [
+          false,
+          0
+        ],
+        "PreciousRoomGravJumpExit": [
+          false,
+          0
+        ],
+        "MochtroidClip": [
+          true,
+          5
+        ],
+        "PuyoClip": [
+          false,
+          0
+        ],
+        "PuyoClipXRay": [
+          false,
+          0
+        ],
+        "SnailClip": [
+          false,
+          0
+        ],
+        "SuitlessPuyoClip": [
+          false,
+          0
+        ],
+        "CrystalFlashClip": [
+          false,
+          0
+        ],
+        "SuitlessCrystalFlashClip": [
+          false,
+          0
+        ],
+        "KillPlasmaPiratesWithSpark": [
+          false,
+          0
+        ],
+        "KillPlasmaPiratesWithCharge": [
+          true,
+          5
+        ],
+        "AccessSpringBallWithHiJump": [
+          true,
+          1
+        ],
+        "AccessSpringBallWithSpringBallBombJumps": [
+          true,
+          10
+        ],
+        "AccessSpringBallWithBombJumps": [
+          false,
+          0
+        ],
+        "AccessSpringBallWithSpringBallJump": [
+          false,
+          0
+        ],
+        "AccessSpringBallWithXRayClimb": [
+          false,
+          0
+        ],
+        "AccessSpringBallWithGravJump": [
+          false,
+          0
+        ],
+        "AccessSpringBallWithFlatley": [
+          false,
+          0
+        ]
+      },
+      "hellRuns": {
+        "Ice": [
+          [
+            4,
+            50
+          ],
+          [
+            5,
+            25
+          ],
+          [
+            6,
+            10
+          ],
+          [
+            10,
+            5
+          ]
+        ],
+        "MainUpperNorfair": [
+          [
+            5,
+            100
+          ],
+          [
+            6,
+            50
+          ],
+          [
+            8,
+            25
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            14,
+            5
+          ]
+        ],
+        "LowerNorfair": null
       },
       "world_directory": "sm"
     }

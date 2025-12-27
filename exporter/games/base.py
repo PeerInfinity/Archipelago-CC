@@ -56,17 +56,17 @@ class BaseGameExportHandler:
     # Whether to auto-discover and export all simple region attributes
     # When False (default), only dynamically_added is exported
     # When True, all simple attributes (bool, int, float, str) are exported
-    AUTO_DISCOVER_REGION_ATTRIBUTES: bool = False
+    AUTO_DISCOVER_REGION_ATTRIBUTES: bool = True
 
     # Whether to auto-discover and export all simple location attributes
     # When False (default), no attributes are exported
     # When True, all simple attributes (bool, int, float, str) are exported
-    AUTO_DISCOVER_LOCATION_ATTRIBUTES: bool = False
+    AUTO_DISCOVER_LOCATION_ATTRIBUTES: bool = True
 
     # Whether to auto-discover and export all simple world attributes
     # When False (default), only explicitly defined WORLD_ATTRIBUTES are exported
     # When True, all simple attributes (bool, int, float, str) on the world instance are exported
-    AUTO_DISCOVER_WORLD_ATTRIBUTES: bool = False
+    AUTO_DISCOVER_WORLD_ATTRIBUTES: bool = True
 
     # Set of helper function names to export as definitions (manual whitelist)
     # These helpers are always exported regardless of AUTO_EXPORT_DISCOVERED_HELPERS

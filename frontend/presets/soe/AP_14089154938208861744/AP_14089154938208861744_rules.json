@@ -15824,6 +15824,14 @@
           "display_name": "Turdo Mode"
         }
       },
+      "logic": {
+        "player": 1,
+        "out_of_bounds": false,
+        "sequence_breaks": false
+      },
+      "evermizer_seed": 29138,
+      "connect_name": "Player1",
+      "rom_name": "SOE_ROM_NOT_GENERATED",
       "world_description": "Secret of Evermore is a SNES action RPG. You learn alchemy spells, fight bosses and gather rocket parts to visit a\nspace station where the final boss must be defeated.",
       "web": {
         "theme": "jungle",

@@ -1962,6 +1962,13 @@
           "display_name": "Turners"
         }
       },
+      "task_advances": 4,
+      "turners": 3,
+      "paint_cans": 3,
+      "traps": 5,
+      "rainbow_trap_weight": 50,
+      "spinner_trap_weight": 50,
+      "killer_trap_weight": 0,
       "world_description": "Bumper Stickers is a match-three puzzle game unlike any you've seen.\nLaunch Bumpers onto the field, and match them in sets of three of the same color.\nHow long can you go without getting Jammed?",
       "web": {
         "theme": "stone",
