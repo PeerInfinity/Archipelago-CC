@@ -5110,6 +5110,18 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       return false;
     }
 
+    // AST_prog_item_count (from DLCQuest and other games with accumulator items)
+    // Returns the count of a progression item from state.prog_items[player][key]
+    case 'AST_prog_item_count': {
+      const progKey = args.key;
+      if (progKey === undefined) {
+        log('warn', '[evaluateRuleBuilderRule] AST_prog_item_count: missing key');
+        return undefined;
+      }
+      // Delegate to the prog_item_count handler
+      return evaluateRule({ type: 'prog_item_count', key: progKey }, context, depth + 1, localScope);
+    }
+
     // Reachability rules
     case 'CanReachRegion': {
       const regionName = args.region_name;
