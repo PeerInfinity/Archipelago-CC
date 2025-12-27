@@ -820,7 +820,7 @@
   },
   "Old School Runescape": {
     "exporter_path": "exporter/games/osrs.py",
-    "exporter_size": 6186,
+    "exporter_size": 6182,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
