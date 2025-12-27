@@ -12,6 +12,17 @@ class LADXGameExportHandler(GenericGameExportHandler):
 
     USE_RESOLVED_ITEMS = True
 
+    def handle_complex_entrance_rule(self, entrance_name: str, access_rule_method):
+        """
+        Extract the actual condition from LADX entrance objects (for entrances).
+
+        This delegates to handle_complex_exit_rule since LinksAwakeningEntrance
+        objects are added to both region.exits and region.entrances (via connect()).
+        Both need the same special handling to avoid analyzing the access_rule method
+        which uses GameStateAdapater - a class that can't be analyzed as a function.
+        """
+        return self.handle_complex_exit_rule(entrance_name, access_rule_method)
+
     def handle_complex_exit_rule(self, exit_name: str, access_rule_method):
         """
         Extract the actual condition from LADX entrance objects.
