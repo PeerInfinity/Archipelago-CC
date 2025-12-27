@@ -16,7 +16,7 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
 
 
     # All helpers are now exported to rules.json - no JavaScript implementations needed.
-    # Runtime data (auto_scroll_levels, sprite_data) is exported via get_settings_data.
+    # Runtime data (auto_scroll_levels, sprite_data) is exported via get_world_data.
     HELPERS_TO_PRESERVE = set()
     HELPERS_TO_EXPORT_BLACKLIST = set()
 
@@ -236,16 +236,16 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
         # For all other rules, use the parent's expansion logic
         return super().expand_rule(rule, _depth)
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extract Super Mario Land 2 settings including player options."""
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Extract Super Mario Land 2 world data including player options and runtime data."""
         # Store world reference for use in expand_rule
         self._world = world
 
         # Store option values for use in expand_rule
         self._cached_options = {}
 
-        # Get base settings from parent
-        settings_dict = super().get_settings_data(world, multiworld, player)
+        # Get base world data from parent
+        world_data = super().get_world_data(world, multiworld, player)
 
         # Add Mario Land 2 specific options that are referenced in rules
         if hasattr(world, 'options'):
@@ -253,23 +253,23 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
             required_coins = getattr(world.options, 'required_golden_coins', None)
             if required_coins is not None:
                 value = getattr(required_coins, 'value', required_coins)
-                settings_dict['required_golden_coins'] = value
+                world_data['required_golden_coins'] = value
                 self._cached_options['required_golden_coins'] = value
 
             # Export shuffle_midway_bells as it's used in access rules
             shuffle_midway = getattr(world.options, 'shuffle_midway_bells', None)
             if shuffle_midway is not None:
                 value = getattr(shuffle_midway, 'value', shuffle_midway)
-                settings_dict['shuffle_midway_bells'] = value
+                world_data['shuffle_midway_bells'] = value
                 self._cached_options['shuffle_midway_bells'] = value
 
         # Export runtime data needed by helpers (generated in generate_early)
         # auto_scroll_levels: list of auto-scroll states per level (0=none, 1=on, 2=cancel item, 3=trap)
         if hasattr(world, 'auto_scroll_levels'):
-            settings_dict['auto_scroll_levels'] = world.auto_scroll_levels
+            world_data['auto_scroll_levels'] = world.auto_scroll_levels
 
         # sprite_data: dict of level -> sprite configurations (needed for not_blocked_by_sharks)
         if hasattr(world, 'sprite_data'):
-            settings_dict['sprite_data'] = world.sprite_data
+            world_data['sprite_data'] = world.sprite_data
 
-        return settings_dict
+        return world_data

@@ -35,27 +35,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Animal Husbandry",
-                      "Foreign Trade",
-                      "Irrigation",
-                      "Mining",
-                      "Sailing",
-                      "State Workforce"
-                    ]
-                  }
+                  "rule": "has_non_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_ANCIENT"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
                 },
                 {
-                  "rule": "HasAllCounts",
-                  "args": {
-                    "items": {
-                      "Progressive Campus": 1,
-                      "Progressive Encampment": 1,
-                      "Progressive Holy Site": 1
+                  "rule": "has_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_ANCIENT"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             }
@@ -476,28 +481,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Political Philosophy",
-                      "Shipbuilding"
-                    ]
-                  }
+                  "rule": "has_non_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_CLASSICAL"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
                 },
                 {
-                  "rule": "HasAllCounts",
-                  "args": {
-                    "items": {
-                      "Progressive Campus": 1,
-                      "Progressive Commercial Hub": 1,
-                      "Progressive Diplomatic Quarter": 1,
-                      "Progressive Encampment": 1,
-                      "Progressive Entertainment Complex": 1,
-                      "Progressive Harbor": 1,
-                      "Progressive Holy Site": 2,
-                      "Progressive Theater": 1
+                  "rule": "has_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_CLASSICAL"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             }
@@ -726,28 +735,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Divine Right"
-                    ]
-                  }
+                  "rule": "has_non_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_MEDIEVAL"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
                 },
                 {
-                  "rule": "HasAllCounts",
-                  "args": {
-                    "items": {
-                      "Progressive Campus": 2,
-                      "Progressive Commercial Hub": 1,
-                      "Progressive Diplomatic Quarter": 1,
-                      "Progressive Encampment": 2,
-                      "Progressive Entertainment Complex": 1,
-                      "Progressive Harbor": 1,
-                      "Progressive Holy Site": 2,
-                      "Progressive Industrial Zone": 1,
-                      "Progressive Theater": 1
+                  "rule": "has_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_MEDIEVAL"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             }
@@ -976,30 +989,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Cartography",
-                      "Exploration",
-                      "Reformed Church"
-                    ]
-                  }
+                  "rule": "has_non_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_RENAISSANCE"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
                 },
                 {
-                  "rule": "HasAllCounts",
-                  "args": {
-                    "items": {
-                      "Progressive Campus": 2,
-                      "Progressive Commercial Hub": 2,
-                      "Progressive Diplomatic Quarter": 2,
-                      "Progressive Encampment": 2,
-                      "Progressive Entertainment Complex": 1,
-                      "Progressive Harbor": 2,
-                      "Progressive Holy Site": 2,
-                      "Progressive Industrial Zone": 1,
-                      "Progressive Theater": 2
+                  "rule": "has_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_RENAISSANCE"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             }
@@ -1228,28 +1243,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Nationalism"
-                    ]
-                  }
+                  "rule": "has_non_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_INDUSTRIAL"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
                 },
                 {
-                  "rule": "HasAllCounts",
-                  "args": {
-                    "items": {
-                      "Progressive Campus": 2,
-                      "Progressive Commercial Hub": 3,
-                      "Progressive Diplomatic Quarter": 2,
-                      "Progressive Encampment": 3,
-                      "Progressive Entertainment Complex": 2,
-                      "Progressive Harbor": 2,
-                      "Progressive Holy Site": 2,
-                      "Progressive Industrial Zone": 2,
-                      "Progressive Theater": 2
+                  "rule": "has_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_INDUSTRIAL"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             }
@@ -1478,32 +1497,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Class Struggle",
-                      "Refining",
-                      "Suffrage",
-                      "Totalitarianism"
-                    ]
-                  }
+                  "rule": "has_non_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_MODERN"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
                 },
                 {
-                  "rule": "HasAllCounts",
-                  "args": {
-                    "items": {
-                      "Progressive Aerodrome": 1,
-                      "Progressive Campus": 3,
-                      "Progressive Commercial Hub": 3,
-                      "Progressive Diplomatic Quarter": 2,
-                      "Progressive Encampment": 3,
-                      "Progressive Entertainment Complex": 2,
-                      "Progressive Harbor": 2,
-                      "Progressive Holy Site": 2,
-                      "Progressive Industrial Zone": 3,
-                      "Progressive Theater": 3
+                  "rule": "has_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_MODERN"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             }
@@ -1760,31 +1779,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Combined Arms",
-                      "Plastics"
-                    ]
-                  }
+                  "rule": "has_non_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_ATOMIC"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
                 },
                 {
-                  "rule": "HasAllCounts",
-                  "args": {
-                    "items": {
-                      "Progressive Aerodrome": 2,
-                      "Progressive Campus": 3,
-                      "Progressive Commercial Hub": 3,
-                      "Progressive Diplomatic Quarter": 2,
-                      "Progressive Encampment": 3,
-                      "Progressive Entertainment Complex": 3,
-                      "Progressive Harbor": 2,
-                      "Progressive Holy Site": 2,
-                      "Progressive Industrial Zone": 4,
-                      "Progressive Space Port": 1,
-                      "Progressive Theater": 3
+                  "rule": "has_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_ATOMIC"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             }
@@ -1985,32 +2005,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Corporate Libertarianism",
-                      "Digital Democracy",
-                      "Synthetic Technocracy"
-                    ]
-                  }
+                  "rule": "has_non_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_INFORMATION"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
                 },
                 {
-                  "rule": "HasAllCounts",
-                  "args": {
-                    "items": {
-                      "Progressive Aerodrome": 2,
-                      "Progressive Campus": 3,
-                      "Progressive Commercial Hub": 3,
-                      "Progressive Diplomatic Quarter": 2,
-                      "Progressive Encampment": 3,
-                      "Progressive Entertainment Complex": 3,
-                      "Progressive Harbor": 2,
-                      "Progressive Holy Site": 2,
-                      "Progressive Industrial Zone": 4,
-                      "Progressive Space Port": 4,
-                      "Progressive Theater": 3
+                  "rule": "has_progressive_items",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ERA_INFORMATION"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             }
@@ -4464,11 +4484,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Civilization VI",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "advisor_show_progression_items": "true",
@@ -4562,171 +4580,6 @@
           "display_name": "Shuffle Goody Hut Rewards"
         }
       },
-      "era_non_progressive_items": {
-        "ERA_ANCIENT": [
-          "Mining",
-          "Irrigation",
-          "Sailing",
-          "Animal Husbandry",
-          "State Workforce",
-          "Foreign Trade"
-        ],
-        "ERA_CLASSICAL": [
-          "Shipbuilding",
-          "Political Philosophy"
-        ],
-        "ERA_MEDIEVAL": [
-          "Divine Right"
-        ],
-        "ERA_RENAISSANCE": [
-          "Exploration",
-          "Reformed Church",
-          "Cartography"
-        ],
-        "ERA_INDUSTRIAL": [
-          "Nationalism"
-        ],
-        "ERA_MODERN": [
-          "Refining",
-          "Suffrage",
-          "Totalitarianism",
-          "Class Struggle"
-        ],
-        "ERA_ATOMIC": [
-          "Combined Arms",
-          "Plastics"
-        ],
-        "ERA_INFORMATION": [
-          "Corporate Libertarianism",
-          "Digital Democracy",
-          "Synthetic Technocracy"
-        ],
-        "ERA_FUTURE": []
-      },
-      "era_progressive_item_counts": {
-        "ERA_ANCIENT": {
-          "Progressive Encampment": 1,
-          "Progressive Holy Site": 1,
-          "Progressive Campus": 1
-        },
-        "ERA_CLASSICAL": {
-          "Progressive Encampment": 1,
-          "Progressive Holy Site": 2,
-          "Progressive Campus": 1,
-          "Progressive Harbor": 1,
-          "Progressive Commercial Hub": 1,
-          "Progressive Diplomatic Quarter": 1,
-          "Progressive Entertainment Complex": 1,
-          "Progressive Theater": 1
-        },
-        "ERA_MEDIEVAL": {
-          "Progressive Encampment": 2,
-          "Progressive Holy Site": 2,
-          "Progressive Campus": 2,
-          "Progressive Harbor": 1,
-          "Progressive Commercial Hub": 1,
-          "Progressive Diplomatic Quarter": 1,
-          "Progressive Entertainment Complex": 1,
-          "Progressive Theater": 1,
-          "Progressive Industrial Zone": 1
-        },
-        "ERA_RENAISSANCE": {
-          "Progressive Encampment": 2,
-          "Progressive Holy Site": 2,
-          "Progressive Campus": 2,
-          "Progressive Harbor": 2,
-          "Progressive Commercial Hub": 2,
-          "Progressive Diplomatic Quarter": 2,
-          "Progressive Entertainment Complex": 1,
-          "Progressive Theater": 2,
-          "Progressive Industrial Zone": 1
-        },
-        "ERA_INDUSTRIAL": {
-          "Progressive Encampment": 3,
-          "Progressive Holy Site": 2,
-          "Progressive Campus": 2,
-          "Progressive Harbor": 2,
-          "Progressive Commercial Hub": 3,
-          "Progressive Diplomatic Quarter": 2,
-          "Progressive Entertainment Complex": 2,
-          "Progressive Theater": 2,
-          "Progressive Industrial Zone": 2
-        },
-        "ERA_MODERN": {
-          "Progressive Encampment": 3,
-          "Progressive Holy Site": 2,
-          "Progressive Campus": 3,
-          "Progressive Harbor": 2,
-          "Progressive Commercial Hub": 3,
-          "Progressive Diplomatic Quarter": 2,
-          "Progressive Entertainment Complex": 2,
-          "Progressive Theater": 3,
-          "Progressive Industrial Zone": 3,
-          "Progressive Aerodrome": 1
-        },
-        "ERA_ATOMIC": {
-          "Progressive Encampment": 3,
-          "Progressive Holy Site": 2,
-          "Progressive Campus": 3,
-          "Progressive Harbor": 2,
-          "Progressive Commercial Hub": 3,
-          "Progressive Diplomatic Quarter": 2,
-          "Progressive Entertainment Complex": 3,
-          "Progressive Theater": 3,
-          "Progressive Industrial Zone": 4,
-          "Progressive Aerodrome": 2,
-          "Progressive Space Port": 1
-        },
-        "ERA_INFORMATION": {
-          "Progressive Encampment": 3,
-          "Progressive Holy Site": 2,
-          "Progressive Campus": 3,
-          "Progressive Harbor": 2,
-          "Progressive Commercial Hub": 3,
-          "Progressive Diplomatic Quarter": 2,
-          "Progressive Entertainment Complex": 3,
-          "Progressive Theater": 3,
-          "Progressive Industrial Zone": 4,
-          "Progressive Aerodrome": 2,
-          "Progressive Space Port": 4
-        },
-        "ERA_FUTURE": {
-          "Progressive Encampment": 3,
-          "Progressive Holy Site": 2,
-          "Progressive Campus": 3,
-          "Progressive Harbor": 2,
-          "Progressive Commercial Hub": 3,
-          "Progressive Diplomatic Quarter": 2,
-          "Progressive Entertainment Complex": 3,
-          "Progressive Theater": 3,
-          "Progressive Industrial Zone": 4,
-          "Progressive Aerodrome": 2,
-          "Progressive Space Port": 4
-        }
-      },
-      "world_directory": "civ_6"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Civilization VI",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "ocean",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up Civilization VI for MultiWorld.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "hesto2"
-          ]
-        }
-      ],
       "world_description": "Civilization VI is a turn-based strategy video game in which one or more players compete alongside computer-controlled opponents to grow their individual civilization from a small tribe to control the entire planet across several periods of development.",
       "slot_data": {
         "progression_style": 0,
@@ -4736,8 +4589,91 @@
           "Unit Killed"
         ],
         "death_link_effect_percent": 20
-      }
+      },
+      "web": {
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up Civilization VI for MultiWorld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "hesto2"
+            ]
+          }
+        ]
+      },
+      "world_directory": "civ_6"
     }
   },
-  "helpers": {}
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
+  },
+  "helpers": {
+    "1": {
+      "has_non_progressive_items": {
+        "params": [
+          "era"
+        ],
+        "body": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "subscript",
+              "value": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "world"
+                },
+                "attr": "era_required_non_progressive_items"
+              },
+              "index": {
+                "type": "name",
+                "name": "era"
+              }
+            }
+          ]
+        }
+      },
+      "has_progressive_items": {
+        "params": [
+          "era"
+        ],
+        "body": {
+          "type": "state_method",
+          "method": "has_all_counts",
+          "args": [
+            {
+              "type": "subscript",
+              "value": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "world"
+                },
+                "attr": "era_required_progressive_items_counts"
+              },
+              "index": {
+                "type": "name",
+                "name": "era"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
 }

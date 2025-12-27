@@ -27152,11 +27152,9 @@
       "Glide"
     ]
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Kingdom Hearts 2",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "AntiForm": "false",
         "AtlanticaToggle": "false",
@@ -27517,34 +27515,6 @@
           "display_name": "Progression Balancing"
         }
       },
-      "FightLogic": "normal",
-      "AutoFormLogic": "false",
-      "FinalFormLogic": "light_and_darkness",
-      "Promise_Charm": "false",
-      "CorSkipToggle": "false",
-      "world_directory": "kh2"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Kingdom Hearts 2",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "grass",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to playing Kingdom Hearts 2 Final Mix with Archipelago.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "JaredWeakStrike"
-          ]
-        }
-      ],
       "world_description": "Kingdom Hearts II is an action role-playing game developed and published by Square Enix and released in 2005.\nIt is the sequel to Kingdom Hearts and Kingdom Hearts: Chain of Memories, and like the two previous games,\nfocuses on Sora and his friends' continued battle against the Darkness.",
       "slot_data": {
         "Goal": 1,
@@ -27672,8 +27642,36 @@
           "Goofy Protera": 1,
           "Goofy Protega": 1
         }
-      }
+      },
+      "web": {
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to playing Kingdom Hearts 2 Final Mix with Archipelago.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "JaredWeakStrike"
+            ]
+          }
+        ]
+      },
+      "world_directory": "kh2"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {
     "1": {
@@ -27756,7 +27754,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
+                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
                   }
                 ]
               },
@@ -27812,7 +27810,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(TT3) Underground Concourse Mythril Gem"
+                    "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
                   }
                 ]
               },
@@ -27868,7 +27866,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
+                    "value": "(TT3) Underground Concourse Mythril Gem"
                   }
                 ]
               },

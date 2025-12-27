@@ -61,14 +61,9 @@
             "name": "Eolis Key Jack",
             "id": 400101,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Deluge",
-                  "Progressive Sword",
-                  "Ring of Elf"
-                ]
-              }
+              "rule": "can_buy_in_eolis",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Elixir",
@@ -82,14 +77,9 @@
             "name": "Eolis Hand Dagger",
             "id": 400102,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Deluge",
-                  "Progressive Sword",
-                  "Ring of Elf"
-                ]
-              }
+              "rule": "can_buy_in_eolis",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Key King",
@@ -103,14 +93,9 @@
             "name": "Eolis Red Potion",
             "id": 400103,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Deluge",
-                  "Progressive Sword",
-                  "Ring of Elf"
-                ]
-              }
+              "rule": "can_buy_in_eolis",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Key Jack",
@@ -124,14 +109,9 @@
             "name": "Eolis Elixir",
             "id": 400104,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Deluge",
-                  "Progressive Sword",
-                  "Ring of Elf"
-                ]
-              }
+              "rule": "can_buy_in_eolis",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Black Onyx",
@@ -145,14 +125,9 @@
             "name": "Eolis Deluge",
             "id": 400105,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Deluge",
-                  "Progressive Sword",
-                  "Ring of Elf"
-                ]
-              }
+              "rule": "can_buy_in_eolis",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Wingboots",
@@ -1066,16 +1041,9 @@
             "name": "Misty Doctor Office",
             "id": 400148,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Death",
-                  "Deluge",
-                  "Fire",
-                  "Thunder",
-                  "Tilte"
-                ]
-              }
+              "rule": "has_any_magic",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Red Potion",
@@ -1919,16 +1887,9 @@
             "name": "Dartmoor Castle Hidden Red Potion",
             "id": 400192,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Death",
-                  "Deluge",
-                  "Fire",
-                  "Thunder",
-                  "Tilte"
-                ]
-              }
+              "rule": "has_any_magic",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Ring of Elf",
@@ -2010,16 +1971,9 @@
             "name": "Fraternal Castle Shop Hidden Ointment",
             "id": 400197,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Death",
-                  "Deluge",
-                  "Fire",
-                  "Thunder",
-                  "Tilte"
-                ]
-              }
+              "rule": "has_any_magic",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Red Potion",
@@ -2662,11 +2616,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Faxanadu",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "exclude_locations": [],
@@ -2761,29 +2713,6 @@
           "display_name": "Require Dragon Slayer"
         }
       },
-      "world_directory": "faxanadu"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Faxanadu",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "dirt",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Faxanadu randomizer connected to an Archipelago Multiworld",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Daivuk"
-          ]
-        }
-      ],
       "world_description": "Faxanadu is an action role-playing platform video game developed by Hudson Soft for the Nintendo Entertainment System",
       "slot_data": {
         "keep_shop_red_potions": 0,
@@ -2793,8 +2722,69 @@
         "random_monsters": 0,
         "random_rewards": 0,
         "daxanadu_version": "0.3.0"
-      }
+      },
+      "web": {
+        "theme": "dirt",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Faxanadu randomizer connected to an Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Daivuk"
+            ]
+          }
+        ]
+      },
+      "world_directory": "faxanadu"
     }
   },
-  "helpers": {}
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
+  },
+  "helpers": {
+    "1": {
+      "can_buy_in_eolis": {
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Deluge",
+              "Progressive Sword",
+              "Ring of Elf"
+            ]
+          }
+        ]
+      },
+      "has_any_magic": {
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Death",
+              "Deluge",
+              "Fire",
+              "Thunder",
+              "Tilte"
+            ]
+          }
+        ]
+      }
+    }
+  }
 }

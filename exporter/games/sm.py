@@ -1369,8 +1369,10 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         return rule
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Export Super Metroid specific settings including hardRooms and ROM patches.
+
+        Overrides get_world_data to add SM-specific settings to world data.
 
         Args:
             world: The world instance
@@ -1378,10 +1380,10 @@ class SMGameExportHandler(GenericGameExportHandler):
             player: The player ID
 
         Returns:
-            Dict containing game settings
+            Dict containing game settings with SM-specific additions
         """
-        # Get base settings
-        settings = super().get_settings_data(world, multiworld, player)
+        # Get base world data
+        settings = super().get_world_data(world, multiworld, player)
 
         # Super Metroid uses base_items (default), not resolved_items
         # All SM items appear in both base_items and resolved_items with identical values

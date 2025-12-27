@@ -13723,11 +13723,9 @@
       "The Storehouse (E3M1)"
     ]
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Heretic",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "added_ammo_arrows": 50,
@@ -13996,29 +13994,6 @@
           "display_name": "Start With Map Scrolls"
         }
       },
-      "world_directory": "heretic"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Heretic",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "dirt",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Heretic randomizer connected to an Archipelago Multiworld",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Daivuk"
-          ]
-        }
-      ],
       "world_description": "Heretic is a dark fantasy first-person shooter video game released in December 1994. It was developed by Raven Software.",
       "slot_data": {
         "goal": 0,
@@ -14048,8 +14023,36 @@
         "ammo4add": 200,
         "ammo5add": 20,
         "ammo6add": 150
-      }
+      },
+      "web": {
+        "theme": "dirt",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Heretic randomizer connected to an Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Daivuk"
+            ]
+          }
+        ]
+      },
+      "world_directory": "heretic"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }

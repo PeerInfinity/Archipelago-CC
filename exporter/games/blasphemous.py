@@ -699,9 +699,9 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
             'args': rule.get('args', [])
         }
     
-    def expand_helper(self, helper_name: str):
+    def expand_helper(self, helper_name: str, args=None):
         """Expand Blasphemous-specific helper functions."""
-        
+
         # First check if it's a self reference
         if helper_name.startswith('self.'):
             return self._expand_self_helper({'name': helper_name})

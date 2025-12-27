@@ -6652,11 +6652,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Sonic Adventure 2 Battle",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "animalsanity": "false",
@@ -7703,31 +7701,6 @@
           "display_name": "Whistlesanity"
         }
       },
-      "world_directory": "sa2b"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Sonic Adventure 2 Battle",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "partyTime",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Sonic Adventure 2: Battle randomizer connected to an Archipelago Multiworld.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "RaspberrySpaceJam",
-            "PoryGone",
-            "Entiss"
-          ]
-        }
-      ],
       "world_description": "Sonic Adventure 2 Battle is an action platforming game. Play as Sonic, Tails, Knuckles, Shadow, Rouge, and Eggman across 31 stages and prevent the destruction of the earth.",
       "slot_data": {
         "ModVersion": 204,
@@ -10849,8 +10822,38 @@
           "91": 2
         },
         "PlayerNum": 1
-      }
+      },
+      "web": {
+        "theme": "partyTime",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Sonic Adventure 2: Battle randomizer connected to an Archipelago Multiworld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "RaspberrySpaceJam",
+              "PoryGone",
+              "Entiss"
+            ]
+          }
+        ]
+      },
+      "world_directory": "sa2b"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }

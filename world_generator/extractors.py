@@ -215,6 +215,13 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
     # Extract game options from settings (for generating dynamic fill_slot_data)
     settings = json_data.get('settings', {}).get('1', {})
     game_options = settings.get('options', {})
+    # Also check world.1.options for games like ALttP that store options there
+    world_options = json_data.get('world', {}).get('1', {}).get('options', {})
+    if world_options and not game_options:
+        game_options = world_options
+    elif world_options:
+        # Merge world options into game_options (world options take precedence)
+        game_options = {**game_options, **world_options}
 
     # Extract resolved settings for evaluating setting_value nodes in helpers
     # These are the actual values used in the seed, stored at the top level of settings
@@ -243,6 +250,14 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
     world_attrs = json_data.get('world_attributes', {}).get('1', {})
     for k, v in world_attrs.items():
         resolved_settings[k] = v
+
+    # Also include world.1 attributes (e.g., ALttP required_medallions, logical_heart_pieces)
+    # These are game-specific world attributes that setting_value nodes may reference
+    world_data = json_data.get('world', {}).get('1', {})
+    skip_world_keys = {'options', 'option_definitions', 'dungeons', 'shops', 'game'}
+    for k, v in world_data.items():
+        if k not in skip_world_keys and k not in resolved_settings:
+            resolved_settings[k] = v
 
     # Extract option definitions (type, range, choices, etc.)
     option_definitions = settings.get('option_definitions', {})
@@ -303,6 +318,9 @@ def extract_items(json_data: Dict[str, Any]) -> Tuple[Dict[str, ItemData], List[
 
     for item_name, item_info in items_data.items():
         item_id = item_info.get('id')
+        # Treat list IDs as None (e.g., ALttP pendants/crystals export SRAM data as lists)
+        if isinstance(item_id, list):
+            item_id = None
         is_event = item_id is None or item_info.get('event', False)
         groups = item_info.get('groups', [])
         hint_text = item_info.get('hint_text')  # Only set if different from name
@@ -885,12 +903,26 @@ def extract_world_attributes(json_data: Dict[str, Any]) -> Dict[str, Any]:
     new_world_attrs = json_data.get('world_attributes', {}).get('1', {})
     if new_world_attrs:
         world_attributes.update(new_world_attrs)
-    else:
-        # Legacy format: world attributes are mixed with settings
+
+    # Always ensure 'shops' exists as an empty list for games with shop-related helpers
+    # This prevents AttributeError when iterating over world.shops
+    if 'shops' not in world_attributes:
+        world_attributes['shops'] = []
+
+    if not new_world_attrs:
+        # Legacy format: world attributes are mixed with settings or world section
         # Extract game-specific computed settings that need to be world attributes
         # These are settings that are accessed by helpers as world.X
         # (e.g., world.difficulty_requirements, world.shop_items)
         settings = json_data.get('settings', {}).get('1', {})
+
+        # Also check world.1 for game-specific attributes (e.g., ALttP required_medallions)
+        world_data = json_data.get('world', {}).get('1', {})
+        if world_data:
+            # Extract non-option attributes from world data
+            for key, value in world_data.items():
+                if key not in ['options', 'option_definitions', 'dungeons', 'shops', 'game']:
+                    settings[key] = value
 
         # Settings to skip (internal/structural settings, not world attributes)
         skip_settings = {

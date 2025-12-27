@@ -57,6 +57,18 @@ const ANIMAL_REQUIREMENTS = {
 };
 
 /**
+ * Map from level numbers to level names.
+ * Used for can_reach_boss to construct stage completion item names.
+ */
+const LEVEL_NAMES_INVERSE = {
+  1: "Grass Land",
+  2: "Ripple Field",
+  3: "Sand Canyon",
+  4: "Cloudy Park",
+  5: "Iceberg",
+};
+
+/**
  * Helper to check if player has an item.
  */
 function hasItem(snapshot, itemName) {
@@ -73,6 +85,28 @@ function hasItem(snapshot, itemName) {
     return true;
   }
   return false;
+}
+
+/**
+ * Helper to count how many of an item the player has.
+ * @param {Object} snapshot - Game state snapshot
+ * @param {string} itemName - Name of the item to count
+ * @returns {number} Count of the item
+ */
+function countItem(snapshot, itemName) {
+  // Check inventory for actual count
+  const invCount = snapshot?.inventory?.[itemName] || 0;
+  if (invCount > 0) {
+    return invCount;
+  }
+  // For flags and events, they're binary (0 or 1)
+  if (snapshot?.flags?.includes(itemName)) {
+    return 1;
+  }
+  if (snapshot?.events?.includes(itemName)) {
+    return 1;
+  }
+  return 0;
 }
 
 /**
@@ -214,6 +248,87 @@ function can_fix_angel_wings(snapshot, staticData, copyAbilitiesArg) {
 }
 
 /**
+ * Check if player can reach the boss of a specific level.
+ *
+ * When open_world is enabled:
+ * - Must have at least ow_boss_requirement instances of "{LevelName} - Stage Completion"
+ *
+ * When open_world is disabled:
+ * - Must be able to reach the 6th stage location (player_levels[level][5])
+ *
+ * Python source: worlds/kdl3/rules.py:14-19
+ *
+ * @param {Object} snapshot - Game state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {number} level - Level number (1-5)
+ * @param {boolean|string|number} openWorld - Whether open world mode is enabled
+ * @param {number} owBossReq - Number of stage completions required to reach boss
+ * @param {Object} playerLevels - Dictionary mapping level numbers to location ID arrays
+ * @returns {boolean} True if boss can be reached
+ */
+function can_reach_boss(snapshot, staticData, level, openWorld, owBossReq, playerLevels) {
+  // Handle various truthy values for open_world setting
+  const isOpenWorld = openWorld === true || openWorld === "true" || openWorld === 1 || openWorld === "1";
+
+  if (isOpenWorld) {
+    // In open world mode, check if player has enough stage completions
+    const levelName = LEVEL_NAMES_INVERSE[level];
+    if (!levelName) {
+      console.warn(`[can_reach_boss] Unknown level: ${level}`);
+      return false;
+    }
+
+    const stageCompletionItem = `${levelName} - Stage Completion`;
+
+    // Count how many stage completions we have
+    const completionCount = countItem(snapshot, stageCompletionItem);
+
+    // Need at least ow_boss_requirement completions
+    return completionCount >= (owBossReq || 0);
+  } else {
+    // In non-open world mode, need to reach the 6th stage location
+    // The location at player_levels[level][5] represents stage 6
+    const levelKey = String(level);
+    const levelLocations = playerLevels?.[level] || playerLevels?.[levelKey];
+
+    if (!levelLocations || !Array.isArray(levelLocations) || levelLocations.length < 6) {
+      console.warn(`[can_reach_boss] Invalid playerLevels for level ${level}`);
+      return false;
+    }
+
+    // Get the 6th stage location ID
+    const stage6LocationId = levelLocations[5];
+
+    // Look up the location name from the ID and check if it's reachable
+    const playerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || '1';
+    const playerIdStr = String(playerId);
+    const regions = staticData?.regions?.[playerIdStr];
+
+    if (regions) {
+      for (const regionName in regions) {
+        const region = regions[regionName];
+        if (region?.locations) {
+          for (const loc of region.locations) {
+            if (loc.id === stage6LocationId) {
+              // Found the location - check if it's in the checked/accessible locations
+              const locationName = loc.name;
+              // Check if we've already checked this location or if it's accessible
+              return snapshot?.flags?.includes(locationName) ||
+                     snapshot?.accessibleLocations?.includes?.(locationName) ||
+                     snapshot?.reachableLocations?.includes?.(locationName) ||
+                     false;
+            }
+          }
+        }
+      }
+    }
+
+    // Couldn't find the location - return false as a safety default
+    return false;
+  }
+}
+
+/**
  * Exported helper functions for KDL3.
  * Extends generic helpers with KDL3-specific complex helpers.
  */
@@ -224,6 +339,7 @@ export const helperFunctions = {
   // KDL3-specific complex helpers
   can_assemble_rob,
   can_fix_angel_wings,
+  can_reach_boss,
 
   // Expose ability/animal reach functions in case they're needed directly
   can_reach_burning(snapshot, staticData) {

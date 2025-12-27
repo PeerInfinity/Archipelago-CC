@@ -1981,12 +1981,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "DLCQuest",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": true,
-      "add_sphere_items_upfront": true,
       "options": {
         "accessibility": "full",
         "campaign": "basic",
@@ -2104,39 +2101,6 @@
           "display_name": "Time Is Money"
         }
       },
-      "world_directory": "dlcquest"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "DLCQuest",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "grass",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Archipelago DLCQuest game on your computer.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "axe_y"
-          ]
-        },
-        {
-          "name": "Guide de configuration MultiWorld",
-          "description": "Un guide pour configurer DLCQuest sur votre PC.",
-          "language": "Fran\u00e7ais",
-          "file_name": "setup_fr.md",
-          "link": "setup/fr",
-          "authors": [
-            "Deoxis"
-          ]
-        }
-      ],
       "world_description": "DLCQuest is a metroid ish game where everything is an in-game dlc.",
       "slot_data": {
         "death_link": 0,
@@ -2148,6 +2112,46 @@
         "coinbundlerange": 20,
         "seed": 71185160
       },
+      "web": {
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago DLCQuest game on your computer.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "axe_y"
+            ]
+          },
+          {
+            "name": "Guide de configuration MultiWorld",
+            "description": "Un guide pour configurer DLCQuest sur votre PC.",
+            "language": "Fran\u00e7ais",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "Deoxis"
+            ]
+          }
+        ]
+      },
+      "world_directory": "dlcquest"
+    }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": true,
+      "add_sphere_items_upfront": true
+    }
+  },
+  "game_info": {
+    "1": {
       "accumulator_rules": [
         {
           "pattern": "^(\\d+) coins?$",
