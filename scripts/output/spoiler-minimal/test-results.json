@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-27T05:56:40.115748",
-    "last_updated": "2025-12-27T05:56:40.115753",
+    "last_updated": "2025-12-27T18:10:22.367869",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2196,50 +2196,38 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "799272ceacc0278b30f0d192708e1448a4cc666d524c036465ce87fcb700dace",
-          "new_sphere_log_hash": "dca59178e74b06dc84c9338d680a5275526faf657c5d67bb6336e6675b506cc5",
-          "original_rules_hash": "799272ceacc0278b30f0d192708e1448a4cc666d524c036465ce87fcb700dace",
-          "original_sphere_log_hash": "dca59178e74b06dc84c9338d680a5275526faf657c5d67bb6336e6675b506cc5",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-27T05:54:52.201735"
-        }
-      },
       "game_name_from_filename": "mmbn3",
       "game_name_from_yaml": "MegaMan Battle Network 3",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.52,
+        "processing_time_seconds": 7.19,
         "return_code": 0,
         "success": true,
-        "warning_count": 3
+        "warning_count": 2
       },
       "rules_file": {
         "path": "frontend/presets/mmbn3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 220607,
+        "size_bytes": 222096,
         "size_mb": 0.21
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 16.97,
-        "return_code": 1,
-        "sphere_reached": 3.3,
-        "success": false,
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 11.81,
+        "return_code": 0,
+        "sphere_reached": 6.1,
+        "success": true,
         "total_spheres": 6.1,
         "warning_count": 0
       },
       "template_filename": "MegaMan Battle Network 3.yaml",
-      "timestamp": "2025-12-27T05:53:47.503044",
+      "timestamp": "2025-12-27T18:10:02.927951",
       "world_info": {
         "exporter_path": "exporter/games/mmbn3.py",
-        "exporter_size": 3430,
+        "exporter_size": 4669,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "mmbn3",
