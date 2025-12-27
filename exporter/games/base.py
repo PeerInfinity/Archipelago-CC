@@ -63,6 +63,11 @@ class BaseGameExportHandler:
     # When True, all simple attributes (bool, int, float, str) are exported
     AUTO_DISCOVER_LOCATION_ATTRIBUTES: bool = False
 
+    # Whether to auto-discover and export all simple world attributes
+    # When False (default), only explicitly defined WORLD_ATTRIBUTES are exported
+    # When True, all simple attributes (bool, int, float, str) on the world instance are exported
+    AUTO_DISCOVER_WORLD_ATTRIBUTES: bool = False
+
     # Set of helper function names to export as definitions (manual whitelist)
     # These helpers are always exported regardless of AUTO_EXPORT_DISCOVERED_HELPERS
     HELPERS_TO_EXPORT_WHITELIST: Set[str] = set()
@@ -107,7 +112,7 @@ class BaseGameExportHandler:
     # When enabled, helpers with more nodes than HELPER_INLINE_THRESHOLD will be
     # preserved as helper calls instead of inlined, reducing rules.json size
     # Most games work better with this disabled (17 games explicitly disable it)
-    AUTO_PRESERVE_LARGE_HELPERS: bool = False
+    AUTO_PRESERVE_LARGE_HELPERS: bool = True
 
     # Threshold for automatic helper preservation (only used if AUTO_PRESERVE_LARGE_HELPERS is True)
     # Helpers with more than this many nodes will be preserved as helper calls
@@ -1089,28 +1094,30 @@ class BaseGameExportHandler:
 
             return False
 
-        # Get instance attributes (set on self)
-        if hasattr(world, '__dict__'):
-            for attr_name, value in world.__dict__.items():
-                try_add_attribute(attr_name, value)
+        # Auto-discover world attributes if enabled
+        if self.AUTO_DISCOVER_WORLD_ATTRIBUTES:
+            # Get instance attributes (set on self)
+            if hasattr(world, '__dict__'):
+                for attr_name, value in world.__dict__.items():
+                    try_add_attribute(attr_name, value)
 
-        # Also check class-level attributes with type annotations (e.g., can_take_damage: bool = True)
-        # These are defaults that may not be set on the instance
-        world_class = type(world)
-        if hasattr(world_class, '__annotations__'):
-            for attr_name, attr_type in world_class.__annotations__.items():
-                if attr_name in world_attributes:
-                    continue  # Already discovered from instance
-                if attr_name in skip_attrs:
-                    continue
-                # Only include simple annotated types
-                if attr_type in (bool, int, float, str):
-                    try:
-                        value = getattr(world, attr_name, None)
-                        if value is not None:
-                            try_add_attribute(attr_name, value)
-                    except Exception:
-                        pass
+            # Also check class-level attributes with type annotations (e.g., can_take_damage: bool = True)
+            # These are defaults that may not be set on the instance
+            world_class = type(world)
+            if hasattr(world_class, '__annotations__'):
+                for attr_name, attr_type in world_class.__annotations__.items():
+                    if attr_name in world_attributes:
+                        continue  # Already discovered from instance
+                    if attr_name in skip_attrs:
+                        continue
+                    # Only include simple annotated types
+                    if attr_type in (bool, int, float, str):
+                        try:
+                            value = getattr(world, attr_name, None)
+                            if value is not None:
+                                try_add_attribute(attr_name, value)
+                        except Exception:
+                            pass
 
         # For worldgen worlds, load world_attributes from _worldgen_settings.json
         # This is needed because worldgen worlds store computed attributes there

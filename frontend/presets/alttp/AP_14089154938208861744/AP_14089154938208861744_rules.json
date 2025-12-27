@@ -21538,10 +21538,6 @@
           "display_name": "Underworld Palette"
         }
       },
-      "treasure_hunt_required": 0,
-      "can_take_damage": true,
-      "logical_heart_pieces": 24,
-      "logical_heart_containers": 10,
       "has_progressive_bows": true,
       "dungeons": {
         "Hyrule Castle": "Hyrule Castle",
@@ -21970,6 +21966,8 @@
           "sram_offset": 30
         }
       ],
+      "logical_heart_containers": 10,
+      "logical_heart_pieces": 24,
       "er_seed": "vanilla",
       "difficulty_requirements": {
         "baseitems": [
@@ -22303,8 +22301,10 @@
         "heart_piece_limit": 24,
         "boss_heart_container_limit": 10
       },
+      "treasure_hunt_required": 0,
       "treasure_hunt_total": 0,
       "rom_name": "ALTTP_ROM_NOT_GENERATED",
+      "can_take_damage": true,
       "swamp_patch_required": false,
       "powder_patch_required": false,
       "ganon_at_pyramid": true,
@@ -22734,73 +22734,57 @@
         ],
         "body": {
           "type": "any_of",
+          "element_rule": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "shop"
+                  },
+                  "attr": "has"
+                },
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "item"
+                  }
+                ]
+              },
+              {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "shop"
+                    },
+                    "attr": "region"
+                  },
+                  "attr": "can_reach"
+                }
+              }
+            ]
+          },
           "iterator_info": {
+            "type": "comprehension_details",
             "target": {
               "type": "name",
               "name": "shop"
             },
             "iterator": {
-              "type": "world_attribute",
-              "attribute": "shops"
-            }
-          },
-          "element_rule": {
-            "type": "and",
-            "args": [
-              {
-                "type": "any_of",
-                "iterator_info": {
-                  "target": {
-                    "type": "name",
-                    "name": "inv"
-                  },
-                  "iterator": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "name",
-                      "name": "shop"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": "inventory"
-                    }
-                  }
-                },
-                "element_rule": {
-                  "type": "compare",
-                  "left": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "name",
-                      "name": "inv"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": "item"
-                    }
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "name",
-                    "name": "item"
-                  }
-                }
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
               },
-              {
-                "type": "can_reach",
-                "region": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "shop"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": "region"
-                  }
-                }
-              }
-            ]
+              "attr": "shops"
+            }
           }
         }
       },
@@ -22810,97 +22794,57 @@
         ],
         "body": {
           "type": "any_of",
+          "element_rule": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "shop"
+                  },
+                  "attr": "has_unlimited"
+                },
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "item"
+                  }
+                ]
+              },
+              {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "shop"
+                    },
+                    "attr": "region"
+                  },
+                  "attr": "can_reach"
+                }
+              }
+            ]
+          },
           "iterator_info": {
+            "type": "comprehension_details",
             "target": {
               "type": "name",
               "name": "shop"
             },
             "iterator": {
-              "type": "world_attribute",
-              "attribute": "shops"
-            }
-          },
-          "element_rule": {
-            "type": "and",
-            "args": [
-              {
-                "type": "any_of",
-                "iterator_info": {
-                  "target": {
-                    "type": "name",
-                    "name": "inv"
-                  },
-                  "iterator": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "name",
-                      "name": "shop"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": "inventory"
-                    }
-                  }
-                },
-                "element_rule": {
-                  "type": "and",
-                  "args": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "subscript",
-                        "value": {
-                          "type": "name",
-                          "name": "inv"
-                        },
-                        "index": {
-                          "type": "constant",
-                          "value": "item"
-                        }
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "name",
-                        "name": "item"
-                      }
-                    },
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "subscript",
-                        "value": {
-                          "type": "name",
-                          "name": "inv"
-                        },
-                        "index": {
-                          "type": "constant",
-                          "value": "max"
-                        }
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    }
-                  ]
-                }
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
               },
-              {
-                "type": "can_reach",
-                "region": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "name",
-                    "name": "shop"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": "region"
-                  }
-                }
-              }
-            ]
+              "attr": "shops"
+            }
           }
         }
       },

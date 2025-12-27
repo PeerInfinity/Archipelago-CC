@@ -1384,6 +1384,13 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             return undefined;
           }
 
+          // Special handling for shop.region - return a region reference for can_reach checks
+          // Shop objects have 'inventory' array and 'region' string (region name)
+          if (rule.attr === 'region' && baseObject.inventory && typeof baseObject.region === 'string') {
+            // Return a region reference object that can_reach handling will recognize
+            return { __regionRef: true, regionName: baseObject.region };
+          }
+
           // Special handling for boss attribute - redirect to bosses["None"] if bosses exists
           if (rule.attr === 'boss') {
             const hasBoss = baseObject.boss !== undefined;
@@ -1677,7 +1684,41 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
           return undefined;
         }
-        
+
+        // Special handling for shop.has(item) method calls
+        // Shop objects have 'inventory' array; has() checks if any inventory item matches
+        if (rule.function?.type === 'attribute' &&
+            rule.function.attr === 'has' &&
+            rule.function.object?.type === 'name') {
+          // Resolve the shop object from local scope (bound in any_of iteration)
+          const shopObj = evaluateRule(rule.function.object, context, depth + 1, localScope);
+          if (shopObj && Array.isArray(shopObj.inventory)) {
+            const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
+            const itemName = args[0];
+            // Check if any inventory entry has this item
+            const hasItem = shopObj.inventory.some(inv => inv && inv.item === itemName);
+            result = hasItem;
+            break;
+          }
+        }
+
+        // Special handling for shop.has_unlimited(item) method calls
+        // Checks if shop has the item with unlimited stock (max === 0)
+        if (rule.function?.type === 'attribute' &&
+            rule.function.attr === 'has_unlimited' &&
+            rule.function.object?.type === 'name') {
+          // Resolve the shop object from local scope (bound in any_of iteration)
+          const shopObj = evaluateRule(rule.function.object, context, depth + 1, localScope);
+          if (shopObj && Array.isArray(shopObj.inventory)) {
+            const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
+            const itemName = args[0];
+            // Check if any inventory entry has this item with unlimited stock
+            const hasUnlimited = shopObj.inventory.some(inv => inv && inv.item === itemName && inv.max === 0);
+            result = hasUnlimited;
+            break;
+          }
+        }
+
         // Special handling for boss.can_defeat function calls
         // These need to be redirected to use the boss's defeat_rule data
         if (
@@ -2832,11 +2873,23 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           result = context.resolveName(rule.name);
         }
 
-        // If not resolved, try to get from settings
+        // If not resolved, try to get from settings or world data
         // This is needed for helper definitions that reference settings like 'floating'
         if (result === undefined && typeof context?.getStaticData === 'function') {
           const staticData = context.getStaticData();
           const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+
+          // Special case: 'world' name should resolve to the world data object
+          // This enables world.shops, world.dungeons, etc. attribute access
+          if (rule.name === 'world') {
+            const worldData = staticData?.world?.[playerId];
+            if (worldData !== undefined) {
+              result = worldData;
+              log('debug', `[evaluateRule] Resolved 'world' to world data object`);
+              break;
+            }
+          }
+
           const settingValue = staticData?.settings?.[playerId]?.[rule.name];
           if (settingValue !== undefined) {
             result = settingValue;
@@ -3278,7 +3331,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           // Create a new context with the iterator variable bound
           const boundContext = createBoundContext(context, rule.iterator_info, item);
 
-          const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1);
+          // Pass localScope to preserve helper parameter bindings
+          const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1, localScope);
           if (itemResult === false) {
             result = false;
             break;
@@ -3333,7 +3387,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           // Create a new context with the iterator variable bound
           const boundContext = createBoundContext(context, rule.iterator_info, item);
 
-          const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1);
+          // Pass localScope to preserve helper parameter bindings (e.g., 'item' in can_buy(item))
+          const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1, localScope);
           if (itemResult === true) {
             result = true;
             break;

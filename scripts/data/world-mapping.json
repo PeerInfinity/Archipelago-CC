@@ -1,7 +1,7 @@
 {
   "A Hat in Time": {
     "exporter_path": "exporter/games/ahit.py",
-    "exporter_size": 11454,
+    "exporter_size": 10225,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -19,7 +19,7 @@
   },
   "A Link to the Past": {
     "exporter_path": "exporter/games/alttp.py",
-    "exporter_size": 12381,
+    "exporter_size": 2194,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
