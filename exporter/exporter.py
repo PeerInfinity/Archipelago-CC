@@ -1655,7 +1655,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                     exit_targets.add(target)
 
         missing_regions = exit_targets - set(regions_data.keys())
-        for missing_region in missing_regions:
+        for missing_region in sorted(missing_regions):
             logger.debug(f"Creating placeholder for missing terminal region: {missing_region}")
             regions_data[missing_region] = {
                 'name': missing_region,
@@ -2107,7 +2107,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'world',
         'exporter',
         'game_info',
-        'metamath_data'
+        'metamath_data',
+        'helpers'
     ]
 
     # Player-specific keys contain data nested under player IDs
