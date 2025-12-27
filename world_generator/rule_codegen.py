@@ -4807,6 +4807,17 @@ class HelperCodeGenerator:
                 else:
                     return str(value)
 
+        # Special case: when accessing world.xxx where xxx is a known world attribute
+        # (e.g., world.era_required_non_progressive_items), inline the constant value.
+        # This handles game-specific computed attributes that were exported in the rules.json
+        # and are accessed by helper functions. Instead of trying to access via
+        # state.multiworld.worlds[player] (which is a SimpleNamespace), we inline the data.
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name' and obj_expr.get('name') == 'world':
+            if attr in self.settings:
+                value = self.settings[attr]
+                # Use _expr_constant to convert the value to Python code
+                return self._expr_constant({'type': 'constant', 'value': value})
+
         obj = self._generate_expression(obj_expr)
         return f"{obj}.{attr}"
 
