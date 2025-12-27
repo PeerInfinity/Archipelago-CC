@@ -363,22 +363,28 @@ class ASTVisitorMixin:
                             # Keep unresolved or complex objects as name references
                             resolved_args.append(arg)
                     elif arg and arg.get('type') == 'attribute':
-                        # Try to resolve attribute expressions like HatType.BREWING
-                        resolved_value = self.expression_resolver.resolve_expression(arg)
-                        if resolved_value is not None and is_simple_value(resolved_value):
-                            # Only create constant for simple values
-                            # Handle enum values - extract the numeric value
-                            if hasattr(resolved_value, 'value'):
-                                final_value = resolved_value.value
-                            else:
-                                final_value = resolved_value
-                            # Ensure the final value is JSON-serializable
-                            final_value = make_json_serializable(final_value)
-                            logging.debug(f"Resolved argument attribute to {final_value}")
-                            resolved_args.append({'type': 'constant', 'value': final_value})
-                        else:
-                            # Keep unresolved or complex objects as attribute references
+                        # Don't resolve world attribute chains - let the frontend resolve them
+                        # This ensures consistent output regardless of analysis order.
+                        if self._is_world_attribute_chain(arg):
+                            logging.debug(f"Preserving world attribute chain in argument (not resolving to constant)")
                             resolved_args.append(arg)
+                        else:
+                            # Try to resolve attribute expressions like HatType.BREWING
+                            resolved_value = self.expression_resolver.resolve_expression(arg)
+                            if resolved_value is not None and is_simple_value(resolved_value):
+                                # Only create constant for simple values
+                                # Handle enum values - extract the numeric value
+                                if hasattr(resolved_value, 'value'):
+                                    final_value = resolved_value.value
+                                else:
+                                    final_value = resolved_value
+                                # Ensure the final value is JSON-serializable
+                                final_value = make_json_serializable(final_value)
+                                logging.debug(f"Resolved argument attribute to {final_value}")
+                                resolved_args.append({'type': 'constant', 'value': final_value})
+                            else:
+                                # Keep unresolved or complex objects as attribute references
+                                resolved_args.append(arg)
                     else:
                         resolved_args.append(arg)
 
@@ -1643,6 +1649,37 @@ class ASTVisitorMixin:
 
         return True
 
+    def _is_world_attribute_chain(self, obj_result):
+        """
+        Check if obj_result is a 'world' name or an attribute chain rooted in 'world'.
+
+        This is used to prevent resolving world attributes to constants during analysis,
+        ensuring consistent output regardless of analysis order.
+
+        Examples that return True:
+        - {'type': 'name', 'name': 'world'}
+        - {'type': 'attribute', 'object': {'type': 'name', 'name': 'world'}, 'attr': 'difficulty_requirements'}
+        - {'type': 'attribute', 'object': {...nested world chain...}, 'attr': 'x'}
+
+        Args:
+            obj_result: The analyzed object result dictionary
+
+        Returns:
+            True if the object is rooted in 'world', False otherwise
+        """
+        if not isinstance(obj_result, dict):
+            return False
+
+        # Direct world name reference
+        if obj_result.get('type') == 'name' and obj_result.get('name') == 'world':
+            return True
+
+        # Nested attribute chain - recursively check if it's rooted in world
+        if obj_result.get('type') == 'attribute':
+            return self._is_world_attribute_chain(obj_result.get('object'))
+
+        return False
+
     def _is_world_options_pattern(self, node):
         """
         Detect patterns accessing world settings/attributes:
@@ -2038,8 +2075,18 @@ class ASTVisitorMixin:
                 obj_result = self.visit(node.value) # Get returned result
 
             if obj_result:
-                 # Try to resolve the attribute access to a constant value
+                 # Build the attribute access structure
                  attr_structure = {'type': 'attribute', 'object': obj_result, 'attr': attr_name}
+
+                 # Don't resolve world attributes to constants - let the frontend resolve them
+                 # from the exported world data. This ensures consistent output regardless of
+                 # whether world is available during analysis (which can vary based on order).
+                 # Check for both direct (world.attr) and nested (world.x.y) attribute chains.
+                 if self._is_world_attribute_chain(obj_result):
+                     logging.debug(f"visit_Attribute: Preserving world attribute chain .{attr_name} as reference (not resolving to constant)")
+                     return attr_structure
+
+                 # Try to resolve the attribute access to a constant value
                  resolved_value = self.expression_resolver.resolve_expression(attr_structure)
 
                  # If resolved to a simple value, return it as a constant

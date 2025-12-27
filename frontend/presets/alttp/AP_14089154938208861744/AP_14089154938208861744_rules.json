@@ -21538,10 +21538,6 @@
           "display_name": "Underworld Palette"
         }
       },
-      "treasure_hunt_required": 0,
-      "can_take_damage": true,
-      "logical_heart_pieces": 24,
-      "logical_heart_containers": 10,
       "has_progressive_bows": true,
       "dungeons": {
         "Hyrule Castle": "Hyrule Castle",
@@ -21970,6 +21966,8 @@
           "sram_offset": 30
         }
       ],
+      "logical_heart_containers": 10,
+      "logical_heart_pieces": 24,
       "er_seed": "vanilla",
       "difficulty_requirements": {
         "baseitems": [
@@ -22303,8 +22301,10 @@
         "heart_piece_limit": 24,
         "boss_heart_container_limit": 10
       },
+      "treasure_hunt_required": 0,
       "treasure_hunt_total": 0,
       "rom_name": "ALTTP_ROM_NOT_GENERATED",
+      "can_take_damage": true,
       "swamp_patch_required": false,
       "powder_patch_required": false,
       "ganon_at_pyramid": true,
