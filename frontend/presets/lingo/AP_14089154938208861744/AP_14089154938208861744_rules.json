@@ -21072,6 +21072,4271 @@
           "display_name": "Victory Condition"
         }
       },
+      "player_logic": {
+        "item_by_door": {
+          "Pilgrim Antechamber": {
+            "Sun Painting": "Pilgrim Room - Sun Painting"
+          }
+        },
+        "locations_by_room": {
+          "Ending Area": [
+            {
+              "name": "The End (Solved)"
+            }
+          ],
+          "Starting Room": [
+            {
+              "name": "Starting Room - HI",
+              "code": 444400
+            },
+            {
+              "name": "Starting Room - HIDDEN",
+              "code": 444401
+            }
+          ],
+          "Hidden Room": [
+            {
+              "name": "Hidden Room - DEAD END",
+              "code": 444406
+            },
+            {
+              "name": "Hidden Room - OPEN",
+              "code": 444407
+            }
+          ],
+          "The Seeker": [
+            {
+              "name": "The Seeker - Achievement",
+              "code": 444409
+            }
+          ],
+          "Second Room": [
+            {
+              "name": "Second Room - LEVEL 2",
+              "code": 444431
+            },
+            {
+              "name": "Second Room - Good Luck",
+              "code": 445203
+            }
+          ],
+          "Hub Room": [
+            {
+              "name": "Hub Room - ORDER",
+              "code": 444432
+            },
+            {
+              "name": "Hub Room - SLAUGHTER",
+              "code": 444433
+            },
+            {
+              "name": "Hub Room - TRACE",
+              "code": 444436
+            },
+            {
+              "name": "Hub Room - RAT",
+              "code": 444437
+            },
+            {
+              "name": "Hub Room - OPEN",
+              "code": 444438
+            },
+            {
+              "name": "Hub Room - LOST",
+              "code": 444440
+            }
+          ],
+          "Pilgrim Antechamber": [
+            {
+              "name": "Pilgrim Antechamber - PILGRIM",
+              "code": 444447
+            },
+            {
+              "name": "Pilgrim Room - HOT CRUST",
+              "code": 445205
+            }
+          ],
+          "Pilgrim Room": [
+            {
+              "name": "Pilgrim Room - THIS",
+              "code": 444449
+            }
+          ],
+          "Crossroads": [
+            {
+              "name": "Crossroads - DECAY",
+              "code": 444462
+            },
+            {
+              "name": "Crossroads - NOPE",
+              "code": 444463
+            },
+            {
+              "name": "Crossroads - WE ROT",
+              "code": 444465
+            },
+            {
+              "name": "Crossroads - BEND HI",
+              "code": 444469
+            },
+            {
+              "name": "Crossroads - THE EYES",
+              "code": 444470
+            },
+            {
+              "name": "Crossroads - TURN/RUNT",
+              "code": 445206
+            },
+            {
+              "name": "Crossroads - WORDS, SWORD",
+              "code": 445207
+            }
+          ],
+          "The Tenacious": [
+            {
+              "name": "The Tenacious - Achievement",
+              "code": 444491
+            },
+            {
+              "name": "The Tenacious - Palindromes",
+              "code": 445210
+            },
+            {
+              "name": "The Tenacious - White Palindromes",
+              "code": 445211
+            }
+          ],
+          "Outside The Agreeable": [
+            {
+              "name": "Outside The Agreeable - MASSACRED",
+              "code": 444496
+            },
+            {
+              "name": "Outside The Agreeable - BLACK",
+              "code": 444497
+            },
+            {
+              "name": "Outside The Agreeable - CLOSE",
+              "code": 444498
+            },
+            {
+              "name": "Outside The Agreeable - RIGHT",
+              "code": 444501
+            }
+          ],
+          "Dread Hallway": [
+            {
+              "name": "Dread Hallway - DREAD",
+              "code": 444516
+            }
+          ],
+          "The Agreeable": [
+            {
+              "name": "The Agreeable - Achievement",
+              "code": 444517
+            },
+            {
+              "name": "The Agreeable - BYE",
+              "code": 444518
+            }
+          ],
+          "Hedge Maze": [
+            {
+              "name": "Hedge Maze - DOWN",
+              "code": 444530
+            },
+            {
+              "name": "Hedge Maze - Hide and Seek",
+              "code": 445215
+            }
+          ],
+          "The Perceptive": [
+            {
+              "name": "The Perceptive - Achievement",
+              "code": 444546
+            },
+            {
+              "name": "The Perceptive - GAZE",
+              "code": 444547
+            }
+          ],
+          "The Fearless": [
+            {
+              "name": "The Fearless - Achievement",
+              "code": 444560
+            }
+          ],
+          "The Observant": [
+            {
+              "name": "The Observant - Achievement",
+              "code": 444565
+            },
+            {
+              "name": "The Observant - SIX",
+              "code": 444569
+            },
+            {
+              "name": "The Observant - FOUR (1), FOUR (2)",
+              "code": 445218
+            }
+          ],
+          "The Incomparable": [
+            {
+              "name": "The Incomparable - Achievement",
+              "code": 444585
+            },
+            {
+              "name": "Giant Sevens",
+              "code": 445219
+            }
+          ],
+          "Orange Tower First Floor": [
+            {
+              "name": "Orange Tower First Floor - SECRET",
+              "code": 444602
+            },
+            {
+              "name": "Orange Tower First Floor - DADS + ALE",
+              "code": 444603
+            },
+            {
+              "name": "Orange Tower First Floor - Salt Pepper Door",
+              "code": 445220
+            }
+          ],
+          "Orange Tower Third Floor": [
+            {
+              "name": "Orange Tower Third Floor - DEER + WREN",
+              "code": 444606
+            },
+            {
+              "name": "Color Barriers - RED and YELLOW",
+              "code": 445221
+            }
+          ],
+          "Orange Tower Fourth Floor": [
+            {
+              "name": "Orange Tower Fourth Floor - LEARNS + UNSEW",
+              "code": 444609
+            },
+            {
+              "name": "Orange Tower Fourth Floor - HOT CRUSTS",
+              "code": 444610
+            },
+            {
+              "name": "Orange Tower Fourth Floor - IRK HORN",
+              "code": 444611
+            }
+          ],
+          "Orange Tower Fifth Floor": [
+            {
+              "name": "Orange Tower Fifth Floor - DRAWL + RUNS",
+              "code": 444615
+            },
+            {
+              "name": "Orange Tower Fifth Floor - SIZE (Small), SIZE (Big)",
+              "code": 445222
+            }
+          ],
+          "Orange Tower Seventh Floor": [
+            {
+              "name": "Orange Tower Seventh Floor - THE MASTER",
+              "code": 444621
+            },
+            {
+              "name": "Mastery Panels",
+              "code": 445223
+            }
+          ],
+          "Orange Tower Basement": [
+            {
+              "name": "Orange Tower Basement - THE LIBRARY",
+              "code": 444631
+            }
+          ],
+          "The Colorful": [
+            {
+              "name": "The Colorful - Achievement",
+              "code": 444652
+            }
+          ],
+          "Welcome Back Area": [
+            {
+              "name": "Welcome Back Area - WELCOME BACK",
+              "code": 444653
+            },
+            {
+              "name": "Welcome Back Area - CLOCKWISE",
+              "code": 444655
+            }
+          ],
+          "Owl Hallway": [
+            {
+              "name": "Owl Hallway - STRAYS",
+              "code": 444656
+            },
+            {
+              "name": "Owl Hallway - READS + RUST",
+              "code": 444657
+            }
+          ],
+          "Outside The Initiated": [
+            {
+              "name": "Outside The Initiated - UNCOVER",
+              "code": 444664
+            },
+            {
+              "name": "Outside The Initiated - OXEN",
+              "code": 444665
+            },
+            {
+              "name": "Color Barriers - BLUE and YELLOW",
+              "code": 445235
+            },
+            {
+              "name": "Color Barriers - RED and BLUE",
+              "code": 445236
+            },
+            {
+              "name": "Color Barriers - GREEN, ORANGE and PURPLE",
+              "code": 445237
+            }
+          ],
+          "The Initiated": [
+            {
+              "name": "The Initiated - Achievement",
+              "code": 444676
+            }
+          ],
+          "The Optimistic": [
+            {
+              "name": "The Optimistic - Achievement",
+              "code": 444667
+            }
+          ],
+          "The Traveled": [
+            {
+              "name": "The Traveled - Achievement",
+              "code": 444693
+            },
+            {
+              "name": "The Traveled - HELLO",
+              "code": 444698
+            }
+          ],
+          "Outside The Bold": [
+            {
+              "name": "Outside The Bold - UNOPEN",
+              "code": 444711
+            },
+            {
+              "name": "Outside The Bold - BEGIN",
+              "code": 444712
+            }
+          ],
+          "The Bold": [
+            {
+              "name": "The Bold - Achievement",
+              "code": 444725
+            }
+          ],
+          "Outside The Undeterred": [
+            {
+              "name": "Outside The Undeterred - ART + ART",
+              "code": 444743
+            },
+            {
+              "name": "Outside The Undeterred - PEN",
+              "code": 444744
+            },
+            {
+              "name": "Outside The Undeterred - RAINY",
+              "code": 444750
+            },
+            {
+              "name": "Outside The Undeterred - ZERO",
+              "code": 444751
+            },
+            {
+              "name": "Outside The Undeterred - ONE",
+              "code": 444752
+            },
+            {
+              "name": "Twos",
+              "code": 445238
+            },
+            {
+              "name": "Threes",
+              "code": 445239
+            },
+            {
+              "name": "Fours",
+              "code": 445240
+            }
+          ],
+          "The Undeterred": [
+            {
+              "name": "The Undeterred - Achievement",
+              "code": 444759
+            }
+          ],
+          "Directional Gallery": [
+            {
+              "name": "Directional Gallery - 834283054",
+              "code": 444792
+            },
+            {
+              "name": "Directional Gallery - PARANOID",
+              "code": 444793
+            },
+            {
+              "name": "Directional Gallery - WADED + WEE",
+              "code": 444795
+            },
+            {
+              "name": "Directional Gallery - TURN, LEARN",
+              "code": 445246
+            }
+          ],
+          "Color Hunt": [
+            {
+              "name": "Color Hunt - EXIT",
+              "code": 444806
+            },
+            {
+              "name": "Color Hunt - RED",
+              "code": 444808
+            },
+            {
+              "name": "Color Hunt - BLUE",
+              "code": 444809
+            },
+            {
+              "name": "Color Hunt - YELLOW",
+              "code": 444810
+            },
+            {
+              "name": "Color Hunt - GREEN",
+              "code": 444811
+            },
+            {
+              "name": "Color Hunt - PURPLE",
+              "code": 444812
+            },
+            {
+              "name": "Color Hunt - ORANGE",
+              "code": 444813
+            }
+          ],
+          "Champion's Rest": [
+            {
+              "name": "Champion's Rest - YOU",
+              "code": 444814
+            }
+          ],
+          "The Bearer": [
+            {
+              "name": "The Bearer - Achievement",
+              "code": 444819
+            },
+            {
+              "name": "The Bearer - MIDDLE",
+              "code": 444820
+            },
+            {
+              "name": "The Bearer - FARTHER",
+              "code": 444821
+            }
+          ],
+          "The Steady": [
+            {
+              "name": "The Steady - Achievement",
+              "code": 444859
+            }
+          ],
+          "The Artistic (Smiley)": [
+            {
+              "name": "The Artistic - Achievement",
+              "code": 444885
+            },
+            {
+              "name": "The Artistic - Smiley and Panda",
+              "code": 445249
+            }
+          ],
+          "The Discerning": [
+            {
+              "name": "The Discerning - Achievement",
+              "code": 444920
+            }
+          ],
+          "The Eyes They See": [
+            {
+              "name": "The Eyes They See - NEAR",
+              "code": 444937
+            }
+          ],
+          "Outside The Wondrous": [
+            {
+              "name": "Outside The Wondrous - SHRINK",
+              "code": 444940
+            }
+          ],
+          "The Wondrous": [
+            {
+              "name": "The Wondrous - Achievement",
+              "code": 444947
+            }
+          ],
+          "Hallway Room (1)": [
+            {
+              "name": "Hallway Room (1) - OUT",
+              "code": 444505
+            },
+            {
+              "name": "Hallway Room - First Room",
+              "code": 445214
+            }
+          ],
+          "Elements Area": [
+            {
+              "name": "Elements Area - UNDISTRACTED",
+              "code": 444961
+            }
+          ],
+          "Outside The Wanderer": [
+            {
+              "name": "Outside The Wanderer - WANDERLUST",
+              "code": 444966
+            }
+          ],
+          "The Wanderer": [
+            {
+              "name": "The Wanderer - Achievement",
+              "code": 444967
+            }
+          ],
+          "Art Gallery": [
+            {
+              "name": "Art Gallery - ORDER",
+              "code": 444981
+            }
+          ],
+          "Room Room": [
+            {
+              "name": "Room Room - BASE",
+              "code": 445076
+            }
+          ],
+          "The Wise": [
+            {
+              "name": "The Wise - Achievement",
+              "code": 445086
+            }
+          ],
+          "The Red": [
+            {
+              "name": "The Red - Achievement",
+              "code": 445099
+            }
+          ],
+          "The Ecstatic": [
+            {
+              "name": "The Ecstatic - Achievement",
+              "code": 445115
+            }
+          ],
+          "Outside The Scientific": [
+            {
+              "name": "Outside The Scientific - OPEN",
+              "code": 445130
+            }
+          ],
+          "The Scientific": [
+            {
+              "name": "The Scientific - Achievement",
+              "code": 445133
+            },
+            {
+              "name": "The Scientific - Chemistry Puzzles",
+              "code": 445268
+            },
+            {
+              "name": "The Scientific - Biology Puzzles",
+              "code": 445269
+            },
+            {
+              "name": "The Scientific - Physics Puzzles",
+              "code": 445270
+            }
+          ],
+          "Challenge Room": [
+            {
+              "name": "Challenge Room - WELCOME",
+              "code": 445176
+            },
+            {
+              "name": "Challenge Room - Achievement",
+              "code": 445178
+            }
+          ],
+          "Lost Area": [
+            {
+              "name": "Crossroads - LOST Pair",
+              "code": 445208
+            }
+          ],
+          "Amen Name Area": [
+            {
+              "name": "Amen Name Area - AMEN, NAME",
+              "code": 445209
+            }
+          ],
+          "Near Far Area": [
+            {
+              "name": "Symmetry Room - NEAR, FAR",
+              "code": 445204
+            }
+          ],
+          "Warts Straw Area": [
+            {
+              "name": "Symmetry Room - WARTS, STRAW",
+              "code": 445212
+            }
+          ],
+          "Leaf Feel Area": [
+            {
+              "name": "Symmetry Room - LEAF, FEEL",
+              "code": 445213
+            }
+          ],
+          "Compass Room": [
+            {
+              "name": "Outside The Agreeable - Lookout Panels",
+              "code": 445271
+            }
+          ],
+          "The Fearless (First Floor)": [
+            {
+              "name": "The Fearless - First Floor Puzzles",
+              "code": 445216
+            }
+          ],
+          "The Fearless (Second Floor)": [
+            {
+              "name": "The Fearless - Second Floor Puzzles",
+              "code": 445217
+            }
+          ],
+          "First Second Third Fourth": [
+            {
+              "name": "Courtyard - FIRST, SECOND, THIRD, FOURTH",
+              "code": 445224
+            }
+          ],
+          "The Colorful (White)": [
+            {
+              "name": "The Colorful - White",
+              "code": 445225
+            }
+          ],
+          "The Colorful (Black)": [
+            {
+              "name": "The Colorful - Black",
+              "code": 445226
+            }
+          ],
+          "The Colorful (Red)": [
+            {
+              "name": "The Colorful - Red",
+              "code": 445227
+            }
+          ],
+          "The Colorful (Yellow)": [
+            {
+              "name": "The Colorful - Yellow",
+              "code": 445228
+            }
+          ],
+          "The Colorful (Blue)": [
+            {
+              "name": "The Colorful - Blue",
+              "code": 445229
+            }
+          ],
+          "The Colorful (Purple)": [
+            {
+              "name": "The Colorful - Purple",
+              "code": 445230
+            }
+          ],
+          "The Colorful (Orange)": [
+            {
+              "name": "The Colorful - Orange",
+              "code": 445231
+            }
+          ],
+          "The Colorful (Green)": [
+            {
+              "name": "The Colorful - Green",
+              "code": 445232
+            }
+          ],
+          "The Colorful (Brown)": [
+            {
+              "name": "The Colorful - Brown",
+              "code": 445233
+            }
+          ],
+          "The Colorful (Gray)": [
+            {
+              "name": "The Colorful - Gray",
+              "code": 445234
+            }
+          ],
+          "Number Hunt": [
+            {
+              "name": "Fives",
+              "code": 445241
+            },
+            {
+              "name": "Sixes",
+              "code": 445242
+            },
+            {
+              "name": "Sevens",
+              "code": 445243
+            },
+            {
+              "name": "Eights",
+              "code": 445244
+            },
+            {
+              "name": "Nines",
+              "code": 445245
+            }
+          ],
+          "Bearer Side Area": [
+            {
+              "name": "The Bearer - SHORTCUT",
+              "code": 445247
+            }
+          ],
+          "Knight Night (Final)": [
+            {
+              "name": "Knight Night Room - TRUSTED",
+              "code": 445248
+            }
+          ],
+          "The Artistic (Panda)": [
+            {
+              "name": "The Artistic - Panda and Lattice",
+              "code": 445250
+            }
+          ],
+          "The Artistic (Lattice)": [
+            {
+              "name": "The Artistic - Lattice and Apple",
+              "code": 445251
+            }
+          ],
+          "The Artistic (Apple)": [
+            {
+              "name": "The Artistic - Apple and Smiley",
+              "code": 445252
+            }
+          ],
+          "Hallway Room (2)": [
+            {
+              "name": "Hallway Room - Second Room",
+              "code": 445253
+            }
+          ],
+          "Hallway Room (3)": [
+            {
+              "name": "Hallway Room - Third Room",
+              "code": 445254
+            }
+          ],
+          "Hallway Room (4)": [
+            {
+              "name": "Hallway Room - Fourth Room",
+              "code": 445255
+            }
+          ],
+          "Art Gallery (First Floor)": [
+            {
+              "name": "Art Gallery - First Floor Puzzles",
+              "code": 445256
+            }
+          ],
+          "Art Gallery (Second Floor)": [
+            {
+              "name": "Art Gallery - Second Floor Puzzles",
+              "code": 445257
+            }
+          ],
+          "Art Gallery (Third Floor)": [
+            {
+              "name": "Art Gallery - Third Floor Puzzles",
+              "code": 445258
+            }
+          ],
+          "Art Gallery (Fourth Floor)": [
+            {
+              "name": "Art Gallery - Fourth Floor Puzzles",
+              "code": 445259
+            }
+          ],
+          "Rhyme Room (Smiley)": [
+            {
+              "name": "Rhyme Room (Smiley) - Puzzles Toward Target",
+              "code": 445260
+            }
+          ],
+          "Rhyme Room (Cross)": [
+            {
+              "name": "Rhyme Room (Cross) - Exit Puzzles",
+              "code": 445261
+            }
+          ],
+          "Rhyme Room (Circle)": [
+            {
+              "name": "Rhyme Room - Circle/Smiley Wall",
+              "code": 445262
+            }
+          ],
+          "Rhyme Room (Looped Square)": [
+            {
+              "name": "Rhyme Room - Circle/Looped Square Wall",
+              "code": 445263
+            },
+            {
+              "name": "Rhyme Room - Cross/Looped Square Wall",
+              "code": 445264
+            },
+            {
+              "name": "Rhyme Room - Target/Looped Square Wall",
+              "code": 445265
+            }
+          ],
+          "Rhyme Room (Target)": [
+            {
+              "name": "Rhyme Room (Target) - Puzzles Toward Cross",
+              "code": 445266
+            }
+          ],
+          "Outside The Wise": [
+            {
+              "name": "Outside The Wise - KITTEN, CAT",
+              "code": 445267
+            }
+          ]
+        },
+        "real_locations": [
+          "Starting Room - HI",
+          "Starting Room - HIDDEN",
+          "Hidden Room - DEAD END",
+          "Hidden Room - OPEN",
+          "The Seeker - Achievement",
+          "Second Room - LEVEL 2",
+          "Hub Room - ORDER",
+          "Hub Room - SLAUGHTER",
+          "Hub Room - TRACE",
+          "Hub Room - RAT",
+          "Hub Room - OPEN",
+          "Hub Room - LOST",
+          "Pilgrim Antechamber - PILGRIM",
+          "Pilgrim Room - THIS",
+          "Crossroads - DECAY",
+          "Crossroads - NOPE",
+          "Crossroads - WE ROT",
+          "Crossroads - BEND HI",
+          "Crossroads - THE EYES",
+          "The Tenacious - Achievement",
+          "Outside The Agreeable - MASSACRED",
+          "Outside The Agreeable - BLACK",
+          "Outside The Agreeable - CLOSE",
+          "Outside The Agreeable - RIGHT",
+          "Dread Hallway - DREAD",
+          "The Agreeable - Achievement",
+          "The Agreeable - BYE",
+          "Hedge Maze - DOWN",
+          "The Perceptive - Achievement",
+          "The Perceptive - GAZE",
+          "The Fearless - Achievement",
+          "The Observant - Achievement",
+          "The Observant - SIX",
+          "The Incomparable - Achievement",
+          "Orange Tower First Floor - SECRET",
+          "Orange Tower First Floor - DADS + ALE",
+          "Orange Tower Third Floor - DEER + WREN",
+          "Orange Tower Fourth Floor - LEARNS + UNSEW",
+          "Orange Tower Fourth Floor - HOT CRUSTS",
+          "Orange Tower Fourth Floor - IRK HORN",
+          "Orange Tower Fifth Floor - DRAWL + RUNS",
+          "The Colorful - Achievement",
+          "Welcome Back Area - WELCOME BACK",
+          "Welcome Back Area - CLOCKWISE",
+          "Owl Hallway - STRAYS",
+          "Owl Hallway - READS + RUST",
+          "Outside The Initiated - UNCOVER",
+          "Outside The Initiated - OXEN",
+          "The Initiated - Achievement",
+          "The Optimistic - Achievement",
+          "The Traveled - Achievement",
+          "The Traveled - HELLO",
+          "Outside The Bold - UNOPEN",
+          "Outside The Bold - BEGIN",
+          "The Bold - Achievement",
+          "Outside The Undeterred - ART + ART",
+          "Outside The Undeterred - PEN",
+          "Outside The Undeterred - RAINY",
+          "Outside The Undeterred - ZERO",
+          "Outside The Undeterred - ONE",
+          "The Undeterred - Achievement",
+          "Directional Gallery - 834283054",
+          "Directional Gallery - PARANOID",
+          "Directional Gallery - WADED + WEE",
+          "Color Hunt - EXIT",
+          "Color Hunt - RED",
+          "Color Hunt - BLUE",
+          "Color Hunt - YELLOW",
+          "Color Hunt - GREEN",
+          "Color Hunt - PURPLE",
+          "Color Hunt - ORANGE",
+          "Champion's Rest - YOU",
+          "The Bearer - Achievement",
+          "The Bearer - MIDDLE",
+          "The Bearer - FARTHER",
+          "The Steady - Achievement",
+          "The Artistic - Achievement",
+          "The Discerning - Achievement",
+          "The Eyes They See - NEAR",
+          "Outside The Wondrous - SHRINK",
+          "The Wondrous - Achievement",
+          "Hallway Room (1) - OUT",
+          "Elements Area - UNDISTRACTED",
+          "Outside The Wanderer - WANDERLUST",
+          "The Wanderer - Achievement",
+          "Art Gallery - ORDER",
+          "Room Room - BASE",
+          "The Wise - Achievement",
+          "Challenge Room - WELCOME",
+          "Challenge Room - Achievement",
+          "Second Room - Good Luck",
+          "Pilgrim Room - HOT CRUST",
+          "Crossroads - TURN/RUNT",
+          "Crossroads - WORDS, SWORD",
+          "Crossroads - LOST Pair",
+          "Amen Name Area - AMEN, NAME",
+          "The Tenacious - Palindromes",
+          "The Tenacious - White Palindromes",
+          "Symmetry Room - NEAR, FAR",
+          "Symmetry Room - WARTS, STRAW",
+          "Symmetry Room - LEAF, FEEL",
+          "Outside The Agreeable - Lookout Panels",
+          "Hedge Maze - Hide and Seek",
+          "The Fearless - First Floor Puzzles",
+          "The Fearless - Second Floor Puzzles",
+          "The Observant - FOUR (1), FOUR (2)",
+          "Giant Sevens",
+          "Orange Tower First Floor - Salt Pepper Door",
+          "Color Barriers - RED and YELLOW",
+          "Orange Tower Fifth Floor - SIZE (Small), SIZE (Big)",
+          "Courtyard - FIRST, SECOND, THIRD, FOURTH",
+          "The Colorful - White",
+          "The Colorful - Black",
+          "The Colorful - Red",
+          "The Colorful - Yellow",
+          "The Colorful - Blue",
+          "The Colorful - Purple",
+          "The Colorful - Orange",
+          "The Colorful - Green",
+          "The Colorful - Brown",
+          "The Colorful - Gray",
+          "Color Barriers - BLUE and YELLOW",
+          "Color Barriers - RED and BLUE",
+          "Color Barriers - GREEN, ORANGE and PURPLE",
+          "Twos",
+          "Threes",
+          "Fours",
+          "Fives",
+          "Sixes",
+          "Sevens",
+          "Eights",
+          "Nines",
+          "Directional Gallery - TURN, LEARN",
+          "The Bearer - SHORTCUT",
+          "Knight Night Room - TRUSTED",
+          "The Artistic - Smiley and Panda",
+          "The Artistic - Panda and Lattice",
+          "The Artistic - Lattice and Apple",
+          "The Artistic - Apple and Smiley",
+          "Hallway Room - First Room",
+          "Hallway Room - Second Room",
+          "Hallway Room - Third Room",
+          "Hallway Room - Fourth Room",
+          "Art Gallery - First Floor Puzzles",
+          "Art Gallery - Second Floor Puzzles",
+          "Art Gallery - Third Floor Puzzles",
+          "Art Gallery - Fourth Floor Puzzles",
+          "Rhyme Room (Smiley) - Puzzles Toward Target",
+          "Rhyme Room (Cross) - Exit Puzzles",
+          "Rhyme Room - Circle/Smiley Wall",
+          "Rhyme Room - Circle/Looped Square Wall",
+          "Rhyme Room - Cross/Looped Square Wall",
+          "Rhyme Room - Target/Looped Square Wall",
+          "Rhyme Room (Target) - Puzzles Toward Cross",
+          "Outside The Wise - KITTEN, CAT"
+        ],
+        "event_loc_to_item": {
+          "The End (Solved)": "Victory"
+        },
+        "real_items": [
+          "Pilgrim Room - Sun Painting",
+          "Black",
+          "Red",
+          "Blue",
+          "Yellow",
+          "Green",
+          "Orange",
+          "Gray",
+          "Brown",
+          "Purple"
+        ],
+        "victory_condition": "Orange Tower Seventh Floor - THE END",
+        "mastery_location": "Orange Tower Seventh Floor - THE MASTER",
+        "level_2_location": "Second Room - LEVEL 2",
+        "good_item_options": [],
+        "mastery_reqs": [
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          },
+          {
+            "the_master": false,
+            "postgame": false
+          }
+        ],
+        "counting_panel_reqs": {
+          "Starting Room": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              6
+            ]
+          ],
+          "Hidden Room": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              3
+            ]
+          ],
+          "The Seeker": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              18
+            ]
+          ],
+          "Second Room": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ]
+          ],
+          "Hub Room": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              3
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              5
+            ]
+          ],
+          "Dead End Area": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Pilgrim Antechamber": [
+            [
+              {
+                "the_master": true,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Pilgrim Room": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ]
+          ],
+          "Crossroads": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              7
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Lost Area": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ]
+          ],
+          "Amen Name Area": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ]
+          ],
+          "Suits Area": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              3
+            ]
+          ],
+          "The Tenacious": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              3
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              3
+            ]
+          ],
+          "Near Far Area": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ]
+          ],
+          "Warts Straw Area": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ]
+          ],
+          "Leaf Feel Area": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ]
+          ],
+          "Outside The Agreeable": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              6
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Compass Room": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Dread Hallway": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Agreeable": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              12
+            ]
+          ],
+          "Hedge Maze": [
+            [
+              {
+                "the_master": true,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": true,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              4
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              8
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Perceptive": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Fearless (First Floor)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              5
+            ]
+          ],
+          "The Fearless (Second Floor)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              7
+            ]
+          ],
+          "The Fearless": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              5
+            ]
+          ],
+          "The Observant": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              7
+            ]
+          ],
+          "The Incomparable": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              13
+            ]
+          ],
+          "Eight Room": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              3
+            ]
+          ],
+          "Orange Tower First Floor": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Orange Tower Third Floor": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Orange Tower Fourth Floor": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              3
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Hot Crusts Area": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Orange Tower Fifth Floor": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              3
+            ]
+          ],
+          "Orange Tower Seventh Floor": [
+            [
+              {
+                "the_master": true,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": true,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Behind A Smile": [
+            [
+              {
+                "the_master": true,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Sixteen Colorful Squares": [
+            [
+              {
+                "the_master": true,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Among Treetops": [
+            [
+              {
+                "the_master": true,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Horizon's Edge": [
+            [
+              {
+                "the_master": true,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Beneath The Lookout": [
+            [
+              {
+                "the_master": true,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Rooftop Staircase": [
+            [
+              {
+                "the_master": true,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Orange Tower Basement": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Courtyard": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ]
+          ],
+          "Yellow Backside Area": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "First Second Third Fourth": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              4
+            ]
+          ],
+          "The Colorful (White)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Colorful (Black)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Colorful (Red)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Colorful (Yellow)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Colorful (Blue)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Colorful (Purple)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Colorful (Orange)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Colorful (Green)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Colorful (Brown)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Colorful (Gray)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Colorful": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Welcome Back Area": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Owl Hallway": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Outside The Initiated": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Initiated": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              17
+            ]
+          ],
+          "The Optimistic": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Traveled": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              16
+            ]
+          ],
+          "Outside The Bold": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              3
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              5
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Bold": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              17
+            ]
+          ],
+          "Outside The Undeterred": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Undeterred": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              17
+            ]
+          ],
+          "Number Hunt": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Directional Gallery": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              4
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              4
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              5
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Color Hunt": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              5
+            ]
+          ],
+          "Champion's Rest": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              3
+            ]
+          ],
+          "The Bearer": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Bearer (East)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Bearer (North)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Bearer (South)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Bearer (West)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Bearer Side Area": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Cross Tower (East)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Cross Tower (North)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Cross Tower (South)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Cross Tower (West)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady (Rose)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady (Ruby)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady (Carnation)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady (Sunflower)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady (Plum)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady (Lime)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady (Lemon)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady (Topaz)": [
+            [
+              {
+                "the_master": true,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady (Orange)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady (Sapphire)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady (Blueberry)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady (Amber)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady (Emerald)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady (Amethyst)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady (Lilac)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady (Cherry)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Steady": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Knight Night (Outer Ring)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              3
+            ]
+          ],
+          "Knight Night (Right Upper Segment)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Knight Night (Right Lower Segment)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Knight Night (Final)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Knight Night Exit": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Artistic (Smiley)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Artistic (Panda)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Artistic (Lattice)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Artistic (Apple)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Artistic (Hint Room)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Discerning": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              17
+            ]
+          ],
+          "The Eyes They See": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Far Window": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Outside The Wondrous": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Wondrous (Bookcase)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Wondrous (Chandelier)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Wondrous (Window)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Wondrous (Table)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Wondrous": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Arrow Garden": [
+            [
+              {
+                "the_master": true,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Hallway Room (1)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              4
+            ]
+          ],
+          "Hallway Room (2)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              4
+            ]
+          ],
+          "Hallway Room (3)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              4
+            ]
+          ],
+          "Hallway Room (4)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Elements Area": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": true,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              4
+            ]
+          ],
+          "Outside The Wanderer": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Wanderer": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              9
+            ]
+          ],
+          "Art Gallery": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Art Gallery (First Floor)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Art Gallery (Second Floor)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "Art Gallery (Third Floor)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              4
+            ]
+          ],
+          "Art Gallery (Fourth Floor)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              3
+            ]
+          ],
+          "Rhyme Room (Smiley)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              6
+            ]
+          ],
+          "Rhyme Room (Cross)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              4
+            ]
+          ],
+          "Rhyme Room (Circle)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              4
+            ]
+          ],
+          "Rhyme Room (Looped Square)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              8
+            ]
+          ],
+          "Rhyme Room (Target)": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              6
+            ]
+          ],
+          "Room Room": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": true,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              40
+            ]
+          ],
+          "Outside The Wise": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ]
+          ],
+          "The Wise": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              8
+            ]
+          ],
+          "The Red": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              16
+            ]
+          ],
+          "The Ecstatic": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              15
+            ]
+          ],
+          "Outside The Scientific": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ]
+          ],
+          "The Scientific": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              7
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              11
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              3
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              7
+            ]
+          ],
+          "Challenge Room": [
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              4
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              2
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              1
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              5
+            ],
+            [
+              {
+                "the_master": false,
+                "postgame": false
+              },
+              6
+            ]
+          ]
+        },
+        "sunwarp_mapping": [],
+        "sunwarp_entrances": [
+          "Hub Room",
+          "Hot Crusts Area",
+          "Orange Tower Third Floor",
+          "Orange Tower First Floor",
+          "Orange Tower Fourth Floor",
+          "Outside The Agreeable"
+        ],
+        "sunwarp_exits": [
+          "Crossroads",
+          "Orange Tower Third Floor",
+          "Outside The Initiated",
+          "Outside The Undeterred",
+          "Color Hunt",
+          "Directional Gallery"
+        ]
+      },
       "base_id": 444400,
       "world_description": "Lingo is a first person indie puzzle game in the vein of The Witness. You find yourself in a mazelike, non-Euclidean\nworld filled with 800 word puzzles that use a variety of different mechanics.",
       "slot_data": {

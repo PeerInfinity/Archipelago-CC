@@ -3311,14 +3311,14 @@
         "locations": [],
         "placeholder": true
       },
-      "Shapesanity Colorful Half Mixed": {
-        "name": "Shapesanity Colorful Half Mixed",
+      "Shapesanity Colorful East Windmill Mixed": {
+        "name": "Shapesanity Colorful East Windmill Mixed",
         "exits": [],
         "locations": [],
         "placeholder": true
       },
-      "Shapesanity Colorful East Windmill Mixed": {
-        "name": "Shapesanity Colorful East Windmill Mixed",
+      "Shapesanity Colorful Half Mixed": {
+        "name": "Shapesanity Colorful Half Mixed",
         "exits": [],
         "locations": [],
         "placeholder": true
@@ -4481,6 +4481,653 @@
           "display_name": "Traps Percentage"
         }
       },
+      "location_count": 139,
+      "level_logic": [
+        "Cutter",
+        "Rotator",
+        "Painter",
+        "Color Mixer",
+        "Stacker"
+      ],
+      "upgrade_logic": [
+        "Stacker",
+        "Cutter",
+        "Rotator",
+        "Painter",
+        "Color Mixer"
+      ],
+      "level_logic_type": "stretched",
+      "upgrade_logic_type": "linear",
+      "random_logic_phase_length": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "category_random_logic_amounts": {
+        "belt": 0,
+        "miner": 1,
+        "processors": 2,
+        "painting": 3
+      },
+      "maxlevel": 25,
+      "finaltier": 8,
+      "included_locations": {
+        "Level 1": [
+          "Main",
+          2
+        ],
+        "Level 1 Additional": [
+          "Main",
+          2
+        ],
+        "Level 20 Additional": [
+          "Levels with 5 buildings",
+          1
+        ],
+        "Level 20 Additional 2": [
+          "Levels with 5 buildings",
+          1
+        ],
+        "Level 2": [
+          "Main",
+          1
+        ],
+        "Level 3": [
+          "Main",
+          1
+        ],
+        "Level 4": [
+          "Levels with 1 building",
+          1
+        ],
+        "Level 5": [
+          "Levels with 1 building",
+          1
+        ],
+        "Level 6": [
+          "Levels with 1 building",
+          1
+        ],
+        "Level 7": [
+          "Levels with 1 building",
+          1
+        ],
+        "Level 8": [
+          "Levels with 2 buildings",
+          1
+        ],
+        "Level 9": [
+          "Levels with 2 buildings",
+          1
+        ],
+        "Level 10": [
+          "Levels with 2 buildings",
+          1
+        ],
+        "Level 11": [
+          "Levels with 2 buildings",
+          1
+        ],
+        "Level 12": [
+          "Levels with 3 buildings",
+          1
+        ],
+        "Level 13": [
+          "Levels with 3 buildings",
+          1
+        ],
+        "Level 14": [
+          "Levels with 3 buildings",
+          1
+        ],
+        "Level 15": [
+          "Levels with 3 buildings",
+          1
+        ],
+        "Level 16": [
+          "Levels with 4 buildings",
+          1
+        ],
+        "Level 17": [
+          "Levels with 4 buildings",
+          1
+        ],
+        "Level 18": [
+          "Levels with 4 buildings",
+          1
+        ],
+        "Level 19": [
+          "Levels with 4 buildings",
+          1
+        ],
+        "Level 20": [
+          "Levels with 5 buildings",
+          1
+        ],
+        "Level 21": [
+          "Levels with 5 buildings",
+          1
+        ],
+        "Level 22": [
+          "Levels with 5 buildings",
+          1
+        ],
+        "Level 23": [
+          "Levels with 5 buildings",
+          1
+        ],
+        "Level 24": [
+          "Levels with 5 buildings",
+          1
+        ],
+        "Level 25": [
+          "Levels with 5 buildings",
+          1
+        ],
+        "Belt Upgrade Tier II": [
+          "Main",
+          1
+        ],
+        "Miner Upgrade Tier II": [
+          "Main",
+          1
+        ],
+        "Processors Upgrade Tier II": [
+          "Main",
+          1
+        ],
+        "Painting Upgrade Tier II": [
+          "Main",
+          1
+        ],
+        "Belt Upgrade Tier III": [
+          "Upgrades with 1 building",
+          1
+        ],
+        "Miner Upgrade Tier III": [
+          "Upgrades with 1 building",
+          1
+        ],
+        "Processors Upgrade Tier III": [
+          "Upgrades with 1 building",
+          1
+        ],
+        "Painting Upgrade Tier III": [
+          "Upgrades with 1 building",
+          1
+        ],
+        "Belt Upgrade Tier IV": [
+          "Upgrades with 2 buildings",
+          1
+        ],
+        "Miner Upgrade Tier IV": [
+          "Upgrades with 2 buildings",
+          1
+        ],
+        "Processors Upgrade Tier IV": [
+          "Upgrades with 2 buildings",
+          1
+        ],
+        "Painting Upgrade Tier IV": [
+          "Upgrades with 2 buildings",
+          1
+        ],
+        "Belt Upgrade Tier V": [
+          "Upgrades with 3 buildings",
+          1
+        ],
+        "Miner Upgrade Tier V": [
+          "Upgrades with 3 buildings",
+          1
+        ],
+        "Processors Upgrade Tier V": [
+          "Upgrades with 3 buildings",
+          1
+        ],
+        "Painting Upgrade Tier V": [
+          "Upgrades with 3 buildings",
+          1
+        ],
+        "Belt Upgrade Tier VI": [
+          "Upgrades with 4 buildings",
+          1
+        ],
+        "Miner Upgrade Tier VI": [
+          "Upgrades with 4 buildings",
+          1
+        ],
+        "Processors Upgrade Tier VI": [
+          "Upgrades with 4 buildings",
+          1
+        ],
+        "Painting Upgrade Tier VI": [
+          "Upgrades with 4 buildings",
+          1
+        ],
+        "Belt Upgrade Tier VII": [
+          "Upgrades with 5 buildings",
+          1
+        ],
+        "Miner Upgrade Tier VII": [
+          "Upgrades with 5 buildings",
+          1
+        ],
+        "Processors Upgrade Tier VII": [
+          "Upgrades with 5 buildings",
+          1
+        ],
+        "Painting Upgrade Tier VII": [
+          "Upgrades with 5 buildings",
+          1
+        ],
+        "Belt Upgrade Tier VIII": [
+          "Upgrades with 5 buildings",
+          1
+        ],
+        "Miner Upgrade Tier VIII": [
+          "Upgrades with 5 buildings",
+          1
+        ],
+        "Processors Upgrade Tier VIII": [
+          "Upgrades with 5 buildings",
+          1
+        ],
+        "Painting Upgrade Tier VIII": [
+          "Upgrades with 5 buildings",
+          1
+        ],
+        "Shapesanity 1": [
+          "Shapesanity Full Uncolored",
+          1
+        ],
+        "Shapesanity 2": [
+          "Shapesanity Full Uncolored",
+          1
+        ],
+        "Shapesanity 3": [
+          "Shapesanity Full Uncolored",
+          1
+        ],
+        "Shapesanity 4": [
+          "Shapesanity East Windmill Uncolored",
+          1
+        ],
+        "Shapesanity 5": [
+          "Shapesanity East Windmill Mixed",
+          1
+        ],
+        "Shapesanity 6": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 7": [
+          "Shapesanity Half Mixed",
+          1
+        ],
+        "Shapesanity 8": [
+          "Shapesanity Piece Mixed",
+          1
+        ],
+        "Shapesanity 9": [
+          "Shapesanity Piece Mixed",
+          1
+        ],
+        "Shapesanity 10": [
+          "Shapesanity Half Painted",
+          1
+        ],
+        "Shapesanity 11": [
+          "Shapesanity Stitched Painted",
+          1
+        ],
+        "Shapesanity 12": [
+          "Shapesanity Stitched Painted",
+          1
+        ],
+        "Shapesanity 13": [
+          "Shapesanity Piece Painted",
+          1
+        ],
+        "Shapesanity 14": [
+          "Shapesanity Piece Painted",
+          1
+        ],
+        "Shapesanity 15": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 16": [
+          "Shapesanity East Windmill Painted",
+          1
+        ],
+        "Shapesanity 17": [
+          "Shapesanity Half Painted",
+          1
+        ],
+        "Shapesanity 18": [
+          "Shapesanity Piece Mixed",
+          1
+        ],
+        "Shapesanity 19": [
+          "Shapesanity Stitched Painted",
+          1
+        ],
+        "Shapesanity 20": [
+          "Shapesanity Half Mixed",
+          1
+        ],
+        "Shapesanity 21": [
+          "Shapesanity Stitched Painted",
+          1
+        ],
+        "Shapesanity 22": [
+          "Shapesanity Full Painted",
+          1
+        ],
+        "Shapesanity 23": [
+          "Shapesanity Stitched Painted",
+          1
+        ],
+        "Shapesanity 24": [
+          "Shapesanity Piece Painted",
+          1
+        ],
+        "Shapesanity 25": [
+          "Shapesanity Full Mixed",
+          1
+        ],
+        "Shapesanity 26": [
+          "Shapesanity Colorful Full Mixed",
+          1
+        ],
+        "Shapesanity 27": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 28": [
+          "Shapesanity Colorful Full Mixed",
+          1
+        ],
+        "Shapesanity 29": [
+          "Shapesanity Stitched Painted",
+          1
+        ],
+        "Shapesanity 30": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 31": [
+          "Shapesanity Stitched Painted",
+          1
+        ],
+        "Shapesanity 32": [
+          "Shapesanity Stitched Painted",
+          1
+        ],
+        "Shapesanity 33": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 34": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 35": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 36": [
+          "Shapesanity Stitched Uncolored",
+          1
+        ],
+        "Shapesanity 37": [
+          "Shapesanity Half-Half Mixed",
+          1
+        ],
+        "Shapesanity 38": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 39": [
+          "Shapesanity Colorful Full Mixed",
+          1
+        ],
+        "Shapesanity 40": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 41": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 42": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 43": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 44": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 45": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 46": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 47": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 48": [
+          "Shapesanity Stitched Mixed",
+          1
+        ],
+        "Shapesanity 49": [
+          "Shapesanity Colorful Half-Half Mixed",
+          1
+        ],
+        "Shapesanity 50": [
+          "Shapesanity Colorful Half-Half Mixed",
+          1
+        ],
+        "My eyes no longer hurt": [
+          "Menu",
+          1
+        ],
+        "Painter": [
+          "Achievements with (double) painter",
+          1
+        ],
+        "Cutter": [
+          "Achievements with half cutter",
+          1
+        ],
+        "Rotater": [
+          "Achievements with clockwise rotator",
+          1
+        ],
+        "Wait, they stack?": [
+          "Achievements with stacker",
+          1
+        ],
+        "Storage": [
+          "Achievements with storage",
+          1
+        ],
+        "The logo!": [
+          "Achievements with all main buildings",
+          1
+        ],
+        "To the moon": [
+          "Achievements with all main buildings",
+          1
+        ],
+        "It's piling up": [
+          "Achievements with all main buildings",
+          1
+        ],
+        "I'll use it later": [
+          "Achievements with all main buildings",
+          1
+        ],
+        "Stack overflow": [
+          "Achievements with stacker",
+          1
+        ],
+        "It's a mess": [
+          "Main",
+          1
+        ],
+        "Get rid of them": [
+          "Achievements with trash",
+          1
+        ],
+        "Getting into it": [
+          "Menu",
+          1
+        ],
+        "Now it's easy": [
+          "Achievements with blueprints",
+          1
+        ],
+        "Computer Guy": [
+          "Achievements with wires",
+          1
+        ],
+        "Perfectionist": [
+          "Achievements with any placeable building",
+          1
+        ],
+        "The next dimension": [
+          "Achievements with wires",
+          1
+        ],
+        "Copy-Pasta": [
+          "Achievements with blueprints",
+          1
+        ],
+        "I've seen that before ...": [
+          "Achievements with all main buildings",
+          1
+        ],
+        "Memories from the past": [
+          "Achievements with all main buildings",
+          1
+        ],
+        "I need trains": [
+          "Shape transportation",
+          1
+        ],
+        "GPS": [
+          "Menu",
+          1
+        ],
+        "Preparing to launch": [
+          "Achievements with all main buildings",
+          1
+        ],
+        "SpaceY": [
+          "Achievements with all main buildings",
+          1
+        ],
+        "Efficiency 1": [
+          "Achievements with all main buildings",
+          1
+        ],
+        "Efficiency 2": [
+          "Achievements with x1.6 belt speed",
+          1
+        ],
+        "Branding specialist 1": [
+          "Achievements with all main buildings",
+          1
+        ],
+        "Branding specialist 2": [
+          "Achievements with x1.6 belt speed",
+          1
+        ],
+        "Even faster": [
+          "Upgrades with 5 buildings",
+          1
+        ],
+        "Faster": [
+          "Upgrades with 3 buildings",
+          1
+        ],
+        "Wires": [
+          "Levels with 5 buildings",
+          1
+        ],
+        "Oops": [
+          "Main",
+          1
+        ]
+      },
+      "client_seed": 3745,
+      "shapesanity_names": [
+        "Uncolored Circle",
+        "Uncolored Square",
+        "Uncolored Star",
+        "Uncolored Windmill",
+        "Cyan Windmill",
+        "Cornered Yellow Star",
+        "Half Cyan Circle",
+        "Purple Square Piece",
+        "Yellow Circle Piece",
+        "Half Blue Circle",
+        "Cut Out Green Circle",
+        "Cut Out Blue Square",
+        "Green Star Piece",
+        "Red Square Piece",
+        "Cornered Yellow Square",
+        "Red Windmill",
+        "Half Red Star",
+        "Yellow Windmill Piece",
+        "Cut Out Red Star",
+        "Half White Circle",
+        "Cut Out Red Square",
+        "Blue Square",
+        "Cut Out Blue Star",
+        "Blue Star Piece",
+        "Purple Circle",
+        "bcgr Star",
+        "Yellow CRS-",
+        "cpru Circle",
+        "Blue CSW-",
+        "Adjacent 2-1 Wc Ww",
+        "Adjacent Singles Cr Wr",
+        "3-1 Rr Sg",
+        "Cornered 2-1 Rr Ww",
+        "Adjacent 2-1 Su Cc",
+        "Adjacent 2-1 Su Wc",
+        "3-1 Ru Cu",
+        "Half-Half Cp Su",
+        "Checkered Cr Wp",
+        "3-1 Rc Rr",
+        "Adjacent 2-1 Cy Wr",
+        "Adjacent Singles Cw Sy",
+        "Adjacent 2-1-1 Sg Cb Ww",
+        "Singles Cy Sw Wr",
+        "Cornered 2-1-1 Ry Cc Cy",
+        "Adjacent 2-1-1 Su Sy Wu",
+        "Singles Cr Rb Wg Wy",
+        "Singles Cw Sy Wg Wr",
+        "Singles Cp Rb Sg Sr",
+        "Singles Cc Cp Ru Rw",
+        "Singles Cr Cw Rb Rw"
+      ],
+      "upgrade_traps_allowed": {
+        "value": 0
+      },
+      "ut_active": false,
       "base_id": 20010707,
       "world_description": "shapez is an automation game about cutting, rotating, stacking, and painting shapes, that you extract from randomly\ngenerated patches on an infinite canvas, without the need to manage your infinite resources or to pay for building\nyour factories.",
       "slot_data": {

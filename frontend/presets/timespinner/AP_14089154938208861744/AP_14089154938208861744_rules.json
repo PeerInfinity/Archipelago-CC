@@ -9325,6 +9325,42 @@
           "display_name": "Unchained Keys"
         }
       },
+      "precalculated_weights": {
+        "flood_basement": false,
+        "flood_basement_high": false,
+        "flood_xarion": false,
+        "flood_maw": false,
+        "flood_pyramid_shaft": false,
+        "flood_pyramid_back": false,
+        "flood_moat": false,
+        "flood_courtyard": false,
+        "flood_lake_desolation": false,
+        "flood_lake_serene": true,
+        "flood_lake_serene_bridge": false,
+        "flood_lab": false,
+        "boss_rando_overrides": {
+          "FelineSentry": "FelineSentry",
+          "Varndagroth": "Varndagroth",
+          "AzureQueen": "AzureQueen",
+          "GoldenIdol": "GoldenIdol",
+          "Aelana": "Aelana",
+          "Maw": "Maw",
+          "Cantoran": "Cantoran",
+          "Genza": "Genza",
+          "Nuvius": "Nuvius",
+          "Vol": "Vol",
+          "Prince": "Prince",
+          "Xarion": "Xarion",
+          "Ravenlord": "Ravenlord",
+          "Ifrit": "Ifrit",
+          "Sandman": "Sandman",
+          "Nightmare": "Nightmare"
+        },
+        "pyramid_keys_unlock": "GateLakeSereneRight",
+        "present_key_unlock": "GateSealedSirensCave",
+        "past_key_unlock": "GateLakeSereneRight",
+        "time_key_unlock": "GateRightPyramid"
+      },
       "world_description": "Timespinner is a beautiful metroidvania inspired by classic 90s action-platformers.\nTravel back in time to change fate itself. Join timekeeper Lunais on her quest for revenge against the empire that killed her family.",
       "slot_data": {
         "StartWithJewelryBox": 0,

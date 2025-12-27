@@ -2230,6 +2230,11 @@
           "display_name": "Progression Balancing"
         }
       },
+      "goal": 0,
+      "include_evolution_traps": 0,
+      "include_psi_keys": 1,
+      "item_cache_cost": 0,
+      "death_link": 0,
       "world_description": "Meritous Gaiden is a procedurally generated bullet-hell dungeon crawl game.\nFive generations after the Orcus Dome incident, strange experiments conducted in a new\nstructure on the moon are tearing at the very fabric of reality...",
       "slot_data": {
         "goal": 0,

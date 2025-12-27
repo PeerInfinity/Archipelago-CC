@@ -26912,6 +26912,338 @@
           "display_name": "WarpAnywhere"
         }
       },
+      "slot_2_levels": [],
+      "starting_accessory_locations": [
+        "Donald Starting Accessory 1",
+        "Jack Starting Accessory 2",
+        "Donald Starting Accessory 2",
+        "Peter Pan Starting Accessory 2",
+        "Tarzan Starting Accessory 1",
+        "Peter Pan Starting Accessory 1",
+        "Goofy Starting Accessory 2",
+        "Beast Starting Accessory 1",
+        "Aladdin Starting Accessory 1",
+        "Jack Starting Accessory 1"
+      ],
+      "starting_accessories": [
+        "Ifrit Belt",
+        "Thunder Ring",
+        "Chaos Ring",
+        "Cosmic Arts",
+        "Angel Bangle",
+        "Master Earring",
+        "Element Ring",
+        "Protect Chain",
+        "Golem Chain",
+        "Brave Warrior"
+      ],
+      "ap_costs": [
+        {
+          "Ability Name": "Treasure Magnet",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Combo Plus",
+          "AP Cost": 1,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Air Combo Plus",
+          "AP Cost": 1,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Critical Plus",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Second Wind",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Scan",
+          "AP Cost": 1,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Sonic Blade",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Ars Arcanum",
+          "AP Cost": 4,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Strike Raid",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Ragnarok",
+          "AP Cost": 4,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Trinity Limit",
+          "AP Cost": 1,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Cheer",
+          "AP Cost": 1,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Vortex",
+          "AP Cost": 1,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Aerial Sweep",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Counter Attack",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Blitz",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Guard",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Dodge Roll",
+          "AP Cost": 1,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "MP Haste",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "MP Rage",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Second Chance",
+          "AP Cost": 5,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Berserk",
+          "AP Cost": 1,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Jackpot",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Lucky Strike",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Charge",
+          "AP Cost": 1,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Rocket",
+          "AP Cost": 1,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Tornado",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "MP Gift",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Raging Boar",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Asp's Bite",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Healing Herb",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Wind Armor",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Crescent",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Sandstorm",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Applause!",
+          "AP Cost": 1,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Blazing Fury",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Icy Terror",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Bolts of Sorrow",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Ghostly Scream",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Hummingbird",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Time-Out",
+          "AP Cost": 4,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Storm\u00b4s Eye",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Ferocious Lunge",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Furious Bellow",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Spiral Wave",
+          "AP Cost": 1,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Thunder Potion",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Cure Potion",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Aero Potion",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Slapshot",
+          "AP Cost": 1,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Sliding Dash",
+          "AP Cost": 1,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Hurricane Blast",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Ripple Drive",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Stun Impact",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Gravity Break",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Zantetsuken",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Tech Boost",
+          "AP Cost": 2,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Encounter Plus",
+          "AP Cost": 1,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Leaf Bracer",
+          "AP Cost": 5,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Evolution",
+          "AP Cost": 3,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "EXP Zero",
+          "AP Cost": 0,
+          "Randomize": true
+        },
+        {
+          "Ability Name": "Combo Master",
+          "AP Cost": 3,
+          "Randomize": true
+        }
+      ],
       "world_description": "Kingdom Hearts is an action RPG following Sora on his journey\nthrough many worlds to find Riku and Kairi.",
       "slot_data": {
         "atlantica": false,

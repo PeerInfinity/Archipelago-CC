@@ -494,7 +494,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 0
           },
           {
             "name": "Make Eggs, Throw Eggs: Flowers",
@@ -514,7 +515,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 0
           },
           {
             "name": "Make Eggs, Throw Eggs: Stars",
@@ -535,7 +537,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 0
           },
           {
             "name": "Make Eggs, Throw Eggs: Level Clear",
@@ -552,7 +555,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 0
           }
         ]
       },
@@ -578,7 +582,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 1
           },
           {
             "name": "Watch Out Below!: Flowers",
@@ -598,7 +603,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 1
           },
           {
             "name": "Watch Out Below!: Stars",
@@ -625,7 +631,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 1
           },
           {
             "name": "Watch Out Below!: Level Clear",
@@ -642,7 +649,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 1
           }
         ]
       },
@@ -665,7 +673,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 2
           },
           {
             "name": "The Cave Of Chomp Rock: Flowers",
@@ -682,7 +691,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 2
           },
           {
             "name": "The Cave Of Chomp Rock: Stars",
@@ -696,7 +706,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 2
           },
           {
             "name": "The Cave Of Chomp Rock: Level Clear",
@@ -710,7 +721,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 2
           }
         ]
       },
@@ -743,7 +755,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 3
           },
           {
             "name": "Burt The Bashful's Fort: Flowers",
@@ -785,7 +798,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 3
           },
           {
             "name": "Burt The Bashful's Fort: Stars",
@@ -823,7 +837,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 3
           },
           {
             "name": "Burt The Bashful's Fort: Level Clear",
@@ -839,7 +854,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 3
           }
         ]
       },
@@ -861,7 +877,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "level_id": 3
           }
         ]
       },
@@ -881,7 +898,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 4
           },
           {
             "name": "Hop! Hop! Donut Lifts: Flowers",
@@ -895,7 +913,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 4
           },
           {
             "name": "Hop! Hop! Donut Lifts: Stars",
@@ -921,7 +940,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 4
           },
           {
             "name": "Hop! Hop! Donut Lifts: Level Clear",
@@ -935,7 +955,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 4
           }
         ]
       },
@@ -963,7 +984,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 5
           },
           {
             "name": "Shy-Guys On Stilts: Flowers",
@@ -980,7 +1002,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 5
           },
           {
             "name": "Shy-Guys On Stilts: Stars",
@@ -1039,7 +1062,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 5
           },
           {
             "name": "Shy-Guys On Stilts: Level Clear",
@@ -1059,7 +1083,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 5
           }
         ]
       },
@@ -1087,7 +1112,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 6
           },
           {
             "name": "Touch Fuzzy Get Dizzy: Flowers",
@@ -1101,7 +1127,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 6
           },
           {
             "name": "Touch Fuzzy Get Dizzy: Stars",
@@ -1142,7 +1169,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 6
           },
           {
             "name": "Touch Fuzzy Get Dizzy: Level Clear",
@@ -1156,7 +1184,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 6
           },
           {
             "name": "Touch Fuzzy Get Dizzy: Gather Coins",
@@ -1172,7 +1201,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "level_id": 6
           }
         ]
       },
@@ -1205,7 +1235,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 7
           },
           {
             "name": "Salvo The Slime's Castle: Flowers",
@@ -1222,7 +1253,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 7
           },
           {
             "name": "Salvo The Slime's Castle: Stars",
@@ -1263,7 +1295,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 7
           },
           {
             "name": "Salvo The Slime's Castle: Level Clear",
@@ -1279,7 +1312,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 7
           }
         ]
       },
@@ -1301,7 +1335,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "level_id": 7
           }
         ]
       },
@@ -1328,7 +1363,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 12
           },
           {
             "name": "Visit Koopa And Para-Koopa: Flowers",
@@ -1348,7 +1384,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 12
           },
           {
             "name": "Visit Koopa And Para-Koopa: Stars",
@@ -1375,7 +1412,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 12
           },
           {
             "name": "Visit Koopa And Para-Koopa: Level Clear",
@@ -1392,7 +1430,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 12
           }
         ]
       },
@@ -1421,7 +1460,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 13
           },
           {
             "name": "The Baseball Boys: Flowers",
@@ -1444,7 +1484,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 13
           },
           {
             "name": "The Baseball Boys: Stars",
@@ -1487,7 +1528,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 13
           },
           {
             "name": "The Baseball Boys: Level Clear",
@@ -1509,7 +1551,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 13
           }
         ]
       },
@@ -1532,7 +1575,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 14
           },
           {
             "name": "What's Gusty Taste Like?: Flowers",
@@ -1552,7 +1596,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 14
           },
           {
             "name": "What's Gusty Taste Like?: Stars",
@@ -1566,7 +1611,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 14
           },
           {
             "name": "What's Gusty Taste Like?: Level Clear",
@@ -1586,7 +1632,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 14
           }
         ]
       },
@@ -1623,7 +1670,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 15
           },
           {
             "name": "Bigger Boo's Fort: Flowers",
@@ -1644,7 +1692,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 15
           },
           {
             "name": "Bigger Boo's Fort: Stars",
@@ -1675,7 +1724,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 15
           },
           {
             "name": "Bigger Boo's Fort: Level Clear",
@@ -1691,7 +1741,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 15
           }
         ]
       },
@@ -1713,7 +1764,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "level_id": 15
           }
         ]
       },
@@ -1736,7 +1788,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 16
           },
           {
             "name": "Watch Out For Lakitu: Flowers",
@@ -1757,7 +1810,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 16
           },
           {
             "name": "Watch Out For Lakitu: Stars",
@@ -1771,7 +1825,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 16
           },
           {
             "name": "Watch Out For Lakitu: Level Clear",
@@ -1788,7 +1843,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 16
           }
         ]
       },
@@ -1811,7 +1867,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 17
           },
           {
             "name": "The Cave Of The Mystery Maze: Flowers",
@@ -1831,7 +1888,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 17
           },
           {
             "name": "The Cave Of The Mystery Maze: Stars",
@@ -1858,7 +1916,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 17
           },
           {
             "name": "The Cave Of The Mystery Maze: Level Clear",
@@ -1875,7 +1934,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 17
           },
           {
             "name": "The Cave Of the Mystery Maze: Seed Spitting Contest",
@@ -1891,7 +1951,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "level_id": 17
           }
         ]
       },
@@ -1938,7 +1999,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 18
           },
           {
             "name": "Lakitu's Wall: Flowers",
@@ -1979,7 +2041,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 18
           },
           {
             "name": "Lakitu's Wall: Stars",
@@ -2006,7 +2069,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 18
           },
           {
             "name": "Lakitu's Wall: Level Clear",
@@ -2026,7 +2090,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 18
           },
           {
             "name": "Lakitu's Wall: Gather Coins",
@@ -2042,7 +2107,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "level_id": 18
           }
         ]
       },
@@ -2089,7 +2155,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 19
           },
           {
             "name": "The Potted Ghost's Castle: Flowers",
@@ -2121,7 +2188,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 19
           },
           {
             "name": "The Potted Ghost's Castle: Stars",
@@ -2157,7 +2225,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 19
           },
           {
             "name": "The Potted Ghost's Castle: Level Clear",
@@ -2173,7 +2242,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 19
           }
         ]
       },
@@ -2195,7 +2265,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "level_id": 19
           }
         ]
       },
@@ -2215,7 +2286,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 24
           },
           {
             "name": "Welcome To Monkey World!: Flowers",
@@ -2229,7 +2301,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 24
           },
           {
             "name": "Welcome To Monkey World!: Stars",
@@ -2245,7 +2318,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 24
           },
           {
             "name": "Welcome To Monkey World!: Level Clear",
@@ -2259,7 +2333,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 24
           }
         ]
       },
@@ -2285,7 +2360,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 25
           },
           {
             "name": "Jungle Rhythm...: Flowers",
@@ -2305,7 +2381,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 25
           },
           {
             "name": "Jungle Rhythm...: Stars",
@@ -2332,7 +2409,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 25
           },
           {
             "name": "Jungle Rhythm...: Level Clear",
@@ -2352,7 +2430,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 25
           }
         ]
       },
@@ -2378,7 +2457,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 26
           },
           {
             "name": "Nep-Enuts' Domain: Flowers",
@@ -2398,7 +2478,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 26
           },
           {
             "name": "Nep-Enuts' Domain: Stars",
@@ -2428,7 +2509,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 26
           },
           {
             "name": "Nep-Enuts' Domain: Level Clear",
@@ -2448,7 +2530,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 26
           }
         ]
       },
@@ -2481,7 +2564,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 27
           },
           {
             "name": "Prince Froggy's Fort: Flowers",
@@ -2520,7 +2604,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 27
           },
           {
             "name": "Prince Froggy's Fort: Stars",
@@ -2536,7 +2621,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 27
           },
           {
             "name": "Prince Froggy's Fort: Level Clear",
@@ -2552,7 +2638,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 27
           }
         ]
       },
@@ -2574,7 +2661,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "level_id": 27
           }
         ]
       },
@@ -2594,7 +2682,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 28
           },
           {
             "name": "Jammin' Through The Trees: Flowers",
@@ -2621,7 +2710,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 28
           },
           {
             "name": "Jammin' Through The Trees: Stars",
@@ -2679,7 +2769,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 28
           },
           {
             "name": "Jammin' Through The Trees: Level Clear",
@@ -2693,7 +2784,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 28
           }
         ]
       },
@@ -2721,7 +2813,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 29
           },
           {
             "name": "The Cave Of Harry Hedgehog: Flowers",
@@ -2744,7 +2837,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 29
           },
           {
             "name": "The Cave Of Harry Hedgehog: Stars",
@@ -2778,7 +2872,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 29
           },
           {
             "name": "The Cave Of Harry Hedgehog: Level Clear",
@@ -2799,7 +2894,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 29
           }
         ]
       },
@@ -2827,7 +2923,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 30
           },
           {
             "name": "Monkeys' Favorite Lake: Flowers",
@@ -2847,7 +2944,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 30
           },
           {
             "name": "Monkeys' Favorite Lake: Stars",
@@ -2864,7 +2962,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 30
           },
           {
             "name": "Monkeys' Favorite Lake: Level Clear",
@@ -2881,7 +2980,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 30
           }
         ]
       },
@@ -2925,7 +3025,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 31
           },
           {
             "name": "Naval Piranha's Castle: Flowers",
@@ -2953,7 +3054,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 31
           },
           {
             "name": "Naval Piranha's Castle: Stars",
@@ -2980,7 +3082,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 31
           },
           {
             "name": "Naval Piranha's Castle: Level Clear",
@@ -2996,7 +3099,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 31
           }
         ]
       },
@@ -3018,7 +3122,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "level_id": 31
           }
         ]
       },
@@ -3041,7 +3146,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 36
           },
           {
             "name": "GO! GO! MARIO!!: Flowers",
@@ -3058,7 +3164,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 36
           },
           {
             "name": "GO! GO! MARIO!!: Stars",
@@ -3095,7 +3202,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 36
           },
           {
             "name": "GO! GO! MARIO!!: Level Clear",
@@ -3112,7 +3220,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 36
           }
         ]
       },
@@ -3139,7 +3248,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 37
           },
           {
             "name": "The Cave Of The Lakitus: Flowers",
@@ -3159,7 +3269,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 37
           },
           {
             "name": "The Cave Of The Lakitus: Stars",
@@ -3179,7 +3290,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 37
           },
           {
             "name": "The Cave Of The Lakitus: Level Clear",
@@ -3196,7 +3308,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 37
           }
         ]
       },
@@ -3223,7 +3336,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 38
           },
           {
             "name": "Don't Look Back!: Flowers",
@@ -3243,7 +3357,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 38
           },
           {
             "name": "Don't Look Back!: Stars",
@@ -3281,7 +3396,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 38
           },
           {
             "name": "Don't Look Back!: Level Clear",
@@ -3298,7 +3414,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 38
           }
         ]
       },
@@ -3358,7 +3475,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 39
           },
           {
             "name": "Marching Milde's Fort: Flowers",
@@ -3401,7 +3519,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 39
           },
           {
             "name": "Marching Milde's Fort: Stars",
@@ -3444,7 +3563,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 39
           },
           {
             "name": "Marching Milde's Fort: Level Clear",
@@ -3460,7 +3580,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 39
           }
         ]
       },
@@ -3482,7 +3603,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "level_id": 39
           }
         ]
       },
@@ -3508,7 +3630,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 40
           },
           {
             "name": "Chomp Rock Zone: Flowers",
@@ -3530,7 +3653,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 40
           },
           {
             "name": "Chomp Rock Zone: Stars",
@@ -3552,7 +3676,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 40
           },
           {
             "name": "Chomp Rock Zone: Level Clear",
@@ -3566,7 +3691,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 40
           }
         ]
       },
@@ -3613,7 +3739,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 41
           },
           {
             "name": "Lake Shore Paradise: Flowers",
@@ -3654,7 +3781,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 41
           },
           {
             "name": "Lake Shore Paradise: Stars",
@@ -3712,7 +3840,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 41
           },
           {
             "name": "Lake Shore Paradise: Level Clear",
@@ -3739,7 +3868,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 41
           }
         ]
       },
@@ -3762,7 +3892,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 42
           },
           {
             "name": "Ride Like The Wind: Flowers",
@@ -3779,7 +3910,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 42
           },
           {
             "name": "Ride Like The Wind: Stars",
@@ -3817,7 +3949,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 42
           },
           {
             "name": "Ride Like The Wind: Level Clear",
@@ -3834,7 +3967,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 42
           },
           {
             "name": "Ride Like The Wind: Gather Coins",
@@ -3850,7 +3984,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "level_id": 42
           }
         ]
       },
@@ -3887,7 +4022,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 43
           },
           {
             "name": "Hookbill The Koopa's Castle: Flowers",
@@ -3908,7 +4044,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 43
           },
           {
             "name": "Hookbill The Koopa's Castle: Stars",
@@ -3938,7 +4075,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 43
           },
           {
             "name": "Hookbill The Koopa's Castle: Level Clear",
@@ -3954,7 +4092,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 43
           }
         ]
       },
@@ -3976,7 +4115,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "level_id": 43
           }
         ]
       },
@@ -4002,7 +4142,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 48
           },
           {
             "name": "BLIZZARD!!!: Flowers",
@@ -4016,7 +4157,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 48
           },
           {
             "name": "BLIZZARD!!!: Stars",
@@ -4064,7 +4206,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 48
           },
           {
             "name": "BLIZZARD!!!: Level Clear",
@@ -4078,7 +4221,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 48
           }
         ]
       },
@@ -4098,7 +4242,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 49
           },
           {
             "name": "Ride The Ski Lifts: Flowers",
@@ -4112,7 +4257,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 49
           },
           {
             "name": "Ride The Ski Lifts: Stars",
@@ -4139,7 +4285,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 49
           },
           {
             "name": "Ride The Ski Lifts: Level Clear",
@@ -4153,7 +4300,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 49
           }
         ]
       },
@@ -4203,7 +4351,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 50
           },
           {
             "name": "Danger - Icy Conditions Ahead: Flowers",
@@ -4245,7 +4394,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 50
           },
           {
             "name": "Danger - Icy Conditions Ahead: Stars",
@@ -4293,7 +4443,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 50
           },
           {
             "name": "Danger - Icy Conditions Ahead: Level Clear",
@@ -4314,7 +4465,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 50
           }
         ]
       },
@@ -4351,7 +4503,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 51
           },
           {
             "name": "Sluggy The Unshaven's Fort: Flowers",
@@ -4372,7 +4525,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 51
           },
           {
             "name": "Sluggy The Unshaven's Fort: Stars",
@@ -4429,7 +4583,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 51
           },
           {
             "name": "Sluggy The Unshaven's Fort: Level Clear",
@@ -4445,7 +4600,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 51
           }
         ]
       },
@@ -4467,7 +4623,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "level_id": 51
           }
         ]
       },
@@ -4493,7 +4650,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 52
           },
           {
             "name": "Goonie Rides!: Flowers",
@@ -4513,7 +4671,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 52
           },
           {
             "name": "Goonie Rides!: Stars",
@@ -4529,7 +4688,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 52
           },
           {
             "name": "Goonie Rides!: Level Clear",
@@ -4549,7 +4709,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 52
           }
         ]
       },
@@ -4569,7 +4730,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 53
           },
           {
             "name": "Welcome To Cloud World: Flowers",
@@ -4583,7 +4745,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 53
           },
           {
             "name": "Welcome To Cloud World: Stars",
@@ -4610,7 +4773,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 53
           },
           {
             "name": "Welcome To Cloud World: Level Clear",
@@ -4624,7 +4788,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 53
           }
         ]
       },
@@ -4657,7 +4822,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 54
           },
           {
             "name": "Shifting Platforms Ahead: Flowers",
@@ -4684,7 +4850,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 54
           },
           {
             "name": "Shifting Platforms Ahead: Stars",
@@ -4700,7 +4867,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 54
           },
           {
             "name": "Shifting Platforms Ahead: Level Clear",
@@ -4714,7 +4882,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 54
           }
         ]
       },
@@ -4750,7 +4919,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 55
           },
           {
             "name": "Raphael The Raven's Castle: Flowers",
@@ -4770,7 +4940,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 55
           },
           {
             "name": "Raphael The Raven's Castle: Stars",
@@ -4797,7 +4968,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 55
           },
           {
             "name": "Raphael The Raven's Castle: Level Clear",
@@ -4813,7 +4985,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 55
           }
         ]
       },
@@ -4835,7 +5008,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "level_id": 55
           }
         ]
       },
@@ -4861,7 +5035,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 60
           },
           {
             "name": "Scary Skeleton Goonies!: Flowers",
@@ -4881,7 +5056,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 60
           },
           {
             "name": "Scary Skeleton Goonies!: Stars",
@@ -4908,7 +5084,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 60
           },
           {
             "name": "Scary Skeleton Goonies!: Level Clear",
@@ -4928,7 +5105,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 60
           }
         ]
       },
@@ -4951,7 +5129,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 61
           },
           {
             "name": "The Cave Of The Bandits: Flowers",
@@ -4968,7 +5147,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 61
           },
           {
             "name": "The Cave Of The Bandits: Stars",
@@ -4994,7 +5174,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 61
           },
           {
             "name": "The Cave Of The Bandits: Level Clear",
@@ -5011,7 +5192,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 61
           }
         ]
       },
@@ -5031,7 +5213,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 62
           },
           {
             "name": "Beware The Spinning Logs: Flowers",
@@ -5045,7 +5228,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 62
           },
           {
             "name": "Beware The Spinning Logs: Stars",
@@ -5059,7 +5243,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 62
           },
           {
             "name": "Beware The Spinning Logs: Level Clear",
@@ -5073,7 +5258,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 62
           }
         ]
       },
@@ -5133,7 +5319,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 63
           },
           {
             "name": "Tap-Tap The Red Nose's Fort: Flowers",
@@ -5177,7 +5364,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 63
           },
           {
             "name": "Tap-Tap The Red Nose's Fort: Stars",
@@ -5209,7 +5397,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 63
           },
           {
             "name": "Tap-Tap The Red Nose's Fort: Level Clear",
@@ -5225,7 +5414,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 63
           }
         ]
       },
@@ -5247,7 +5437,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "level_id": 63
           }
         ]
       },
@@ -5292,7 +5483,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 64
           },
           {
             "name": "The Very Loooooong Cave: Flowers",
@@ -5331,7 +5523,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 64
           },
           {
             "name": "The Very Loooooong Cave: Stars",
@@ -5375,7 +5568,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 64
           },
           {
             "name": "The Very Loooooong Cave: Level Clear",
@@ -5389,7 +5583,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 64
           }
         ]
       },
@@ -5416,7 +5611,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 65
           },
           {
             "name": "The Deep, Underground Maze: Flowers",
@@ -5437,7 +5633,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 65
           },
           {
             "name": "The Deep, Underground Maze: Stars",
@@ -5483,7 +5680,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 65
           },
           {
             "name": "The Deep, Underground Maze: Level Clear",
@@ -5505,7 +5703,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 65
           }
         ]
       },
@@ -5538,7 +5737,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 66
           },
           {
             "name": "KEEP MOVING!!!!: Flowers",
@@ -5555,7 +5755,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 66
           },
           {
             "name": "KEEP MOVING!!!!: Stars",
@@ -5571,7 +5772,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 66
           },
           {
             "name": "KEEP MOVING!!!!: Level Clear",
@@ -5585,7 +5787,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 66
           }
         ]
       },
@@ -5631,7 +5834,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 67
           },
           {
             "name": "King Bowser's Castle: Flowers",
@@ -5661,7 +5865,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 67
           },
           {
             "name": "King Bowser's Castle: Stars",
@@ -5691,7 +5896,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "level_id": 67
           }
         ]
       },
@@ -5713,7 +5919,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "level_id": 67
           }
         ]
       }
@@ -6955,6 +7162,885 @@
           "display_name": "Singularity Yoshi Color"
         }
       },
+      "locked_locations": [],
+      "level_colors": [
+        0,
+        1,
+        4,
+        2,
+        7,
+        1,
+        6,
+        2,
+        4,
+        2,
+        1,
+        2,
+        3,
+        5,
+        3,
+        4,
+        0,
+        5,
+        7,
+        5,
+        2,
+        3,
+        0,
+        5,
+        5,
+        0,
+        0,
+        4,
+        1,
+        4,
+        4,
+        7,
+        7,
+        4,
+        1,
+        1,
+        3,
+        3,
+        2,
+        5,
+        2,
+        4,
+        6,
+        4,
+        5,
+        3,
+        1,
+        3,
+        0,
+        7,
+        1,
+        0,
+        4,
+        1,
+        5,
+        4,
+        7,
+        7,
+        3,
+        3,
+        7,
+        1,
+        7,
+        5,
+        0,
+        5,
+        0,
+        0,
+        2,
+        1,
+        3,
+        2
+      ],
+      "color_order": [],
+      "world_bonus": [
+        6,
+        4,
+        8,
+        4,
+        4,
+        2,
+        6,
+        8,
+        0,
+        6,
+        0,
+        2
+      ],
+      "baby_mario_sfx": 68,
+      "boss_order": [
+        "Burt The Bashful's Boss Room",
+        "Salvo The Slime's Boss Room",
+        "Bigger Boo's Boss Room",
+        "Roger The Ghost's Boss Room",
+        "Prince Froggy's Boss Room",
+        "Naval Piranha's Boss Room",
+        "Marching Milde's Boss Room",
+        "Hookbill The Koopa's Boss Room",
+        "Sluggy The Unshaven's Boss Room",
+        "Raphael The Raven's Boss Room",
+        "Tap-Tap The Red Nose's Boss Room"
+      ],
+      "boss_room_id": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "tap_tap_room": 63,
+      "boss_ap_loc": [
+        "Burt The Bashful Defeated",
+        "Salvo The Slime Defeated",
+        "Bigger Boo Defeated",
+        "Roger The Ghost Defeated",
+        "Prince Froggy Defeated",
+        "Naval Piranha Defeated",
+        "Marching Milde Defeated",
+        "Hookbill The Koopa Defeated",
+        "Sluggy The Unshaven Defeated",
+        "Raphael The Raven Defeated",
+        "Tap-Tap The Red Nose Defeated"
+      ],
+      "boss_burt_data": [
+        61,
+        5,
+        99,
+        0
+      ],
+      "boss_slime_data": [
+        112,
+        4,
+        120,
+        0
+      ],
+      "boss_boo_data": [
+        116,
+        187,
+        122,
+        0
+      ],
+      "boss_pot_data": [
+        207,
+        4,
+        77,
+        0
+      ],
+      "boss_frog_data": [
+        191,
+        18,
+        98,
+        4
+      ],
+      "boss_plant_data": [
+        127,
+        13,
+        66,
+        0
+      ],
+      "boss_milde_data": [
+        130,
+        6,
+        100,
+        0
+      ],
+      "boss_koop_data": [
+        134,
+        13,
+        120,
+        0
+      ],
+      "boss_slug_data": [
+        138,
+        9,
+        122,
+        0
+      ],
+      "boss_raph_data": [
+        196,
+        3,
+        75,
+        5
+      ],
+      "boss_tap_data": [
+        204,
+        73,
+        100,
+        2
+      ],
+      "global_level_list": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66
+      ],
+      "world_start_lv": [
+        0,
+        8,
+        16,
+        24,
+        32,
+        40
+      ],
+      "level_location_list": [
+        "1-1",
+        "1-2",
+        "1-3",
+        "1-4",
+        "1-5",
+        "1-6",
+        "1-7",
+        "1-8",
+        "2-1",
+        "2-2",
+        "2-3",
+        "2-4",
+        "2-5",
+        "2-6",
+        "2-7",
+        "2-8",
+        "3-1",
+        "3-2",
+        "3-3",
+        "3-4",
+        "3-5",
+        "3-6",
+        "3-7",
+        "3-8",
+        "4-1",
+        "4-2",
+        "4-3",
+        "4-4",
+        "4-5",
+        "4-6",
+        "4-7",
+        "4-8",
+        "5-1",
+        "5-2",
+        "5-3",
+        "5-4",
+        "5-5",
+        "5-6",
+        "5-7",
+        "5-8",
+        "6-1",
+        "6-2",
+        "6-3",
+        "6-4",
+        "6-5",
+        "6-6",
+        "6-7"
+      ],
+      "level_name_list": [
+        "Make Eggs, Throw Eggs",
+        "Watch Out Below!",
+        "The Cave Of Chomp Rock",
+        "Burt The Bashful's Fort",
+        "Hop! Hop! Donut Lifts",
+        "Shy-Guys On Stilts",
+        "Touch Fuzzy Get Dizzy",
+        "Salvo The Slime's Castle",
+        "Visit Koopa And Para-Koopa",
+        "The Baseball Boys",
+        "What's Gusty Taste Like?",
+        "Bigger Boo's Fort",
+        "Watch Out For Lakitu",
+        "The Cave Of The Mystery Maze",
+        "Lakitu's Wall",
+        "The Potted Ghost's Castle",
+        "Welcome To Monkey World!",
+        "Jungle Rhythm...",
+        "Nep-Enuts' Domain",
+        "Prince Froggy's Fort",
+        "Jammin' Through The Trees",
+        "The Cave Of Harry Hedgehog",
+        "Monkeys' Favorite Lake",
+        "Naval Piranha's Castle",
+        "GO! GO! MARIO!!",
+        "The Cave Of The Lakitus",
+        "Don't Look Back!",
+        "Marching Milde's Fort",
+        "Chomp Rock Zone",
+        "Lake Shore Paradise",
+        "Ride Like The Wind",
+        "Hookbill The Koopa's Castle",
+        "BLIZZARD!!!",
+        "Ride The Ski Lifts",
+        "Danger - Icy Conditions Ahead",
+        "Sluggy The Unshaven's Fort",
+        "Goonie Rides!",
+        "Welcome To Cloud World",
+        "Shifting Platforms Ahead",
+        "Raphael The Raven's Castle",
+        "Scary Skeleton Goonies!",
+        "The Cave Of The Bandits",
+        "Beware The Spinning Logs",
+        "Tap-Tap The Red Nose's Fort",
+        "The Very Loooooong Cave",
+        "The Deep, Underground Maze",
+        "KEEP MOVING!!!!"
+      ],
+      "Stage11StageGFX": [
+        4,
+        4,
+        83
+      ],
+      "Stage12StageGFX": [
+        32,
+        4,
+        83
+      ],
+      "Stage13StageGFX": [
+        60,
+        4,
+        83
+      ],
+      "Stage14StageGFX": [
+        88,
+        4,
+        83
+      ],
+      "Stage15StageGFX": [
+        116,
+        4,
+        83
+      ],
+      "Stage16StageGFX": [
+        144,
+        4,
+        83
+      ],
+      "Stage17StageGFX": [
+        172,
+        4,
+        83
+      ],
+      "Stage18StageGFX": [
+        200,
+        4,
+        83
+      ],
+      "Stage21StageGFX": [
+        4,
+        36,
+        83
+      ],
+      "Stage22StageGFX": [
+        32,
+        36,
+        83
+      ],
+      "Stage23StageGFX": [
+        60,
+        36,
+        83
+      ],
+      "Stage24StageGFX": [
+        88,
+        36,
+        83
+      ],
+      "Stage25StageGFX": [
+        116,
+        36,
+        83
+      ],
+      "Stage26StageGFX": [
+        144,
+        36,
+        83
+      ],
+      "Stage27StageGFX": [
+        172,
+        36,
+        83
+      ],
+      "Stage28StageGFX": [
+        200,
+        36,
+        83
+      ],
+      "Stage31StageGFX": [
+        4,
+        68,
+        83
+      ],
+      "Stage32StageGFX": [
+        32,
+        68,
+        83
+      ],
+      "Stage33StageGFX": [
+        60,
+        68,
+        83
+      ],
+      "Stage34StageGFX": [
+        88,
+        68,
+        83
+      ],
+      "Stage35StageGFX": [
+        116,
+        68,
+        83
+      ],
+      "Stage36StageGFX": [
+        144,
+        68,
+        83
+      ],
+      "Stage37StageGFX": [
+        172,
+        68,
+        83
+      ],
+      "Stage38StageGFX": [
+        200,
+        68,
+        83
+      ],
+      "Stage41StageGFX": [
+        4,
+        100,
+        83
+      ],
+      "Stage42StageGFX": [
+        32,
+        100,
+        83
+      ],
+      "Stage43StageGFX": [
+        60,
+        100,
+        83
+      ],
+      "Stage44StageGFX": [
+        88,
+        100,
+        83
+      ],
+      "Stage45StageGFX": [
+        116,
+        100,
+        83
+      ],
+      "Stage46StageGFX": [
+        144,
+        100,
+        83
+      ],
+      "Stage47StageGFX": [
+        172,
+        100,
+        83
+      ],
+      "Stage48StageGFX": [
+        200,
+        100,
+        83
+      ],
+      "Stage51StageGFX": [
+        4,
+        4,
+        83
+      ],
+      "Stage52StageGFX": [
+        32,
+        4,
+        83
+      ],
+      "Stage53StageGFX": [
+        60,
+        4,
+        83
+      ],
+      "Stage54StageGFX": [
+        88,
+        4,
+        83
+      ],
+      "Stage55StageGFX": [
+        116,
+        4,
+        83
+      ],
+      "Stage56StageGFX": [
+        144,
+        4,
+        83
+      ],
+      "Stage57StageGFX": [
+        172,
+        4,
+        83
+      ],
+      "Stage58StageGFX": [
+        200,
+        4,
+        83
+      ],
+      "Stage61StageGFX": [
+        4,
+        36,
+        83
+      ],
+      "Stage62StageGFX": [
+        32,
+        36,
+        83
+      ],
+      "Stage63StageGFX": [
+        60,
+        36,
+        83
+      ],
+      "Stage64StageGFX": [
+        88,
+        36,
+        83
+      ],
+      "Stage65StageGFX": [
+        116,
+        36,
+        83
+      ],
+      "Stage66StageGFX": [
+        144,
+        36,
+        83
+      ],
+      "Stage67StageGFX": [
+        172,
+        36,
+        83
+      ],
+      "level_gfx_table": [
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        21,
+        21,
+        21,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        21,
+        21,
+        21,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        21,
+        21,
+        21,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21
+      ],
+      "palette_panel_list": [
+        0,
+        12,
+        0,
+        16,
+        0,
+        16,
+        0,
+        12,
+        0,
+        12,
+        0,
+        12,
+        0,
+        16,
+        0,
+        16,
+        0,
+        12,
+        0,
+        12,
+        0,
+        24,
+        0,
+        24,
+        0,
+        12,
+        0,
+        16,
+        0,
+        16,
+        0,
+        16,
+        0,
+        12,
+        0,
+        16,
+        0,
+        12,
+        0,
+        12,
+        0,
+        12,
+        0,
+        12,
+        0,
+        24,
+        0,
+        24,
+        0,
+        16,
+        0,
+        12,
+        0,
+        12,
+        0,
+        12,
+        0,
+        12,
+        0,
+        12,
+        0,
+        16,
+        0,
+        16,
+        0,
+        12,
+        0,
+        12,
+        0,
+        24,
+        0,
+        24,
+        0,
+        12,
+        0,
+        16,
+        0,
+        12,
+        0,
+        12,
+        0,
+        16,
+        0,
+        12,
+        0,
+        12,
+        0,
+        12,
+        0,
+        12,
+        0,
+        12,
+        0,
+        24,
+        0,
+        24,
+        0,
+        12,
+        0,
+        16,
+        0,
+        12,
+        0,
+        16,
+        0,
+        12,
+        0,
+        12,
+        0,
+        16,
+        0,
+        12,
+        0,
+        12,
+        0,
+        12,
+        0,
+        24,
+        0,
+        24,
+        0,
+        12,
+        0,
+        12,
+        0,
+        16,
+        0,
+        16,
+        0,
+        12,
+        0,
+        12,
+        0,
+        16
+      ],
+      "castle_door": [
+        184,
+        5,
+        119,
+        0
+      ],
+      "world_1_stages": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "world_2_stages": [
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "world_3_stages": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33
+      ],
+      "world_4_stages": [
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ],
+      "world_5_stages": [
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57
+      ],
+      "world_6_stages": [
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69
+      ],
+      "bowser_text": [
+        222,
+        238,
+        220,
+        220,
+        229
+      ],
+      "luigi_count": 0,
+      "rom_name": "YOSHI_ROM_NOT_GENERATED",
       "world_description": "Yoshi's Island is a 2D platforming game.\nDuring a delivery, Bowser's evil ward, Kamek, attacked the stork, kidnapping Luigi and dropping Mario onto Yoshi's Island.\nAs Yoshi, you must run, jump, and throw eggs to escort the baby Mario across the island to defeat Bowser and reunite the two brothers with their parents.",
       "slot_data": {
         "world_1": [
@@ -7059,19 +8145,6 @@
       "consumable_logic": true,
       "bowser_door": 0,
       "luigi_pieces": 25,
-      "boss_order": [
-        "Burt The Bashful's Boss Room",
-        "Salvo The Slime's Boss Room",
-        "Bigger Boo's Boss Room",
-        "Roger The Ghost's Boss Room",
-        "Prince Froggy's Boss Room",
-        "Naval Piranha's Boss Room",
-        "Marching Milde's Boss Room",
-        "Hookbill The Koopa's Boss Room",
-        "Sluggy The Unshaven's Boss Room",
-        "Raphael The Raven's Boss Room",
-        "Tap-Tap The Red Nose's Boss Room"
-      ],
       "castle_unlock": 5,
       "boss_unlock": 0,
       "world_directory": "yoshisisland"

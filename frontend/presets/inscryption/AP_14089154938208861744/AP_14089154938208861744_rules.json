@@ -3119,6 +3119,220 @@
           "display_name": "Skip Tutorial"
         }
       },
+      "all_items": [
+        {
+          "name": "Stinkbug Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Stunted Wolf Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Wardrobe Key",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Skink Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Ant Cards",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Caged Wolf Card",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Squirrel Totem Head",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Dagger",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Film Roll",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Ring",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Magnificus Eye",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Oil Painting's Clover Plant",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Extra Candle",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Bee Figurine",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Greater Smoke",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Angler Hook",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Camera Replica",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Pile Of Meat",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Epitaph Piece",
+          "count": 9,
+          "classification": 1
+        },
+        {
+          "name": "Epitaph Pieces",
+          "count": 3,
+          "classification": 1
+        },
+        {
+          "name": "Monocle",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Bone Lord Femur",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Bone Lord Horn",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Bone Lord Holo Key",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Mycologists Holo Key",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Ancient Obol",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Great Kraken Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Drowned Soul Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Salmon Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Dock's Clover Plant",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Extra Battery",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Nano Armor Generator",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Mrs. Bomb's Remote",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Inspectometer Battery",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Gems Module",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Lonely Wizbot Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Fishbot Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Ourobot Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Holo Pelt",
+          "count": 5,
+          "classification": 1
+        },
+        {
+          "name": "Quill",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Currency",
+          "count": 1,
+          "classification": 0
+        },
+        {
+          "name": "Card Pack",
+          "count": 1,
+          "classification": 0
+        }
+      ],
+      "required_epitaph_pieces_name": "Epitaph Piece",
+      "required_epitaph_pieces_count": 9,
       "world_description": "Inscryption is an inky black card-based odyssey that blends the deckbuilding roguelike,\nescape-room style puzzles, and psychological horror into a blood-laced smoothie.\nDarker still are the secrets inscrybed upon the cards...",
       "slot_data": {
         "death_link": 0,

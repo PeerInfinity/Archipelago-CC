@@ -1057,6 +1057,24 @@
           "display_name": "Yorgle MaxSpeed"
         }
       },
+      "dragon_rooms": [
+        4,
+        25,
+        20
+      ],
+      "dragon_slay_check": 1,
+      "connector_multi_slot": 0,
+      "dragon_rando_type": 1,
+      "yorgle_speed": 2,
+      "yorgle_min_speed": 1,
+      "grundle_speed": 2,
+      "grundle_min_speed": 1,
+      "rhindle_speed": 3,
+      "rhindle_min_speed": 2,
+      "difficulty_switch_a": 2,
+      "difficulty_switch_b": 2,
+      "start_castle": 0,
+      "created_items": 24,
       "world_description": "Adventure for the Atari 2600 is an early graphical adventure game.\nFind the enchanted chalice and return it to the yellow castle,\nusing magic items to enter hidden rooms, retrieve out of\nreach items, or defeat the three dragons.  Beware the bat\nwho likes to steal your equipment!",
       "web": {
         "theme": "dirt",

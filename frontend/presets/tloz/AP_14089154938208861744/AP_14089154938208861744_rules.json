@@ -23266,6 +23266,18 @@
           "display_name": "Progression Balancing"
         }
       },
+      "levels": [
+        null,
+        "Level 1",
+        "Level 2",
+        "Level 3",
+        "Level 4",
+        "Level 5",
+        "Level 6",
+        "Level 7",
+        "Level 8",
+        "Level 9"
+      ],
       "base_id": 7000,
       "world_description": "The Legend of Zelda needs almost no introduction. Gather the eight fragments of the\nTriforce of Wisdom, enter Death Mountain, defeat Ganon, and rescue Princess Zelda.\nThis randomizer shuffles all the items in the game around, leading to a new adventure\nevery time.",
       "slot_data": {

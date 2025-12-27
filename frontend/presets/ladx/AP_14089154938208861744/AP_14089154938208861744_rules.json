@@ -3422,7 +3422,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 2
       },
       "Entrance Chest (Bottle Grotto)": {
         "name": "Entrance Chest (Bottle Grotto)",
@@ -3451,9 +3452,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 2
           }
-        ]
+        ],
+        "dungeon_index": 2
       },
       "D2 Room 2": {
         "name": "D2 Room 2",
@@ -3625,7 +3628,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 2
       },
       "Two Stalfos Key (Bottle Grotto)": {
         "name": "Two Stalfos Key (Bottle Grotto)",
@@ -3683,9 +3687,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 2
           }
-        ]
+        ],
+        "dungeon_index": 2
       },
       "First Switch Locked Chest (Bottle Grotto)": {
         "name": "First Switch Locked Chest (Bottle Grotto)",
@@ -3813,9 +3819,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 2
           }
-        ]
+        ],
+        "dungeon_index": 2
       },
       "Button Spawn Chest (Bottle Grotto)": {
         "name": "Button Spawn Chest (Bottle Grotto)",
@@ -3866,9 +3874,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 2
           }
-        ]
+        ],
+        "dungeon_index": 2
       },
       "D2 Room 3": {
         "name": "D2 Room 3",
@@ -3952,7 +3962,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 2
       },
       "D2 Room 4": {
         "name": "D2 Room 4",
@@ -4059,7 +4070,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 2
           },
           {
             "name": "Outside Boo Buddies Room Chest (Bottle Grotto)",
@@ -4073,9 +4085,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 2
           }
-        ]
+        ],
+        "dungeon_index": 2
       },
       "Second Switch Locked Chest (Bottle Grotto)": {
         "name": "Second Switch Locked Chest (Bottle Grotto)",
@@ -4234,9 +4248,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 2
           }
-        ]
+        ],
+        "dungeon_index": 2
       },
       "Enemy Order Room Chest (Bottle Grotto)": {
         "name": "Enemy Order Room Chest (Bottle Grotto)",
@@ -4357,9 +4373,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 2
           }
-        ]
+        ],
+        "dungeon_index": 2
       },
       "D2 Room 5": {
         "name": "D2 Room 5",
@@ -4403,7 +4421,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 2
       },
       "D2 Room 6": {
         "name": "D2 Room 6",
@@ -4429,7 +4448,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 2
       },
       "D2 Room 7": {
         "name": "D2 Room 7",
@@ -4488,7 +4508,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 2
       },
       "D2 Room 8": {
         "name": "D2 Room 8",
@@ -4550,7 +4571,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 2
           },
           {
             "name": "Conch Horn (Bottle Grotto)",
@@ -4564,9 +4586,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 2
           }
-        ]
+        ],
+        "dungeon_index": 2
       },
       "D2 Room 9": {
         "name": "D2 Room 9",
@@ -4626,7 +4650,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 2
       },
       "Boo Buddies Room Chest (Bottle Grotto)": {
         "name": "Boo Buddies Room Chest (Bottle Grotto)",
@@ -4677,9 +4702,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 2
           }
-        ]
+        ],
+        "dungeon_index": 2
       },
       "Mask-Mimic Key (Bottle Grotto)": {
         "name": "Mask-Mimic Key (Bottle Grotto)",
@@ -4752,9 +4779,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 2
           }
-        ]
+        ],
+        "dungeon_index": 2
       },
       "Mask-Mimic Chest (Bottle Grotto)": {
         "name": "Mask-Mimic Chest (Bottle Grotto)",
@@ -4834,9 +4863,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 2
           }
-        ]
+        ],
+        "dungeon_index": 2
       },
       "D2 Room 10": {
         "name": "D2 Room 10",
@@ -4937,7 +4968,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 2
       },
       "Hardhat Beetle Pit Chest (Bottle Grotto)": {
         "name": "Hardhat Beetle Pit Chest (Bottle Grotto)",
@@ -5029,9 +5061,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 2
           }
-        ]
+        ],
+        "dungeon_index": 2
       },
       "Unset Room (None)": {
         "name": "Unset Room (None)",
@@ -6264,7 +6298,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 4
           },
           {
             "name": "NW of Boots Pit Ledge Chest (Angler's Tunnel)",
@@ -6278,9 +6313,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 4
           }
-        ]
+        ],
+        "dungeon_index": 4
       },
       "Two Spiked Beetle, Zol Chest (Angler's Tunnel)": {
         "name": "Two Spiked Beetle, Zol Chest (Angler's Tunnel)",
@@ -6392,9 +6429,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 4
           }
-        ]
+        ],
+        "dungeon_index": 4
       },
       "Crystal Chest (Angler's Tunnel)": {
         "name": "Crystal Chest (Angler's Tunnel)",
@@ -6434,9 +6473,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 4
           }
-        ]
+        ],
+        "dungeon_index": 4
       },
       "D4 Room 2": {
         "name": "D4 Room 2",
@@ -6503,7 +6544,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 4
       },
       "D4 Room 3": {
         "name": "D4 Room 3",
@@ -6579,7 +6621,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 4
       },
       "Flipper Locked Before Boots Pit Chest (Angler's Tunnel)": {
         "name": "Flipper Locked Before Boots Pit Chest (Angler's Tunnel)",
@@ -6608,9 +6651,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 4
           }
-        ]
+        ],
+        "dungeon_index": 4
       },
       "D4 Room 4": {
         "name": "D4 Room 4",
@@ -6659,7 +6704,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 4
       },
       "D4 Room 5": {
         "name": "D4 Room 5",
@@ -6887,7 +6933,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 4
       },
       "Pit Key (Angler's Tunnel)": {
         "name": "Pit Key (Angler's Tunnel)",
@@ -6968,9 +7015,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 4
           }
-        ]
+        ],
+        "dungeon_index": 4
       },
       "Flipper Locked After Boots Pit Chest (Angler's Tunnel)": {
         "name": "Flipper Locked After Boots Pit Chest (Angler's Tunnel)",
@@ -6999,9 +7048,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 4
           }
-        ]
+        ],
+        "dungeon_index": 4
       },
       "D4 Room 6": {
         "name": "D4 Room 6",
@@ -7073,7 +7124,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 4
           },
           {
             "name": "Spark Chest (Angler's Tunnel)",
@@ -7087,9 +7139,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 4
           }
-        ]
+        ],
+        "dungeon_index": 4
       },
       "Nightmare Key Ledge Chest (Angler's Tunnel)": {
         "name": "Nightmare Key Ledge Chest (Angler's Tunnel)",
@@ -7140,9 +7194,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 4
           }
-        ]
+        ],
+        "dungeon_index": 4
       },
       "Flippers Chest (Angler's Tunnel)": {
         "name": "Flippers Chest (Angler's Tunnel)",
@@ -7222,9 +7278,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 4
           }
-        ]
+        ],
+        "dungeon_index": 4
       },
       "D4 Room 7": {
         "name": "D4 Room 7",
@@ -7258,7 +7316,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 4
       },
       "D4 Room 8": {
         "name": "D4 Room 8",
@@ -7382,7 +7441,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 4
       },
       "D4 Room 9": {
         "name": "D4 Room 9",
@@ -7450,7 +7510,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 4
           },
           {
             "name": "Surf Harp (Angler's Tunnel)",
@@ -7464,9 +7525,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 4
           }
-        ]
+        ],
+        "dungeon_index": 4
       },
       "D4 Room 10": {
         "name": "D4 Room 10",
@@ -7524,7 +7587,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 4
       },
       "Lower Bomb Locked Watery Chest (Angler's Tunnel)": {
         "name": "Lower Bomb Locked Watery Chest (Angler's Tunnel)",
@@ -7553,9 +7617,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 4
           }
-        ]
+        ],
+        "dungeon_index": 4
       },
       "Upper Bomb Locked Watery Chest (Angler's Tunnel)": {
         "name": "Upper Bomb Locked Watery Chest (Angler's Tunnel)",
@@ -7595,9 +7661,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 4
           }
-        ]
+        ],
+        "dungeon_index": 4
       },
       "No Name 17": {
         "name": "No Name 17",
@@ -10173,7 +10241,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 8
       },
       "D8 Room 2": {
         "name": "D8 Room 2",
@@ -10269,7 +10338,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 8
       },
       "Push Block Chest (Turtle Rock)": {
         "name": "Push Block Chest (Turtle Rock)",
@@ -10295,9 +10365,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "Beamos Blocked Chest (Turtle Rock)": {
         "name": "Beamos Blocked Chest (Turtle Rock)",
@@ -10367,9 +10439,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "Left of Hinox Zamboni Chest (Turtle Rock)": {
         "name": "Left of Hinox Zamboni Chest (Turtle Rock)",
@@ -10622,9 +10696,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "Vacuum Mouth Chest (Turtle Rock)": {
         "name": "Vacuum Mouth Chest (Turtle Rock)",
@@ -10768,9 +10844,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "Left Vire Key (Turtle Rock)": {
         "name": "Left Vire Key (Turtle Rock)",
@@ -10828,9 +10906,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "Spark, Pit Chest (Turtle Rock)": {
         "name": "Spark, Pit Chest (Turtle Rock)",
@@ -10870,9 +10950,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "Two Torches Room Chest (Turtle Rock)": {
         "name": "Two Torches Room Chest (Turtle Rock)",
@@ -10901,9 +10983,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "Dodongo Chest (Turtle Rock)": {
         "name": "Dodongo Chest (Turtle Rock)",
@@ -10932,9 +11016,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "Outside Heart Piece (Turtle Rock)": {
         "name": "Outside Heart Piece (Turtle Rock)",
@@ -10991,9 +11077,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "West of Boss Door Ledge Chest (Turtle Rock)": {
         "name": "West of Boss Door Ledge Chest (Turtle Rock)",
@@ -11022,9 +11110,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "D8 Room 3": {
         "name": "D8 Room 3",
@@ -11207,7 +11297,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 8
       },
       "Gibdos on Cracked Floor Key (Turtle Rock)": {
         "name": "Gibdos on Cracked Floor Key (Turtle Rock)",
@@ -11276,9 +11367,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "Lava Ledge Chest (Turtle Rock)": {
         "name": "Lava Ledge Chest (Turtle Rock)",
@@ -11318,9 +11411,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "D8 Room 4": {
         "name": "D8 Room 4",
@@ -11358,7 +11453,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 8
       },
       "D8 Room 5": {
         "name": "D8 Room 5",
@@ -11417,7 +11513,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 8
       },
       "D8 Room 6": {
         "name": "D8 Room 6",
@@ -11461,7 +11558,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 8
       },
       "D8 Room 7": {
         "name": "D8 Room 7",
@@ -11516,7 +11614,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 8
       },
       "Magic Rod Chest (Turtle Rock)": {
         "name": "Magic Rod Chest (Turtle Rock)",
@@ -11556,9 +11655,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "D8 Room 8": {
         "name": "D8 Room 8",
@@ -11596,7 +11697,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 8
       },
       "D8 Room 9": {
         "name": "D8 Room 9",
@@ -11664,7 +11766,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 8
       },
       "Nightmare Key/Big Zamboni Chest (Turtle Rock)": {
         "name": "Nightmare Key/Big Zamboni Chest (Turtle Rock)",
@@ -11717,9 +11820,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "D8 Room 10": {
         "name": "D8 Room 10",
@@ -11767,7 +11872,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 8
       },
       "D8 Room 11": {
         "name": "D8 Room 11",
@@ -11807,7 +11913,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 8
           },
           {
             "name": "Thunder Drum (Turtle Rock)",
@@ -11821,9 +11928,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "Right Lava Chest (Turtle Rock)": {
         "name": "Right Lava Chest (Turtle Rock)",
@@ -11909,9 +12018,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "Zamboni, Two Zol Key (Turtle Rock)": {
         "name": "Zamboni, Two Zol Key (Turtle Rock)",
@@ -12024,9 +12135,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "Four Ropes Pot Chest (Turtle Rock)": {
         "name": "Four Ropes Pot Chest (Turtle Rock)",
@@ -12055,9 +12168,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 8
           }
-        ]
+        ],
+        "dungeon_index": 8
       },
       "No Name 44": {
         "name": "No Name 44",
@@ -12717,7 +12832,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 7
       },
       "Entrance Key (Eagle's Tower)": {
         "name": "Entrance Key (Eagle's Tower)",
@@ -12787,9 +12903,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 7
           }
-        ]
+        ],
+        "dungeon_index": 7
       },
       "Switch Wrapped Chest (Eagle's Tower)": {
         "name": "Switch Wrapped Chest (Eagle's Tower)",
@@ -12991,9 +13109,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 7
           }
-        ]
+        ],
+        "dungeon_index": 7
       },
       "Horse Head, Bubble Chest (Eagle's Tower)": {
         "name": "Horse Head, Bubble Chest (Eagle's Tower)",
@@ -13022,9 +13142,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 7
           }
-        ]
+        ],
+        "dungeon_index": 7
       },
       "Three of a Kind, No Pit Chest (Eagle's Tower)": {
         "name": "Three of a Kind, No Pit Chest (Eagle's Tower)",
@@ -13161,9 +13283,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 7
           }
-        ]
+        ],
+        "dungeon_index": 7
       },
       "D7 Room 2": {
         "name": "D7 Room 2",
@@ -13439,7 +13563,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 7
       },
       "Kirby Ledge Chest (Eagle's Tower)": {
         "name": "Kirby Ledge Chest (Eagle's Tower)",
@@ -13457,9 +13582,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 7
           }
-        ]
+        ],
+        "dungeon_index": 7
       },
       "Hinox Key (Eagle's Tower)": {
         "name": "Hinox Key (Eagle's Tower)",
@@ -13523,9 +13650,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 7
           }
-        ]
+        ],
+        "dungeon_index": 7
       },
       "Nightmare Key/After Grim Creeper Chest (Eagle's Tower)": {
         "name": "Nightmare Key/After Grim Creeper Chest (Eagle's Tower)",
@@ -13583,9 +13712,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 7
           }
-        ]
+        ],
+        "dungeon_index": 7
       },
       "Mirror Shield Chest (Eagle's Tower)": {
         "name": "Mirror Shield Chest (Eagle's Tower)",
@@ -13649,9 +13780,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 7
           }
-        ]
+        ],
+        "dungeon_index": 7
       },
       "Beamos Ledge Chest (Eagle's Tower)": {
         "name": "Beamos Ledge Chest (Eagle's Tower)",
@@ -13715,9 +13848,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 7
           }
-        ]
+        ],
+        "dungeon_index": 7
       },
       "Three of a Kind, Pit Chest (Eagle's Tower)": {
         "name": "Three of a Kind, Pit Chest (Eagle's Tower)",
@@ -13767,9 +13902,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 7
           }
-        ]
+        ],
+        "dungeon_index": 7
       },
       "D7 Room 3": {
         "name": "D7 Room 3",
@@ -13795,7 +13932,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 7
       },
       "D7 Room 4": {
         "name": "D7 Room 4",
@@ -13831,7 +13969,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 7
       },
       "Conveyor Beamos Chest (Eagle's Tower)": {
         "name": "Conveyor Beamos Chest (Eagle's Tower)",
@@ -13860,9 +13999,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 7
           }
-        ]
+        ],
+        "dungeon_index": 7
       },
       "D7 Room 5": {
         "name": "D7 Room 5",
@@ -13917,7 +14058,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 7
       },
       "D7 Room 6": {
         "name": "D7 Room 6",
@@ -13975,7 +14117,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 7
           },
           {
             "name": "Organ of Evening Calm (Eagle's Tower)",
@@ -13989,9 +14132,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 7
           }
-        ]
+        ],
+        "dungeon_index": 7
       },
       "Access Tunnel Exterior (Tal Tal Mountains)": {
         "name": "Access Tunnel Exterior (Tal Tal Mountains)",
@@ -14767,7 +14912,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 9
       },
       "Lower Small Key (Color Dungeon)": {
         "name": "Lower Small Key (Color Dungeon)",
@@ -15040,9 +15186,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 9
           }
-        ]
+        ],
+        "dungeon_index": 9
       },
       "Two Socket Chest (Color Dungeon)": {
         "name": "Two Socket Chest (Color Dungeon)",
@@ -15117,9 +15265,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 9
           }
-        ]
+        ],
+        "dungeon_index": 9
       },
       "D9 Room 2": {
         "name": "D9 Room 2",
@@ -15194,7 +15344,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 9
           },
           {
             "name": "Upper Small Key (Color Dungeon)",
@@ -15208,9 +15359,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 9
           }
-        ]
+        ],
+        "dungeon_index": 9
       },
       "Nightmare Key Chest (Color Dungeon)": {
         "name": "Nightmare Key Chest (Color Dungeon)",
@@ -15257,9 +15410,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 9
           }
-        ]
+        ],
+        "dungeon_index": 9
       },
       "D9 Room 3": {
         "name": "D9 Room 3",
@@ -15338,7 +15493,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 9
       },
       "Zol Chest (Color Dungeon)": {
         "name": "Zol Chest (Color Dungeon)",
@@ -15479,9 +15635,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 9
           }
-        ]
+        ],
+        "dungeon_index": 9
       },
       "Bullshit Room (Color Dungeon)": {
         "name": "Bullshit Room (Color Dungeon)",
@@ -15556,9 +15714,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 9
           }
-        ]
+        ],
+        "dungeon_index": 9
       },
       "D9 Room 4": {
         "name": "D9 Room 4",
@@ -15642,7 +15802,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 9
       },
       "D9 Room 5": {
         "name": "D9 Room 5",
@@ -15737,7 +15898,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 9
       },
       "D9 Room 6": {
         "name": "D9 Room 6",
@@ -15860,7 +16022,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 9
       },
       "D9 Room 7": {
         "name": "D9 Room 7",
@@ -15929,7 +16092,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 9
           },
           {
             "name": "Tunic Fairy Item 2 (Color Dungeon)",
@@ -15943,9 +16107,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 9
           }
-        ]
+        ],
+        "dungeon_index": 9
       },
       "Kiki (Ukuku Prairie)": {
         "name": "Kiki (Ukuku Prairie)",
@@ -16106,7 +16272,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 3
       },
       "Vacuum Mouth Chest (Key Cavern)": {
         "name": "Vacuum Mouth Chest (Key Cavern)",
@@ -16135,9 +16302,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "Four Zol Chest (Key Cavern)": {
         "name": "Four Zol Chest (Key Cavern)",
@@ -16279,9 +16448,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "Two Bombite, Sword Stalfos, Zol Chest (Key Cavern)": {
         "name": "Two Bombite, Sword Stalfos, Zol Chest (Key Cavern)",
@@ -16351,9 +16522,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "D3 Room 2": {
         "name": "D3 Room 2",
@@ -16559,7 +16732,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 3
       },
       "Two Stalfos, Zol Chest (Key Cavern)": {
         "name": "Two Stalfos, Zol Chest (Key Cavern)",
@@ -16628,9 +16802,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "D3 Room 3": {
         "name": "D3 Room 3",
@@ -16787,7 +16963,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 3
       },
       "North Key Room Key (Key Cavern)": {
         "name": "North Key Room Key (Key Cavern)",
@@ -16845,9 +17022,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "Zol Switch Chest (Key Cavern)": {
         "name": "Zol Switch Chest (Key Cavern)",
@@ -16865,9 +17044,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "Sword Stalfos, Keese Switch Chest (Key Cavern)": {
         "name": "Sword Stalfos, Keese Switch Chest (Key Cavern)",
@@ -16885,9 +17066,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "D3 Room 4": {
         "name": "D3 Room 4",
@@ -16960,7 +17143,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 3
       },
       "West Key Room Key (Key Cavern)": {
         "name": "West Key Room Key (Key Cavern)",
@@ -17024,9 +17208,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "D3 Room 5": {
         "name": "D3 Room 5",
@@ -17099,7 +17285,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 3
       },
       "South Key Room Key (Key Cavern)": {
         "name": "South Key Room Key (Key Cavern)",
@@ -17163,9 +17350,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "D3 Room 6": {
         "name": "D3 Room 6",
@@ -17512,7 +17701,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 3
       },
       "After Stairs Key (Key Cavern)": {
         "name": "After Stairs Key (Key Cavern)",
@@ -17582,9 +17772,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "Tile Arrow Ledge Chest (Key Cavern)": {
         "name": "Tile Arrow Ledge Chest (Key Cavern)",
@@ -17630,9 +17822,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "Boots Chest (Key Cavern)": {
         "name": "Boots Chest (Key Cavern)",
@@ -17713,9 +17907,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "Three Zol, Stalfos Chest (Key Cavern)": {
         "name": "Three Zol, Stalfos Chest (Key Cavern)",
@@ -17823,9 +18019,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "Three Bombite Key (Key Cavern)": {
         "name": "Three Bombite Key (Key Cavern)",
@@ -17854,9 +18052,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "Two Zol, Two Pairodd Key (Key Cavern)": {
         "name": "Two Zol, Two Pairodd Key (Key Cavern)",
@@ -17914,9 +18114,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "Two Zol, Stalfos Ledge Chest (Key Cavern)": {
         "name": "Two Zol, Stalfos Ledge Chest (Key Cavern)",
@@ -17974,9 +18176,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "D3 Room 7": {
         "name": "D3 Room 7",
@@ -18026,7 +18230,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 3
       },
       "D3 Room 8": {
         "name": "D3 Room 8",
@@ -18076,7 +18281,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 3
       },
       "D3 Room 9": {
         "name": "D3 Room 9",
@@ -18126,7 +18332,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 3
       },
       "D3 Room 10": {
         "name": "D3 Room 10",
@@ -18210,7 +18417,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 3
       },
       "Nightmare Door Key (Key Cavern)": {
         "name": "Nightmare Door Key (Key Cavern)",
@@ -18317,9 +18525,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "D3 Room 11": {
         "name": "D3 Room 11",
@@ -18370,7 +18580,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 3
           },
           {
             "name": "Sea Lily's Bell (Key Cavern)",
@@ -18384,9 +18595,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 3
           }
-        ]
+        ],
+        "dungeon_index": 3
       },
       "Outside D3 Island Bush (Ukuku Prairie)": {
         "name": "Outside D3 Island Bush (Ukuku Prairie)",
@@ -19663,7 +19876,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 5
       },
       "Entrance Hookshottable Chest (Catfish's Maw)": {
         "name": "Entrance Hookshottable Chest (Catfish's Maw)",
@@ -19692,9 +19906,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 5
           }
-        ]
+        ],
+        "dungeon_index": 5
       },
       "Spark, Two Iron Mask Chest (Catfish's Maw)": {
         "name": "Spark, Two Iron Mask Chest (Catfish's Maw)",
@@ -19785,9 +20001,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 5
           }
-        ]
+        ],
+        "dungeon_index": 5
       },
       "Crystal Key (Catfish's Maw)": {
         "name": "Crystal Key (Catfish's Maw)",
@@ -19827,9 +20045,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 5
           }
-        ]
+        ],
+        "dungeon_index": 5
       },
       "D5 Room 2": {
         "name": "D5 Room 2",
@@ -19984,7 +20204,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 5
       },
       "Flying Bomb Chest South (Catfish's Maw)": {
         "name": "Flying Bomb Chest South (Catfish's Maw)",
@@ -20054,9 +20275,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 5
           }
-        ]
+        ],
+        "dungeon_index": 5
       },
       "Three Iron Mask Chest (Catfish's Maw)": {
         "name": "Three Iron Mask Chest (Catfish's Maw)",
@@ -20085,9 +20308,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 5
           }
-        ]
+        ],
+        "dungeon_index": 5
       },
       "Hookshot Note Chest (Catfish's Maw)": {
         "name": "Hookshot Note Chest (Catfish's Maw)",
@@ -20220,9 +20445,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 5
           }
-        ]
+        ],
+        "dungeon_index": 5
       },
       "D5 Room 3": {
         "name": "D5 Room 3",
@@ -20271,7 +20498,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 5
       },
       "D5 Room 4": {
         "name": "D5 Room 4",
@@ -20355,7 +20583,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 5
       },
       "D5 Room 5": {
         "name": "D5 Room 5",
@@ -20393,7 +20622,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 5
       },
       "D5 Room 6": {
         "name": "D5 Room 6",
@@ -20441,7 +20671,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 5
       },
       "D5 Room 7": {
         "name": "D5 Room 7",
@@ -20492,7 +20723,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 5
           },
           {
             "name": "Wind Marimba (Catfish's Maw)",
@@ -20506,9 +20738,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 5
           }
-        ]
+        ],
+        "dungeon_index": 5
       },
       "D5 Room 8": {
         "name": "D5 Room 8",
@@ -20647,7 +20881,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 5
       },
       "Two Stalfos, Star Pit Chest (Catfish's Maw)": {
         "name": "Two Stalfos, Star Pit Chest (Catfish's Maw)",
@@ -20698,9 +20933,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 5
           }
-        ]
+        ],
+        "dungeon_index": 5
       },
       "Swort Stalfos, Star, Bridge Chest (Catfish's Maw)": {
         "name": "Swort Stalfos, Star, Bridge Chest (Catfish's Maw)",
@@ -20729,9 +20966,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 5
           }
-        ]
+        ],
+        "dungeon_index": 5
       },
       "Flying Bomb Chest East (Catfish's Maw)": {
         "name": "Flying Bomb Chest East (Catfish's Maw)",
@@ -20760,9 +20999,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 5
           }
-        ]
+        ],
+        "dungeon_index": 5
       },
       "D5 Room 9": {
         "name": "D5 Room 9",
@@ -20816,7 +21057,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 5
       },
       "Master Stalfos Item (Catfish's Maw)": {
         "name": "Master Stalfos Item (Catfish's Maw)",
@@ -20862,9 +21104,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 5
           }
-        ]
+        ],
+        "dungeon_index": 5
       },
       "Three Stalfos Chest (Catfish's Maw)": {
         "name": "Three Stalfos Chest (Catfish's Maw)",
@@ -20933,9 +21177,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 5
           }
-        ]
+        ],
+        "dungeon_index": 5
       },
       "Nightmare Key/Torch Cross Chest (Catfish's Maw)": {
         "name": "Nightmare Key/Torch Cross Chest (Catfish's Maw)",
@@ -20975,9 +21221,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 5
           }
-        ]
+        ],
+        "dungeon_index": 5
       },
       "In the Moat Heart Piece (Kanalet Castle)": {
         "name": "In the Moat Heart Piece (Kanalet Castle)",
@@ -21383,7 +21631,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 6
       },
       "Mini-Moldorm, Spark Chest (Face Shrine)": {
         "name": "Mini-Moldorm, Spark Chest (Face Shrine)",
@@ -21435,9 +21684,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 6
           }
-        ]
+        ],
+        "dungeon_index": 6
       },
       "Flying Heart, Statue Chest (Face Shrine)": {
         "name": "Flying Heart, Statue Chest (Face Shrine)",
@@ -21467,9 +21718,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 6
           }
-        ]
+        ],
+        "dungeon_index": 6
       },
       "L2 Bracelet Chest (Face Shrine)": {
         "name": "L2 Bracelet Chest (Face Shrine)",
@@ -21509,9 +21762,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 6
           }
-        ]
+        ],
+        "dungeon_index": 6
       },
       "Three Wizzrobe, Switch Chest (Face Shrine)": {
         "name": "Three Wizzrobe, Switch Chest (Face Shrine)",
@@ -21562,9 +21817,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 6
           }
-        ]
+        ],
+        "dungeon_index": 6
       },
       "D6 Room 2": {
         "name": "D6 Room 2",
@@ -21658,7 +21915,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 6
           },
           {
             "name": "Switch, Star Above Statues Chest (Face Shrine)",
@@ -21672,9 +21930,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 6
           }
-        ]
+        ],
+        "dungeon_index": 6
       },
       "Two Wizzrobe Key (Face Shrine)": {
         "name": "Two Wizzrobe Key (Face Shrine)",
@@ -21725,9 +21985,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 6
           }
-        ]
+        ],
+        "dungeon_index": 6
       },
       "Top Left Horse Heads Chest (Face Shrine)": {
         "name": "Top Left Horse Heads Chest (Face Shrine)",
@@ -21767,9 +22029,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 6
           }
-        ]
+        ],
+        "dungeon_index": 6
       },
       "Raft Chest (Face Shrine)": {
         "name": "Raft Chest (Face Shrine)",
@@ -21862,9 +22126,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 6
           }
-        ]
+        ],
+        "dungeon_index": 6
       },
       "Four Wizzrobe Ledge Chest (Face Shrine)": {
         "name": "Four Wizzrobe Ledge Chest (Face Shrine)",
@@ -21893,9 +22159,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 6
           }
-        ]
+        ],
+        "dungeon_index": 6
       },
       "D6 Room 3": {
         "name": "D6 Room 3",
@@ -21932,7 +22200,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 6
       },
       "D6 Room 4": {
         "name": "D6 Room 4",
@@ -21981,7 +22250,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 6
       },
       "Tile Room Key (Face Shrine)": {
         "name": "Tile Room Key (Face Shrine)",
@@ -22112,9 +22382,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 6
           }
-        ]
+        ],
+        "dungeon_index": 6
       },
       "D6 Room 5": {
         "name": "D6 Room 5",
@@ -22154,7 +22426,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 6
           },
           {
             "name": "Coral Triangle (Face Shrine)",
@@ -22168,9 +22441,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 6
           }
-        ]
+        ],
+        "dungeon_index": 6
       },
       "Top Right Horse Heads Chest (Face Shrine)": {
         "name": "Top Right Horse Heads Chest (Face Shrine)",
@@ -22321,9 +22596,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 6
           }
-        ]
+        ],
+        "dungeon_index": 6
       },
       "Pot Locked Chest (Face Shrine)": {
         "name": "Pot Locked Chest (Face Shrine)",
@@ -22370,9 +22647,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 6
           }
-        ]
+        ],
+        "dungeon_index": 6
       },
       "No Name 78": {
         "name": "No Name 78",
@@ -24015,7 +24294,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 1
           },
           {
             "name": "Four Zol Chest (Tail Cave)",
@@ -24029,7 +24309,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 1
           },
           {
             "name": "Spark, Mini-Moldorm Chest (Tail Cave)",
@@ -24043,9 +24324,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 1
           }
-        ]
+        ],
+        "dungeon_index": 1
       },
       "Hardhat Beetles Key (Tail Cave)": {
         "name": "Hardhat Beetles Key (Tail Cave)",
@@ -24108,9 +24391,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 1
           }
-        ]
+        ],
+        "dungeon_index": 1
       },
       "Mini-Moldorm Spawn Chest (Tail Cave)": {
         "name": "Mini-Moldorm Spawn Chest (Tail Cave)",
@@ -24191,9 +24476,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 1
           }
-        ]
+        ],
+        "dungeon_index": 1
       },
       "Two Stalfos, Two Keese Chest (Tail Cave)": {
         "name": "Two Stalfos, Two Keese Chest (Tail Cave)",
@@ -24314,9 +24601,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 1
           }
-        ]
+        ],
+        "dungeon_index": 1
       },
       "Bombable Wall Seashell Chest (Tail Cave)": {
         "name": "Bombable Wall Seashell Chest (Tail Cave)",
@@ -24345,9 +24634,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 1
           }
-        ]
+        ],
+        "dungeon_index": 1
       },
       "D1 Room 2": {
         "name": "D1 Room 2",
@@ -24385,7 +24676,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 1
       },
       "Feather Chest (Tail Cave)": {
         "name": "Feather Chest (Tail Cave)",
@@ -24414,9 +24706,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 1
           }
-        ]
+        ],
+        "dungeon_index": 1
       },
       "Nightmare Key Chest (Tail Cave)": {
         "name": "Nightmare Key Chest (Tail Cave)",
@@ -24463,9 +24757,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 1
           }
-        ]
+        ],
+        "dungeon_index": 1
       },
       "D1 Room 3": {
         "name": "D1 Room 3",
@@ -24599,7 +24895,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 1
       },
       "Three of a Kind Chest (Tail Cave)": {
         "name": "Three of a Kind Chest (Tail Cave)",
@@ -24668,9 +24965,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "dungeon": 1
           }
-        ]
+        ],
+        "dungeon_index": 1
       },
       "D1 Room 4": {
         "name": "D1 Room 4",
@@ -24742,7 +25041,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 1
       },
       "D1 Room 5": {
         "name": "D1 Room 5",
@@ -24768,7 +25068,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "dungeon_index": 1
       },
       "D1 Room 6": {
         "name": "D1 Room 6",
@@ -24797,7 +25098,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 1
           },
           {
             "name": "Full Moon Cello (Tail Cave)",
@@ -24811,9 +25113,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "dungeon": 1
           }
-        ]
+        ],
+        "dungeon_index": 1
       },
       "Two Zol, Moblin Chest (Mysterious Woods)": {
         "name": "Two Zol, Moblin Chest (Mysterious Woods)",
@@ -26730,541 +27034,8 @@
   },
   "world": {
     "1": {
-      "game": "Links Awakening DX",
-      "options": {
-        "accessibility": "full",
-        "additional_warp_points": "",
-        "ap_title_screen": "true",
-        "boots_controls": "vanilla",
-        "exclude_locations": [],
-        "experimental_dungeon_shuffle": "false",
-        "experimental_entrance_shuffle": "none",
-        "foreign_item_icons": "guess_by_name",
-        "gfxmod": "false",
-        "goal": "instruments",
-        "hard_mode": "none",
-        "in_game_hints": "true",
-        "instrument_count": 8,
-        "item_links": [],
-        "link_palette": "normal",
-        "local_items": [],
-        "logic": "normal",
-        "low_hp_beep": "default",
-        "music": "vanilla",
-        "music_change_condition": "always",
-        "nag_messages": "false",
-        "no_flash": "true",
-        "non_local_items": [],
-        "overworld": "normal",
-        "palette": "normal",
-        "plando_items": [],
-        "priority_locations": [],
-        "progression_balancing": 50,
-        "quickswap": "none",
-        "rooster": "true",
-        "shuffle_compasses": "original_dungeon",
-        "shuffle_instruments": "vanilla",
-        "shuffle_maps": "original_dungeon",
-        "shuffle_nightmare_keys": "original_dungeon",
-        "shuffle_small_keys": "original_dungeon",
-        "shuffle_stone_beaks": "original_dungeon",
-        "stabilize_item_pool": "false",
-        "start_hints": [],
-        "start_inventory": {},
-        "start_inventory_from_pool": {},
-        "start_location_hints": [],
-        "stealing": "out_of_logic",
-        "tarins_gift": "local_progression",
-        "text_mode": "fast",
-        "text_shuffle": "false",
-        "tradequest": "false",
-        "trendy_game": "normal",
-        "warp_improvements": "",
-        "warps": "vanilla"
-      },
-      "option_definitions": {
-        "accessibility": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "full",
-            "2": "minimal"
-          },
-          "default": 0,
-          "display_name": "Accessibility"
-        },
-        "ap_title_screen": {
-          "type": "default_on_toggle",
-          "default": 1,
-          "display_name": "AP Title Screen"
-        },
-        "boots_controls": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "vanilla",
-            "1": "bracelet",
-            "2": "press_a",
-            "3": "press_b"
-          },
-          "default": 0,
-          "display_name": "Boots Controls"
-        },
-        "experimental_dungeon_shuffle": {
-          "type": "toggle",
-          "default": 0,
-          "display_name": "Dungeon Shuffle"
-        },
-        "experimental_entrance_shuffle": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "none",
-            "1": "simple"
-          },
-          "default": 0,
-          "display_name": "Entrance Shuffle"
-        },
-        "foreign_item_icons": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "guess_by_name",
-            "1": "indicate_progression"
-          },
-          "default": 0,
-          "display_name": "Foreign Item Icons"
-        },
-        "gfxmod": {
-          "type": "toggle",
-          "default": 0,
-          "display_name": "GFX Modification"
-        },
-        "goal": {
-          "type": "choice",
-          "name_lookup": {
-            "1": "instruments",
-            "2": "seashells",
-            "3": "open"
-          },
-          "default": 1,
-          "display_name": "Goal"
-        },
-        "hard_mode": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "none",
-            "1": "oracle",
-            "2": "hero",
-            "3": "ohko"
-          },
-          "default": 0,
-          "display_name": "Hard Mode"
-        },
-        "in_game_hints": {
-          "type": "default_on_toggle",
-          "default": 1,
-          "display_name": "In-game Hints"
-        },
-        "instrument_count": {
-          "type": "range",
-          "range_start": 0,
-          "range_end": 8,
-          "default": 8,
-          "display_name": "Instrument Count"
-        },
-        "link_palette": {
-          "type": "choice",
-          "name_lookup": {
-            "-1": "normal",
-            "0": "green",
-            "1": "yellow",
-            "2": "red",
-            "3": "blue",
-            "4": "invert_a",
-            "5": "invert_b",
-            "6": "invert_c",
-            "7": "invert_d"
-          },
-          "default": -1,
-          "display_name": "Link's Palette"
-        },
-        "logic": {
-          "type": "choice",
-          "name_lookup": {
-            "1": "normal",
-            "2": "hard",
-            "3": "glitched",
-            "4": "hell"
-          },
-          "default": 1,
-          "display_name": "Logic"
-        },
-        "low_hp_beep": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "default",
-            "1": "slow",
-            "2": "none"
-          },
-          "default": 0,
-          "display_name": "Low HP Beep"
-        },
-        "music": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "vanilla",
-            "1": "shuffled",
-            "2": "off"
-          },
-          "default": 0,
-          "display_name": "Music"
-        },
-        "music_change_condition": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "sword",
-            "1": "always"
-          },
-          "default": 1,
-          "display_name": "Music Change Condition"
-        },
-        "nag_messages": {
-          "type": "toggle",
-          "default": 0,
-          "display_name": "Nag Messages"
-        },
-        "no_flash": {
-          "type": "default_on_toggle",
-          "default": 1,
-          "display_name": "No Flash"
-        },
-        "overworld": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "normal",
-            "1": "open_mabe"
-          },
-          "default": 0,
-          "display_name": "Overworld"
-        },
-        "palette": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "normal",
-            "1": "1bit",
-            "2": "2bit",
-            "3": "greyscale",
-            "4": "pink",
-            "5": "inverted"
-          },
-          "default": 0,
-          "display_name": "Palette"
-        },
-        "progression_balancing": {
-          "type": "range",
-          "range_start": 0,
-          "range_end": 99,
-          "default": 50,
-          "display_name": "Progression Balancing"
-        },
-        "quickswap": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "none",
-            "1": "a",
-            "2": "b"
-          },
-          "default": 0,
-          "display_name": "Quickswap"
-        },
-        "rooster": {
-          "type": "default_on_toggle",
-          "default": 1,
-          "display_name": "Rooster"
-        },
-        "shuffle_compasses": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "original_dungeon",
-            "1": "own_dungeons",
-            "2": "own_world",
-            "3": "any_world",
-            "4": "different_world"
-          },
-          "default": 0,
-          "display_name": "Shuffle Compasses"
-        },
-        "shuffle_instruments": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "original_dungeon",
-            "1": "own_dungeons",
-            "2": "own_world",
-            "3": "any_world",
-            "4": "different_world",
-            "100": "vanilla"
-          },
-          "default": 100,
-          "display_name": "Shuffle Instruments"
-        },
-        "shuffle_maps": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "original_dungeon",
-            "1": "own_dungeons",
-            "2": "own_world",
-            "3": "any_world",
-            "4": "different_world"
-          },
-          "default": 0,
-          "display_name": "Shuffle Maps"
-        },
-        "shuffle_nightmare_keys": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "original_dungeon",
-            "1": "own_dungeons",
-            "2": "own_world",
-            "3": "any_world",
-            "4": "different_world"
-          },
-          "default": 0,
-          "display_name": "Shuffle Nightmare Keys"
-        },
-        "shuffle_small_keys": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "original_dungeon",
-            "1": "own_dungeons",
-            "2": "own_world",
-            "3": "any_world",
-            "4": "different_world"
-          },
-          "default": 0,
-          "display_name": "Shuffle Small Keys"
-        },
-        "shuffle_stone_beaks": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "original_dungeon",
-            "1": "own_dungeons",
-            "2": "own_world",
-            "3": "any_world",
-            "4": "different_world"
-          },
-          "default": 0,
-          "display_name": "Shuffle Stone Beaks"
-        },
-        "stabilize_item_pool": {
-          "type": "toggle",
-          "default": 0,
-          "display_name": "Stabilize Item Pool"
-        },
-        "stealing": {
-          "type": "choice",
-          "name_lookup": {
-            "1": "in_logic",
-            "2": "out_of_logic",
-            "3": "disabled"
-          },
-          "default": 2,
-          "display_name": "Stealing"
-        },
-        "tarins_gift": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "local_progression",
-            "1": "bush_breaker",
-            "2": "any_item"
-          },
-          "default": 0,
-          "display_name": "Tarin's Gift"
-        },
-        "text_mode": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "normal",
-            "1": "fast"
-          },
-          "default": 1,
-          "display_name": "Text Mode"
-        },
-        "text_shuffle": {
-          "type": "toggle",
-          "default": 0,
-          "display_name": "Text Shuffle"
-        },
-        "tradequest": {
-          "type": "toggle",
-          "default": 0,
-          "display_name": "Trade Quest"
-        },
-        "trendy_game": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "easy",
-            "1": "normal",
-            "2": "hard",
-            "3": "harder",
-            "4": "hardest",
-            "5": "impossible"
-          },
-          "default": 1,
-          "display_name": "Trendy Game"
-        },
-        "warps": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "vanilla",
-            "1": "improved",
-            "2": "improved_additional"
-          },
-          "default": 0,
-          "display_name": "Warps"
-        }
-      },
-      "base_id": 10000000,
-      "world_description": "After a previous adventure, Link is stranded on Koholint Island, full of mystery and familiar faces.\nGather the 8 Instruments of the Sirens to wake the Wind Fish, so that Link can go home!",
-      "slot_data": {
-        "world_version": "2.0.1",
-        "instrument_count": 8,
-        "logic": "normal",
-        "tradequest": "false",
-        "rooster": "true",
-        "experimental_dungeon_shuffle": "false",
-        "experimental_entrance_shuffle": "none",
-        "goal": "instruments",
-        "trendy_game": "normal",
-        "gfxmod": "false",
-        "shuffle_nightmare_keys": "original_dungeon",
-        "shuffle_small_keys": "original_dungeon",
-        "shuffle_maps": "original_dungeon",
-        "shuffle_compasses": "original_dungeon",
-        "shuffle_stone_beaks": "original_dungeon",
-        "shuffle_instruments": "vanilla",
-        "nag_messages": "false",
-        "hard_mode": "none",
-        "overworld": "normal",
-        "entrance_mapping": {
-          "d8": "d8",
-          "phone_d8": "phone_d8",
-          "fire_cave_exit": "fire_cave_exit",
-          "fire_cave_entrance": "fire_cave_entrance",
-          "madbatter_taltal": "madbatter_taltal",
-          "left_taltal_entrance": "left_taltal_entrance",
-          "obstacle_cave_entrance": "obstacle_cave_entrance",
-          "left_to_right_taltalentrance": "left_to_right_taltalentrance",
-          "obstacle_cave_outside_chest": "obstacle_cave_outside_chest",
-          "obstacle_cave_exit": "obstacle_cave_exit",
-          "papahl_entrance": "papahl_entrance",
-          "papahl_exit": "papahl_exit",
-          "rooster_house": "rooster_house",
-          "bird_cave": "bird_cave",
-          "multichest_left": "multichest_left",
-          "multichest_right": "multichest_right",
-          "multichest_top": "multichest_top",
-          "right_taltal_connector1": "right_taltal_connector1",
-          "right_taltal_connector2": "right_taltal_connector2",
-          "right_taltal_connector3": "right_taltal_connector3",
-          "right_taltal_connector4": "right_taltal_connector4",
-          "right_taltal_connector5": "right_taltal_connector5",
-          "right_taltal_connector6": "right_taltal_connector6",
-          "right_fairy": "right_fairy",
-          "d7": "d7",
-          "writes_cave_left": "writes_cave_left",
-          "writes_cave_right": "writes_cave_right",
-          "writes_house": "writes_house",
-          "writes_phone": "writes_phone",
-          "d2": "d2",
-          "moblin_cave": "moblin_cave",
-          "photo_house": "photo_house",
-          "mambo": "mambo",
-          "d4": "d4",
-          "heartpiece_swim_cave": "heartpiece_swim_cave",
-          "raft_return_exit": "raft_return_exit",
-          "raft_house": "raft_house",
-          "raft_return_enter": "raft_return_enter",
-          "hookshot_cave": "hookshot_cave",
-          "toadstool_exit": "toadstool_exit",
-          "forest_madbatter": "forest_madbatter",
-          "toadstool_entrance": "toadstool_entrance",
-          "crazy_tracy": "crazy_tracy",
-          "witch": "witch",
-          "graveyard_cave_left": "graveyard_cave_left",
-          "graveyard_cave_right": "graveyard_cave_right",
-          "d0": "d0",
-          "castle_jump_cave": "castle_jump_cave",
-          "castle_main_entrance": "castle_main_entrance",
-          "castle_upper_left": "castle_upper_left",
-          "castle_upper_right": "castle_upper_right",
-          "castle_secret_exit": "castle_secret_exit",
-          "castle_secret_entrance": "castle_secret_entrance",
-          "castle_phone": "castle_phone",
-          "papahl_house_left": "papahl_house_left",
-          "papahl_house_right": "papahl_house_right",
-          "dream_hut": "dream_hut",
-          "rooster_grave": "rooster_grave",
-          "shop": "shop",
-          "madambowwow": "madambowwow",
-          "kennel": "kennel",
-          "start_house": "start_house",
-          "library": "library",
-          "ulrira": "ulrira",
-          "mabe_phone": "mabe_phone",
-          "trendy_shop": "trendy_shop",
-          "prairie_left_phone": "prairie_left_phone",
-          "prairie_left_cave1": "prairie_left_cave1",
-          "prairie_left_cave2": "prairie_left_cave2",
-          "prairie_left_fairy": "prairie_left_fairy",
-          "mamu": "mamu",
-          "d3": "d3",
-          "prairie_right_phone": "prairie_right_phone",
-          "seashell_mansion": "seashell_mansion",
-          "prairie_right_cave_top": "prairie_right_cave_top",
-          "prairie_right_cave_bottom": "prairie_right_cave_bottom",
-          "prairie_right_cave_high": "prairie_right_cave_high",
-          "prairie_to_animal_connector": "prairie_to_animal_connector",
-          "animal_to_prairie_connector": "animal_to_prairie_connector",
-          "d6": "d6",
-          "d6_connector_exit": "d6_connector_exit",
-          "d6_connector_entrance": "d6_connector_entrance",
-          "armos_fairy": "armos_fairy",
-          "armos_maze_cave": "armos_maze_cave",
-          "armos_temple": "armos_temple",
-          "d1": "d1",
-          "boomerang_cave": "boomerang_cave",
-          "banana_seller": "banana_seller",
-          "ghost_house": "ghost_house",
-          "richard_house": "richard_house",
-          "richard_maze": "richard_maze",
-          "prairie_low_phone": "prairie_low_phone",
-          "prairie_madbatter_connector_entrance": "prairie_madbatter_connector_entrance",
-          "prairie_madbatter_connector_exit": "prairie_madbatter_connector_exit",
-          "prairie_madbatter": "prairie_madbatter",
-          "d5": "d5",
-          "animal_phone": "animal_phone",
-          "animal_house1": "animal_house1",
-          "animal_house2": "animal_house2",
-          "animal_house3": "animal_house3",
-          "animal_house4": "animal_house4",
-          "animal_house5": "animal_house5",
-          "animal_cave": "animal_cave",
-          "desert_cave": "desert_cave"
-        }
-      },
-      "web": {
-        "theme": "ocean",
-        "tutorials": [
-          {
-            "name": "Multiworld Setup Guide",
-            "description": "A guide to setting up Links Awakening DX for MultiWorld.",
-            "language": "English",
-            "file_name": "setup_en.md",
-            "link": "setup/en",
-            "authors": [
-              "zig"
-            ]
-          }
-        ]
-      },
-      "world_directory": "ladx"
+      "error": "Error exporting world data for player 1: 'name'",
+      "details": "Failed to read world data. Check logs for more information."
     }
   },
   "exporter": {

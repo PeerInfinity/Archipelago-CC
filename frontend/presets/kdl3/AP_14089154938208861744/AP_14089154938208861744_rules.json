@@ -98,7 +98,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 20,
+        "pointer": 3434257,
+        "room": 0,
+        "stage": 0
       },
       "Grass Land 1 - 1": {
         "name": "Grass Land 1 - 1",
@@ -168,7 +174,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 304,
+        "level": 1,
+        "music": 20,
+        "pointer": 3368373,
+        "room": 1,
+        "stage": 0
       },
       "Grass Land 1 - 2": {
         "name": "Grass Land 1 - 2",
@@ -223,7 +235,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 38,
+        "pointer": 2960650,
+        "room": 2,
+        "stage": 0
       },
       "Grass Land 1 - 3": {
         "name": "Grass Land 1 - 3",
@@ -263,7 +281,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 20,
+        "pointer": 3478442,
+        "room": 3,
+        "stage": 0
       },
       "Grass Land 1 - 4": {
         "name": "Grass Land 1 - 4",
@@ -302,7 +326,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 8,
+        "pointer": 2978390,
+        "room": 4,
+        "stage": 0
       },
       "Grass Land 1 - 5": {
         "name": "Grass Land 1 - 5",
@@ -337,7 +367,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 5,
+        "pointer": 2890835,
+        "room": 5,
+        "stage": 0
       },
       "Grass Land 2 - 0": {
         "name": "Grass Land 2 - 0",
@@ -422,7 +458,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 11,
+        "pointer": 3293347,
+        "room": 0,
+        "stage": 1
       },
       "Grass Land 2 - 1": {
         "name": "Grass Land 2 - 1",
@@ -477,7 +519,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 39,
+        "pointer": 3059685,
+        "room": 1,
+        "stage": 1
       },
       "Grass Land 2 - 2": {
         "name": "Grass Land 2 - 2",
@@ -565,7 +613,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 11,
+        "pointer": 3432109,
+        "room": 2,
+        "stage": 1
       },
       "Grass Land 2 - 3": {
         "name": "Grass Land 2 - 3",
@@ -589,7 +643,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 11,
+        "pointer": 2970029,
+        "room": 3,
+        "stage": 1
       },
       "Grass Land 2 - 4": {
         "name": "Grass Land 2 - 4",
@@ -659,7 +719,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 352,
+        "level": 1,
+        "music": 11,
+        "pointer": 3578022,
+        "room": 4,
+        "stage": 1
       },
       "Grass Land 2 - 5": {
         "name": "Grass Land 2 - 5",
@@ -700,7 +766,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 8,
+        "pointer": 2966057,
+        "room": 5,
+        "stage": 1
       },
       "Grass Land 2 - 6": {
         "name": "Grass Land 2 - 6",
@@ -735,7 +807,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 5,
+        "pointer": 2887461,
+        "room": 6,
+        "stage": 1
       },
       "Grass Land 3 - 0": {
         "name": "Grass Land 3 - 0",
@@ -823,7 +901,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 19,
+        "pointer": 3149707,
+        "room": 0,
+        "stage": 2
       },
       "Grass Land 3 - 1": {
         "name": "Grass Land 3 - 1",
@@ -847,7 +931,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 128,
+        "level": 1,
+        "music": 19,
+        "pointer": 3204939,
+        "room": 1,
+        "stage": 2
       },
       "Grass Land 3 - 2": {
         "name": "Grass Land 3 - 2",
@@ -871,7 +961,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 19,
+        "pointer": 3200066,
+        "room": 2,
+        "stage": 2
       },
       "Grass Land 3 - 3": {
         "name": "Grass Land 3 - 3",
@@ -895,7 +991,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 31,
+        "pointer": 2959784,
+        "room": 3,
+        "stage": 2
       },
       "Grass Land 3 - 4": {
         "name": "Grass Land 3 - 4",
@@ -950,7 +1052,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 40,
+        "pointer": 2979121,
+        "room": 4,
+        "stage": 2
       },
       "Grass Land 3 - 5": {
         "name": "Grass Land 3 - 5",
@@ -974,7 +1082,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 8,
+        "pointer": 2997811,
+        "room": 5,
+        "stage": 2
       },
       "Grass Land 3 - 6": {
         "name": "Grass Land 3 - 6",
@@ -1028,7 +1142,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 19,
+        "pointer": 3084876,
+        "room": 6,
+        "stage": 2
       },
       "Grass Land 3 - 7": {
         "name": "Grass Land 3 - 7",
@@ -1063,7 +1183,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 5,
+        "pointer": 2891317,
+        "room": 7,
+        "stage": 2
       },
       "Grass Land 4 - 0": {
         "name": "Grass Land 4 - 0",
@@ -1133,7 +1259,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 10,
+        "pointer": 3471284,
+        "room": 0,
+        "stage": 3
       },
       "Grass Land 4 - 1": {
         "name": "Grass Land 4 - 1",
@@ -1191,7 +1323,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 368,
+        "level": 1,
+        "music": 10,
+        "pointer": 3436401,
+        "room": 1,
+        "stage": 3
       },
       "Grass Land 4 - 2": {
         "name": "Grass Land 4 - 2",
@@ -1215,7 +1353,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 9,
+        "pointer": 3039401,
+        "room": 2,
+        "stage": 3
       },
       "Grass Land 4 - 3": {
         "name": "Grass Land 4 - 3",
@@ -1270,7 +1414,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 288,
+        "level": 1,
+        "music": 10,
+        "pointer": 3722714,
+        "room": 3,
+        "stage": 3
       },
       "Grass Land 4 - 4": {
         "name": "Grass Land 4 - 4",
@@ -1294,7 +1444,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 160,
+        "level": 1,
+        "music": 10,
+        "pointer": 3304980,
+        "room": 4,
+        "stage": 3
       },
       "Grass Land 4 - 5": {
         "name": "Grass Land 4 - 5",
@@ -1347,7 +1503,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 10,
+        "pointer": 3498127,
+        "room": 5,
+        "stage": 3
       },
       "Grass Land 4 - 6": {
         "name": "Grass Land 4 - 6",
@@ -1371,7 +1533,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 10,
+        "pointer": 3160191,
+        "room": 6,
+        "stage": 3
       },
       "Grass Land 4 - 7": {
         "name": "Grass Land 4 - 7",
@@ -1411,7 +1579,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 4,
+        "pointer": 3035801,
+        "room": 7,
+        "stage": 3
       },
       "Grass Land 4 - 8": {
         "name": "Grass Land 4 - 8",
@@ -1452,7 +1626,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 8,
+        "pointer": 2989794,
+        "room": 8,
+        "stage": 3
       },
       "Grass Land 4 - 9": {
         "name": "Grass Land 4 - 9",
@@ -1507,7 +1687,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 38,
+        "pointer": 3043518,
+        "room": 9,
+        "stage": 3
       },
       "Grass Land 4 - 10": {
         "name": "Grass Land 4 - 10",
@@ -1542,7 +1728,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 5,
+        "pointer": 2888425,
+        "room": 10,
+        "stage": 3
       },
       "Grass Land 5 - 0": {
         "name": "Grass Land 5 - 0",
@@ -1612,7 +1804,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 11,
+        "pointer": 3303565,
+        "room": 0,
+        "stage": 4
       },
       "Grass Land 5 - 1": {
         "name": "Grass Land 5 - 1",
@@ -1688,7 +1886,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 11,
+        "pointer": 3048718,
+        "room": 1,
+        "stage": 4
       },
       "Grass Land 5 - 2": {
         "name": "Grass Land 5 - 2",
@@ -1758,7 +1962,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 11,
+        "pointer": 3327019,
+        "room": 2,
+        "stage": 4
       },
       "Grass Land 5 - 3": {
         "name": "Grass Land 5 - 3",
@@ -1813,7 +2023,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 38,
+        "pointer": 2966459,
+        "room": 3,
+        "stage": 4
       },
       "Grass Land 5 - 4": {
         "name": "Grass Land 5 - 4",
@@ -1868,7 +2084,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 38,
+        "pointer": 2973509,
+        "room": 4,
+        "stage": 4
       },
       "Grass Land 5 - 5": {
         "name": "Grass Land 5 - 5",
@@ -1909,7 +2131,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 8,
+        "pointer": 2962351,
+        "room": 5,
+        "stage": 4
       },
       "Grass Land 5 - 6": {
         "name": "Grass Land 5 - 6",
@@ -1944,7 +2172,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 5,
+        "pointer": 2886738,
+        "room": 6,
+        "stage": 4
       },
       "Grass Land 5 - 7": {
         "name": "Grass Land 5 - 7",
@@ -1984,7 +2218,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 11,
+        "pointer": 3255423,
+        "room": 7,
+        "stage": 4
       },
       "Grass Land 6 - 0": {
         "name": "Grass Land 6 - 0",
@@ -2087,7 +2327,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 20,
+        "pointer": 3376872,
+        "room": 0,
+        "stage": 5
       },
       "Grass Land 6 - 1": {
         "name": "Grass Land 6 - 1",
@@ -2142,7 +2388,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 256,
+        "level": 1,
+        "music": 20,
+        "pointer": 3395125,
+        "room": 1,
+        "stage": 5
       },
       "Grass Land 6 - 2": {
         "name": "Grass Land 6 - 2",
@@ -2215,7 +2467,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 20,
+        "pointer": 3375177,
+        "room": 2,
+        "stage": 5
       },
       "Grass Land 6 - 3": {
         "name": "Grass Land 6 - 3",
@@ -2270,7 +2528,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 20,
+        "pointer": 3322977,
+        "room": 3,
+        "stage": 5
       },
       "Grass Land 6 - 4": {
         "name": "Grass Land 6 - 4",
@@ -2310,7 +2574,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 176,
+        "level": 1,
+        "music": 20,
+        "pointer": 3490819,
+        "room": 4,
+        "stage": 5
       },
       "Grass Land 6 - 5": {
         "name": "Grass Land 6 - 5",
@@ -2349,7 +2619,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 8,
+        "pointer": 3076769,
+        "room": 5,
+        "stage": 5
       },
       "Grass Land 6 - 6": {
         "name": "Grass Land 6 - 6",
@@ -2404,7 +2680,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 39,
+        "pointer": 3047576,
+        "room": 6,
+        "stage": 5
       },
       "Grass Land 6 - 7": {
         "name": "Grass Land 6 - 7",
@@ -2459,7 +2741,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 38,
+        "pointer": 3022909,
+        "room": 7,
+        "stage": 5
       },
       "Grass Land 6 - 8": {
         "name": "Grass Land 6 - 8",
@@ -2494,7 +2782,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 5,
+        "pointer": 2884569,
+        "room": 8,
+        "stage": 5
       },
       "Grass Land Boss - 0": {
         "name": "Grass Land Boss - 0",
@@ -2729,7 +3023,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 1,
+        "music": 2,
+        "pointer": 2984105,
+        "room": 0,
+        "stage": 7
       },
       "Ripple Field 1 - 0": {
         "name": "Ripple Field 1 - 0",
@@ -2814,7 +3114,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3279855,
+        "room": 0,
+        "stage": 0
       },
       "Ripple Field 1 - 1": {
         "name": "Ripple Field 1 - 1",
@@ -2938,7 +3244,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3588688,
+        "room": 1,
+        "stage": 0
       },
       "Ripple Field 1 - 2": {
         "name": "Ripple Field 1 - 2",
@@ -2993,7 +3305,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 40,
+        "pointer": 2955848,
+        "room": 2,
+        "stage": 0
       },
       "Ripple Field 1 - 3": {
         "name": "Ripple Field 1 - 3",
@@ -3033,7 +3351,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3558828,
+        "room": 3,
+        "stage": 0
       },
       "Ripple Field 1 - 4": {
         "name": "Ripple Field 1 - 4",
@@ -3084,7 +3408,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 8,
+        "pointer": 2974271,
+        "room": 4,
+        "stage": 0
       },
       "Ripple Field 1 - 5": {
         "name": "Ripple Field 1 - 5",
@@ -3108,7 +3438,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3051513,
+        "room": 5,
+        "stage": 0
       },
       "Ripple Field 1 - 6": {
         "name": "Ripple Field 1 - 6",
@@ -3132,7 +3468,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3049838,
+        "room": 6,
+        "stage": 0
       },
       "Ripple Field 1 - 7": {
         "name": "Ripple Field 1 - 7",
@@ -3156,7 +3498,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3066407,
+        "room": 7,
+        "stage": 0
       },
       "Ripple Field 1 - 8": {
         "name": "Ripple Field 1 - 8",
@@ -3191,7 +3539,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 5,
+        "pointer": 2889148,
+        "room": 8,
+        "stage": 0
       },
       "Ripple Field 2 - 0": {
         "name": "Ripple Field 2 - 0",
@@ -3288,7 +3642,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 10,
+        "pointer": 3342336,
+        "room": 0,
+        "stage": 1
       },
       "Ripple Field 2 - 1": {
         "name": "Ripple Field 2 - 1",
@@ -3343,7 +3703,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 39,
+        "pointer": 3084099,
+        "room": 1,
+        "stage": 1
       },
       "Ripple Field 2 - 2": {
         "name": "Ripple Field 2 - 2",
@@ -3419,7 +3785,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 10,
+        "pointer": 3451207,
+        "room": 2,
+        "stage": 1
       },
       "Ripple Field 2 - 3": {
         "name": "Ripple Field 2 - 3",
@@ -3459,7 +3831,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 128,
+        "level": 2,
+        "music": 10,
+        "pointer": 3674327,
+        "room": 3,
+        "stage": 1
       },
       "Ripple Field 2 - 4": {
         "name": "Ripple Field 2 - 4",
@@ -3483,7 +3861,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 10,
+        "pointer": 2972744,
+        "room": 4,
+        "stage": 1
       },
       "Ripple Field 2 - 5": {
         "name": "Ripple Field 2 - 5",
@@ -3538,7 +3922,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 38,
+        "pointer": 3109710,
+        "room": 5,
+        "stage": 1
       },
       "Ripple Field 2 - 6": {
         "name": "Ripple Field 2 - 6",
@@ -3589,7 +3979,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 8,
+        "pointer": 2973127,
+        "room": 6,
+        "stage": 1
       },
       "Ripple Field 2 - 7": {
         "name": "Ripple Field 2 - 7",
@@ -3624,7 +4020,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 5,
+        "pointer": 2890353,
+        "room": 7,
+        "stage": 1
       },
       "Ripple Field 3 - 0": {
         "name": "Ripple Field 3 - 0",
@@ -3694,7 +4096,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 18,
+        "pointer": 3517254,
+        "room": 0,
+        "stage": 2
       },
       "Ripple Field 3 - 1": {
         "name": "Ripple Field 3 - 1",
@@ -3776,7 +4184,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 160,
+        "level": 2,
+        "music": 18,
+        "pointer": 3604480,
+        "room": 1,
+        "stage": 2
       },
       "Ripple Field 3 - 2": {
         "name": "Ripple Field 3 - 2",
@@ -3816,7 +4230,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 18,
+        "pointer": 3715428,
+        "room": 2,
+        "stage": 2
       },
       "Ripple Field 3 - 3": {
         "name": "Ripple Field 3 - 3",
@@ -3871,7 +4291,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 39,
+        "pointer": 3071919,
+        "room": 3,
+        "stage": 2
       },
       "Ripple Field 3 - 4": {
         "name": "Ripple Field 3 - 4",
@@ -3910,7 +4336,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 8,
+        "pointer": 2970810,
+        "room": 4,
+        "stage": 2
       },
       "Ripple Field 3 - 5": {
         "name": "Ripple Field 3 - 5",
@@ -3934,7 +4366,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 31,
+        "pointer": 2987502,
+        "room": 5,
+        "stage": 2
       },
       "Ripple Field 3 - 6": {
         "name": "Ripple Field 3 - 6",
@@ -3969,7 +4407,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 5,
+        "pointer": 2888666,
+        "room": 6,
+        "stage": 2
       },
       "Ripple Field 3 - 7": {
         "name": "Ripple Field 3 - 7",
@@ -4011,7 +4455,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 18,
+        "pointer": 3161120,
+        "room": 7,
+        "stage": 2
       },
       "Ripple Field 4 - 0": {
         "name": "Ripple Field 4 - 0",
@@ -4123,7 +4573,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3082540,
+        "room": 0,
+        "stage": 3
       },
       "Ripple Field 4 - 1": {
         "name": "Ripple Field 4 - 1",
@@ -4163,7 +4619,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 4,
+        "pointer": 2964846,
+        "room": 1,
+        "stage": 3
       },
       "Ripple Field 4 - 2": {
         "name": "Ripple Field 4 - 2",
@@ -4203,7 +4665,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3018503,
+        "room": 2,
+        "stage": 3
       },
       "Ripple Field 4 - 3": {
         "name": "Ripple Field 4 - 3",
@@ -4244,7 +4712,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 8,
+        "pointer": 2988166,
+        "room": 3,
+        "stage": 3
       },
       "Ripple Field 4 - 4": {
         "name": "Ripple Field 4 - 4",
@@ -4279,7 +4753,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 5,
+        "pointer": 2885533,
+        "room": 4,
+        "stage": 3
       },
       "Ripple Field 4 - 5": {
         "name": "Ripple Field 4 - 5",
@@ -4367,7 +4847,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 40,
+        "pointer": 3042349,
+        "room": 5,
+        "stage": 3
       },
       "Ripple Field 4 - 6": {
         "name": "Ripple Field 4 - 6",
@@ -4464,7 +4950,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3234805,
+        "room": 6,
+        "stage": 3
       },
       "Ripple Field 4 - 7": {
         "name": "Ripple Field 4 - 7",
@@ -4506,7 +4998,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3155468,
+        "room": 7,
+        "stage": 3
       },
       "Ripple Field 4 - 8": {
         "name": "Ripple Field 4 - 8",
@@ -4597,7 +5095,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3350031,
+        "room": 8,
+        "stage": 3
       },
       "Ripple Field 4 - 9": {
         "name": "Ripple Field 4 - 9",
@@ -4637,7 +5141,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 176,
+        "level": 2,
+        "music": 15,
+        "pointer": 3050397,
+        "room": 9,
+        "stage": 3
       },
       "Ripple Field 4 - 10": {
         "name": "Ripple Field 4 - 10",
@@ -4661,7 +5171,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 128,
+        "level": 2,
+        "music": 15,
+        "pointer": 3052069,
+        "room": 10,
+        "stage": 3
       },
       "Ripple Field 4 - 11": {
         "name": "Ripple Field 4 - 11",
@@ -4731,7 +5247,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3386974,
+        "room": 11,
+        "stage": 3
       },
       "Ripple Field 4 - 12": {
         "name": "Ripple Field 4 - 12",
@@ -4789,7 +5311,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3168339,
+        "room": 12,
+        "stage": 3
       },
       "Ripple Field 4 - 13": {
         "name": "Ripple Field 4 - 13",
@@ -4813,7 +5341,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 128,
+        "level": 2,
+        "music": 15,
+        "pointer": 2958478,
+        "room": 13,
+        "stage": 3
       },
       "Ripple Field 5 - 0": {
         "name": "Ripple Field 5 - 0",
@@ -4837,7 +5371,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 16,
+        "pointer": 3240369,
+        "room": 0,
+        "stage": 4
       },
       "Ripple Field 5 - 1": {
         "name": "Ripple Field 5 - 1",
@@ -4861,7 +5401,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 16,
+        "pointer": 3547528,
+        "room": 1,
+        "stage": 4
       },
       "Ripple Field 5 - 2": {
         "name": "Ripple Field 5 - 2",
@@ -4940,7 +5486,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 16,
+        "pointer": 3611327,
+        "room": 2,
+        "stage": 4
       },
       "Ripple Field 5 - 3": {
         "name": "Ripple Field 5 - 3",
@@ -5047,7 +5599,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 128,
+        "level": 2,
+        "music": 16,
+        "pointer": 3926157,
+        "room": 3,
+        "stage": 4
       },
       "Ripple Field 5 - 4": {
         "name": "Ripple Field 5 - 4",
@@ -5087,7 +5645,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 40,
+        "pointer": 3026639,
+        "room": 4,
+        "stage": 4
       },
       "Ripple Field 5 - 5": {
         "name": "Ripple Field 5 - 5",
@@ -5124,7 +5688,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 16,
+        "pointer": 3207333,
+        "room": 5,
+        "stage": 4
       },
       "Ripple Field 5 - 6": {
         "name": "Ripple Field 5 - 6",
@@ -5194,7 +5764,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 16,
+        "pointer": 3485896,
+        "room": 6,
+        "stage": 4
       },
       "Ripple Field 5 - 7": {
         "name": "Ripple Field 5 - 7",
@@ -5282,7 +5858,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 352,
+        "level": 2,
+        "music": 16,
+        "pointer": 3752698,
+        "room": 7,
+        "stage": 4
       },
       "Ripple Field 5 - 8": {
         "name": "Ripple Field 5 - 8",
@@ -5322,7 +5904,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 39,
+        "pointer": 3044682,
+        "room": 8,
+        "stage": 4
       },
       "Ripple Field 5 - 9": {
         "name": "Ripple Field 5 - 9",
@@ -5383,7 +5971,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 8,
+        "pointer": 2963193,
+        "room": 9,
+        "stage": 4
       },
       "Ripple Field 5 - 10": {
         "name": "Ripple Field 5 - 10",
@@ -5423,7 +6017,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 16,
+        "pointer": 3042934,
+        "room": 10,
+        "stage": 4
       },
       "Ripple Field 5 - 11": {
         "name": "Ripple Field 5 - 11",
@@ -5460,7 +6060,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 5,
+        "pointer": 2886256,
+        "room": 11,
+        "stage": 4
       },
       "Ripple Field 6 - 0": {
         "name": "Ripple Field 6 - 0",
@@ -5500,7 +6106,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 2949576,
+        "room": 0,
+        "stage": 5
       },
       "Ripple Field 6 - 1": {
         "name": "Ripple Field 6 - 1",
@@ -5570,7 +6182,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 38,
+        "pointer": 2971200,
+        "room": 1,
+        "stage": 5
       },
       "Ripple Field 6 - 2": {
         "name": "Ripple Field 6 - 2",
@@ -5630,7 +6248,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3637749,
+        "room": 2,
+        "stage": 5
       },
       "Ripple Field 6 - 3": {
         "name": "Ripple Field 6 - 3",
@@ -5654,7 +6278,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3092564,
+        "room": 3,
+        "stage": 5
       },
       "Ripple Field 6 - 4": {
         "name": "Ripple Field 6 - 4",
@@ -5678,7 +6308,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3133247,
+        "room": 4,
+        "stage": 5
       },
       "Ripple Field 6 - 5": {
         "name": "Ripple Field 6 - 5",
@@ -5720,7 +6356,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3507762,
+        "room": 5,
+        "stage": 5
       },
       "Ripple Field 6 - 6": {
         "name": "Ripple Field 6 - 6",
@@ -5744,7 +6386,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3211264,
+        "room": 6,
+        "stage": 5
       },
       "Ripple Field 6 - 7": {
         "name": "Ripple Field 6 - 7",
@@ -5829,7 +6477,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3586039,
+        "room": 7,
+        "stage": 5
       },
       "Ripple Field 6 - 8": {
         "name": "Ripple Field 6 - 8",
@@ -5932,7 +6586,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 15,
+        "pointer": 3621483,
+        "room": 8,
+        "stage": 5
       },
       "Ripple Field 6 - 9": {
         "name": "Ripple Field 6 - 9",
@@ -5972,7 +6632,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 39,
+        "pointer": 2954523,
+        "room": 9,
+        "stage": 5
       },
       "Ripple Field 6 - 10": {
         "name": "Ripple Field 6 - 10",
@@ -6011,7 +6677,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 8,
+        "pointer": 3069438,
+        "room": 10,
+        "stage": 5
       },
       "Ripple Field 6 - 11": {
         "name": "Ripple Field 6 - 11",
@@ -6046,7 +6718,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 5,
+        "pointer": 2886497,
+        "room": 11,
+        "stage": 5
       },
       "Ripple Field Boss - 0": {
         "name": "Ripple Field Boss - 0",
@@ -6281,7 +6959,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 2,
+        "music": 2,
+        "pointer": 3157370,
+        "room": 0,
+        "stage": 7
       },
       "Sand Canyon 1 - 0": {
         "name": "Sand Canyon 1 - 0",
@@ -6336,7 +7020,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 13,
+        "pointer": 3524267,
+        "room": 0,
+        "stage": 0
       },
       "Sand Canyon 1 - 1": {
         "name": "Sand Canyon 1 - 1",
@@ -6391,7 +7081,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 38,
+        "pointer": 3163860,
+        "room": 1,
+        "stage": 0
       },
       "Sand Canyon 1 - 2": {
         "name": "Sand Canyon 1 - 2",
@@ -6431,7 +7127,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 13,
+        "pointer": 3512532,
+        "room": 2,
+        "stage": 0
       },
       "Sand Canyon 1 - 3": {
         "name": "Sand Canyon 1 - 3",
@@ -6516,7 +7218,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 13,
+        "pointer": 3719146,
+        "room": 3,
+        "stage": 0
       },
       "Sand Canyon 1 - 4": {
         "name": "Sand Canyon 1 - 4",
@@ -6601,7 +7309,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 13,
+        "pointer": 3421212,
+        "room": 4,
+        "stage": 0
       },
       "Sand Canyon 1 - 5": {
         "name": "Sand Canyon 1 - 5",
@@ -6659,7 +7373,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 13,
+        "pointer": 3203325,
+        "room": 5,
+        "stage": 0
       },
       "Sand Canyon 1 - 6": {
         "name": "Sand Canyon 1 - 6",
@@ -6683,7 +7403,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 128,
+        "level": 3,
+        "music": 13,
+        "pointer": 3138524,
+        "room": 6,
+        "stage": 0
       },
       "Sand Canyon 1 - 7": {
         "name": "Sand Canyon 1 - 7",
@@ -6722,7 +7448,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 8,
+        "pointer": 2988822,
+        "room": 7,
+        "stage": 0
       },
       "Sand Canyon 1 - 8": {
         "name": "Sand Canyon 1 - 8",
@@ -6757,7 +7489,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 5,
+        "pointer": 2885292,
+        "room": 8,
+        "stage": 0
       },
       "Sand Canyon 2 - 0": {
         "name": "Sand Canyon 2 - 0",
@@ -6845,7 +7583,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 21,
+        "pointer": 3668370,
+        "room": 0,
+        "stage": 1
       },
       "Sand Canyon 2 - 1": {
         "name": "Sand Canyon 2 - 1",
@@ -6900,7 +7644,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 40,
+        "pointer": 2952738,
+        "room": 1,
+        "stage": 1
       },
       "Sand Canyon 2 - 2": {
         "name": "Sand Canyon 2 - 2",
@@ -6940,7 +7690,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 21,
+        "pointer": 3531156,
+        "room": 2,
+        "stage": 1
       },
       "Sand Canyon 2 - 3": {
         "name": "Sand Canyon 2 - 3",
@@ -7043,7 +7799,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 21,
+        "pointer": 3263731,
+        "room": 3,
+        "stage": 1
       },
       "Sand Canyon 2 - 4": {
         "name": "Sand Canyon 2 - 4",
@@ -7067,7 +7829,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 128,
+        "level": 3,
+        "music": 21,
+        "pointer": 3076300,
+        "room": 4,
+        "stage": 1
       },
       "Sand Canyon 2 - 5": {
         "name": "Sand Canyon 2 - 5",
@@ -7236,7 +8004,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 21,
+        "pointer": 3302133,
+        "room": 5,
+        "stage": 1
       },
       "Sand Canyon 2 - 6": {
         "name": "Sand Canyon 2 - 6",
@@ -7276,7 +8050,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 21,
+        "pointer": 3800612,
+        "room": 6,
+        "stage": 1
       },
       "Sand Canyon 2 - 7": {
         "name": "Sand Canyon 2 - 7",
@@ -7300,7 +8080,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 21,
+        "pointer": 3073888,
+        "room": 7,
+        "stage": 1
       },
       "Sand Canyon 2 - 8": {
         "name": "Sand Canyon 2 - 8",
@@ -7340,7 +8126,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 21,
+        "pointer": 3061270,
+        "room": 8,
+        "stage": 1
       },
       "Sand Canyon 2 - 9": {
         "name": "Sand Canyon 2 - 9",
@@ -7425,7 +8217,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 128,
+        "level": 3,
+        "music": 21,
+        "pointer": 3453286,
+        "room": 9,
+        "stage": 1
       },
       "Sand Canyon 2 - 10": {
         "name": "Sand Canyon 2 - 10",
@@ -7466,7 +8264,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 8,
+        "pointer": 2994821,
+        "room": 10,
+        "stage": 1
       },
       "Sand Canyon 2 - 11": {
         "name": "Sand Canyon 2 - 11",
@@ -7501,7 +8305,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 5,
+        "pointer": 2891799,
+        "room": 11,
+        "stage": 1
       },
       "Sand Canyon 3 - 0": {
         "name": "Sand Canyon 3 - 0",
@@ -7604,7 +8414,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 16,
+        "pointer": 3544676,
+        "room": 0,
+        "stage": 2
       },
       "Sand Canyon 3 - 1": {
         "name": "Sand Canyon 3 - 1",
@@ -7674,7 +8490,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 39,
+        "pointer": 2965655,
+        "room": 1,
+        "stage": 2
       },
       "Sand Canyon 3 - 2": {
         "name": "Sand Canyon 3 - 2",
@@ -7714,7 +8536,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 16,
+        "pointer": 3726270,
+        "room": 2,
+        "stage": 2
       },
       "Sand Canyon 3 - 3": {
         "name": "Sand Canyon 3 - 3",
@@ -7754,7 +8582,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 16,
+        "pointer": 3416806,
+        "room": 3,
+        "stage": 2
       },
       "Sand Canyon 3 - 4": {
         "name": "Sand Canyon 3 - 4",
@@ -7809,7 +8643,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 16,
+        "pointer": 3564419,
+        "room": 4,
+        "stage": 2
       },
       "Sand Canyon 3 - 5": {
         "name": "Sand Canyon 3 - 5",
@@ -7848,7 +8688,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 8,
+        "pointer": 2973891,
+        "room": 5,
+        "stage": 2
       },
       "Sand Canyon 3 - 6": {
         "name": "Sand Canyon 3 - 6",
@@ -7933,7 +8779,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 16,
+        "pointer": 3247969,
+        "room": 6,
+        "stage": 2
       },
       "Sand Canyon 3 - 7": {
         "name": "Sand Canyon 3 - 7",
@@ -7968,7 +8820,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 5,
+        "pointer": 2887702,
+        "room": 7,
+        "stage": 2
       },
       "Sand Canyon 3 - 8": {
         "name": "Sand Canyon 3 - 8",
@@ -7992,7 +8850,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 31,
+        "pointer": 2968057,
+        "room": 8,
+        "stage": 2
       },
       "Sand Canyon 4 - 0": {
         "name": "Sand Canyon 4 - 0",
@@ -8080,7 +8944,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 18,
+        "pointer": 3521954,
+        "room": 0,
+        "stage": 3
       },
       "Sand Canyon 4 - 1": {
         "name": "Sand Canyon 4 - 1",
@@ -8150,7 +9020,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 39,
+        "pointer": 2956289,
+        "room": 1,
+        "stage": 3
       },
       "Sand Canyon 4 - 2": {
         "name": "Sand Canyon 4 - 2",
@@ -8220,7 +9096,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 160,
+        "level": 3,
+        "music": 18,
+        "pointer": 3505360,
+        "room": 2,
+        "stage": 3
       },
       "Sand Canyon 4 - 3": {
         "name": "Sand Canyon 4 - 3",
@@ -8371,7 +9253,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 18,
+        "pointer": 3412361,
+        "room": 3,
+        "stage": 3
       },
       "Sand Canyon 4 - 4": {
         "name": "Sand Canyon 4 - 4",
@@ -8395,7 +9283,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 18,
+        "pointer": 3307804,
+        "room": 4,
+        "stage": 3
       },
       "Sand Canyon 4 - 5": {
         "name": "Sand Canyon 4 - 5",
@@ -8435,7 +9329,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 4,
+        "pointer": 2955407,
+        "room": 5,
+        "stage": 3
       },
       "Sand Canyon 4 - 6": {
         "name": "Sand Canyon 4 - 6",
@@ -8459,7 +9359,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 18,
+        "pointer": 3094851,
+        "room": 6,
+        "stage": 3
       },
       "Sand Canyon 4 - 7": {
         "name": "Sand Canyon 4 - 7",
@@ -8529,7 +9435,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 128,
+        "level": 3,
+        "music": 18,
+        "pointer": 3483428,
+        "room": 7,
+        "stage": 3
       },
       "Sand Canyon 4 - 8": {
         "name": "Sand Canyon 4 - 8",
@@ -8568,7 +9480,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 8,
+        "pointer": 3002086,
+        "room": 8,
+        "stage": 3
       },
       "Sand Canyon 4 - 9": {
         "name": "Sand Canyon 4 - 9",
@@ -8603,7 +9521,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 5,
+        "pointer": 2885774,
+        "room": 9,
+        "stage": 3
       },
       "Sand Canyon 5 - 0": {
         "name": "Sand Canyon 5 - 0",
@@ -8691,7 +9615,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 208,
+        "level": 3,
+        "music": 13,
+        "pointer": 3662486,
+        "room": 0,
+        "stage": 4
       },
       "Sand Canyon 5 - 1": {
         "name": "Sand Canyon 5 - 1",
@@ -8791,7 +9721,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 13,
+        "pointer": 3052622,
+        "room": 1,
+        "stage": 4
       },
       "Sand Canyon 5 - 2": {
         "name": "Sand Canyon 5 - 2",
@@ -8831,7 +9767,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 40,
+        "pointer": 3057544,
+        "room": 2,
+        "stage": 4
       },
       "Sand Canyon 5 - 3": {
         "name": "Sand Canyon 5 - 3",
@@ -8886,7 +9828,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 304,
+        "level": 3,
+        "music": 13,
+        "pointer": 3419011,
+        "room": 3,
+        "stage": 4
       },
       "Sand Canyon 5 - 4": {
         "name": "Sand Canyon 5 - 4",
@@ -8974,7 +9922,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 13,
+        "pointer": 3644149,
+        "room": 4,
+        "stage": 4
       },
       "Sand Canyon 5 - 5": {
         "name": "Sand Canyon 5 - 5",
@@ -9014,7 +9968,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 39,
+        "pointer": 3044100,
+        "room": 5,
+        "stage": 4
       },
       "Sand Canyon 5 - 6": {
         "name": "Sand Canyon 5 - 6",
@@ -9054,7 +10014,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 13,
+        "pointer": 3373481,
+        "room": 6,
+        "stage": 4
       },
       "Sand Canyon 5 - 7": {
         "name": "Sand Canyon 5 - 7",
@@ -9105,7 +10071,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 8,
+        "pointer": 2964028,
+        "room": 7,
+        "stage": 4
       },
       "Sand Canyon 5 - 8": {
         "name": "Sand Canyon 5 - 8",
@@ -9142,7 +10114,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 5,
+        "pointer": 2890112,
+        "room": 8,
+        "stage": 4
       },
       "Sand Canyon 5 - 9": {
         "name": "Sand Canyon 5 - 9",
@@ -9225,7 +10203,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 13,
+        "pointer": 3647264,
+        "room": 9,
+        "stage": 4
       },
       "Sand Canyon 6 - 0": {
         "name": "Sand Canyon 6 - 0",
@@ -9310,7 +10294,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3314761,
+        "room": 0,
+        "stage": 5
       },
       "Sand Canyon 6 - 1": {
         "name": "Sand Canyon 6 - 1",
@@ -9380,7 +10370,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 39,
+        "pointer": 2976913,
+        "room": 1,
+        "stage": 5
       },
       "Sand Canyon 6 - 2": {
         "name": "Sand Canyon 6 - 2",
@@ -9404,7 +10400,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 2978757,
+        "room": 2,
+        "stage": 5
       },
       "Sand Canyon 6 - 3": {
         "name": "Sand Canyon 6 - 3",
@@ -9554,7 +10556,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3178082,
+        "room": 3,
+        "stage": 5
       },
       "Sand Canyon 6 - 4": {
         "name": "Sand Canyon 6 - 4",
@@ -9704,7 +10712,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3181563,
+        "room": 4,
+        "stage": 5
       },
       "Sand Canyon 6 - 5": {
         "name": "Sand Canyon 6 - 5",
@@ -9854,7 +10868,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3177209,
+        "room": 5,
+        "stage": 5
       },
       "Sand Canyon 6 - 6": {
         "name": "Sand Canyon 6 - 6",
@@ -10004,7 +11024,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3183291,
+        "room": 6,
+        "stage": 5
       },
       "Sand Canyon 6 - 7": {
         "name": "Sand Canyon 6 - 7",
@@ -10154,7 +11180,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3175453,
+        "room": 7,
+        "stage": 5
       },
       "Sand Canyon 6 - 8": {
         "name": "Sand Canyon 6 - 8",
@@ -10304,7 +11336,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3179826,
+        "room": 8,
+        "stage": 5
       },
       "Sand Canyon 6 - 9": {
         "name": "Sand Canyon 6 - 9",
@@ -10454,7 +11492,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3176334,
+        "room": 9,
+        "stage": 5
       },
       "Sand Canyon 6 - 10": {
         "name": "Sand Canyon 6 - 10",
@@ -10604,7 +11648,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3178954,
+        "room": 10,
+        "stage": 5
       },
       "Sand Canyon 6 - 11": {
         "name": "Sand Canyon 6 - 11",
@@ -10628,7 +11678,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 2989149,
+        "room": 11,
+        "stage": 5
       },
       "Sand Canyon 6 - 12": {
         "name": "Sand Canyon 6 - 12",
@@ -10670,7 +11726,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3015947,
+        "room": 12,
+        "stage": 5
       },
       "Sand Canyon 6 - 13": {
         "name": "Sand Canyon 6 - 13",
@@ -10694,7 +11756,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 2976539,
+        "room": 13,
+        "stage": 5
       },
       "Sand Canyon 6 - 14": {
         "name": "Sand Canyon 6 - 14",
@@ -10736,7 +11804,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3030336,
+        "room": 14,
+        "stage": 5
       },
       "Sand Canyon 6 - 15": {
         "name": "Sand Canyon 6 - 15",
@@ -10760,7 +11834,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 2972361,
+        "room": 15,
+        "stage": 5
       },
       "Sand Canyon 6 - 16": {
         "name": "Sand Canyon 6 - 16",
@@ -10802,7 +11882,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 2953186,
+        "room": 16,
+        "stage": 5
       },
       "Sand Canyon 6 - 17": {
         "name": "Sand Canyon 6 - 17",
@@ -10844,7 +11930,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 2953633,
+        "room": 17,
+        "stage": 5
       },
       "Sand Canyon 6 - 18": {
         "name": "Sand Canyon 6 - 18",
@@ -10868,7 +11960,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 2991707,
+        "room": 18,
+        "stage": 5
       },
       "Sand Canyon 6 - 19": {
         "name": "Sand Canyon 6 - 19",
@@ -10910,7 +12008,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 2974651,
+        "room": 19,
+        "stage": 5
       },
       "Sand Canyon 6 - 20": {
         "name": "Sand Canyon 6 - 20",
@@ -10934,7 +12038,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 2969638,
+        "room": 20,
+        "stage": 5
       },
       "Sand Canyon 6 - 21": {
         "name": "Sand Canyon 6 - 21",
@@ -11004,7 +12114,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 40,
+        "pointer": 2976163,
+        "room": 21,
+        "stage": 5
       },
       "Sand Canyon 6 - 22": {
         "name": "Sand Canyon 6 - 22",
@@ -11064,7 +12180,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 2950938,
+        "room": 22,
+        "stage": 5
       },
       "Sand Canyon 6 - 23": {
         "name": "Sand Canyon 6 - 23",
@@ -11088,7 +12210,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3311993,
+        "room": 23,
+        "stage": 5
       },
       "Sand Canyon 6 - 24": {
         "name": "Sand Canyon 6 - 24",
@@ -11130,7 +12258,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3079078,
+        "room": 24,
+        "stage": 5
       },
       "Sand Canyon 6 - 25": {
         "name": "Sand Canyon 6 - 25",
@@ -11172,7 +12306,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3065898,
+        "room": 25,
+        "stage": 5
       },
       "Sand Canyon 6 - 26": {
         "name": "Sand Canyon 6 - 26",
@@ -11214,7 +12354,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3063347,
+        "room": 26,
+        "stage": 5
       },
       "Sand Canyon 6 - 27": {
         "name": "Sand Canyon 6 - 27",
@@ -11256,7 +12402,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3066916,
+        "room": 27,
+        "stage": 5
       },
       "Sand Canyon 6 - 28": {
         "name": "Sand Canyon 6 - 28",
@@ -11280,7 +12432,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3067425,
+        "room": 28,
+        "stage": 5
       },
       "Sand Canyon 6 - 29": {
         "name": "Sand Canyon 6 - 29",
@@ -11304,7 +12462,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 2950032,
+        "room": 29,
+        "stage": 5
       },
       "Sand Canyon 6 - 30": {
         "name": "Sand Canyon 6 - 30",
@@ -11328,7 +12492,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 2986500,
+        "room": 30,
+        "stage": 5
       },
       "Sand Canyon 6 - 31": {
         "name": "Sand Canyon 6 - 31",
@@ -11370,7 +12540,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3070930,
+        "room": 31,
+        "stage": 5
       },
       "Sand Canyon 6 - 32": {
         "name": "Sand Canyon 6 - 32",
@@ -11443,7 +12619,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3054817,
+        "room": 32,
+        "stage": 5
       },
       "Sand Canyon 6 - 33": {
         "name": "Sand Canyon 6 - 33",
@@ -11516,7 +12698,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3053173,
+        "room": 33,
+        "stage": 5
       },
       "Sand Canyon 6 - 34": {
         "name": "Sand Canyon 6 - 34",
@@ -11589,7 +12777,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3053721,
+        "room": 34,
+        "stage": 5
       },
       "Sand Canyon 6 - 35": {
         "name": "Sand Canyon 6 - 35",
@@ -11662,7 +12856,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3054269,
+        "room": 35,
+        "stage": 5
       },
       "Sand Canyon 6 - 36": {
         "name": "Sand Canyon 6 - 36",
@@ -11686,7 +12886,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 2986164,
+        "room": 36,
+        "stage": 5
       },
       "Sand Canyon 6 - 37": {
         "name": "Sand Canyon 6 - 37",
@@ -11710,7 +12916,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3074377,
+        "room": 37,
+        "stage": 5
       },
       "Sand Canyon 6 - 38": {
         "name": "Sand Canyon 6 - 38",
@@ -11752,7 +12964,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 2971589,
+        "room": 38,
+        "stage": 5
       },
       "Sand Canyon 6 - 39": {
         "name": "Sand Canyon 6 - 39",
@@ -11776,7 +12994,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3063858,
+        "room": 39,
+        "stage": 5
       },
       "Sand Canyon 6 - 40": {
         "name": "Sand Canyon 6 - 40",
@@ -11800,7 +13024,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3064368,
+        "room": 40,
+        "stage": 5
       },
       "Sand Canyon 6 - 41": {
         "name": "Sand Canyon 6 - 41",
@@ -11824,7 +13054,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3064878,
+        "room": 41,
+        "stage": 5
       },
       "Sand Canyon 6 - 42": {
         "name": "Sand Canyon 6 - 42",
@@ -11864,7 +13100,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 14,
+        "pointer": 3068939,
+        "room": 42,
+        "stage": 5
       },
       "Sand Canyon 6 - 43": {
         "name": "Sand Canyon 6 - 43",
@@ -12129,7 +13371,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 8,
+        "pointer": 2988495,
+        "room": 43,
+        "stage": 5
       },
       "Sand Canyon 6 - 44": {
         "name": "Sand Canyon 6 - 44",
@@ -12164,7 +13412,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 5,
+        "pointer": 2886979,
+        "room": 44,
+        "stage": 5
       },
       "Sand Canyon Boss - 0": {
         "name": "Sand Canyon Boss - 0",
@@ -12399,7 +13653,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 3,
+        "music": 2,
+        "pointer": 2991389,
+        "room": 0,
+        "stage": 7
       },
       "Cloudy Park 1 - 0": {
         "name": "Cloudy Park 1 - 0",
@@ -12469,7 +13729,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 17,
+        "pointer": 3172795,
+        "room": 0,
+        "stage": 0
       },
       "Cloudy Park 1 - 1": {
         "name": "Cloudy Park 1 - 1",
@@ -12509,7 +13775,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 39,
+        "pointer": 3078163,
+        "room": 1,
+        "stage": 0
       },
       "Cloudy Park 1 - 2": {
         "name": "Cloudy Park 1 - 2",
@@ -12564,7 +13836,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 17,
+        "pointer": 3285882,
+        "room": 2,
+        "stage": 0
       },
       "Cloudy Park 1 - 3": {
         "name": "Cloudy Park 1 - 3",
@@ -12604,7 +13882,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 39,
+        "pointer": 3062831,
+        "room": 3,
+        "stage": 0
       },
       "Cloudy Park 1 - 4": {
         "name": "Cloudy Park 1 - 4",
@@ -12644,7 +13928,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 17,
+        "pointer": 3396729,
+        "room": 4,
+        "stage": 0
       },
       "Cloudy Park 1 - 5": {
         "name": "Cloudy Park 1 - 5",
@@ -12699,7 +13989,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 39,
+        "pointer": 3038805,
+        "room": 5,
+        "stage": 0
       },
       "Cloudy Park 1 - 6": {
         "name": "Cloudy Park 1 - 6",
@@ -12754,7 +14050,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 17,
+        "pointer": 3535736,
+        "room": 6,
+        "stage": 0
       },
       "Cloudy Park 1 - 7": {
         "name": "Cloudy Park 1 - 7",
@@ -12794,7 +14096,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 39,
+        "pointer": 2954080,
+        "room": 7,
+        "stage": 0
       },
       "Cloudy Park 1 - 8": {
         "name": "Cloudy Park 1 - 8",
@@ -12834,7 +14142,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 17,
+        "pointer": 3465407,
+        "room": 8,
+        "stage": 0
       },
       "Cloudy Park 1 - 9": {
         "name": "Cloudy Park 1 - 9",
@@ -12874,7 +14188,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 39,
+        "pointer": 3078621,
+        "room": 9,
+        "stage": 0
       },
       "Cloudy Park 1 - 10": {
         "name": "Cloudy Park 1 - 10",
@@ -12929,7 +14249,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 17,
+        "pointer": 3281366,
+        "room": 10,
+        "stage": 0
       },
       "Cloudy Park 1 - 11": {
         "name": "Cloudy Park 1 - 11",
@@ -12984,7 +14310,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 352,
+        "level": 4,
+        "music": 17,
+        "pointer": 3519608,
+        "room": 11,
+        "stage": 0
       },
       "Cloudy Park 1 - 12": {
         "name": "Cloudy Park 1 - 12",
@@ -13035,7 +14367,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 8,
+        "pointer": 2958914,
+        "room": 12,
+        "stage": 0
       },
       "Cloudy Park 1 - 13": {
         "name": "Cloudy Park 1 - 13",
@@ -13070,7 +14408,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 5,
+        "pointer": 2886015,
+        "room": 13,
+        "stage": 0
       },
       "Cloudy Park 2 - 0": {
         "name": "Cloudy Park 2 - 0",
@@ -13125,7 +14469,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 19,
+        "pointer": 3142443,
+        "room": 0,
+        "stage": 1
       },
       "Cloudy Park 2 - 1": {
         "name": "Cloudy Park 2 - 1",
@@ -13195,7 +14545,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 19,
+        "pointer": 3235925,
+        "room": 1,
+        "stage": 1
       },
       "Cloudy Park 2 - 2": {
         "name": "Cloudy Park 2 - 2",
@@ -13250,7 +14606,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 19,
+        "pointer": 3297758,
+        "room": 2,
+        "stage": 1
       },
       "Cloudy Park 2 - 3": {
         "name": "Cloudy Park 2 - 3",
@@ -13305,7 +14667,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 19,
+        "pointer": 3341087,
+        "room": 3,
+        "stage": 1
       },
       "Cloudy Park 2 - 4": {
         "name": "Cloudy Park 2 - 4",
@@ -13390,7 +14758,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 19,
+        "pointer": 3457404,
+        "room": 4,
+        "stage": 1
       },
       "Cloudy Park 2 - 5": {
         "name": "Cloudy Park 2 - 5",
@@ -13445,7 +14819,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 19,
+        "pointer": 3273878,
+        "room": 5,
+        "stage": 1
       },
       "Cloudy Park 2 - 6": {
         "name": "Cloudy Park 2 - 6",
@@ -13515,7 +14895,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 38,
+        "pointer": 2984453,
+        "room": 6,
+        "stage": 1
       },
       "Cloudy Park 2 - 7": {
         "name": "Cloudy Park 2 - 7",
@@ -13539,7 +14925,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 19,
+        "pointer": 2985482,
+        "room": 7,
+        "stage": 1
       },
       "Cloudy Park 2 - 8": {
         "name": "Cloudy Park 2 - 8",
@@ -13580,7 +14972,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 8,
+        "pointer": 2990753,
+        "room": 8,
+        "stage": 1
       },
       "Cloudy Park 2 - 9": {
         "name": "Cloudy Park 2 - 9",
@@ -13615,7 +15013,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 5,
+        "pointer": 2889630,
+        "room": 9,
+        "stage": 1
       },
       "Cloudy Park 3 - 0": {
         "name": "Cloudy Park 3 - 0",
@@ -13685,7 +15089,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 15,
+        "pointer": 3100859,
+        "room": 0,
+        "stage": 2
       },
       "Cloudy Park 3 - 1": {
         "name": "Cloudy Park 3 - 1",
@@ -13725,7 +15135,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 15,
+        "pointer": 3209719,
+        "room": 1,
+        "stage": 2
       },
       "Cloudy Park 3 - 2": {
         "name": "Cloudy Park 3 - 2",
@@ -13828,7 +15244,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 15,
+        "pointer": 3216185,
+        "room": 2,
+        "stage": 2
       },
       "Cloudy Park 3 - 3": {
         "name": "Cloudy Park 3 - 3",
@@ -13898,7 +15320,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 40,
+        "pointer": 2994208,
+        "room": 3,
+        "stage": 2
       },
       "Cloudy Park 3 - 4": {
         "name": "Cloudy Park 3 - 4",
@@ -13968,7 +15396,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 15,
+        "pointer": 3229151,
+        "room": 4,
+        "stage": 2
       },
       "Cloudy Park 3 - 5": {
         "name": "Cloudy Park 3 - 5",
@@ -13992,7 +15426,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 31,
+        "pointer": 2969244,
+        "room": 5,
+        "stage": 2
       },
       "Cloudy Park 3 - 6": {
         "name": "Cloudy Park 3 - 6",
@@ -14031,7 +15471,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 8,
+        "pointer": 4128530,
+        "room": 6,
+        "stage": 2
       },
       "Cloudy Park 3 - 7": {
         "name": "Cloudy Park 3 - 7",
@@ -14066,7 +15512,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 5,
+        "pointer": 2885051,
+        "room": 7,
+        "stage": 2
       },
       "Cloudy Park 4 - 0": {
         "name": "Cloudy Park 4 - 0",
@@ -14090,7 +15542,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 21,
+        "pointer": 3072905,
+        "room": 0,
+        "stage": 3
       },
       "Cloudy Park 4 - 1": {
         "name": "Cloudy Park 4 - 1",
@@ -14145,7 +15603,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 38,
+        "pointer": 3074863,
+        "room": 1,
+        "stage": 3
       },
       "Cloudy Park 4 - 2": {
         "name": "Cloudy Park 4 - 2",
@@ -14230,7 +15694,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 21,
+        "pointer": 3309209,
+        "room": 2,
+        "stage": 3
       },
       "Cloudy Park 4 - 3": {
         "name": "Cloudy Park 4 - 3",
@@ -14285,7 +15755,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 304,
+        "level": 4,
+        "music": 21,
+        "pointer": 3296291,
+        "room": 3,
+        "stage": 3
       },
       "Cloudy Park 4 - 4": {
         "name": "Cloudy Park 4 - 4",
@@ -14355,7 +15831,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 21,
+        "pointer": 3330996,
+        "room": 4,
+        "stage": 3
       },
       "Cloudy Park 4 - 5": {
         "name": "Cloudy Park 4 - 5",
@@ -14410,7 +15892,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 21,
+        "pointer": 3332300,
+        "room": 5,
+        "stage": 3
       },
       "Cloudy Park 4 - 6": {
         "name": "Cloudy Park 4 - 6",
@@ -14465,7 +15953,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 21,
+        "pointer": 3253310,
+        "room": 6,
+        "stage": 3
       },
       "Cloudy Park 4 - 7": {
         "name": "Cloudy Park 4 - 7",
@@ -14505,7 +15999,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 4,
+        "pointer": 2967658,
+        "room": 7,
+        "stage": 3
       },
       "Cloudy Park 4 - 8": {
         "name": "Cloudy Park 4 - 8",
@@ -14529,7 +16029,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 21,
+        "pointer": 2981644,
+        "room": 8,
+        "stage": 3
       },
       "Cloudy Park 4 - 9": {
         "name": "Cloudy Park 4 - 9",
@@ -14570,7 +16076,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 8,
+        "pointer": 3008001,
+        "room": 9,
+        "stage": 3
       },
       "Cloudy Park 4 - 10": {
         "name": "Cloudy Park 4 - 10",
@@ -14605,7 +16117,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 5,
+        "pointer": 2888184,
+        "room": 10,
+        "stage": 3
       },
       "Cloudy Park 5 - 0": {
         "name": "Cloudy Park 5 - 0",
@@ -14690,7 +16208,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 17,
+        "pointer": 3192630,
+        "room": 0,
+        "stage": 4
       },
       "Cloudy Park 5 - 1": {
         "name": "Cloudy Park 5 - 1",
@@ -14760,7 +16284,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 288,
+        "level": 4,
+        "music": 17,
+        "pointer": 3050956,
+        "room": 1,
+        "stage": 4
       },
       "Cloudy Park 5 - 2": {
         "name": "Cloudy Park 5 - 2",
@@ -14815,7 +16345,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 40,
+        "pointer": 3604194,
+        "room": 2,
+        "stage": 4
       },
       "Cloudy Park 5 - 3": {
         "name": "Cloudy Park 5 - 3",
@@ -14870,7 +16406,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 17,
+        "pointer": 3131242,
+        "room": 3,
+        "stage": 4
       },
       "Cloudy Park 5 - 4": {
         "name": "Cloudy Park 5 - 4",
@@ -14910,7 +16452,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 17,
+        "pointer": 2990116,
+        "room": 4,
+        "stage": 4
       },
       "Cloudy Park 5 - 5": {
         "name": "Cloudy Park 5 - 5",
@@ -14934,7 +16482,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 17,
+        "pointer": 2975410,
+        "room": 5,
+        "stage": 4
       },
       "Cloudy Park 5 - 6": {
         "name": "Cloudy Park 5 - 6",
@@ -14974,7 +16528,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 17,
+        "pointer": 3173683,
+        "room": 6,
+        "stage": 4
       },
       "Cloudy Park 5 - 7": {
         "name": "Cloudy Park 5 - 7",
@@ -15015,7 +16575,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 8,
+        "pointer": 2992340,
+        "room": 7,
+        "stage": 4
       },
       "Cloudy Park 5 - 8": {
         "name": "Cloudy Park 5 - 8",
@@ -15050,7 +16616,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 5,
+        "pointer": 2891558,
+        "room": 8,
+        "stage": 4
       },
       "Cloudy Park 6 - 0": {
         "name": "Cloudy Park 6 - 0",
@@ -15074,7 +16646,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 11,
+        "pointer": 3269847,
+        "room": 0,
+        "stage": 5
       },
       "Cloudy Park 6 - 1": {
         "name": "Cloudy Park 6 - 1",
@@ -15098,7 +16676,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 11,
+        "pointer": 3252248,
+        "room": 1,
+        "stage": 5
       },
       "Cloudy Park 6 - 2": {
         "name": "Cloudy Park 6 - 2",
@@ -15156,7 +16740,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 11,
+        "pointer": 3028494,
+        "room": 2,
+        "stage": 5
       },
       "Cloudy Park 6 - 3": {
         "name": "Cloudy Park 6 - 3",
@@ -15180,7 +16770,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 11,
+        "pointer": 3131911,
+        "room": 3,
+        "stage": 5
       },
       "Cloudy Park 6 - 4": {
         "name": "Cloudy Park 6 - 4",
@@ -15253,7 +16849,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 11,
+        "pointer": 3115416,
+        "room": 4,
+        "stage": 5
       },
       "Cloudy Park 6 - 5": {
         "name": "Cloudy Park 6 - 5",
@@ -15323,7 +16925,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 11,
+        "pointer": 3245809,
+        "room": 5,
+        "stage": 5
       },
       "Cloudy Park 6 - 6": {
         "name": "Cloudy Park 6 - 6",
@@ -15363,7 +16971,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 11,
+        "pointer": 3237044,
+        "room": 6,
+        "stage": 5
       },
       "Cloudy Park 6 - 7": {
         "name": "Cloudy Park 6 - 7",
@@ -15439,7 +17053,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 11,
+        "pointer": 3262705,
+        "room": 7,
+        "stage": 5
       },
       "Cloudy Park 6 - 8": {
         "name": "Cloudy Park 6 - 8",
@@ -15539,7 +17159,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 304,
+        "level": 4,
+        "music": 11,
+        "pointer": 3027259,
+        "room": 8,
+        "stage": 5
       },
       "Cloudy Park 6 - 9": {
         "name": "Cloudy Park 6 - 9",
@@ -15563,7 +17189,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 11,
+        "pointer": 3089504,
+        "room": 9,
+        "stage": 5
       },
       "Cloudy Park 6 - 10": {
         "name": "Cloudy Park 6 - 10",
@@ -15651,7 +17283,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 40,
+        "pointer": 3132579,
+        "room": 10,
+        "stage": 5
       },
       "Cloudy Park 6 - 11": {
         "name": "Cloudy Park 6 - 11",
@@ -15675,7 +17313,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 11,
+        "pointer": 3017866,
+        "room": 11,
+        "stage": 5
       },
       "Cloudy Park 6 - 12": {
         "name": "Cloudy Park 6 - 12",
@@ -15717,7 +17361,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 11,
+        "pointer": 3036404,
+        "room": 12,
+        "stage": 5
       },
       "Cloudy Park 6 - 13": {
         "name": "Cloudy Park 6 - 13",
@@ -15741,7 +17391,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 11,
+        "pointer": 2965251,
+        "room": 13,
+        "stage": 5
       },
       "Cloudy Park 6 - 14": {
         "name": "Cloudy Park 6 - 14",
@@ -15765,7 +17421,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 11,
+        "pointer": 3077236,
+        "room": 14,
+        "stage": 5
       },
       "Cloudy Park 6 - 15": {
         "name": "Cloudy Park 6 - 15",
@@ -15804,7 +17466,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 8,
+        "pointer": 3061794,
+        "room": 15,
+        "stage": 5
       },
       "Cloudy Park 6 - 16": {
         "name": "Cloudy Park 6 - 16",
@@ -15839,7 +17507,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 5,
+        "pointer": 2888907,
+        "room": 16,
+        "stage": 5
       },
       "Cloudy Park Boss - 0": {
         "name": "Cloudy Park Boss - 0",
@@ -16074,7 +17748,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 4,
+        "music": 2,
+        "pointer": 2998682,
+        "room": 0,
+        "stage": 7
       },
       "Iceberg 1 - 0": {
         "name": "Iceberg 1 - 0",
@@ -16144,7 +17824,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 18,
+        "pointer": 3363111,
+        "room": 0,
+        "stage": 0
       },
       "Iceberg 1 - 1": {
         "name": "Iceberg 1 - 1",
@@ -16214,7 +17900,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 18,
+        "pointer": 3596524,
+        "room": 1,
+        "stage": 0
       },
       "Iceberg 1 - 2": {
         "name": "Iceberg 1 - 2",
@@ -16272,7 +17964,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 18,
+        "pointer": 3288880,
+        "room": 2,
+        "stage": 0
       },
       "Iceberg 1 - 3": {
         "name": "Iceberg 1 - 3",
@@ -16327,7 +18025,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 38,
+        "pointer": 3068439,
+        "room": 3,
+        "stage": 0
       },
       "Iceberg 1 - 4": {
         "name": "Iceberg 1 - 4",
@@ -16397,7 +18101,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 18,
+        "pointer": 3233681,
+        "room": 4,
+        "stage": 0
       },
       "Iceberg 1 - 5": {
         "name": "Iceberg 1 - 5",
@@ -16467,7 +18177,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 18,
+        "pointer": 3406133,
+        "room": 5,
+        "stage": 0
       },
       "Iceberg 1 - 6": {
         "name": "Iceberg 1 - 6",
@@ -16508,7 +18224,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 8,
+        "pointer": 2985823,
+        "room": 6,
+        "stage": 0
       },
       "Iceberg 1 - 7": {
         "name": "Iceberg 1 - 7",
@@ -16543,7 +18265,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 5,
+        "pointer": 2892040,
+        "room": 7,
+        "stage": 0
       },
       "Iceberg 2 - 0": {
         "name": "Iceberg 2 - 0",
@@ -16598,7 +18326,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 20,
+        "pointer": 3106800,
+        "room": 0,
+        "stage": 1
       },
       "Iceberg 2 - 1": {
         "name": "Iceberg 2 - 1",
@@ -16668,7 +18402,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 20,
+        "pointer": 3334841,
+        "room": 1,
+        "stage": 1
       },
       "Iceberg 2 - 2": {
         "name": "Iceberg 2 - 2",
@@ -16825,7 +18565,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 20,
+        "pointer": 3473408,
+        "room": 2,
+        "stage": 1
       },
       "Iceberg 2 - 3": {
         "name": "Iceberg 2 - 3",
@@ -16849,7 +18595,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 20,
+        "pointer": 3037006,
+        "room": 3,
+        "stage": 1
       },
       "Iceberg 2 - 4": {
         "name": "Iceberg 2 - 4",
@@ -16873,7 +18625,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 20,
+        "pointer": 3035198,
+        "room": 4,
+        "stage": 1
       },
       "Iceberg 2 - 5": {
         "name": "Iceberg 2 - 5",
@@ -16897,7 +18655,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 20,
+        "pointer": 3128551,
+        "room": 5,
+        "stage": 1
       },
       "Iceberg 2 - 6": {
         "name": "Iceberg 2 - 6",
@@ -16967,7 +18731,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 20,
+        "pointer": 3270857,
+        "room": 6,
+        "stage": 1
       },
       "Iceberg 2 - 7": {
         "name": "Iceberg 2 - 7",
@@ -17022,7 +18792,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 20,
+        "pointer": 3212501,
+        "room": 7,
+        "stage": 1
       },
       "Iceberg 2 - 8": {
         "name": "Iceberg 2 - 8",
@@ -17063,7 +18839,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 8,
+        "pointer": 2994515,
+        "room": 8,
+        "stage": 1
       },
       "Iceberg 2 - 9": {
         "name": "Iceberg 2 - 9",
@@ -17118,7 +18900,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 39,
+        "pointer": 3058084,
+        "room": 9,
+        "stage": 1
       },
       "Iceberg 2 - 10": {
         "name": "Iceberg 2 - 10",
@@ -17153,7 +18941,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 5,
+        "pointer": 2887220,
+        "room": 10,
+        "stage": 1
       },
       "Iceberg 3 - 0": {
         "name": "Iceberg 3 - 0",
@@ -17256,7 +19050,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 14,
+        "pointer": 3455346,
+        "room": 0,
+        "stage": 2
       },
       "Iceberg 3 - 1": {
         "name": "Iceberg 3 - 1",
@@ -17326,7 +19126,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 38,
+        "pointer": 3019769,
+        "room": 1,
+        "stage": 2
       },
       "Iceberg 3 - 2": {
         "name": "Iceberg 3 - 2",
@@ -17396,7 +19202,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 128,
+        "level": 5,
+        "music": 14,
+        "pointer": 3618121,
+        "room": 2,
+        "stage": 2
       },
       "Iceberg 3 - 3": {
         "name": "Iceberg 3 - 3",
@@ -17454,7 +19266,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 14,
+        "pointer": 3650368,
+        "room": 3,
+        "stage": 2
       },
       "Iceberg 3 - 4": {
         "name": "Iceberg 3 - 4",
@@ -17509,7 +19327,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 39,
+        "pointer": 3038208,
+        "room": 4,
+        "stage": 2
       },
       "Iceberg 3 - 5": {
         "name": "Iceberg 3 - 5",
@@ -17533,7 +19357,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 31,
+        "pointer": 3013938,
+        "room": 5,
+        "stage": 2
       },
       "Iceberg 3 - 6": {
         "name": "Iceberg 3 - 6",
@@ -17588,7 +19418,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 14,
+        "pointer": 3624789,
+        "room": 6,
+        "stage": 2
       },
       "Iceberg 3 - 7": {
         "name": "Iceberg 3 - 7",
@@ -17627,7 +19463,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 8,
+        "pointer": 2989472,
+        "room": 7,
+        "stage": 2
       },
       "Iceberg 3 - 8": {
         "name": "Iceberg 3 - 8",
@@ -17662,7 +19504,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 5,
+        "pointer": 2889871,
+        "room": 8,
+        "stage": 2
       },
       "Iceberg 4 - 0": {
         "name": "Iceberg 4 - 0",
@@ -17747,7 +19595,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 19,
+        "pointer": 3274879,
+        "room": 0,
+        "stage": 3
       },
       "Iceberg 4 - 1": {
         "name": "Iceberg 4 - 1",
@@ -17802,7 +19656,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 19,
+        "pointer": 3371780,
+        "room": 1,
+        "stage": 3
       },
       "Iceberg 4 - 2": {
         "name": "Iceberg 4 - 2",
@@ -17852,7 +19712,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 19,
+        "pointer": 3284378,
+        "room": 2,
+        "stage": 3
       },
       "Iceberg 4 - 3": {
         "name": "Iceberg 4 - 3",
@@ -17876,7 +19742,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 19,
+        "pointer": 3162957,
+        "room": 3,
+        "stage": 3
       },
       "Iceberg 4 - 4": {
         "name": "Iceberg 4 - 4",
@@ -17916,7 +19788,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 19,
+        "pointer": 3261679,
+        "room": 4,
+        "stage": 3
       },
       "Iceberg 4 - 5": {
         "name": "Iceberg 4 - 5",
@@ -17956,7 +19834,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 19,
+        "pointer": 3217398,
+        "room": 5,
+        "stage": 3
       },
       "Iceberg 4 - 6": {
         "name": "Iceberg 4 - 6",
@@ -17980,7 +19864,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 19,
+        "pointer": 3108265,
+        "room": 6,
+        "stage": 3
       },
       "Iceberg 4 - 7": {
         "name": "Iceberg 4 - 7",
@@ -18017,7 +19907,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 19,
+        "pointer": 3346202,
+        "room": 7,
+        "stage": 3
       },
       "Iceberg 4 - 8": {
         "name": "Iceberg 4 - 8",
@@ -18041,7 +19937,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 19,
+        "pointer": 3055911,
+        "room": 8,
+        "stage": 3
       },
       "Iceberg 4 - 9": {
         "name": "Iceberg 4 - 9",
@@ -18081,7 +19983,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 4,
+        "pointer": 3056457,
+        "room": 9,
+        "stage": 3
       },
       "Iceberg 4 - 10": {
         "name": "Iceberg 4 - 10",
@@ -18105,7 +20013,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 19,
+        "pointer": 3257516,
+        "room": 10,
+        "stage": 3
       },
       "Iceberg 4 - 11": {
         "name": "Iceberg 4 - 11",
@@ -18145,7 +20059,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 19,
+        "pointer": 3083322,
+        "room": 11,
+        "stage": 3
       },
       "Iceberg 4 - 12": {
         "name": "Iceberg 4 - 12",
@@ -18185,7 +20105,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 19,
+        "pointer": 3147724,
+        "room": 12,
+        "stage": 3
       },
       "Iceberg 4 - 13": {
         "name": "Iceberg 4 - 13",
@@ -18320,7 +20246,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 19,
+        "pointer": 3370077,
+        "room": 13,
+        "stage": 3
       },
       "Iceberg 4 - 14": {
         "name": "Iceberg 4 - 14",
@@ -18393,7 +20325,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 19,
+        "pointer": 3057002,
+        "room": 14,
+        "stage": 3
       },
       "Iceberg 4 - 15": {
         "name": "Iceberg 4 - 15",
@@ -18435,7 +20373,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 19,
+        "pointer": 3116124,
+        "room": 15,
+        "stage": 3
       },
       "Iceberg 4 - 16": {
         "name": "Iceberg 4 - 16",
@@ -18475,7 +20419,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 38,
+        "pointer": 3069937,
+        "room": 16,
+        "stage": 3
       },
       "Iceberg 4 - 17": {
         "name": "Iceberg 4 - 17",
@@ -18515,7 +20465,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 38,
+        "pointer": 3072413,
+        "room": 17,
+        "stage": 3
       },
       "Iceberg 4 - 18": {
         "name": "Iceberg 4 - 18",
@@ -18555,7 +20511,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 19,
+        "pointer": 3404593,
+        "room": 18,
+        "stage": 3
       },
       "Iceberg 4 - 19": {
         "name": "Iceberg 4 - 19",
@@ -18611,7 +20573,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 8,
+        "pointer": 3075826,
+        "room": 19,
+        "stage": 3
       },
       "Iceberg 4 - 20": {
         "name": "Iceberg 4 - 20",
@@ -18648,7 +20616,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 5,
+        "pointer": 2887943,
+        "room": 20,
+        "stage": 3
       },
       "Iceberg 5 - 0": {
         "name": "Iceberg 5 - 0",
@@ -18793,7 +20767,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3316135,
+        "room": 0,
+        "stage": 4
       },
       "Iceberg 5 - 1": {
         "name": "Iceberg 5 - 1",
@@ -18817,7 +20797,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3037607,
+        "room": 1,
+        "stage": 4
       },
       "Iceberg 5 - 2": {
         "name": "Iceberg 5 - 2",
@@ -18857,7 +20843,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3103842,
+        "room": 2,
+        "stage": 4
       },
       "Iceberg 5 - 3": {
         "name": "Iceberg 5 - 3",
@@ -18897,7 +20889,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3135899,
+        "room": 3,
+        "stage": 4
       },
       "Iceberg 5 - 4": {
         "name": "Iceberg 5 - 4",
@@ -18937,7 +20935,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3180695,
+        "room": 4,
+        "stage": 4
       },
       "Iceberg 5 - 5": {
         "name": "Iceberg 5 - 5",
@@ -18977,7 +20981,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3106064,
+        "room": 5,
+        "stage": 4
       },
       "Iceberg 5 - 6": {
         "name": "Iceberg 5 - 6",
@@ -19001,7 +21011,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3276800,
+        "room": 6,
+        "stage": 4
       },
       "Iceberg 5 - 7": {
         "name": "Iceberg 5 - 7",
@@ -19025,7 +21041,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3104585,
+        "room": 7,
+        "stage": 4
       },
       "Iceberg 5 - 8": {
         "name": "Iceberg 5 - 8",
@@ -19049,7 +21071,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3195121,
+        "room": 8,
+        "stage": 4
       },
       "Iceberg 5 - 9": {
         "name": "Iceberg 5 - 9",
@@ -19073,7 +21101,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 128,
+        "level": 5,
+        "music": 16,
+        "pointer": 3087198,
+        "room": 9,
+        "stage": 4
       },
       "Iceberg 5 - 10": {
         "name": "Iceberg 5 - 10",
@@ -19097,7 +21131,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3321612,
+        "room": 10,
+        "stage": 4
       },
       "Iceberg 5 - 11": {
         "name": "Iceberg 5 - 11",
@@ -19137,7 +21177,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 176,
+        "level": 5,
+        "music": 16,
+        "pointer": 3139178,
+        "room": 11,
+        "stage": 4
       },
       "Iceberg 5 - 12": {
         "name": "Iceberg 5 - 12",
@@ -19177,7 +21223,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3118231,
+        "room": 12,
+        "stage": 4
       },
       "Iceberg 5 - 13": {
         "name": "Iceberg 5 - 13",
@@ -19217,7 +21269,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3021658,
+        "room": 13,
+        "stage": 4
       },
       "Iceberg 5 - 14": {
         "name": "Iceberg 5 - 14",
@@ -19241,7 +21299,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 176,
+        "level": 5,
+        "music": 16,
+        "pointer": 3025398,
+        "room": 14,
+        "stage": 4
       },
       "Iceberg 5 - 15": {
         "name": "Iceberg 5 - 15",
@@ -19281,7 +21345,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3167445,
+        "room": 15,
+        "stage": 4
       },
       "Iceberg 5 - 16": {
         "name": "Iceberg 5 - 16",
@@ -19305,7 +21375,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3033990,
+        "room": 16,
+        "stage": 4
       },
       "Iceberg 5 - 17": {
         "name": "Iceberg 5 - 17",
@@ -19329,7 +21405,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3100111,
+        "room": 17,
+        "stage": 4
       },
       "Iceberg 5 - 18": {
         "name": "Iceberg 5 - 18",
@@ -19369,7 +21451,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3030947,
+        "room": 18,
+        "stage": 4
       },
       "Iceberg 5 - 19": {
         "name": "Iceberg 5 - 19",
@@ -19409,7 +21497,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3105326,
+        "room": 19,
+        "stage": 4
       },
       "Iceberg 5 - 20": {
         "name": "Iceberg 5 - 20",
@@ -19449,7 +21543,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3118928,
+        "room": 20,
+        "stage": 4
       },
       "Iceberg 5 - 21": {
         "name": "Iceberg 5 - 21",
@@ -19519,7 +21619,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3202517,
+        "room": 21,
+        "stage": 4
       },
       "Iceberg 5 - 22": {
         "name": "Iceberg 5 - 22",
@@ -19559,7 +21665,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3014656,
+        "room": 22,
+        "stage": 4
       },
       "Iceberg 5 - 23": {
         "name": "Iceberg 5 - 23",
@@ -19599,7 +21711,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3166550,
+        "room": 23,
+        "stage": 4
       },
       "Iceberg 5 - 24": {
         "name": "Iceberg 5 - 24",
@@ -19639,7 +21757,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3029110,
+        "room": 24,
+        "stage": 4
       },
       "Iceberg 5 - 25": {
         "name": "Iceberg 5 - 25",
@@ -19679,7 +21803,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3156420,
+        "room": 25,
+        "stage": 4
       },
       "Iceberg 5 - 26": {
         "name": "Iceberg 5 - 26",
@@ -19719,7 +21849,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3127877,
+        "room": 26,
+        "stage": 4
       },
       "Iceberg 5 - 27": {
         "name": "Iceberg 5 - 27",
@@ -19774,7 +21910,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3256471,
+        "room": 27,
+        "stage": 4
       },
       "Iceberg 5 - 28": {
         "name": "Iceberg 5 - 28",
@@ -19814,7 +21956,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3029723,
+        "room": 28,
+        "stage": 4
       },
       "Iceberg 5 - 29": {
         "name": "Iceberg 5 - 29",
@@ -19838,7 +21986,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3526568,
+        "room": 29,
+        "stage": 4
       },
       "Iceberg 5 - 30": {
         "name": "Iceberg 5 - 30",
@@ -19893,7 +22047,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 40,
+        "pointer": 3022285,
+        "room": 30,
+        "stage": 4
       },
       "Iceberg 5 - 31": {
         "name": "Iceberg 5 - 31",
@@ -19948,7 +22108,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 40,
+        "pointer": 3026019,
+        "room": 31,
+        "stage": 4
       },
       "Iceberg 5 - 32": {
         "name": "Iceberg 5 - 32",
@@ -20003,7 +22169,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 40,
+        "pointer": 3039996,
+        "room": 32,
+        "stage": 4
       },
       "Iceberg 5 - 33": {
         "name": "Iceberg 5 - 33",
@@ -20058,7 +22230,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 40,
+        "pointer": 3015302,
+        "room": 33,
+        "stage": 4
       },
       "Iceberg 5 - 34": {
         "name": "Iceberg 5 - 34",
@@ -20098,7 +22276,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3185868,
+        "room": 34,
+        "stage": 4
       },
       "Iceberg 5 - 35": {
         "name": "Iceberg 5 - 35",
@@ -20122,7 +22306,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 16,
+        "pointer": 3865635,
+        "room": 35,
+        "stage": 4
       },
       "Iceberg 5 - 36": {
         "name": "Iceberg 5 - 36",
@@ -20163,7 +22353,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 8,
+        "pointer": 3024154,
+        "room": 36,
+        "stage": 4
       },
       "Iceberg 5 - 37": {
         "name": "Iceberg 5 - 37",
@@ -20198,7 +22394,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 5,
+        "pointer": 2890594,
+        "room": 37,
+        "stage": 4
       },
       "Iceberg 6 - 0": {
         "name": "Iceberg 6 - 0",
@@ -20238,7 +22440,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3385305,
+        "room": 0,
+        "stage": 5
       },
       "Iceberg 6 - 1": {
         "name": "Iceberg 6 - 1",
@@ -20308,7 +22516,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3197599,
+        "room": 1,
+        "stage": 5
       },
       "Iceberg 6 - 2": {
         "name": "Iceberg 6 - 2",
@@ -20332,7 +22546,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3097113,
+        "room": 2,
+        "stage": 5
       },
       "Iceberg 6 - 3": {
         "name": "Iceberg 6 - 3",
@@ -20402,7 +22622,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3198422,
+        "room": 3,
+        "stage": 5
       },
       "Iceberg 6 - 4": {
         "name": "Iceberg 6 - 4",
@@ -20426,7 +22652,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3210507,
+        "room": 4,
+        "stage": 5
       },
       "Iceberg 6 - 5": {
         "name": "Iceberg 6 - 5",
@@ -20450,7 +22682,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 128,
+        "level": 5,
+        "music": 12,
+        "pointer": 3196776,
+        "room": 5,
+        "stage": 5
       },
       "Iceberg 6 - 6": {
         "name": "Iceberg 6 - 6",
@@ -20490,7 +22728,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3208130,
+        "room": 6,
+        "stage": 5
       },
       "Iceberg 6 - 7": {
         "name": "Iceberg 6 - 7",
@@ -20530,7 +22774,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3124478,
+        "room": 7,
+        "stage": 5
       },
       "Iceberg 6 - 8": {
         "name": "Iceberg 6 - 8",
@@ -20572,7 +22822,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3110431,
+        "room": 8,
+        "stage": 5
       },
       "Iceberg 6 - 9": {
         "name": "Iceberg 6 - 9",
@@ -20612,7 +22868,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3139832,
+        "room": 9,
+        "stage": 5
       },
       "Iceberg 6 - 10": {
         "name": "Iceberg 6 - 10",
@@ -20636,7 +22898,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3119624,
+        "room": 10,
+        "stage": 5
       },
       "Iceberg 6 - 11": {
         "name": "Iceberg 6 - 11",
@@ -20676,7 +22944,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3141139,
+        "room": 11,
+        "stage": 5
       },
       "Iceberg 6 - 12": {
         "name": "Iceberg 6 - 12",
@@ -20700,7 +22974,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3123788,
+        "room": 12,
+        "stage": 5
       },
       "Iceberg 6 - 13": {
         "name": "Iceberg 6 - 13",
@@ -20740,7 +23020,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3143741,
+        "room": 13,
+        "stage": 5
       },
       "Iceberg 6 - 14": {
         "name": "Iceberg 6 - 14",
@@ -20764,7 +23050,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3120319,
+        "room": 14,
+        "stage": 5
       },
       "Iceberg 6 - 15": {
         "name": "Iceberg 6 - 15",
@@ -20804,7 +23096,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3135238,
+        "room": 15,
+        "stage": 5
       },
       "Iceberg 6 - 16": {
         "name": "Iceberg 6 - 16",
@@ -20828,7 +23126,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3123096,
+        "room": 16,
+        "stage": 5
       },
       "Iceberg 6 - 17": {
         "name": "Iceberg 6 - 17",
@@ -20868,7 +23172,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3144389,
+        "room": 17,
+        "stage": 5
       },
       "Iceberg 6 - 18": {
         "name": "Iceberg 6 - 18",
@@ -20892,7 +23202,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3121014,
+        "room": 18,
+        "stage": 5
       },
       "Iceberg 6 - 19": {
         "name": "Iceberg 6 - 19",
@@ -20932,7 +23248,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3017228,
+        "room": 19,
+        "stage": 5
       },
       "Iceberg 6 - 20": {
         "name": "Iceberg 6 - 20",
@@ -20956,7 +23278,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3121709,
+        "room": 20,
+        "stage": 5
       },
       "Iceberg 6 - 21": {
         "name": "Iceberg 6 - 21",
@@ -20996,7 +23324,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3145036,
+        "room": 21,
+        "stage": 5
       },
       "Iceberg 6 - 22": {
         "name": "Iceberg 6 - 22",
@@ -21020,7 +23354,13 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 12,
+        "pointer": 3116830,
+        "room": 22,
+        "stage": 5
       },
       "Iceberg 6 - 23": {
         "name": "Iceberg 6 - 23",
@@ -21197,7 +23537,13 @@
             },
             "locked": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 8,
+        "pointer": 3045263,
+        "room": 23,
+        "stage": 5
       },
       "Iceberg 6 - 24": {
         "name": "Iceberg 6 - 24",
@@ -21232,7 +23578,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 5,
+        "pointer": 2889389,
+        "room": 24,
+        "stage": 5
       },
       "Iceberg Boss - 0": {
         "name": "Iceberg Boss - 0",
@@ -21467,7 +23819,13 @@
             "locked": true,
             "show_in_spoiler": false
           }
-        ]
+        ],
+        "consumable_pointer": 0,
+        "level": 5,
+        "music": 7,
+        "pointer": 2980207,
+        "room": 0,
+        "stage": 7
       },
       "Menu": {
         "name": "Menu",
@@ -23026,6 +25384,418 @@
         "Boboo": "Burning Ability",
         "Haboki": "Clean Ability"
       },
+      "required_heart_stars": 15,
+      "boss_requirements": [
+        3,
+        6,
+        9,
+        12,
+        15
+      ],
+      "stage_shuffle_enabled": false,
+      "boss_butch_bosses": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "rooms": [
+        "Grass Land 1 - 0",
+        "Grass Land 1 - 1",
+        "Grass Land 1 - 2",
+        "Grass Land 1 - 3",
+        "Grass Land 1 - 4",
+        "Grass Land 1 - 5",
+        "Grass Land 2 - 0",
+        "Grass Land 2 - 1",
+        "Grass Land 2 - 2",
+        "Grass Land 2 - 3",
+        "Grass Land 2 - 4",
+        "Grass Land 2 - 5",
+        "Grass Land 2 - 6",
+        "Grass Land 3 - 0",
+        "Grass Land 3 - 1",
+        "Grass Land 3 - 2",
+        "Grass Land 3 - 3",
+        "Grass Land 3 - 4",
+        "Grass Land 3 - 5",
+        "Grass Land 3 - 6",
+        "Grass Land 3 - 7",
+        "Grass Land 4 - 0",
+        "Grass Land 4 - 1",
+        "Grass Land 4 - 2",
+        "Grass Land 4 - 3",
+        "Grass Land 4 - 4",
+        "Grass Land 4 - 5",
+        "Grass Land 4 - 6",
+        "Grass Land 4 - 7",
+        "Grass Land 4 - 8",
+        "Grass Land 4 - 9",
+        "Grass Land 4 - 10",
+        "Grass Land 5 - 0",
+        "Grass Land 5 - 1",
+        "Grass Land 5 - 2",
+        "Grass Land 5 - 3",
+        "Grass Land 5 - 4",
+        "Grass Land 5 - 5",
+        "Grass Land 5 - 6",
+        "Grass Land 5 - 7",
+        "Grass Land 6 - 0",
+        "Grass Land 6 - 1",
+        "Grass Land 6 - 2",
+        "Grass Land 6 - 3",
+        "Grass Land 6 - 4",
+        "Grass Land 6 - 5",
+        "Grass Land 6 - 6",
+        "Grass Land 6 - 7",
+        "Grass Land 6 - 8",
+        "Grass Land Boss - 0",
+        "Ripple Field 1 - 0",
+        "Ripple Field 1 - 1",
+        "Ripple Field 1 - 2",
+        "Ripple Field 1 - 3",
+        "Ripple Field 1 - 4",
+        "Ripple Field 1 - 5",
+        "Ripple Field 1 - 6",
+        "Ripple Field 1 - 7",
+        "Ripple Field 1 - 8",
+        "Ripple Field 2 - 0",
+        "Ripple Field 2 - 1",
+        "Ripple Field 2 - 2",
+        "Ripple Field 2 - 3",
+        "Ripple Field 2 - 4",
+        "Ripple Field 2 - 5",
+        "Ripple Field 2 - 6",
+        "Ripple Field 2 - 7",
+        "Ripple Field 3 - 0",
+        "Ripple Field 3 - 1",
+        "Ripple Field 3 - 2",
+        "Ripple Field 3 - 3",
+        "Ripple Field 3 - 4",
+        "Ripple Field 3 - 5",
+        "Ripple Field 3 - 6",
+        "Ripple Field 3 - 7",
+        "Ripple Field 4 - 0",
+        "Ripple Field 4 - 1",
+        "Ripple Field 4 - 2",
+        "Ripple Field 4 - 3",
+        "Ripple Field 4 - 4",
+        "Ripple Field 4 - 5",
+        "Ripple Field 4 - 6",
+        "Ripple Field 4 - 7",
+        "Ripple Field 4 - 8",
+        "Ripple Field 4 - 9",
+        "Ripple Field 4 - 10",
+        "Ripple Field 4 - 11",
+        "Ripple Field 4 - 12",
+        "Ripple Field 4 - 13",
+        "Ripple Field 5 - 0",
+        "Ripple Field 5 - 1",
+        "Ripple Field 5 - 2",
+        "Ripple Field 5 - 3",
+        "Ripple Field 5 - 4",
+        "Ripple Field 5 - 5",
+        "Ripple Field 5 - 6",
+        "Ripple Field 5 - 7",
+        "Ripple Field 5 - 8",
+        "Ripple Field 5 - 9",
+        "Ripple Field 5 - 10",
+        "Ripple Field 5 - 11",
+        "Ripple Field 6 - 0",
+        "Ripple Field 6 - 1",
+        "Ripple Field 6 - 2",
+        "Ripple Field 6 - 3",
+        "Ripple Field 6 - 4",
+        "Ripple Field 6 - 5",
+        "Ripple Field 6 - 6",
+        "Ripple Field 6 - 7",
+        "Ripple Field 6 - 8",
+        "Ripple Field 6 - 9",
+        "Ripple Field 6 - 10",
+        "Ripple Field 6 - 11",
+        "Ripple Field Boss - 0",
+        "Sand Canyon 1 - 0",
+        "Sand Canyon 1 - 1",
+        "Sand Canyon 1 - 2",
+        "Sand Canyon 1 - 3",
+        "Sand Canyon 1 - 4",
+        "Sand Canyon 1 - 5",
+        "Sand Canyon 1 - 6",
+        "Sand Canyon 1 - 7",
+        "Sand Canyon 1 - 8",
+        "Sand Canyon 2 - 0",
+        "Sand Canyon 2 - 1",
+        "Sand Canyon 2 - 2",
+        "Sand Canyon 2 - 3",
+        "Sand Canyon 2 - 4",
+        "Sand Canyon 2 - 5",
+        "Sand Canyon 2 - 6",
+        "Sand Canyon 2 - 7",
+        "Sand Canyon 2 - 8",
+        "Sand Canyon 2 - 9",
+        "Sand Canyon 2 - 10",
+        "Sand Canyon 2 - 11",
+        "Sand Canyon 3 - 0",
+        "Sand Canyon 3 - 1",
+        "Sand Canyon 3 - 2",
+        "Sand Canyon 3 - 3",
+        "Sand Canyon 3 - 4",
+        "Sand Canyon 3 - 5",
+        "Sand Canyon 3 - 6",
+        "Sand Canyon 3 - 7",
+        "Sand Canyon 3 - 8",
+        "Sand Canyon 4 - 0",
+        "Sand Canyon 4 - 1",
+        "Sand Canyon 4 - 2",
+        "Sand Canyon 4 - 3",
+        "Sand Canyon 4 - 4",
+        "Sand Canyon 4 - 5",
+        "Sand Canyon 4 - 6",
+        "Sand Canyon 4 - 7",
+        "Sand Canyon 4 - 8",
+        "Sand Canyon 4 - 9",
+        "Sand Canyon 5 - 0",
+        "Sand Canyon 5 - 1",
+        "Sand Canyon 5 - 2",
+        "Sand Canyon 5 - 3",
+        "Sand Canyon 5 - 4",
+        "Sand Canyon 5 - 5",
+        "Sand Canyon 5 - 6",
+        "Sand Canyon 5 - 7",
+        "Sand Canyon 5 - 8",
+        "Sand Canyon 5 - 9",
+        "Sand Canyon 6 - 0",
+        "Sand Canyon 6 - 1",
+        "Sand Canyon 6 - 2",
+        "Sand Canyon 6 - 3",
+        "Sand Canyon 6 - 4",
+        "Sand Canyon 6 - 5",
+        "Sand Canyon 6 - 6",
+        "Sand Canyon 6 - 7",
+        "Sand Canyon 6 - 8",
+        "Sand Canyon 6 - 9",
+        "Sand Canyon 6 - 10",
+        "Sand Canyon 6 - 11",
+        "Sand Canyon 6 - 12",
+        "Sand Canyon 6 - 13",
+        "Sand Canyon 6 - 14",
+        "Sand Canyon 6 - 15",
+        "Sand Canyon 6 - 16",
+        "Sand Canyon 6 - 17",
+        "Sand Canyon 6 - 18",
+        "Sand Canyon 6 - 19",
+        "Sand Canyon 6 - 20",
+        "Sand Canyon 6 - 21",
+        "Sand Canyon 6 - 22",
+        "Sand Canyon 6 - 23",
+        "Sand Canyon 6 - 24",
+        "Sand Canyon 6 - 25",
+        "Sand Canyon 6 - 26",
+        "Sand Canyon 6 - 27",
+        "Sand Canyon 6 - 28",
+        "Sand Canyon 6 - 29",
+        "Sand Canyon 6 - 30",
+        "Sand Canyon 6 - 31",
+        "Sand Canyon 6 - 32",
+        "Sand Canyon 6 - 33",
+        "Sand Canyon 6 - 34",
+        "Sand Canyon 6 - 35",
+        "Sand Canyon 6 - 36",
+        "Sand Canyon 6 - 37",
+        "Sand Canyon 6 - 38",
+        "Sand Canyon 6 - 39",
+        "Sand Canyon 6 - 40",
+        "Sand Canyon 6 - 41",
+        "Sand Canyon 6 - 42",
+        "Sand Canyon 6 - 43",
+        "Sand Canyon 6 - 44",
+        "Sand Canyon Boss - 0",
+        "Cloudy Park 1 - 0",
+        "Cloudy Park 1 - 1",
+        "Cloudy Park 1 - 2",
+        "Cloudy Park 1 - 3",
+        "Cloudy Park 1 - 4",
+        "Cloudy Park 1 - 5",
+        "Cloudy Park 1 - 6",
+        "Cloudy Park 1 - 7",
+        "Cloudy Park 1 - 8",
+        "Cloudy Park 1 - 9",
+        "Cloudy Park 1 - 10",
+        "Cloudy Park 1 - 11",
+        "Cloudy Park 1 - 12",
+        "Cloudy Park 1 - 13",
+        "Cloudy Park 2 - 0",
+        "Cloudy Park 2 - 1",
+        "Cloudy Park 2 - 2",
+        "Cloudy Park 2 - 3",
+        "Cloudy Park 2 - 4",
+        "Cloudy Park 2 - 5",
+        "Cloudy Park 2 - 6",
+        "Cloudy Park 2 - 7",
+        "Cloudy Park 2 - 8",
+        "Cloudy Park 2 - 9",
+        "Cloudy Park 3 - 0",
+        "Cloudy Park 3 - 1",
+        "Cloudy Park 3 - 2",
+        "Cloudy Park 3 - 3",
+        "Cloudy Park 3 - 4",
+        "Cloudy Park 3 - 5",
+        "Cloudy Park 3 - 6",
+        "Cloudy Park 3 - 7",
+        "Cloudy Park 4 - 0",
+        "Cloudy Park 4 - 1",
+        "Cloudy Park 4 - 2",
+        "Cloudy Park 4 - 3",
+        "Cloudy Park 4 - 4",
+        "Cloudy Park 4 - 5",
+        "Cloudy Park 4 - 6",
+        "Cloudy Park 4 - 7",
+        "Cloudy Park 4 - 8",
+        "Cloudy Park 4 - 9",
+        "Cloudy Park 4 - 10",
+        "Cloudy Park 5 - 0",
+        "Cloudy Park 5 - 1",
+        "Cloudy Park 5 - 2",
+        "Cloudy Park 5 - 3",
+        "Cloudy Park 5 - 4",
+        "Cloudy Park 5 - 5",
+        "Cloudy Park 5 - 6",
+        "Cloudy Park 5 - 7",
+        "Cloudy Park 5 - 8",
+        "Cloudy Park 6 - 0",
+        "Cloudy Park 6 - 1",
+        "Cloudy Park 6 - 2",
+        "Cloudy Park 6 - 3",
+        "Cloudy Park 6 - 4",
+        "Cloudy Park 6 - 5",
+        "Cloudy Park 6 - 6",
+        "Cloudy Park 6 - 7",
+        "Cloudy Park 6 - 8",
+        "Cloudy Park 6 - 9",
+        "Cloudy Park 6 - 10",
+        "Cloudy Park 6 - 11",
+        "Cloudy Park 6 - 12",
+        "Cloudy Park 6 - 13",
+        "Cloudy Park 6 - 14",
+        "Cloudy Park 6 - 15",
+        "Cloudy Park 6 - 16",
+        "Cloudy Park Boss - 0",
+        "Iceberg 1 - 0",
+        "Iceberg 1 - 1",
+        "Iceberg 1 - 2",
+        "Iceberg 1 - 3",
+        "Iceberg 1 - 4",
+        "Iceberg 1 - 5",
+        "Iceberg 1 - 6",
+        "Iceberg 1 - 7",
+        "Iceberg 2 - 0",
+        "Iceberg 2 - 1",
+        "Iceberg 2 - 2",
+        "Iceberg 2 - 3",
+        "Iceberg 2 - 4",
+        "Iceberg 2 - 5",
+        "Iceberg 2 - 6",
+        "Iceberg 2 - 7",
+        "Iceberg 2 - 8",
+        "Iceberg 2 - 9",
+        "Iceberg 2 - 10",
+        "Iceberg 3 - 0",
+        "Iceberg 3 - 1",
+        "Iceberg 3 - 2",
+        "Iceberg 3 - 3",
+        "Iceberg 3 - 4",
+        "Iceberg 3 - 5",
+        "Iceberg 3 - 6",
+        "Iceberg 3 - 7",
+        "Iceberg 3 - 8",
+        "Iceberg 4 - 0",
+        "Iceberg 4 - 1",
+        "Iceberg 4 - 2",
+        "Iceberg 4 - 3",
+        "Iceberg 4 - 4",
+        "Iceberg 4 - 5",
+        "Iceberg 4 - 6",
+        "Iceberg 4 - 7",
+        "Iceberg 4 - 8",
+        "Iceberg 4 - 9",
+        "Iceberg 4 - 10",
+        "Iceberg 4 - 11",
+        "Iceberg 4 - 12",
+        "Iceberg 4 - 13",
+        "Iceberg 4 - 14",
+        "Iceberg 4 - 15",
+        "Iceberg 4 - 16",
+        "Iceberg 4 - 17",
+        "Iceberg 4 - 18",
+        "Iceberg 4 - 19",
+        "Iceberg 4 - 20",
+        "Iceberg 5 - 0",
+        "Iceberg 5 - 1",
+        "Iceberg 5 - 2",
+        "Iceberg 5 - 3",
+        "Iceberg 5 - 4",
+        "Iceberg 5 - 5",
+        "Iceberg 5 - 6",
+        "Iceberg 5 - 7",
+        "Iceberg 5 - 8",
+        "Iceberg 5 - 9",
+        "Iceberg 5 - 10",
+        "Iceberg 5 - 11",
+        "Iceberg 5 - 12",
+        "Iceberg 5 - 13",
+        "Iceberg 5 - 14",
+        "Iceberg 5 - 15",
+        "Iceberg 5 - 16",
+        "Iceberg 5 - 17",
+        "Iceberg 5 - 18",
+        "Iceberg 5 - 19",
+        "Iceberg 5 - 20",
+        "Iceberg 5 - 21",
+        "Iceberg 5 - 22",
+        "Iceberg 5 - 23",
+        "Iceberg 5 - 24",
+        "Iceberg 5 - 25",
+        "Iceberg 5 - 26",
+        "Iceberg 5 - 27",
+        "Iceberg 5 - 28",
+        "Iceberg 5 - 29",
+        "Iceberg 5 - 30",
+        "Iceberg 5 - 31",
+        "Iceberg 5 - 32",
+        "Iceberg 5 - 33",
+        "Iceberg 5 - 34",
+        "Iceberg 5 - 35",
+        "Iceberg 5 - 36",
+        "Iceberg 5 - 37",
+        "Iceberg 6 - 0",
+        "Iceberg 6 - 1",
+        "Iceberg 6 - 2",
+        "Iceberg 6 - 3",
+        "Iceberg 6 - 4",
+        "Iceberg 6 - 5",
+        "Iceberg 6 - 6",
+        "Iceberg 6 - 7",
+        "Iceberg 6 - 8",
+        "Iceberg 6 - 9",
+        "Iceberg 6 - 10",
+        "Iceberg 6 - 11",
+        "Iceberg 6 - 12",
+        "Iceberg 6 - 13",
+        "Iceberg 6 - 14",
+        "Iceberg 6 - 15",
+        "Iceberg 6 - 16",
+        "Iceberg 6 - 17",
+        "Iceberg 6 - 18",
+        "Iceberg 6 - 19",
+        "Iceberg 6 - 20",
+        "Iceberg 6 - 21",
+        "Iceberg 6 - 22",
+        "Iceberg 6 - 23",
+        "Iceberg 6 - 24",
+        "Iceberg Boss - 0"
+      ],
       "world_description": "Join Kirby and his Animal Friends on an adventure to collect Heart Stars and drive Dark Matter away from Dream Land!",
       "slot_data": {
         "player_levels": {

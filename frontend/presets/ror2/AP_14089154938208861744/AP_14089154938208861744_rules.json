@@ -5707,6 +5707,7 @@
           "display_name": "Yellow Scraps"
         }
       },
+      "total_revivals": 7,
       "world_description": "Escape a chaotic alien planet by fighting through hordes of frenzied monsters \u2013 with your friends, or on your own.\nCombine loot in surprising ways and master each character until you become the havoc you feared upon your\nfirst crash landing.",
       "slot_data": {
         "itemPickupStep": 1,
