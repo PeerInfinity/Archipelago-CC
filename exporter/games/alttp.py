@@ -13,6 +13,8 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     # This setting is currently only used for region navigation in the frontend
     ASSUME_BIDIRECTIONAL_EXITS = True
 
+    # The following settings are just to make the rules.json file easier to read:
+
     # Auto-discover region attributes (is_light_world, is_dark_world, type)
     AUTO_DISCOVER_REGION_ATTRIBUTES = True
 
@@ -22,10 +24,24 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     # Auto-discover world attributes (shops, dungeons, difficulty_requirements, etc.)
     AUTO_DISCOVER_WORLD_ATTRIBUTES = True
 
+    # Export Choice options as string keys instead of numeric values
+    # ALttP rules use string comparisons like `enemy_health in ("easy", "default")`
+    # and don't use ordered comparisons, so string keys work correctly
+    EXPORT_CHOICE_OPTIONS_AS_NUMERIC = False
+
     def replace_name(self, name: str) -> str:
-        """Replace ALTTP-specific name references with standard equivalents."""
+        """Normalize closure-captured location variables to standard 'location' parameter.
+
+        In worlds/alttp/Rules.py, some location access rules are written as:
+            ep_boss = multiworld.get_location('Eastern Palace - Boss', player)
+            add_rule(ep_boss, lambda state: ... ep_boss.parent_region.dungeon ...)
+
+        The lambda captures 'ep_boss' from the enclosing scope. However, when the frontend
+        evaluates access rules, it provides the location as a parameter named 'location'.
+        This function replaces these closure-captured names with 'location' so the
+        exported rules work correctly in the frontend.
+        """
         if name == 'ep_boss' or name == 'ep_prize':
-            logger.debug(f"ALTTP: Replacing '{name}' with 'location'")
             return 'location'
         return name
 

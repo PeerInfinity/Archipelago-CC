@@ -892,6 +892,35 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
             logger.error(error_msg)
             # Don't add error to export_data - just skip helpers silently
 
+        # Normalize option constants in helpers and regions to match the export format
+        # This ensures comparisons work correctly in JavaScript
+        try:
+            world_data = export_data.get('world', {}).get(player_str, {})
+            option_definitions = world_data.get('option_definitions', {})
+            if option_definitions:
+                if game_handler.EXPORT_CHOICE_OPTIONS_AS_NUMERIC:
+                    # Convert string constants to numeric (for ordered comparisons)
+                    if player_str in export_data.get('helpers', {}):
+                        export_data['helpers'][player_str] = game_handler.normalize_helper_option_constants(
+                            export_data['helpers'][player_str], option_definitions
+                        )
+                    if player_str in export_data.get('regions', {}):
+                        export_data['regions'][player_str] = game_handler.normalize_region_option_constants(
+                            export_data['regions'][player_str], option_definitions
+                        )
+                else:
+                    # Convert numeric constants to strings (for equality comparisons)
+                    if player_str in export_data.get('helpers', {}):
+                        export_data['helpers'][player_str] = game_handler.normalize_to_string_constants(
+                            export_data['helpers'][player_str], option_definitions, 'helpers'
+                        )
+                    if player_str in export_data.get('regions', {}):
+                        export_data['regions'][player_str] = game_handler.normalize_to_string_constants(
+                            export_data['regions'][player_str], option_definitions, 'regions'
+                        )
+        except Exception as e:
+            logger.error(f"Error normalizing option constants for player {player}: {str(e)}")
+
         # Start regions
         try:
             # First, check if the world has an origin_region_name attribute
