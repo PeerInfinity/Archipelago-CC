@@ -4796,6 +4796,22 @@ class HelperCodeGenerator:
                 else:
                     return str(value)
 
+        # Special case: handle module-level constant accesses that should be inlined
+        # This handles cases like location_name.level_names_inverse from kdl3 where
+        # the original code imports a module with constant dictionaries.
+        # Note: We use single quotes for string values to avoid conflicts with f-string double quotes.
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name':
+            module_name = obj_expr.get('name', '')
+            # Handle KDL3's location_name module constants
+            if module_name == 'location_name':
+                if attr == 'level_names_inverse':
+                    # Inline the level_names_inverse dictionary
+                    # This maps level numbers (1-5) to level names
+                    return "{1: 'Grass Land', 2: 'Ripple Field', 3: 'Sand Canyon', 4: 'Cloudy Park', 5: 'Iceberg'}"
+                elif attr == 'level_names':
+                    # Inline the level_names dictionary (maps names to numbers)
+                    return "{'Grass Land': 1, 'Ripple Field': 2, 'Sand Canyon': 3, 'Cloudy Park': 4, 'Iceberg': 5}"
+
         obj = self._generate_expression(obj_expr)
         return f"{obj}.{attr}"
 
@@ -5091,6 +5107,12 @@ class HelperCodeGenerator:
                     # Expression to be interpolated
                     inner_value = part.get('value', {})
                     inner_expr = self._generate_expression(inner_value)
+                    # If the expression starts with '{', it's likely a dict literal
+                    # which needs to be wrapped in parentheses to avoid confusing
+                    # the f-string parser (e.g., {1: 'Grass Land'}[level] becomes
+                    # ({1: 'Grass Land'})[level] to avoid being parsed as format spec)
+                    if inner_expr.startswith('{'):
+                        inner_expr = '(' + inner_expr + ')'
                     f_string_parts.append('{' + inner_expr + '}')
                 else:
                     # Fallback - treat as expression
