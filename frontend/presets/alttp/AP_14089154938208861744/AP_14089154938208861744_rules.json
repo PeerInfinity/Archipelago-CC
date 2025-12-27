@@ -34,19 +34,10 @@
             "name": "Old Man S&Q",
             "connected_region": "Old Man House",
             "access_rule": {
-              "rule": "AST_function_call",
+              "rule": "CanReachLocation",
               "args": {
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "location"
-                  },
-                  "attr": "can_reach"
-                },
-                "_original_ast_type": "function_call"
-              },
-              "_converted_from_ast": true
+                "location_name": "Old Man"
+              }
             }
           }
         ],
