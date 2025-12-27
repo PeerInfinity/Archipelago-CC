@@ -5110,6 +5110,12 @@ class HelperCodeGenerator:
                     # Expression to be interpolated
                     inner_value = part.get('value', {})
                     inner_expr = self._generate_expression(inner_value)
+                    # If the expression starts with '{', it's likely a dict literal
+                    # which needs to be wrapped in parentheses to avoid confusing
+                    # the f-string parser (e.g., {1: 'Grass Land'}[level] becomes
+                    # ({1: 'Grass Land'})[level] to avoid being parsed as format spec)
+                    if inner_expr.startswith('{'):
+                        inner_expr = '(' + inner_expr + ')'
                     f_string_parts.append('{' + inner_expr + '}')
                 else:
                     # Fallback - treat as expression
