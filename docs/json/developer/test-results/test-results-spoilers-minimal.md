@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-27 14:11:34
+**Generated:** 2025-12-27 23:00:39
 
-**Source Data Created:** 2025-12-27T19:22:27.049517
+**Source Data Created:** 2025-12-27T22:18:58.413118
 
-**Source Data Last Updated:** 2025-12-27T19:22:27.049525
+**Source Data Last Updated:** 2025-12-27T22:18:58.413123
 
 ## Summary
 
-- **Total Games:** 74
-- **Passed:** 72 (97.3%)
+- **Total Games:** 73
+- **Passed:** 71 (97.3%)
 - **Failed:** 2 (2.7%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/72 (40.3% of passed)
-- **Passing with Generic Logic:** 64/72 (88.9% of passed)
-- **Passing with Both Generic:** 29/72 (40.3% of passed)
+- **Passing with Generic Exporter:** 29/71 (40.8% of passed)
+- **Passing with Generic Logic:** 64/71 (90.1% of passed)
+- **Passing with Both Generic:** 29/71 (40.8% of passed)
 
 ## Test Results
 
@@ -58,11 +58,11 @@
 | Hylics 2 | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 8.0KB | ✅ |
 | Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | 57.9KB | 12.5KB |
-| Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 33.8KB | 105.3KB |
+| Kingdom Hearts 2 | ❌ Failed | 0 | 0.2 | 15.1 | 🟠 1.3% | 33.8KB | 105.3KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 18.6KB | 13.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 18.5KB | ✅ |
 | Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 41.3KB | 10.7KB |
-| Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 18.1KB | ✅ |
+| Links Awakening DX | ❌ Failed | 1 | 15.1 | 15.1 | 🟡 100.0% | 18.1KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 0.3KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
@@ -75,7 +75,6 @@
 | Old School Runescape | ✅ Passed | 0 | 7.5 | 7.5 | 🟢 Complete | 6.0KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 30.0KB | 6.7KB |
 | Paint | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 7.1KB | ✅ |
-| Pokemon Red and Blue | ❌ Failed | 0 | 0.6 | 10.2 | 🟠 5.9% | 12.2KB | 13.0KB |
 | Raft | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 12.0KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | ✅ | ✅ |
 | Saving Princess | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 3.2KB | ✅ |
@@ -91,7 +90,7 @@
 | Super Metroid | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | 72.0KB | 114.5KB |
 | TOEM original | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
-| TUNIC | ❌ Failed | 0 | 0.14 | 5.1 | 🟠 2.7% | 1.9KB | ✅ |
+| TUNIC | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 1.9KB | ✅ |
 | Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 19.3KB | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 5.8KB | ✅ |
 | The Messenger | ✅ Passed | 0 | 6.3 | 6.3 | 🟢 Complete | 11.6KB | ✅ |
