@@ -1315,7 +1315,7 @@
   },
   "Timespinner": {
     "exporter_path": "exporter/games/timespinner.py",
-    "exporter_size": 4618,
+    "exporter_size": 4614,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
