@@ -142,10 +142,9 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -955,10 +954,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1094,10 +1092,9 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1147,10 +1144,9 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -1175,10 +1171,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1276,10 +1271,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1381,10 +1375,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1710,6 +1703,11 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -1747,12 +1745,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
                 }
               ]
             }
@@ -1805,10 +1797,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1832,10 +1823,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1881,10 +1871,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1917,10 +1906,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2415,10 +2403,9 @@
                       ]
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rope Dart"
-                      }
+                      "rule": "has_dart",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -2750,10 +2737,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -3443,10 +3429,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -3518,10 +3503,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -3609,10 +3593,9 @@
                       ]
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rope Dart"
-                      }
+                      "rule": "has_dart",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -3908,10 +3891,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4091,10 +4073,9 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4289,10 +4270,9 @@
                       ]
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rope Dart"
-                      }
+                      "rule": "has_dart",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -4367,10 +4347,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4545,10 +4524,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4597,10 +4575,9 @@
                       ]
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rope Dart"
-                      }
+                      "rule": "has_dart",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -4679,10 +4656,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4713,10 +4689,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4942,10 +4917,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4982,10 +4956,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -5043,10 +5016,9 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -5275,10 +5247,9 @@
                           ]
                         },
                         {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Rope Dart"
-                          }
+                          "rule": "has_dart",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
                         },
                         {
                           "rule": "Has",
@@ -5406,10 +5377,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rope Dart"
-                      }
+                      "rule": "has_dart",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Has",
@@ -5499,15 +5469,14 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Candle"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Rope Dart"
+                    "item_name": "Candle"
                   }
                 }
               ]
@@ -5611,10 +5580,9 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5700,10 +5668,9 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -6002,15 +5969,14 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Currents Master"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Rope Dart"
+                    "item_name": "Currents Master"
                   }
                 }
               ]
@@ -6087,10 +6053,9 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -6377,10 +6342,9 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rope Dart"
-                  }
+                  "rule": "has_dart",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -7483,11 +7447,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "The Messenger",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "available_portals": 6,
@@ -7642,40 +7604,6 @@
           "display_name": "Include Traps"
         }
       },
-      "use_paren_number_accumulator": true,
-      "world_directory": "messenger"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "The Messenger",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "ocean",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up The Messenger randomizer on your computer.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "alwaysintreble"
-          ]
-        },
-        {
-          "name": "The Messenger Plando Guide",
-          "description": "A guide detailing The Messenger's various supported plando options.",
-          "language": "English",
-          "file_name": "plando_en.md",
-          "link": "plando/en",
-          "authors": [
-            "alwaysintreble"
-          ]
-        }
-      ],
       "world_description": "As a demon army besieges his village, a young ninja ventures through a cursed world, to deliver a scroll paramount\nto his clan\u2019s survival. What begins as a classic action platformer soon unravels into an expansive time-traveling\nadventure full of thrills, surprises, and humor.",
       "slot_data": {
         "shop": {
@@ -7729,8 +7657,146 @@
         "music_box": 1,
         "death_link": 0,
         "logic_level": 0
-      }
+      },
+      "web": {
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up The Messenger randomizer on your computer.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "alwaysintreble"
+            ]
+          },
+          {
+            "name": "The Messenger Plando Guide",
+            "description": "A guide detailing The Messenger's various supported plando options.",
+            "language": "English",
+            "file_name": "plando_en.md",
+            "link": "plando/en",
+            "authors": [
+              "alwaysintreble"
+            ]
+          }
+        ]
+      },
+      "world_directory": "messenger"
     }
   },
-  "helpers": {}
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
+  },
+  "helpers": {
+    "1": {
+      "can_dboost": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Meditation"
+              },
+              {
+                "type": "item_check",
+                "item": "Path of Resilience"
+              }
+            ]
+          },
+          {
+            "type": "item_check",
+            "item": "Second Wind"
+          }
+        ]
+      },
+      "can_destroy_projectiles": {
+        "type": "item_check",
+        "item": "Strike of the Ninja"
+      },
+      "can_double_dboost": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Meditation"
+          },
+          {
+            "type": "item_check",
+            "item": "Path of Resilience"
+          },
+          {
+            "type": "item_check",
+            "item": "Second Wind"
+          }
+        ]
+      },
+      "can_shop": {
+        "type": "item_check",
+        "item": "Shards",
+        "count": {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "self"
+          },
+          "attr": "maximum_price"
+        }
+      },
+      "has_dart": {
+        "type": "item_check",
+        "item": "Rope Dart"
+      },
+      "has_tabi": {
+        "type": "item_check",
+        "item": "Lightfoot Tabi"
+      },
+      "has_vertical": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Wingsuit",
+            "inferred": true,
+            "description": "Requires having Wingsuit"
+          },
+          {
+            "type": "helper",
+            "name": "has_dart"
+          }
+        ]
+      },
+      "has_wingsuit": {
+        "type": "item_check",
+        "item": "Wingsuit"
+      },
+      "is_aerobatic": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Wingsuit",
+            "inferred": true,
+            "description": "Requires having Wingsuit"
+          },
+          {
+            "type": "item_check",
+            "item": "Aerobatics Warrior"
+          }
+        ]
+      }
+    }
+  }
 }

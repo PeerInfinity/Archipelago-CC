@@ -340,11 +340,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "APQuest",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "confetti_explosiveness": 3,
@@ -428,39 +426,6 @@
           "display_name": "Trap Chance"
         }
       },
-      "world_directory": "apquest"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "APQuest",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "grassFlowers",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up APQuest for MultiWorld.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "NewSoupVi"
-          ]
-        },
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up APQuest for MultiWorld.",
-          "language": "German",
-          "file_name": "setup_de.md",
-          "link": "setup/de",
-          "authors": [
-            "NewSoupVi"
-          ]
-        }
-      ],
       "world_description": "APQuest is a minimal 8bit-era inspired adventure game with grid-like movement.\nGood games don't need more than six checks.",
       "slot_data": {
         "hard_mode": 0,
@@ -468,8 +433,46 @@
         "extra_starting_chest": 0,
         "confetti_explosiveness": 3,
         "player_sprite": 0
-      }
+      },
+      "web": {
+        "theme": "grassFlowers",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up APQuest for MultiWorld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "NewSoupVi"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up APQuest for MultiWorld.",
+            "language": "German",
+            "file_name": "setup_de.md",
+            "link": "setup/de",
+            "authors": [
+              "NewSoupVi"
+            ]
+          }
+        ]
+      },
+      "world_directory": "apquest"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }

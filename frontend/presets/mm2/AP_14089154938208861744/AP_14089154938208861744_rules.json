@@ -1506,11 +1506,9 @@
       "Air Man Access Codes"
     ]
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Mega Man 2",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "consumables": "1up_etank",
@@ -1668,29 +1666,6 @@
           "display_name": "Yoku Block Jumps"
         }
       },
-      "world_directory": "mm2"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Mega Man 2",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "partyTime",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Mega Man 2 randomizer connected to an Archipelago Multiworld.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Silvris"
-          ]
-        }
-      ],
       "world_description": "In the year 200X, following his prior defeat by Mega Man, the evil Dr. Wily has returned to take over the world with\nhis own group of Robot Masters. Mega Man once again sets out to defeat the eight Robot Masters and stop Dr. Wily.",
       "slot_data": {
         "death_link": 0,
@@ -1851,8 +1826,36 @@
           "7": [],
           "12": []
         }
-      }
+      },
+      "web": {
+        "theme": "partyTime",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Mega Man 2 randomizer connected to an Archipelago Multiworld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Silvris"
+            ]
+          }
+        ]
+      },
+      "world_directory": "mm2"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {
     "1": {

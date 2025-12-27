@@ -12411,11 +12411,9 @@
       "Nirvana (MAP21)"
     ]
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "DOOM II",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "added_ammo_bullets": 200,
@@ -12640,29 +12638,6 @@
           "display_name": "Start With Computer Area Maps"
         }
       },
-      "world_directory": "doom_ii"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "DOOM II",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "dirt",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the DOOM II randomizer connected to an Archipelago Multiworld",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Daivuk"
-          ]
-        }
-      ],
       "world_description": "Doom II, also known as Doom II: Hell on Earth, is a first-person shooter game by id Software.\nIt was released for MS-DOS in 1994.\nCompared to its predecessor, Doom II features larger levels, new enemies, a new \"super shotgun\" weapon",
       "slot_data": {
         "difficulty": 2,
@@ -12686,8 +12661,36 @@
         "ammo2add": 50,
         "ammo3add": 300,
         "ammo4add": 50
-      }
+      },
+      "web": {
+        "theme": "dirt",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the DOOM II randomizer connected to an Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Daivuk"
+            ]
+          }
+        ]
+      },
+      "world_directory": "doom_ii"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }

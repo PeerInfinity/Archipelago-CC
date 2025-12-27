@@ -23203,11 +23203,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "The Legend of Zelda",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "ExpandedPool": "true",
         "StartingPosition": "safe",
@@ -23268,37 +23266,42 @@
           "display_name": "Progression Balancing"
         }
       },
-      "world_directory": "tloz"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "The Legend of Zelda",
-      "rule_format": {
-        "version": "1.0"
-      },
       "base_id": 7000,
-      "web_theme": "stone",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up The Legend of Zelda for Archipelago on your computer.",
-          "language": "English",
-          "file_name": "multiworld_en.md",
-          "link": "multiworld/en",
-          "authors": [
-            "Rosalie and Figment"
-          ]
-        }
-      ],
       "world_description": "The Legend of Zelda needs almost no introduction. Gather the eight fragments of the\nTriforce of Wisdom, enter Death Mountain, defeat Ganon, and rescue Princess Zelda.\nThis randomizer shuffles all the items in the game around, leading to a new adventure\nevery time.",
       "slot_data": {
         "TakeAnyLeft": 7115,
         "TakeAnyMiddle": 7126,
         "TakeAnyRight": 7129
-      }
+      },
+      "web": {
+        "theme": "stone",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up The Legend of Zelda for Archipelago on your computer.",
+            "language": "English",
+            "file_name": "multiworld_en.md",
+            "link": "multiworld/en",
+            "authors": [
+              "Rosalie and Figment"
+            ]
+          }
+        ]
+      },
+      "world_directory": "tloz"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }

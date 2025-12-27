@@ -18590,6 +18590,11 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "_has_any_scroll",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "CanReachLocation",
                   "args": {
                     "location_name": {
@@ -18597,35 +18602,6 @@
                       "value": "FK: Cinders of a Lord - Abyss Watcher"
                     }
                   }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Crystal Scroll"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Golden Scroll"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Logan's Scroll"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Sage's Scroll"
-                      }
-                    }
-                  ]
                 }
               ]
             },
@@ -18687,6 +18663,11 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "_has_any_scroll",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "CanReachLocation",
                   "args": {
                     "location_name": {
@@ -18694,35 +18675,6 @@
                       "value": "FK: Cinders of a Lord - Abyss Watcher"
                     }
                   }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Crystal Scroll"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Golden Scroll"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Logan's Scroll"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Sage's Scroll"
-                      }
-                    }
-                  ]
                 }
               ]
             },
@@ -18742,6 +18694,11 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "_has_any_scroll",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "CanReachLocation",
                   "args": {
                     "location_name": {
@@ -18749,35 +18706,6 @@
                       "value": "FK: Cinders of a Lord - Abyss Watcher"
                     }
                   }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Crystal Scroll"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Golden Scroll"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Logan's Scroll"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Sage's Scroll"
-                      }
-                    }
-                  ]
                 }
               ]
             },
@@ -18797,6 +18725,11 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "_has_any_scroll",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "CanReachLocation",
                   "args": {
                     "location_name": {
@@ -18804,35 +18737,6 @@
                       "value": "FK: Cinders of a Lord - Abyss Watcher"
                     }
                   }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Crystal Scroll"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Golden Scroll"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Logan's Scroll"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Sage's Scroll"
-                      }
-                    }
-                  ]
                 }
               ]
             },
@@ -18852,6 +18756,11 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "_has_any_scroll",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
                   "rule": "CanReachLocation",
                   "args": {
                     "location_name": {
@@ -18859,35 +18768,6 @@
                       "value": "FK: Cinders of a Lord - Abyss Watcher"
                     }
                   }
-                },
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Crystal Scroll"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Golden Scroll"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Logan's Scroll"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Sage's Scroll"
-                      }
-                    }
-                  ]
                 }
               ]
             },
@@ -36154,11 +36034,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Dark Souls III",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "all_chests_are_mimics": "false",
@@ -37270,31 +37148,7 @@
           "display_name": "Smooth Upgraded Weapons"
         }
       },
-      "world_directory": "dark_souls_3"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Dark Souls III",
-      "rule_format": {
-        "version": "1.0"
-      },
       "base_id": 100000,
-      "web_theme": "stone",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Archipelago Dark Souls III randomizer on your computer.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Natalie",
-            "Marech"
-          ]
-        }
-      ],
       "world_description": "Dark souls III is an Action role-playing game and is part of the Souls series developed by FromSoftware.\nPlayed from a third-person perspective, players have access to various weapons, armour, magic, and consumables that\nthey can use to fight their enemies.",
       "slot_data": {
         "options": {
@@ -38691,8 +38545,105 @@
           "101505": "07,0:50006150::"
         },
         "versions": ">=3.0.0-beta.24 <3.1.0"
-      }
+      },
+      "web": {
+        "theme": "stone",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago Dark Souls III randomizer on your computer.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Natalie",
+              "Marech"
+            ]
+          }
+        ]
+      },
+      "world_directory": "dark_souls_3"
     }
   },
-  "helpers": {}
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
+  },
+  "helpers": {
+    "1": {
+      "_can_get": {
+        "params": [
+          "location"
+        ],
+        "body": {
+          "type": "state_method",
+          "method": "can_reach_location",
+          "args": [
+            {
+              "type": "name",
+              "name": "location"
+            }
+          ]
+        }
+      },
+      "_can_go_to": {
+        "params": [
+          "region"
+        ],
+        "body": {
+          "type": "state_method",
+          "method": "can_reach_entrance",
+          "args": [
+            {
+              "type": "f_string",
+              "parts": [
+                {
+                  "type": "constant",
+                  "value": "Go To "
+                },
+                {
+                  "type": "formatted_value",
+                  "value": {
+                    "type": "name",
+                    "name": "region"
+                  }
+                }
+              ],
+              "all_simple": true,
+              "value": "Go To {region}"
+            }
+          ]
+        }
+      },
+      "_has_any_scroll": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Sage's Scroll"
+          },
+          {
+            "type": "item_check",
+            "item": "Golden Scroll"
+          },
+          {
+            "type": "item_check",
+            "item": "Logan's Scroll"
+          },
+          {
+            "type": "item_check",
+            "item": "Crystal Scroll"
+          }
+        ]
+      }
+    }
+  }
 }

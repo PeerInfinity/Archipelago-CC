@@ -1736,11 +1736,9 @@
       "Statement 1"
     ]
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Metamath",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "auto_download_database": "true",
@@ -1810,17 +1808,6 @@
           "display_name": "Theorem to Prove"
         }
       },
-      "world_directory": "metamath"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Metamath",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "grass",
       "world_description": "Turn MetaMath proofs into Archipelago worlds!\nEach proof step is both a location (proving it) and an item (ability to use it).\nNavigate logical dependencies across the multiworld to complete your proof.",
       "slot_data": {
         "proof_structure": {
@@ -1875,9 +1862,9 @@
             "label": "3eqtri",
             "expression": "|- A = D",
             "dependencies": [
-              3,
               6,
-              7
+              7,
+              3
             ],
             "full_text": "3eqtri: Register '=' as an equality for its type (class). $) $( $j equality 'wceq' from 'eqid' 'eqcomi' 'eqtri'; $) ${ 3eqtri.1 $e |- A = B $. 3eqtri.2 $e |- B = C $. 3eqtri.3 $e |- C = D $. $( An inference from three chained equalities.  (Contributed by NM, 29-Aug-1993.) (|- A = D)"
           },
@@ -1904,8 +1891,24 @@
         ],
         "theorem": "2p2e4",
         "randomize_items": false
-      }
+      },
+      "web": {
+        "theme": "grass"
+      },
+      "world_directory": "metamath"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }
