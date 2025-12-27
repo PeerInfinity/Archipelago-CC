@@ -21,10 +21,10 @@ class V6GameExportHandler(GenericGameExportHandler):
     # Store world data for post-processing
     _world_data: Dict[int, Dict[str, Any]] = {}
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Extracts VVVVVV-specific settings including door_cost and area_cost_map."""
         # Get base settings from parent class
-        settings_dict = super().get_settings_data(world, multiworld, player)
+        settings_dict = super().get_world_data(world, multiworld, player)
 
         # Add VVVVVV-specific settings
         try:

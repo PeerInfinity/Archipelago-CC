@@ -1220,7 +1220,43 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       case 'value': // Handles literal values encoded as nodes
       case 'constant': {
         // Keep constant for backward compatibility
-        result = rule.value;
+        // However, if the value is an object or array containing nested rule objects,
+        // we need to recursively evaluate them. This happens when helper definitions
+        // have parameterized dictionaries like: {"item": {"type": "name", "name": "level"}}
+        const constValue = rule.value;
+
+        if (constValue !== null && typeof constValue === 'object') {
+          if (Array.isArray(constValue)) {
+            // Evaluate each element if it's a rule
+            result = constValue.map(elem => {
+              if (elem && typeof elem === 'object' && (elem.type || elem.rule)) {
+                return evaluateRule(elem, context, depth + 1, localScope);
+              }
+              return elem;
+            });
+          } else {
+            // Check if any values in the object are rules that need evaluation
+            const hasNestedRules = Object.values(constValue).some(
+              v => v && typeof v === 'object' && (v.type || v.rule)
+            );
+
+            if (hasNestedRules) {
+              // Recursively evaluate nested rule objects
+              result = {};
+              for (const [key, val] of Object.entries(constValue)) {
+                if (val && typeof val === 'object' && (val.type || val.rule)) {
+                  result[key] = evaluateRule(val, context, depth + 1, localScope);
+                } else {
+                  result[key] = val;
+                }
+              }
+            } else {
+              result = constValue;
+            }
+          }
+        } else {
+          result = constValue;
+        }
         break;
       }
 
@@ -5108,6 +5144,18 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       if (weightSum >= requiredCount) return true;
       if (weightSum + undefinedWeightSum >= requiredCount) return undefined;
       return false;
+    }
+
+    // AST_prog_item_count (from DLCQuest and other games with accumulator items)
+    // Returns the count of a progression item from state.prog_items[player][key]
+    case 'AST_prog_item_count': {
+      const progKey = args.key;
+      if (progKey === undefined) {
+        log('warn', '[evaluateRuleBuilderRule] AST_prog_item_count: missing key');
+        return undefined;
+      }
+      // Delegate to the prog_item_count handler
+      return evaluateRule({ type: 'prog_item_count', key: progKey }, context, depth + 1, localScope);
     }
 
     // Reachability rules

@@ -1,8 +1,11 @@
 # exporter/games/alttp.py
 
+import logging
 from .base import BaseGameExportHandler
 from typing import Any, Dict
 from worlds.alttp.Items import progression_mapping
+
+logger = logging.getLogger(__name__)
 
 
 class ALttPGameExportHandler(BaseGameExportHandler):
@@ -18,6 +21,13 @@ class ALttPGameExportHandler(BaseGameExportHandler):
 
     # Auto-discover world attributes (shops, dungeons, difficulty_requirements, etc.)
     AUTO_DISCOVER_WORLD_ATTRIBUTES = True
+
+    def replace_name(self, name: str) -> str:
+        """Replace ALTTP-specific name references with standard equivalents."""
+        if name == 'ep_boss' or name == 'ep_prize':
+            logger.debug(f"ALTTP: Replacing '{name}' with 'location'")
+            return 'location'
+        return name
 
     def get_progression_mapping(self, world) -> Dict[str, Any]:
         """Return ALTTP-specific progression item mapping."""

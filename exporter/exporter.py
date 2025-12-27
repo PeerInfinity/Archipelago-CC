@@ -1361,13 +1361,26 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             expanded_rule = None
                             entrance_name = getattr(entrance, 'name', None)
                             if hasattr(entrance, 'access_rule') and entrance.access_rule is not None:
-                                expanded_rule = safe_expand_rule(
-                                    game_handler,
-                                    entrance.access_rule,
-                                    entrance_name,
-                                    target_type='Entrance',
-                                    world=world
-                                )
+                                rule_to_analyze = entrance.access_rule
+
+                                # Try special handling first for complex entrance rules
+                                # (e.g., LADX which uses custom entrance classes with condition attributes)
+                                if game_handler and hasattr(game_handler, 'handle_complex_entrance_rule'):
+                                    special_rule = game_handler.handle_complex_entrance_rule(entrance_name, rule_to_analyze)
+                                    if special_rule:
+                                        expanded_rule = game_handler.expand_rule(special_rule)
+                                        # Resolve any attribute nodes in item_check rules
+                                        expanded_rule = resolve_attribute_nodes_in_rule(expanded_rule, world)
+
+                                # If no special handling, use normal analysis
+                                if expanded_rule is None:
+                                    expanded_rule = safe_expand_rule(
+                                        game_handler,
+                                        rule_to_analyze,
+                                        entrance_name,
+                                        target_type='Entrance',
+                                        world=world
+                                    )
 
                                 # Post-process the entrance rule if the game handler supports it
                                 if expanded_rule and game_handler and hasattr(game_handler, 'postprocess_entrance_rule'):

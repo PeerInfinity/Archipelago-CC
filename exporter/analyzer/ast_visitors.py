@@ -2166,13 +2166,18 @@ class ASTVisitorMixin:
                     logging.debug(f"visit_Name: Found Region object '{name}' in closure, keeping as name reference for attribute access")
                     # Don't convert to string here - let attribute access or other operations handle it
                     pass
-                # Handle Location objects - replace with 'location' keyword
+                # Handle Location objects - DON'T convert to 'location' keyword
                 # Location objects have 'name' and 'parent_region' but NOT 'entrances'
-                # Using 'location' keyword allows the frontend to resolve the current location
-                # and access its attributes (e.g., location.parent_region.dungeon.boss)
+                # Keep the original variable name so that downstream handlers (like can_reach)
+                # can resolve the actual location object and extract its name.
+                # For patterns like loc.can_reach(state), the can_reach handler will resolve
+                # 'loc' from closure_vars to get the actual location name.
+                # For patterns like location.parent_region.dungeon.boss where the variable
+                # is literally named 'location', the original name is preserved.
                 elif hasattr(value, 'name') and hasattr(value, 'parent_region') and not hasattr(value, 'entrances'):
-                    logging.debug(f"visit_Name: Found Location object '{name}' in closure with location name '{value.name}', replacing with 'location'")
-                    return {'type': 'name', 'name': 'location'}
+                    logging.debug(f"visit_Name: Found Location object '{name}' in closure with location name '{value.name}', keeping as name reference")
+                    # Don't convert to 'location' keyword - let can_reach handler resolve it
+                    pass
 
             # Also check function defaults and module globals
             # When preserve_parameter_names is True, skip resolution for actual function parameters
