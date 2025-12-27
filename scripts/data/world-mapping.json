@@ -1432,7 +1432,7 @@
   },
   "Yoshi's Island": {
     "exporter_path": "exporter/games/yoshisisland.py",
-    "exporter_size": 11956,
+    "exporter_size": 12335,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,

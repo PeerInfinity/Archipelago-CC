@@ -16,7 +16,7 @@
       ],
       "last_updated": "2025-12-26T23:30:53.558588"
     },
-    "last_updated": "2025-12-26T23:30:53.558585",
+    "last_updated": "2025-12-27T04:07:41.467975",
     "script_version": "1.0.0"
   },
   "results": {
@@ -4156,50 +4156,38 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "5db97f44a552083777577c07d55aa0d6c883e102df10764499af37d7075f1e08",
-          "new_sphere_log_hash": "229a997b4adb3a670d99dc4aafded400d9c5e94792d0b036cc9ba850f656ade8",
-          "original_rules_hash": "5db97f44a552083777577c07d55aa0d6c883e102df10764499af37d7075f1e08",
-          "original_sphere_log_hash": "229a997b4adb3a670d99dc4aafded400d9c5e94792d0b036cc9ba850f656ade8",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-26T23:27:43.806492"
-        }
-      },
       "game_name_from_filename": "yoshisisland",
       "game_name_from_yaml": "Yoshi's Island",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.26,
+        "processing_time_seconds": 8.06,
         "return_code": 0,
         "success": true,
-        "warning_count": 3
+        "warning_count": 2
       },
       "rules_file": {
         "path": "frontend/presets/yoshisisland/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 284317,
-        "size_mb": 0.27
+        "size_bytes": 273705,
+        "size_mb": 0.26
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 14.27,
-        "return_code": 1,
-        "sphere_reached": 0.0,
-        "success": false,
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 13.75,
+        "return_code": 0,
+        "sphere_reached": 12.4,
+        "success": true,
         "total_spheres": 12.4,
         "warning_count": 0
       },
       "template_filename": "Yoshi's Island.yaml",
-      "timestamp": "2025-12-26T23:26:46.533991",
+      "timestamp": "2025-12-27T04:07:19.245922",
       "world_info": {
         "exporter_path": "exporter/games/yoshisisland.py",
-        "exporter_size": 11956,
+        "exporter_size": 12335,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "yoshisisland",
