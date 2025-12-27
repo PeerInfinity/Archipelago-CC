@@ -20,6 +20,9 @@ class MMBN3GameExportHandler(GenericGameExportHandler):
 
         MMBN3's explore_score helper is defined as a method on the world class,
         so we need to manually export it as a rule definition.
+
+        Also exports simple item check helpers (has_www_id, has_press) and
+        the can_unlock helper which checks region accessibility or item count.
         """
         helpers = {}
 
@@ -37,6 +40,38 @@ class MMBN3GameExportHandler(GenericGameExportHandler):
                 'op': '==',
                 'right': {'type': 'constant', 'value': True}
             }
+
+        # has_www_id: state.has(ItemName.WWW_ID, self.player)
+        # Simple item check for "WWW ID"
+        helpers['has_www_id'] = {
+            'type': 'item_check',
+            'item': 'WWW ID'
+        }
+
+        # has_press: state.has(ItemName.Press, self.player)
+        # Simple item check for "Press"
+        helpers['has_press'] = {
+            'type': 'item_check',
+            'item': 'Press'
+        }
+
+        # can_unlock: state.can_reach_region(SciLab_Overworld) or
+        #             state.can_reach_region(SciLab_Cyberworld) or
+        #             state.can_reach_region(Yoka_Cyberworld) or
+        #             state.has(Unlocker, 8)
+        helpers['can_unlock'] = {
+            'type': 'or',
+            'conditions': [
+                can_reach_region('SciLab Overworld'),
+                can_reach_region('SciLab Cyberworld'),
+                can_reach_region('Yoka Cyberworld'),
+                {
+                    'type': 'item_check',
+                    'item': 'Unlocker',
+                    'count': 8
+                }
+            ]
+        }
 
         # Helper function to create a conditional score contribution
         def score_if_reachable(region_name: str, score: int):
