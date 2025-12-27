@@ -23,9 +23,24 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
 
     # Whitelist helpers that should always be exported
     # These are from BossReqs class and called via bosses.method_name()
+    # and YoshiLogic class helpers needed for location access rules
     HELPERS_TO_EXPORT_WHITELIST = {
+        # BossReqs class helpers
         'castle_access',
         'castle_clear',
+        # YoshiLogic class helpers - needed for location access rules
+        'has_midring',
+        'reconstitute_luigi',
+        'bandit_bonus',
+        'item_bonus',
+        'combat_item',
+        'melon_item',
+        'default_vis',
+        'cansee_clouds',
+        'bowserdoor_1',
+        'bowserdoor_2',
+        'bowserdoor_3',
+        'bowserdoor_4',
     }
 
     # Define Yoshi's Island-specific helpers that should NOT be auto-expanded
@@ -155,10 +170,10 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
 
         return data
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extract Yoshi's Island settings."""
-        # Get base settings (ASSUME_BIDIRECTIONAL_EXITS = False is the default)
-        settings_dict = super().get_settings_data(world, multiworld, player)
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Extract Yoshi's Island world data including computed settings for helpers."""
+        # Get base world data
+        world_data = super().get_world_data(world, multiworld, player)
 
         # Default values for Yoshi's Island options (used for WorldGen worlds that lack these options)
         # These match the defaults in the original Yoshi's Island world
@@ -187,50 +202,50 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
         # Yoshi's Island specific settings needed for helper functions
         if hasattr(world, 'options'):
             # Raw option values for backwards compatibility
-            settings_dict['StageLogic'] = extract_option('stage_logic')
-            settings_dict['HiddenObjectVisibility'] = extract_option('hidden_object_visibility')
-            settings_dict['ShuffleMiddleRings'] = extract_option('shuffle_midrings')
-            settings_dict['ItemLogic'] = extract_option('item_logic')
-            settings_dict['BowserDoorMode'] = extract_option('bowser_door_mode')
-            settings_dict['LuigiPiecesRequired'] = extract_option('luigi_pieces_required')
-            settings_dict['CastleClearCondition'] = extract_option('castle_clear_condition')
-            settings_dict['CastleOpenCondition'] = extract_option('castle_open_condition')
+            world_data['StageLogic'] = extract_option('stage_logic')
+            world_data['HiddenObjectVisibility'] = extract_option('hidden_object_visibility')
+            world_data['ShuffleMiddleRings'] = extract_option('shuffle_midrings')
+            world_data['ItemLogic'] = extract_option('item_logic')
+            world_data['BowserDoorMode'] = extract_option('bowser_door_mode')
+            world_data['LuigiPiecesRequired'] = extract_option('luigi_pieces_required')
+            world_data['CastleClearCondition'] = extract_option('castle_clear_condition')
+            world_data['CastleOpenCondition'] = extract_option('castle_open_condition')
 
             # Computed values that match YoshiLogic instance attributes
             # These are referenced by exported helpers as self.attribute
             stage_logic = extract_option('stage_logic')
             if stage_logic == 0:  # StageLogic.option_strict
-                settings_dict['game_logic'] = "Easy"
+                world_data['game_logic'] = "Easy"
             elif stage_logic == 1:  # StageLogic.option_loose
-                settings_dict['game_logic'] = "Normal"
+                world_data['game_logic'] = "Normal"
             else:  # StageLogic.option_expert
-                settings_dict['game_logic'] = "Hard"
+                world_data['game_logic'] = "Hard"
 
             # midring_start = not shuffle_midrings
-            settings_dict['midring_start'] = not extract_option('shuffle_midrings')
+            world_data['midring_start'] = not extract_option('shuffle_midrings')
 
             # clouds_always_visible = hidden_object_visibility >= ObjectVis.option_clouds_only (2)
-            settings_dict['clouds_always_visible'] = extract_option('hidden_object_visibility') >= 2
+            world_data['clouds_always_visible'] = extract_option('hidden_object_visibility') >= 2
 
             # consumable_logic = not item_logic
-            settings_dict['consumable_logic'] = not extract_option('item_logic')
+            world_data['consumable_logic'] = not extract_option('item_logic')
 
             # bowser_door with special case for door_4 -> door_3
             bowser_door = extract_option('bowser_door_mode')
             if bowser_door == 4:  # BowserDoor.option_door_4
                 bowser_door = 3  # BowserDoor.option_door_3
-            settings_dict['bowser_door'] = bowser_door
+            world_data['bowser_door'] = bowser_door
 
             # luigi_pieces from option
-            settings_dict['luigi_pieces'] = extract_option('luigi_pieces_required')
+            world_data['luigi_pieces'] = extract_option('luigi_pieces_required')
 
             # Export boss_order list for _xxCanFightBoss helpers
             # This is dynamically set during world setup based on boss shuffle option
             if hasattr(world, 'boss_order') and world.boss_order:
-                settings_dict['boss_order'] = list(world.boss_order)
+                world_data['boss_order'] = list(world.boss_order)
             else:
                 # Default boss order if not shuffled (names must match actual location names)
-                settings_dict['boss_order'] = [
+                world_data['boss_order'] = [
                     "Burt The Bashful's Boss Room",
                     "Salvo The Slime's Boss Room",
                     "Bigger Boo's Boss Room",
@@ -246,7 +261,7 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
 
             # Settings for BossReqs class (castle_access, castle_clear helpers)
             # These use self.castle_unlock and self.boss_unlock which are from options
-            settings_dict['castle_unlock'] = extract_option('castle_open_condition')
-            settings_dict['boss_unlock'] = extract_option('castle_clear_condition')
+            world_data['castle_unlock'] = extract_option('castle_open_condition')
+            world_data['boss_unlock'] = extract_option('castle_clear_condition')
 
-        return settings_dict
+        return world_data
