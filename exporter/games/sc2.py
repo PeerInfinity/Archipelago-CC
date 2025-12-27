@@ -1498,9 +1498,9 @@ class SC2GameExportHandler(GenericGameExportHandler):
         # Attribute not recognized
         return None
 
-    def get_settings_data(self, world, multiworld, player: int) -> Dict[str, Any]:
+    def get_world_data(self, world, multiworld, player: int) -> Dict[str, Any]:
         """Extract Starcraft 2 settings for export."""
-        settings_dict = super().get_settings_data(world, multiworld, player)
+        settings_dict = super().get_world_data(world, multiworld, player)
 
         # Export all SC2 options
         if hasattr(world, 'options'):
