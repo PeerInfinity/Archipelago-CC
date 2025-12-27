@@ -390,17 +390,17 @@ class LingoGameExportHandler(GenericGameExportHandler):
 
         return attributes
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
         """
-        Export Lingo-specific settings needed for rule evaluation.
+        Export Lingo-specific world data needed for rule evaluation.
 
         This exports data structures that the rule engine needs to evaluate
         entrance access rules that contain unresolved variable references.
 
         For worldgen worlds, reads settings from _worldgen_settings.json instead.
         """
-        # Get base settings from parent class
-        settings = super().get_settings_data(world, multiworld, player)
+        # Get base world data from parent class
+        settings = super().get_world_data(world, multiworld, player)
 
         # Check if this is a worldgen world
         if self._is_worldgen_world(world):
