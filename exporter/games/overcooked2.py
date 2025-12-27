@@ -154,13 +154,13 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
         # Return None to use default analysis
         return None
 
-    def expand_helper(self, helper_name: str):
+    def expand_helper(self, helper_name: str, args=None):
         """Expand Overcooked! 2 helper functions."""
         # Preserve level star requirements as helper - implemented in frontend JavaScript
         if helper_name in ['has_requirements_for_level_star', 'has_requirements_for_level_access']:
             return None  # Keep as helper
 
-        return super().expand_helper(helper_name)
+        return super().expand_helper(helper_name, args)
 
     def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Post-process analyzed rules to expand Overcooked! 2-specific helpers."""

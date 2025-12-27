@@ -6810,6 +6810,9 @@
           "display_name": "Trap Link"
         }
       },
+      "actual_egg_count": 0,
+      "required_egg_count": 0,
+      "rom_name": "SMW_ROM_NOT_GENERATED",
       "world_description": "Super Mario World is an action platforming game.\nThe Princess has been kidnapped by Bowser again, but Mario has somehow\nlost all of his abilities. Can he get them back in time to save the Princess?",
       "slot_data": {
         "dragon_coin_checks": 0,

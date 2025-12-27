@@ -31,7 +31,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 136,
+            "rel_cost": 235,
+            "revealed": true
           },
           {
             "name": "AP-5-349",
@@ -71,7 +75,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 185,
+            "rel_cost": 349,
+            "revealed": true
           },
           {
             "name": "AP-1-798",
@@ -88,7 +96,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 426,
+            "rel_cost": 798,
+            "revealed": true
           },
           {
             "name": "AP-5-126",
@@ -128,7 +140,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 93,
+            "rel_cost": 126,
+            "revealed": true
           },
           {
             "name": "AP-2-328",
@@ -145,7 +161,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 181,
+            "rel_cost": 328,
+            "revealed": true
           },
           {
             "name": "AP-4-431",
@@ -173,7 +193,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 219,
+            "rel_cost": 431,
+            "revealed": true
           },
           {
             "name": "AP-3-926",
@@ -201,7 +225,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 462,
+            "rel_cost": 926,
+            "revealed": true
           },
           {
             "name": "AP-1-757",
@@ -218,7 +246,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 389,
+            "rel_cost": 757,
+            "revealed": true
           },
           {
             "name": "AP-3-413",
@@ -246,7 +278,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 211,
+            "rel_cost": 413,
+            "revealed": true
           },
           {
             "name": "AP-4-529",
@@ -286,7 +322,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 273,
+            "rel_cost": 529,
+            "revealed": true
           },
           {
             "name": "AP-2-416",
@@ -314,7 +354,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 215,
+            "rel_cost": 416,
+            "revealed": true
           },
           {
             "name": "AP-4-304",
@@ -354,7 +398,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 176,
+            "rel_cost": 304,
+            "revealed": true
           },
           {
             "name": "AP-4-024",
@@ -394,7 +442,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 25,
+            "rel_cost": 24,
+            "revealed": true
           },
           {
             "name": "AP-6-946",
@@ -440,7 +492,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "complexity": 5,
+            "count": 473,
+            "rel_cost": 946,
+            "revealed": true
           },
           {
             "name": "AP-4-169",
@@ -480,7 +536,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 107,
+            "rel_cost": 169,
+            "revealed": true
           },
           {
             "name": "AP-4-954",
@@ -508,7 +568,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 480,
+            "rel_cost": 954,
+            "revealed": true
           },
           {
             "name": "AP-3-041",
@@ -542,7 +606,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 32,
+            "rel_cost": 41,
+            "revealed": true
           },
           {
             "name": "AP-4-822",
@@ -570,7 +638,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 432,
+            "rel_cost": 822,
+            "revealed": true
           },
           {
             "name": "AP-2-179",
@@ -598,7 +670,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 110,
+            "rel_cost": 179,
+            "revealed": true
           },
           {
             "name": "AP-1-097",
@@ -615,7 +691,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 74,
+            "rel_cost": 97,
+            "revealed": true
           },
           {
             "name": "AP-2-634",
@@ -643,7 +723,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 315,
+            "rel_cost": 634,
+            "revealed": true
           },
           {
             "name": "AP-3-974",
@@ -677,7 +761,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 490,
+            "rel_cost": 974,
+            "revealed": true
           },
           {
             "name": "AP-2-688",
@@ -705,7 +793,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 358,
+            "rel_cost": 688,
+            "revealed": true
           },
           {
             "name": "AP-4-499",
@@ -733,7 +825,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 251,
+            "rel_cost": 499,
+            "revealed": true
           },
           {
             "name": "AP-4-738",
@@ -767,7 +863,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 384,
+            "rel_cost": 738,
+            "revealed": true
           },
           {
             "name": "AP-1-141",
@@ -784,7 +884,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 101,
+            "rel_cost": 141,
+            "revealed": true
           },
           {
             "name": "AP-2-683",
@@ -812,7 +916,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 346,
+            "rel_cost": 683,
+            "revealed": true
           },
           {
             "name": "AP-2-650",
@@ -840,7 +948,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 328,
+            "rel_cost": 650,
+            "revealed": true
           },
           {
             "name": "AP-1-459",
@@ -857,7 +969,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 221,
+            "rel_cost": 459,
+            "revealed": true
           },
           {
             "name": "AP-1-055",
@@ -874,7 +990,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "complexity": 0,
+            "count": 10,
+            "rel_cost": 55,
+            "revealed": true
           },
           {
             "name": "AP-5-117",
@@ -891,7 +1011,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 85,
+            "rel_cost": 117,
+            "revealed": true
           },
           {
             "name": "AP-2-269",
@@ -919,7 +1043,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 142,
+            "rel_cost": 269,
+            "revealed": true
           },
           {
             "name": "AP-5-220",
@@ -959,7 +1087,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 136,
+            "rel_cost": 220,
+            "revealed": true
           },
           {
             "name": "AP-5-338",
@@ -999,7 +1131,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 182,
+            "rel_cost": 338,
+            "revealed": true
           },
           {
             "name": "AP-4-022",
@@ -1039,7 +1175,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 20,
+            "rel_cost": 22,
+            "revealed": true
           },
           {
             "name": "AP-2-413",
@@ -1067,7 +1207,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 213,
+            "rel_cost": 413,
+            "revealed": true
           },
           {
             "name": "AP-2-502",
@@ -1084,7 +1228,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 253,
+            "rel_cost": 502,
+            "revealed": true
           },
           {
             "name": "AP-3-722",
@@ -1112,7 +1260,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 373,
+            "rel_cost": 722,
+            "revealed": true
           },
           {
             "name": "AP-3-806",
@@ -1140,7 +1292,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 430,
+            "rel_cost": 806,
+            "revealed": true
           },
           {
             "name": "AP-2-524",
@@ -1157,7 +1313,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 263,
+            "rel_cost": 524,
+            "revealed": true
           },
           {
             "name": "AP-1-769",
@@ -1174,7 +1334,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 403,
+            "rel_cost": 769,
+            "revealed": true
           },
           {
             "name": "AP-6-011",
@@ -1214,7 +1378,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 8,
+            "rel_cost": 11,
+            "revealed": true
           },
           {
             "name": "AP-4-013",
@@ -1254,7 +1422,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 15,
+            "rel_cost": 13,
+            "revealed": true
           },
           {
             "name": "AP-4-849",
@@ -1294,7 +1466,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 439,
+            "rel_cost": 849,
+            "revealed": true
           },
           {
             "name": "AP-4-600",
@@ -1328,7 +1504,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 303,
+            "rel_cost": 600,
+            "revealed": true
           },
           {
             "name": "AP-4-374",
@@ -1362,7 +1542,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 194,
+            "rel_cost": 374,
+            "revealed": true
           },
           {
             "name": "AP-6-002",
@@ -1402,7 +1586,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 5,
+            "rel_cost": 2,
+            "revealed": true
           },
           {
             "name": "AP-2-654",
@@ -1419,7 +1607,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 333,
+            "rel_cost": 654,
+            "revealed": true
           },
           {
             "name": "AP-4-274",
@@ -1459,7 +1651,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 152,
+            "rel_cost": 274,
+            "revealed": true
           },
           {
             "name": "AP-2-272",
@@ -1487,7 +1683,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 150,
+            "rel_cost": 272,
+            "revealed": true
           },
           {
             "name": "AP-3-129",
@@ -1504,7 +1704,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 99,
+            "rel_cost": 129,
+            "revealed": true
           },
           {
             "name": "AP-2-072",
@@ -1532,7 +1736,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 47,
+            "rel_cost": 72,
+            "revealed": true
           },
           {
             "name": "AP-2-898",
@@ -1560,7 +1768,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 454,
+            "rel_cost": 898,
+            "revealed": true
           },
           {
             "name": "AP-4-696",
@@ -1600,7 +1812,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 361,
+            "rel_cost": 696,
+            "revealed": true
           },
           {
             "name": "AP-1-633",
@@ -1617,7 +1833,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 306,
+            "rel_cost": 633,
+            "revealed": true
           },
           {
             "name": "AP-4-972",
@@ -1657,7 +1877,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 490,
+            "rel_cost": 972,
+            "revealed": true
           },
           {
             "name": "AP-1-076",
@@ -1674,7 +1898,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 52,
+            "rel_cost": 76,
+            "revealed": true
           },
           {
             "name": "AP-3-719",
@@ -1708,7 +1936,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 368,
+            "rel_cost": 719,
+            "revealed": true
           },
           {
             "name": "AP-1-880",
@@ -1725,7 +1957,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 445,
+            "rel_cost": 880,
+            "revealed": true
           },
           {
             "name": "AP-5-703",
@@ -1753,7 +1989,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 367,
+            "rel_cost": 703,
+            "revealed": true
           },
           {
             "name": "AP-1-211",
@@ -1770,7 +2010,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 130,
+            "rel_cost": 211,
+            "revealed": true
           },
           {
             "name": "AP-6-676",
@@ -1804,7 +2048,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 338,
+            "rel_cost": 676,
+            "revealed": true
           },
           {
             "name": "AP-5-735",
@@ -1844,7 +2092,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 378,
+            "rel_cost": 735,
+            "revealed": true
           },
           {
             "name": "AP-2-270",
@@ -1872,7 +2124,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 148,
+            "rel_cost": 270,
+            "revealed": true
           },
           {
             "name": "AP-5-755",
@@ -1906,7 +2162,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 388,
+            "rel_cost": 755,
+            "revealed": true
           },
           {
             "name": "AP-1-754",
@@ -1923,7 +2183,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 387,
+            "rel_cost": 754,
+            "revealed": true
           },
           {
             "name": "AP-2-861",
@@ -1951,7 +2215,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 439,
+            "rel_cost": 861,
+            "revealed": true
           },
           {
             "name": "AP-6-077",
@@ -1991,7 +2259,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 54,
+            "rel_cost": 77,
+            "revealed": true
           },
           {
             "name": "AP-2-469",
@@ -2019,7 +2291,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 224,
+            "rel_cost": 469,
+            "revealed": true
           },
           {
             "name": "AP-5-464",
@@ -2053,7 +2329,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 222,
+            "rel_cost": 464,
+            "revealed": true
           },
           {
             "name": "AP-3-954",
@@ -2087,7 +2367,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 481,
+            "rel_cost": 954,
+            "revealed": true
           },
           {
             "name": "AP-3-886",
@@ -2121,7 +2405,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 447,
+            "rel_cost": 886,
+            "revealed": true
           },
           {
             "name": "AP-4-999",
@@ -2155,7 +2443,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 500,
+            "rel_cost": 999,
+            "revealed": true
           },
           {
             "name": "AP-5-609",
@@ -2201,7 +2493,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 304,
+            "rel_cost": 609,
+            "revealed": true
           },
           {
             "name": "AP-6-201",
@@ -2253,7 +2549,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 122,
+            "rel_cost": 201,
+            "revealed": true
           },
           {
             "name": "AP-5-316",
@@ -2287,7 +2587,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 178,
+            "rel_cost": 316,
+            "revealed": true
           },
           {
             "name": "AP-4-829",
@@ -2315,7 +2619,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 437,
+            "rel_cost": 829,
+            "revealed": true
           },
           {
             "name": "AP-3-702",
@@ -2349,7 +2657,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 362,
+            "rel_cost": 702,
+            "revealed": true
           },
           {
             "name": "AP-1-983",
@@ -2366,7 +2678,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 493,
+            "rel_cost": 983,
+            "revealed": true
           },
           {
             "name": "AP-3-953",
@@ -2394,7 +2710,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 478,
+            "rel_cost": 953,
+            "revealed": true
           },
           {
             "name": "AP-2-996",
@@ -2411,7 +2731,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 494,
+            "rel_cost": 996,
+            "revealed": true
           },
           {
             "name": "AP-1-080",
@@ -2428,7 +2752,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 72,
+            "rel_cost": 80,
+            "revealed": true
           },
           {
             "name": "AP-2-901",
@@ -2456,7 +2784,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 456,
+            "rel_cost": 901,
+            "revealed": true
           },
           {
             "name": "AP-5-844",
@@ -2502,7 +2834,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 437,
+            "rel_cost": 844,
+            "revealed": true
           },
           {
             "name": "AP-5-734",
@@ -2548,7 +2884,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 375,
+            "rel_cost": 734,
+            "revealed": true
           },
           {
             "name": "AP-1-475",
@@ -2565,7 +2905,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 243,
+            "rel_cost": 475,
+            "revealed": true
           },
           {
             "name": "AP-6-193",
@@ -2617,7 +2961,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 113,
+            "rel_cost": 193,
+            "revealed": true
           },
           {
             "name": "AP-1-126",
@@ -2634,7 +2982,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 95,
+            "rel_cost": 126,
+            "revealed": true
           },
           {
             "name": "AP-4-406",
@@ -2668,7 +3020,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 196,
+            "rel_cost": 406,
+            "revealed": true
           },
           {
             "name": "AP-1-954",
@@ -2685,7 +3041,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 487,
+            "rel_cost": 954,
+            "revealed": true
           },
           {
             "name": "AP-6-148",
@@ -2725,7 +3085,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 102,
+            "rel_cost": 148,
+            "revealed": true
           },
           {
             "name": "AP-4-827",
@@ -2753,7 +3117,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 434,
+            "rel_cost": 827,
+            "revealed": true
           },
           {
             "name": "AP-4-409",
@@ -2781,7 +3149,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 207,
+            "rel_cost": 409,
+            "revealed": true
           },
           {
             "name": "AP-3-240",
@@ -2815,7 +3187,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 141,
+            "rel_cost": 240,
+            "revealed": true
           },
           {
             "name": "AP-3-025",
@@ -2849,7 +3225,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 27,
+            "rel_cost": 25,
+            "revealed": true
           },
           {
             "name": "AP-5-133",
@@ -2895,7 +3275,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 101,
+            "rel_cost": 133,
+            "revealed": true
           },
           {
             "name": "AP-2-507",
@@ -2912,7 +3296,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 258,
+            "rel_cost": 507,
+            "revealed": true
           },
           {
             "name": "AP-2-585",
@@ -2940,7 +3328,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 299,
+            "rel_cost": 585,
+            "revealed": true
           },
           {
             "name": "AP-4-350",
@@ -2980,7 +3372,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 187,
+            "rel_cost": 350,
+            "revealed": true
           },
           {
             "name": "AP-3-466",
@@ -3014,7 +3410,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 223,
+            "rel_cost": 466,
+            "revealed": true
           },
           {
             "name": "AP-5-401",
@@ -3042,7 +3442,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 195,
+            "rel_cost": 401,
+            "revealed": true
           },
           {
             "name": "AP-1-951",
@@ -3059,7 +3463,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 477,
+            "rel_cost": 951,
+            "revealed": true
           },
           {
             "name": "AP-3-210",
@@ -3093,7 +3501,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 127,
+            "rel_cost": 210,
+            "revealed": true
           },
           {
             "name": "AP-1-079",
@@ -3110,7 +3522,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 63,
+            "rel_cost": 79,
+            "revealed": true
           },
           {
             "name": "AP-4-603",
@@ -3144,7 +3560,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 304,
+            "rel_cost": 603,
+            "revealed": true
           },
           {
             "name": "AP-6-618",
@@ -3190,7 +3610,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 305,
+            "rel_cost": 618,
+            "revealed": true
           },
           {
             "name": "AP-6-496",
@@ -3224,7 +3648,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 250,
+            "rel_cost": 496,
+            "revealed": true
           },
           {
             "name": "AP-5-180",
@@ -3264,7 +3692,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 111,
+            "rel_cost": 180,
+            "revealed": true
           },
           {
             "name": "AP-1-711",
@@ -3281,7 +3713,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 367,
+            "rel_cost": 711,
+            "revealed": true
           },
           {
             "name": "AP-3-801",
@@ -3309,7 +3745,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 430,
+            "rel_cost": 801,
+            "revealed": true
           },
           {
             "name": "AP-5-693",
@@ -3349,7 +3789,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 361,
+            "rel_cost": 693,
+            "revealed": true
           },
           {
             "name": "AP-5-934",
@@ -3389,7 +3833,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 470,
+            "rel_cost": 934,
+            "revealed": true
           },
           {
             "name": "AP-2-644",
@@ -3406,7 +3854,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 318,
+            "rel_cost": 644,
+            "revealed": true
           },
           {
             "name": "AP-5-261",
@@ -3446,7 +3898,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 142,
+            "rel_cost": 261,
+            "revealed": true
           },
           {
             "name": "AP-2-784",
@@ -3474,7 +3930,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 405,
+            "rel_cost": 784,
+            "revealed": true
           },
           {
             "name": "AP-6-269",
@@ -3520,7 +3980,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 148,
+            "rel_cost": 269,
+            "revealed": true
           },
           {
             "name": "AP-6-746",
@@ -3554,7 +4018,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 385,
+            "rel_cost": 746,
+            "revealed": true
           },
           {
             "name": "AP-2-514",
@@ -3582,7 +4050,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 262,
+            "rel_cost": 514,
+            "revealed": true
           },
           {
             "name": "AP-3-554",
@@ -3610,7 +4082,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 277,
+            "rel_cost": 554,
+            "revealed": true
           },
           {
             "name": "AP-2-889",
@@ -3638,7 +4114,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 449,
+            "rel_cost": 889,
+            "revealed": true
           },
           {
             "name": "AP-6-092",
@@ -3684,7 +4164,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 72,
+            "rel_cost": 92,
+            "revealed": true
           },
           {
             "name": "AP-2-473",
@@ -3712,7 +4196,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 241,
+            "rel_cost": 473,
+            "revealed": true
           },
           {
             "name": "AP-4-336",
@@ -3752,7 +4240,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 182,
+            "rel_cost": 336,
+            "revealed": true
           },
           {
             "name": "AP-1-195",
@@ -3769,7 +4261,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 114,
+            "rel_cost": 195,
+            "revealed": true
           },
           {
             "name": "AP-4-126",
@@ -3803,7 +4299,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 96,
+            "rel_cost": 126,
+            "revealed": true
           },
           {
             "name": "AP-5-034",
@@ -3843,7 +4343,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 32,
+            "rel_cost": 34,
+            "revealed": true
           },
           {
             "name": "AP-1-494",
@@ -3860,7 +4364,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 248,
+            "rel_cost": 494,
+            "revealed": true
           },
           {
             "name": "AP-6-117",
@@ -3894,7 +4402,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 86,
+            "rel_cost": 117,
+            "revealed": true
           },
           {
             "name": "AP-6-577",
@@ -3940,7 +4452,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 290,
+            "rel_cost": 577,
+            "revealed": true
           },
           {
             "name": "AP-5-472",
@@ -3986,7 +4502,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 236,
+            "rel_cost": 472,
+            "revealed": true
           },
           {
             "name": "AP-2-652",
@@ -4003,7 +4523,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 330,
+            "rel_cost": 652,
+            "revealed": true
           },
           {
             "name": "AP-3-063",
@@ -4037,7 +4561,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 42,
+            "rel_cost": 63,
+            "revealed": true
           },
           {
             "name": "AP-6-737",
@@ -4083,7 +4611,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 382,
+            "rel_cost": 737,
+            "revealed": true
           },
           {
             "name": "AP-4-881",
@@ -4111,7 +4643,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 445,
+            "rel_cost": 881,
+            "revealed": true
           },
           {
             "name": "AP-4-276",
@@ -4151,7 +4687,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 169,
+            "rel_cost": 276,
+            "revealed": true
           },
           {
             "name": "AP-5-561",
@@ -4179,7 +4719,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 278,
+            "rel_cost": 561,
+            "revealed": true
           },
           {
             "name": "AP-6-576",
@@ -4219,7 +4763,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 280,
+            "rel_cost": 576,
+            "revealed": true
           },
           {
             "name": "AP-4-678",
@@ -4247,7 +4795,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 341,
+            "rel_cost": 678,
+            "revealed": true
           },
           {
             "name": "AP-6-371",
@@ -4299,7 +4851,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 194,
+            "rel_cost": 371,
+            "revealed": true
           },
           {
             "name": "AP-4-823",
@@ -4327,7 +4883,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 433,
+            "rel_cost": 823,
+            "revealed": true
           },
           {
             "name": "AP-3-733",
@@ -4361,7 +4921,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 374,
+            "rel_cost": 733,
+            "revealed": true
           },
           {
             "name": "AP-3-318",
@@ -4395,7 +4959,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 180,
+            "rel_cost": 318,
+            "revealed": true
           },
           {
             "name": "AP-3-079",
@@ -4429,7 +4997,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 72,
+            "rel_cost": 79,
+            "revealed": true
           },
           {
             "name": "AP-3-537",
@@ -4463,7 +5035,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 276,
+            "rel_cost": 537,
+            "revealed": true
           },
           {
             "name": "AP-3-674",
@@ -4497,7 +5073,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 333,
+            "rel_cost": 674,
+            "revealed": true
           },
           {
             "name": "AP-1-330",
@@ -4514,7 +5094,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 182,
+            "rel_cost": 330,
+            "revealed": true
           },
           {
             "name": "AP-5-599",
@@ -4548,7 +5132,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 303,
+            "rel_cost": 599,
+            "revealed": true
           },
           {
             "name": "AP-6-406",
@@ -4588,7 +5176,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 201,
+            "rel_cost": 406,
+            "revealed": true
           },
           {
             "name": "AP-5-298",
@@ -4616,7 +5208,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 175,
+            "rel_cost": 298,
+            "revealed": true
           },
           {
             "name": "AP-4-527",
@@ -4650,7 +5246,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 267,
+            "rel_cost": 527,
+            "revealed": true
           },
           {
             "name": "AP-6-800",
@@ -4690,7 +5290,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 429,
+            "rel_cost": 800,
+            "revealed": true
           },
           {
             "name": "AP-4-927",
@@ -4730,7 +5334,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 470,
+            "rel_cost": 927,
+            "revealed": true
           },
           {
             "name": "AP-1-158",
@@ -4747,7 +5355,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 104,
+            "rel_cost": 158,
+            "revealed": true
           },
           {
             "name": "AP-6-321",
@@ -4799,7 +5411,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 180,
+            "rel_cost": 321,
+            "revealed": true
           },
           {
             "name": "AP-5-356",
@@ -4839,7 +5455,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 190,
+            "rel_cost": 356,
+            "revealed": true
           },
           {
             "name": "AP-1-934",
@@ -4856,7 +5476,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 470,
+            "rel_cost": 934,
+            "revealed": true
           },
           {
             "name": "AP-4-649",
@@ -4896,7 +5520,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 3,
+            "count": 325,
+            "rel_cost": 649,
+            "revealed": true
           },
           {
             "name": "AP-1-108",
@@ -4913,7 +5541,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 82,
+            "rel_cost": 108,
+            "revealed": true
           },
           {
             "name": "AP-5-953",
@@ -4953,7 +5585,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 478,
+            "rel_cost": 953,
+            "revealed": true
           },
           {
             "name": "AP-2-255",
@@ -4981,7 +5617,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 142,
+            "rel_cost": 255,
+            "revealed": true
           },
           {
             "name": "AP-3-106",
@@ -5015,7 +5655,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 80,
+            "rel_cost": 106,
+            "revealed": true
           },
           {
             "name": "AP-2-794",
@@ -5043,7 +5687,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 419,
+            "rel_cost": 794,
+            "revealed": true
           },
           {
             "name": "AP-6-070",
@@ -5095,7 +5743,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 45,
+            "rel_cost": 70,
+            "revealed": true
           },
           {
             "name": "AP-5-998",
@@ -5135,7 +5787,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 498,
+            "rel_cost": 998,
+            "revealed": true
           },
           {
             "name": "AP-5-075",
@@ -5181,7 +5837,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 4,
+            "count": 48,
+            "rel_cost": 75,
+            "revealed": true
           },
           {
             "name": "AP-1-031",
@@ -5198,7 +5858,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "complexity": 0,
+            "count": 10,
+            "rel_cost": 31,
+            "revealed": true
           },
           {
             "name": "AP-3-043",
@@ -5232,7 +5896,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 40,
+            "rel_cost": 43,
+            "revealed": true
           },
           {
             "name": "AP-1-653",
@@ -5249,7 +5917,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 332,
+            "rel_cost": 653,
+            "revealed": true
           },
           {
             "name": "AP-1-997",
@@ -5266,7 +5938,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 497,
+            "rel_cost": 997,
+            "revealed": true
           },
           {
             "name": "AP-6-096",
@@ -5300,7 +5976,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 72,
+            "rel_cost": 96,
+            "revealed": true
           },
           {
             "name": "AP-1-194",
@@ -5317,7 +5997,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 113,
+            "rel_cost": 194,
+            "revealed": true
           },
           {
             "name": "AP-2-491",
@@ -5334,7 +6018,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 247,
+            "rel_cost": 491,
+            "revealed": true
           },
           {
             "name": "AP-3-794",
@@ -5368,7 +6056,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 2,
+            "count": 424,
+            "rel_cost": 794,
+            "revealed": true
           },
           {
             "name": "AP-6-684",
@@ -5414,7 +6106,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 350,
+            "rel_cost": 684,
+            "revealed": true
           },
           {
             "name": "AP-2-338",
@@ -5431,7 +6127,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 185,
+            "rel_cost": 338,
+            "revealed": true
           },
           {
             "name": "AP-6-685",
@@ -5483,7 +6183,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 5,
+            "count": 355,
+            "rel_cost": 685,
+            "revealed": true
           },
           {
             "name": "AP-2-763",
@@ -5511,7 +6215,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 399,
+            "rel_cost": 763,
+            "revealed": true
           },
           {
             "name": "AP-1-499",
@@ -5528,7 +6236,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 0,
+            "count": 253,
+            "rel_cost": 499,
+            "revealed": true
           },
           {
             "name": "AP-2-569",
@@ -5545,7 +6257,11 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "complexity": 1,
+            "count": 279,
+            "rel_cost": 569,
+            "revealed": true
           },
           {
             "name": "Rocket Launch",
@@ -14206,6 +14922,457 @@
           "default": 0,
           "display_name": "Teleport Traps"
         }
+      },
+      "custom_recipes": {
+        "rocket-part": "rocket-part",
+        "ap-energy-bridge": "ap-energy-bridge"
+      },
+      "science_locations": [
+        "AP-1-235",
+        "AP-5-349",
+        "AP-1-798",
+        "AP-5-126",
+        "AP-2-328",
+        "AP-4-431",
+        "AP-3-926",
+        "AP-1-757",
+        "AP-3-413",
+        "AP-4-529",
+        "AP-2-416",
+        "AP-4-304",
+        "AP-4-024",
+        "AP-6-946",
+        "AP-4-169",
+        "AP-4-954",
+        "AP-3-041",
+        "AP-4-822",
+        "AP-2-179",
+        "AP-1-097",
+        "AP-2-634",
+        "AP-3-974",
+        "AP-2-688",
+        "AP-4-499",
+        "AP-4-738",
+        "AP-1-141",
+        "AP-2-683",
+        "AP-2-650",
+        "AP-1-459",
+        "AP-1-055",
+        "AP-5-117",
+        "AP-2-269",
+        "AP-5-220",
+        "AP-5-338",
+        "AP-4-022",
+        "AP-2-413",
+        "AP-2-502",
+        "AP-3-722",
+        "AP-3-806",
+        "AP-2-524",
+        "AP-1-769",
+        "AP-6-011",
+        "AP-4-013",
+        "AP-4-849",
+        "AP-4-600",
+        "AP-4-374",
+        "AP-6-002",
+        "AP-2-654",
+        "AP-4-274",
+        "AP-2-272",
+        "AP-3-129",
+        "AP-2-072",
+        "AP-2-898",
+        "AP-4-696",
+        "AP-1-633",
+        "AP-4-972",
+        "AP-1-076",
+        "AP-3-719",
+        "AP-1-880",
+        "AP-5-703",
+        "AP-1-211",
+        "AP-6-676",
+        "AP-5-735",
+        "AP-2-270",
+        "AP-5-755",
+        "AP-1-754",
+        "AP-2-861",
+        "AP-6-077",
+        "AP-2-469",
+        "AP-5-464",
+        "AP-3-954",
+        "AP-3-886",
+        "AP-4-999",
+        "AP-5-609",
+        "AP-6-201",
+        "AP-5-316",
+        "AP-4-829",
+        "AP-3-702",
+        "AP-1-983",
+        "AP-3-953",
+        "AP-2-996",
+        "AP-1-080",
+        "AP-2-901",
+        "AP-5-844",
+        "AP-5-734",
+        "AP-1-475",
+        "AP-6-193",
+        "AP-1-126",
+        "AP-4-406",
+        "AP-1-954",
+        "AP-6-148",
+        "AP-4-827",
+        "AP-4-409",
+        "AP-3-240",
+        "AP-3-025",
+        "AP-5-133",
+        "AP-2-507",
+        "AP-2-585",
+        "AP-4-350",
+        "AP-3-466",
+        "AP-5-401",
+        "AP-1-951",
+        "AP-3-210",
+        "AP-1-079",
+        "AP-4-603",
+        "AP-6-618",
+        "AP-6-496",
+        "AP-5-180",
+        "AP-1-711",
+        "AP-3-801",
+        "AP-5-693",
+        "AP-5-934",
+        "AP-2-644",
+        "AP-5-261",
+        "AP-2-784",
+        "AP-6-269",
+        "AP-6-746",
+        "AP-2-514",
+        "AP-3-554",
+        "AP-2-889",
+        "AP-6-092",
+        "AP-2-473",
+        "AP-4-336",
+        "AP-1-195",
+        "AP-4-126",
+        "AP-5-034",
+        "AP-1-494",
+        "AP-6-117",
+        "AP-6-577",
+        "AP-5-472",
+        "AP-2-652",
+        "AP-3-063",
+        "AP-6-737",
+        "AP-4-881",
+        "AP-4-276",
+        "AP-5-561",
+        "AP-6-576",
+        "AP-4-678",
+        "AP-6-371",
+        "AP-4-823",
+        "AP-3-733",
+        "AP-3-318",
+        "AP-3-079",
+        "AP-3-537",
+        "AP-3-674",
+        "AP-1-330",
+        "AP-5-599",
+        "AP-6-406",
+        "AP-5-298",
+        "AP-4-527",
+        "AP-6-800",
+        "AP-4-927",
+        "AP-1-158",
+        "AP-6-321",
+        "AP-5-356",
+        "AP-1-934",
+        "AP-4-649",
+        "AP-1-108",
+        "AP-5-953",
+        "AP-2-255",
+        "AP-3-106",
+        "AP-2-794",
+        "AP-6-070",
+        "AP-5-998",
+        "AP-5-075",
+        "AP-1-031",
+        "AP-3-043",
+        "AP-1-653",
+        "AP-1-997",
+        "AP-6-096",
+        "AP-1-194",
+        "AP-2-491",
+        "AP-3-794",
+        "AP-6-684",
+        "AP-2-338",
+        "AP-6-685",
+        "AP-2-763",
+        "AP-1-499",
+        "AP-2-569"
+      ],
+      "tech_mix": 70,
+      "skip_silo": false,
+      "want_progressives": {
+        "advanced-circuit": true,
+        "advanced-combinators": true,
+        "progressive-advanced-material-processing": true,
+        "progressive-processing": true,
+        "artillery": true,
+        "progressive-rocketry": true,
+        "progressive-train-network": true,
+        "progressive-automation": true,
+        "progressive-vehicle": true,
+        "battery": true,
+        "progressive-personal-battery": true,
+        "belt-immunity-equipment": true,
+        "progressive-inserter": true,
+        "progressive-science-pack": true,
+        "circuit-network": true,
+        "cliff-explosives": true,
+        "concrete": true,
+        "construction-robotics": true,
+        "progressive-follower": true,
+        "discharge-defense-equipment": true,
+        "effect-transmission": true,
+        "progressive-efficiency-module": true,
+        "electric-energy-accumulators": true,
+        "progressive-electric-energy-distribution": true,
+        "progressive-engine": true,
+        "progressive-energy-shield": true,
+        "exoskeleton-equipment": true,
+        "explosives": true,
+        "fission-reactor-equipment": true,
+        "progressive-flamethrower": true,
+        "progressive-fluid-handling": true,
+        "progressive-follower-robot-count": true,
+        "progressive-wall": true,
+        "progressive-turret": true,
+        "progressive-armor": true,
+        "lamp": true,
+        "land-mine": true,
+        "landfill": true,
+        "progressive-laser-shooting-speed": true,
+        "progressive-laser-weapons-damage": true,
+        "logistic-robotics": true,
+        "logistic-system": true,
+        "progressive-logistics": true,
+        "low-density-structure": true,
+        "lubricant": true,
+        "progressive-military": true,
+        "progressive-mining-productivity": true,
+        "night-vision-equipment": true,
+        "nuclear-power": true,
+        "oil-gathering": true,
+        "personal-laser-defense-equipment": true,
+        "progressive-personal-roboport-equipment": true,
+        "progressive-physical-projectile-damage": true,
+        "plastics": true,
+        "processing-unit": true,
+        "progressive-productivity-module": true,
+        "radar": true,
+        "repair-pack": true,
+        "progressive-research-speed": true,
+        "robotics": true,
+        "rocket-fuel": true,
+        "rocket-silo": true,
+        "solar-energy": true,
+        "solar-panel-equipment": true,
+        "progressive-speed-module": true,
+        "steel-axe": true,
+        "progressive-stronger-explosives": true,
+        "toolbelt": true,
+        "uranium-ammo": true,
+        "uranium-mining": true,
+        "progressive-weapon-shooting-speed": true,
+        "progressive-worker-robots-speed": true,
+        "progressive-worker-robots-storage": true
+      },
+      "custom_technologies": {
+        "advanced-circuit": "advanced-circuit",
+        "advanced-combinators": "advanced-combinators",
+        "advanced-material-processing": "advanced-material-processing",
+        "advanced-material-processing-2": "advanced-material-processing-2",
+        "advanced-oil-processing": "advanced-oil-processing",
+        "artillery": "artillery",
+        "atomic-bomb": "atomic-bomb",
+        "automated-rail-transportation": "automated-rail-transportation",
+        "automation": "automation",
+        "automation-2": "automation-2",
+        "automation-3": "automation-3",
+        "automation-science-pack": "automation-science-pack",
+        "automobilism": "automobilism",
+        "battery": "battery",
+        "battery-equipment": "battery-equipment",
+        "battery-mk2-equipment": "battery-mk2-equipment",
+        "belt-immunity-equipment": "belt-immunity-equipment",
+        "braking-force-1": "braking-force-1",
+        "braking-force-2": "braking-force-2",
+        "braking-force-3": "braking-force-3",
+        "braking-force-4": "braking-force-4",
+        "braking-force-5": "braking-force-5",
+        "braking-force-6": "braking-force-6",
+        "braking-force-7": "braking-force-7",
+        "bulk-inserter": "bulk-inserter",
+        "chemical-science-pack": "chemical-science-pack",
+        "circuit-network": "circuit-network",
+        "cliff-explosives": "cliff-explosives",
+        "coal-liquefaction": "coal-liquefaction",
+        "concrete": "concrete",
+        "construction-robotics": "construction-robotics",
+        "defender": "defender",
+        "destroyer": "destroyer",
+        "discharge-defense-equipment": "discharge-defense-equipment",
+        "distractor": "distractor",
+        "effect-transmission": "effect-transmission",
+        "efficiency-module": "efficiency-module",
+        "efficiency-module-2": "efficiency-module-2",
+        "efficiency-module-3": "efficiency-module-3",
+        "electric-energy-accumulators": "electric-energy-accumulators",
+        "electric-energy-distribution-1": "electric-energy-distribution-1",
+        "electric-energy-distribution-2": "electric-energy-distribution-2",
+        "electric-engine": "electric-engine",
+        "electric-mining-drill": "electric-mining-drill",
+        "electronics": "electronics",
+        "energy-shield-equipment": "energy-shield-equipment",
+        "energy-shield-mk2-equipment": "energy-shield-mk2-equipment",
+        "engine": "engine",
+        "exoskeleton-equipment": "exoskeleton-equipment",
+        "explosive-rocketry": "explosive-rocketry",
+        "explosives": "explosives",
+        "fast-inserter": "fast-inserter",
+        "fission-reactor-equipment": "fission-reactor-equipment",
+        "flamethrower": "flamethrower",
+        "flammables": "flammables",
+        "fluid-handling": "fluid-handling",
+        "fluid-wagon": "fluid-wagon",
+        "follower-robot-count-1": "follower-robot-count-1",
+        "follower-robot-count-2": "follower-robot-count-2",
+        "follower-robot-count-3": "follower-robot-count-3",
+        "follower-robot-count-4": "follower-robot-count-4",
+        "gate": "gate",
+        "gun-turret": "gun-turret",
+        "heavy-armor": "heavy-armor",
+        "inserter-capacity-bonus-1": "inserter-capacity-bonus-1",
+        "inserter-capacity-bonus-2": "inserter-capacity-bonus-2",
+        "inserter-capacity-bonus-3": "inserter-capacity-bonus-3",
+        "inserter-capacity-bonus-4": "inserter-capacity-bonus-4",
+        "inserter-capacity-bonus-5": "inserter-capacity-bonus-5",
+        "inserter-capacity-bonus-6": "inserter-capacity-bonus-6",
+        "inserter-capacity-bonus-7": "inserter-capacity-bonus-7",
+        "kovarex-enrichment-process": "kovarex-enrichment-process",
+        "lamp": "lamp",
+        "land-mine": "land-mine",
+        "landfill": "landfill",
+        "laser": "laser",
+        "laser-shooting-speed-1": "laser-shooting-speed-1",
+        "laser-shooting-speed-2": "laser-shooting-speed-2",
+        "laser-shooting-speed-3": "laser-shooting-speed-3",
+        "laser-shooting-speed-4": "laser-shooting-speed-4",
+        "laser-shooting-speed-5": "laser-shooting-speed-5",
+        "laser-shooting-speed-6": "laser-shooting-speed-6",
+        "laser-shooting-speed-7": "laser-shooting-speed-7",
+        "laser-turret": "laser-turret",
+        "laser-weapons-damage-1": "laser-weapons-damage-1",
+        "laser-weapons-damage-2": "laser-weapons-damage-2",
+        "laser-weapons-damage-3": "laser-weapons-damage-3",
+        "laser-weapons-damage-4": "laser-weapons-damage-4",
+        "laser-weapons-damage-5": "laser-weapons-damage-5",
+        "laser-weapons-damage-6": "laser-weapons-damage-6",
+        "logistic-robotics": "logistic-robotics",
+        "logistic-science-pack": "logistic-science-pack",
+        "logistic-system": "logistic-system",
+        "logistics": "logistics",
+        "logistics-2": "logistics-2",
+        "logistics-3": "logistics-3",
+        "low-density-structure": "low-density-structure",
+        "lubricant": "lubricant",
+        "military": "military",
+        "military-2": "military-2",
+        "military-3": "military-3",
+        "military-4": "military-4",
+        "military-science-pack": "military-science-pack",
+        "mining-productivity-1": "mining-productivity-1",
+        "mining-productivity-2": "mining-productivity-2",
+        "mining-productivity-3": "mining-productivity-3",
+        "modular-armor": "modular-armor",
+        "modules": "modules",
+        "night-vision-equipment": "night-vision-equipment",
+        "nuclear-fuel-reprocessing": "nuclear-fuel-reprocessing",
+        "nuclear-power": "nuclear-power",
+        "oil-gathering": "oil-gathering",
+        "oil-processing": "oil-processing",
+        "personal-laser-defense-equipment": "personal-laser-defense-equipment",
+        "personal-roboport-equipment": "personal-roboport-equipment",
+        "personal-roboport-mk2-equipment": "personal-roboport-mk2-equipment",
+        "physical-projectile-damage-1": "physical-projectile-damage-1",
+        "physical-projectile-damage-2": "physical-projectile-damage-2",
+        "physical-projectile-damage-3": "physical-projectile-damage-3",
+        "physical-projectile-damage-4": "physical-projectile-damage-4",
+        "physical-projectile-damage-5": "physical-projectile-damage-5",
+        "physical-projectile-damage-6": "physical-projectile-damage-6",
+        "plastics": "plastics",
+        "power-armor": "power-armor",
+        "power-armor-mk2": "power-armor-mk2",
+        "processing-unit": "processing-unit",
+        "production-science-pack": "production-science-pack",
+        "productivity-module": "productivity-module",
+        "productivity-module-2": "productivity-module-2",
+        "productivity-module-3": "productivity-module-3",
+        "radar": "radar",
+        "railway": "railway",
+        "refined-flammables-1": "refined-flammables-1",
+        "refined-flammables-2": "refined-flammables-2",
+        "refined-flammables-3": "refined-flammables-3",
+        "refined-flammables-4": "refined-flammables-4",
+        "refined-flammables-5": "refined-flammables-5",
+        "refined-flammables-6": "refined-flammables-6",
+        "repair-pack": "repair-pack",
+        "research-speed-1": "research-speed-1",
+        "research-speed-2": "research-speed-2",
+        "research-speed-3": "research-speed-3",
+        "research-speed-4": "research-speed-4",
+        "research-speed-5": "research-speed-5",
+        "research-speed-6": "research-speed-6",
+        "robotics": "robotics",
+        "rocket-fuel": "rocket-fuel",
+        "rocket-silo": "rocket-silo",
+        "rocketry": "rocketry",
+        "solar-energy": "solar-energy",
+        "solar-panel-equipment": "solar-panel-equipment",
+        "space-science-pack": "space-science-pack",
+        "speed-module": "speed-module",
+        "speed-module-2": "speed-module-2",
+        "speed-module-3": "speed-module-3",
+        "spidertron": "spidertron",
+        "steam-power": "steam-power",
+        "steel-axe": "steel-axe",
+        "steel-processing": "steel-processing",
+        "stone-wall": "stone-wall",
+        "stronger-explosives-1": "stronger-explosives-1",
+        "stronger-explosives-2": "stronger-explosives-2",
+        "stronger-explosives-3": "stronger-explosives-3",
+        "stronger-explosives-4": "stronger-explosives-4",
+        "stronger-explosives-5": "stronger-explosives-5",
+        "stronger-explosives-6": "stronger-explosives-6",
+        "sulfur-processing": "sulfur-processing",
+        "tank": "tank",
+        "toolbelt": "toolbelt",
+        "uranium-ammo": "uranium-ammo",
+        "uranium-mining": "uranium-mining",
+        "uranium-processing": "uranium-processing",
+        "utility-science-pack": "utility-science-pack",
+        "weapon-shooting-speed-1": "weapon-shooting-speed-1",
+        "weapon-shooting-speed-2": "weapon-shooting-speed-2",
+        "weapon-shooting-speed-3": "weapon-shooting-speed-3",
+        "weapon-shooting-speed-4": "weapon-shooting-speed-4",
+        "weapon-shooting-speed-5": "weapon-shooting-speed-5",
+        "weapon-shooting-speed-6": "weapon-shooting-speed-6",
+        "worker-robots-speed-1": "worker-robots-speed-1",
+        "worker-robots-speed-2": "worker-robots-speed-2",
+        "worker-robots-speed-3": "worker-robots-speed-3",
+        "worker-robots-speed-4": "worker-robots-speed-4",
+        "worker-robots-speed-5": "worker-robots-speed-5",
+        "worker-robots-storage-1": "worker-robots-storage-1",
+        "worker-robots-storage-2": "worker-robots-storage-2",
+        "worker-robots-storage-3": "worker-robots-storage-3"
       },
       "world_description": "Factorio is a game about automation. You play as an engineer who has crash landed on the planet\nNauvis, an inhospitable world filled with dangerous creatures called biters. Build a factory,\nresearch new technologies, and become more efficient in your quest to build a rocket and return home.",
       "web": {

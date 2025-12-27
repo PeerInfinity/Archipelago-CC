@@ -328,7 +328,10 @@
               "advancement": true,
               "type": "Event"
             },
-            "locked": true
+            "locked": true,
+            "bit": 64,
+            "region": "The Great Sea",
+            "stage_id": 8
           },
           {
             "name": "Forsaken Fortress - Chest Guarded By Bokoblin",
@@ -344,7 +347,11 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "bit": 2,
+            "code": 117,
+            "region": "The Great Sea",
+            "stage_id": 2
           },
           {
             "name": "Forsaken Fortress - Chest Inside Lower Jail Cell",
@@ -360,7 +367,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 3,
+            "code": 116,
+            "region": "The Great Sea",
+            "stage_id": 2
           },
           {
             "name": "Forsaken Fortress - Chest Outside Upper Jail Cell",
@@ -405,7 +416,11 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "bit": 0,
+            "code": 115,
+            "region": "The Great Sea",
+            "stage_id": 2
           },
           {
             "name": "Forsaken Fortress - Chest on Bed",
@@ -421,7 +436,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 1,
+            "code": 118,
+            "region": "The Great Sea",
+            "stage_id": 2
           },
           {
             "name": "Forsaken Fortress - Phantom Ganon",
@@ -437,7 +456,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 16,
+            "code": 114,
+            "region": "The Great Sea",
+            "stage_id": 0
           },
           {
             "name": "Ganon's Tower - Maze Chest",
@@ -463,7 +486,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 0,
+            "code": 164,
+            "region": "The Great Sea",
+            "stage_id": 8
           },
           {
             "name": "Outset Island - Great Fairy",
@@ -480,7 +507,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 4,
+            "code": 4,
+            "region": "The Great Sea",
+            "stage_id": 12
           },
           {
             "name": "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item",
@@ -496,7 +527,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 5,
+            "code": 230,
+            "region": "The Great Sea",
+            "stage_id": 10
           },
           {
             "name": "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item",
@@ -512,7 +547,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 3,
+            "code": 232,
+            "region": "The Great Sea",
+            "stage_id": 10
           },
           {
             "name": "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item",
@@ -528,7 +567,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 4,
+            "code": 231,
+            "region": "The Great Sea",
+            "stage_id": 10
           },
           {
             "name": "The Great Sea - Salvage Corp Gift",
@@ -542,7 +585,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 7,
+            "code": 178,
+            "region": "The Great Sea",
+            "stage_id": 0
           },
           {
             "name": "Windfall Island - Jail - Tingle - First Gift",
@@ -556,7 +603,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 53,
+            "code": 9,
+            "region": "The Great Sea",
+            "stage_id": 11
           },
           {
             "name": "Windfall Island - Jail - Tingle - Second Gift",
@@ -570,7 +621,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 54,
+            "code": 10,
+            "region": "The Great Sea",
+            "stage_id": 11
           },
           {
             "name": "Windfall Island - Maggie - Free Item",
@@ -584,7 +639,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 0,
+            "code": 25,
+            "region": "The Great Sea",
+            "stage_id": 11
           },
           {
             "name": "Windfall Island - Tott - Teach Rhythm",
@@ -601,7 +660,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 6,
+            "code": 30,
+            "region": "The Great Sea",
+            "stage_id": 0
           }
         ]
       },
@@ -634,7 +697,11 @@
               "advancement": true,
               "type": "Small Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 2,
+            "code": 57,
+            "region": "Dragon Roost Cavern",
+            "stage_id": 3
           },
           {
             "name": "Dragon Roost Cavern - Big Key Chest",
@@ -666,7 +733,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 12,
+            "code": 71,
+            "region": "Dragon Roost Cavern",
+            "stage_id": 3
           },
           {
             "name": "Dragon Roost Cavern - Bird's Nest",
@@ -684,7 +755,11 @@
               "advancement": true,
               "type": "Small Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 3,
+            "code": 63,
+            "region": "Dragon Roost Cavern",
+            "stage_id": 3
           },
           {
             "name": "Dragon Roost Cavern - Boarded Up Chest",
@@ -701,7 +776,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 1,
+            "code": 59,
+            "region": "Dragon Roost Cavern",
+            "stage_id": 3
           },
           {
             "name": "Dragon Roost Cavern - Boss Stairs Left Chest",
@@ -717,7 +796,11 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "bit": 10,
+            "code": 73,
+            "region": "Dragon Roost Cavern",
+            "stage_id": 3
           },
           {
             "name": "Dragon Roost Cavern - Boss Stairs Right Chest",
@@ -733,7 +816,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 11,
+            "code": 72,
+            "region": "Dragon Roost Cavern",
+            "stage_id": 3
           },
           {
             "name": "Dragon Roost Cavern - Chest Across Lava Pit",
@@ -791,7 +878,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 13,
+            "code": 60,
+            "region": "Dragon Roost Cavern",
+            "stage_id": 3
           },
           {
             "name": "Dragon Roost Cavern - Dark Room",
@@ -809,7 +900,11 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "bit": 4,
+            "code": 64,
+            "region": "Dragon Roost Cavern",
+            "stage_id": 3
           },
           {
             "name": "Dragon Roost Cavern - First Room",
@@ -823,7 +918,11 @@
               "advancement": true,
               "type": "Small Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 0,
+            "code": 56,
+            "region": "Dragon Roost Cavern",
+            "stage_id": 3
           },
           {
             "name": "Dragon Roost Cavern - Miniboss",
@@ -841,7 +940,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 17,
+            "code": 68,
+            "region": "Dragon Roost Cavern",
+            "stage_id": 3
           },
           {
             "name": "Dragon Roost Cavern - Pot Room Chest",
@@ -859,7 +962,11 @@
               "advancement": true,
               "type": "Big Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 6,
+            "code": 67,
+            "region": "Dragon Roost Cavern",
+            "stage_id": 3
           },
           {
             "name": "Dragon Roost Cavern - Rat Room",
@@ -877,7 +984,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 14,
+            "code": 61,
+            "region": "Dragon Roost Cavern",
+            "stage_id": 3
           },
           {
             "name": "Dragon Roost Cavern - Rat Room Boarded Up Chest",
@@ -895,7 +1006,11 @@
               "advancement": true,
               "type": "Small Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 3,
+            "code": 62,
+            "region": "Dragon Roost Cavern",
+            "stage_id": 3
           },
           {
             "name": "Dragon Roost Cavern - Under Rope Bridge",
@@ -934,7 +1049,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 7,
+            "code": 69,
+            "region": "Dragon Roost Cavern",
+            "stage_id": 3
           }
         ]
       },
@@ -994,7 +1113,11 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "bit": 4,
+            "code": 93,
+            "region": "Forbidden Woods",
+            "stage_id": 4
           },
           {
             "name": "Forbidden Woods - Chest Across Red Hanging Flower",
@@ -1029,7 +1152,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 11,
+            "code": 90,
+            "region": "Forbidden Woods",
+            "stage_id": 4
           },
           {
             "name": "Forbidden Woods - Chest in Locked Tree Trunk",
@@ -1064,7 +1191,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 9,
+            "code": 92,
+            "region": "Forbidden Woods",
+            "stage_id": 4
           },
           {
             "name": "Forbidden Woods - Climb to Top Using Boko Baba Bulbs",
@@ -1090,7 +1221,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 2,
+            "code": 80,
+            "region": "Forbidden Woods",
+            "stage_id": 4
           },
           {
             "name": "Forbidden Woods - Double Mothula Room",
@@ -1137,7 +1272,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 14,
+            "code": 94,
+            "region": "Forbidden Woods",
+            "stage_id": 4
           },
           {
             "name": "Forbidden Woods - First Room",
@@ -1151,7 +1290,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 0,
+            "code": 78,
+            "region": "Forbidden Woods",
+            "stage_id": 4
           },
           {
             "name": "Forbidden Woods - Hole in Tree",
@@ -1177,7 +1320,11 @@
               "advancement": true,
               "type": "Small Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 6,
+            "code": 82,
+            "region": "Forbidden Woods",
+            "stage_id": 4
           },
           {
             "name": "Forbidden Woods - Inside Hollow Tree's Mouth",
@@ -1203,7 +1350,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 1,
+            "code": 79,
+            "region": "Forbidden Woods",
+            "stage_id": 4
           },
           {
             "name": "Forbidden Woods - Morth Pit",
@@ -1235,7 +1386,11 @@
               "advancement": true,
               "type": "Big Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 8,
+            "code": 83,
+            "region": "Forbidden Woods",
+            "stage_id": 4
           },
           {
             "name": "Forbidden Woods - Past Seeds Hanging by Vines",
@@ -1293,7 +1448,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 3,
+            "code": 89,
+            "region": "Forbidden Woods",
+            "stage_id": 4
           },
           {
             "name": "Forbidden Woods - Tall Room Before Miniboss",
@@ -1346,7 +1505,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 12,
+            "code": 87,
+            "region": "Forbidden Woods",
+            "stage_id": 4
           },
           {
             "name": "Forbidden Woods - Vine Maze Left Chest",
@@ -1378,7 +1541,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 7,
+            "code": 84,
+            "region": "Forbidden Woods",
+            "stage_id": 4
           },
           {
             "name": "Forbidden Woods - Vine Maze Right Chest",
@@ -1410,7 +1577,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 5,
+            "code": 85,
+            "region": "Forbidden Woods",
+            "stage_id": 4
           }
         ]
       },
@@ -1451,7 +1622,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 0,
+            "code": 111,
+            "region": "Tower of the Gods",
+            "stage_id": 5
           },
           {
             "name": "Tower of the Gods - Chest Behind Bombable Walls",
@@ -1468,7 +1643,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 2,
+            "code": 97,
+            "region": "Tower of the Gods",
+            "stage_id": 5
           },
           {
             "name": "Tower of the Gods - First Chest Guarded by Armos Knights",
@@ -1494,7 +1673,11 @@
               "advancement": true,
               "type": "Big Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 6,
+            "code": 104,
+            "region": "Tower of the Gods",
+            "stage_id": 5
           },
           {
             "name": "Tower of the Gods - Floating Platforms Room",
@@ -1562,7 +1745,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 4,
+            "code": 108,
+            "region": "Tower of the Gods",
+            "stage_id": 5
           },
           {
             "name": "Tower of the Gods - Hop Across Floating Boxes",
@@ -1576,7 +1763,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 1,
+            "code": 99,
+            "region": "Tower of the Gods",
+            "stage_id": 5
           },
           {
             "name": "Tower of the Gods - Light Two Torches",
@@ -1593,7 +1784,11 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "bit": 10,
+            "code": 100,
+            "region": "Tower of the Gods",
+            "stage_id": 5
           },
           {
             "name": "Tower of the Gods - Second Chest Guarded by Armos Knights",
@@ -1625,7 +1820,11 @@
               "advancement": true,
               "type": "Small Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 8,
+            "code": 107,
+            "region": "Tower of the Gods",
+            "stage_id": 5
           },
           {
             "name": "Tower of the Gods - Shoot Eye Above Skulls Room Chest",
@@ -1652,7 +1851,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 9,
+            "code": 102,
+            "region": "Tower of the Gods",
+            "stage_id": 5
           },
           {
             "name": "Tower of the Gods - Skulls Room Chest",
@@ -1669,7 +1872,11 @@
               "advancement": true,
               "type": "Small Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 3,
+            "code": 101,
+            "region": "Tower of the Gods",
+            "stage_id": 5
           },
           {
             "name": "Tower of the Gods - Stone Tablet",
@@ -1696,7 +1903,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 4,
+            "code": 105,
+            "region": "Tower of the Gods",
+            "stage_id": 5
           },
           {
             "name": "Tower of the Gods - Top of Floating Platforms Room",
@@ -1722,7 +1933,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 11,
+            "code": 109,
+            "region": "Tower of the Gods",
+            "stage_id": 5
           }
         ]
       },
@@ -1859,7 +2074,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 6,
+            "code": 146,
+            "region": "Earth Temple",
+            "stage_id": 6
           },
           {
             "name": "Earth Temple - Casket in Second Crypt",
@@ -1875,7 +2094,11 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "bit": 14,
+            "code": 136,
+            "region": "Earth Temple",
+            "stage_id": 6
           },
           {
             "name": "Earth Temple - Chest Behind Destructible Walls",
@@ -1901,7 +2124,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 12,
+            "code": 133,
+            "region": "Earth Temple",
+            "stage_id": 6
           },
           {
             "name": "Earth Temple - Chest Behind Statues",
@@ -1937,7 +2164,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 3,
+            "code": 135,
+            "region": "Earth Temple",
+            "stage_id": 6
           },
           {
             "name": "Earth Temple - Chest In Three Blocks Room",
@@ -1989,7 +2220,11 @@
               "advancement": true,
               "type": "Small Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 2,
+            "code": 134,
+            "region": "Earth Temple",
+            "stage_id": 6
           },
           {
             "name": "Earth Temple - Chest in Third Crypt",
@@ -2005,7 +2240,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 5,
+            "code": 142,
+            "region": "Earth Temple",
+            "stage_id": 6
           },
           {
             "name": "Earth Temple - End of Foggy Room With Floormasters",
@@ -2041,7 +2280,11 @@
               "advancement": true,
               "type": "Big Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 4,
+            "code": 139,
+            "region": "Earth Temple",
+            "stage_id": 6
           },
           {
             "name": "Earth Temple - Kill All Floormasters in Foggy Room",
@@ -2082,7 +2325,11 @@
               "advancement": true,
               "type": "Small Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 11,
+            "code": 140,
+            "region": "Earth Temple",
+            "stage_id": 6
           },
           {
             "name": "Earth Temple - Many Mirrors Room Left Chest",
@@ -2119,7 +2366,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 10,
+            "code": 144,
+            "region": "Earth Temple",
+            "stage_id": 6
           },
           {
             "name": "Earth Temple - Many Mirrors Room Right Chest",
@@ -2145,7 +2396,11 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "bit": 9,
+            "code": 143,
+            "region": "Earth Temple",
+            "stage_id": 6
           },
           {
             "name": "Earth Temple - Stalfos Crypt Room",
@@ -2171,7 +2426,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 14,
+            "code": 145,
+            "region": "Earth Temple",
+            "stage_id": 6
           },
           {
             "name": "Earth Temple - Transparent Chest In Warp Pot Room",
@@ -2187,7 +2446,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 0,
+            "code": 130,
+            "region": "Earth Temple",
+            "stage_id": 6
           },
           {
             "name": "Earth Temple - Transparent Chest in First Crypt",
@@ -2229,7 +2492,11 @@
               "advancement": true,
               "type": "Small Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 1,
+            "code": 132,
+            "region": "Earth Temple",
+            "stage_id": 6
           }
         ]
       },
@@ -2296,7 +2563,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 8,
+            "code": 153,
+            "region": "Wind Temple",
+            "stage_id": 7
           },
           {
             "name": "Wind Temple - Chest Behind Seven Armos",
@@ -2322,7 +2593,11 @@
               "advancement": true,
               "type": "Big Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 4,
+            "code": 161,
+            "region": "Wind Temple",
+            "stage_id": 7
           },
           {
             "name": "Wind Temple - Chest Behind Stone Head",
@@ -2352,7 +2627,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 3,
+            "code": 151,
+            "region": "Wind Temple",
+            "stage_id": 7
           },
           {
             "name": "Wind Temple - Chest Between Two Dirt Patches",
@@ -2368,7 +2647,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 0,
+            "code": 148,
+            "region": "Wind Temple",
+            "stage_id": 7
           },
           {
             "name": "Wind Temple - Chest In Many Cyclones Room",
@@ -2483,7 +2766,11 @@
               "advancement": true,
               "type": "Small Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 11,
+            "code": 154,
+            "region": "Wind Temple",
+            "stage_id": 7
           },
           {
             "name": "Wind Temple - Chest In Middle Of Hub Room",
@@ -2499,7 +2786,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 13,
+            "code": 156,
+            "region": "Wind Temple",
+            "stage_id": 7
           },
           {
             "name": "Wind Temple - Chest at Top of Hub Room",
@@ -2515,7 +2806,11 @@
               "advancement": true,
               "type": "Small Key"
             },
-            "locked": true
+            "locked": true,
+            "bit": 2,
+            "code": 160,
+            "region": "Wind Temple",
+            "stage_id": 7
           },
           {
             "name": "Wind Temple - Chest in Left Alcove",
@@ -2547,7 +2842,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 7,
+            "code": 152,
+            "region": "Wind Temple",
+            "stage_id": 7
           },
           {
             "name": "Wind Temple - Kill All Enemies in Tall Basement Room",
@@ -2583,7 +2882,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 12,
+            "code": 162,
+            "region": "Wind Temple",
+            "stage_id": 7
           },
           {
             "name": "Wind Temple - Spike Wall Room - Destroy All Cracked Floors",
@@ -2610,7 +2913,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 10,
+            "code": 158,
+            "region": "Wind Temple",
+            "stage_id": 7
           },
           {
             "name": "Wind Temple - Spike Wall Room - First Chest",
@@ -2637,7 +2944,11 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "bit": 9,
+            "code": 157,
+            "region": "Wind Temple",
+            "stage_id": 7
           }
         ]
       },
@@ -2659,7 +2970,11 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "bit": 10,
+            "code": 88,
+            "region": "Forbidden Woods Miniboss Arena",
+            "stage_id": 4
           }
         ]
       },
@@ -2681,7 +2996,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 5,
+            "code": 106,
+            "region": "Tower of the Gods Miniboss Arena",
+            "stage_id": 5
           }
         ]
       },
@@ -2714,7 +3033,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 7,
+            "code": 137,
+            "region": "Earth Temple Miniboss Arena",
+            "stage_id": 6
           }
         ]
       },
@@ -2746,7 +3069,11 @@
               "advancement": false,
               "type": "Map"
             },
-            "locked": true
+            "locked": true,
+            "bit": 5,
+            "code": 159,
+            "region": "Wind Temple Miniboss Arena",
+            "stage_id": 7
           }
         ]
       },
@@ -2768,7 +3095,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 0,
+            "code": 113,
+            "region": "Master Sword Chamber",
+            "stage_id": 9
           }
         ]
       },
@@ -2790,7 +3121,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 21,
+            "code": 75,
+            "region": "Gohma Boss Arena",
+            "stage_id": 3
           }
         ]
       },
@@ -2812,7 +3147,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 21,
+            "code": 95,
+            "region": "Kalle Demos Boss Arena",
+            "stage_id": 4
           }
         ]
       },
@@ -2834,7 +3173,11 @@
               "advancement": false,
               "type": "Compass"
             },
-            "locked": true
+            "locked": true,
+            "bit": 21,
+            "code": 112,
+            "region": "Gohdan Boss Arena",
+            "stage_id": 5
           }
         ]
       },
@@ -2856,7 +3199,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 21,
+            "code": 119,
+            "region": "Helmaroc King Boss Arena",
+            "stage_id": 2
           }
         ]
       },
@@ -2878,7 +3225,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 21,
+            "code": 147,
+            "region": "Jalhalla Boss Arena",
+            "stage_id": 6
           }
         ]
       },
@@ -2900,7 +3251,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 21,
+            "code": 163,
+            "region": "Molgera Boss Arena",
+            "stage_id": 7
           }
         ]
       },
@@ -2945,7 +3300,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 1,
+            "code": 126,
+            "region": "Ice Ring Isle Secret Cave",
+            "stage_id": 12
           }
         ]
       },
@@ -2968,7 +3327,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 22,
+            "code": 184,
+            "region": "Cabana Labyrinth",
+            "stage_id": 12
           },
           {
             "name": "Private Oasis - Cabana Labyrinth - Upper Floor Chest",
@@ -2995,7 +3358,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 17,
+            "code": 185,
+            "region": "Cabana Labyrinth",
+            "stage_id": 12
           }
         ]
       },
@@ -3017,7 +3384,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 9,
+            "code": 190,
+            "region": "Needle Rock Isle Secret Cave",
+            "stage_id": 13
           }
         ]
       },
@@ -3060,7 +3431,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 6,
+            "code": 193,
+            "region": "Angular Isles Secret Cave",
+            "stage_id": 13
           }
         ]
       },
@@ -3097,7 +3472,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 16,
+            "code": 202,
+            "region": "Bird's Peak Rock Secret Cave",
+            "stage_id": 12
           }
         ]
       },
@@ -3119,7 +3498,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 24,
+            "code": 204,
+            "region": "Pawprint Isle Chuchu Cave",
+            "stage_id": 12
           },
           {
             "name": "Pawprint Isle - Chuchu Cave - Behind Right Boulder",
@@ -3135,7 +3518,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 25,
+            "code": 205,
+            "region": "Pawprint Isle Chuchu Cave",
+            "stage_id": 12
           },
           {
             "name": "Pawprint Isle - Chuchu Cave - Chest",
@@ -3149,7 +3536,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 26,
+            "code": 203,
+            "region": "Pawprint Isle Chuchu Cave",
+            "stage_id": 12
           },
           {
             "name": "Pawprint Isle - Chuchu Cave - Scale the Wall",
@@ -3166,7 +3557,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 2,
+            "code": 206,
+            "region": "Pawprint Isle Chuchu Cave",
+            "stage_id": 12
           }
         ]
       },
@@ -3191,7 +3586,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 23,
+            "code": 223,
+            "region": "Diamond Steppe Island Warp Maze Cave",
+            "stage_id": 12
           },
           {
             "name": "Diamond Steppe Island - Warp Maze Cave - Second Chest",
@@ -3205,7 +3604,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 3,
+            "code": 224,
+            "region": "Diamond Steppe Island Warp Maze Cave",
+            "stage_id": 12
           }
         ]
       },
@@ -3227,7 +3630,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 5,
+            "code": 226,
+            "region": "Bomb Island Secret Cave",
+            "stage_id": 12
           }
         ]
       },
@@ -3301,7 +3708,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 7,
+            "code": 238,
+            "region": "Cliff Plateau Isles Secret Cave",
+            "stage_id": 12
           }
         ]
       },
@@ -3336,7 +3747,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 1,
+            "code": 239,
+            "region": "Cliff Plateau Isles Inner Cave",
+            "stage_id": 0
           }
         ]
       },
@@ -3361,7 +3776,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 0,
+            "code": 209,
+            "region": "Thorned Fairy Fountain",
+            "stage_id": 12
           }
         ]
       },
@@ -3381,7 +3800,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 3,
+            "code": 212,
+            "region": "Eastern Fairy Fountain",
+            "stage_id": 12
           }
         ]
       },
@@ -3401,7 +3824,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 1,
+            "code": 214,
+            "region": "Western Fairy Fountain",
+            "stage_id": 12
           }
         ]
       },
@@ -3421,7 +3848,11 @@
               "advancement": false,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 2,
+            "code": 216,
+            "region": "Southern Fairy Fountain",
+            "stage_id": 12
           }
         ]
       },
@@ -3441,7 +3872,11 @@
               "advancement": true,
               "type": "Item"
             },
-            "locked": false
+            "locked": false,
+            "bit": 5,
+            "code": 219,
+            "region": "Northern Fairy Fountain",
+            "stage_id": 12
           }
         ]
       }
@@ -5748,6 +6183,299 @@
           "display_name": "Sword Mode"
         }
       },
+      "dungeons": {
+        "Dragon Roost Cavern": "Dragon Roost Cavern",
+        "Forbidden Woods": "Forbidden Woods",
+        "Tower of the Gods": "Tower of the Gods",
+        "Forsaken Fortress": "Forsaken Fortress",
+        "Earth Temple": "Earth Temple",
+        "Wind Temple": "Wind Temple"
+      },
+      "item_classification_overrides": {
+        "Maggie's Letter": 0,
+        "Moblin's Letter": 0,
+        "Progressive Picto Box": 0,
+        "Spoils Bag": 0,
+        "Triforce Chart 1": 0,
+        "Triforce Chart 8": 0,
+        "Triforce Chart 5": 0,
+        "Triforce Chart 7": 0,
+        "Triforce Chart 2": 0,
+        "Triforce Chart 3": 0,
+        "Triforce Chart 4": 0,
+        "Triforce Chart 6": 0,
+        "Treasure Chart 19": 0,
+        "Treasure Chart 35": 0,
+        "Treasure Chart 12": 0,
+        "Treasure Chart 2": 0,
+        "Treasure Chart 17": 0,
+        "Treasure Chart 36": 0,
+        "Treasure Chart 37": 0,
+        "Treasure Chart 28": 0,
+        "Treasure Chart 24": 0,
+        "Treasure Chart 29": 0,
+        "Treasure Chart 5": 0,
+        "Treasure Chart 26": 0,
+        "Treasure Chart 41": 0,
+        "Treasure Chart 30": 0,
+        "Treasure Chart 18": 0,
+        "Treasure Chart 6": 0,
+        "Treasure Chart 25": 0,
+        "Treasure Chart 1": 0,
+        "Treasure Chart 40": 0,
+        "Treasure Chart 7": 0,
+        "Treasure Chart 4": 0,
+        "Treasure Chart 8": 0,
+        "Treasure Chart 38": 0,
+        "Treasure Chart 3": 0,
+        "Treasure Chart 21": 0,
+        "Treasure Chart 33": 0,
+        "Treasure Chart 23": 0,
+        "Treasure Chart 15": 0,
+        "Treasure Chart 22": 0,
+        "Treasure Chart 9": 0,
+        "Treasure Chart 10": 0,
+        "Treasure Chart 11": 0,
+        "Treasure Chart 16": 0,
+        "Treasure Chart 32": 0,
+        "Treasure Chart 34": 0,
+        "Treasure Chart 20": 0,
+        "Treasure Chart 13": 0,
+        "Treasure Chart 31": 0,
+        "Treasure Chart 14": 0,
+        "Treasure Chart 27": 0,
+        "Treasure Chart 39": 0,
+        "Goddess Tingle Statue": 0,
+        "Dragon Tingle Statue": 0,
+        "Earth Tingle Statue": 0,
+        "Forbidden Tingle Statue": 0,
+        "Wind Tingle Statue": 0,
+        "Quiver Capacity Upgrade": 2,
+        "Tingle Tuner": 2
+      },
+      "useful_pool": [
+        "Piece of Heart",
+        "Bomb Bag Capacity Upgrade",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Silver Rupee",
+        "Silver Rupee",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Orange Rupee",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Silver Rupee",
+        "Piece of Heart",
+        "Silver Rupee",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Heart Container",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Rainbow Rupee",
+        "Piece of Heart",
+        "Silver Rupee",
+        "Piece of Heart",
+        "Silver Rupee",
+        "Silver Rupee",
+        "Silver Rupee",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Silver Rupee",
+        "Quiver Capacity Upgrade",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Heart Container",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Fill-Up Coupon",
+        "Orange Rupee",
+        "Heart Container",
+        "Orange Rupee",
+        "Silver Rupee",
+        "Orange Rupee",
+        "Orange Rupee",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Orange Rupee",
+        "Heart Container",
+        "Orange Rupee",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Heart Container",
+        "Silver Rupee",
+        "Quiver Capacity Upgrade",
+        "Piece of Heart",
+        "Piece of Heart",
+        "Silver Rupee",
+        "Orange Rupee",
+        "Piece of Heart",
+        "Piece of Heart"
+      ],
+      "filler_pool": [
+        "Knight's Crest",
+        "Hyoi Pear",
+        "Green Rupee",
+        "Golden Feather",
+        "Treasure Chart 10",
+        "Treasure Chart 29",
+        "Joy Pendant",
+        "Treasure Chart 37",
+        "Purple Rupee",
+        "Treasure Chart 30",
+        "Golden Feather",
+        "Triforce Chart 3",
+        "Golden Feather",
+        "Joy Pendant",
+        "Platform Chart",
+        "Triforce Chart 2",
+        "Treasure Chart 41",
+        "Skull Necklace",
+        "Treasure Chart 15",
+        "Beedle's Chart",
+        "Treasure Chart 40",
+        "Treasure Chart 8",
+        "Hyoi Pear",
+        "Treasure Chart 4",
+        "Treasure Chart 24",
+        "Skull Necklace",
+        "Treasure Chart 19",
+        "Purple Rupee",
+        "Moblin's Letter",
+        "Hyoi Pear",
+        "Light Ring Chart",
+        "Treasure Chart 28",
+        "Joy Pendant",
+        "Triforce Chart 8",
+        "Purple Rupee",
+        "Joy Pendant",
+        "Treasure Chart 2",
+        "Skull Necklace",
+        "Treasure Chart 26",
+        "Treasure Chart 6",
+        "Red Rupee",
+        "Skull Necklace",
+        "Triforce Chart 6",
+        "Purple Rupee",
+        "Joy Pendant",
+        "Treasure Chart 25",
+        "Great Fairy Chart",
+        "Treasure Chart 7",
+        "Triforce Chart 7",
+        "Skull Necklace",
+        "Joy Pendant",
+        "Red Rupee",
+        "Red Rupee",
+        "Joy Pendant",
+        "Joy Pendant",
+        "Treasure Chart 31",
+        "Treasure Chart 12",
+        "Treasure Chart 38",
+        "Skull Necklace",
+        "Yellow Rupee",
+        "Earth Tingle Statue",
+        "Purple Rupee",
+        "Treasure Chart 32",
+        "Joy Pendant",
+        "Secret Cave Chart",
+        "Treasure Chart 9",
+        "Joy Pendant",
+        "Triforce Chart 1",
+        "Blue Rupee",
+        "Submarine Chart",
+        "Boko Baba Seed",
+        "Skull Necklace",
+        "Treasure Chart 39",
+        "Spoils Bag",
+        "Triforce Chart 5",
+        "Joy Pendant",
+        "Red Rupee",
+        "Joy Pendant",
+        "Treasure Chart 11",
+        "Dragon Tingle Statue",
+        "Knight's Crest",
+        "Skull Necklace",
+        "Red Rupee",
+        "Red Rupee",
+        "Joy Pendant",
+        "Golden Feather",
+        "Golden Feather",
+        "Treasure Chart 1",
+        "Treasure Chart 18",
+        "Treasure Chart 35",
+        "Wind Tingle Statue",
+        "Progressive Picto Box",
+        "Yellow Rupee",
+        "Joy Pendant",
+        "Hyoi Pear",
+        "Treasure Chart 22",
+        "Progressive Picto Box",
+        "Red Chu Jelly",
+        "Treasure Chart 17",
+        "Knight's Crest",
+        "Octo Chart",
+        "Treasure Chart 5",
+        "Golden Feather",
+        "Purple Rupee",
+        "Red Rupee",
+        "Joy Pendant",
+        "Joy Pendant",
+        "Treasure Chart 3",
+        "Treasure Chart 36",
+        "Treasure Chart 21",
+        "Purple Rupee",
+        "Skull Necklace",
+        "Triforce Chart 4",
+        "Golden Feather",
+        "Treasure Chart 33",
+        "Goddess Tingle Statue",
+        "Golden Feather",
+        "Joy Pendant",
+        "Treasure Chart 13",
+        "Joy Pendant",
+        "Yellow Rupee",
+        "Maggie's Letter",
+        "Joy Pendant",
+        "Treasure Chart 23",
+        "Treasure Chart 27",
+        "Red Rupee",
+        "Purple Rupee",
+        "Treasure Chart 20",
+        "Purple Rupee",
+        "Treasure Chart 16",
+        "Blue Rupee",
+        "Golden Feather",
+        "Purple Rupee",
+        "All-Purpose Bait",
+        "Forbidden Tingle Statue",
+        "Treasure Chart 34",
+        "Green Chu Jelly",
+        "Tingle's Chart",
+        "Joy Pendant",
+        "Treasure Chart 14"
+      ],
+      "boss_reqs": {
+        "required_boss_item_locations": [],
+        "required_bosses": [],
+        "banned_bosses": []
+      },
+      "logic_rematch_bosses_skipped": true,
+      "logic_in_swordless_mode": false,
+      "logic_in_required_bosses_mode": false,
+      "logic_obscure_3": false,
+      "logic_obscure_2": false,
+      "logic_obscure_1": false,
+      "logic_precise_3": false,
+      "logic_precise_2": false,
+      "logic_precise_1": false,
+      "logic_tuner_logic_enabled": false,
       "world_description": "Legend has it that whenever evil has appeared, a hero named Link has arisen to defeat it. The legend continues on\nthe surface of a vast and mysterious sea as Link sets sail in his most epic, awe-inspiring adventure yet. Aided by a\nmagical conductor's baton called the Wind Waker, he will face unimaginable monsters, explore puzzling dungeons, and\nmeet a cast of unforgettable characters as he searches for his kidnapped sister.",
       "slot_data": {
         "progression_dungeons": 1,

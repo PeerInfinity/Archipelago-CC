@@ -127,23 +127,11 @@ class ExpressionResolver:
                         # Try to get the attribute
                         resolved = getattr(obj_value, attr_name)
 
-                        # Special handling for Option class attributes like Goal.option_vanilla
-                        # These should return the string option name (e.g., "vanilla") instead of the
-                        # numeric value (e.g., 0) because settings in the exported JSON use string names.
-                        # This ensures comparisons like `goal == Goal.option_vanilla` work correctly
-                        # when goal is passed as "vanilla" from settings.
-                        if attr_name.startswith('option_') and isinstance(resolved, int):
-                            # Check if the parent is an Option class with name_lookup
-                            if hasattr(obj_value, 'name_lookup'):
-                                try:
-                                    # Use name_lookup to get the actual string key for this value
-                                    option_name = obj_value.name_lookup.get(resolved)
-                                    if option_name is not None:
-                                        logging.debug(f"Resolved Option attribute {attr_name} to string name: {option_name}")
-                                        return option_name
-                                except (TypeError, KeyError):
-                                    # name_lookup access failed, fall through to return resolved
-                                    pass
+                        # Note: Previously, Option class attributes like Goal.option_vanilla were
+                        # converted to string names (e.g., "vanilla") to match settings exported as strings.
+                        # However, this broke ordered comparisons (e.g., ice_grappling < difficulty).
+                        # Now, both settings and option_* constants are exported as numeric values,
+                        # ensuring consistent comparison behavior matching Python's semantics.
 
                         logging.debug(f"Resolved attribute {attr_name} to value: {resolved}")
                         return resolved

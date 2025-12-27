@@ -45,15 +45,11 @@
     },
     {
       "name": "Pokemon Red and Blue.yaml",
-      "reason": "Temporarily excluded. It takes too long to process. 61 seconds for the multiclient test."
+      "reason": "Temporarily excluded. It takes too long to process. 408 seconds for the multiclient test."
     },
     {
       "name": "SMZ3.yaml",
       "reason": "Temporarily excluded. It takes too long to process. 186 seconds for the multiclient test, which also fails because of self-locking items."
-    },
-    {
-      "name": "TUNIC.yaml",
-      "reason": "Temporarily excluded. There is a recursion issue in the exporter that makes it never stop writing to the output file."
     },
     {
       "name": "Yacht Dice.yaml",

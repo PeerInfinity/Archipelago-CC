@@ -484,7 +484,9 @@ class ASTVisitorMixin:
                                                               closure_vars=enhanced_closure_vars,
                                                               seen_funcs=self.seen_funcs,
                                                               game_handler=self.game_handler,
-                                                              player_context=self.player_context)
+                                                              player_context=self.player_context,
+                                                              rule_target_name=getattr(self, 'rule_target_name', None),
+                                                              target_type=getattr(self, 'target_type', None))
                                 if recursive_result.get('type') != 'error':
                                     # Check if the result is too large to inline
                                     # If so, discard the analyzed result and treat like manual preservation
@@ -626,7 +628,9 @@ class ASTVisitorMixin:
                                                           closure_vars=enhanced_closure_vars,
                                                           seen_funcs=self.seen_funcs, # Pass the dict
                                                           game_handler=self.game_handler,
-                                                          player_context=self.player_context)
+                                                          player_context=self.player_context,
+                                                          rule_target_name=getattr(self, 'rule_target_name', None),
+                                                          target_type=getattr(self, 'target_type', None))
                           if recursive_result.get('type') != 'error':
                               # Check if the result is too large to inline
                               # If so, discard the analyzed result and treat like manual preservation
@@ -707,7 +711,9 @@ class ASTVisitorMixin:
                                 try:
                                     item_result = analyze_rule(rule_func=item_func, closure_vars=self.closure_vars.copy(),
                                                               seen_funcs=self.seen_funcs, game_handler=self.game_handler,
-                                                              player_context=self.player_context)
+                                                              player_context=self.player_context,
+                                                              rule_target_name=getattr(self, 'rule_target_name', None),
+                                                              target_type=getattr(self, 'target_type', None))
                                     if item_result and item_result.get('type') != 'error':
                                         analyzed_items.append(item_result)
                                     else:
@@ -819,7 +825,9 @@ class ASTVisitorMixin:
                                 try:
                                     item_result = analyze_rule(rule_func=item_func, closure_vars=self.closure_vars.copy(),
                                                               seen_funcs=self.seen_funcs, game_handler=self.game_handler,
-                                                              player_context=self.player_context)
+                                                              player_context=self.player_context,
+                                                              rule_target_name=getattr(self, 'rule_target_name', None),
+                                                              target_type=getattr(self, 'target_type', None))
                                     if item_result and item_result.get('type') != 'error':
                                         analyzed_items.append(item_result)
                                     else:
@@ -860,7 +868,9 @@ class ASTVisitorMixin:
                                                 closure_vars=self.closure_vars.copy(),
                                                 seen_funcs=self.seen_funcs,
                                                 game_handler=self.game_handler,
-                                                player_context=self.player_context
+                                                player_context=self.player_context,
+                                                rule_target_name=getattr(self, 'rule_target_name', None),
+                                                target_type=getattr(self, 'target_type', None)
                                             )
                                             if item_result and item_result.get('type') != 'error':
                                                 inner_conditions.append(item_result)
@@ -2221,6 +2231,22 @@ class ASTVisitorMixin:
                         # Don't convert to list here - let attribute access resolve the fields
                         pass
 
+            # Replace closure-captured location variable with 'location'
+            # This handles patterns like: add_rule(ep_boss, lambda state: ... ep_boss.parent_region ...)
+            # where the lambda captures the location variable from the enclosing scope
+            # Detection: if we're analyzing a Location access rule, and the closure variable
+            # is a Location object with the same name as the rule target, replace with 'location'
+            if (hasattr(self, 'target_type') and self.target_type == 'Location' and
+                hasattr(self, 'rule_target_name') and self.rule_target_name and
+                name in self.closure_vars):
+                closure_value = self.closure_vars.get(name)
+                # Check if it's a Location object with matching name
+                if (closure_value is not None and
+                    hasattr(closure_value, 'name') and
+                    getattr(closure_value, 'name', None) == self.rule_target_name):
+                    logging.debug(f"visit_Name: Replaced closure-captured location variable '{name}' with 'location' (matched target '{self.rule_target_name}')")
+                    name = 'location'
+
             # Use game handler to replace names if available
             if self.game_handler and hasattr(self.game_handler, 'replace_name'):
                 original_name = name
@@ -2253,6 +2279,7 @@ class ASTVisitorMixin:
                 logging.debug(f"visit_Expr: Detected top-level '{func_name}' call. Visiting rule argument directly.")
                 # Visit the second argument (the rule function/lambda) and return its result
                 rule_result = self.visit(call_node.args[1])
+
                 logging.debug(f"visit_Expr: Finished visiting rule argument for '{func_name}'. Returning result: {rule_result}")
                 return rule_result
 
@@ -2507,7 +2534,9 @@ class ASTVisitorMixin:
                                 closure_vars=self.closure_vars,
                                 seen_funcs=self.seen_funcs,
                                 game_handler=self.game_handler,
-                                player_context=self.player_context
+                                player_context=self.player_context,
+                                rule_target_name=getattr(self, 'rule_target_name', None),
+                                target_type=getattr(self, 'target_type', None)
                             )
                             if analyzed_result and analyzed_result.get('type') != 'error':
                                 logging.debug(f"Successfully analyzed callable subscript result: {analyzed_result.get('type')}")
@@ -2530,7 +2559,9 @@ class ASTVisitorMixin:
                                             closure_vars=self.closure_vars.copy(),
                                             seen_funcs=self.seen_funcs,
                                             game_handler=self.game_handler,
-                                            player_context=self.player_context
+                                            player_context=self.player_context,
+                                            rule_target_name=getattr(self, 'rule_target_name', None),
+                                            target_type=getattr(self, 'target_type', None)
                                         )
                                         if item_result and item_result.get('type') != 'error':
                                             analyzed_items.append(item_result)

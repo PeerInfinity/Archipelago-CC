@@ -1,17 +1,16 @@
 # exporter/games/alttp.py
 
-import logging
 from .base import BaseGameExportHandler
 from typing import Any, Dict
 from worlds.alttp.Items import progression_mapping
-
-logger = logging.getLogger(__name__)
 
 
 class ALttPGameExportHandler(BaseGameExportHandler):
     # For now, treat all exits as bidirectional
     # This setting is currently only used for region navigation in the frontend
     ASSUME_BIDIRECTIONAL_EXITS = True
+
+    # The following settings are just to make the rules.json file easier to read:
 
     # Auto-discover region attributes (is_light_world, is_dark_world, type)
     AUTO_DISCOVER_REGION_ATTRIBUTES = True
@@ -22,12 +21,10 @@ class ALttPGameExportHandler(BaseGameExportHandler):
     # Auto-discover world attributes (shops, dungeons, difficulty_requirements, etc.)
     AUTO_DISCOVER_WORLD_ATTRIBUTES = True
 
-    def replace_name(self, name: str) -> str:
-        """Replace ALTTP-specific name references with standard equivalents."""
-        if name == 'ep_boss' or name == 'ep_prize':
-            logger.debug(f"ALTTP: Replacing '{name}' with 'location'")
-            return 'location'
-        return name
+    # Export Choice options as string keys instead of numeric values
+    # ALttP rules use string comparisons like `enemy_health in ("easy", "default")`
+    # and don't use ordered comparisons, so string keys work correctly
+    EXPORT_CHOICE_OPTIONS_AS_NUMERIC = False
 
     def get_progression_mapping(self, world) -> Dict[str, Any]:
         """Return ALTTP-specific progression item mapping."""

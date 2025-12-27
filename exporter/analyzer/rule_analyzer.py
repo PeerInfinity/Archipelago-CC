@@ -34,7 +34,8 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
 
     def __init__(self, closure_vars=None, seen_funcs=None,
                  game_handler=None, rule_func=None, player_context=None,
-                 preserve_parameter_names=False):
+                 preserve_parameter_names=False, rule_target_name=None,
+                 target_type=None):
         """
         Initialize the RuleAnalyzer.
 
@@ -46,6 +47,9 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
             player_context: The player number context for this analysis
             preserve_parameter_names: If True, keep function parameters as name references
                                      instead of resolving to default values
+            rule_target_name: Name of the rule target (e.g., location name) for detecting
+                             closure-captured references that should be replaced with 'location'
+            target_type: Type of target ('Location', 'Entrance', etc.) for context-specific handling
         """
         self.closure_vars = closure_vars or {}
         self.seen_funcs = seen_funcs or {}
@@ -58,6 +62,12 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
 
         # Operation counter to detect infinite loops
         self.operation_count = 0
+
+        # Rule target context for detecting closure-captured location references
+        # When analyzing a Location access rule, if a closure variable is a Location
+        # object with the same name, it should be replaced with 'location'
+        self.rule_target_name = rule_target_name
+        self.target_type = target_type
 
         # Initialize helper components
         self.expression_resolver = ExpressionResolver(

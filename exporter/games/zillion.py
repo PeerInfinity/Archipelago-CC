@@ -14,7 +14,7 @@ class ZillionGameExportHandler(GenericGameExportHandler):
     the zilliandomizer location objects and convert them to our rules format.
     """
 
-    def expand_helper(self, helper_name: str):
+    def expand_helper(self, helper_name: str, args=None):
         """Zillion does not use helper functions in its access rules."""
         if helper_name:
             logger.warning(f"Unexpected helper in Zillion: {helper_name}")

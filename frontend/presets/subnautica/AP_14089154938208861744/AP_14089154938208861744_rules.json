@@ -6073,6 +6073,7 @@
           "display_name": "Swim Rule"
         }
       },
+      "creatures_to_scan": [],
       "world_description": "Subnautica is an undersea exploration game. Stranded on an alien world, you become infected by\nan unknown bacteria. The planet's automatic quarantine will shoot you down if you try to leave.\nYou must find a cure for yourself, build an escape rocket, and leave the planet.",
       "slot_data": {
         "goal": "launch",

@@ -8322,6 +8322,29 @@
           "display_name": "Trade Quest Hinting"
         }
       },
+      "item_frequencies": {
+        "Progressive Undernet Rank": 8,
+        "ExpMem": 2,
+        "Unlocker": 10,
+        "HPMemory": 23,
+        "RegUP1": 4,
+        "RegUP2": 13,
+        "RegUP3": 4,
+        "Untrap": 2,
+        "SubMem": 4,
+        "MiniEnrg": 3,
+        "FullEnrg": 5,
+        "CopyDmg *": 3,
+        "Charge+1 (White)": 2,
+        "Charge+1 (Pink)": 2,
+        "600z": 2,
+        "800z": 2,
+        "1000z": 2,
+        "1200z": 2,
+        "1 BugFrag": 10,
+        "10 BugFrags": 5
+      },
+      "rom_name": "MMBN3_ROM_NOT_GENERATED",
       "world_description": "Play as Lan and MegaMan to stop the evil organization WWW led by the nefarious\nDr. Wily in their plans to take over the Net! Collect BattleChips, Customize your Navi,\nand utilize powerful Style Changes to grow strong enough to take on the greatest\nthreat the Internet has ever faced!",
       "slot_data": {
         "extra_ranks": 0,
@@ -8360,6 +8383,69 @@
   },
   "helpers": {
     "1": {
+      "has_www_id": {
+        "type": "item_check",
+        "item": "WWW ID"
+      },
+      "has_press": {
+        "type": "item_check",
+        "item": "Press"
+      },
+      "can_unlock": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "compare",
+            "left": {
+              "type": "can_reach",
+              "region": {
+                "type": "constant",
+                "value": "SciLab Overworld"
+              }
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "type": "compare",
+            "left": {
+              "type": "can_reach",
+              "region": {
+                "type": "constant",
+                "value": "SciLab Cyberworld"
+              }
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "type": "compare",
+            "left": {
+              "type": "can_reach",
+              "region": {
+                "type": "constant",
+                "value": "Yoka Cyberworld"
+              }
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "type": "item_check",
+            "item": "Unlocker",
+            "count": 8
+          }
+        ]
+      },
       "explore_score": {
         "type": "conditional",
         "test": {

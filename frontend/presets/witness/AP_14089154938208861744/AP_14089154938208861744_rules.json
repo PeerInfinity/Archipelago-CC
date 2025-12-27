@@ -10168,6 +10168,3289 @@
           "display_name": "Victory Condition"
         }
       },
+      "player_logic": {
+        "PARENT_ITEM_COUNT_PER_BASE_ITEM": {
+          "Full Dots": 2,
+          "Stars": 1,
+          "Dots": 1,
+          "Stars + Same Colored Symbol": 2,
+          "Symmetry": 1,
+          "Colored Dots": 2,
+          "Black/White Squares": 1,
+          "Boat": 1,
+          "Colored Squares": 1,
+          "Eraser": 1,
+          "Shapers": 1,
+          "Rotated Shapers": 1,
+          "Sound Dots": 1,
+          "Negative Shapers": 1,
+          "Mountain Entry": 1,
+          "+1 Laser (Unredirected)": 1,
+          "Desert Laser Redirection": 1,
+          "Triangles": 1
+        },
+        "PROGRESSIVE_LISTS": {
+          "Progressive Dots": [
+            "Dots",
+            "Full Dots"
+          ],
+          "Progressive Stars": [
+            "Stars",
+            "Stars + Same Colored Symbol"
+          ],
+          "Progressive Symmetry": [
+            "Symmetry",
+            "Colored Dots"
+          ]
+        },
+        "DOOR_ITEMS_BY_ID": {
+          "0x17CDF": [
+            "Boat"
+          ],
+          "0x17CC8": [
+            "Boat"
+          ],
+          "0x17CA6": [
+            "Boat"
+          ],
+          "0x09DB8": [
+            "Boat"
+          ],
+          "0x17C95": [
+            "Boat"
+          ],
+          "0x0A054": [
+            "Boat"
+          ]
+        },
+        "CONNECTIONS_BY_REGION_NAME_THEORETICAL": {
+          "Entry": [
+            {
+              "target_region": "Tutorial First Hallway"
+            },
+            {
+              "target_region": "Desert Obelisk"
+            },
+            {
+              "target_region": "Quarry Obelisk"
+            },
+            {
+              "target_region": "Monastery Obelisk"
+            },
+            {
+              "target_region": "Town Obelisk"
+            },
+            {
+              "target_region": "Treehouse Obelisk"
+            },
+            {
+              "target_region": "Mountainside Obelisk"
+            },
+            {
+              "target_region": "Easter Eggs"
+            }
+          ],
+          "Tutorial First Hallway": [
+            {
+              "target_region": "Entry"
+            },
+            {
+              "target_region": "Tutorial First Hallway Room"
+            }
+          ],
+          "Tutorial First Hallway Room": [
+            {
+              "target_region": "Tutorial"
+            },
+            {
+              "target_region": "Tutorial First Hallway"
+            }
+          ],
+          "Tutorial": [
+            {
+              "target_region": "Outside Tutorial"
+            },
+            {
+              "target_region": "Tutorial First Hallway Room"
+            }
+          ],
+          "Outside Tutorial": [
+            {
+              "target_region": "Outside Tutorial Path To Outpost"
+            },
+            {
+              "target_region": "Outside Tutorial Vault"
+            },
+            {
+              "target_region": "Tutorial"
+            },
+            {
+              "target_region": "Outside Tutorial Outpost"
+            },
+            {
+              "target_region": "Main Island"
+            }
+          ],
+          "Outside Tutorial Vault": [
+            {
+              "target_region": "Outside Tutorial"
+            }
+          ],
+          "Outside Tutorial Path To Outpost": [
+            {
+              "target_region": "Outside Tutorial Outpost"
+            },
+            {
+              "target_region": "Outside Tutorial"
+            }
+          ],
+          "Outside Tutorial Outpost": [
+            {
+              "target_region": "Outside Tutorial"
+            },
+            {
+              "target_region": "Outside Tutorial Path To Outpost"
+            }
+          ],
+          "Orchard": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Orchard Beyond First Gate"
+            }
+          ],
+          "Orchard Beyond First Gate": [
+            {
+              "target_region": "Orchard End"
+            },
+            {
+              "target_region": "Orchard"
+            }
+          ],
+          "Orchard End": [
+            {
+              "target_region": "Orchard Beyond First Gate"
+            }
+          ],
+          "Main Island": [
+            {
+              "target_region": "Outside Tutorial"
+            },
+            {
+              "target_region": "Orchard"
+            },
+            {
+              "target_region": "Outside Glass Factory"
+            },
+            {
+              "target_region": "Outside Symmetry Island"
+            },
+            {
+              "target_region": "Desert Outside"
+            },
+            {
+              "target_region": "Outside Quarry"
+            },
+            {
+              "target_region": "Shadows"
+            },
+            {
+              "target_region": "Outside Keep"
+            },
+            {
+              "target_region": "Outside Monastery"
+            },
+            {
+              "target_region": "Town"
+            },
+            {
+              "target_region": "Southern Peninsula"
+            },
+            {
+              "target_region": "Jungle"
+            },
+            {
+              "target_region": "Outside Jungle River"
+            },
+            {
+              "target_region": "Outside Bunker"
+            },
+            {
+              "target_region": "Outside Swamp"
+            },
+            {
+              "target_region": "Treehouse Beach"
+            },
+            {
+              "target_region": "Treehouse Drawbridge Platform"
+            },
+            {
+              "target_region": "Mountainside"
+            },
+            {
+              "target_region": "Caves"
+            }
+          ],
+          "Outside Glass Factory": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Inside Glass Factory"
+            }
+          ],
+          "Inside Glass Factory": [
+            {
+              "target_region": "Inside Glass Factory Behind Back Wall"
+            },
+            {
+              "target_region": "Outside Glass Factory"
+            }
+          ],
+          "Inside Glass Factory Behind Back Wall": [
+            {
+              "target_region": "The Ocean"
+            },
+            {
+              "target_region": "Inside Glass Factory"
+            }
+          ],
+          "Outside Symmetry Island": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Symmetry Island Lower"
+            }
+          ],
+          "Symmetry Island Lower": [
+            {
+              "target_region": "Symmetry Island Upper"
+            },
+            {
+              "target_region": "Outside Symmetry Island"
+            }
+          ],
+          "Symmetry Island Upper": [
+            {
+              "target_region": "Symmetry Island Lower"
+            }
+          ],
+          "Desert Obelisk": [
+            {
+              "target_region": "Entry"
+            }
+          ],
+          "Desert Outside": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Desert Light Room"
+            },
+            {
+              "target_region": "Desert Vault"
+            }
+          ],
+          "Desert Vault": [
+            {
+              "target_region": "Desert Outside"
+            }
+          ],
+          "Desert Light Room": [
+            {
+              "target_region": "Desert Pond Room"
+            },
+            {
+              "target_region": "Desert Outside"
+            }
+          ],
+          "Desert Pond Room": [
+            {
+              "target_region": "Desert Flood Room"
+            },
+            {
+              "target_region": "Desert Light Room"
+            }
+          ],
+          "Desert Flood Room": [
+            {
+              "target_region": "Desert Elevator Room"
+            },
+            {
+              "target_region": "Desert Flood Room Underwater"
+            },
+            {
+              "target_region": "Desert Pond Room"
+            }
+          ],
+          "Desert Flood Room Underwater": [
+            {
+              "target_region": "Desert Flood Room"
+            }
+          ],
+          "Desert Elevator Room": [
+            {
+              "target_region": "Desert Behind Elevator"
+            },
+            {
+              "target_region": "Desert Flood Room"
+            }
+          ],
+          "Desert Behind Elevator": [
+            {
+              "target_region": "Desert Elevator Room"
+            },
+            {
+              "target_region": "Tunnels"
+            }
+          ],
+          "Quarry Obelisk": [
+            {
+              "target_region": "Entry"
+            }
+          ],
+          "Outside Quarry": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Quarry Between Entry Doors"
+            },
+            {
+              "target_region": "Quarry Stoneworks Ground Floor"
+            },
+            {
+              "target_region": "Quarry Elevator"
+            }
+          ],
+          "Quarry Elevator": [
+            {
+              "target_region": "Outside Quarry"
+            },
+            {
+              "target_region": "Quarry"
+            }
+          ],
+          "Quarry Between Entry Doors": [
+            {
+              "target_region": "Quarry"
+            },
+            {
+              "target_region": "Outside Quarry"
+            }
+          ],
+          "Quarry": [
+            {
+              "target_region": "Quarry Stoneworks Ground Floor"
+            },
+            {
+              "target_region": "Quarry Between Entry Doors"
+            },
+            {
+              "target_region": "Quarry Boathouse"
+            },
+            {
+              "target_region": "Shadows Ledge"
+            },
+            {
+              "target_region": "Quarry Elevator"
+            }
+          ],
+          "Quarry Stoneworks Ground Floor": [
+            {
+              "target_region": "Quarry"
+            },
+            {
+              "target_region": "Quarry Stoneworks Middle Floor"
+            },
+            {
+              "target_region": "Outside Quarry"
+            },
+            {
+              "target_region": "Quarry Stoneworks Lift"
+            },
+            {
+              "target_region": "Quarry Stoneworks Upper Floor"
+            }
+          ],
+          "Quarry Stoneworks Middle Floor": [
+            {
+              "target_region": "Quarry Stoneworks Lift"
+            },
+            {
+              "target_region": "Quarry Stoneworks Ground Floor"
+            }
+          ],
+          "Quarry Stoneworks Lift": [
+            {
+              "target_region": "Quarry Stoneworks Middle Floor"
+            },
+            {
+              "target_region": "Quarry Stoneworks Ground Floor"
+            },
+            {
+              "target_region": "Quarry Stoneworks Upper Floor"
+            }
+          ],
+          "Quarry Stoneworks Upper Floor": [
+            {
+              "target_region": "Quarry Stoneworks Lift"
+            },
+            {
+              "target_region": "Quarry Stoneworks Ground Floor"
+            }
+          ],
+          "Quarry Boathouse": [
+            {
+              "target_region": "Quarry"
+            },
+            {
+              "target_region": "Quarry Boathouse Upper Front"
+            },
+            {
+              "target_region": "Quarry Boathouse Behind Staircase"
+            }
+          ],
+          "Quarry Boathouse Behind Staircase": [
+            {
+              "target_region": "The Ocean"
+            },
+            {
+              "target_region": "Quarry Boathouse"
+            }
+          ],
+          "Quarry Boathouse Upper Front": [
+            {
+              "target_region": "Quarry Boathouse Upper Middle"
+            },
+            {
+              "target_region": "Quarry Boathouse"
+            }
+          ],
+          "Quarry Boathouse Upper Middle": [
+            {
+              "target_region": "Quarry Boathouse Upper Back"
+            },
+            {
+              "target_region": "Quarry Boathouse Upper Front"
+            }
+          ],
+          "Quarry Boathouse Upper Back": [
+            {
+              "target_region": "Quarry Boathouse Upper Middle"
+            }
+          ],
+          "Shadows": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Shadows Ledge"
+            },
+            {
+              "target_region": "Shadows Laser Room"
+            },
+            {
+              "target_region": "Keep 4th Pressure Plate"
+            }
+          ],
+          "Shadows Ledge": [
+            {
+              "target_region": "Shadows"
+            },
+            {
+              "target_region": "Quarry"
+            }
+          ],
+          "Shadows Laser Room": [
+            {
+              "target_region": "Shadows"
+            }
+          ],
+          "Outside Keep": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Keep"
+            }
+          ],
+          "Keep": [
+            {
+              "target_region": "Outside Keep"
+            },
+            {
+              "target_region": "Keep 2nd Maze"
+            },
+            {
+              "target_region": "Keep 2nd Pressure Plate"
+            },
+            {
+              "target_region": "Keep 3rd Maze"
+            },
+            {
+              "target_region": "Keep 4th Maze"
+            },
+            {
+              "target_region": "Keep Tower"
+            }
+          ],
+          "Keep 2nd Maze": [
+            {
+              "target_region": "Keep"
+            },
+            {
+              "target_region": "Keep 3rd Maze"
+            }
+          ],
+          "Keep 3rd Maze": [
+            {
+              "target_region": "Keep"
+            },
+            {
+              "target_region": "Keep 4th Maze"
+            },
+            {
+              "target_region": "Keep 2nd Maze"
+            }
+          ],
+          "Keep 4th Maze": [
+            {
+              "target_region": "Keep"
+            },
+            {
+              "target_region": "Keep Tower"
+            },
+            {
+              "target_region": "Keep 3rd Maze"
+            }
+          ],
+          "Keep 2nd Pressure Plate": [
+            {
+              "target_region": "Keep 3rd Pressure Plate"
+            },
+            {
+              "target_region": "Keep"
+            }
+          ],
+          "Keep 3rd Pressure Plate": [
+            {
+              "target_region": "Keep 4th Pressure Plate"
+            },
+            {
+              "target_region": "Keep 2nd Pressure Plate"
+            },
+            {
+              "target_region": "Shipwreck"
+            }
+          ],
+          "Keep 4th Pressure Plate": [
+            {
+              "target_region": "Shadows"
+            },
+            {
+              "target_region": "Keep Tower"
+            },
+            {
+              "target_region": "Keep 3rd Pressure Plate"
+            }
+          ],
+          "Keep Tower": [
+            {
+              "target_region": "Keep"
+            },
+            {
+              "target_region": "Keep 4th Maze"
+            },
+            {
+              "target_region": "Keep 4th Pressure Plate"
+            }
+          ],
+          "Shipwreck": [
+            {
+              "target_region": "Keep 3rd Pressure Plate"
+            },
+            {
+              "target_region": "Shipwreck Vault"
+            }
+          ],
+          "Shipwreck Vault": [
+            {
+              "target_region": "Shipwreck"
+            }
+          ],
+          "Monastery Obelisk": [
+            {
+              "target_region": "Entry"
+            }
+          ],
+          "Outside Monastery": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Inside Monastery"
+            },
+            {
+              "target_region": "Monastery Garden"
+            }
+          ],
+          "Inside Monastery": [
+            {
+              "target_region": "Monastery North Shutters"
+            },
+            {
+              "target_region": "Outside Monastery"
+            }
+          ],
+          "Monastery Garden": [
+            {
+              "target_region": "Outside Monastery"
+            },
+            {
+              "target_region": "Outside Jungle River"
+            }
+          ],
+          "Monastery North Shutters": [
+            {
+              "target_region": "Inside Monastery"
+            }
+          ],
+          "Town Obelisk": [
+            {
+              "target_region": "Entry"
+            }
+          ],
+          "Town": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "The Ocean"
+            },
+            {
+              "target_region": "Town Maze Rooftop"
+            },
+            {
+              "target_region": "Town Church"
+            },
+            {
+              "target_region": "Town Wooden Rooftop"
+            },
+            {
+              "target_region": "Town RGB House"
+            },
+            {
+              "target_region": "Town Inside Cargo Box"
+            },
+            {
+              "target_region": "Outside Windmill"
+            },
+            {
+              "target_region": "Town Tower Bottom"
+            },
+            {
+              "target_region": "Theater"
+            },
+            {
+              "target_region": "Tunnels"
+            }
+          ],
+          "Town Inside Cargo Box": [
+            {
+              "target_region": "Town"
+            }
+          ],
+          "Town Maze Rooftop": [
+            {
+              "target_region": "Town Red Rooftop"
+            },
+            {
+              "target_region": "Town"
+            }
+          ],
+          "Town Red Rooftop": [
+            {
+              "target_region": "Town Maze Rooftop"
+            }
+          ],
+          "Town Wooden Rooftop": [
+            {
+              "target_region": "Town"
+            }
+          ],
+          "Town Church": [
+            {
+              "target_region": "Town"
+            }
+          ],
+          "Town RGB House": [
+            {
+              "target_region": "Town RGB House Upstairs"
+            },
+            {
+              "target_region": "Town"
+            }
+          ],
+          "Town RGB House Upstairs": [
+            {
+              "target_region": "Town RGB House"
+            }
+          ],
+          "Town Tower Bottom": [
+            {
+              "target_region": "Town"
+            },
+            {
+              "target_region": "Town Tower After First Door"
+            }
+          ],
+          "Town Tower After First Door": [
+            {
+              "target_region": "Town Tower After Second Door"
+            },
+            {
+              "target_region": "Town Tower Bottom"
+            }
+          ],
+          "Town Tower After Second Door": [
+            {
+              "target_region": "Town Tower After Third Door"
+            },
+            {
+              "target_region": "Town Tower After First Door"
+            }
+          ],
+          "Town Tower After Third Door": [
+            {
+              "target_region": "Town Tower Top"
+            },
+            {
+              "target_region": "Town Tower After Second Door"
+            }
+          ],
+          "Town Tower Top": [
+            {
+              "target_region": "Town Tower After Third Door"
+            }
+          ],
+          "Outside Windmill": [
+            {
+              "target_region": "Windmill Interior"
+            },
+            {
+              "target_region": "Town"
+            }
+          ],
+          "Windmill Interior": [
+            {
+              "target_region": "Theater"
+            },
+            {
+              "target_region": "Outside Windmill"
+            },
+            {
+              "target_region": "Tunnels"
+            }
+          ],
+          "Theater": [
+            {
+              "target_region": "Town"
+            },
+            {
+              "target_region": "Windmill Interior"
+            }
+          ],
+          "Southern Peninsula": [
+            {
+              "target_region": "Main Island"
+            }
+          ],
+          "Jungle": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "The Ocean"
+            },
+            {
+              "target_region": "Jungle Under Popup Wall"
+            }
+          ],
+          "Jungle Under Popup Wall": [
+            {
+              "target_region": "Jungle"
+            }
+          ],
+          "Outside Jungle River": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Monastery Garden"
+            },
+            {
+              "target_region": "Jungle Vault"
+            }
+          ],
+          "Jungle Vault": [
+            {
+              "target_region": "Outside Jungle River"
+            }
+          ],
+          "Outside Bunker": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Bunker"
+            },
+            {
+              "target_region": "Bunker Elevator"
+            }
+          ],
+          "Bunker": [
+            {
+              "target_region": "Bunker Glass Room"
+            },
+            {
+              "target_region": "Outside Bunker"
+            }
+          ],
+          "Bunker Glass Room": [
+            {
+              "target_region": "Bunker Ultraviolet Room"
+            },
+            {
+              "target_region": "Bunker"
+            }
+          ],
+          "Bunker Ultraviolet Room": [
+            {
+              "target_region": "Bunker Elevator Section"
+            },
+            {
+              "target_region": "Bunker Glass Room"
+            }
+          ],
+          "Bunker Elevator Section": [
+            {
+              "target_region": "Bunker Elevator"
+            },
+            {
+              "target_region": "Bunker Under Elevator"
+            },
+            {
+              "target_region": "Bunker Ultraviolet Room"
+            }
+          ],
+          "Bunker Under Elevator": [
+            {
+              "target_region": "Bunker Elevator Section"
+            }
+          ],
+          "Bunker Elevator": [
+            {
+              "target_region": "Bunker Elevator Section"
+            },
+            {
+              "target_region": "Bunker Cyan Room"
+            },
+            {
+              "target_region": "Bunker Green Room"
+            },
+            {
+              "target_region": "Bunker Laser Platform"
+            },
+            {
+              "target_region": "Outside Bunker"
+            }
+          ],
+          "Bunker Cyan Room": [
+            {
+              "target_region": "Bunker Elevator"
+            }
+          ],
+          "Bunker Green Room": [
+            {
+              "target_region": "Bunker Elevator"
+            }
+          ],
+          "Bunker Laser Platform": [
+            {
+              "target_region": "Bunker Elevator"
+            }
+          ],
+          "Outside Swamp": [
+            {
+              "target_region": "Swamp Entry Area"
+            },
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Swamp Long Bridge"
+            },
+            {
+              "target_region": "Swamp Laser Area"
+            }
+          ],
+          "Swamp Entry Area": [
+            {
+              "target_region": "Swamp Sliding Bridge"
+            },
+            {
+              "target_region": "Outside Swamp"
+            }
+          ],
+          "Swamp Sliding Bridge": [
+            {
+              "target_region": "Swamp Entry Area"
+            },
+            {
+              "target_region": "Swamp Platform"
+            }
+          ],
+          "Swamp Platform": [
+            {
+              "target_region": "Swamp Cyan Underwater"
+            },
+            {
+              "target_region": "Swamp Near Boat"
+            },
+            {
+              "target_region": "Swamp Between Bridges Near"
+            },
+            {
+              "target_region": "Swamp Sliding Bridge"
+            }
+          ],
+          "Swamp Cyan Underwater": [
+            {
+              "target_region": "Swamp Platform"
+            }
+          ],
+          "Swamp Between Bridges Near": [
+            {
+              "target_region": "Swamp Between Bridges Far"
+            },
+            {
+              "target_region": "Swamp Platform"
+            }
+          ],
+          "Swamp Between Bridges Far": [
+            {
+              "target_region": "Swamp Red Underwater"
+            },
+            {
+              "target_region": "Swamp Rotating Bridge"
+            },
+            {
+              "target_region": "Swamp Between Bridges Near"
+            }
+          ],
+          "Swamp Red Underwater": [
+            {
+              "target_region": "Swamp Maze"
+            },
+            {
+              "target_region": "Swamp Between Bridges Far"
+            }
+          ],
+          "Swamp Rotating Bridge": [
+            {
+              "target_region": "Swamp Between Bridges Far"
+            },
+            {
+              "target_region": "Swamp Near Boat"
+            },
+            {
+              "target_region": "Swamp Purple Area"
+            }
+          ],
+          "Swamp Near Boat": [
+            {
+              "target_region": "Swamp Rotating Bridge"
+            },
+            {
+              "target_region": "Swamp Blue Underwater"
+            },
+            {
+              "target_region": "Swamp Long Bridge"
+            },
+            {
+              "target_region": "The Ocean"
+            },
+            {
+              "target_region": "Swamp Platform"
+            }
+          ],
+          "Swamp Long Bridge": [
+            {
+              "target_region": "Swamp Near Boat"
+            },
+            {
+              "target_region": "Outside Swamp"
+            }
+          ],
+          "Swamp Purple Area": [
+            {
+              "target_region": "Swamp Rotating Bridge"
+            },
+            {
+              "target_region": "Swamp Purple Underwater"
+            },
+            {
+              "target_region": "Swamp Near Boat"
+            }
+          ],
+          "Swamp Purple Underwater": [
+            {
+              "target_region": "Swamp Purple Area"
+            }
+          ],
+          "Swamp Blue Underwater": [
+            {
+              "target_region": "Swamp Near Boat"
+            }
+          ],
+          "Swamp Maze": [
+            {
+              "target_region": "Swamp Laser Area"
+            },
+            {
+              "target_region": "Swamp Red Underwater"
+            }
+          ],
+          "Swamp Laser Area": [
+            {
+              "target_region": "Outside Swamp"
+            },
+            {
+              "target_region": "Swamp Maze"
+            }
+          ],
+          "Treehouse Obelisk": [
+            {
+              "target_region": "Entry"
+            }
+          ],
+          "Treehouse Beach": [
+            {
+              "target_region": "Main Island"
+            }
+          ],
+          "Treehouse Entry Area": [
+            {
+              "target_region": "Treehouse Between Entry Doors"
+            },
+            {
+              "target_region": "The Ocean"
+            }
+          ],
+          "Treehouse Between Entry Doors": [
+            {
+              "target_region": "Treehouse Yellow Bridge"
+            },
+            {
+              "target_region": "Treehouse Entry Area"
+            }
+          ],
+          "Treehouse Yellow Bridge": [
+            {
+              "target_region": "Treehouse After Yellow Bridge"
+            },
+            {
+              "target_region": "Treehouse Between Entry Doors"
+            }
+          ],
+          "Treehouse After Yellow Bridge": [
+            {
+              "target_region": "Treehouse Junction"
+            },
+            {
+              "target_region": "Treehouse Yellow Bridge"
+            }
+          ],
+          "Treehouse Junction": [
+            {
+              "target_region": "Treehouse Right Orange Bridge"
+            },
+            {
+              "target_region": "Treehouse First Purple Bridge"
+            },
+            {
+              "target_region": "Treehouse Green Bridge"
+            },
+            {
+              "target_region": "Treehouse After Yellow Bridge"
+            }
+          ],
+          "Treehouse First Purple Bridge": [
+            {
+              "target_region": "Treehouse Second Purple Bridge"
+            },
+            {
+              "target_region": "Treehouse Junction"
+            }
+          ],
+          "Treehouse Right Orange Bridge": [
+            {
+              "target_region": "Treehouse Drawbridge Platform"
+            },
+            {
+              "target_region": "Treehouse Junction"
+            }
+          ],
+          "Treehouse Drawbridge Platform": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Treehouse Right Orange Bridge"
+            }
+          ],
+          "Treehouse Second Purple Bridge": [
+            {
+              "target_region": "Treehouse Left Orange Bridge"
+            },
+            {
+              "target_region": "Treehouse First Purple Bridge"
+            }
+          ],
+          "Treehouse Left Orange Bridge": [
+            {
+              "target_region": "Treehouse Laser Room Front Platform"
+            },
+            {
+              "target_region": "Treehouse Laser Room Back Platform"
+            },
+            {
+              "target_region": "Treehouse Burned House"
+            },
+            {
+              "target_region": "Treehouse Second Purple Bridge"
+            }
+          ],
+          "Treehouse Green Bridge": [
+            {
+              "target_region": "Treehouse Green Bridge Front House"
+            },
+            {
+              "target_region": "Treehouse Green Bridge Left House"
+            },
+            {
+              "target_region": "Treehouse Junction"
+            }
+          ],
+          "Treehouse Green Bridge Front House": [
+            {
+              "target_region": "Treehouse Green Bridge"
+            }
+          ],
+          "Treehouse Green Bridge Left House": [
+            {
+              "target_region": "Treehouse Green Bridge"
+            }
+          ],
+          "Treehouse Laser Room Front Platform": [
+            {
+              "target_region": "Treehouse Laser Room"
+            },
+            {
+              "target_region": "Treehouse Left Orange Bridge"
+            }
+          ],
+          "Treehouse Laser Room Back Platform": [
+            {
+              "target_region": "Treehouse Left Orange Bridge"
+            }
+          ],
+          "Treehouse Burned House": [
+            {
+              "target_region": "Treehouse Left Orange Bridge"
+            }
+          ],
+          "Treehouse Laser Room": [
+            {
+              "target_region": "Treehouse Laser Room Front Platform"
+            }
+          ],
+          "Mountainside Obelisk": [
+            {
+              "target_region": "Entry"
+            }
+          ],
+          "Mountainside": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Mountaintop"
+            },
+            {
+              "target_region": "Mountainside Vault"
+            }
+          ],
+          "Mountainside Vault": [
+            {
+              "target_region": "Mountainside"
+            }
+          ],
+          "Mountaintop": [
+            {
+              "target_region": "Mountain Floor 1"
+            },
+            {
+              "target_region": "Mountainside"
+            }
+          ],
+          "Mountain Floor 1": [
+            {
+              "target_region": "Mountain Floor 1 Bridge"
+            },
+            {
+              "target_region": "Mountaintop"
+            }
+          ],
+          "Mountain Floor 1 Bridge": [
+            {
+              "target_region": "Mountain Floor 1 At Door"
+            },
+            {
+              "target_region": "Mountain Floor 1 Trash Pillar"
+            },
+            {
+              "target_region": "Mountain Floor 1 Back Section"
+            },
+            {
+              "target_region": "Mountain Floor 1"
+            }
+          ],
+          "Mountain Floor 1 Trash Pillar": [],
+          "Mountain Floor 1 Back Section": [],
+          "Mountain Floor 1 At Door": [
+            {
+              "target_region": "Mountain Floor 2"
+            }
+          ],
+          "Mountain Floor 2": [
+            {
+              "target_region": "Mountain Floor 2 Light Bridge Room Near"
+            },
+            {
+              "target_region": "Mountain Floor 2 Beyond Bridge"
+            },
+            {
+              "target_region": "Mountain Floor 2 Above The Abyss"
+            },
+            {
+              "target_region": "Mountain Pink Bridge EP"
+            },
+            {
+              "target_region": "Mountain Floor 1 At Door"
+            }
+          ],
+          "Mountain Floor 2 Above The Abyss": [
+            {
+              "target_region": "Mountain Floor 2 Elevator Room"
+            },
+            {
+              "target_region": "Mountain Floor 2"
+            }
+          ],
+          "Mountain Floor 2 Light Bridge Room Near": [
+            {
+              "target_region": "Mountain Floor 2"
+            }
+          ],
+          "Mountain Floor 2 Beyond Bridge": [
+            {
+              "target_region": "Mountain Floor 2 Light Bridge Room Far"
+            },
+            {
+              "target_region": "Mountain Pink Bridge EP"
+            },
+            {
+              "target_region": "Mountain Floor 2"
+            }
+          ],
+          "Mountain Floor 2 Light Bridge Room Far": [
+            {
+              "target_region": "Mountain Floor 2 Beyond Bridge"
+            }
+          ],
+          "Mountain Floor 2 Elevator Room": [
+            {
+              "target_region": "Mountain Floor 2 Elevator"
+            },
+            {
+              "target_region": "Mountain Floor 2 Above The Abyss"
+            }
+          ],
+          "Mountain Floor 2 Elevator": [
+            {
+              "target_region": "Mountain Floor 2 Elevator Room"
+            },
+            {
+              "target_region": "Mountain Floor 3"
+            }
+          ],
+          "Mountain Floor 3": [
+            {
+              "target_region": "Mountain Floor 2 Elevator"
+            },
+            {
+              "target_region": "Mountain Bottom Floor"
+            },
+            {
+              "target_region": "Mountain Pink Bridge EP"
+            }
+          ],
+          "Mountain Bottom Floor": [
+            {
+              "target_region": "Mountain Path to Caves"
+            },
+            {
+              "target_region": "Mountain Bottom Floor Pillars Room"
+            },
+            {
+              "target_region": "Mountain Floor 3"
+            }
+          ],
+          "Mountain Bottom Floor Pillars Room": [
+            {
+              "target_region": "Elevator"
+            },
+            {
+              "target_region": "Mountain Bottom Floor"
+            }
+          ],
+          "Elevator": [
+            {
+              "target_region": "Mountain Bottom Floor Pillars Room"
+            }
+          ],
+          "Mountain Pink Bridge EP": [],
+          "Mountain Path to Caves": [
+            {
+              "target_region": "Caves"
+            },
+            {
+              "target_region": "Caves Entry Door"
+            },
+            {
+              "target_region": "Mountain Bottom Floor"
+            }
+          ],
+          "Caves Entry Door": [],
+          "Caves": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Caves Path to Challenge"
+            },
+            {
+              "target_region": "Caves Entry Door"
+            },
+            {
+              "target_region": "Mountain Path to Caves"
+            }
+          ],
+          "Caves Path to Challenge": [
+            {
+              "target_region": "Challenge"
+            },
+            {
+              "target_region": "Caves"
+            }
+          ],
+          "Challenge": [
+            {
+              "target_region": "Tunnels"
+            },
+            {
+              "target_region": "Challenge Vault"
+            },
+            {
+              "target_region": "Caves Path to Challenge"
+            }
+          ],
+          "Challenge Vault": [
+            {
+              "target_region": "Challenge"
+            }
+          ],
+          "Tunnels": [
+            {
+              "target_region": "Windmill Interior"
+            },
+            {
+              "target_region": "Desert Behind Elevator"
+            },
+            {
+              "target_region": "Town"
+            },
+            {
+              "target_region": "Challenge"
+            }
+          ],
+          "The Ocean": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Swamp Near Boat"
+            },
+            {
+              "target_region": "Treehouse Entry Area"
+            },
+            {
+              "target_region": "Quarry Boathouse Behind Staircase"
+            },
+            {
+              "target_region": "Inside Glass Factory Behind Back Wall"
+            },
+            {
+              "target_region": "Town"
+            },
+            {
+              "target_region": "Jungle"
+            }
+          ],
+          "Easter Eggs": [
+            {
+              "target_region": "Entry"
+            }
+          ]
+        },
+        "CONNECTIONS_BY_REGION_NAME": {
+          "Entry": [
+            {
+              "target_region": "Tutorial First Hallway"
+            },
+            {
+              "target_region": "Desert Obelisk"
+            },
+            {
+              "target_region": "Quarry Obelisk"
+            },
+            {
+              "target_region": "Monastery Obelisk"
+            },
+            {
+              "target_region": "Town Obelisk"
+            },
+            {
+              "target_region": "Treehouse Obelisk"
+            },
+            {
+              "target_region": "Mountainside Obelisk"
+            },
+            {
+              "target_region": "Easter Eggs"
+            }
+          ],
+          "Tutorial First Hallway": [
+            {
+              "target_region": "Entry"
+            },
+            {
+              "target_region": "Tutorial First Hallway Room"
+            }
+          ],
+          "Tutorial First Hallway Room": [
+            {
+              "target_region": "Tutorial"
+            },
+            {
+              "target_region": "Tutorial First Hallway"
+            }
+          ],
+          "Tutorial": [
+            {
+              "target_region": "Outside Tutorial"
+            },
+            {
+              "target_region": "Tutorial First Hallway Room"
+            }
+          ],
+          "Outside Tutorial": [
+            {
+              "target_region": "Outside Tutorial Path To Outpost"
+            },
+            {
+              "target_region": "Tutorial"
+            },
+            {
+              "target_region": "Outside Tutorial Outpost"
+            },
+            {
+              "target_region": "Main Island"
+            }
+          ],
+          "Outside Tutorial Vault": [],
+          "Outside Tutorial Path To Outpost": [
+            {
+              "target_region": "Outside Tutorial Outpost"
+            },
+            {
+              "target_region": "Outside Tutorial"
+            }
+          ],
+          "Outside Tutorial Outpost": [
+            {
+              "target_region": "Outside Tutorial"
+            },
+            {
+              "target_region": "Outside Tutorial Path To Outpost"
+            }
+          ],
+          "Orchard": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Orchard Beyond First Gate"
+            }
+          ],
+          "Orchard Beyond First Gate": [
+            {
+              "target_region": "Orchard"
+            }
+          ],
+          "Orchard End": [],
+          "Main Island": [
+            {
+              "target_region": "Outside Tutorial"
+            },
+            {
+              "target_region": "Orchard"
+            },
+            {
+              "target_region": "Outside Glass Factory"
+            },
+            {
+              "target_region": "Outside Symmetry Island"
+            },
+            {
+              "target_region": "Desert Outside"
+            },
+            {
+              "target_region": "Outside Quarry"
+            },
+            {
+              "target_region": "Shadows"
+            },
+            {
+              "target_region": "Outside Keep"
+            },
+            {
+              "target_region": "Outside Monastery"
+            },
+            {
+              "target_region": "Town"
+            },
+            {
+              "target_region": "Southern Peninsula"
+            },
+            {
+              "target_region": "Jungle"
+            },
+            {
+              "target_region": "Outside Jungle River"
+            },
+            {
+              "target_region": "Outside Bunker"
+            },
+            {
+              "target_region": "Outside Swamp"
+            },
+            {
+              "target_region": "Treehouse Beach"
+            },
+            {
+              "target_region": "Treehouse Drawbridge Platform"
+            },
+            {
+              "target_region": "Mountainside"
+            }
+          ],
+          "Outside Glass Factory": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Inside Glass Factory"
+            }
+          ],
+          "Inside Glass Factory": [
+            {
+              "target_region": "Inside Glass Factory Behind Back Wall"
+            },
+            {
+              "target_region": "Outside Glass Factory"
+            }
+          ],
+          "Inside Glass Factory Behind Back Wall": [
+            {
+              "target_region": "The Ocean"
+            },
+            {
+              "target_region": "Inside Glass Factory"
+            }
+          ],
+          "Outside Symmetry Island": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Symmetry Island Lower"
+            }
+          ],
+          "Symmetry Island Lower": [
+            {
+              "target_region": "Symmetry Island Upper"
+            },
+            {
+              "target_region": "Outside Symmetry Island"
+            }
+          ],
+          "Symmetry Island Upper": [
+            {
+              "target_region": "Symmetry Island Lower"
+            }
+          ],
+          "Desert Obelisk": [
+            {
+              "target_region": "Entry"
+            }
+          ],
+          "Desert Outside": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Desert Light Room"
+            }
+          ],
+          "Desert Vault": [],
+          "Desert Light Room": [
+            {
+              "target_region": "Desert Pond Room"
+            },
+            {
+              "target_region": "Desert Outside"
+            }
+          ],
+          "Desert Pond Room": [
+            {
+              "target_region": "Desert Flood Room"
+            },
+            {
+              "target_region": "Desert Light Room"
+            }
+          ],
+          "Desert Flood Room": [
+            {
+              "target_region": "Desert Elevator Room"
+            },
+            {
+              "target_region": "Desert Flood Room Underwater"
+            },
+            {
+              "target_region": "Desert Pond Room"
+            }
+          ],
+          "Desert Flood Room Underwater": [
+            {
+              "target_region": "Desert Flood Room"
+            }
+          ],
+          "Desert Elevator Room": [
+            {
+              "target_region": "Desert Behind Elevator"
+            },
+            {
+              "target_region": "Desert Flood Room"
+            }
+          ],
+          "Desert Behind Elevator": [
+            {
+              "target_region": "Desert Elevator Room"
+            }
+          ],
+          "Quarry Obelisk": [
+            {
+              "target_region": "Entry"
+            }
+          ],
+          "Outside Quarry": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Quarry Between Entry Doors"
+            },
+            {
+              "target_region": "Quarry Stoneworks Ground Floor"
+            },
+            {
+              "target_region": "Quarry Elevator"
+            }
+          ],
+          "Quarry Elevator": [
+            {
+              "target_region": "Outside Quarry"
+            },
+            {
+              "target_region": "Quarry"
+            }
+          ],
+          "Quarry Between Entry Doors": [
+            {
+              "target_region": "Quarry"
+            },
+            {
+              "target_region": "Outside Quarry"
+            }
+          ],
+          "Quarry": [
+            {
+              "target_region": "Quarry Stoneworks Ground Floor"
+            },
+            {
+              "target_region": "Quarry Between Entry Doors"
+            },
+            {
+              "target_region": "Quarry Boathouse"
+            },
+            {
+              "target_region": "Shadows Ledge"
+            },
+            {
+              "target_region": "Quarry Elevator"
+            }
+          ],
+          "Quarry Stoneworks Ground Floor": [
+            {
+              "target_region": "Quarry"
+            },
+            {
+              "target_region": "Quarry Stoneworks Middle Floor"
+            },
+            {
+              "target_region": "Outside Quarry"
+            },
+            {
+              "target_region": "Quarry Stoneworks Lift"
+            },
+            {
+              "target_region": "Quarry Stoneworks Upper Floor"
+            }
+          ],
+          "Quarry Stoneworks Middle Floor": [
+            {
+              "target_region": "Quarry Stoneworks Lift"
+            },
+            {
+              "target_region": "Quarry Stoneworks Ground Floor"
+            }
+          ],
+          "Quarry Stoneworks Lift": [
+            {
+              "target_region": "Quarry Stoneworks Middle Floor"
+            },
+            {
+              "target_region": "Quarry Stoneworks Ground Floor"
+            },
+            {
+              "target_region": "Quarry Stoneworks Upper Floor"
+            }
+          ],
+          "Quarry Stoneworks Upper Floor": [
+            {
+              "target_region": "Quarry Stoneworks Lift"
+            },
+            {
+              "target_region": "Quarry Stoneworks Ground Floor"
+            }
+          ],
+          "Quarry Boathouse": [
+            {
+              "target_region": "Quarry"
+            },
+            {
+              "target_region": "Quarry Boathouse Upper Front"
+            },
+            {
+              "target_region": "Quarry Boathouse Behind Staircase"
+            }
+          ],
+          "Quarry Boathouse Behind Staircase": [
+            {
+              "target_region": "The Ocean"
+            },
+            {
+              "target_region": "Quarry Boathouse"
+            }
+          ],
+          "Quarry Boathouse Upper Front": [
+            {
+              "target_region": "Quarry Boathouse Upper Middle"
+            },
+            {
+              "target_region": "Quarry Boathouse"
+            }
+          ],
+          "Quarry Boathouse Upper Middle": [
+            {
+              "target_region": "Quarry Boathouse Upper Back"
+            },
+            {
+              "target_region": "Quarry Boathouse Upper Front"
+            }
+          ],
+          "Quarry Boathouse Upper Back": [
+            {
+              "target_region": "Quarry Boathouse Upper Middle"
+            }
+          ],
+          "Shadows": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Shadows Ledge"
+            },
+            {
+              "target_region": "Shadows Laser Room"
+            },
+            {
+              "target_region": "Keep 4th Pressure Plate"
+            }
+          ],
+          "Shadows Ledge": [
+            {
+              "target_region": "Shadows"
+            },
+            {
+              "target_region": "Quarry"
+            }
+          ],
+          "Shadows Laser Room": [
+            {
+              "target_region": "Shadows"
+            }
+          ],
+          "Outside Keep": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Keep"
+            }
+          ],
+          "Keep": [
+            {
+              "target_region": "Outside Keep"
+            },
+            {
+              "target_region": "Keep 2nd Maze"
+            },
+            {
+              "target_region": "Keep 2nd Pressure Plate"
+            },
+            {
+              "target_region": "Keep 3rd Maze"
+            },
+            {
+              "target_region": "Keep 4th Maze"
+            },
+            {
+              "target_region": "Keep Tower"
+            }
+          ],
+          "Keep 2nd Maze": [
+            {
+              "target_region": "Keep"
+            },
+            {
+              "target_region": "Keep 3rd Maze"
+            }
+          ],
+          "Keep 3rd Maze": [
+            {
+              "target_region": "Keep"
+            },
+            {
+              "target_region": "Keep 4th Maze"
+            },
+            {
+              "target_region": "Keep 2nd Maze"
+            }
+          ],
+          "Keep 4th Maze": [
+            {
+              "target_region": "Keep"
+            },
+            {
+              "target_region": "Keep Tower"
+            },
+            {
+              "target_region": "Keep 3rd Maze"
+            }
+          ],
+          "Keep 2nd Pressure Plate": [
+            {
+              "target_region": "Keep 3rd Pressure Plate"
+            },
+            {
+              "target_region": "Keep"
+            }
+          ],
+          "Keep 3rd Pressure Plate": [
+            {
+              "target_region": "Keep 4th Pressure Plate"
+            },
+            {
+              "target_region": "Keep 2nd Pressure Plate"
+            },
+            {
+              "target_region": "Shipwreck"
+            }
+          ],
+          "Keep 4th Pressure Plate": [
+            {
+              "target_region": "Shadows"
+            },
+            {
+              "target_region": "Keep Tower"
+            },
+            {
+              "target_region": "Keep 3rd Pressure Plate"
+            }
+          ],
+          "Keep Tower": [
+            {
+              "target_region": "Keep"
+            },
+            {
+              "target_region": "Keep 4th Maze"
+            },
+            {
+              "target_region": "Keep 4th Pressure Plate"
+            }
+          ],
+          "Shipwreck": [
+            {
+              "target_region": "Keep 3rd Pressure Plate"
+            }
+          ],
+          "Shipwreck Vault": [],
+          "Monastery Obelisk": [
+            {
+              "target_region": "Entry"
+            }
+          ],
+          "Outside Monastery": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Inside Monastery"
+            }
+          ],
+          "Inside Monastery": [
+            {
+              "target_region": "Monastery North Shutters"
+            },
+            {
+              "target_region": "Outside Monastery"
+            }
+          ],
+          "Monastery Garden": [],
+          "Monastery North Shutters": [
+            {
+              "target_region": "Inside Monastery"
+            }
+          ],
+          "Town Obelisk": [
+            {
+              "target_region": "Entry"
+            }
+          ],
+          "Town": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "The Ocean"
+            },
+            {
+              "target_region": "Town Maze Rooftop"
+            },
+            {
+              "target_region": "Town Church"
+            },
+            {
+              "target_region": "Town Wooden Rooftop"
+            },
+            {
+              "target_region": "Town RGB House"
+            },
+            {
+              "target_region": "Outside Windmill"
+            },
+            {
+              "target_region": "Town Tower Bottom"
+            },
+            {
+              "target_region": "Theater"
+            }
+          ],
+          "Town Inside Cargo Box": [],
+          "Town Maze Rooftop": [
+            {
+              "target_region": "Town Red Rooftop"
+            },
+            {
+              "target_region": "Town"
+            }
+          ],
+          "Town Red Rooftop": [
+            {
+              "target_region": "Town Maze Rooftop"
+            }
+          ],
+          "Town Wooden Rooftop": [
+            {
+              "target_region": "Town"
+            }
+          ],
+          "Town Church": [
+            {
+              "target_region": "Town"
+            }
+          ],
+          "Town RGB House": [
+            {
+              "target_region": "Town RGB House Upstairs"
+            },
+            {
+              "target_region": "Town"
+            }
+          ],
+          "Town RGB House Upstairs": [
+            {
+              "target_region": "Town RGB House"
+            }
+          ],
+          "Town Tower Bottom": [
+            {
+              "target_region": "Town"
+            },
+            {
+              "target_region": "Town Tower After First Door"
+            }
+          ],
+          "Town Tower After First Door": [
+            {
+              "target_region": "Town Tower After Second Door"
+            },
+            {
+              "target_region": "Town Tower Bottom"
+            }
+          ],
+          "Town Tower After Second Door": [
+            {
+              "target_region": "Town Tower After Third Door"
+            },
+            {
+              "target_region": "Town Tower After First Door"
+            }
+          ],
+          "Town Tower After Third Door": [
+            {
+              "target_region": "Town Tower Top"
+            },
+            {
+              "target_region": "Town Tower After Second Door"
+            }
+          ],
+          "Town Tower Top": [
+            {
+              "target_region": "Town Tower After Third Door"
+            }
+          ],
+          "Outside Windmill": [
+            {
+              "target_region": "Windmill Interior"
+            },
+            {
+              "target_region": "Town"
+            }
+          ],
+          "Windmill Interior": [
+            {
+              "target_region": "Theater"
+            },
+            {
+              "target_region": "Outside Windmill"
+            }
+          ],
+          "Theater": [
+            {
+              "target_region": "Town"
+            },
+            {
+              "target_region": "Windmill Interior"
+            }
+          ],
+          "Southern Peninsula": [
+            {
+              "target_region": "Main Island"
+            }
+          ],
+          "Jungle": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "The Ocean"
+            },
+            {
+              "target_region": "Jungle Under Popup Wall"
+            }
+          ],
+          "Jungle Under Popup Wall": [
+            {
+              "target_region": "Jungle"
+            }
+          ],
+          "Outside Jungle River": [
+            {
+              "target_region": "Main Island"
+            }
+          ],
+          "Jungle Vault": [],
+          "Outside Bunker": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Bunker"
+            },
+            {
+              "target_region": "Bunker Elevator"
+            }
+          ],
+          "Bunker": [
+            {
+              "target_region": "Bunker Glass Room"
+            },
+            {
+              "target_region": "Outside Bunker"
+            }
+          ],
+          "Bunker Glass Room": [
+            {
+              "target_region": "Bunker Ultraviolet Room"
+            },
+            {
+              "target_region": "Bunker"
+            }
+          ],
+          "Bunker Ultraviolet Room": [
+            {
+              "target_region": "Bunker Elevator Section"
+            },
+            {
+              "target_region": "Bunker Glass Room"
+            }
+          ],
+          "Bunker Elevator Section": [
+            {
+              "target_region": "Bunker Elevator"
+            },
+            {
+              "target_region": "Bunker Under Elevator"
+            },
+            {
+              "target_region": "Bunker Ultraviolet Room"
+            }
+          ],
+          "Bunker Under Elevator": [
+            {
+              "target_region": "Bunker Elevator Section"
+            }
+          ],
+          "Bunker Elevator": [
+            {
+              "target_region": "Bunker Elevator Section"
+            },
+            {
+              "target_region": "Bunker Cyan Room"
+            },
+            {
+              "target_region": "Bunker Green Room"
+            },
+            {
+              "target_region": "Bunker Laser Platform"
+            },
+            {
+              "target_region": "Outside Bunker"
+            }
+          ],
+          "Bunker Cyan Room": [
+            {
+              "target_region": "Bunker Elevator"
+            }
+          ],
+          "Bunker Green Room": [
+            {
+              "target_region": "Bunker Elevator"
+            }
+          ],
+          "Bunker Laser Platform": [
+            {
+              "target_region": "Bunker Elevator"
+            }
+          ],
+          "Outside Swamp": [
+            {
+              "target_region": "Swamp Entry Area"
+            },
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Swamp Laser Area"
+            }
+          ],
+          "Swamp Entry Area": [
+            {
+              "target_region": "Swamp Sliding Bridge"
+            },
+            {
+              "target_region": "Outside Swamp"
+            }
+          ],
+          "Swamp Sliding Bridge": [
+            {
+              "target_region": "Swamp Entry Area"
+            },
+            {
+              "target_region": "Swamp Platform"
+            }
+          ],
+          "Swamp Platform": [
+            {
+              "target_region": "Swamp Cyan Underwater"
+            },
+            {
+              "target_region": "Swamp Near Boat"
+            },
+            {
+              "target_region": "Swamp Between Bridges Near"
+            },
+            {
+              "target_region": "Swamp Sliding Bridge"
+            }
+          ],
+          "Swamp Cyan Underwater": [
+            {
+              "target_region": "Swamp Platform"
+            }
+          ],
+          "Swamp Between Bridges Near": [
+            {
+              "target_region": "Swamp Between Bridges Far"
+            },
+            {
+              "target_region": "Swamp Platform"
+            }
+          ],
+          "Swamp Between Bridges Far": [
+            {
+              "target_region": "Swamp Red Underwater"
+            },
+            {
+              "target_region": "Swamp Rotating Bridge"
+            },
+            {
+              "target_region": "Swamp Between Bridges Near"
+            }
+          ],
+          "Swamp Red Underwater": [
+            {
+              "target_region": "Swamp Maze"
+            },
+            {
+              "target_region": "Swamp Between Bridges Far"
+            }
+          ],
+          "Swamp Rotating Bridge": [
+            {
+              "target_region": "Swamp Between Bridges Far"
+            },
+            {
+              "target_region": "Swamp Near Boat"
+            },
+            {
+              "target_region": "Swamp Purple Area"
+            }
+          ],
+          "Swamp Near Boat": [
+            {
+              "target_region": "Swamp Rotating Bridge"
+            },
+            {
+              "target_region": "Swamp Blue Underwater"
+            },
+            {
+              "target_region": "Swamp Long Bridge"
+            },
+            {
+              "target_region": "The Ocean"
+            },
+            {
+              "target_region": "Swamp Platform"
+            }
+          ],
+          "Swamp Long Bridge": [
+            {
+              "target_region": "Swamp Near Boat"
+            }
+          ],
+          "Swamp Purple Area": [
+            {
+              "target_region": "Swamp Rotating Bridge"
+            },
+            {
+              "target_region": "Swamp Purple Underwater"
+            },
+            {
+              "target_region": "Swamp Near Boat"
+            }
+          ],
+          "Swamp Purple Underwater": [
+            {
+              "target_region": "Swamp Purple Area"
+            }
+          ],
+          "Swamp Blue Underwater": [
+            {
+              "target_region": "Swamp Near Boat"
+            }
+          ],
+          "Swamp Maze": [
+            {
+              "target_region": "Swamp Laser Area"
+            },
+            {
+              "target_region": "Swamp Red Underwater"
+            }
+          ],
+          "Swamp Laser Area": [
+            {
+              "target_region": "Outside Swamp"
+            },
+            {
+              "target_region": "Swamp Maze"
+            }
+          ],
+          "Treehouse Obelisk": [
+            {
+              "target_region": "Entry"
+            }
+          ],
+          "Treehouse Beach": [
+            {
+              "target_region": "Main Island"
+            }
+          ],
+          "Treehouse Entry Area": [
+            {
+              "target_region": "Treehouse Between Entry Doors"
+            },
+            {
+              "target_region": "The Ocean"
+            }
+          ],
+          "Treehouse Between Entry Doors": [
+            {
+              "target_region": "Treehouse Yellow Bridge"
+            },
+            {
+              "target_region": "Treehouse Entry Area"
+            }
+          ],
+          "Treehouse Yellow Bridge": [
+            {
+              "target_region": "Treehouse After Yellow Bridge"
+            },
+            {
+              "target_region": "Treehouse Between Entry Doors"
+            }
+          ],
+          "Treehouse After Yellow Bridge": [
+            {
+              "target_region": "Treehouse Junction"
+            },
+            {
+              "target_region": "Treehouse Yellow Bridge"
+            }
+          ],
+          "Treehouse Junction": [
+            {
+              "target_region": "Treehouse Right Orange Bridge"
+            },
+            {
+              "target_region": "Treehouse First Purple Bridge"
+            },
+            {
+              "target_region": "Treehouse Green Bridge"
+            },
+            {
+              "target_region": "Treehouse After Yellow Bridge"
+            }
+          ],
+          "Treehouse First Purple Bridge": [
+            {
+              "target_region": "Treehouse Second Purple Bridge"
+            },
+            {
+              "target_region": "Treehouse Junction"
+            }
+          ],
+          "Treehouse Right Orange Bridge": [
+            {
+              "target_region": "Treehouse Drawbridge Platform"
+            },
+            {
+              "target_region": "Treehouse Junction"
+            }
+          ],
+          "Treehouse Drawbridge Platform": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Treehouse Right Orange Bridge"
+            }
+          ],
+          "Treehouse Second Purple Bridge": [
+            {
+              "target_region": "Treehouse Left Orange Bridge"
+            },
+            {
+              "target_region": "Treehouse First Purple Bridge"
+            }
+          ],
+          "Treehouse Left Orange Bridge": [
+            {
+              "target_region": "Treehouse Laser Room Front Platform"
+            },
+            {
+              "target_region": "Treehouse Laser Room Back Platform"
+            },
+            {
+              "target_region": "Treehouse Burned House"
+            },
+            {
+              "target_region": "Treehouse Second Purple Bridge"
+            }
+          ],
+          "Treehouse Green Bridge": [
+            {
+              "target_region": "Treehouse Green Bridge Front House"
+            },
+            {
+              "target_region": "Treehouse Green Bridge Left House"
+            },
+            {
+              "target_region": "Treehouse Junction"
+            }
+          ],
+          "Treehouse Green Bridge Front House": [
+            {
+              "target_region": "Treehouse Green Bridge"
+            }
+          ],
+          "Treehouse Green Bridge Left House": [
+            {
+              "target_region": "Treehouse Green Bridge"
+            }
+          ],
+          "Treehouse Laser Room Front Platform": [
+            {
+              "target_region": "Treehouse Laser Room"
+            },
+            {
+              "target_region": "Treehouse Left Orange Bridge"
+            }
+          ],
+          "Treehouse Laser Room Back Platform": [
+            {
+              "target_region": "Treehouse Left Orange Bridge"
+            }
+          ],
+          "Treehouse Burned House": [
+            {
+              "target_region": "Treehouse Left Orange Bridge"
+            }
+          ],
+          "Treehouse Laser Room": [
+            {
+              "target_region": "Treehouse Laser Room Front Platform"
+            }
+          ],
+          "Mountainside Obelisk": [
+            {
+              "target_region": "Entry"
+            }
+          ],
+          "Mountainside": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Mountaintop"
+            }
+          ],
+          "Mountainside Vault": [],
+          "Mountaintop": [
+            {
+              "target_region": "Mountain Floor 1"
+            },
+            {
+              "target_region": "Mountainside"
+            }
+          ],
+          "Mountain Floor 1": [
+            {
+              "target_region": "Mountain Floor 1 Bridge"
+            },
+            {
+              "target_region": "Mountaintop"
+            }
+          ],
+          "Mountain Floor 1 Bridge": [
+            {
+              "target_region": "Mountain Floor 1 At Door"
+            },
+            {
+              "target_region": "Mountain Floor 1 Trash Pillar"
+            },
+            {
+              "target_region": "Mountain Floor 1 Back Section"
+            },
+            {
+              "target_region": "Mountain Floor 1"
+            }
+          ],
+          "Mountain Floor 1 Trash Pillar": [],
+          "Mountain Floor 1 Back Section": [],
+          "Mountain Floor 1 At Door": [
+            {
+              "target_region": "Mountain Floor 2"
+            }
+          ],
+          "Mountain Floor 2": [
+            {
+              "target_region": "Mountain Floor 2 Light Bridge Room Near"
+            },
+            {
+              "target_region": "Mountain Floor 2 Beyond Bridge"
+            },
+            {
+              "target_region": "Mountain Floor 2 Above The Abyss"
+            },
+            {
+              "target_region": "Mountain Pink Bridge EP"
+            },
+            {
+              "target_region": "Mountain Floor 1 At Door"
+            }
+          ],
+          "Mountain Floor 2 Above The Abyss": [
+            {
+              "target_region": "Mountain Floor 2 Elevator Room"
+            },
+            {
+              "target_region": "Mountain Floor 2"
+            }
+          ],
+          "Mountain Floor 2 Light Bridge Room Near": [
+            {
+              "target_region": "Mountain Floor 2"
+            }
+          ],
+          "Mountain Floor 2 Beyond Bridge": [
+            {
+              "target_region": "Mountain Floor 2 Light Bridge Room Far"
+            },
+            {
+              "target_region": "Mountain Pink Bridge EP"
+            },
+            {
+              "target_region": "Mountain Floor 2"
+            }
+          ],
+          "Mountain Floor 2 Light Bridge Room Far": [
+            {
+              "target_region": "Mountain Floor 2 Beyond Bridge"
+            }
+          ],
+          "Mountain Floor 2 Elevator Room": [
+            {
+              "target_region": "Mountain Floor 2 Elevator"
+            },
+            {
+              "target_region": "Mountain Floor 2 Above The Abyss"
+            }
+          ],
+          "Mountain Floor 2 Elevator": [
+            {
+              "target_region": "Mountain Floor 2 Elevator Room"
+            },
+            {
+              "target_region": "Mountain Floor 3"
+            }
+          ],
+          "Mountain Floor 3": [
+            {
+              "target_region": "Mountain Floor 2 Elevator"
+            },
+            {
+              "target_region": "Mountain Bottom Floor"
+            },
+            {
+              "target_region": "Mountain Pink Bridge EP"
+            }
+          ],
+          "Mountain Bottom Floor": [
+            {
+              "target_region": "Mountain Bottom Floor Pillars Room"
+            },
+            {
+              "target_region": "Mountain Floor 3"
+            }
+          ],
+          "Mountain Bottom Floor Pillars Room": [
+            {
+              "target_region": "Elevator"
+            },
+            {
+              "target_region": "Mountain Bottom Floor"
+            }
+          ],
+          "Elevator": [
+            {
+              "target_region": "Mountain Bottom Floor Pillars Room"
+            }
+          ],
+          "Mountain Pink Bridge EP": [],
+          "Mountain Path to Caves": [
+            {
+              "target_region": "Caves Entry Door"
+            }
+          ],
+          "Caves Entry Door": [],
+          "Caves": [
+            {
+              "target_region": "Caves Entry Door"
+            }
+          ],
+          "Caves Path to Challenge": [],
+          "Challenge": [],
+          "Challenge Vault": [],
+          "Tunnels": [],
+          "The Ocean": [
+            {
+              "target_region": "Main Island"
+            },
+            {
+              "target_region": "Swamp Near Boat"
+            },
+            {
+              "target_region": "Treehouse Entry Area"
+            },
+            {
+              "target_region": "Quarry Boathouse Behind Staircase"
+            },
+            {
+              "target_region": "Inside Glass Factory Behind Back Wall"
+            },
+            {
+              "target_region": "Town"
+            },
+            {
+              "target_region": "Jungle"
+            }
+          ],
+          "Easter Eggs": [
+            {
+              "target_region": "Entry"
+            }
+          ]
+        },
+        "EVENT_ITEM_PAIRS": {
+          "Mountain Bottom Floor Elevator Start Solved": [
+            "Victory",
+            "0x3D9A9"
+          ],
+          "Symmetry Island Laser Activated": [
+            "+1 Laser",
+            "0x00509"
+          ],
+          "Desert Laser Activated": [
+            "+1 Laser (Unredirected)",
+            "0x012FB"
+          ],
+          "Town Desert Laser Redirect Control Solved": [
+            "Desert Laser Redirection",
+            "0x09F98"
+          ],
+          "Desert Laser Activated + Redirected Solved": [
+            "+1 Laser (Redirected)",
+            "0xFFD03"
+          ],
+          "Quarry Laser Activated": [
+            "+1 Laser",
+            "0x01539"
+          ],
+          "Shadows Laser Activated": [
+            "+1 Laser",
+            "0x181B3"
+          ],
+          "Keep Laser Activated": [
+            "+1 Laser",
+            "0x014BB"
+          ],
+          "Monastery Laser Activated": [
+            "+1 Laser",
+            "0x17C65"
+          ],
+          "Town Laser Activated": [
+            "+1 Laser",
+            "0x032F9"
+          ],
+          "Jungle Laser Activated": [
+            "+1 Laser",
+            "0x00274"
+          ],
+          "Bunker Laser Activated": [
+            "+1 Laser",
+            "0x0C2B2"
+          ],
+          "Swamp Laser Activated": [
+            "+1 Laser",
+            "0x00BF6"
+          ],
+          "Treehouse Laser Activated": [
+            "+1 Laser",
+            "0x028A4"
+          ],
+          "Mountaintop Mountain Entry Panel Solved": [
+            "Mountain Entry",
+            "0x17C34"
+          ]
+        },
+        "VICTORY_LOCATION": "0x3D9A9",
+        "ALWAYS_EVENT_NAMES_BY_HEX": {
+          "0x00509": "+1 Laser",
+          "0x012FB": "+1 Laser (Unredirected)",
+          "0x09F98": "Desert Laser Redirection",
+          "0xFFD03": "+1 Laser (Redirected)",
+          "0x01539": "+1 Laser",
+          "0x181B3": "+1 Laser",
+          "0x014BB": "+1 Laser",
+          "0x17C65": "+1 Laser",
+          "0x032F9": "+1 Laser",
+          "0x00274": "+1 Laser",
+          "0x0C2B2": "+1 Laser",
+          "0x00BF6": "+1 Laser",
+          "0x028A4": "+1 Laser",
+          "0x17C34": "Mountain Entry",
+          "0xFFF00": "Bottom Floor Discard Turns On"
+        },
+        "USED_EVENT_NAMES_BY_HEX": {
+          "0x3D9A9": [
+            "Victory"
+          ],
+          "0x00509": [
+            "+1 Laser"
+          ],
+          "0x012FB": [
+            "+1 Laser (Unredirected)"
+          ],
+          "0x09F98": [
+            "Desert Laser Redirection"
+          ],
+          "0xFFD03": [
+            "+1 Laser (Redirected)"
+          ],
+          "0x01539": [
+            "+1 Laser"
+          ],
+          "0x181B3": [
+            "+1 Laser"
+          ],
+          "0x014BB": [
+            "+1 Laser"
+          ],
+          "0x17C65": [
+            "+1 Laser"
+          ],
+          "0x032F9": [
+            "+1 Laser"
+          ],
+          "0x00274": [
+            "+1 Laser"
+          ],
+          "0x0C2B2": [
+            "+1 Laser"
+          ],
+          "0x00BF6": [
+            "+1 Laser"
+          ],
+          "0x028A4": [
+            "+1 Laser"
+          ],
+          "0x17C34": [
+            "Mountain Entry"
+          ]
+        }
+      },
+      "player_locations": {
+        "CHECK_PANELHEX_TO_ID": {
+          "0x002C2": 158004,
+          "0x0A3B5": 158005,
+          "0x0A3B2": 158006,
+          "0x03629": 158007,
+          "0x0C373": 158010,
+          "0x0A171": 158011,
+          "0x04CA4": 158012,
+          "0x00061": 158017,
+          "0x00021": 158026,
+          "0x01A54": 158027,
+          "0x0005C": 158032,
+          "0x00083": 158035,
+          "0x0343A": 158038,
+          "0x000B0": 158040,
+          "0x00026": 158045,
+          "0x00079": 158051,
+          "0x00076": 158058,
+          "0x00B8D": 158063,
+          "0x1C349": 158064,
+          "0x00A5B": 158067,
+          "0x00A68": 158070,
+          "0x032FF": 158075,
+          "0x09F94": 158084,
+          "0x0A02D": 158090,
+          "0x18313": 158095,
+          "0x18076": 158110,
+          "0x012D7": 158113,
+          "0x0A15F": 158117,
+          "0x09E57": 158118,
+          "0x17C09": 158119,
+          "0x01E5A": 158121,
+          "0x01E59": 158122,
+          "0x014E8": 158130,
+          "0x014E9": 158141,
+          "0x03677": 158142,
+          "0x3C125": 158143,
+          "0x0367C": 158144,
+          "0x034D4": 158146,
+          "0x021D5": 158147,
+          "0x021AE": 158153,
+          "0x09DB4": 158164,
+          "0x0A3D0": 158169,
+          "0x0A8E0": 158173,
+          "0x1972F": 158181,
+          "0x197E5": 158186,
+          "0x00139": 158193,
+          "0x019DC": 158194,
+          "0x019E7": 158195,
+          "0x01A0F": 158196,
+          "0x033EA": 158198,
+          "0x01BE9": 158200,
+          "0x01CD3": 158202,
+          "0x01D3F": 158204,
+          "0x00037": 158212,
+          "0x193A6": 158217,
+          "0x0A0C8": 158219,
+          "0x28B39": 158224,
+          "0x28998": 158225,
+          "0x28A0D": 158226,
+          "0x28A69": 158227,
+          "0x28A79": 158228,
+          "0x28ACC": 158234,
+          "0x28AC1": 158239,
+          "0x28AD9": 158240,
+          "0x17F5F": 158241,
+          "0x034E3": 158243,
+          "0x03C0C": 158245,
+          "0x03C08": 158246,
+          "0x17F89": 158248,
+          "0x0A168": 158249,
+          "0x33AB2": 158250,
+          "0x002C6": 158254,
+          "0x002C7": 158258,
+          "0x014B2": 158265,
+          "0x17CAA": 158267,
+          "0x17C2E": 158268,
+          "0x09FF8": 158273,
+          "0x09DAF": 158277,
+          "0x0A01F": 158281,
+          "0x17E67": 158285,
+          "0x0056E": 158287,
+          "0x0056F": 158293,
+          "0x181A9": 158301,
+          "0x009A1": 158306,
+          "0x00596": 158311,
+          "0x00990": 158316,
+          "0x17C0E": 158318,
+          "0x0000A": 158322,
+          "0x014D1": 158326,
+          "0x00E3A": 158332,
+          "0x009A6": 158333,
+          "0x00006": 158338,
+          "0x17C02": 158342,
+          "0x0288C": 158344,
+          "0x02886": 158345,
+          "0x17DC4": 158354,
+          "0x0A182": 158355,
+          "0x17D6C": 158361,
+          "0x17DC6": 158368,
+          "0x17E61": 158375,
+          "0x17DDB": 158390,
+          "0x17DA2": 158402,
+          "0x037FF": 158404,
+          "0x0042D": 158405,
+          "0x17C34": 158407,
+          "0x09E39": 158408,
+          "0x09E7B": 158413,
+          "0x09E6B": 158420,
+          "0x09F6E": 158423,
+          "0x09EAF": 158425,
+          "0x09FD8": 158430,
+          "0x09E86": 158431,
+          "0x09FD2": 158437,
+          "0x09ED8": 158438,
+          "0x09FDA": 158444,
+          "0x01983": 158445,
+          "0x01987": 158446,
+          "0x33961": 158525,
+          "0x339BB": 158529,
+          "0x0360D": 158700,
+          "0x03608": 158701,
+          "0x03612": 158702,
+          "0x19650": 158703,
+          "0x0360E": 158704,
+          "0x03317": 158705,
+          "0x17CA4": 158706,
+          "0x032F5": 158708,
+          "0x03616": 158709,
+          "0x09DE0": 158710,
+          "0x03615": 158711,
+          "0x03613": 158712,
+          "0xFFF80": 159800
+        },
+        "CHECK_LOCATION_TABLE": {
+          "Tutorial Front Left": 158004,
+          "Tutorial Back Left": 158005,
+          "Tutorial Back Right": 158006,
+          "Tutorial Gate Open": 158007,
+          "Tutorial Patio Floor": 158010,
+          "Outside Tutorial Outpost Entry Panel": 158011,
+          "Outside Tutorial Outpost Exit Panel": 158012,
+          "Outside Tutorial Shed Row 5": 158017,
+          "Outside Tutorial Tree Row 9": 158026,
+          "Glass Factory Entry Panel": 158027,
+          "Glass Factory Back Wall 5": 158032,
+          "Glass Factory Front 3": 158035,
+          "Glass Factory Melting 3": 158038,
+          "Symmetry Island Lower Panel": 158040,
+          "Symmetry Island Right 5": 158045,
+          "Symmetry Island Back 6": 158051,
+          "Symmetry Island Left 7": 158058,
+          "Symmetry Island Scenery Outlines 5": 158063,
+          "Symmetry Island Upper Panel": 158064,
+          "Symmetry Island Laser Yellow 3": 158067,
+          "Symmetry Island Laser Blue 3": 158070,
+          "Orchard Apple Tree 5": 158075,
+          "Desert Surface 8": 158084,
+          "Desert Light Room 3": 158090,
+          "Desert Pond Room 5": 158095,
+          "Desert Flood Room 6": 158110,
+          "Desert Elevator Room Hexagonal": 158113,
+          "Desert Elevator Room Bent 3": 158117,
+          "Quarry Entry 1 Panel": 158118,
+          "Quarry Entry 2 Panel": 158119,
+          "Quarry Stoneworks Entry Left Panel": 158121,
+          "Quarry Stoneworks Entry Right Panel": 158122,
+          "Quarry Stoneworks Lower Row 6": 158130,
+          "Quarry Stoneworks Upper Row 8": 158141,
+          "Quarry Stoneworks Stairs Panel": 158142,
+          "Quarry Stoneworks Control Room Left": 158143,
+          "Quarry Stoneworks Control Room Right": 158144,
+          "Quarry Boathouse Intro Left": 158146,
+          "Quarry Boathouse Intro Right": 158147,
+          "Quarry Boathouse Front Row 5": 158153,
+          "Quarry Boathouse Back First Row 9": 158164,
+          "Quarry Boathouse Back Second Row 3": 158169,
+          "Shadows Intro 8": 158173,
+          "Shadows Far 8": 158181,
+          "Shadows Near 5": 158186,
+          "Keep Hedge Maze 1": 158193,
+          "Keep Hedge Maze 2": 158194,
+          "Keep Hedge Maze 3": 158195,
+          "Keep Hedge Maze 4": 158196,
+          "Keep Pressure Plates 1": 158198,
+          "Keep Pressure Plates 2": 158200,
+          "Keep Pressure Plates 3": 158202,
+          "Keep Pressure Plates 4": 158204,
+          "Monastery Outside 3": 158212,
+          "Monastery Inside 4": 158217,
+          "Town Cargo Box Entry Panel": 158219,
+          "Town Tall Hexagonal": 158224,
+          "Town RGB House Entry Panel": 158225,
+          "Town Church Entry Panel": 158226,
+          "Town Church Lattice": 158227,
+          "Town Maze Panel": 158228,
+          "Town Red Rooftop 5": 158234,
+          "Town Wooden Roof Lower Row 5": 158239,
+          "Town Wooden Rooftop": 158240,
+          "Windmill Entry Panel": 158241,
+          "Town RGB House Sound Room Right": 158243,
+          "Town RGB House Upstairs Left": 158245,
+          "Town RGB House Upstairs Right": 158246,
+          "Windmill Theater Entry Panel": 158248,
+          "Theater Exit Left Panel": 158249,
+          "Theater Exit Right Panel": 158250,
+          "Jungle First Row 3": 158254,
+          "Jungle Second Row 4": 158258,
+          "Jungle Popup Wall 6": 158265,
+          "Jungle Monastery Garden Shortcut Panel": 158267,
+          "Bunker Entry Panel": 158268,
+          "Bunker Intro Left 5": 158273,
+          "Bunker Intro Back 4": 158277,
+          "Bunker Glass Room 3": 158281,
+          "Bunker UV Room 2": 158285,
+          "Swamp Entry Panel": 158287,
+          "Swamp Intro Front 6": 158293,
+          "Swamp Intro Back 8": 158301,
+          "Swamp Between Bridges Near Row 4": 158306,
+          "Swamp Cyan Underwater 5": 158311,
+          "Swamp Platform Row 4": 158316,
+          "Swamp Platform Shortcut Right Panel": 158318,
+          "Swamp Between Bridges Far Row 4": 158322,
+          "Swamp Red Underwater 4": 158326,
+          "Swamp Beyond Rotating Bridge 4": 158332,
+          "Swamp Purple Underwater": 158333,
+          "Swamp Blue Underwater 5": 158338,
+          "Swamp Laser Shortcut Right Panel": 158342,
+          "Treehouse First Door Panel": 158344,
+          "Treehouse Second Door Panel": 158345,
+          "Treehouse Yellow Bridge 9": 158354,
+          "Treehouse Third Door Panel": 158355,
+          "Treehouse First Purple Bridge 5": 158361,
+          "Treehouse Second Purple Bridge 7": 158368,
+          "Treehouse Green Bridge 7": 158375,
+          "Treehouse Left Orange Bridge 15": 158390,
+          "Treehouse Right Orange Bridge 12": 158402,
+          "Treehouse Drawbridge Panel": 158404,
+          "Mountaintop River Shape": 158405,
+          "Mountaintop Mountain Entry Panel": 158407,
+          "Mountain Floor 1 Light Bridge Controller": 158408,
+          "Mountain Floor 1 Right Row 5": 158413,
+          "Mountain Floor 1 Left Row 7": 158420,
+          "Mountain Floor 1 Back Row 3": 158423,
+          "Mountain Floor 1 Trash Pillar 2": 158425,
+          "Mountain Floor 2 Near Row 5": 158430,
+          "Mountain Floor 2 Light Bridge Controller Near": 158431,
+          "Mountain Floor 2 Far Row 6": 158437,
+          "Mountain Floor 2 Light Bridge Controller Far": 158438,
+          "Mountain Bottom Floor Giant Puzzle": 158444,
+          "Mountain Bottom Floor Pillars Room Entry Left": 158445,
+          "Mountain Bottom Floor Pillars Room Entry Right": 158446,
+          "Mountain Bottom Floor Right Pillar 4": 158525,
+          "Mountain Bottom Floor Left Pillar 4": 158529,
+          "Symmetry Island Laser Panel": 158700,
+          "Desert Laser Panel": 158701,
+          "Quarry Laser Panel": 158702,
+          "Shadows Laser Panel": 158703,
+          "Keep Laser Panel Hedges": 158704,
+          "Keep Laser Panel Pressure Plates": 158705,
+          "Monastery Laser Panel": 158706,
+          "Town Laser Panel": 158708,
+          "Jungle Laser Panel": 158709,
+          "Bunker Laser Panel": 158710,
+          "Swamp Laser Panel": 158711,
+          "Treehouse Laser Panel": 158712,
+          "Town Pet the Dog": 159800
+        }
+      },
+      "panel_hunt_required_count": 0,
+      "items_placed_early": [
+        "Puzzle Skip",
+        "Black/White Squares"
+      ],
+      "own_itempool": [
+        "Victory",
+        "+1 Laser",
+        "+1 Laser (Unredirected)",
+        "Desert Laser Redirection",
+        "+1 Laser (Redirected)",
+        "+1 Laser",
+        "+1 Laser",
+        "+1 Laser",
+        "+1 Laser",
+        "+1 Laser",
+        "+1 Laser",
+        "+1 Laser",
+        "+1 Laser",
+        "+1 Laser",
+        "Mountain Entry",
+        "Puzzle Skip",
+        "Black/White Squares",
+        "Boat",
+        "Bonk",
+        "Bonk",
+        "Colored Squares",
+        "Eraser",
+        "Functioning Brain",
+        "Negative Shapers",
+        "Power Surge",
+        "Power Surge",
+        "Power Surge",
+        "Power Surge",
+        "Power Surge",
+        "Progressive Dots",
+        "Progressive Dots",
+        "Progressive Stars",
+        "Progressive Stars",
+        "Progressive Symmetry",
+        "Progressive Symmetry",
+        "Puzzle Skip",
+        "Puzzle Skip",
+        "Puzzle Skip",
+        "Puzzle Skip",
+        "Puzzle Skip",
+        "Puzzle Skip",
+        "Puzzle Skip",
+        "Puzzle Skip",
+        "Puzzle Skip",
+        "Puzzle Skip",
+        "Rotated Shapers",
+        "Shapers",
+        "Slowness",
+        "Slowness",
+        "Slowness",
+        "Slowness",
+        "Slowness",
+        "Slowness",
+        "Slowness",
+        "Slowness",
+        "Slowness",
+        "Slowness",
+        "Slowness",
+        "Slowness",
+        "Slowness",
+        "Slowness",
+        "Sound Dots",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Speed Boost",
+        "Triangles"
+      ],
       "world_description": "The Witness is an open-world puzzle game with dozens of locations\nto explore and over 500 puzzles. Play the popular puzzle randomizer\nby sigma144, with an added layer of progression randomization!",
       "slot_data": {
         "seed": 9335755,
@@ -11370,541 +14653,541 @@
         ],
         "doors_that_shouldnt_be_locked": [],
         "disabled_entities": [
-          138,
-          186175,
-          211382,
-          975405,
-          974873,
-          210377,
-          13827,
-          108,
-          975456,
-          974912,
-          210083,
-          1048148,
-          1556,
-          974852,
-          974884,
-          974903,
-          974943,
-          14262,
-          139493,
-          974895,
-          975458,
-          41323,
-          975381,
-          210589,
-          97575,
-          1311,
-          1048083,
-          210108,
-          975388,
-          974964,
-          13441,
-          974923,
-          210527,
-          974922,
-          166351,
-          975403,
-          3081,
-          1048097,
-          2430,
-          1048149,
-          3059,
-          975377,
-          15787,
-          86663,
-          975378,
-          15331,
-          975440,
-          975467,
-          4088,
-          15014,
-          975420,
-          210936,
-          975373,
-          13775,
-          419,
-          13771,
-          14030,
-          975466,
-          974871,
-          52347,
-          975365,
-          140,
-          975400,
-          974872,
-          98208,
-          975477,
-          975457,
-          1048066,
-          13487,
-          15139,
-          161597,
-          19829,
-          974898,
-          97393,
-          678,
-          1316,
-          13621,
-          2991,
-          97537,
-          1767,
-          139492,
-          15330,
-          975470,
-          115482,
-          41,
-          14129,
-          13380,
-          975407,
-          975397,
-          13450,
-          975413,
-          97527,
-          41732,
-          974874,
-          974940,
-          41693,
-          3257,
-          974890,
-          974864,
-          3200,
-          974856,
-          975366,
-          13637,
-          974868,
-          975465,
-          41370,
-          974902,
-          41778,
-          161586,
-          974857,
-          13675,
-          975463,
-          1048128,
-          975401,
-          974904,
-          975389,
-          975385,
-          974966,
-          97204,
-          974855,
-          40285,
-          1048115,
-          2453,
-          974891,
-          975387,
-          974954,
-          975468,
-          974929,
-          1048320,
-          1526,
-          98210,
-          974909,
-          974851,
-          974910,
-          40,
-          975437,
-          13651,
-          975439,
-          97531,
-          975460,
-          41292,
-          40291,
-          211497,
-          974918,
-          975472,
-          13246,
-          1048144,
-          15996,
-          974916,
-          166388,
-          15044,
-          975379,
-          975424,
-          1048096,
-          974959,
-          166633,
-          974920,
-          15038,
-          975436,
-          975392,
-          1048112,
-          974938,
-          161593,
-          975393,
-          975411,
-          974883,
-          166590,
-          15311,
-          210376,
-          14502,
-          974896,
-          974887,
-          974913,
-          975376,
-          975429,
-          40405,
-          1048065,
-          975367,
-          137,
-          40286,
-          974925,
-          41326,
-          975428,
-          974952,
-          2674,
-          211488,
-          974956,
-          166122,
-          13813,
-          1766,
-          166589,
-          97576,
           975361,
-          13556,
-          41678,
-          3161,
-          975419,
-          13548,
-          974870,
-          1048117,
-          974962,
-          41993,
-          975386,
-          975390,
-          14969,
-          15141,
-          974917,
-          98203,
-          974935,
-          974848,
-          2232,
-          211498,
-          974875,
-          975449,
-          13285,
-          975444,
-          1048085,
-          1368,
-          974937,
-          974948,
-          974893,
-          1048146,
-          15385,
-          15040,
-          2429,
-          975399,
-          2427,
-          13641,
-          975450,
-          974958,
-          247,
-          975454,
-          974914,
-          975396,
-          974942,
-          975427,
-          13479,
-          975417,
-          975416,
-          107,
           974907,
-          1693,
-          974908,
-          13769,
-          210586,
-          14772,
-          210145,
-          1048113,
-          210133,
-          975434,
-          1048068,
-          975382,
-          974888,
-          166704,
-          210347,
-          15991,
-          139,
-          974901,
-          975464,
-          166375,
-          975421,
-          975432,
-          974863,
-          139526,
-          13647,
-          166353,
-          975438,
-          98233,
-          166455,
-          1048130,
-          975423,
-          974879,
-          974961,
-          1765,
-          1048100,
-          40583,
-          14506,
-          974900,
-          975362,
-          974936,
-          1790,
-          975431,
-          974877,
-          975412,
-          97522,
-          975383,
-          975461,
-          5810,
-          1048114,
-          211087,
-          166389,
-          98217,
-          139453,
-          974941,
-          166058,
-          15622,
-          13159,
-          974861,
-          13485,
-          2452,
-          13109,
-          15367,
-          975479,
+          1048096,
+          974932,
+          974962,
+          3081,
+          975417,
+          15036,
+          15331,
+          975414,
+          13641,
+          975420,
+          974918,
+          15044,
+          39,
+          14030,
+          974850,
+          974848,
+          1767,
+          210578,
+          98208,
+          40291,
           975402,
-          15629,
+          975421,
+          13268,
+          975466,
+          166389,
+          974963,
+          974852,
+          975398,
+          211498,
+          1048115,
+          975425,
+          8663,
+          975441,
+          2454,
+          974927,
+          975474,
+          975450,
+          13651,
+          13247,
+          974954,
+          246059,
+          974868,
+          975427,
+          2190,
+          3106,
+          975465,
+          974903,
+          975437,
+          974957,
+          975378,
+          975397,
+          975374,
+          166697,
+          974898,
+          1383,
+          974939,
+          3233,
+          1340,
+          974964,
+          974945,
+          1048064,
+          975460,
+          106,
+          974904,
+          975454,
+          974912,
+          97520,
+          975368,
+          1556,
+          974889,
+          974905,
+          13827,
+          1048129,
+          1048128,
+          15141,
+          97537,
+          974853,
+          98233,
+          974947,
+          210108,
+          41370,
+          975456,
+          13485,
+          974861,
+          166798,
+          15139,
+          974877,
+          15040,
+          974894,
+          975445,
+          974882,
+          1048131,
+          97346,
+          975383,
+          975409,
+          41993,
+          974856,
+          975380,
+          1048148,
+          15038,
+          1048065,
+          13548,
+          1048100,
+          975365,
+          1048082,
+          974911,
+          186175,
+          41292,
+          6216,
+          1048068,
+          166704,
+          6669,
+          211497,
+          975470,
+          97576,
+          13646,
+          210102,
+          975377,
+          974930,
+          98195,
+          207206,
+          41706,
+          975438,
+          975393,
+          6326,
+          1526,
+          975375,
+          974857,
+          975461,
+          2468,
+          974864,
+          975384,
+          975410,
+          211718,
+          975468,
+          166455,
+          140,
+          166353,
+          974931,
+          974923,
+          15138,
+          15385,
+          15996,
+          1048130,
+          14502,
+          975422,
+          975478,
+          1048149,
+          974922,
+          166375,
+          975364,
+          1048083,
+          975452,
+          108,
+          975434,
+          41323,
+          2137,
+          974967,
+          1048114,
+          975459,
+          974941,
+          975408,
+          975376,
+          2069,
+          1693,
+          1048099,
+          974924,
+          13330,
+          139493,
+          975373,
+          974958,
+          161597,
+          97511,
+          3176,
+          115482,
+          975463,
+          1048097,
+          974865,
+          14969,
+          166447,
+          13214,
+          13647,
+          974901,
+          40285,
+          13650,
+          975455,
+          97575,
+          974873,
+          974888,
+          974959,
+          247,
+          15140,
+          975479,
+          975362,
+          13277,
+          1048066,
+          974886,
+          4189,
+          2430,
+          13775,
+          13637,
+          974965,
+          3257,
+          974956,
+          210223,
+          1048067,
+          975411,
+          975412,
+          166590,
+          975385,
+          2456,
+          1342,
+          14995,
+          166794,
+          975444,
+          52347,
+          186457,
+          974883,
+          975440,
+          974902,
+          974854,
+          14258,
+          974885,
+          974926,
+          974897,
+          1765,
+          1316,
+          974942,
+          975448,
+          975467,
+          98210,
+          974874,
+          975449,
+          975477,
+          2427,
+          3161,
+          975381,
+          13771,
+          975404,
+          1048117,
+          1311,
+          138,
+          210721,
+          166633,
+          166474,
+          139492,
+          974966,
+          13264,
+          15787,
+          186237,
+          2674,
+          975476,
+          975413,
+          210702,
+          974851,
+          13479,
+          974937,
+          975366,
+          974887,
+          13450,
+          975451,
+          13099,
+          975446,
+          97204,
+          974891,
+          974879,
+          14267,
+          975429,
+          975386,
+          974925,
+          15936,
+          137,
+          974849,
+          1048101,
+          210105,
+          974961,
+          210527,
+          210205,
+          975431,
+          975472,
+          974953,
+          41693,
+          210181,
+          974936,
+          2452,
           975394,
           1048132,
-          974881,
-          210063,
-          974906,
-          975442,
+          4088,
           195318,
-          1897,
-          974869,
-          975374,
-          210105,
-          974892,
-          13573,
-          6565,
-          6705,
-          974945,
-          974897,
-          15138,
-          975372,
-          97465,
-          15313,
-          211718,
-          1048064,
-          974953,
-          1048067,
-          974944,
-          975452,
-          975426,
-          139431,
-          115481,
-          210721,
-          975473,
-          975398,
-          975476,
-          1340,
-          975451,
-          975471,
-          166698,
-          2069,
-          974886,
-          1342,
-          975475,
-          13268,
-          974882,
-          2419,
-          974965,
-          3284,
-          975391,
-          975447,
-          974967,
-          974960,
-          974939,
-          246059,
-          133,
-          1905,
-          211065,
-          210432,
-          975369,
-          1048081,
-          15935,
-          974951,
-          974880,
-          2929,
-          210348,
-          13099,
-          1048082,
-          166801,
-          975375,
-          98195,
-          974905,
-          15006,
-          8663,
-          210632,
-          160355,
-          3291,
-          975459,
-          975430,
-          41687,
-          1048147,
-          211,
-          974957,
-          974849,
-          210223,
-          13634,
-          15936,
-          1383,
-          974858,
-          106,
-          975368,
-          6326,
-          166474,
-          974930,
-          97346,
-          975455,
-          4189,
-          975380,
-          14267,
-          974949,
-          6669,
-          2456,
-          14082,
-          975448,
-          15789,
-          6216,
-          15140,
-          974866,
-          974911,
-          974946,
-          41293,
-          974919,
-          13214,
-          974889,
-          1341,
-          400,
-          975433,
-          13767,
-          974926,
-          41706,
-          210102,
-          1048116,
-          975370,
-          974931,
-          166794,
-          974853,
-          975384,
-          13247,
-          210181,
-          3233,
-          974963,
-          974927,
-          166697,
-          975446,
-          974885,
-          210702,
-          974899,
-          974859,
-          210350,
-          2454,
-          975364,
-          974934,
-          974924,
-          975462,
-          975395,
-          974876,
-          166523,
-          210205,
-          1048145,
-          974947,
+          975387,
+          13556,
+          974863,
+          974952,
           975363,
-          166140,
-          88797,
-          143,
-          211031,
-          186457,
-          40581,
-          975435,
-          975415,
-          974950,
-          166476,
-          13650,
-          974862,
-          974860,
-          1048084,
-          974878,
-          210224,
-          2137,
-          97520,
-          3106,
-          98099,
-          975478,
-          975441,
-          166447,
-          1048101,
-          207202,
-          1048080,
-          974867,
-          974894,
-          15045,
-          211324,
-          975408,
-          975425,
-          975371,
-          975469,
-          974932,
-          2468,
-          13646,
-          975406,
-          975474,
-          2811,
-          39,
-          974955,
-          1048098,
-          974921,
-          975414,
-          974854,
-          1048129,
-          15310,
-          975443,
-          975418,
-          210578,
-          3176,
-          15036,
+          13767,
+          14506,
+          15367,
+          115481,
+          1048147,
+          211065,
+          13285,
+          974880,
+          975433,
+          210133,
           15873,
+          974860,
+          975457,
+          975392,
+          3059,
+          1048084,
+          974943,
+          974858,
+          13573,
+          974916,
+          15014,
+          210632,
+          975471,
+          974890,
+          974938,
+          166589,
+          1048146,
+          975469,
+          975382,
+          974866,
+          975442,
+          975458,
           974915,
-          975453,
-          2190,
-          166798,
-          207206,
           15788,
-          1048099,
-          13825,
+          678,
+          40,
+          41678,
+          15935,
+          1048085,
+          161593,
+          1048098,
+          13159,
+          3284,
+          974892,
+          3291,
+          210936,
+          14129,
+          97465,
+          975436,
+          143,
+          974884,
+          211324,
+          975389,
+          88797,
+          975464,
+          975401,
+          97527,
+          1048145,
+          1368,
+          166388,
+          211031,
+          139453,
+          975390,
+          974881,
+          1048081,
+          1048320,
+          975399,
+          975430,
+          975443,
+          166122,
+          41326,
+          974895,
+          2419,
+          975419,
+          210083,
+          41,
+          166140,
+          974899,
+          13246,
+          1790,
+          210224,
+          211488,
+          15629,
+          98217,
+          207202,
+          2453,
+          133,
+          975406,
+          3200,
+          15330,
+          974960,
+          974896,
+          975473,
+          974935,
           974933,
-          974850,
-          13330,
-          975422,
-          975409,
-          97511,
-          13277,
-          14258,
-          975404,
-          975410,
-          13790,
-          975445,
+          975391,
+          975415,
+          974869,
+          13634,
+          98203,
+          211382,
+          166476,
+          2811,
+          975388,
+          2429,
+          166698,
+          41293,
+          974950,
+          1048080,
+          974875,
+          40581,
+          975369,
+          41687,
+          15991,
+          15006,
+          975379,
+          975396,
+          13380,
+          2232,
+          107,
+          419,
+          14772,
+          13825,
+          974855,
+          2991,
+          1048116,
+          210376,
+          974908,
           6304,
+          975475,
+          5810,
+          166801,
+          974871,
+          974900,
+          15311,
+          1048113,
+          974920,
+          210586,
+          974872,
+          166058,
+          13769,
+          974929,
+          1766,
+          210145,
+          1048144,
+          975367,
+          14082,
+          14262,
+          1905,
+          975447,
+          13487,
+          13813,
+          211087,
+          1341,
+          6705,
+          974948,
+          974951,
+          975400,
+          166351,
+          161586,
+          974949,
+          19829,
+          15789,
+          975424,
+          975439,
+          975428,
+          139,
+          210348,
+          974893,
+          975371,
+          139526,
+          974878,
+          974914,
+          974876,
+          41732,
+          15310,
+          15313,
+          97531,
+          974917,
+          97393,
+          974955,
+          974867,
+          975453,
+          210589,
+          86663,
+          40405,
+          975372,
+          13109,
+          166523,
+          210350,
+          975403,
+          13441,
+          975426,
+          97522,
+          210432,
+          13675,
+          974921,
+          975416,
+          974944,
+          975407,
+          15622,
+          98099,
+          974919,
+          40583,
+          1897,
+          210347,
+          400,
+          211,
+          40286,
+          975435,
+          139431,
           974928,
-          974865,
-          13264,
-          186237,
-          14995,
-          1048131
+          1048112,
+          13790,
+          975370,
+          974946,
+          974940,
+          975395,
+          974934,
+          975405,
+          210063,
+          974870,
+          975423,
+          210377,
+          13621,
+          974909,
+          974906,
+          160355,
+          975432,
+          2929,
+          974910,
+          15045,
+          974913,
+          975462,
+          6565,
+          41778,
+          975418,
+          974862,
+          974859
         ],
         "hunt_entities": [],
         "log_ids_to_hints": {

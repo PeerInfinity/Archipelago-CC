@@ -105,7 +105,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 1
           },
           {
             "name": "2 score",
@@ -183,7 +184,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "yacht_dice_score": 2
           },
           {
             "name": "3 score",
@@ -261,7 +263,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 3
           },
           {
             "name": "4 score",
@@ -339,7 +342,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "yacht_dice_score": 4
           },
           {
             "name": "5 score",
@@ -417,7 +421,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 5
           },
           {
             "name": "6 score",
@@ -495,7 +500,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 6
           },
           {
             "name": "7 score",
@@ -573,7 +579,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 7
           },
           {
             "name": "8 score",
@@ -651,7 +658,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 8
           },
           {
             "name": "9 score",
@@ -729,7 +737,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 9
           },
           {
             "name": "10 score",
@@ -807,7 +816,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 10
           },
           {
             "name": "11 score",
@@ -885,7 +895,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 11
           },
           {
             "name": "12 score",
@@ -963,7 +974,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 12
           },
           {
             "name": "13 score",
@@ -1041,7 +1053,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 13
           },
           {
             "name": "14 score",
@@ -1119,7 +1132,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 14
           },
           {
             "name": "15 score",
@@ -1197,7 +1211,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 15
           },
           {
             "name": "17 score",
@@ -1275,7 +1290,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 17
           },
           {
             "name": "19 score",
@@ -1353,7 +1369,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 19
           },
           {
             "name": "22 score",
@@ -1431,7 +1448,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 22
           },
           {
             "name": "25 score",
@@ -1509,7 +1527,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 25
           },
           {
             "name": "28 score",
@@ -1587,7 +1606,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 28
           },
           {
             "name": "32 score",
@@ -1665,7 +1685,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 32
           },
           {
             "name": "36 score",
@@ -1743,7 +1764,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 36
           },
           {
             "name": "40 score",
@@ -1821,7 +1843,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 40
           },
           {
             "name": "44 score",
@@ -1899,7 +1922,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 44
           },
           {
             "name": "48 score",
@@ -1977,7 +2001,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 48
           },
           {
             "name": "53 score",
@@ -2055,7 +2080,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 53
           },
           {
             "name": "58 score",
@@ -2133,7 +2159,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 58
           },
           {
             "name": "63 score",
@@ -2211,7 +2238,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 63
           },
           {
             "name": "69 score",
@@ -2289,7 +2317,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 69
           },
           {
             "name": "74 score",
@@ -2367,7 +2396,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 74
           },
           {
             "name": "80 score",
@@ -2445,7 +2475,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 80
           },
           {
             "name": "87 score",
@@ -2523,7 +2554,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 87
           },
           {
             "name": "93 score",
@@ -2601,7 +2633,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 93
           },
           {
             "name": "100 score",
@@ -2679,7 +2712,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 100
           },
           {
             "name": "107 score",
@@ -2757,7 +2791,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 107
           },
           {
             "name": "114 score",
@@ -2835,7 +2870,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 114
           },
           {
             "name": "122 score",
@@ -2913,7 +2949,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 122
           },
           {
             "name": "130 score",
@@ -2991,7 +3028,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 130
           },
           {
             "name": "138 score",
@@ -3069,7 +3107,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 138
           },
           {
             "name": "146 score",
@@ -3147,7 +3186,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 146
           },
           {
             "name": "155 score",
@@ -3225,7 +3265,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 155
           },
           {
             "name": "164 score",
@@ -3303,7 +3344,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 164
           },
           {
             "name": "173 score",
@@ -3381,7 +3423,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 173
           },
           {
             "name": "183 score",
@@ -3459,7 +3502,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 183
           },
           {
             "name": "193 score",
@@ -3537,7 +3581,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 193
           },
           {
             "name": "203 score",
@@ -3615,7 +3660,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 203
           },
           {
             "name": "214 score",
@@ -3693,7 +3739,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 214
           },
           {
             "name": "224 score",
@@ -3771,7 +3818,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 224
           },
           {
             "name": "236 score",
@@ -3849,7 +3897,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 236
           },
           {
             "name": "247 score",
@@ -3927,7 +3976,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 247
           },
           {
             "name": "259 score",
@@ -4005,7 +4055,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 259
           },
           {
             "name": "271 score",
@@ -4083,7 +4134,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 271
           },
           {
             "name": "283 score",
@@ -4161,7 +4213,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 283
           },
           {
             "name": "296 score",
@@ -4239,7 +4292,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 296
           },
           {
             "name": "309 score",
@@ -4317,7 +4371,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 309
           },
           {
             "name": "322 score",
@@ -4395,7 +4450,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 322
           },
           {
             "name": "336 score",
@@ -4473,7 +4529,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 336
           },
           {
             "name": "350 score",
@@ -4551,7 +4608,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 350
           },
           {
             "name": "364 score",
@@ -4629,7 +4687,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 364
           },
           {
             "name": "378 score",
@@ -4707,7 +4766,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 378
           },
           {
             "name": "393 score",
@@ -4785,7 +4845,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 393
           },
           {
             "name": "408 score",
@@ -4863,7 +4924,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 408
           },
           {
             "name": "424 score",
@@ -4941,7 +5003,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 424
           },
           {
             "name": "440 score",
@@ -5019,7 +5082,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 440
           },
           {
             "name": "456 score",
@@ -5097,7 +5161,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 456
           },
           {
             "name": "473 score",
@@ -5175,7 +5240,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 473
           },
           {
             "name": "490 score",
@@ -5253,7 +5319,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 490
           },
           {
             "name": "507 score",
@@ -5331,7 +5398,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 507
           },
           {
             "name": "524 score",
@@ -5409,7 +5477,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 524
           },
           {
             "name": "542 score",
@@ -5487,7 +5556,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 542
           },
           {
             "name": "560 score",
@@ -5565,7 +5635,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 560
           },
           {
             "name": "579 score",
@@ -5643,7 +5714,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 579
           },
           {
             "name": "598 score",
@@ -5721,7 +5793,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 598
           },
           {
             "name": "617 score",
@@ -5799,7 +5872,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 617
           },
           {
             "name": "637 score",
@@ -5877,7 +5951,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 637
           },
           {
             "name": "657 score",
@@ -5955,7 +6030,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 657
           },
           {
             "name": "677 score",
@@ -6033,7 +6109,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 677
           },
           {
             "name": "698 score",
@@ -6111,7 +6188,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 698
           },
           {
             "name": "719 score",
@@ -6189,7 +6267,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 719
           },
           {
             "name": "740 score",
@@ -6267,7 +6346,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 740
           },
           {
             "name": "762 score",
@@ -6345,7 +6425,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 762
           },
           {
             "name": "777 score",
@@ -6423,7 +6504,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "yacht_dice_score": 777
           },
           {
             "name": "806 score",
@@ -6501,7 +6583,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 806
           },
           {
             "name": "829 score",
@@ -6579,7 +6662,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 829
           },
           {
             "name": "852 score",
@@ -6657,7 +6741,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 852
           },
           {
             "name": "876 score",
@@ -6735,7 +6820,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 876
           },
           {
             "name": "899 score",
@@ -6813,7 +6899,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 899
           },
           {
             "name": "924 score",
@@ -6891,7 +6978,8 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 924
           },
           {
             "name": "948 score",
@@ -6969,7 +7057,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 948
           },
           {
             "name": "1000 score",
@@ -7047,7 +7136,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": false,
+            "yacht_dice_score": 1000
           }
         ]
       }
@@ -7898,6 +7988,128 @@
           "display_name": "Story"
         }
       },
+      "itempool": [
+        "Category Ones",
+        "Category Twos",
+        "Category Threes",
+        "Category Fours",
+        "Category Fives",
+        "Category Sixes",
+        "Category Pair",
+        "Category Three of a Kind",
+        "Category Four of a Kind",
+        "Category Tiny Straight",
+        "Category Small Straight",
+        "Category Large Straight",
+        "Category Full House",
+        "Category Yacht",
+        "Dice",
+        "Roll",
+        "Dice Fragment",
+        "Dice Fragment",
+        "Dice Fragment",
+        "Dice Fragment",
+        "Dice Fragment",
+        "Dice Fragment",
+        "Dice Fragment",
+        "Dice Fragment",
+        "Dice Fragment",
+        "Dice Fragment",
+        "Dice Fragment",
+        "Dice Fragment",
+        "Roll Fragment",
+        "Roll Fragment",
+        "Roll Fragment",
+        "Roll Fragment",
+        "Dice Fragment",
+        "Dice Fragment",
+        "Dice Fragment",
+        "Roll Fragment",
+        "Roll Fragment",
+        "Roll Fragment",
+        "Fixed Score Multiplier",
+        "Category Threes",
+        "Fixed Score Multiplier",
+        "Dice Fragment",
+        "Fixed Score Multiplier",
+        "Fixed Score Multiplier",
+        "Fixed Score Multiplier",
+        "Roll Fragment",
+        "Category Choice",
+        "Fixed Score Multiplier",
+        "Category Three of a Kind",
+        "10 Points",
+        "Category Twos",
+        "Category Tiny Straight",
+        "10 Points",
+        "Fixed Score Multiplier",
+        "Fixed Score Multiplier",
+        "10 Points",
+        "Category Threes",
+        "Fixed Score Multiplier",
+        "10 Points",
+        "Fixed Score Multiplier",
+        "Roll Fragment",
+        "Category Tiny Straight",
+        "10 Points",
+        "Fixed Score Multiplier",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Bonus Point",
+        "Encouragement",
+        "Encouragement",
+        "Encouragement",
+        "Encouragement",
+        "Encouragement"
+      ],
+      "precollected": [
+        "Category Choice",
+        "Category Inverse Choice",
+        "Dice",
+        "Roll"
+      ],
+      "frags_per_dice": 4,
+      "frags_per_roll": 4,
+      "difficulty": 2,
+      "possible_categories": [
+        "Category Choice",
+        "Category Inverse Choice",
+        "Category Ones",
+        "Category Twos",
+        "Category Threes",
+        "Category Fours",
+        "Category Fives",
+        "Category Sixes",
+        "Category Pair",
+        "Category Three of a Kind",
+        "Category Four of a Kind",
+        "Category Tiny Straight",
+        "Category Small Straight",
+        "Category Large Straight",
+        "Category Full House",
+        "Category Yacht"
+      ],
+      "skip_early_locations": false,
+      "max_score": 1000,
+      "goal_score": 777,
+      "number_of_locations": 90,
       "world_description": "Yacht Dice is a straightforward game, custom-made for Archipelago,\nwhere you cast your dice to chart a course for high scores,\nunlocking valuable treasures along the way.\nDiscover more dice, extra rolls, multipliers,\nand unlockable categories to navigate the depths of the game.\nRoll your way to victory by reaching the target score!",
       "slot_data": {
         "seed_name": "14089154938208861744",

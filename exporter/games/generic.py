@@ -45,7 +45,7 @@ class GenericGameExportHandler(BaseGameExportHandler):
     # Most games benefit from this. Override with False if needed.
     AUTO_EXPORT_DISCOVERED_HELPERS = True
 
-    def expand_helper(self, helper_name: str):
+    def expand_helper(self, helper_name: str, args: List[Any] = None):
         return None  # Preserve helper nodes as-is
         
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
@@ -80,7 +80,7 @@ class GenericGameExportHandler(BaseGameExportHandler):
 
         # Standard processing from base class
         if rule['type'] == 'helper':
-            expanded = self.expand_helper(rule['name'])
+            expanded = self.expand_helper(rule['name'], rule.get('args', []))
             return expanded if expanded else rule
 
         if rule['type'] in ['and', 'or']:

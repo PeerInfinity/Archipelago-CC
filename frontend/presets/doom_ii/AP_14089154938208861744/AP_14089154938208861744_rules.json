@@ -12638,6 +12638,18 @@
           "display_name": "Start With Computer Area Maps"
         }
       },
+      "included_episodes": [
+        1,
+        1,
+        1,
+        0
+      ],
+      "location_count": 423,
+      "starting_levels": [
+        "Entryway (MAP01)",
+        "The Factory (MAP12)",
+        "Nirvana (MAP21)"
+      ],
       "world_description": "Doom II, also known as Doom II: Hell on Earth, is a first-person shooter game by id Software.\nIt was released for MS-DOS in 1994.\nCompared to its predecessor, Doom II features larger levels, new enemies, a new \"super shotgun\" weapon",
       "slot_data": {
         "difficulty": 2,

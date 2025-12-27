@@ -38,7 +38,9 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                  game_handler=None,
                  player_context: Optional[int] = None,
                  context_info: Optional[str] = None,
-                 preserve_parameter_names: bool = False) -> Dict[str, Any]:
+                 preserve_parameter_names: bool = False,
+                 rule_target_name: Optional[str] = None,
+                 target_type: Optional[str] = None) -> Dict[str, Any]:
     """
     Analyzes a rule function or an AST node representing a rule.
 
@@ -55,6 +57,8 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
         ast_node: An optional pre-parsed AST node (e.g., ast.Lambda) to analyze directly.
         game_handler: Game-specific handler for processing rules
         player_context: Player number for context-sensitive analysis
+        rule_target_name: Name of the target (e.g., location name) for detecting closure-captured references
+        target_type: Type of target ('Location', 'Entrance', etc.) for context-specific handling
 
     Returns:
         A dictionary representing the structured rule, or an error structure.
@@ -84,7 +88,9 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                 closure_vars=closure_vars,
                 seen_funcs=seen_funcs,
                 game_handler=game_handler,
-                player_context=player_context
+                player_context=player_context,
+                rule_target_name=rule_target_name,
+                target_type=target_type
             )
             analysis_result = analyzer.visit(ast_node)
 
@@ -193,7 +199,9 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                     game_handler=game_handler,
                     rule_func=rule_func,
                     player_context=player_context,
-                    preserve_parameter_names=preserve_parameter_names
+                    preserve_parameter_names=preserve_parameter_names,
+                    rule_target_name=rule_target_name,
+                    target_type=target_type
                 )
 
                 # Check if cleaned_source contains "Bridge"

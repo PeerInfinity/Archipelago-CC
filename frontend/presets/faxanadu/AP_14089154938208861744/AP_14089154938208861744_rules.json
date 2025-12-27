@@ -2713,6 +2713,14 @@
           "display_name": "Require Dragon Slayer"
         }
       },
+      "filler_ratios": {
+        "Hourglass": 6,
+        "Red Potion": 15,
+        "Elixir": 4,
+        "Glove": 5,
+        "Ointment": 8,
+        "Poison": 13
+      },
       "world_description": "Faxanadu is an action role-playing platform video game developed by Hudson Soft for the Nintendo Entertainment System",
       "slot_data": {
         "keep_shop_red_potions": 0,
