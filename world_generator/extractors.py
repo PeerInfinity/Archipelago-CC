@@ -260,7 +260,14 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
             resolved_settings[k] = v
 
     # Extract option definitions (type, range, choices, etc.)
+    # Check both settings and world_data since different exporters store them in different places
     option_definitions = settings.get('option_definitions', {})
+    world_option_definitions = world_data.get('option_definitions', {})
+    if world_option_definitions and not option_definitions:
+        option_definitions = world_option_definitions
+    elif world_option_definitions:
+        # Merge: world_data takes precedence
+        option_definitions = {**option_definitions, **world_option_definitions}
 
     return GameMetadata(
         game_name=game_name,
