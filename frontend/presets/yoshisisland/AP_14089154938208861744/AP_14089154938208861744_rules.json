@@ -6684,11 +6684,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Yoshi's Island",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "add_secretlens": "false",
@@ -6957,58 +6955,6 @@
           "display_name": "Singularity Yoshi Color"
         }
       },
-      "StageLogic": 0,
-      "HiddenObjectVisibility": 1,
-      "ShuffleMiddleRings": 0,
-      "ItemLogic": 0,
-      "BowserDoorMode": 0,
-      "LuigiPiecesRequired": 25,
-      "CastleClearCondition": 0,
-      "CastleOpenCondition": 5,
-      "game_logic": "Easy",
-      "midring_start": true,
-      "clouds_always_visible": false,
-      "consumable_logic": true,
-      "bowser_door": 0,
-      "luigi_pieces": 25,
-      "boss_order": [
-        "Burt The Bashful's Boss Room",
-        "Salvo The Slime's Boss Room",
-        "Bigger Boo's Boss Room",
-        "Roger The Ghost's Boss Room",
-        "Prince Froggy's Boss Room",
-        "Naval Piranha's Boss Room",
-        "Marching Milde's Boss Room",
-        "Hookbill The Koopa's Boss Room",
-        "Sluggy The Unshaven's Boss Room",
-        "Raphael The Raven's Boss Room",
-        "Tap-Tap The Red Nose's Boss Room"
-      ],
-      "castle_unlock": 5,
-      "boss_unlock": 0,
-      "world_directory": "yoshisisland"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Yoshi's Island",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "ocean",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Yoshi's Island randomizer and connecting to an Archipelago server.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Pink Switch"
-          ]
-        }
-      ],
       "world_description": "Yoshi's Island is a 2D platforming game.\nDuring a delivery, Bowser's evil ward, Kamek, attacked the stork, kidnapping Luigi and dropping Mario onto Yoshi's Island.\nAs Yoshi, you must run, jump, and throw eggs to escort the baby Mario across the island to defeat Bowser and reunite the two brothers with their parents.",
       "slot_data": {
         "world_1": [
@@ -7083,8 +7029,65 @@
           68,
           69
         ]
-      }
+      },
+      "web": {
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Yoshi's Island randomizer and connecting to an Archipelago server.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Pink Switch"
+            ]
+          }
+        ]
+      },
+      "StageLogic": 0,
+      "HiddenObjectVisibility": 1,
+      "ShuffleMiddleRings": 0,
+      "ItemLogic": 0,
+      "BowserDoorMode": 0,
+      "LuigiPiecesRequired": 25,
+      "CastleClearCondition": 0,
+      "CastleOpenCondition": 5,
+      "game_logic": "Easy",
+      "midring_start": true,
+      "clouds_always_visible": false,
+      "consumable_logic": true,
+      "bowser_door": 0,
+      "luigi_pieces": 25,
+      "boss_order": [
+        "Burt The Bashful's Boss Room",
+        "Salvo The Slime's Boss Room",
+        "Bigger Boo's Boss Room",
+        "Roger The Ghost's Boss Room",
+        "Prince Froggy's Boss Room",
+        "Naval Piranha's Boss Room",
+        "Marching Milde's Boss Room",
+        "Hookbill The Koopa's Boss Room",
+        "Sluggy The Unshaven's Boss Room",
+        "Raphael The Raven's Boss Room",
+        "Tap-Tap The Red Nose's Boss Room"
+      ],
+      "castle_unlock": 5,
+      "boss_unlock": 0,
+      "world_directory": "yoshisisland"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {
     "1": {
@@ -10256,6 +10259,56 @@
           }
         }
       },
+      "bowserdoor_4": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "constant",
+            "value": true
+          }
+        }
+      },
       "cansee_clouds": {
         "type": "conditional",
         "test": {
@@ -10466,6 +10519,18 @@
               }
             ]
           }
+        }
+      },
+      "reconstitute_luigi": {
+        "type": "item_check",
+        "item": "Piece of Luigi",
+        "count": {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "self"
+          },
+          "attr": "luigi_pieces"
         }
       }
     }
