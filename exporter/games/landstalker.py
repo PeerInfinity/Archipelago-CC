@@ -133,8 +133,62 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
                 if simplified_item is not None:
                     return {"type": "item_check", "item": simplified_item}
 
+        # Handle _landstalker_has_visited_regions helper call directly
+        # This helper checks that all specified regions have been visited via event items
+        # Pattern: {"type": "helper", "name": "_landstalker_has_visited_regions", "args": [...]}
+        if rule.get('type') == 'helper' and rule.get('name') == '_landstalker_has_visited_regions':
+            return self._expand_has_visited_regions_helper(rule)
+
         # Let parent handle standard cases
         return super().expand_rule(rule, _depth)
+
+    def _expand_has_visited_regions_helper(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Expand _landstalker_has_visited_regions helper to item_check conditions.
+
+        Converts:
+          {"type": "helper", "name": "_landstalker_has_visited_regions",
+           "args": [{"type": "constant", "value": ["Region1", "Region2"]}]}
+        To:
+          {"type": "and", "conditions": [
+            {"type": "item_check", "item": "event_visited_region1"},
+            {"type": "item_check", "item": "event_visited_region2"}
+          ]}
+        """
+        args = rule.get('args', [])
+
+        if not args:
+            logger.debug("_landstalker_has_visited_regions called with no args, returning True")
+            return {"type": "constant", "value": True}
+
+        # Extract regions from the first argument (should be a constant list or a list)
+        regions_arg = args[0]
+        region_names = []
+
+        if isinstance(regions_arg, dict):
+            if regions_arg.get('type') == 'constant':
+                value = regions_arg.get('value', [])
+                if isinstance(value, list):
+                    region_names = value
+            elif regions_arg.get('type') == 'list':
+                # Handle list type if present
+                elements = regions_arg.get('elements', [])
+                for elem in elements:
+                    if isinstance(elem, dict) and elem.get('type') == 'constant':
+                        region_names.append(elem.get('value'))
+                    elif isinstance(elem, str):
+                        region_names.append(elem)
+        elif isinstance(regions_arg, list):
+            region_names = regions_arg
+
+        if not region_names:
+            logger.debug("No region names found in _landstalker_has_visited_regions args")
+            return {"type": "constant", "value": True}
+
+        # Convert region names to codes and build conditions
+        region_codes = self._normalize_region_codes(region_names)
+        logger.debug(f"Expanding _landstalker_has_visited_regions: {region_names} -> {region_codes}")
+
+        return self._build_event_visited_conditions(region_codes)
 
     def _resolve_all_of_iterator(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Resolve unresolved iterator in all_of rules.

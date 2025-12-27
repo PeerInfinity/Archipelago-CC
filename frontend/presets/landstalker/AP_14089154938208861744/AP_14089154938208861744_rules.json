@@ -36,43 +36,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "And",
                   "children": [
                     {
@@ -88,6 +51,9 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "True_"
                 }
               ]
             }
@@ -244,43 +210,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "And",
                   "children": [
                     {
@@ -296,6 +225,9 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "True_"
                 }
               ]
             }
@@ -371,41 +303,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -523,41 +421,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -910,41 +774,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -1122,41 +952,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -1322,41 +1118,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -1417,41 +1179,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -1843,41 +1571,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -1909,41 +1603,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -1961,41 +1621,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -2020,41 +1646,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -2271,11 +1863,18 @@
             "name": "Mercator: Fahl's dojo challenge reward",
             "id": 4343,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Life Stock",
-                "count": 15
-              }
+              "rule": "_landstalker_has_health",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 15
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Restoration",
@@ -2354,41 +1953,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -2583,41 +2148,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -2713,41 +2244,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -2765,41 +2262,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -2817,41 +2280,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -2951,41 +2380,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -3025,41 +2420,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -3163,41 +2524,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -3539,41 +2866,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -3591,41 +2884,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -3643,41 +2902,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -3815,41 +3040,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -3917,41 +3108,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -4308,41 +3465,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -4536,41 +3659,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -5188,41 +4277,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -5346,41 +4401,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -5771,41 +4792,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -5830,41 +4817,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -5882,41 +4835,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -6166,41 +5085,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -6224,43 +5109,6 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
-                },
                 {
                   "rule": "And",
                   "children": [
@@ -6295,6 +5143,9 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "True_"
                 }
               ]
             }
@@ -6497,41 +5348,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -6549,41 +5366,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -6686,41 +5469,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -6738,41 +5487,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -7057,41 +5772,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -7167,41 +5848,7 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
+                  "rule": "True_"
                 },
                 {
                   "rule": "Has",
@@ -7432,43 +6079,6 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "AST_all_of",
-                  "args": {
-                    "element_rule": {
-                      "type": "item_check",
-                      "item": {
-                        "type": "binary_op",
-                        "left": {
-                          "type": "constant",
-                          "value": "event_visited_"
-                        },
-                        "op": "+",
-                        "right": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "region"
-                          },
-                          "attr": "code"
-                        }
-                      }
-                    },
-                    "iterator_info": {
-                      "type": "comprehension_details",
-                      "target": {
-                        "type": "name",
-                        "name": "region"
-                      },
-                      "iterator": {
-                        "type": "constant",
-                        "value": []
-                      }
-                    },
-                    "_original_ast_type": "all_of"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "And",
                   "children": [
                     {
@@ -7490,6 +6100,9 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "True_"
                 }
               ]
             }
@@ -8420,11 +7033,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Landstalker - The Treasures of King Nole",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": true,
       "options": {
         "accessibility": "full",
         "allow_whistle_usage_behind_trees": "true",
@@ -8605,29 +7216,6 @@
           "display_name": "Use Spell Book"
         }
       },
-      "world_directory": "landstalker"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Landstalker - The Treasures of King Nole",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "grass",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Landstalker Randomizer software on your computer.",
-          "language": "English",
-          "file_name": "landstalker_setup_en.md",
-          "link": "landstalker_setup/en",
-          "authors": [
-            "Dinopony"
-          ]
-        }
-      ],
       "world_description": "Landstalker: The Treasures of King Nole is a classic Action-RPG with an isometric view (also known as \"2.5D\").\nYou play Nigel, a treasure hunter exploring the island of Mercator trying to find the legendary treasure.\nRoam freely on the island, get stronger to beat dungeons and gather the required key items in order to reach the\nhidden palace and claim the treasure.",
       "slot_data": {
         "goal": 0,
@@ -8652,18 +7240,18 @@
         "seed": 2089113674,
         "dark_region": "Massan Cave",
         "hints": {
-          "Foxy (right after making Miro flee with Garlic in Mir Tower)": "I can sense Lantern in the village of Massan.",
-          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Buyer Card among the trees.",
+          "Foxy (right after making Miro flee with Garlic in Mir Tower)": "I can sense Green Jewel inside a tower.",
+          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Garlic in Verla Mines.",
           "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "I can sense Casino Ticket close to a waterfall.",
-          "Foxy (in Gumi boulder map)": "I can sense Idol Stone among the trees.",
-          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Green Jewel inside a tower.",
-          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Gola's Nail on a route.",
-          "Foxy (in Destel)": "Have you found all of the 283 items in this universe?",
-          "Foxy (in room next to green golem roundabout in Lake Shrine)": "I can sense Safety Pass in a region inhabited by bears.",
-          "Foxy (on Kazalt bridge)": "I can sense Gola's Eye on a route.",
-          "Foxy (inside Mercator Crypt)": "I can sense Sun Stone on a route.",
-          "Foxy (at Waterfall Shrine crossroads)": "I can sense Blue Jewel in Twinkle village.",
-          "Foxy (in King Nole's Palace entrance room)": "I can sense Logs in Destel region.",
+          "Foxy (in Gumi boulder map)": "I can sense Red Jewel in a town.",
+          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Lithograph in the village of Massan.",
+          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Idol Stone among the trees.",
+          "Foxy (in Destel)": "I can sense Iron Boots in a mountainous area.",
+          "Foxy (in room next to green golem roundabout in Lake Shrine)": "I can sense Armlet near a swamp.",
+          "Foxy (on Kazalt bridge)": "I can sense Garlic in King Nole's domain.",
+          "Foxy (inside Mercator Crypt)": "I can sense Yellow Jewel inside a tower.",
+          "Foxy (at Waterfall Shrine crossroads)": "Did you know that your world contains 100 percent of all progression items?",
+          "Foxy (in King Nole's Palace entrance room)": "I can sense Buyer Card among the trees.",
           "Lithograph": "It's barely readable:\nRED MERCATOR ITEM\nPURPLE ITEM DESTEL\nTOWER GREEN CHALLENGE\nFIRST GROUND BLUE\nYELLOW ROOM TOWER",
           "Oracle Stone": "It shows Massan Cave\nenshrouded in darkness."
         },
@@ -8740,8 +7328,61 @@
           "Kazalt: Shop item #4": 415,
           "Kazalt: Shop item #5": 415
         }
-      }
+      },
+      "web": {
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Landstalker Randomizer software on your computer.",
+            "language": "English",
+            "file_name": "landstalker_setup_en.md",
+            "link": "landstalker_setup/en",
+            "authors": [
+              "Dinopony"
+            ]
+          }
+        ]
+      },
+      "world_directory": "landstalker"
     }
   },
-  "helpers": {}
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": true
+    }
+  },
+  "game_info": {
+    "1": {}
+  },
+  "helpers": {
+    "1": {
+      "_landstalker_has_health": {
+        "params": [
+          "health"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Life Stock",
+          "count": {
+            "type": "name",
+            "name": "health"
+          }
+        }
+      },
+      "_landstalker_has_visited_regions": {
+        "params": [
+          "regions"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        }
+      }
+    }
+  }
 }
