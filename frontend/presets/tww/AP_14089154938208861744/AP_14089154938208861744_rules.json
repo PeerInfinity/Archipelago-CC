@@ -5357,11 +5357,9 @@
       "Progressive Sword"
     ]
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "The Wind Waker",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "add_shortcut_warps_between_dungeons": "false",
@@ -5750,50 +5748,6 @@
           "display_name": "Sword Mode"
         }
       },
-      "logic_in_swordless_mode": false,
-      "logic_in_required_bosses_mode": false,
-      "logic_obscure_1": false,
-      "logic_obscure_2": false,
-      "logic_obscure_3": false,
-      "logic_precise_1": false,
-      "logic_precise_2": false,
-      "logic_precise_3": false,
-      "logic_rematch_bosses_skipped": true,
-      "logic_tuner_logic_enabled": false,
-      "world_directory": "tww"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "The Wind Waker",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "ocean",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Archipelago The Wind Waker software on your computer.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "tanjo3",
-            "Lunix"
-          ]
-        },
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Archipelago The Wind Waker software on your computer.",
-          "language": "Fran\u00e7ais",
-          "file_name": "setup_fr.md",
-          "link": "setup/fr",
-          "authors": [
-            "mobby45"
-          ]
-        }
-      ],
       "world_description": "Legend has it that whenever evil has appeared, a hero named Link has arisen to defeat it. The legend continues on\nthe surface of a vast and mysterious sea as Link sets sail in his most epic, awe-inspiring adventure yet. Aided by a\nmagical conductor's baton called the Wind Waker, he will face unimaginable monsters, explore puzzling dungeons, and\nmeet a cast of unforgettable characters as he searches for his kidnapped sister.",
       "slot_data": {
         "progression_dungeons": 1,
@@ -5834,8 +5788,57 @@
         "skip_rematch_bosses": 1,
         "remove_music": 0,
         "death_link": 0
-      }
+      },
+      "web": {
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago The Wind Waker software on your computer.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "tanjo3",
+              "Lunix"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago The Wind Waker software on your computer.",
+            "language": "Fran\u00e7ais",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "mobby45"
+            ]
+          }
+        ]
+      },
+      "logic_in_swordless_mode": false,
+      "logic_in_required_bosses_mode": false,
+      "logic_obscure_1": false,
+      "logic_obscure_2": false,
+      "logic_obscure_3": false,
+      "logic_precise_1": false,
+      "logic_precise_2": false,
+      "logic_precise_3": false,
+      "logic_rematch_bosses_skipped": true,
+      "logic_tuner_logic_enabled": false,
+      "world_directory": "tww"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {
     "1": {
