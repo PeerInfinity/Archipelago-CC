@@ -23,6 +23,11 @@ on:
         type: boolean
         default: true
 
+      filter_presets:
+        description: 'Filter preset changes to only include rules.json and sphere_log.jsonl files (excludes Spoiler.txt and .archipelago)'
+        type: boolean
+        default: true
+
 permissions:
   contents: write  # Allow pushing commits and creating branches
 
@@ -109,10 +114,28 @@ jobs:
           scripts/utils/generate_all_templates.sh
 
       - name: Commit and push generated presets
+        env:
+          FILTER_PRESETS: ${{ inputs.filter_presets }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
+
+          if [ "$FILTER_PRESETS" = "true" ]; then
+            echo "Filtering presets: only staging rules.json, sphere_log.jsonl, and preset_files.json"
+
+            # Add all changes outside frontend/presets/
+            git add -A -- ':!frontend/presets/'
+
+            # Add only allowed file types in frontend/presets/
+            git add -- 'frontend/presets/preset_files.json' 2>/dev/null || true
+            git add -- 'frontend/presets/**/*_rules.json' 2>/dev/null || true
+            git add -- 'frontend/presets/**/*_sphere_log.jsonl' 2>/dev/null || true
+
+            # Stage any deletions in frontend/presets/ (deletions are allowed for all file types)
+            git diff --name-only --diff-filter=D -- frontend/presets/ | xargs -r git add --
+          else
+            git add -A
+          fi
 
           if ! git diff --staged --quiet; then
             git commit -m "Generate presets
