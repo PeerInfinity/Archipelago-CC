@@ -2156,11 +2156,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Meritous",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "death_link": "false",
@@ -2232,29 +2230,6 @@
           "display_name": "Progression Balancing"
         }
       },
-      "world_directory": "meritous"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Meritous",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "ice",
-      "web_tutorials": [
-        {
-          "name": "Meritous Setup Guide",
-          "description": "A guide to setting up the Archipelago Meritous software on your computer.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "KewlioMZX"
-          ]
-        }
-      ],
       "world_description": "Meritous Gaiden is a procedurally generated bullet-hell dungeon crawl game.\nFive generations after the Orcus Dome incident, strange experiments conducted in a new\nstructure on the moon are tearing at the very fabric of reality...",
       "slot_data": {
         "goal": 0,
@@ -2264,8 +2239,36 @@
           4
         ],
         "death_link": 0
-      }
+      },
+      "web": {
+        "theme": "ice",
+        "tutorials": [
+          {
+            "name": "Meritous Setup Guide",
+            "description": "A guide to setting up the Archipelago Meritous software on your computer.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "KewlioMZX"
+            ]
+          }
+        ]
+      },
+      "world_directory": "meritous"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }

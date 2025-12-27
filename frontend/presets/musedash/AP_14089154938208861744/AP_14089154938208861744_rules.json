@@ -9898,11 +9898,9 @@
       "Yuki no Shizuku Ame no Oto"
     ]
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Muse Dash",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "additional_song_count": 40,
@@ -10038,47 +10036,52 @@
           "display_name": "Trap Percentage"
         }
       },
-      "world_directory": "musedash"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Muse Dash",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "partyTime",
-      "web_tutorials": [
-        {
-          "name": "Mod Setup and Use Guide",
-          "description": "A guide to setting up the Muse Dash Archipelago Mod on your computer.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "DeamonHunter"
-          ]
-        },
-        {
-          "name": "Mod Setup and Use Guide",
-          "description": "A guide to setting up the Muse Dash Archipelago Mod on your computer.",
-          "language": "Espa\u00f1ol",
-          "file_name": "setup_es.md",
-          "link": "setup/es",
-          "authors": [
-            "Shiny"
-          ]
-        }
-      ],
       "world_description": "Muse Dash is a rhythm game where you hit objects to the beat of one of 400+ songs.\nPlay through a selection of randomly chosen songs, collecting music sheets\nuntil you have enough to play and complete the goal song!",
       "slot_data": {
         "victoryLocation": "Magical Wonderland",
         "deathLink": 0,
         "musicSheetWinCount": 7,
         "gradeNeeded": 0
-      }
+      },
+      "web": {
+        "theme": "partyTime",
+        "tutorials": [
+          {
+            "name": "Mod Setup and Use Guide",
+            "description": "A guide to setting up the Muse Dash Archipelago Mod on your computer.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "DeamonHunter"
+            ]
+          },
+          {
+            "name": "Mod Setup and Use Guide",
+            "description": "A guide to setting up the Muse Dash Archipelago Mod on your computer.",
+            "language": "Espa\u00f1ol",
+            "file_name": "setup_es.md",
+            "link": "setup/es",
+            "authors": [
+              "Shiny"
+            ]
+          }
+        ]
+      },
+      "world_directory": "musedash"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }

@@ -8414,11 +8414,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Timespinner",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "BossHealing": "true",
         "BossRando": "off",
@@ -9327,49 +9325,6 @@
           "display_name": "Unchained Keys"
         }
       },
-      "flag_specific_keycards": false,
-      "flag_eye_spy": false,
-      "flag_unchained_keys": false,
-      "flag_prism_break": false,
-      "pyramid_keys_unlock": "GateLakeSereneRight",
-      "present_keys_unlock": "GateSealedSirensCave",
-      "past_keys_unlock": "GateLakeSereneRight",
-      "time_keys_unlock": "GateRightPyramid",
-      "world_directory": "timespinner"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Timespinner",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "ice",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Timespinner randomizer connected to an Archipelago Multiworld",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Jarno"
-          ]
-        },
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Timespinner randomizer connected to an Archipelago Multiworld",
-          "language": "Deutsch",
-          "file_name": "setup_de.md",
-          "link": "setup/de",
-          "authors": [
-            "Grrmo",
-            "Fynxes",
-            "Blaze0168"
-          ]
-        }
-      ],
       "world_description": "Timespinner is a beautiful metroidvania inspired by classic 90s action-platformers.\nTravel back in time to change fate itself. Join timekeeper Lunais on her quest for revenge against the empire that killed her family.",
       "slot_data": {
         "StartWithJewelryBox": 0,
@@ -9723,8 +9678,56 @@
         "DryLakeSerene": false,
         "LakeSereneBridge": false,
         "Lab": false
-      }
+      },
+      "web": {
+        "theme": "ice",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Timespinner randomizer connected to an Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Jarno"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Timespinner randomizer connected to an Archipelago Multiworld",
+            "language": "Deutsch",
+            "file_name": "setup_de.md",
+            "link": "setup/de",
+            "authors": [
+              "Grrmo",
+              "Fynxes",
+              "Blaze0168"
+            ]
+          }
+        ]
+      },
+      "flag_specific_keycards": false,
+      "flag_eye_spy": false,
+      "flag_unchained_keys": false,
+      "flag_prism_break": false,
+      "pyramid_keys_unlock": "GateLakeSereneRight",
+      "present_keys_unlock": "GateSealedSirensCave",
+      "past_keys_unlock": "GateLakeSereneRight",
+      "time_keys_unlock": "GateRightPyramid",
+      "world_directory": "timespinner"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {
     "1": {

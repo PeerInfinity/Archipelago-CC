@@ -12053,11 +12053,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Terraria",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "calamity": "false",
@@ -12164,82 +12162,15 @@
           "display_name": "Progression Balancing"
         }
       },
-      "armor_minions": {
-        "Wulfrum Armor": 1,
-        "Flinx Fur Coat": 1,
-        "Victide Armor": 1,
-        "Obsidian Armor": 1,
-        "Bee Armor": 2,
-        "Aerospec Armor": 1,
-        "Statigel Armor": 1,
-        "Spider Armor": 3,
-        "Forbidden Armor": 2,
-        "Daedalus Armor": 2,
-        "Hallowed Armor": 3,
-        "Fathom Swarmer Armor": 2,
-        "Tiki Armor": 4,
-        "Hydrothermic Armor": 2,
-        "Plaguebringer Armor": 3,
-        "Spooky Armor": 4,
-        "Astral Armor": 3,
-        "Stardust Armor": 5,
-        "Tarragon Armor": 3,
-        "Bloodflare Armor": 3,
-        "Omega Blue Armor": 2,
-        "Fearmonger Armor": 2,
-        "Silva Armor": 5,
-        "Auric Tesla Armor": 6,
-        "Demonshade Armor": 10
-      },
-      "accessory_minions": {
-        "Summoning Potion": 1,
-        "Voltaic Jelly": 1,
-        "Pygmy Necklace": 1,
-        "Bewitching Table": 1,
-        "The First Shadowflame": 1,
-        "Nuclear Fuel Rod": 1,
-        "Starbuster Core": 1,
-        "Necromantic Scroll": 1,
-        "Papyrus Scarab": 1,
-        "Eldritch Soul Artifact": 1,
-        "Profaned Soul Artifact": 1,
-        "Angelic Alliance": 2
-      },
-      "world_directory": "terraria"
-    }
-  },
-  "world_attributes": {
-    "1": {
       "calamity": false,
       "grindy_achievements": false,
-      "getfixedboi": false
-    }
-  },
-  "game_info": {
-    "1": {
-      "name": "Terraria",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "grass",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Terraria randomizer connected to an Archipelago Multiworld.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Seldom"
-          ]
-        }
-      ],
+      "getfixedboi": false,
       "world_description": "Terraria is a 2D multiplayer sandbox game featuring mining, building, exploration, and combat.\nFeatures 18 bosses and 4 classes.",
       "slot_data": {
         "goal": [
+          "The Twins",
           "Skeletron Prime",
-          "The Destroyer",
-          "The Twins"
+          "The Destroyer"
         ],
         "deathlink": false,
         "calamity": 0,
@@ -12248,8 +12179,36 @@
         "normal_achievements": 1,
         "grindy_achievements": 0,
         "fishing_achievements": 0
-      }
+      },
+      "web": {
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Terraria randomizer connected to an Archipelago Multiworld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Seldom"
+            ]
+          }
+        ]
+      },
+      "world_directory": "terraria"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {
     "1": {

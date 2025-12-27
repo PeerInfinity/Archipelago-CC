@@ -3641,31 +3641,27 @@
             "name": "Hideout -> Versum Hill",
             "connected_region": "Versum Hill",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 20
-              }
+              "rule": "versum_hill_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Hideout -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed"
-              }
+              "rule": "millennium_square_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Hideout -> Mataan - Streets",
             "connected_region": "Mataan - Streets",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed"
-              }
+              "rule": "mataan_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3786,10 +3782,18 @@
             "name": "Hideout: BMX garage skateboard",
             "id": 2308008,
             "access_rule": {
-              "rule": "HasGroup",
-              "args": {
-                "group": "bmx"
-              }
+              "rule": "bmx",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Skateboard (Terrence)",
@@ -3803,10 +3807,18 @@
             "name": "Hideout: Unlock phone app",
             "id": 2308009,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed"
-              }
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Inline Skates (Glaciers)",
@@ -3820,11 +3832,18 @@
             "name": "Hideout: Vinyl joins the crew",
             "id": 2308010,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed",
-                "count": 3
-              }
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 4
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Inline Skates (Red Industry)",
@@ -3838,11 +3857,18 @@
             "name": "Hideout: Solace joins the crew",
             "id": 2308011,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed",
-                "count": 4
-              }
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 5
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "16 REP",
@@ -3868,10 +3894,18 @@
             "name": "Versum Hill -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "rule": "HasGroup",
-              "args": {
-                "group": "graffitil"
-              }
+              "rule": "versum_hill_ch1_roadblock",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           }
         ],
@@ -3922,10 +3956,18 @@
             "name": "Versum Hill: BMX gate outfit",
             "id": 2308031,
             "access_rule": {
-              "rule": "HasGroup",
-              "args": {
-                "group": "bmx"
-              }
+              "rule": "bmx",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "24 REP",
@@ -3939,10 +3981,9 @@
             "name": "Versum Hill: Big Polo",
             "id": 2308037,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Music (You Can Say Hi)",
@@ -3956,10 +3997,9 @@
             "name": "Versum Hill: Trash Polo",
             "id": 2308038,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Bel",
@@ -3985,54 +4025,45 @@
             "name": "Versum Hill - After Roadblock -> Versum Hill",
             "connected_region": "Versum Hill",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 20
-              }
+              "rule": "versum_hill_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed"
-              }
+              "rule": "millennium_square_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Versum Hill - Underground Mall",
             "connected_region": "Versum Hill - Underground Mall",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 120
-              }
+              "rule": "versum_hill_oldhead",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Versum Hill - Side Street",
             "connected_region": "Versum Hill - Side Street",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 65
-              }
+              "rule": "versum_hill_all_challenges",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Versum Hill - Basketball Court",
             "connected_region": "Versum Hill - Basketball Court",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 90
-              }
+              "rule": "versum_hill_basketball_court",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4139,11 +4170,9 @@
             "name": "Versum Hill: Wallrunning challenge reward",
             "id": 2308022,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 50
-              }
+              "rule": "versum_hill_challenge1",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Solace",
@@ -4157,11 +4186,9 @@
             "name": "Versum Hill: Manual challenge reward",
             "id": 2308023,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 58
-              }
+              "rule": "versum_hill_challenge2",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Graffiti (L - INFINITY)",
@@ -4175,11 +4202,9 @@
             "name": "Versum Hill: Corner challenge reward",
             "id": 2308024,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 65
-              }
+              "rule": "versum_hill_challenge3",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "8 REP",
@@ -4193,10 +4218,18 @@
             "name": "Versum Hill: Glass floor skates",
             "id": 2308032,
             "access_rule": {
-              "rule": "HasGroup",
-              "args": {
-                "group": "skates"
-              }
+              "rule": "inline_skates",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "8 REP",
@@ -4210,10 +4243,18 @@
             "name": "Versum Hill: Frank joins the crew",
             "id": 2308035,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed"
-              }
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "24 REP",
@@ -4232,10 +4273,18 @@
             "name": "Versum Hill - Underground Mall -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "rule": "HasGroup",
-              "args": {
-                "group": "graffitil"
-              }
+              "rule": "versum_hill_ch1_roadblock",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           }
         ],
@@ -4272,19 +4321,23 @@
             "name": "Versum Hill: Rave joins the crew",
             "id": 2308034,
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "versum_hill_rave",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitil"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitixl"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4300,10 +4353,9 @@
             "name": "Versum Hill: Fruit stand Polo",
             "id": 2308039,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Music (GET ENUF)",
@@ -4322,10 +4374,18 @@
             "name": "Versum Hill - Side Street -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "rule": "HasGroup",
-              "args": {
-                "group": "graffitil"
-              }
+              "rule": "versum_hill_ch1_roadblock",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           }
         ],
@@ -4367,21 +4427,27 @@
             "name": "Versum Hill - Basketball Court -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "rule": "HasGroup",
-              "args": {
-                "group": "graffitil"
-              }
+              "rule": "versum_hill_ch1_roadblock",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Versum Hill - Basketball Court -> Versum Hill",
             "connected_region": "Versum Hill",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 20
-              }
+              "rule": "versum_hill_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4418,10 +4484,18 @@
             "name": "Versum Hill: Basketball court shortcut CD",
             "id": 2308033,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed"
-              }
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Graffiti (M - Stacked Symbols)",
@@ -4435,19 +4509,23 @@
             "name": "Versum Hill: Rietveld joins the crew",
             "id": 2308036,
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "versum_hill_rietveld",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitim"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "Constant",
                   "args": {
-                    "item_name": "Chapter Completed"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4463,20 +4541,23 @@
             "name": "Versum Hill: Complete Chapter 1",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "versum_hill_crew_battle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitim"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "Constant",
                   "args": {
-                    "item_name": "rep",
-                    "count": 90
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -4498,82 +4579,54 @@
             "name": "Millennium Square -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "rule": "HasGroup",
-              "args": {
-                "group": "graffitil"
-              }
+              "rule": "versum_hill_ch1_roadblock",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
             "name": "Millennium Square -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "girl"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chapter Completed"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 180
-                  }
-                }
-              ]
+              "rule": "brink_terminal_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Millennium Square -> Millennium Mall",
             "connected_region": "Millennium Mall",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chapter Completed",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 380
-                  }
-                }
-              ]
+              "rule": "millennium_mall_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Millennium Square -> Pyramid Island - Base",
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed",
-                "count": 3
-              }
+              "rule": "pyramid_island_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Millennium Square -> Mataan - Streets",
             "connected_region": "Mataan - Streets",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed"
-              }
+              "rule": "mataan_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4806,10 +4859,9 @@
             "name": "Millennium Square: Half pipe Polo",
             "id": 2308056,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Outfit (Red - Winter)",
@@ -4828,43 +4880,36 @@
             "name": "Brink Terminal -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed"
-              }
+              "rule": "millennium_square_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Brink Terminal -> Brink Terminal - Underground",
             "connected_region": "Brink Terminal - Underground",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 250
-              }
+              "rule": "brink_terminal_oldhead_underground",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Brink Terminal -> Brink Terminal - Dock",
             "connected_region": "Brink Terminal - Dock",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 320
-              }
+              "rule": "brink_terminal_oldhead_dock",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Brink Terminal -> Brink Terminal - Planet Plaza",
             "connected_region": "Brink Terminal - Planet Plaza",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 220
-              }
+              "rule": "brink_terminal_plaza",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -4873,11 +4918,9 @@
             "name": "Brink Terminal: Upside grind challenge reward",
             "id": 2308057,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 188
-              }
+              "rule": "brink_terminal_challenge1",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Music (Light Switch)",
@@ -4891,11 +4934,9 @@
             "name": "Brink Terminal: Manual challenge reward",
             "id": 2308058,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 200
-              }
+              "rule": "brink_terminal_challenge2",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "16 REP",
@@ -4909,11 +4950,9 @@
             "name": "Brink Terminal: Score challenge reward",
             "id": 2308059,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 220
-              }
+              "rule": "brink_terminal_challenge3",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Graffiti (L - RECORD.HEAD)",
@@ -4969,10 +5008,18 @@
             "name": "Brink Terminal: BMX gate graffiti",
             "id": 2308063,
             "access_rule": {
-              "rule": "HasGroup",
-              "args": {
-                "group": "bmx"
-              }
+              "rule": "bmx",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Skateboard (Devon)",
@@ -5042,11 +5089,18 @@
             "name": "Brink Terminal: Eclipse joins the crew",
             "id": 2308081,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed",
-                "count": 2
-              }
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 3
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Skateboard (Just Swell)",
@@ -5060,10 +5114,9 @@
             "name": "Brink Terminal: Behind glass Polo",
             "id": 2308082,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Graffiti (M - Pora)",
@@ -5082,28 +5135,9 @@
             "name": "Brink Terminal - Underground -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "girl"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chapter Completed"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 180
-                  }
-                }
-              ]
+              "rule": "brink_terminal_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5145,28 +5179,9 @@
             "name": "Brink Terminal - Dock -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "girl"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chapter Completed"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 180
-                  }
-                }
-              ]
+              "rule": "brink_terminal_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5175,19 +5190,23 @@
             "name": "Brink Terminal: Mesh's skateboard",
             "id": 2308069,
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "brink_terminal_mesh",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitim"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitixl"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5259,19 +5278,23 @@
             "name": "Brink Terminal: Mesh joins the crew",
             "id": 2308080,
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "brink_terminal_mesh",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitim"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitixl"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5292,39 +5315,18 @@
             "name": "Brink Terminal - Planet Plaza -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "girl"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chapter Completed"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 180
-                  }
-                }
-              ]
+              "rule": "brink_terminal_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Brink Terminal - Planet Plaza -> Brink Terminal - Tower",
             "connected_region": "Brink Terminal - Tower",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 280
-              }
+              "rule": "brink_terminal_tower",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5352,39 +5354,18 @@
             "name": "Brink Terminal - Tower -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "girl"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chapter Completed"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 180
-                  }
-                }
-              ]
+              "rule": "brink_terminal_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Brink Terminal - Tower -> Brink Terminal - Planet Plaza",
             "connected_region": "Brink Terminal - Planet Plaza",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 220
-              }
+              "rule": "brink_terminal_plaza",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5407,10 +5388,18 @@
             "name": "Brink Terminal: Rooftop glass CD",
             "id": 2308073,
             "access_rule": {
-              "rule": "HasGroup",
-              "args": {
-                "group": "skates"
-              }
+              "rule": "inline_skates",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "8 REP",
@@ -5452,20 +5441,23 @@
             "name": "Brink Terminal: Complete Chapter 2",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "brink_terminal_crew_battle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitil"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "Constant",
                   "args": {
-                    "item_name": "rep",
-                    "count": 280
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5487,42 +5479,25 @@
             "name": "Millennium Mall -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed"
-              }
+              "rule": "millennium_square_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Millennium Mall -> Millennium Mall - Hanging Lights",
             "connected_region": "Millennium Mall - Hanging Lights",
             "access_rule": {
-              "rule": "Or",
-              "children": [
+              "rule": "millennium_mall_oldhead_ceiling",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "HasGroup",
-                      "args": {
-                        "group": "graffitim"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "rep",
-                        "count": 491
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
+                  "rule": "Constant",
                   "args": {
-                    "item_name": "rep",
-                    "count": 580
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5531,20 +5506,23 @@
             "name": "Millennium Mall -> Millennium Mall - Atrium",
             "connected_region": "Millennium Mall - Atrium",
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "millennium_mall_big",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitim"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "Constant",
                   "args": {
-                    "item_name": "Chapter Completed",
-                    "count": 2
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5597,10 +5575,18 @@
             "name": "Millennium Mall: Glass cylinder CD",
             "id": 2308086,
             "access_rule": {
-              "rule": "HasGroup",
-              "args": {
-                "group": "skates"
-              }
+              "rule": "inline_skates",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Vinyl",
@@ -5633,23 +5619,9 @@
             "name": "Millennium Mall - Hanging Lights -> Millennium Mall",
             "connected_region": "Millennium Mall",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chapter Completed",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 380
-                  }
-                }
-              ]
+              "rule": "millennium_mall_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5677,54 +5649,34 @@
             "name": "Millennium Mall - Atrium -> Millennium Mall",
             "connected_region": "Millennium Mall",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chapter Completed",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 380
-                  }
-                }
-              ]
+              "rule": "millennium_mall_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Millennium Mall - Atrium -> Millennium Mall - Race Track",
             "connected_region": "Millennium Mall - Race Track",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 530
-              }
+              "rule": "millennium_mall_oldhead_race",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Millennium Mall - Atrium -> Millennium Mall - Theater",
             "connected_region": "Millennium Mall - Theater",
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "millennium_mall_theater",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitim"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 491
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5749,11 +5701,9 @@
             "name": "Millennium Mall: Trick challenge reward",
             "id": 2308089,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 434
-              }
+              "rule": "millennium_mall_challenge1",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Graffiti (XL - FATE)",
@@ -5767,11 +5717,9 @@
             "name": "Millennium Mall: Slide challenge reward",
             "id": 2308090,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 442
-              }
+              "rule": "millennium_mall_challenge2",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "24 REP",
@@ -5785,11 +5733,9 @@
             "name": "Millennium Mall: Fish challenge reward",
             "id": 2308091,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 450
-              }
+              "rule": "millennium_mall_challenge3",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "8 REP",
@@ -5803,11 +5749,9 @@
             "name": "Millennium Mall: Score challenge reward",
             "id": 2308092,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 458
-              }
+              "rule": "millennium_mall_challenge4",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Inline Skates (Sharpshooters)",
@@ -5877,10 +5821,18 @@
             "name": "Millennium Mall: Atrium BMX gate BMX",
             "id": 2308097,
             "access_rule": {
-              "rule": "HasGroup",
-              "args": {
-                "group": "bmx"
-              }
+              "rule": "bmx",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Tryce",
@@ -5908,11 +5860,18 @@
             "name": "Millennium Mall: DOT.EXE joins the crew",
             "id": 2308106,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed",
-                "count": 3
-              }
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 4
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Graffiti (L - Jd Vila Formosa)",
@@ -5931,20 +5890,23 @@
             "name": "Millennium Mall - Race Track -> Millennium Mall - Atrium",
             "connected_region": "Millennium Mall - Atrium",
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "millennium_mall_big",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitim"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "Constant",
                   "args": {
-                    "item_name": "Chapter Completed",
-                    "count": 2
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5974,20 +5936,23 @@
             "name": "Millennium Mall - Theater -> Millennium Mall - Atrium",
             "connected_region": "Millennium Mall - Atrium",
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "millennium_mall_big",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitim"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "Constant",
                   "args": {
-                    "item_name": "Chapter Completed",
-                    "count": 2
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -5996,23 +5961,9 @@
             "name": "Millennium Mall - Theater -> Millennium Mall",
             "connected_region": "Millennium Mall",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chapter Completed",
-                    "count": 2
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 380
-                  }
-                }
-              ]
+              "rule": "millennium_mall_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6077,11 +6028,18 @@
             "name": "Millennium Mall: Shine joins the crew",
             "id": 2308105,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed",
-                "count": 3
-              }
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 4
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Oldhead",
@@ -6095,26 +6053,23 @@
             "name": "Millennium Mall: Complete Chapter 3",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "millennium_mall_crew_battle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitil"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitim"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 491
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6136,21 +6091,18 @@
             "name": "Pyramid Island - Base -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed"
-              }
+              "rule": "millennium_square_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Pyramid Island - Base -> Pyramid Island - After Gate",
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 620
-              }
+              "rule": "pyramid_island_gate",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6201,10 +6153,18 @@
             "name": "Pyramid Island: BMX gate BMX",
             "id": 2308110,
             "access_rule": {
-              "rule": "HasGroup",
-              "args": {
-                "group": "bmx"
-              }
+              "rule": "bmx",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Outfit (Rise - Autumn)",
@@ -6218,10 +6178,9 @@
             "name": "Pyramid Island: Polo pile 1",
             "id": 2308131,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Graffiti (M - 0m33)",
@@ -6235,10 +6194,9 @@
             "name": "Pyramid Island: Polo pile 2",
             "id": 2308132,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Music (DA PEOPLE)",
@@ -6252,10 +6210,9 @@
             "name": "Pyramid Island: Polo pile 3",
             "id": 2308133,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Devil Theory",
@@ -6269,10 +6226,9 @@
             "name": "Pyramid Island: Polo pile 4",
             "id": 2308134,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Outfit (Solace - Winter)",
@@ -6291,42 +6247,41 @@
             "name": "Pyramid Island - After Gate -> Pyramid Island - Base",
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed",
-                "count": 3
-              }
+              "rule": "pyramid_island_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Pyramid Island - After Gate -> Pyramid Island - Maze",
             "connected_region": "Pyramid Island - Maze",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 780
-              }
+              "rule": "pyramid_island_oldhead",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Pyramid Island - After Gate -> Pyramid Island - Upper Areas",
             "connected_region": "Pyramid Island - Upper Areas",
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "pyramid_island_upper_half",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitim"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "Constant",
                   "args": {
-                    "item_name": "rep",
-                    "count": 660
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -6421,23 +6376,9 @@
             "name": "Pyramid Island: Score challenge reward",
             "id": 2308117,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chapter Completed",
-                    "count": 3
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 630
-                  }
-                }
-              ]
+              "rule": "pyramid_island_challenge1",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "8 REP",
@@ -6451,11 +6392,9 @@
             "name": "Pyramid Island: Score challenge 2 reward",
             "id": 2308118,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 650
-              }
+              "rule": "pyramid_island_challenge2",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "16 REP",
@@ -6469,11 +6408,9 @@
             "name": "Pyramid Island: Quarter pipe challenge reward",
             "id": 2308119,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 660
-              }
+              "rule": "pyramid_island_challenge3",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "8 REP",
@@ -6492,11 +6429,9 @@
             "name": "Pyramid Island - Maze -> Pyramid Island - After Gate",
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 620
-              }
+              "rule": "pyramid_island_gate",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6505,7 +6440,18 @@
             "name": "Pyramid Island: Maze outfit",
             "id": 2308128,
             "access_rule": {
-              "rule": "True_"
+              "rule": "skateboard",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Graffiti (XL - Web Spitter)",
@@ -6519,10 +6465,9 @@
             "name": "Pyramid Island: Maze glass Polo",
             "id": 2308135,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Graffiti (XL - Gold Rush)",
@@ -6536,10 +6481,9 @@
             "name": "Pyramid Island: Maze classroom Polo",
             "id": 2308136,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Outfit (Rave - Autumn)",
@@ -6553,10 +6497,9 @@
             "name": "Pyramid Island: Maze vent Polo",
             "id": 2308137,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Music (Funk Express)",
@@ -6570,10 +6513,9 @@
             "name": "Pyramid Island: Big maze Polo",
             "id": 2308138,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "8 REP",
@@ -6587,10 +6529,9 @@
             "name": "Pyramid Island: Maze desk Polo",
             "id": 2308139,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "16 REP",
@@ -6604,10 +6545,9 @@
             "name": "Pyramid Island: Maze forklift Polo",
             "id": 2308140,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Music (watchyaback!)",
@@ -6626,33 +6566,27 @@
             "name": "Pyramid Island - Upper Areas -> Pyramid Island - Base",
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed",
-                "count": 3
-              }
+              "rule": "pyramid_island_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Pyramid Island - Upper Areas -> Pyramid Island - After Gate",
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 620
-              }
+              "rule": "pyramid_island_gate",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Pyramid Island - Upper Areas -> Pyramid Island - Top",
             "connected_region": "Pyramid Island - Top",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed",
-                "count": 4
-              }
+              "rule": "pyramid_island_top",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6675,10 +6609,18 @@
             "name": "Pyramid Island: Shortcut glass CD",
             "id": 2308121,
             "access_rule": {
-              "rule": "HasGroup",
-              "args": {
-                "group": "skates"
-              }
+              "rule": "inline_skates",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 2
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Music (Trinitron)",
@@ -6748,11 +6690,18 @@
             "name": "Pyramid Island: Devil Theory joins the crew",
             "id": 2308130,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed",
-                "count": 4
-              }
+              "rule": "current_chapter",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": 5
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             },
             "item": {
               "name": "Music (State of Mind)",
@@ -6766,20 +6715,23 @@
             "name": "Pyramid Island: Complete Chapter 4",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "pyramid_island_crew_battle",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitil"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "Constant",
                   "args": {
-                    "item_name": "rep",
-                    "count": 730
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -6801,42 +6753,41 @@
             "name": "Pyramid Island - Top -> Pyramid Island - Base",
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed",
-                "count": 3
-              }
+              "rule": "pyramid_island_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Pyramid Island - Top -> Pyramid Island - After Gate",
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 620
-              }
+              "rule": "pyramid_island_gate",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Pyramid Island - Top -> Pyramid Island - Upper Areas",
             "connected_region": "Pyramid Island - Upper Areas",
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "pyramid_island_upper_half",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitim"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "Constant",
                   "args": {
-                    "item_name": "rep",
-                    "count": 660
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -6875,10 +6826,9 @@
             "name": "Pyramid Island: Rise joins the crew",
             "id": 2308129,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "16 REP",
@@ -6904,33 +6854,18 @@
             "name": "Mataan - Streets -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed"
-              }
+              "rule": "millennium_square_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Mataan - Streets -> Mataan - After Smoke Wall",
             "connected_region": "Mataan - After Smoke Wall",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chapter Completed",
-                    "count": 4
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 850
-                  }
-                }
-              ]
+              "rule": "mataan_smoke_wall",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6986,37 +6921,32 @@
             "name": "Mataan - After Smoke Wall -> Mataan - Streets",
             "connected_region": "Mataan - Streets",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed"
-              }
+              "rule": "mataan_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Mataan - After Smoke Wall -> Mataan - Deep City",
             "connected_region": "Mataan - Deep City",
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "mataan_deep_city",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitil"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "Constant",
                   "args": {
-                    "item_name": "Chapter Completed",
-                    "count": 4
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 864
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -7097,10 +7027,9 @@
             "name": "Mataan: Trash Polo",
             "id": 2308167,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "8 REP",
@@ -7119,78 +7048,41 @@
             "name": "Mataan - Deep City -> Mataan - After Smoke Wall",
             "connected_region": "Mataan - After Smoke Wall",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chapter Completed",
-                    "count": 4
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 850
-                  }
-                }
-              ]
+              "rule": "mataan_smoke_wall",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Mataan - Deep City -> Mataan - Red Light District",
             "connected_region": "Mataan - Red Light District",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 935
-              }
+              "rule": "mataan_oldhead",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Mataan - Deep City -> Mataan - Lion Statue",
             "connected_region": "Mataan - Lion Statue",
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "mataan_smoke_wall2",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "HasGroup",
-                          "args": {
-                            "group": "graffitixl"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "rep",
-                            "count": 880
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "rep",
-                        "count": 920
-                      }
-                    }
-                  ]
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "Constant",
                   "args": {
-                    "item_name": "rep",
-                    "count": 960
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -7229,27 +7121,23 @@
             "name": "Mataan: Race challenge reward",
             "id": 2308151,
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "mataan_challenge1",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitil"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "Constant",
                   "args": {
-                    "item_name": "Chapter Completed",
-                    "count": 4
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 864
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -7265,20 +7153,23 @@
             "name": "Mataan: Wallrunning challenge reward",
             "id": 2308152,
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "mataan_challenge2",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitixl"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "Constant",
                   "args": {
-                    "item_name": "rep",
-                    "count": 880
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -7294,11 +7185,9 @@
             "name": "Mataan: Score challenge reward",
             "id": 2308153,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "rep",
-                "count": 920
-              }
+              "rule": "mataan_challenge3",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Outfit (Rave - Winter)",
@@ -7359,27 +7248,23 @@
             "name": "Mataan - Red Light District -> Mataan - Deep City",
             "connected_region": "Mataan - Deep City",
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "mataan_deep_city",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitil"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "Constant",
                   "args": {
-                    "item_name": "Chapter Completed",
-                    "count": 4
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 864
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -7423,27 +7308,23 @@
             "name": "Mataan - Lion Statue -> Mataan - Deep City",
             "connected_region": "Mataan - Deep City",
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "mataan_deep_city",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitil"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "Constant",
                   "args": {
-                    "item_name": "Chapter Completed",
-                    "count": 4
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "rep",
-                    "count": 864
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -7452,61 +7333,23 @@
             "name": "Mataan - Lion Statue -> Mataan - Skyscrapers",
             "connected_region": "Mataan - Skyscrapers",
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "mataan_deepest",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "HasGroup",
-                              "args": {
-                                "group": "graffitixl"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "rep",
-                                "count": 880
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "rep",
-                            "count": 920
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "rep",
-                        "count": 960
-                      }
-                    }
-                  ]
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitim"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "graffitixl"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -7536,10 +7379,9 @@
             "name": "Mataan - Skyscrapers -> Mataan - Streets",
             "connected_region": "Mataan - Streets",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Chapter Completed"
-              }
+              "rule": "mataan_entrance",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -7604,61 +7446,23 @@
             "name": "Mataan: Coil joins the crew",
             "id": 2308164,
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "mataan_deepest",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "HasGroup",
-                              "args": {
-                                "group": "graffitixl"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "rep",
-                                "count": 880
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "rep",
-                            "count": 920
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "rep",
-                        "count": 960
-                      }
-                    }
-                  ]
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitim"
-                  }
-                },
-                {
-                  "rule": "HasGroup",
-                  "args": {
-                    "group": "graffitixl"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -7702,10 +7506,9 @@
             "name": "Mataan: Shopping Polo",
             "id": 2308168,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Camera App"
-              }
+              "rule": "camera",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Outfit (Felix - Winter)",
@@ -7719,72 +7522,23 @@
             "name": "Defeat Faux",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
+              "rule": "mataan_faux",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "HasGroup",
-                                  "args": {
-                                    "group": "graffitixl"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "rep",
-                                    "count": 880
-                                  }
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "rep",
-                                "count": 920
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "rep",
-                            "count": 960
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "rule": "HasGroup",
-                      "args": {
-                        "group": "graffitim"
-                      }
-                    },
-                    {
-                      "rule": "HasGroup",
-                      "args": {
-                        "group": "graffitixl"
-                      }
-                    }
-                  ]
+                  "rule": "Constant",
+                  "args": {
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasGroup",
+                  "rule": "Constant",
                   "args": {
-                    "group": "graffitim"
-                  }
+                    "value": 0
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -10079,11 +9833,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Bomb Rush Cyberfunk",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "damage_multiplier": 1,
@@ -10223,29 +9975,6 @@
           "display_name": "Total REP"
         }
       },
-      "world_directory": "bomb_rush_cyberfunk"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Bomb Rush Cyberfunk",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "ocean",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up Bomb Rush Cyberfunk randomizer and connecting to an Archipelago Multiworld",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "TRPG"
-          ]
-        }
-      ],
       "world_description": "Bomb Rush Cyberfunk is 1 second per second of advanced funkstyle. Battle rival crews and dispatch militarized\npolice to conquer the five boroughs of New Amsterdam. Become All City.",
       "slot_data": {
         "locations": {
@@ -10511,8 +10240,1990 @@
         "score_difficulty": 0,
         "damage_multiplier": 1,
         "death_link": false
-      }
+      },
+      "web": {
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up Bomb Rush Cyberfunk randomizer and connecting to an Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "TRPG"
+            ]
+          }
+        ]
+      },
+      "world_directory": "bomb_rush_cyberfunk"
     }
   },
-  "helpers": {}
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
+  },
+  "helpers": {
+    "1": {
+      "bmx": {
+        "params": [
+          "movestyle"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "name",
+              "name": "movestyle"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": 1
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "group_check",
+            "group": "bmx"
+          }
+        }
+      },
+      "brink_terminal_all_challenges": {
+        "type": "helper",
+        "name": "brink_terminal_challenge3"
+      },
+      "brink_terminal_challenge1": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 188
+          }
+        ]
+      },
+      "brink_terminal_challenge2": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 200
+          }
+        ]
+      },
+      "brink_terminal_challenge3": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 220
+          }
+        ]
+      },
+      "brink_terminal_crew_battle": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 280
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 103
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 280
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 62
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "brink_terminal_entrance": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "is_girl"
+          },
+          {
+            "type": "helper",
+            "name": "rep",
+            "args": [
+              {
+                "type": "constant",
+                "value": 180
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "current_chapter",
+            "args": [
+              {
+                "type": "constant",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "brink_terminal_mesh": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 114
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiXL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 45
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 67
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiXL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 45
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "brink_terminal_oldhead_dock": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 320
+          }
+        ]
+      },
+      "brink_terminal_oldhead_underground": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 250
+          }
+        ]
+      },
+      "brink_terminal_plaza": {
+        "type": "helper",
+        "name": "brink_terminal_all_challenges"
+      },
+      "brink_terminal_tower": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 280
+          }
+        ]
+      },
+      "camera": {
+        "type": "item_check",
+        "item": "Camera App"
+      },
+      "current_chapter": {
+        "params": [
+          "chapter"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Chapter Completed",
+          "count": {
+            "type": "binary_op",
+            "left": {
+              "type": "name",
+              "name": "chapter"
+            },
+            "op": "-",
+            "right": {
+              "type": "constant",
+              "value": 1
+            }
+          }
+        }
+      },
+      "graffitiL": {
+        "params": [
+          "limit",
+          "spots"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "limit"
+          },
+          "if_true": {
+            "type": "compare",
+            "left": {
+              "type": "binary_op",
+              "left": {
+                "type": "state_method",
+                "method": "count_group_unique",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "graffitil"
+                  }
+                ]
+              },
+              "op": "*",
+              "right": {
+                "type": "constant",
+                "value": 6
+              }
+            },
+            "op": ">=",
+            "right": {
+              "type": "name",
+              "name": "spots"
+            }
+          },
+          "if_false": {
+            "type": "group_check",
+            "group": "graffitil"
+          }
+        }
+      },
+      "graffitiM": {
+        "params": [
+          "limit",
+          "spots"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "limit"
+          },
+          "if_true": {
+            "type": "compare",
+            "left": {
+              "type": "binary_op",
+              "left": {
+                "type": "state_method",
+                "method": "count_group_unique",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "graffitim"
+                  }
+                ]
+              },
+              "op": "*",
+              "right": {
+                "type": "constant",
+                "value": 7
+              }
+            },
+            "op": ">=",
+            "right": {
+              "type": "name",
+              "name": "spots"
+            }
+          },
+          "if_false": {
+            "type": "group_check",
+            "group": "graffitim"
+          }
+        }
+      },
+      "graffitiXL": {
+        "params": [
+          "limit",
+          "spots"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "limit"
+          },
+          "if_true": {
+            "type": "compare",
+            "left": {
+              "type": "binary_op",
+              "left": {
+                "type": "state_method",
+                "method": "count_group_unique",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "graffitixl"
+                  }
+                ]
+              },
+              "op": "*",
+              "right": {
+                "type": "constant",
+                "value": 4
+              }
+            },
+            "op": ">=",
+            "right": {
+              "type": "name",
+              "name": "spots"
+            }
+          },
+          "if_false": {
+            "type": "group_check",
+            "group": "graffitixl"
+          }
+        }
+      },
+      "inline_skates": {
+        "params": [
+          "movestyle"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "name",
+              "name": "movestyle"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": 3
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "group_check",
+            "group": "skates"
+          }
+        }
+      },
+      "is_girl": {
+        "type": "group_check",
+        "group": "girl"
+      },
+      "mataan_all_challenges": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "mataan_challenge2",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "limit"
+                },
+                {
+                  "type": "name",
+                  "name": "glitched"
+                }
+              ]
+            },
+            {
+              "type": "helper",
+              "name": "mataan_challenge3"
+            }
+          ]
+        }
+      },
+      "mataan_challenge1": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "current_chapter",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 5
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 864
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 108
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "current_chapter",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 5
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 864
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 98
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "mataan_challenge2": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 880
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiXL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 59
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 880
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiXL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 57
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "mataan_challenge3": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 920
+          }
+        ]
+      },
+      "mataan_crew_battle": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "mataan_smoke_wall2",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "name",
+                    "name": "glitched"
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 122
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiXL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 59
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "mataan_smoke_wall2",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "name",
+                    "name": "glitched"
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 117
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiXL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 57
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "mataan_deep_city": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "helper",
+          "name": "mataan_challenge1",
+          "args": [
+            {
+              "type": "name",
+              "name": "limit"
+            },
+            {
+              "type": "name",
+              "name": "glitched"
+            }
+          ]
+        }
+      },
+      "mataan_deepest": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "helper",
+          "name": "mataan_crew_battle",
+          "args": [
+            {
+              "type": "name",
+              "name": "limit"
+            },
+            {
+              "type": "name",
+              "name": "glitched"
+            }
+          ]
+        }
+      },
+      "mataan_entrance": {
+        "type": "helper",
+        "name": "current_chapter",
+        "args": [
+          {
+            "type": "constant",
+            "value": 2
+          }
+        ]
+      },
+      "mataan_faux": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "mataan_deepest",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "limit"
+                },
+                {
+                  "type": "name",
+                  "name": "glitched"
+                }
+              ]
+            },
+            {
+              "type": "helper",
+              "name": "graffitiM",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "limit"
+                },
+                {
+                  "type": "constant",
+                  "value": 122
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "mataan_oldhead": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 935
+          }
+        ]
+      },
+      "mataan_smoke_wall": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "current_chapter",
+            "args": [
+              {
+                "type": "constant",
+                "value": 5
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "rep",
+            "args": [
+              {
+                "type": "constant",
+                "value": 850
+              }
+            ]
+          }
+        ]
+      },
+      "mataan_smoke_wall2": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "mataan_all_challenges",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "limit"
+                },
+                {
+                  "type": "name",
+                  "name": "glitched"
+                }
+              ]
+            },
+            {
+              "type": "helper",
+              "name": "rep",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 960
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "millennium_mall_big": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "helper",
+          "name": "millennium_mall_switch",
+          "args": [
+            {
+              "type": "name",
+              "name": "limit"
+            },
+            {
+              "type": "name",
+              "name": "glitched"
+            }
+          ]
+        }
+      },
+      "millennium_mall_challenge1": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 434
+          }
+        ]
+      },
+      "millennium_mall_challenge2": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 442
+          }
+        ]
+      },
+      "millennium_mall_challenge3": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 450
+          }
+        ]
+      },
+      "millennium_mall_challenge4": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 458
+          }
+        ]
+      },
+      "millennium_mall_crew_battle": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 491
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 114
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 107
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 491
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 78
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 80
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "millennium_mall_entrance": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "rep",
+            "args": [
+              {
+                "type": "constant",
+                "value": 380
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "current_chapter",
+            "args": [
+              {
+                "type": "constant",
+                "value": 3
+              }
+            ]
+          }
+        ]
+      },
+      "millennium_mall_oldhead_ceiling": {
+        "params": [
+          "limit"
+        ],
+        "body": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "rep",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 580
+                }
+              ]
+            },
+            {
+              "type": "helper",
+              "name": "millennium_mall_theater",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "limit"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "millennium_mall_oldhead_race": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 530
+          }
+        ]
+      },
+      "millennium_mall_switch": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 114
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "current_chapter",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 3
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 72
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "current_chapter",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 3
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "millennium_mall_theater": {
+        "params": [
+          "limit"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "rep",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 491
+                }
+              ]
+            },
+            {
+              "type": "helper",
+              "name": "graffitiM",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "limit"
+                },
+                {
+                  "type": "constant",
+                  "value": 78
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "millennium_square_entrance": {
+        "type": "helper",
+        "name": "current_chapter",
+        "args": [
+          {
+            "type": "constant",
+            "value": 2
+          }
+        ]
+      },
+      "pyramid_island_all_challenges": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 114
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 660
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 88
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 660
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "pyramid_island_challenge1": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "rep",
+            "args": [
+              {
+                "type": "constant",
+                "value": 630
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "current_chapter",
+            "args": [
+              {
+                "type": "constant",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      },
+      "pyramid_island_challenge2": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 650
+          }
+        ]
+      },
+      "pyramid_island_challenge3": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 660
+          }
+        ]
+      },
+      "pyramid_island_crew_battle": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 730
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 108
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 730
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 97
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "pyramid_island_entrance": {
+        "type": "helper",
+        "name": "current_chapter",
+        "args": [
+          {
+            "type": "constant",
+            "value": 4
+          }
+        ]
+      },
+      "pyramid_island_gate": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 620
+          }
+        ]
+      },
+      "pyramid_island_oldhead": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 780
+          }
+        ]
+      },
+      "pyramid_island_top": {
+        "type": "helper",
+        "name": "current_chapter",
+        "args": [
+          {
+            "type": "constant",
+            "value": 5
+          }
+        ]
+      },
+      "pyramid_island_upper_half": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "helper",
+          "name": "pyramid_island_all_challenges",
+          "args": [
+            {
+              "type": "name",
+              "name": "limit"
+            },
+            {
+              "type": "name",
+              "name": "glitched"
+            }
+          ]
+        }
+      },
+      "rep": {
+        "params": [
+          "required"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "rep",
+          "count": {
+            "type": "name",
+            "name": "required"
+          }
+        }
+      },
+      "skateboard": {
+        "params": [
+          "movestyle"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "name",
+              "name": "movestyle"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": 2
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "group_check",
+            "group": "skateboard"
+          }
+        }
+      },
+      "versum_hill_all_challenges": {
+        "type": "helper",
+        "name": "versum_hill_challenge3"
+      },
+      "versum_hill_basketball_court": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 90
+          }
+        ]
+      },
+      "versum_hill_ch1_roadblock": {
+        "params": [
+          "limit"
+        ],
+        "body": {
+          "type": "helper",
+          "name": "graffitiL",
+          "args": [
+            {
+              "type": "name",
+              "name": "limit"
+            },
+            {
+              "type": "constant",
+              "value": 10
+            }
+          ]
+        }
+      },
+      "versum_hill_challenge1": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 50
+          }
+        ]
+      },
+      "versum_hill_challenge2": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 58
+          }
+        ]
+      },
+      "versum_hill_challenge3": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 65
+          }
+        ]
+      },
+      "versum_hill_crew_battle": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 90
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 98
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "rep",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 90
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 27
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "versum_hill_entrance": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 20
+          }
+        ]
+      },
+      "versum_hill_oldhead": {
+        "type": "helper",
+        "name": "rep",
+        "args": [
+          {
+            "type": "constant",
+            "value": 120
+          }
+        ]
+      },
+      "versum_hill_rave": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "conditional",
+            "test": {
+              "type": "helper",
+              "name": "current_chapter",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 4
+                }
+              ]
+            },
+            "if_true": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "graffitiL",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "limit"
+                    },
+                    {
+                      "type": "constant",
+                      "value": 90
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "graffitiXL",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "limit"
+                    },
+                    {
+                      "type": "constant",
+                      "value": 51
+                    }
+                  ]
+                }
+              ]
+            },
+            "if_false": {
+              "type": "conditional",
+              "test": {
+                "type": "helper",
+                "name": "current_chapter",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 3
+                  }
+                ]
+              },
+              "if_true": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "helper",
+                    "name": "graffitiL",
+                    "args": [
+                      {
+                        "type": "name",
+                        "name": "limit"
+                      },
+                      {
+                        "type": "constant",
+                        "value": 89
+                      }
+                    ]
+                  },
+                  {
+                    "type": "helper",
+                    "name": "graffitiXL",
+                    "args": [
+                      {
+                        "type": "name",
+                        "name": "limit"
+                      },
+                      {
+                        "type": "constant",
+                        "value": 51
+                      }
+                    ]
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "helper",
+                    "name": "graffitiL",
+                    "args": [
+                      {
+                        "type": "name",
+                        "name": "limit"
+                      },
+                      {
+                        "type": "constant",
+                        "value": 85
+                      }
+                    ]
+                  },
+                  {
+                    "type": "helper",
+                    "name": "graffitiXL",
+                    "args": [
+                      {
+                        "type": "name",
+                        "name": "limit"
+                      },
+                      {
+                        "type": "constant",
+                        "value": 48
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "graffitiL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 26
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiXL",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 10
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "versum_hill_rietveld": {
+        "params": [
+          "limit",
+          "glitched"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "name",
+            "name": "glitched"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "current_chapter",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 114
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "current_chapter",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "graffitiM",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "limit"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 67
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
 }

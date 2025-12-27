@@ -5363,11 +5363,9 @@
       "Distant Roost"
     ]
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Risk of Rain 2",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "altars_per_stage": 1,
@@ -5709,30 +5707,6 @@
           "display_name": "Yellow Scraps"
         }
       },
-      "world_directory": "ror2"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Risk of Rain 2",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "grass",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Risk of Rain 2 integration for Archipelago multiworld games.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Ijwu",
-            "Kindasneaki"
-          ]
-        }
-      ],
       "world_description": "Escape a chaotic alien planet by fighting through hordes of frenzied monsters \u2013 with your friends, or on your own.\nCombine loot in surprising ways and master each character until you become the havoc you feared upon your\nfirst crash landing.",
       "slot_data": {
         "itemPickupStep": 1,
@@ -5753,8 +5727,37 @@
         "progressiveStages": 1,
         "seed": "3991975562123098",
         "offset": 37000
-      }
+      },
+      "web": {
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Risk of Rain 2 integration for Archipelago multiworld games.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Ijwu",
+              "Kindasneaki"
+            ]
+          }
+        ]
+      },
+      "world_directory": "ror2"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }

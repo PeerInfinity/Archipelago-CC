@@ -971,10 +971,18 @@
             "name": "Core Exit",
             "connected_region": "New Home",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Mettaton Plush"
-              }
+              "rule": "_undertale_has_plot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Mettaton Plush"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           }
         ],
@@ -2201,11 +2209,9 @@
       "Ruins Key"
     ]
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Undertale",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "exclude_locations": [],
@@ -2324,29 +2330,6 @@
           "display_name": "Include Temy Armor"
         }
       },
-      "world_directory": "undertale"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Undertale",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "grass",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Archipelago Undertale software on your computer. This guide covers single-player, multiworld, and related software.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Mewlif"
-          ]
-        }
-      ],
       "world_description": "Undertale is an RPG where every choice you make matters. You could choose to hurt all the enemies, eventually\ncausing genocide of the monster species. Or you can spare all the enemies, befriending them and freeing them\nfrom their underground prison.",
       "slot_data": {
         "world_seed": 3777206549,
@@ -2373,8 +2356,121 @@
         "rando_item_button": false,
         "route_required": 0,
         "temy_include": 1
-      }
+      },
+      "web": {
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago Undertale software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Mewlif"
+            ]
+          }
+        ]
+      },
+      "world_directory": "undertale"
     }
   },
-  "helpers": {}
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {}
+  },
+  "helpers": {
+    "1": {
+      "_undertale_has_plot": {
+        "params": [
+          "item"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "name",
+              "name": "item"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Complete Skeleton"
+            }
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": "Complete Skeleton"
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "item"
+              },
+              "op": "==",
+              "right": {
+                "type": "constant",
+                "value": "Fish"
+              }
+            },
+            "if_true": {
+              "type": "item_check",
+              "item": "Fish"
+            },
+            "if_false": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "item"
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": "Mettaton Plush"
+                }
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": "Mettaton Plush"
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "name",
+                    "name": "item"
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": "DT Extractor"
+                  }
+                },
+                "if_true": {
+                  "type": "item_check",
+                  "item": "DT Extractor"
+                },
+                "if_false": null
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

@@ -11224,11 +11224,9 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Choo-Choo Charles",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "accessibility": "full",
         "exclude_locations": [],
@@ -11261,41 +11259,46 @@
           "display_name": "Progression Balancing"
         }
       },
+      "world_description": "An independent 3D horror game, taking place on an island.\nThe main gameplay consists of traveling and fighting a monster on board a train.\nUpgrading the train requires leaving the train to gather resources with the threat of encountering the monster.",
+      "web": {
+        "theme": "stone",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setup Choo-Choo Charles for the Archipelago MultiWorld Randomizer.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Yaranorgoth"
+            ]
+          },
+          {
+            "name": "Guide d'Installation Multiworld",
+            "description": "Un guide pour mettre en place Choo-Choo Charles pour le Randomiseur Multiworld Archipelago",
+            "language": "Fran\u00e7ais",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "Yaranorgoth"
+            ]
+          }
+        ]
+      },
       "world_directory": "cccharles"
     }
   },
-  "world_attributes": {},
-  "game_info": {
+  "exporter": {
     "1": {
-      "name": "Choo-Choo Charles",
       "rule_format": {
         "version": "1.0"
       },
-      "web_theme": "stone",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setup Choo-Choo Charles for the Archipelago MultiWorld Randomizer.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Yaranorgoth"
-          ]
-        },
-        {
-          "name": "Guide d'Installation Multiworld",
-          "description": "Un guide pour mettre en place Choo-Choo Charles pour le Randomiseur Multiworld Archipelago",
-          "language": "Fran\u00e7ais",
-          "file_name": "setup_fr.md",
-          "link": "setup/fr",
-          "authors": [
-            "Yaranorgoth"
-          ]
-        }
-      ],
-      "world_description": "An independent 3D horror game, taking place on an island.\nThe main gameplay consists of traveling and fighting a monster on board a train.\nUpgrading the train requires leaving the train to gather resources with the threat of encountering the monster."
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }
