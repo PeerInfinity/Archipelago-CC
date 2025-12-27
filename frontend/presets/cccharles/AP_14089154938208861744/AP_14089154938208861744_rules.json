@@ -11228,7 +11228,7 @@
     "1": {
       "game": "Choo-Choo Charles",
       "options": {
-        "accessibility": "full",
+        "accessibility": 0,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],

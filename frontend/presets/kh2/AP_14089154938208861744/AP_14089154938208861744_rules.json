@@ -27156,14 +27156,14 @@
     "1": {
       "game": "Kingdom Hearts 2",
       "options": {
-        "AntiForm": "false",
-        "AtlanticaToggle": "false",
-        "AutoFormLogic": "false",
+        "AntiForm": false,
+        "AtlanticaToggle": false,
+        "AutoFormLogic": false,
         "BountyAmount": 10,
         "BountyRequired": 7,
-        "BountyStartingHintToggle": "false",
-        "CorSkipToggle": "false",
-        "Cups": "no_cups",
+        "BountyStartingHintToggle": false,
+        "CorSkipToggle": false,
+        "Cups": 0,
         "CustomItemPoolQuantity": {
           "Aerial Dodge": 4,
           "Anti Form": 1,
@@ -27205,33 +27205,33 @@
           "Way to the Dawn": 2,
           "Wisdom Form": 1
         },
-        "DonaldGoofyStatsanity": "true",
-        "FightLogic": "normal",
-        "FillerItemsLocal": "true",
-        "FinalFormLogic": "light_and_darkness",
-        "FinalXemnas": "true",
+        "DonaldGoofyStatsanity": true,
+        "FightLogic": 1,
+        "FillerItemsLocal": true,
+        "FinalFormLogic": 1,
+        "FinalXemnas": true,
         "Final_Form_EXP": 3,
-        "Goal": "lucky_emblem_hunt",
+        "Goal": 1,
         "Keyblade_Maximum": 7,
         "Keyblade_Minimum": 3,
-        "LevelDepth": "level_50",
+        "LevelDepth": 0,
         "Limit_Form_EXP": 3,
         "LuckyEmblemsAmount": 40,
         "LuckyEmblemsRequired": 35,
         "Master_Form_EXP": 3,
-        "Promise_Charm": "false",
+        "Promise_Charm": false,
         "RandomGrowth": 0,
         "RandomVisitLockingItem": 0,
-        "Schmovement": "level_1",
+        "Schmovement": 1,
         "Sora_Level_EXP": 5,
-        "SummonLevelLocationToggle": "false",
+        "SummonLevelLocationToggle": false,
         "Summon_EXP": 5,
-        "SuperBosses": "true",
+        "SuperBosses": true,
         "Valor_Form_EXP": 3,
-        "Visitlocking": "first_and_second_visit_locking",
-        "WeaponSlotStartHint": "false",
+        "Visitlocking": 2,
+        "WeaponSlotStartHint": false,
         "Wisdom_Form_EXP": 3,
-        "accessibility": "full",
+        "accessibility": 0,
         "exclude_locations": [
           "(AT) Musical Blizzard Element",
           "(AT) Musical Orichalcum+",
@@ -29742,6 +29742,34 @@
                 "args": [
                   {
                     "type": "constant",
+                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
                     "value": "(TT3) Underground Concourse Mythril Gem"
                   }
                 ]
@@ -29798,63 +29826,35 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
                     "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
                   }
                 ]
               },

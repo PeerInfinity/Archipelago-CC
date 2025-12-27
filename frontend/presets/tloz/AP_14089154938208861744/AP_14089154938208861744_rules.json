@@ -23207,10 +23207,10 @@
     "1": {
       "game": "The Legend of Zelda",
       "options": {
-        "ExpandedPool": "true",
-        "StartingPosition": "safe",
-        "TriforceLocations": "vanilla",
-        "accessibility": "full",
+        "ExpandedPool": true,
+        "StartingPosition": 0,
+        "TriforceLocations": 0,
+        "accessibility": 0,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],

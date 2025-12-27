@@ -4410,9 +4410,9 @@
     "1": {
       "game": "Paint",
       "options": {
-        "accessibility": "full",
-        "canvas_size_increment": "100",
-        "death_link": "false",
+        "accessibility": 0,
+        "canvas_size_increment": 100,
+        "death_link": false,
         "exclude_locations": [],
         "goal_image": 1,
         "goal_percent": 80,
@@ -4429,7 +4429,7 @@
         "start_inventory": {},
         "start_inventory_from_pool": {},
         "start_location_hints": [],
-        "starting_tool": "brush",
+        "starting_tool": 0,
         "trap_count": 0
       },
       "option_definitions": {

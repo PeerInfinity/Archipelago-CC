@@ -1876,7 +1876,7 @@
     "1": {
       "game": "Bumper Stickers",
       "options": {
-        "accessibility": "full",
+        "accessibility": 0,
         "exclude_locations": [],
         "item_links": [],
         "killer_trap_weight": 0,
