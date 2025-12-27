@@ -1,22 +1,11 @@
 # exporter/games/alttp.py
 
 from .base import BaseGameExportHandler
-from typing import Any, Dict, Optional, Set, List
-from worlds.alttp.Items import item_table, progression_mapping
-from BaseClasses import ItemClassification
-import collections
-import logging
-
-logger = logging.getLogger(__name__) # Add logger if needed later
+from typing import Any, Dict
+from worlds.alttp.Items import progression_mapping
 
 
 class ALttPGameExportHandler(BaseGameExportHandler):
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
-
-    # Closure functions are cached during analysis and exported
-    AUTO_PRESERVE_LARGE_HELPERS = True
-
     # For now, treat all exits as bidirectional
     # This setting is currently only used for region navigation in the frontend
     ASSUME_BIDIRECTIONAL_EXITS = True
@@ -26,6 +15,9 @@ class ALttPGameExportHandler(BaseGameExportHandler):
 
     # Auto-discover location attributes (crystal, player_address, shop_slot_disabled)
     AUTO_DISCOVER_LOCATION_ATTRIBUTES = False
+
+    # Auto-discover world attributes (shops, dungeons, difficulty_requirements, etc.)
+    AUTO_DISCOVER_WORLD_ATTRIBUTES = True
 
     def get_progression_mapping(self, world) -> Dict[str, Any]:
         """Return ALTTP-specific progression item mapping."""
@@ -58,7 +50,3 @@ class ALttPGameExportHandler(BaseGameExportHandler):
             }
 
         return mapping_data
-
-
-# Reminder: Ensure get_game_export_handler in exporter/games/__init__.py
-# returns an instance of ALttPGameExportHandler for the 'A Link to the Past' game.
