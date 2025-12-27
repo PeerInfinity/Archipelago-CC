@@ -543,7 +543,7 @@
     "exporter_path": "exporter/games/kh1.py",
     "exporter_size": 59315,
     "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
-    "game_logic_size": 5705,
+    "game_logic_size": 12842,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "kh1"
@@ -613,7 +613,7 @@
   },
   "Lingo": {
     "exporter_path": "exporter/games/lingo.py",
-    "exporter_size": 42313,
+    "exporter_size": 42311,
     "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
     "game_logic_size": 10922,
     "has_custom_exporter": true,
@@ -631,7 +631,7 @@
   },
   "Links Awakening DX": {
     "exporter_path": "exporter/games/ladx.py",
-    "exporter_size": 17893,
+    "exporter_size": 18500,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1072,7 +1072,7 @@
   },
   "Subnautica": {
     "exporter_path": "exporter/games/subnautica.py",
-    "exporter_size": 7675,
+    "exporter_size": 8132,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1117,7 +1117,7 @@
   },
   "Super Mario Land 2": {
     "exporter_path": "exporter/games/marioland2.py",
-    "exporter_size": 14204,
+    "exporter_size": 14198,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1315,7 +1315,7 @@
   },
   "Timespinner": {
     "exporter_path": "exporter/games/timespinner.py",
-    "exporter_size": 4618,
+    "exporter_size": 4614,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1360,7 +1360,7 @@
   },
   "VVVVVV": {
     "exporter_path": "exporter/games/v6.py",
-    "exporter_size": 5505,
+    "exporter_size": 5499,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1432,7 +1432,7 @@
   },
   "Yoshi's Island": {
     "exporter_path": "exporter/games/yoshisisland.py",
-    "exporter_size": 11956,
+    "exporter_size": 12335,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
