@@ -142,9 +142,7 @@ class KDL3GameExportHandler(GenericGameExportHandler):
             helper_name = rule.get('rule', '')
 
         if helper_name and helper_name in self.HELPERS_TO_PRESERVE:
-            # Normalize to AST format for expand_helper
-            normalized = {'type': 'helper', 'name': helper_name, 'args': rule.get('args', [])}
-            expanded = self.expand_helper(normalized)
+            expanded = self.expand_helper(helper_name, rule.get('args', []))
             if expanded:
                 # Recursively expand the result
                 return self.expand_rule(expanded, _depth + 1)
@@ -272,7 +270,7 @@ class KDL3GameExportHandler(GenericGameExportHandler):
     # NOTE: post_process_data removed - f-string resolution now happens during
     # the initial export pass via safe_expand_rule() -> expand_rule() -> _convert_f_string()
 
-    def expand_helper(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    def expand_helper(self, helper_name: str, args=None) -> Optional[Dict[str, Any]]:
         """
         Expand complex KDL3 helpers with constant arguments into simplified rules.
 
@@ -282,13 +280,14 @@ class KDL3GameExportHandler(GenericGameExportHandler):
         the logic at export time and produce a simplified rule.
 
         Args:
-            rule: A helper call rule with type='helper' and name in HELPERS_TO_PRESERVE
+            helper_name: The name of the helper function
+            args: List of arguments to the helper
 
         Returns:
             A simplified rule dict if expansion was successful, None otherwise
         """
-        helper_name = rule.get('name', '')
-        args = rule.get('args', [])
+        if args is None:
+            args = []
 
         # Get copy_abilities from the first argument if it's a constant
         copy_abilities = None

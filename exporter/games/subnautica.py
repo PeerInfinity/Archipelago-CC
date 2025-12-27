@@ -34,7 +34,7 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
 
         return settings_data
 
-    def expand_helper(self, helper_def: dict, helper_name: str) -> dict:
+    def _expand_helper_definition(self, helper_def: dict, helper_name: str) -> dict:
         """Expand SwimRule property accesses in helper definitions.
 
         The SwimRule option class has computed properties:
@@ -43,6 +43,9 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
 
         Since we only export the integer value, we need to expand these
         property accesses to their computed equivalents.
+
+        Note: This is different from expand_helper() which expands helper *calls*
+        in rules. This method transforms helper *definitions* before export.
         """
         if not helper_def:
             return helper_def
@@ -189,9 +192,9 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
         # Get helper definitions from base class
         helpers = super().get_helper_definitions(world)
 
-        # Apply SwimRule expansion to each helper using the expand_helper method
+        # Apply SwimRule expansion to each helper definition
         expanded_helpers = {}
         for helper_name, helper_def in helpers.items():
-            expanded_helpers[helper_name] = self.expand_helper(helper_def, helper_name)
+            expanded_helpers[helper_name] = self._expand_helper_definition(helper_def, helper_name)
 
         return expanded_helpers
