@@ -20,9 +20,9 @@ class OSRSGameExportHandler(GenericGameExportHandler):
     # No blacklist - quest_points is handled via computed helper
     HELPERS_TO_EXPORT_BLACKLIST = set()
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Export OSRS-specific settings including QP location data."""
-        settings = super().get_settings_data(world, multiworld, player)
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Export OSRS-specific world data including QP location data."""
+        settings = super().get_world_data(world, multiworld, player)
 
         # For worldgen worlds, qp_items is already loaded from _worldgen_settings.json
         # by the base exporter, so we don't need to compute it here
