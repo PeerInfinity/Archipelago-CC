@@ -49,10 +49,32 @@ python -m world_generator frontend/presets/[gamename]/AP_[SEED_ID]/AP_[SEED_ID]_
 **Common options:**
 ```
 python -m world_generator rules.json --dry-run                    # preview without writing
-python -m world_generator rules.json --game-name "New Name"       # rename to avoid conflicts
+python -m world_generator rules.json --game-name "New Name"       # rename game display name
 python -m world_generator rules.json -o worlds/custom/ --force    # specify output, overwrite
 python -m world_generator rules.json --canonical-seed1            # enable seed=1 canonical placement
 ```
+
+**Creating `_worldgen` worlds:**
+
+To create a world with the `_worldgen` suffix (avoiding conflicts with original worlds), use both `-o` and `--game-name`:
+```
+python -m world_generator frontend/presets/[gamename]/AP_[SEED_ID]/AP_[SEED_ID]_rules.json \
+    -o worlds/[gamename]_worldgen \
+    --game-name "[GameName] WorldGen" \
+    --force \
+    --canonical-seed1
+```
+
+Example for TUNIC:
+```
+python -m world_generator frontend/presets/tunic/AP_14089154938208861744/AP_14089154938208861744_rules.json \
+    -o worlds/tunic_worldgen \
+    --game-name "TUNIC WorldGen" \
+    --force \
+    --canonical-seed1
+```
+
+Note: `-o` controls the output directory, `--game-name` sets the display name, `--canonical-seed1` enables deterministic placement for seed 1. These match the convention used by `test-world-generator.py`.
 
 **Input:**
 - JSON rules file (exported from an existing world via seed generation)
