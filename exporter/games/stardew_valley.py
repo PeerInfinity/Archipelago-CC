@@ -447,8 +447,8 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
         # Get any base helper definitions first
         helpers = super().get_helper_definitions(world)
 
-        # Add Has rule helpers
-        for item_name in self._has_rules_to_export:
+        # Add Has rule helpers - sorted for deterministic output
+        for item_name in sorted(self._has_rules_to_export):
             helper_name = f'has_{self._sanitize_helper_name(item_name)}'
             if item_name in self._has_rule_cache:
                 helpers[helper_name] = self._has_rule_cache[item_name]

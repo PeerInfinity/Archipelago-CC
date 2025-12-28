@@ -1,10 +1,8 @@
 {
   "settings": {
     "game": "Bumper Stickers",
-    "assume_bidirectional_exits": false,
-    "use_resolved_items": false,
     "options": {
-      "accessibility": "full",
+      "accessibility": 0,
       "exclude_locations": [],
       "item_links": [],
       "killer_trap_weight": 0,
@@ -24,5 +22,30 @@
       "turners": 3
     },
     "world_directory": "bumpstik"
+  },
+  "world_attributes": {
+    "task_advances": 4,
+    "turners": 3,
+    "paint_cans": 3,
+    "traps": 5,
+    "rainbow_trap_weight": 50,
+    "spinner_trap_weight": 50,
+    "killer_trap_weight": 0,
+    "world_description": "Bumper Stickers is a match-three puzzle game unlike any you've seen.\nLaunch Bumpers onto the field, and match them in sets of three of the same color.\nHow long can you go without getting Jammed?",
+    "web": {
+      "theme": "stone",
+      "tutorials": [
+        {
+          "name": "Bumper Stickers Setup Guide",
+          "description": "A guide to setting up the Archipelago Bumper Stickers software on your computer.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "KewlioMZX"
+          ]
+        }
+      ]
+    }
   }
 }

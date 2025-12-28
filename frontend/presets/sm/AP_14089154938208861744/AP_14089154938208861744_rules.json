@@ -17339,7 +17339,7 @@
           "Event"
         ],
         "event": true,
-        "type": "Kraid",
+        "type": "Event",
         "max_count": 1,
         "classification": "progression"
       },
@@ -17350,7 +17350,7 @@
           "Event"
         ],
         "event": true,
-        "type": "Ridley",
+        "type": "Event",
         "max_count": 1,
         "classification": "progression"
       },
@@ -17361,7 +17361,7 @@
           "Event"
         ],
         "event": true,
-        "type": "Phantoon",
+        "type": "Event",
         "max_count": 1,
         "classification": "progression"
       },
@@ -17372,7 +17372,7 @@
           "Event"
         ],
         "event": true,
-        "type": "Draygon",
+        "type": "Event",
         "max_count": 1,
         "classification": "progression"
       },
@@ -17383,7 +17383,7 @@
           "Event"
         ],
         "event": true,
-        "type": "MotherBrain",
+        "type": "Event",
         "max_count": 1,
         "classification": "progression"
       },
@@ -17394,7 +17394,7 @@
           "Event"
         ],
         "event": true,
-        "type": "SporeSpawn",
+        "type": "Event",
         "max_count": 1,
         "classification": "progression"
       },
@@ -17405,7 +17405,7 @@
           "Event"
         ],
         "event": true,
-        "type": "Botwoon",
+        "type": "Event",
         "max_count": 1,
         "classification": "progression"
       },
@@ -17416,7 +17416,7 @@
           "Event"
         ],
         "event": true,
-        "type": "Crocomire",
+        "type": "Event",
         "max_count": 1,
         "classification": "progression"
       },
@@ -17427,7 +17427,7 @@
           "Event"
         ],
         "event": true,
-        "type": "GoldenTorizo",
+        "type": "Event",
         "max_count": 1,
         "classification": "progression"
       }

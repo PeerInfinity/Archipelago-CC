@@ -766,6 +766,55 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Wilderness->Canoe Tree", player),
         Or(And(And(CanReachRegion('Oak Tree'), CanReachRegion('Willow Tree')), CanReachRegion('South of Varrock')), And(False_(), CanReachRegion('Lumbridge')), And(True_(), CanReachRegion('Edgeville')), And(CanReachRegion('Barbarian Village'), CanReachRegion('Oak Tree')))
     )
+    # Register indirect conditions for proper sphere calculation
+    multiworld.register_indirect_condition(
+        world.get_region("Gold Ore"),
+        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Furnace"),
+        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Al Kharid"),
+        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Rimmington"),
+        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Silver Ore"),
+        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Milk"),
+        multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Gold Ore"),
+        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Furnace"),
+        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Al Kharid"),
+        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Rimmington"),
+        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Silver Ore"),
+        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Milk"),
+        multiworld.get_entrance("Crafting Guild->Crafting Guild", player)
+    )
     # Location rules
     world.set_rule(
         multiworld.get_location("Total XP 125,000", player),

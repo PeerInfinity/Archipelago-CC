@@ -39,7 +39,7 @@ def _ahatintimeworldgen_can_hit(state: "CollectionState", player: int, umbrella_
 
 
 def _ahatintimeworldgen_can_use_hat(state: "CollectionState", player: int, hat = None) -> bool:
-    return (state.has({0: 'Sprint Hat', 1: 'Brewing Hat', 2: 'Ice Hat', 3: 'Dweller Mask', 4: 'Time Stop Hat'}[hat], player) if False else (True if (state.multiworld.worlds[player].hat_yarn_costs[hat] <= 0) else state.has('Yarn', player, _ahatintimeworldgen_get_hat_cost(state, player, hat))))
+    return (state.has({0: 'Sprint Hat', 1: 'Brewing Hat', 2: 'Ice Hat', 3: 'Dweller Mask', 4: 'Time Stop Hat'}[hat], player) if False else ((True if (state.multiworld.worlds[player].hat_yarn_costs[hat] <= 0) else None)) or (state.has('Yarn', player, _ahatintimeworldgen_get_hat_cost(state, player, hat))))
 
 
 def _ahatintimeworldgen_can_use_hookshot(state: "CollectionState", player: int) -> bool:
@@ -52,7 +52,7 @@ def _ahatintimeworldgen_get_difficulty(state: "CollectionState", player: int) ->
 
 def _ahatintimeworldgen_get_hat_cost(state: "CollectionState", player: int, hat = None) -> bool:
     cost = 0
-    for h in state.multiworld.worlds[player].hat_craft_order:
+    for h in [2, 4, 1, 0, 3]:
         cost += state.multiworld.worlds[player].hat_yarn_costs[h]
         if (h == hat):
             break
@@ -60,7 +60,7 @@ def _ahatintimeworldgen_get_hat_cost(state: "CollectionState", player: int, hat 
 
 
 def _ahatintimeworldgen_has_paintings(state: "CollectionState", player: int, count = None, allow_skip: bool = True) -> bool:
-    return (True if not (_ahatintimeworldgen_painting_logic(state, player)) else ((True if (_ahatintimeworldgen_get_difficulty(state, player) >= 0) else None) if (not (False)) and (allow_skip) else state.has('Progressive Painting Unlock', player, count)))
+    return (True if not (_ahatintimeworldgen_painting_logic(state, player)) else (((True if (_ahatintimeworldgen_get_difficulty(state, player) >= 0) else None) if (not (False)) and (allow_skip) else None)) or (state.has('Progressive Painting Unlock', player, count)))
 
 
 def _ahatintimeworldgen_has_relic_combo(state: "CollectionState", player: int, relic = None) -> bool:

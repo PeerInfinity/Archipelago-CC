@@ -1,20 +1,18 @@
 {
   "settings": {
     "game": "Muse Dash",
-    "assume_bidirectional_exits": false,
-    "use_resolved_items": false,
     "options": {
-      "accessibility": "full",
+      "accessibility": 0,
       "additional_song_count": 40,
       "allow_just_as_planned_dlc_songs": "",
       "available_trap_types": "",
       "chosen_traps": [],
-      "death_link": "false",
+      "death_link": false,
       "dlc_packs": [],
       "exclude_locations": [],
       "exclude_songs": [],
       "goal_song": [],
-      "grade_needed": "any",
+      "grade_needed": 0,
       "include_songs": [],
       "item_links": [],
       "local_items": [],
@@ -26,14 +24,99 @@
       "progression_balancing": 50,
       "song_difficulty_max": 8,
       "song_difficulty_min": 4,
-      "song_difficulty_mode": "any",
+      "song_difficulty_mode": 0,
       "start_hints": [],
       "start_inventory": {},
       "start_location_hints": [],
       "starting_song_count": 5,
-      "streamer_mode_enabled": "false",
+      "streamer_mode_enabled": false,
       "trap_count_percentage": 15
     },
     "world_directory": "musedash"
+  },
+  "world_attributes": {
+    "starting_songs": [
+      "Breaking Dawn",
+      "Best One feat.tooko",
+      "I don't care about Christmas though",
+      "Koi no Moonlight",
+      "Yuki no Shizuku Ame no Oto"
+    ],
+    "included_songs": [
+      "Medicine of Sing",
+      "Frost Land",
+      "Bass Telekinesis",
+      "Stargazer",
+      "Lys Tourbillon",
+      "MilK",
+      "Dolphin and Broadcast",
+      "Mujinku-Vacuum",
+      "Pancake is Love",
+      "Clock Room & Spiritual World",
+      "Evolution",
+      "Dohna Dohna no Uta",
+      "Confession",
+      "Night Wander",
+      "DISCO NIGHT",
+      "Lights of Muse",
+      "irregulyze",
+      "Latitude",
+      "Out of Sense",
+      "Candy-coloured Love Theory",
+      "Iyaiya",
+      "Mezame Eurythmics",
+      "Say! Fanfare!",
+      "Heart Message feat. Aoi Tokimori",
+      "Aqua Stars",
+      "Yume Ou Mono Yo",
+      "Funkotsu Saishin Casino",
+      "umpopoff",
+      "Mopemope",
+      "Goodbye Boss",
+      "EXIST",
+      "Ira",
+      "Blackest Luxury Car",
+      "From the New World",
+      "Lian Ai Audio Navigation",
+      "Departure Road",
+      "Shenri Kuaira -repeat-",
+      "Heart-Pounding Flight",
+      "Etude -Sunset-",
+      "Galaxy Striker"
+    ],
+    "victory_song_name": "Magical Wonderland",
+    "location_count": 90,
+    "world_description": "Muse Dash is a rhythm game where you hit objects to the beat of one of 400+ songs.\nPlay through a selection of randomly chosen songs, collecting music sheets\nuntil you have enough to play and complete the goal song!",
+    "slot_data": {
+      "victoryLocation": "Magical Wonderland",
+      "deathLink": 0,
+      "musicSheetWinCount": 7,
+      "gradeNeeded": 0
+    },
+    "web": {
+      "theme": "partyTime",
+      "tutorials": [
+        {
+          "name": "Mod Setup and Use Guide",
+          "description": "A guide to setting up the Muse Dash Archipelago Mod on your computer.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "DeamonHunter"
+          ]
+        },
+        {
+          "name": "Mod Setup and Use Guide",
+          "description": "A guide to setting up the Muse Dash Archipelago Mod on your computer.",
+          "language": "Espa\u00f1ol",
+          "file_name": "setup_es.md",
+          "link": "setup/es",
+          "authors": [
+            "Shiny"
+          ]
+        }
+      ]
+    }
   }
 }

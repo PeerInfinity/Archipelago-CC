@@ -3780,37 +3780,9 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "Attribute",
+                          "rule": "Constant",
                           "args": {
-                            "object": {
-                              "rule": "Attribute",
-                              "args": {
-                                "object": {
-                                  "rule": "AST_subscript",
-                                  "args": {
-                                    "value": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "world"
-                                      },
-                                      "attr": "worlds"
-                                    },
-                                    "index": {
-                                      "type": "constant",
-                                      "value": 1
-                                    },
-                                    "_original_ast_type": "subscript"
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                "attr": "options",
-                                "_original_ast_type": "attribute"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "attr": "enemy_health",
-                            "_original_ast_type": "attribute"
+                            "value": 1
                           },
                           "_converted_from_ast": true
                         },
@@ -17469,17 +17441,25 @@
                   "rule": "False_"
                 },
                 "if_false": {
-                  "rule": "Conditional",
-                  "args": {
-                    "test": {
-                      "rule": "has_melee_weapon",
-                      "_original_ast_type": "helper",
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Conditional",
+                      "args": {
+                        "test": {
+                          "rule": "has_melee_weapon",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        },
+                        "if_true": {
+                          "rule": "True_"
+                        },
+                        "if_false": null,
+                        "_original_ast_type": "conditional"
+                      },
                       "_converted_from_ast": true
                     },
-                    "if_true": {
-                      "rule": "True_"
-                    },
-                    "if_false": {
+                    {
                       "rule": "Or",
                       "children": [
                         {
@@ -17553,10 +17533,8 @@
                           ]
                         }
                       ]
-                    },
-                    "_original_ast_type": "conditional"
-                  },
-                  "_converted_from_ast": true
+                    }
+                  ]
                 },
                 "_original_ast_type": "conditional"
               },

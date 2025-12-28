@@ -1,52 +1,21 @@
 """The Wind Waker game-specific export handler."""
 
-from typing import Dict, Any, Set, List
+from typing import Dict, Any
 from .generic import GenericGameExportHandler
 import logging
 
 logger = logging.getLogger(__name__)
 
 class TWWGameExportHandler(GenericGameExportHandler):
-    AUTO_PRESERVE_LARGE_HELPERS = True
-
     # Define where to find helper functions
     HELPER_MODULES = ['worlds.tww.Macros']
 
     # Note: Entrance access helpers (can_access_*) are now auto-discovered during
     # rule analysis and no longer need to be whitelisted explicitly.
 
-
-    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extract The Wind Waker settings including logic configuration values."""
-        # Get base world data
-        settings = super().get_world_data(world, multiworld, player)
-
-        # Add TWW-specific logic values that are used in state_method calls
-        # These are calculated during world initialization and stored as world attributes
-        logic_attrs = [
-            'logic_in_swordless_mode',
-            'logic_in_required_bosses_mode',
-            'logic_obscure_1',
-            'logic_obscure_2',
-            'logic_obscure_3',
-            'logic_precise_1',
-            'logic_precise_2',
-            'logic_precise_3',
-            'logic_rematch_bosses_skipped',
-            'logic_tuner_logic_enabled',
-        ]
-
-        for attr in logic_attrs:
-            try:
-                if hasattr(world, attr):
-                    settings[attr] = bool(getattr(world, attr))
-                else:
-                    settings[attr] = False  # Default value
-            except Exception as e:
-                logger.error(f"Error extracting {attr}: {e}")
-                settings[attr] = False
-
-        return settings
+    # Note: The logic_* world attributes (logic_in_swordless_mode, logic_obscure_1, etc.)
+    # are auto-discovered by the base class since AUTO_DISCOVER_WORLD_ATTRIBUTES = True
+    # by default. These attributes are set during world initialization in __init__.py.
 
     # Mapping of _tww_* state methods to their rule replacements
     # Most are simple setting lookups, some are negations, one is always true

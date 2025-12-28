@@ -657,7 +657,8 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
             return None
 
         # Sort by weight descending for optimization (check high-weight items first)
-        items.sort(key=lambda x: -x[1])
+        # Secondary sort by item name for deterministic ordering when weights are equal
+        items.sort(key=lambda x: (-x[1], x[0]))
 
         # Export as a compact weighted_sum helper - frontend calculates if sum >= 1.0
         # This is MUCH more compact than expanding to all valid combinations
