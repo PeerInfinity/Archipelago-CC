@@ -94,6 +94,17 @@ def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = 
                 if target_name not in dependencies:
                     dependencies.append(target_name)
 
+    # Check for state_method can_reach_region calls (takes 1 arg: region name)
+    if rule_type == 'state_method' and rule.get('method') == 'can_reach_region':
+        args = rule.get('args', [])
+        if len(args) >= 1:
+            region_arg = args[0]
+            region_name = None
+            if isinstance(region_arg, dict) and region_arg.get('type') == 'constant':
+                region_name = region_arg.get('value')
+            if region_name and region_name not in dependencies:
+                dependencies.append(region_name)
+
     # Check for can_reach type (used in helper bodies)
     if rule_type == 'can_reach':
         region = rule.get('region')
@@ -125,7 +136,7 @@ def _extract_region_dependencies(rule: dict, helpers: Dict[str, 'HelperData'] = 
                     dependencies.append(dep)
 
     # Recurse into nested rules
-    for key in ('conditions', 'children', 'if_true', 'if_false', 'test', 'args', 'left', 'right'):
+    for key in ('conditions', 'children', 'if_true', 'if_false', 'test', 'args', 'left', 'right', 'statements'):
         value = rule.get(key)
         if isinstance(value, list):
             for item in value:

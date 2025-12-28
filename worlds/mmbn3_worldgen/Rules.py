@@ -173,6 +173,87 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("Beach Cyberworld -> Undernet", player),
         And(Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 8), Has('Press'))
     )
+    # Register indirect conditions for proper sphere calculation
+    multiworld.register_indirect_condition(
+        world.get_region("WWW Island"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Cyberworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Overworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Cyberworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Beach Overworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Beach Cyberworld"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Undernet"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Deep Undernet"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Secret Area"),
+        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("WWW Island"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Overworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("SciLab Cyberworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Overworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Yoka Cyberworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Beach Overworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Beach Cyberworld"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Undernet"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Deep Undernet"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
+    multiworld.register_indirect_condition(
+        world.get_region("Secret Area"),
+        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
+    )
     # Location rules
     world.set_rule(
         multiworld.get_location("ACDC SonicWav W Trade", player),
