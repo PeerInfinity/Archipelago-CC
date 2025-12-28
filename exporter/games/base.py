@@ -100,6 +100,11 @@ class BaseGameExportHandler:
     # Settings class attributes that control export behavior
     # These are applied in get_settings_data and can be overridden in subclasses
 
+    # When True, method calls on 'self' or 'world' (e.g., self.quest_points(), world.quest_points())
+    # are automatically converted to helper function calls in expand_rule.
+    # This is useful for games that define methods on the World class that are used in rules.
+    CONVERT_WORLD_METHODS_TO_HELPERS: bool = True
+
     # When True, eventProcessor uses resolved_items from sphere log instead of base_items
     # Use for games with complex event items or computed tracking items
     USE_RESOLVED_ITEMS: bool = False
@@ -483,6 +488,37 @@ class BaseGameExportHandler:
             rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)
             rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)
             rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)
+
+        # Handle compare operations (expand left/right recursively)
+        elif rule_type == 'compare':
+            if 'left' in rule:
+                rule['left'] = self.expand_rule(rule['left'], _depth + 1)
+            if 'right' in rule:
+                rule['right'] = self.expand_rule(rule['right'], _depth + 1)
+
+        # Handle state_method (expand args recursively)
+        elif rule_type == 'state_method':
+            if 'args' in rule:
+                rule['args'] = [
+                    self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) else arg
+                    for arg in rule.get('args', [])
+                ]
+
+        # Handle function_call - convert self.method() or world.method() to helper calls
+        # This allows games to define methods on the World class that are used as rules
+        elif rule_type == 'function_call' and self.CONVERT_WORLD_METHODS_TO_HELPERS:
+            function = rule.get('function', {})
+            if function.get('type') == 'attribute':
+                obj = function.get('object', {})
+                method_name = function.get('attr')
+                # Check if the object is 'self' or 'world' (both refer to the World instance)
+                if obj.get('type') == 'name' and obj.get('name') in ['self', 'world']:
+                    logger.debug(f"Converting {obj.get('name')}.{method_name}() to helper function")
+                    return {
+                        'type': 'helper',
+                        'name': method_name,
+                        'args': []
+                    }
 
         return rule
         
