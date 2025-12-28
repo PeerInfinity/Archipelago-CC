@@ -5,7 +5,7 @@ This exporter parses the Rules.py file directly to extract rule expressions befo
 converted to lambdas, then converts them to JSON format.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, Optional
 from .generic import GenericGameExportHandler
 import logging
 import re
@@ -35,9 +35,6 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
         "MC": "Metal Cap",
         "VC": "Vanish Cap"
     }
-
-    # Combined token table for backwards compatibility
-    TOKEN_TABLE = {**MOVEMENT_TOKENS, **CAP_TOKENS}
 
     def __init__(self, world=None):
         super().__init__(world=world)
@@ -105,36 +102,6 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
 
             except Exception as e:
                 logger.error(f"Error extracting SM64 options: {e}")
-
-    def get_settings_data(self, world, multiworld, player):
-        """Extract SM64 settings."""
-        settings = super().get_settings_data(world, multiworld, player)
-
-        # Ensure options are extracted
-        self.extract_world_options(world)
-
-        # Add settings to the output
-        if hasattr(world, 'options'):
-            try:
-                if hasattr(world.options, 'enable_move_rando'):
-                    settings['enable_move_rando'] = bool(world.options.enable_move_rando.value)
-
-                if hasattr(world.options, 'strict_cap_requirements'):
-                    settings['strict_cap_requirements'] = bool(world.options.strict_cap_requirements.value)
-
-                if hasattr(world.options, 'strict_cannon_requirements'):
-                    settings['strict_cannon_requirements'] = bool(world.options.strict_cannon_requirements.value)
-
-                if hasattr(world.options, 'strict_move_requirements'):
-                    settings['strict_move_requirements'] = bool(world.options.strict_move_requirements.value)
-
-                if hasattr(world.options, 'area_rando'):
-                    settings['area_rando'] = int(world.options.area_rando.value)
-
-            except Exception as e:
-                logger.error(f"Error extracting SM64 options: {e}")
-
-        return settings
 
     def parse_rule_expression(self, rule_expr: str, cannon_area: Optional[str] = None) -> Dict[str, Any]:
         """Parse a SM64 rule expression string into JSON rule format.
