@@ -77,12 +77,12 @@ class BaseGameExportHandler:
     # Whether the analyzer should process if-statements with multiple statements in the body
     # When False (default), only simple if-statements with a single statement are handled
     # When True, complex if-statements with multiple statements are combined into compound conditions
-    PROCESS_MULTISTATEMENT_IF_BODIES: bool = False
+    PROCESS_MULTISTATEMENT_IF_BODIES: bool = True
 
     # Whether the analyzer should recursively analyze closure variable function calls
     # When False (default), closure variables are converted to helper calls without recursive analysis
     # When True, closure variables are recursively analyzed and inlined for complex rule logic
-    RECURSIVELY_ANALYZE_CLOSURES: bool = False
+    RECURSIVELY_ANALYZE_CLOSURES: bool = True
 
     # Whether to export Choice options as numeric values or string keys
     # When True (default), Choice options are exported as integers (e.g., 0, 1, 2)
