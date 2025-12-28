@@ -584,6 +584,17 @@ class BaseGameExportHandler:
         # - self.options.X -> constant value
         # - state.multiworld.worlds[player].options.X -> constant value
         elif rule_type == 'attribute':
+            # First apply NAME_REMAPPING to the object if it's a name node
+            # This handles patterns like flooded.something -> precalculated_weights.something
+            obj = rule.get('object')
+            if isinstance(obj, dict) and obj.get('type') == 'name':
+                original_name = obj.get('name', '')
+                if original_name in self.NAME_REMAPPING:
+                    new_name = self.NAME_REMAPPING[original_name]
+                    logger.debug(f"Remapped attribute object name '{original_name}' to '{new_name}'")
+                    obj['name'] = new_name
+
+            # Then try to resolve option access patterns
             resolved = self._resolve_option_access(rule)
             if resolved is not None:
                 return resolved
