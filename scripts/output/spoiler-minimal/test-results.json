@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-28T05:56:43.305790",
-    "last_updated": "2025-12-28T05:56:43.305797",
+    "last_updated": "2025-12-28T17:49:06.617794",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3612,31 +3612,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "7a6035def2896b2e8b825c5973e51d3a7f6de2f3e12bb451003077af1da1ab73",
-          "new_sphere_log_hash": "e75582f03bbe86f89f3fa3c1aae19a15ca902fb27d34a37f515f38105b6437fa",
-          "original_rules_hash": "4d35256f2fbbb2f6b23b81de846b96a064fc5daba9668e05bc060443d32129cb",
-          "original_sphere_log_hash": "e75582f03bbe86f89f3fa3c1aae19a15ca902fb27d34a37f515f38105b6437fa",
-          "rules_identical": false,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-28T05:55:46.821484"
-        }
-      },
       "game_name_from_filename": "terraria",
       "game_name_from_yaml": "Terraria",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.75,
+        "processing_time_seconds": 7.34,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/terraria/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 350205,
+        "size_bytes": 350116,
         "size_mb": 0.33
       },
       "seed": "1",
@@ -3644,7 +3632,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 19.81,
+        "processing_time_seconds": 24.81,
         "return_code": 0,
         "sphere_reached": 9.5,
         "success": true,
@@ -3652,10 +3640,10 @@
         "warning_count": 0
       },
       "template_filename": "Terraria.yaml",
-      "timestamp": "2025-12-28T05:54:20.176419",
+      "timestamp": "2025-12-28T17:48:34.054439",
       "world_info": {
         "exporter_path": "exporter/games/terraria.py",
-        "exporter_size": 19791,
+        "exporter_size": 19645,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "terraria",
