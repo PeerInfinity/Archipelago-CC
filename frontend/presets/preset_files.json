@@ -701,83 +701,6 @@
       }
     }
   },
-  "blasphemous": {
-    "name": "Blasphemous",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Blasphemous"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_result": {
-      "status": "passed",
-      "generation_errors": 0,
-      "generation_warnings": 0,
-      "sphere_reached": 5.1,
-      "max_spheres": 5.1,
-      "progress_percent": 100.0,
-      "has_custom_exporter": true,
-      "has_custom_game_logic": true,
-      "timestamp": "2025-10-09T23:28:21.529989",
-      "processing_time": {
-        "generation_seconds": 62.44,
-        "spoiler_test_seconds": 9.27,
-        "total_seconds": 71.71
-      },
-      "seed_range_info": {
-        "seed_range": "1-10",
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "consecutive_passes_before_failure": 10,
-        "first_failure_seed": null,
-        "total_seeds_tested": 10
-      }
-    },
-    "test_results": {
-      "minimal_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "full_spoiler": {
-        "passed": true,
-        "seeds_passed": 10,
-        "seeds_failed": 0,
-        "total_seeds": 10,
-        "first_failure_seed": null,
-        "seed_range": "1-10"
-      },
-      "multiclient": {
-        "passed": true,
-        "client1_passed": true,
-        "client2_passed": true,
-        "locations_checked": 305,
-        "total_locations": 305
-      },
-      "multiworld": {
-        "passed": true,
-        "players_passed": 1,
-        "players_failed": 0,
-        "total_players": 7,
-        "first_failure_player": null
-      }
-    }
-  },
   "bomb_rush_cyberfunk": {
     "name": "Bomb Rush Cyberfunk",
     "folders": {
@@ -2097,51 +2020,6 @@
       }
     }
   },
-  "hk": {
-    "name": "Hollow Knight",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Hollow Knight"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_result": {
-      "status": "failed",
-      "generation_errors": 0,
-      "generation_warnings": 0,
-      "sphere_reached": 0,
-      "max_spheres": 87.1,
-      "progress_percent": 0.0,
-      "has_custom_exporter": true,
-      "has_custom_game_logic": true,
-      "timestamp": "2025-10-09T23:33:40.487830",
-      "processing_time": {
-        "generation_seconds": 28.26,
-        "spoiler_test_seconds": 157.79,
-        "total_seconds": 186.04999999999998
-      },
-      "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "consecutive_passes_before_failure": 0,
-        "first_failure_seed": 1,
-        "total_seeds_tested": 1
-      }
-    }
-  },
   "hylics2": {
     "name": "Hylics 2",
     "folders": {
@@ -3329,51 +3207,6 @@
         "players_failed": 0,
         "total_players": 10,
         "first_failure_player": null
-      }
-    }
-  },
-  "ocarina_of_time": {
-    "name": "Ocarina of Time",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Ocarina of Time"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_result": {
-      "status": "failed",
-      "generation_errors": 2524,
-      "generation_warnings": 2,
-      "sphere_reached": 0.0,
-      "max_spheres": 22.1,
-      "progress_percent": 0.0,
-      "has_custom_exporter": false,
-      "has_custom_game_logic": false,
-      "timestamp": "2025-10-09T23:40:11.024850",
-      "processing_time": {
-        "generation_seconds": 17.26,
-        "spoiler_test_seconds": 72.11,
-        "total_seconds": 89.37
-      },
-      "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "consecutive_passes_before_failure": 0,
-        "first_failure_seed": 1,
-        "total_seeds_tested": 1
       }
     }
   },
@@ -5706,52 +5539,6 @@
       }
     }
   },
-  "zillion": {
-    "name": "Zillion",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Zillion"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_P1_Player1.apzl",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    },
-    "test_result": {
-      "status": "failed",
-      "generation_errors": 147,
-      "generation_warnings": 0,
-      "sphere_reached": 0.0,
-      "max_spheres": 4.1,
-      "progress_percent": 0.0,
-      "has_custom_exporter": false,
-      "has_custom_game_logic": false,
-      "timestamp": "2025-10-09T23:49:51.528531",
-      "processing_time": {
-        "generation_seconds": 7.37,
-        "spoiler_test_seconds": 5.02,
-        "total_seconds": 12.39
-      },
-      "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "consecutive_passes_before_failure": 0,
-        "first_failure_seed": 1,
-        "total_seeds_tested": 1
-      }
-    }
-  },
   "shapez": {
     "name": "shapez",
     "folders": {
@@ -6539,27 +6326,6 @@
       }
     }
   },
-  "celeste_open_world_worldgen": {
-    "name": "Celeste (Open World) WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Celeste (Open World) WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
   "celeste64_worldgen": {
     "name": "Celeste 64 WorldGen",
     "folders": {
@@ -6854,27 +6620,6 @@
       }
     }
   },
-  "kh2_worldgen": {
-    "name": "Kingdom Hearts 2 WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Kingdom Hearts 2 WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
   "kh1_worldgen": {
     "name": "Kingdom Hearts WorldGen",
     "folders": {
@@ -6896,27 +6641,6 @@
       }
     }
   },
-  "kdl3_worldgen": {
-    "name": "Kirby's Dream Land 3 WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Kirby's Dream Land 3 WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
   "landstalker_worldgen": {
     "name": "Landstalker - The Treasures of King Nole WorldGen",
     "folders": {
@@ -6927,27 +6651,6 @@
             "player": 1,
             "name": "Player1",
             "game": "Landstalker - The Treasures of King Nole WorldGen"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_sphere_log.jsonl"
-        ]
-      }
-    }
-  },
-  "lingo_worldgen": {
-    "name": "Lingo WorldGen",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Lingo WorldGen"
           }
         ],
         "files": [

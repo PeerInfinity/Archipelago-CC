@@ -3515,6 +3515,23 @@ class ASTVisitorMixin:
                             'name': var_name,
                             'value': value_result
                         }
+                # Tuple unpacking assignment (e.g., a, b = func())
+                elif len(node.targets) == 1 and isinstance(node.targets[0], ast.Tuple):
+                    target_names = []
+                    for elt in node.targets[0].elts:
+                        if isinstance(elt, ast.Name):
+                            target_names.append(elt.id)
+                        else:
+                            # Complex target element - skip this assignment
+                            logging.warning(f"visit_statement: Complex tuple unpacking target: {ast.dump(elt)}")
+                            return None
+                    value_result = self.visit(node.value)
+                    if value_result is not None:
+                        return {
+                            'type': 'tuple_assign',
+                            'targets': target_names,
+                            'value': value_result
+                        }
                 return None
             elif isinstance(node, ast.AugAssign):
                 return self.visit_AugAssign(node)

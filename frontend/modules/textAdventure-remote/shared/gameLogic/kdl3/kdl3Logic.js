@@ -163,7 +163,7 @@ function getCopyAbilities(staticData, playerId, copyAbilitiesArg) {
   }
   // Otherwise get from settings
   const playerIdKey = String(playerId || '1');
-  return (staticData?.world?.[playerIdKey] ?? staticData?.settings?.[playerIdKey])?.copy_abilities || {};
+  return staticData?.world?.[playerIdKey]?.copy_abilities || {};
 }
 
 /**

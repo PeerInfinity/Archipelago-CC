@@ -120,7 +120,7 @@ export function has(snapshot, staticData, progressId, requiredCount = 1) {
 
     // Special handling for P_ALLOW_OOB (25) and P_ALLOW_SEQUENCE_BREAKS (26)
     // These are controlled by settings
-    const settings = staticData?.world?.[1] ?? staticData?.settings?.[1];
+    const settings = staticData?.world?.[1];
 
     if (progressId === 25) { // P_ALLOW_OOB
       // Check if out_of_bounds is set to 'logic' (option value 2)

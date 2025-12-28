@@ -17038,11 +17038,6 @@
           "display_name": "Sword Progression"
         }
       },
-      "ability_unlocks": {
-        "Pages 42-43 (Holy Cross)": 1,
-        "Pages 52-53 (Icebolt)": 1,
-        "Pages 24-25 (Prayer)": 1
-      },
       "using_ut": false,
       "player_location_table": {
         "Beneath the Well - [Powered Secret Room] Chest": 509342400,
@@ -17347,6 +17342,11 @@
         "West Garden - [North] Page Pickup": 509342699,
         "West Garden House - [Southeast Lowlands] Ice Dagger Pickup": 509342700,
         "Hero's Grave - Effigy Relic": 509342701
+      },
+      "ability_unlocks": {
+        "Pages 42-43 (Holy Cross)": 1,
+        "Pages 52-53 (Icebolt)": 1,
+        "Pages 24-25 (Prayer)": 1
       },
       "slot_data_items": [
         "Sword Upgrade",
@@ -17942,37 +17942,43 @@
           "value": false
         },
         "if_false": {
-          "type": "conditional",
-          "test": {
-            "type": "setting_value",
-            "setting": "ladder_storage_without_items"
-          },
-          "if_true": {
-            "type": "constant",
-            "value": true
-          },
-          "if_false": {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "helper",
-                "name": "has_melee"
+          "type": "or",
+          "conditions": [
+            {
+              "type": "conditional",
+              "test": {
+                "type": "setting_value",
+                "setting": "ladder_storage_without_items"
               },
-              {
-                "type": "state_method",
-                "method": "has_any",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Magic Orb",
-                      "Shield"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": null
+            },
+            {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_melee"
+                },
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Magic Orb",
+                        "Shield"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       },
       "can_shop": {
@@ -19393,6 +19399,321 @@
           "alt_data": null
         }
       },
+      "get_att_level": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "att_offerings",
+            "value": {
+              "type": "state_method",
+              "method": "count",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "ATT Offering"
+                }
+              ]
+            }
+          },
+          {
+            "type": "assign",
+            "name": "att_upgrades",
+            "value": {
+              "type": "state_method",
+              "method": "count",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Hero Relic - ATT"
+                }
+              ]
+            }
+          },
+          {
+            "type": "assign",
+            "name": "sword_level",
+            "value": {
+              "type": "state_method",
+              "method": "count",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Sword Upgrade"
+                }
+              ]
+            }
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "sword_level"
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 3
+              }
+            },
+            "body": [
+              {
+                "type": "assign",
+                "name": "att_upgrades",
+                "op": "+=",
+                "value": {
+                  "type": "min",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 2
+                    },
+                    {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "name",
+                        "name": "sword_level"
+                      },
+                      "op": "-",
+                      "right": {
+                        "type": "constant",
+                        "value": 2
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "list",
+              "value": [
+                {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "min",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": 8
+                      },
+                      {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "binary_op",
+                          "left": {
+                            "type": "constant",
+                            "value": 1
+                          },
+                          "op": "+",
+                          "right": {
+                            "type": "name",
+                            "name": "att_offerings"
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "type": "name",
+                          "name": "att_upgrades"
+                        }
+                      }
+                    ]
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "item_check",
+                      "item": "Hero's Laurels"
+                    },
+                    "if_true": {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    "if_false": {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  }
+                },
+                {
+                  "type": "name",
+                  "name": "att_offerings"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "get_def_level": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "def_offerings",
+            "value": {
+              "type": "state_method",
+              "method": "count",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "DEF Offering"
+                }
+              ]
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "list",
+              "value": [
+                {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "min",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 8
+                        },
+                        {
+                          "type": "binary_op",
+                          "left": {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "constant",
+                              "value": 1
+                            },
+                            "op": "+",
+                            "right": {
+                              "type": "name",
+                              "name": "def_offerings"
+                            }
+                          },
+                          "op": "+",
+                          "right": {
+                            "type": "state_method",
+                            "method": "count_from_list",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": [
+                                  "Hero Relic - DEF",
+                                  "Secret Legend",
+                                  "Phonomath"
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    "op": "+",
+                    "right": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "item_check",
+                        "item": "Shield"
+                      },
+                      "if_true": {
+                        "type": "constant",
+                        "value": 2
+                      },
+                      "if_false": {
+                        "type": "constant",
+                        "value": 0
+                      }
+                    }
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "item_check",
+                      "item": "Hero's Laurels"
+                    },
+                    "if_true": {
+                      "type": "constant",
+                      "value": 2
+                    },
+                    "if_false": {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  }
+                },
+                {
+                  "type": "name",
+                  "name": "def_offerings"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "get_hp_level": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "hp_offerings",
+            "value": {
+              "type": "state_method",
+              "method": "count",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "HP Offering"
+                }
+              ]
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "list",
+              "value": [
+                {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    "op": "+",
+                    "right": {
+                      "type": "name",
+                      "name": "hp_offerings"
+                    }
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Hero Relic - HP"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "name",
+                  "name": "hp_offerings"
+                }
+              ]
+            }
+          }
+        ]
+      },
       "get_money_count": {
         "type": "block",
         "statements": [
@@ -19557,6 +19878,68 @@
           }
         ]
       },
+      "get_mp_level": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "mp_offerings",
+            "value": {
+              "type": "state_method",
+              "method": "count",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "MP Offering"
+                }
+              ]
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "list",
+              "value": [
+                {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    "op": "+",
+                    "right": {
+                      "type": "name",
+                      "name": "mp_offerings"
+                    }
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "state_method",
+                    "method": "count_from_list",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Hero Relic - MP",
+                          "Sacred Geometry",
+                          "Vintage",
+                          "Dusty"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "name",
+                  "name": "mp_offerings"
+                }
+              ]
+            }
+          }
+        ]
+      },
       "get_potion_count": {
         "type": "binary_op",
         "left": {
@@ -19588,6 +19971,140 @@
             "value": 3
           }
         }
+      },
+      "get_potion_level": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "potion_offerings",
+            "value": {
+              "type": "min",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 2
+                },
+                {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Potion Offering"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "list",
+              "value": [
+                {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    "op": "+",
+                    "right": {
+                      "type": "name",
+                      "name": "potion_offerings"
+                    }
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "state_method",
+                    "method": "count_from_list",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Hero Relic - POTION",
+                          "Just Some Pals",
+                          "Spring Falls",
+                          "Back To Work"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "name",
+                  "name": "potion_offerings"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "get_sp_level": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "sp_offerings",
+            "value": {
+              "type": "state_method",
+              "method": "count",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "SP Offering"
+                }
+              ]
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "list",
+              "value": [
+                {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    "op": "+",
+                    "right": {
+                      "type": "name",
+                      "name": "sp_offerings"
+                    }
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "state_method",
+                    "method": "count_from_list",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Hero Relic - SP",
+                          "Mr Mayor",
+                          "Power Up",
+                          "Regal Weasel",
+                          "Forever Friend"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "name",
+                  "name": "sp_offerings"
+                }
+              ]
+            }
+          }
+        ]
       },
       "has_ability": {
         "params": [
@@ -21289,6 +21806,17 @@
               }
             },
             {
+              "type": "tuple_assign",
+              "targets": [
+                "player_att",
+                "att_offerings"
+              ],
+              "value": {
+                "type": "helper",
+                "name": "get_att_level"
+              }
+            },
+            {
               "type": "if_statement",
               "test": {
                 "type": "and",
@@ -21355,6 +21883,17 @@
                     }
                   },
                   "body": [
+                    {
+                      "type": "tuple_assign",
+                      "targets": [
+                        "player_mp",
+                        "mp_offerings"
+                      ],
+                      "value": {
+                        "type": "helper",
+                        "name": "get_mp_level"
+                      }
+                    },
                     {
                       "type": "if_statement",
                       "test": {
@@ -21615,6 +22154,28 @@
                 }
               },
               "body": [
+                {
+                  "type": "tuple_assign",
+                  "targets": [
+                    "player_def",
+                    "def_offerings"
+                  ],
+                  "value": {
+                    "type": "helper",
+                    "name": "get_def_level"
+                  }
+                },
+                {
+                  "type": "tuple_assign",
+                  "targets": [
+                    "player_sp",
+                    "sp_offerings"
+                  ],
+                  "value": {
+                    "type": "helper",
+                    "name": "get_sp_level"
+                  }
+                },
                 {
                   "type": "assign",
                   "name": "req_stats",
@@ -21947,6 +22508,28 @@
                     "attr": "potion_count"
                   }
                 ]
+              }
+            },
+            {
+              "type": "tuple_assign",
+              "targets": [
+                "player_potion",
+                "potion_offerings"
+              ],
+              "value": {
+                "type": "helper",
+                "name": "get_potion_level"
+              }
+            },
+            {
+              "type": "tuple_assign",
+              "targets": [
+                "player_hp",
+                "hp_offerings"
+              ],
+              "value": {
+                "type": "helper",
+                "name": "get_hp_level"
               }
             },
             {

@@ -29,7 +29,7 @@ def _themessengerworldgen_can_double_dboost(state: "CollectionState", player: in
 
 
 def _themessengerworldgen_can_shop(state: "CollectionState", player: int) -> bool:
-    return state.has('Shards', player, self.maximum_price)
+    return state.has('Shards', player, 4566)
 
 
 def _themessengerworldgen_has_dart(state: "CollectionState", player: int) -> bool:

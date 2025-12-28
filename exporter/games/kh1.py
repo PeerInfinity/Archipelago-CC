@@ -309,18 +309,18 @@ class KH1GameExportHandler(BaseGameExportHandler):
 
         return item_data
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extracts KH1-specific game settings for export."""
-        # Get base settings (USE_RESOLVED_ITEMS class attribute handles use_resolved_items)
-        settings_dict = super().get_settings_data(world, multiworld, player)
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Extracts KH1-specific game world data for export."""
+        # Get base world data (USE_RESOLVED_ITEMS class attribute handles use_resolved_items)
+        world_data = super().get_world_data(world, multiworld, player)
 
-        # Add cached KH1 options to settings
+        # Add cached KH1 options to world data
         # (options were already cached in preprocess_world_data)
         for option_name, value in self.options_cache.items():
-            settings_dict[option_name] = value
+            world_data[option_name] = value
             logger.debug(f"Exported KH1 option: {option_name} = {value}")
 
-        return settings_dict
+        return world_data
 
     def _resolve_options_in_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """

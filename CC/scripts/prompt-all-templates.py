@@ -596,7 +596,7 @@ Key simplification patterns applied:
    - The goal is to leave only truly game-specific code in the custom exporter
 
 2. **Remove redundant method overrides** - Methods that just call `super()` or return minimal data can be removed:
-   - `get_settings_data()` - base class handles options export
+   - `get_world_data()` - base class handles options export
    - `get_game_info()` - base class exports richer metadata
    - `cleanup_settings()` - often dead code after other fixes
 
@@ -630,7 +630,7 @@ cat exporter/games/alttp.py
 grep -n "AUTO_" {exporter_path}
 
 # Check for method overrides that might be removable
-grep -n "def get_settings_data\\|def get_game_info\\|def cleanup_settings\\|def replace_name\\|def handle_special_function_call" {exporter_path}
+grep -n "def get_world_data\\|def get_game_info\\|def cleanup_settings\\|def replace_name\\|def handle_special_function_call" {exporter_path}
 
 # Check for manual WORLD_ATTRIBUTES that could be auto-discovered
 grep -n "WORLD_ATTRIBUTES" {exporter_path}

@@ -3951,6 +3951,8 @@ class HelperCodeGenerator:
 
         if stmt_type == 'assign':
             return self._generate_assign(stmt)
+        elif stmt_type == 'tuple_assign':
+            return self._generate_tuple_assign(stmt)
         elif stmt_type == 'return':
             return self._generate_return(stmt)
         elif stmt_type == 'for_range':
@@ -3979,6 +3981,17 @@ class HelperCodeGenerator:
         if op != '=':
             return f"{name} {op} {value}"
         return f"{name} = {value}"
+
+    def _generate_tuple_assign(self, stmt: Dict[str, Any]) -> str:
+        """Generate Python tuple unpacking assignment statement (e.g., a, b = func())."""
+        targets = stmt.get('targets', [])
+        value = self._generate_expression(stmt.get('value', {'type': 'constant', 'value': None}))
+
+        if not targets:
+            return f"_ = {value}"
+
+        target_str = ', '.join(targets)
+        return f"{target_str} = {value}"
 
     def _generate_return(self, stmt: Dict[str, Any]) -> str:
         """Generate Python return statement."""

@@ -67,16 +67,16 @@ These helpers will remain as helper calls in the rules, requiring JavaScript imp
 
 ### Step 3: Export Required Settings (If Needed)
 
-If a helper uses settings/options that aren't already exported, override `get_settings_data`:
+If a helper uses settings/options that aren't already exported, override `get_world_data`:
 
 ```python
-def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-    settings = super().get_settings_data(world, multiworld, player)
+def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
+    world_data = super().get_world_data(world, multiworld, player)
 
     # Add game-specific settings used by helpers
-    settings['my_option'] = world.options.my_option.value
+    world_data['my_option'] = world.options.my_option.value
 
-    return settings
+    return world_data
 ```
 
 The frontend resolves `name` nodes from settings when evaluating helper definitions.
@@ -296,15 +296,15 @@ class MyGameExportHandler(GenericGameExportHandler):
         'check_sequence',          # Uses closure from call site
     }
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Export settings used by helpers."""
-        settings = super().get_settings_data(world, multiworld, player)
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Export world data used by helpers."""
+        world_data = super().get_world_data(world, multiworld, player)
 
         # Add settings referenced by helpers
-        settings['hard_mode'] = world.options.hard_mode.value
-        settings['key_shuffle'] = world.options.key_shuffle.value
+        world_data['hard_mode'] = world.options.hard_mode.value
+        world_data['key_shuffle'] = world.options.key_shuffle.value
 
-        return settings
+        return world_data
 ```
 
 Note: `HELPER_MODULES` and `ITEM_NAME_MODULES` are omitted because they are automatically detected. Only specify them if helpers are in modules not referenced during rule analysis.

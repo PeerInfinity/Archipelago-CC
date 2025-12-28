@@ -132,10 +132,10 @@ class PokemonRBGameExportHandler(BaseGameExportHandler):
 
         return game_info
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Export Pokemon RB specific settings."""
-        # Get base settings
-        settings_dict = super().get_settings_data(world, multiworld, player)
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Export Pokemon RB specific world data."""
+        # Get base world data
+        world_data = super().get_world_data(world, multiworld, player)
 
         # Add all Pokemon RB options
         if hasattr(world, 'options'):
@@ -189,17 +189,17 @@ class PokemonRBGameExportHandler(BaseGameExportHandler):
                     option_value = getattr(options, option_name)
                     # Get the actual value from the Option object
                     if hasattr(option_value, 'value'):
-                        settings_dict[option_name] = option_value.value
+                        world_data[option_name] = option_value.value
                     elif hasattr(option_value, 'current_option_name'):
-                        settings_dict[option_name] = option_value.current_option_name
+                        world_data[option_name] = option_value.current_option_name
                     else:
-                        settings_dict[option_name] = option_value
+                        world_data[option_name] = option_value
 
         # Enable multi-pass timer for tests - Pokemon RB has event locations
         # that become reachable only after other events propagate
-        settings_dict['use_multipass_timer'] = True
+        world_data['use_multipass_timer'] = True
 
-        return settings_dict
+        return world_data
 
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """Return Pokemon RB-specific item data, including event items."""
