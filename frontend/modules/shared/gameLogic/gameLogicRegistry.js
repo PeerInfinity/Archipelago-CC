@@ -168,11 +168,9 @@
  * **SUPPORTED GAMES**:
  * - A Link to the Past (ALTTP)
  * - A Hat in Time (AHIT)
- * - Blasphemous
  * - Bomb Rush Cyberfunk
  * - Castlevania - Circle of the Moon
  * - DLCQuest
- * - Hollow Knight
  * - Kingdom Hearts
  * - Pokemon Red and Blue
  * - Generic (fallback)
@@ -210,12 +208,11 @@
 // Import all game logic modules
 // alttpLogic removed - helpers now exported to rules.json
 // ahitLogic removed - helpers now exported to rules.json
+// blasphemousLogic removed - game unsupported
+// hkLogic removed - game unsupported
+// ootLogic removed - game unsupported
 import * as genericLogic from './generic/genericLogic.js';
-import * as blasphemousLogic from './blasphemous/blasphemousLogic.js';
-import { blasphemousStateModule } from './blasphemous/blasphemousLogic.js';
 import { helperFunctions as bombRushCyberfunkHelperFunctions } from './bomb_rush_cyberfunk/bombRushCyberfunkLogic.js';
-import * as hkLogic from './hk/hkLogic.js';
-import { hkStateModule } from './hk/hkLogic.js';
 import * as jakanddaxterLogic from './jakanddaxter/jakanddaxterLogic.js';
 import { kh1Logic } from './kh1/kh1Logic.js';
 import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
@@ -228,8 +225,6 @@ import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import * as pokemon_emeraldLogic from './pokemon_emerald/pokemon_emeraldLogic.js';
 import { pokemon_emeraldStateModule } from './pokemon_emerald/pokemon_emeraldLogic.js';
 // mm2Logic removed - helpers now exported to rules.json
-import * as ootLogic from './ocarina_of_time/ootLogic.js';
-import { ootStateModule } from './ocarina_of_time/ootLogic.js';
 // raftLogic removed - helpers now exported to rules.json (uses use_resolved_items=true)
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
@@ -267,12 +262,6 @@ const GAME_REGISTRY = {
     worldClasses: ['HatInTimeWorld'],
     aliases: ['A Hat in Time', 'AHIT']
   },
-  'Blasphemous': {
-    logicModule: blasphemousLogic.blasphemousStateModule,
-    helperFunctions: blasphemousLogic.helperFunctions,
-    worldClasses: ['BlasphemousWorld'],
-    aliases: ['Blasphemous']
-  },
   'Bomb Rush Cyberfunk': {
     logicModule: genericLogic.genericStateModule,
     helperFunctions: bombRushCyberfunkHelperFunctions,
@@ -291,12 +280,6 @@ const GAME_REGISTRY = {
     aliases: ['DLCQuest', 'DLC Quest']
   },
   // Factorio removed - uses generic module with progression_mapping from exporter
-  'Hollow Knight': {
-    logicModule: hkLogic.hkStateModule,
-    helperFunctions: hkLogic.helperFunctions,
-    worldClasses: ['HKWorld'],
-    aliases: ['Hollow Knight', 'HK']
-  },
   'Jak and Daxter: The Precursor Legacy': {
     logicModule: genericLogic.genericStateModule,
     helperFunctions: jakanddaxterLogic.helperFunctions,
@@ -350,12 +333,6 @@ const GAME_REGISTRY = {
     // Helper functions now exported to rules.json - no JavaScript needed
     worldClasses: ['MM2World'],
     aliases: ['Mega Man 2', 'MM2', 'Megaman 2']
-  },
-  'Ocarina of Time': {
-    logicModule: ootLogic.ootStateModule,
-    helperFunctions: ootLogic.helperFunctions,
-    worldClasses: ['OOTWorld'],
-    aliases: ['Ocarina of Time', 'OOT', 'Zelda: Ocarina of Time']
   },
   'Old School Runescape': {
     logicModule: genericLogic.genericStateModule,
