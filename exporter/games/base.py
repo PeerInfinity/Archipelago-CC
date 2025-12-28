@@ -1305,11 +1305,16 @@ class BaseGameExportHandler:
                 # Serialize dicts recursively
                 result = {}
                 for k, v in value.items():
-                    if not isinstance(k, str):
-                        continue  # Skip non-string keys
+                    # Convert key to string (handle enum keys like EraType)
+                    if isinstance(k, str):
+                        key_str = k
+                    elif isinstance(k, enum.Enum):
+                        key_str = k.value if hasattr(k, 'value') else str(k)
+                    else:
+                        continue  # Skip other non-string keys
                     converted = get_serializable_value(v, depth + 1)
                     if converted is not None:
-                        result[k] = converted
+                        result[key_str] = converted
                 return result if result else None
             elif isinstance(value, (list, tuple)):
                 # Namedtuples should be handled by extract_nested_attributes, not as lists
