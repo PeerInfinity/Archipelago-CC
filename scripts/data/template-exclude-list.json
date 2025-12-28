@@ -1,5 +1,5 @@
 {
-  "comment": "Template exclusion lists for different test types. 'exclude_list' contains permanent exclusions that apply to all tests. 'main_test_exclude_list' contains games excluded from spoiler-minimal and multiclient tests. 'worldgen_test_exclude_list' contains games excluded from world-generator tests. This file is loaded by scripts/lib/test_utils.py.",
+  "comment": "Template exclusion lists for different test types. 'exclude_list' contains permanent exclusions that apply to all tests. 'main_test_exclude_list' contains games excluded from spoiler-minimal and multiclient tests. 'worldgen_test_exclude_list' contains games excluded from world-generator tests. 'requires_javascript_helpers_list' contains games that require JavaScript helpers (excluded from new-rule-types prompts). 'exporter_fully_simplified_list' contains games whose exporters are fully simplified (excluded from helper-export and exporter-simplify prompts). This file is loaded by scripts/lib/test_utils.py.",
   "exclude_list": [
     {
       "name": "Archipelago.yaml",
@@ -66,11 +66,19 @@
       "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
     },
     {
+      "name": "Celeste (Open World).yaml",
+      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
+    },
+    {
       "name": "Kingdom Hearts 2.yaml",
       "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
     },
     {
       "name": "Kingdom Hearts.yaml",
+      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
+    },
+    {
+      "name": "Kirby's Dream Land 3.yaml",
       "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
     },
     {
@@ -100,6 +108,18 @@
     {
       "name": "Yacht Dice.yaml",
       "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
+    }
+  ],
+  "requires_javascript_helpers_list": [
+    {
+      "name": "Super Metroid.yaml",
+      "reason": "Game logic requires JavaScript helpers that cannot be removed."
+    }
+  ],
+  "exporter_fully_simplified_list": [
+    {
+      "name": "A Link to the Past.yaml",
+      "reason": "Exporter is already as simplified as it can get."
     }
   ]
 }

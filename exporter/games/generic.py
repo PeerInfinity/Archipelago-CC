@@ -79,14 +79,14 @@ class GenericGameExportHandler(BaseGameExportHandler):
                 return self._expand_common_helper(helper_name, rule.get('args', []))
 
         # Standard processing from base class
-        if rule['type'] == 'helper':
+        rule_type = rule.get('type')
+        if rule_type == 'helper':
             expanded = self.expand_helper(rule['name'], rule.get('args', []))
             return expanded if expanded else rule
 
-        if rule['type'] in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule['conditions']]
-
-        return rule
+        # Use base class for compound rules and other transformations
+        # (f-string resolution, name remapping, settings conversion, etc.)
+        return self._recursively_expand_rule_children(rule, _depth)
     
     def _analyze_original_rule(self, original_rule):
         """
@@ -301,27 +301,43 @@ class GenericGameExportHandler(BaseGameExportHandler):
                 }
         
         # Handle dynamically created event items by scanning locations
+        # Some games (like Mario Land 2) place items with item.code = None, converting
+        # them to events at runtime. We need to detect these and update the item data.
         if hasattr(world, 'multiworld'):
             for location in world.multiworld.get_locations(world.player):
                 if location.item and location.item.player == world.player:
                     item_name = location.item.name
-                    # Check if this is an event item (no code/ID) that we haven't seen
-                    if (location.item.code is None and 
-                        item_name not in item_data and
-                        hasattr(location.item, 'classification')):
-                        
-                        item_data[item_name] = {
-                            'name': item_name,
-                            'id': None,
-                            'groups': ['Event'],
-                            # Use 'in' operator to handle combined flags like progression|useful
-                            'advancement': ItemClassification.progression in location.item.classification,
-                            'useful': ItemClassification.useful in location.item.classification,
-                            'trap': ItemClassification.trap in location.item.classification,
-                            'event': True,
-                            'type': 'Event',
-                            'max_count': 1
-                        }
+                    item_classification = location.item.classification
+
+                    # Check if this is an event item (no code/ID)
+                    if location.item.code is None and hasattr(location.item, 'classification'):
+                        if item_name not in item_data:
+                            # New event item not in item_name_to_id
+                            item_data[item_name] = {
+                                'name': item_name,
+                                'id': None,
+                                'groups': ['Event'],
+                                # Use 'in' operator to handle combined flags like progression|useful
+                                'advancement': ItemClassification.progression in item_classification,
+                                'useful': ItemClassification.useful in item_classification,
+                                'trap': ItemClassification.trap in item_classification,
+                                'event': True,
+                                'type': 'Event',
+                                'max_count': 1
+                            }
+                        else:
+                            # Item exists but was placed as an event - update it
+                            if not item_data[item_name]['event']:
+                                logger.debug(f"Correcting {item_name} to event based on runtime placement (item.code=None)")
+                                item_data[item_name]['event'] = True
+                                item_data[item_name]['type'] = 'Event'
+                                item_data[item_name]['id'] = None
+                                item_data[item_name]['advancement'] = ItemClassification.progression in item_classification
+                                item_data[item_name]['useful'] = ItemClassification.useful in item_classification
+                                item_data[item_name]['trap'] = ItemClassification.trap in item_classification
+                                if 'Event' not in item_data[item_name]['groups']:
+                                    item_data[item_name]['groups'].append('Event')
+                                    item_data[item_name]['groups'].sort()
 
         # Return sorted by item ID to ensure consistent ordering
         # Items with None ID (events) will be placed at the end

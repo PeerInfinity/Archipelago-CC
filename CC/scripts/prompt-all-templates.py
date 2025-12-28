@@ -32,6 +32,48 @@ def load_world_mapping(project_root):
         return {}
 
 
+def load_prompt_exclusion_lists(project_root):
+    """Load the prompt exclusion lists from template-exclude-list.json.
+
+    Returns a dict with two sets:
+    - 'requires_javascript_helpers': Games that require JavaScript helpers
+      (excluded from new-rule-types prompts)
+    - 'exporter_fully_simplified': Games whose exporters are fully simplified
+      (excluded from helper-export and exporter-simplify prompts)
+    """
+    exclude_file = Path(project_root) / 'scripts' / 'data' / 'template-exclude-list.json'
+    result = {
+        'requires_javascript_helpers': set(),
+        'exporter_fully_simplified': set()
+    }
+
+    if not exclude_file.exists():
+        return result
+
+    try:
+        with open(exclude_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+
+        # Load requires_javascript_helpers_list
+        for item in data.get('requires_javascript_helpers_list', []):
+            if isinstance(item, dict) and 'name' in item:
+                result['requires_javascript_helpers'].add(item['name'])
+            elif isinstance(item, str):
+                result['requires_javascript_helpers'].add(item)
+
+        # Load exporter_fully_simplified_list
+        for item in data.get('exporter_fully_simplified_list', []):
+            if isinstance(item, dict) and 'name' in item:
+                result['exporter_fully_simplified'].add(item['name'])
+            elif isinstance(item, str):
+                result['exporter_fully_simplified'].add(item)
+
+        return result
+    except Exception as e:
+        print(f"Error loading prompt exclusion lists: {e}", file=sys.stderr)
+        return result
+
+
 def get_test_results_path(project_root, use_full_spoilers=False, use_minimal_spoilers=False, use_multiclient=False, use_multiworld=False):
     """Determine the correct test results path based on host.yaml configuration or command-line flags."""
     # If --multiworld is set, use the multiworld results path
@@ -380,6 +422,7 @@ def run_all_promptfiles(project_root):
         (['--multiworld', '--CC'], 'multiworld.txt'),
         (['--basic-spoiler-debug', '--CC'], 'basic-spoiler-debug.txt'),
         (['--helper-export', '--CC'], 'helper-export.txt'),
+        (['--exporter-simplify', '--CC'], 'exporter-simplify.txt'),
         (['--new-rule-types', '--CC'], 'new-rule-types.txt'),
         (['--gen-errors', '--CC'], 'gen-errors.txt'),
         (['--worldgen-world-failures', '--worldgen-test-mode', 'canonical'], 'worldgen-world-failures.txt'),
@@ -513,6 +556,113 @@ python scripts/test/test-all-templates.py --include-list "{template_file}" --min
 
 - Python world: `worlds/{world_dir}/`
 - Rules file: `worlds/{world_dir}/Rules.py`
+"""
+
+
+def generate_exporter_simplify_prompt(template_file, game_name, custom_code_info, seed=1, use_cloud_docs=False):
+    """Generate a prompt for simplifying a game's custom exporter.
+
+    This prompt guides simplification of custom exporters by leveraging
+    base class auto-discovery features and removing redundant code,
+    following the pattern established by the ALTTP exporter simplification.
+    """
+    setup_doc = "CC/cloud-setup.md"
+    exporter_path = custom_code_info.get('exporter_path', 'exporter/games/<game>.py')
+    world_dir = custom_code_info.get('world_directory', '<game>')
+
+    return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
+
+## Game Information
+
+- **Game**: {game_name}
+- **Template**: `{template_file}`
+- **Custom exporter**: `{exporter_path}`
+- **World directory**: `worlds/{world_dir}/`
+
+## Goal
+
+Simplify the custom exporter by leveraging base class auto-discovery features and removing redundant code. The goal is to reduce the exporter to only the code that is truly game-specific.
+
+## Reference: ALTTP Simplification
+
+The ALTTP exporter (`exporter/games/alttp.py`) was recently simplified from ~500 lines to ~60 lines. Review the current state of that file as a reference for the target simplicity.
+
+Key simplification patterns applied:
+
+1. **Factor out commonly useful code into the base exporter** - If you find code that could benefit other games, move it to `exporter/games/base.py`:
+   - Generic function handlers (e.g., `location_item_name`, `item_name_in_location_names`)
+   - Common AST patterns (e.g., Location object detection in closures)
+   - Reusable data extraction logic (e.g., world attribute discovery)
+   - The goal is to leave only truly game-specific code in the custom exporter
+
+2. **Remove redundant method overrides** - Methods that just call `super()` or return minimal data can be removed:
+   - `get_world_data()` - base class handles options export
+   - `get_game_info()` - base class exports richer metadata
+   - `cleanup_settings()` - often dead code after other fixes
+
+3. **Enable auto-discovery flags** instead of manual WORLD_ATTRIBUTES:
+   - `AUTO_DISCOVER_WORLD_ATTRIBUTES = True` - auto-discovers world instance attributes
+   - `AUTO_DISCOVER_REGION_ATTRIBUTES = True` - auto-discovers region attributes
+   - `AUTO_DISCOVER_LOCATION_ATTRIBUTES = False` - often False, only enable if needed
+
+4. **Remove game-specific replace_name overrides** - Location objects in closures are now automatically detected and replaced with 'location' keyword by the base AST visitor
+
+5. **Remove game-specific handle_special_function_call overrides** - Generic functions like `location_item_name` and `item_name_in_location_names` are now handled by the base class
+
+6. **Remove unused imports** - After removing code, clean up any imports that are no longer needed
+
+7. **Remove redundant flag declarations** - If the base class default is appropriate, don't redeclare:
+   - `AUTO_EXPORT_DISCOVERED_HELPERS = True` (now default)
+   - `AUTO_PRESERVE_LARGE_HELPERS = True` (now default)
+
+## Investigation Commands
+
+```bash
+source .venv/bin/activate
+
+# View current exporter size
+wc -l {exporter_path}
+
+# View ALTTP exporter for reference
+cat exporter/games/alttp.py
+
+# Check what flags the exporter sets
+grep -n "AUTO_" {exporter_path}
+
+# Check for method overrides that might be removable
+grep -n "def get_world_data\\|def get_game_info\\|def cleanup_settings\\|def replace_name\\|def handle_special_function_call" {exporter_path}
+
+# Check for manual WORLD_ATTRIBUTES that could be auto-discovered
+grep -n "WORLD_ATTRIBUTES" {exporter_path}
+```
+
+## Test Commands
+
+After each simplification, verify tests still pass:
+
+```bash
+python scripts/test/test-all-templates.py --include-list "{template_file}" --minimal-spoilers
+```
+
+## Steps
+
+1. **Review the current exporter** - Understand what custom logic exists
+2. **Compare to ALTTP exporter** - Identify patterns that could be applied
+3. **Identify commonly useful code** - Look for logic that could benefit other games
+4. **Factor out to base exporter** - Move generic handlers to `exporter/games/base.py`
+5. **Enable auto-discovery flags** - Replace manual WORLD_ATTRIBUTES with auto-discovery
+6. **Remove redundant methods** - Delete methods that just delegate to super()
+7. **Remove game-specific overrides** - Check if replace_name/handle_special_function_call are still needed
+8. **Clean up imports** - Remove imports for removed code
+9. **Test after each change** - Verify tests still pass
+
+## Important Notes
+
+- Make incremental changes and test after each one
+- Some games genuinely need custom logic - don't remove code that's actually required
+- The goal is simplification, not breaking functionality
+- Document any game-specific quirks that must remain
+- When factoring out code to the base exporter, ensure it's generic enough to work for all games
 """
 
 
@@ -1622,6 +1772,8 @@ def main():
                        help='Generate prompts for games without JavaScript helpers failing minimal spoiler tests')
     parser.add_argument('--helper-export', action='store_true',
                        help='Generate prompts for games with custom exporter/helpers to convert them to use helper export')
+    parser.add_argument('--exporter-simplify', action='store_true',
+                       help='Generate prompts for simplifying custom exporters by leveraging base class features')
     parser.add_argument('--new-rule-types', action='store_true',
                        help='Generate prompts for games with JavaScript helpers to investigate implementing new rule types')
     parser.add_argument('--gen-errors', action='store_true',
@@ -1682,6 +1834,18 @@ def main():
         print("Error: --helper-export and --basic-spoiler-debug are mutually exclusive")
         sys.exit(1)
 
+    if args.exporter_simplify and (args.multiclient or args.multiworld):
+        print("Error: --exporter-simplify cannot be combined with --multiclient or --multiworld")
+        sys.exit(1)
+
+    if args.exporter_simplify and args.basic_spoiler_debug:
+        print("Error: --exporter-simplify and --basic-spoiler-debug are mutually exclusive")
+        sys.exit(1)
+
+    if args.exporter_simplify and args.helper_export:
+        print("Error: --exporter-simplify and --helper-export are mutually exclusive")
+        sys.exit(1)
+
     if args.new_rule_types and (args.multiclient or args.multiworld):
         print("Error: --new-rule-types cannot be combined with --multiclient or --multiworld")
         sys.exit(1)
@@ -1692,6 +1856,10 @@ def main():
 
     if args.new_rule_types and args.helper_export:
         print("Error: --new-rule-types and --helper-export are mutually exclusive")
+        sys.exit(1)
+
+    if args.new_rule_types and args.exporter_simplify:
+        print("Error: --new-rule-types and --exporter-simplify are mutually exclusive")
         sys.exit(1)
 
     if args.gen_errors and (args.multiclient or args.multiworld):
@@ -1710,6 +1878,10 @@ def main():
         print("Error: --gen-errors and --new-rule-types are mutually exclusive")
         sys.exit(1)
 
+    if args.gen_errors and args.exporter_simplify:
+        print("Error: --gen-errors and --exporter-simplify are mutually exclusive")
+        sys.exit(1)
+
     worldgen_modes = [args.worldgen_world_failures, args.worldgen_seed_failures, args.worldgen_spoiler_failures, args.worldgen_crossval_failures]
     if sum(worldgen_modes) > 1:
         print("Error: --worldgen-world-failures, --worldgen-seed-failures, --worldgen-spoiler-failures, and --worldgen-crossval-failures are mutually exclusive")
@@ -1719,7 +1891,7 @@ def main():
         print("Error: --worldgen-* modes cannot be combined with --multiclient or --multiworld")
         sys.exit(1)
 
-    if any(worldgen_modes) and (args.basic_spoiler_debug or args.helper_export or args.new_rule_types or args.gen_errors):
+    if any(worldgen_modes) and (args.basic_spoiler_debug or args.helper_export or args.exporter_simplify or args.new_rule_types or args.gen_errors):
         print("Error: --worldgen-* modes cannot be combined with other debugging modes")
         sys.exit(1)
 
@@ -1767,6 +1939,9 @@ def main():
     # Load world mapping (needed for filtering by custom code status)
     # Used by: --basic-spoiler-debug, --helper-export, normal mode, and worldgen modes
     world_mapping = load_world_mapping(project_root)
+
+    # Load prompt exclusion lists (for filtering specific prompt types)
+    prompt_exclusions = load_prompt_exclusion_lists(project_root)
 
     # Handle worldgen modes - these iterate through failures, not templates
     if args.worldgen_world_failures or args.worldgen_seed_failures or args.worldgen_spoiler_failures or args.worldgen_crossval_failures:
@@ -2002,6 +2177,18 @@ def main():
                             break
                     continue
 
+                # Skip games whose exporters are fully simplified
+                if template_file in prompt_exclusions['exporter_fully_simplified']:
+                    if not quiet_mode:
+                        print(f"Skipping {game_name_from_yaml} - exporter is fully simplified")
+                    current_index = (current_index + 1) % len(template_files)
+                    processed_count += 1
+                    if processed_count % len(template_files) == 0:
+                        cycle_num = processed_count // len(template_files)
+                        if cycle_num >= args.max_loops:
+                            break
+                    continue
+
                 custom_code_info = get_custom_code_info(game_name_from_yaml, world_mapping)
 
                 # Handle --promptfile mode
@@ -2045,6 +2232,84 @@ def main():
 
             continue  # Skip the normal test-based processing below
 
+        # For --exporter-simplify mode, we look for games with custom exporters (but not JavaScript helpers)
+        if args.exporter_simplify:
+            # Extract game name from template YAML
+            game_name_from_yaml = extract_game_name_from_yaml(template_path)
+            if not game_name_from_yaml:
+                if not quiet_mode:
+                    print(f"Could not extract game name from {template_file}, skipping...")
+            else:
+                if not quiet_mode:
+                    print(f"Game name: {game_name_from_yaml}")
+
+                custom_code_info = get_custom_code_info(game_name_from_yaml, world_mapping)
+
+                # Skip games without custom exporters
+                if not custom_code_info['has_exporter']:
+                    if not quiet_mode:
+                        print(f"Skipping {game_name_from_yaml} - no custom exporter")
+                    current_index = (current_index + 1) % len(template_files)
+                    processed_count += 1
+                    if processed_count % len(template_files) == 0:
+                        cycle_num = processed_count // len(template_files)
+                        if cycle_num >= args.max_loops:
+                            break
+                    continue
+
+                # Skip games whose exporters are fully simplified
+                if template_file in prompt_exclusions['exporter_fully_simplified']:
+                    if not quiet_mode:
+                        print(f"Skipping {game_name_from_yaml} - exporter is fully simplified")
+                    current_index = (current_index + 1) % len(template_files)
+                    processed_count += 1
+                    if processed_count % len(template_files) == 0:
+                        cycle_num = processed_count // len(template_files)
+                        if cycle_num >= args.max_loops:
+                            break
+                    continue
+
+                # Handle --promptfile mode
+                if args.promptfile:
+                    simplify_prompt = generate_exporter_simplify_prompt(
+                        template_file, game_name_from_yaml, custom_code_info, args.seed, args.CC
+                    )
+                    collected_prompts.append(simplify_prompt)
+                else:
+                    # Output the prompt directly
+                    simplify_prompt = generate_exporter_simplify_prompt(
+                        template_file, game_name_from_yaml, custom_code_info, args.seed, args.CC
+                    )
+                    print(simplify_prompt)
+
+                    # Exit immediately if -t or -p was specified
+                    if args.text or args.prompt:
+                        return 0
+
+                files_processed += 1
+
+            # Check if we've reached the max files limit
+            if args.max_files and files_processed >= args.max_files:
+                if not quiet_mode:
+                    print(f"\n Reached maximum file limit ({args.max_files}), stopping...")
+                break
+
+            # Move to next template
+            current_index = (current_index + 1) % len(template_files)
+            processed_count += 1
+
+            # If we've completed a full cycle, show progress
+            if processed_count % len(template_files) == 0:
+                cycle_num = processed_count // len(template_files)
+                print(f"\n Completed cycle {cycle_num}")
+
+                # Check if we've reached the max loops limit
+                if cycle_num >= args.max_loops:
+                    print(f" Reached maximum loop limit ({args.max_loops}), stopping...")
+                    break
+
+            continue  # Skip the normal test-based processing below
+
         # For --new-rule-types mode, we don't check test results - we look for games with JavaScript helpers
         if args.new_rule_types:
             # Extract game name from template YAML
@@ -2060,6 +2325,18 @@ def main():
                 if not has_javascript_helpers(game_name_from_yaml, world_mapping):
                     if not quiet_mode:
                         print(f"Skipping {game_name_from_yaml} - no JavaScript helpers")
+                    current_index = (current_index + 1) % len(template_files)
+                    processed_count += 1
+                    if processed_count % len(template_files) == 0:
+                        cycle_num = processed_count // len(template_files)
+                        if cycle_num >= args.max_loops:
+                            break
+                    continue
+
+                # Skip games that require JavaScript helpers (cannot be removed)
+                if template_file in prompt_exclusions['requires_javascript_helpers']:
+                    if not quiet_mode:
+                        print(f"Skipping {game_name_from_yaml} - requires JavaScript helpers")
                     current_index = (current_index + 1) % len(template_files)
                     processed_count += 1
                     if processed_count % len(template_files) == 0:

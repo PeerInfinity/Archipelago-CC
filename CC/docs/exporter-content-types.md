@@ -346,9 +346,9 @@ Export counts of items in the item pool.
 - **Base implementation**: Standard counting
 - **Exporters overriding**: (none found in processed exporters)
 
-#### get_settings_data(world, multiworld, player)
-Export game settings and options.
-- **Base implementation**: Exports option values
+#### get_world_data(world, multiworld, player)
+Export game world data and options.
+- **Base implementation**: Exports option values and world attributes
 - **Exporters overriding**:
   - ahit.py: Game-specific settings (HatItems, UmbrellaLogic, etc.)
   - alttp.py: Complex settings with dungeon info, medallion requirements

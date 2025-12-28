@@ -179,8 +179,8 @@ export function resolveHelperScope(helperDefinition, args, staticData, playerIdS
     return helperScope;
   }
 
-  // Use world with fallback to settings for backwards compatibility
-  const playerWorld = staticData?.world?.[playerIdStr] || staticData?.settings?.[playerIdStr] || {};
+  // Get world data for this player
+  const playerWorld = staticData?.world?.[playerIdStr] || {};
   // slot_data now in world, with fallback to game_info for backwards compatibility
   const playerSlotData = playerWorld?.slot_data || staticData?.game_info?.[playerIdStr]?.slot_data || {};
   const playerOptions = playerWorld.options || playerWorld;
@@ -719,6 +719,22 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
         if (rule.name === 'list') {
           // Python's list() function - convert iterable to list
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (Array.isArray(value)) {
+            result = value;
+          } else if (value && typeof value === 'object') {
+            result = Object.values(value);
+          } else if (typeof value === 'string') {
+            result = value.split('');
+          } else {
+            result = value ? [value] : [];
+          }
+          break;
+        }
+
+        if (rule.name === 'tuple') {
+          // Python's tuple() function - convert iterable to tuple (array in JS)
+          // This is used by worldgen worlds for generator expressions with .count()
           const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
           if (Array.isArray(value)) {
             result = value;
@@ -1298,8 +1314,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // Special case: If we're accessing world.* and the property doesn't exist on the world object,
-        // check the settings for game-specific runtime data (like auto_scroll_levels, sprite_data).
-        // Some games export runtime data via get_settings_data() which ends up in settings,
+        // check the world data for game-specific runtime data (like auto_scroll_levels, sprite_data).
+        // Games export runtime data via get_world_data() which ends up in world[playerId],
         // but the rule references world.attribute_name.
         if (rule.object?.type === 'name' && rule.object?.name === 'world' &&
             baseObject && typeof baseObject === 'object' && baseObject[rule.attr] === undefined) {
@@ -1307,8 +1323,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             const staticData = context.getStaticData();
             const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
-            // Check world (new) or settings (legacy) for backwards compatibility
-            const worldData = staticData?.world || staticData?.settings;
+            // Get world data
+            const worldData = staticData?.world;
             if (worldData && worldData[playerId]) {
               const settingValue = worldData[playerId][rule.attr];
               if (settingValue !== undefined) {
@@ -1326,8 +1342,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             const staticData = context.getStaticData ? context.getStaticData() : context.staticData;
             const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
-            // Check world (new) or settings (legacy) for backwards compatibility
-            const worldData = staticData?.world || staticData?.settings;
+            // Get world data
+            const worldData = staticData?.world;
 
             // Special case: if accessing self.options, return the world data so nested attributes work
             if (rule.attr === 'options' && worldData && worldData[playerId]) {
@@ -1354,8 +1370,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             const staticData = context.getStaticData();
             const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
-            // Check world (new) or settings (legacy) for backwards compatibility
-            const worldData = staticData?.world || staticData?.settings;
+            // Get world data
+            const worldData = staticData?.world;
             if (worldData && worldData[playerId]) {
               const settingValue = worldData[playerId][rule.attr];
               if (settingValue !== undefined) {
@@ -1384,8 +1400,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             const staticData = context.getStaticData();
             const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
-            // Check world (new) or settings (legacy) for backwards compatibility
-            const worldData = staticData?.world || staticData?.settings;
+            // Get world data
+            const worldData = staticData?.world;
             if (worldData && worldData[playerId]) {
               const settingValue = worldData[playerId][rule.attr];
               if (settingValue !== undefined) {
@@ -2926,8 +2942,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             }
           }
 
-          // Check world first (current), then settings (deprecated) for backwards compatibility
-          const settingValue = staticData?.world?.[playerId]?.[rule.name] ?? staticData?.settings?.[playerId]?.[rule.name];
+          // Check world for the setting value
+          const settingValue = staticData?.world?.[playerId]?.[rule.name];
           if (settingValue !== undefined) {
             result = settingValue;
             log('debug', `[evaluateRule] Resolved name '${rule.name}' from world/settings: ${typeof result === 'object' ? 'object' : result}`);
@@ -5466,8 +5482,8 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       if (context.getStaticData || context.staticData) {
         const staticData = context.getStaticData ? context.getStaticData() : context.staticData;
         const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
-        // Check world (new) or settings (legacy) for backwards compatibility
-        const worldData = staticData?.world || staticData?.settings;
+        // Get world data
+        const worldData = staticData?.world;
         if (worldData && worldData[playerId]) {
           const playerWorld = worldData[playerId];
 

@@ -180,7 +180,7 @@ export class GraphDataManager {
 
     // Check if bidirectional exits are assumed from game settings
     const staticData = stateManager.getStaticData();
-    const playerSettings = staticData?.settings ? Object.values(staticData.settings)[0] : null;
+    const playerSettings = staticData?.world ? Object.values(staticData.world)[0] : null;
     const assumeBidirectional = playerSettings?.assume_bidirectional_exits === true;
     logger.debug('Exit configuration', { assumeBidirectional });
 

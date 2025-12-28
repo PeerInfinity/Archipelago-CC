@@ -88,6 +88,32 @@ Easter Egg:                      EMERALD SECRET
 
 Locations:
 
+EVENT_RECOVER_DEVON_GOODS: EVENT_RECOVER_DEVON_GOODS
+EVENT_DELIVER_LETTER: EVENT_DELIVER_LETTER
+EVENT_RELEASE_GROUDON: EVENT_RELEASE_GROUDON
+EVENT_ENCOUNTER_REGIROCK: EVENT_ENCOUNTER_REGIROCK
+EVENT_MAGMA_STEALS_METEORITE: EVENT_MAGMA_STEALS_METEORITE
+EVENT_DEFEAT_STEVEN: EVENT_DEFEAT_STEVEN
+EVENT_ENCOUNTER_REGICE: EVENT_ENCOUNTER_REGICE
+EVENT_TURN_OFF_GENERATOR: EVENT_TURN_OFF_GENERATOR
+EVENT_ENCOUNTER_REGISTEEL: EVENT_ENCOUNTER_REGISTEEL
+EVENT_CLEAR_AQUA_HIDEOUT: EVENT_CLEAR_AQUA_HIDEOUT
+EVENT_RELEASE_KYOGRE: EVENT_RELEASE_KYOGRE
+EVENT_ENCOUNTER_RAYQUAZA: EVENT_ENCOUNTER_RAYQUAZA
+EVENT_UNDO_REGI_SEAL: EVENT_UNDO_REGI_SEAL
+EVENT_ENCOUNTER_GROUDON: EVENT_ENCOUNTER_GROUDON
+EVENT_ENCOUNTER_KYOGRE: EVENT_ENCOUNTER_KYOGRE
+EVENT_MEET_FLOWER_SHOP_OWNER: EVENT_MEET_FLOWER_SHOP_OWNER
+EVENT_COMPLETE_TRICK_HOUSE_1: EVENT_COMPLETE_TRICK_HOUSE_1
+EVENT_COMPLETE_TRICK_HOUSE_2: EVENT_COMPLETE_TRICK_HOUSE_2
+EVENT_COMPLETE_TRICK_HOUSE_3: EVENT_COMPLETE_TRICK_HOUSE_3
+EVENT_COMPLETE_TRICK_HOUSE_4: EVENT_COMPLETE_TRICK_HOUSE_4
+EVENT_COMPLETE_TRICK_HOUSE_5: EVENT_COMPLETE_TRICK_HOUSE_5
+EVENT_COMPLETE_TRICK_HOUSE_6: EVENT_COMPLETE_TRICK_HOUSE_6
+EVENT_COMPLETE_TRICK_HOUSE_7: EVENT_COMPLETE_TRICK_HOUSE_7
+EVENT_RECOVER_METEORITE: EVENT_RECOVER_METEORITE
+EVENT_ENCOUNTER_LATIOS: EVENT_ENCOUNTER_LATIOS
+EVENT_DEFEAT_SHELLY: EVENT_DEFEAT_SHELLY
 EVENT_ENCOUNTER_LATIAS: EVENT_ENCOUNTER_LATIAS
 EVENT_ENCOUNTER_MEW: EVENT_ENCOUNTER_MEW
 EVENT_ENCOUNTER_DEOXYS: EVENT_ENCOUNTER_DEOXYS
@@ -133,65 +159,76 @@ EVENT_DEFEAT_JUAN: EVENT_DEFEAT_JUAN
 EVENT_VISITED_PACIFIDLOG_TOWN: EVENT_VISITED_PACIFIDLOG_TOWN
 EVENT_VISITED_EVER_GRANDE_CITY: EVENT_VISITED_EVER_GRANDE_CITY
 EVENT_DEFEAT_CHAMPION: EVENT_DEFEAT_CHAMPION
-EVENT_MEET_FLOWER_SHOP_OWNER: EVENT_MEET_FLOWER_SHOP_OWNER
-EVENT_COMPLETE_TRICK_HOUSE_1: EVENT_COMPLETE_TRICK_HOUSE_1
-EVENT_COMPLETE_TRICK_HOUSE_2: EVENT_COMPLETE_TRICK_HOUSE_2
-EVENT_COMPLETE_TRICK_HOUSE_3: EVENT_COMPLETE_TRICK_HOUSE_3
-EVENT_COMPLETE_TRICK_HOUSE_4: EVENT_COMPLETE_TRICK_HOUSE_4
-EVENT_COMPLETE_TRICK_HOUSE_5: EVENT_COMPLETE_TRICK_HOUSE_5
-EVENT_COMPLETE_TRICK_HOUSE_6: EVENT_COMPLETE_TRICK_HOUSE_6
-EVENT_COMPLETE_TRICK_HOUSE_7: EVENT_COMPLETE_TRICK_HOUSE_7
-EVENT_RECOVER_METEORITE: EVENT_RECOVER_METEORITE
-EVENT_ENCOUNTER_LATIOS: EVENT_ENCOUNTER_LATIOS
-EVENT_DEFEAT_SHELLY: EVENT_DEFEAT_SHELLY
-EVENT_RECOVER_DEVON_GOODS: EVENT_RECOVER_DEVON_GOODS
-EVENT_DELIVER_LETTER: EVENT_DELIVER_LETTER
-EVENT_RELEASE_GROUDON: EVENT_RELEASE_GROUDON
-EVENT_ENCOUNTER_REGIROCK: EVENT_ENCOUNTER_REGIROCK
-EVENT_MAGMA_STEALS_METEORITE: EVENT_MAGMA_STEALS_METEORITE
-EVENT_DEFEAT_STEVEN: EVENT_DEFEAT_STEVEN
-EVENT_ENCOUNTER_REGICE: EVENT_ENCOUNTER_REGICE
-EVENT_TURN_OFF_GENERATOR: EVENT_TURN_OFF_GENERATOR
-EVENT_ENCOUNTER_REGISTEEL: EVENT_ENCOUNTER_REGISTEEL
-EVENT_CLEAR_AQUA_HIDEOUT: EVENT_CLEAR_AQUA_HIDEOUT
-EVENT_RELEASE_KYOGRE: EVENT_RELEASE_KYOGRE
-EVENT_ENCOUNTER_RAYQUAZA: EVENT_ENCOUNTER_RAYQUAZA
-EVENT_UNDO_REGI_SEAL: EVENT_UNDO_REGI_SEAL
-EVENT_ENCOUNTER_GROUDON: EVENT_ENCOUNTER_GROUDON
-EVENT_ENCOUNTER_KYOGRE: EVENT_ENCOUNTER_KYOGRE
-Littleroot Town - Aurora Ticket from Norman: Aurora Ticket
-Littleroot Town - Eon Ticket from Norman: Eon Ticket
-Littleroot Town - Mystic Ticket from Norman: Mystic Ticket
-Littleroot Town - Old Sea Map from Norman: Old Sea Map
-Littleroot Town - S.S. Ticket from Norman: HP Up
-Petalburg City - Item Past Pond North: Paralyze Heal
-Petalburg City - Item Past Pond South: PP Up
-Petalburg City - HM03 from Wally's Uncle: Burn Heal
-Petalburg Gym - Balance Badge: Dive Ball
-Rustboro City - Item Behind Fences: Elixir
-Rustboro Gym - Stone Badge: HM07 Waterfall
-Devon Corp 3F - Letter from Mr. Stone: Nugget
-Rustboro City - HM01 from Cutter's House: Escape Rope
-Dewford Town - Old Rod from Fisherman: Old Rod
-Dewford Gym - Knuckle Badge: Knuckle Badge
-Mauville City - Item: Ultra Ball
-Mauville City - Basement Key from Wattson: Rare Candy
-Mauville Gym - Dynamo Badge: Revive
-Mauville City - Acro Bike: Acro Bike
-Mauville City - Mach Bike: Mach Bike
-Mauville City - HM06 from Rock Smash Guy: Dire Hit
-Mauville City - Coin Case from Lady in House: Calcium
-Lavaridge Town - Go Goggles from Rival: HM06 Rock Smash
-Lavaridge Gym - Heat Badge: Basement Key
-Fortree Gym - Feather Badge: HP Up
-Lilycove City - Item on Peninsula: Wailmer Pail
-Lilycove City - Pokeblock Case from Contest Hall: Ether
-Mossdeep City - Item: Super Repel
-Mossdeep Gym - Mind Badge: Stardust
-Mossdeep City - HM08 from Steven's House: Elixir
-Mossdeep City - Super Rod from Fisherman in House: Super Rod
-Sootopolis City - HM07 from Wallace: Ultra Ball
-Sootopolis Gym - Rain Badge: Fire Stone
+Petalburg Woods - Item Northwest: Full Heal
+Petalburg Woods - Item Southwest: Carbos
+Petalburg Woods - Item Past Tree Northeast: Repel
+Petalburg Woods - Item Past Tree South: HM03 Surf
+Rusturf Tunnel - Item West: Heat Badge
+Rusturf Tunnel - Recover Devon Goods: HM01 Cut
+Rusturf Tunnel - Item East: Luxury Ball
+Rusturf Tunnel - HM04 from Tunneler: Revival Herb
+Granite Cave 1F - Item Before Ladder: Mech Mail
+Granite Cave 1F - HM05 from Hiker: Star Piece
+Granite Cave B1F - Item in Alcove: Stone Badge
+Granite Cave B2F - Item After Mud Slope: Poke Ball
+Granite Cave B2F - Item After Crumbling Floor: TM06
+Fiery Path - Item Behind Boulders 1: Moon Stone
+Fiery Path - Item Behind Boulders 2: S.S. Ticket
+Magma Hideout 1F - Item on Ledge: Rain Badge
+Magma Hideout 2F - Item on West Platform: Rare Candy
+Magma Hideout 2F - Item on East Platform: Thunder Stone
+Magma Hideout 3F - Item Before Last Floor: TM18
+Magma Hideout 3F - Item in Drill Room: Scanner
+Magma Hideout 3F - Item After Groudon: Wave Mail
+Magma Hideout 4F - Item Before Groudon: HM02 Fly
+Meteor Falls 1F - Item Northeast: Full Heal
+Meteor Falls 1F - Item West: PP Max
+Meteor Falls 1F - Item Before Steven's Cave: X Speed
+Meteor Falls 1F - Item Below Waterfall: Max Elixir
+Meteor Falls B1F - Item in North Cave: Wood Mail
+Abandoned Ship - Captain's Office Key: Shadow Mail
+Abandoned Ship 1F - Item in East Side Northwest Room: X Special
+Abandoned Ship 1F - Item in West Side North Room: Great Ball
+Abandoned Ship B1F - Item in South Rooms: TM48
+Abandoned Ship B1F - Item in North Rooms: Super Repel
+Abandoned Ship B1F - Item in Storage Room: Harbor Mail
+Abandoned Ship HF - Room 6 Key: Magma Emblem
+Abandoned Ship HF - Room 2 Key: Dynamo Badge
+Abandoned Ship HF - Item in Room 6: Poke Ball
+Abandoned Ship HF - Room 4 Key: Iron
+Abandoned Ship HF - Item in Room 1: Hyper Potion
+Abandoned Ship HF - Scanner: Star Piece
+Abandoned Ship HF - Room 1 Key: Pokeblock Case
+Abandoned Ship HF - Item in Room 3: Net Ball
+New Mauville - Item 1: Ether
+New Mauville - Item 3: Mind Badge
+New Mauville - Item 2: X Attack
+New Mauville - Item 4: Great Ball
+New Mauville - Item 5: Bead Mail
+Scorched Slab - Item: Potion
+Mt Pyre 2F - Item: TM26
+Mt Pyre 3F - Item: Harbor Mail
+Mt Pyre 4F - Item: Elixir
+Mt Pyre 5F - Item: Max Ether
+Mt Pyre 6F - Item: PP Up
+Mt Pyre Exterior - Item 2: Rare Candy
+Mt Pyre Exterior - Item 1: Revive
+Mt Pyre Summit - Magma Emblem from Old Lady: Nest Ball
+Aqua Hideout B1F - Item in East Room: Potion
+Aqua Hideout B1F - Item in Center Room 1: TM23
+Aqua Hideout B1F - Item in Center Room 2: Rare Candy
+Aqua Hideout B2F - Item in Long Hallway: TM11
+Shoal Cave Entrance - Item on Ledge: Tropic Mail
+Shoal Cave Inner Room - Item in Center: Room 1 Key
+Shoal Cave Stairs Room - Item: Storage Key
+Shoal Cave Ice Room - Item 1: Protein
+Shoal Cave Ice Room - Item 2: Carbos
+Seafloor Cavern Room 9 - Item Before Kyogre: Water Stone
+Victory Road 1F - Item East: Room 2 Key
+Victory Road 1F - Item on Southeast Ledge: X Defend
+Victory Road B1F - Item on Northeast Ledge: Escape Rope
+Victory Road B1F - Item Behind Boulders: Nest Ball
+Victory Road B2F - Item Above Waterfall: Blue Shard
 Route 102 - Item: HM05 Flash
 Route 103 - Item Near Berries: HM04 Strength
 Route 103 - Item in Tree Maze: TM30
@@ -290,78 +327,41 @@ Route 133 - Item 2: Nugget
 Route 133 - Item 3: Potion
 Route 134 - Item 1: Calcium
 Route 134 - Item 2: Ether
-Petalburg Woods - Item Northwest: Full Heal
-Petalburg Woods - Item Southwest: Carbos
-Petalburg Woods - Item Past Tree Northeast: Repel
-Petalburg Woods - Item Past Tree South: HM03 Surf
-Rusturf Tunnel - Item West: Heat Badge
-Rusturf Tunnel - Recover Devon Goods: HM01 Cut
-Rusturf Tunnel - Item East: Luxury Ball
-Rusturf Tunnel - HM04 from Tunneler: Revival Herb
-Granite Cave 1F - Item Before Ladder: Mech Mail
-Granite Cave 1F - HM05 from Hiker: Star Piece
-Granite Cave B1F - Item in Alcove: Stone Badge
-Granite Cave B2F - Item After Mud Slope: Poke Ball
-Granite Cave B2F - Item After Crumbling Floor: TM06
-Fiery Path - Item Behind Boulders 1: Moon Stone
-Fiery Path - Item Behind Boulders 2: S.S. Ticket
-Magma Hideout 1F - Item on Ledge: Rain Badge
-Magma Hideout 2F - Item on West Platform: Rare Candy
-Magma Hideout 2F - Item on East Platform: Thunder Stone
-Magma Hideout 3F - Item Before Last Floor: TM18
-Magma Hideout 3F - Item in Drill Room: Scanner
-Magma Hideout 3F - Item After Groudon: Wave Mail
-Magma Hideout 4F - Item Before Groudon: HM02 Fly
-Meteor Falls 1F - Item Northeast: Full Heal
-Meteor Falls 1F - Item West: PP Max
-Meteor Falls 1F - Item Before Steven's Cave: X Speed
-Meteor Falls 1F - Item Below Waterfall: Max Elixir
-Meteor Falls B1F - Item in North Cave: Wood Mail
-Abandoned Ship - Captain's Office Key: Shadow Mail
-Abandoned Ship 1F - Item in East Side Northwest Room: X Special
-Abandoned Ship 1F - Item in West Side North Room: Great Ball
-Abandoned Ship B1F - Item in South Rooms: TM48
-Abandoned Ship B1F - Item in North Rooms: Super Repel
-Abandoned Ship B1F - Item in Storage Room: Harbor Mail
-Abandoned Ship HF - Room 6 Key: Magma Emblem
-Abandoned Ship HF - Room 2 Key: Dynamo Badge
-Abandoned Ship HF - Item in Room 6: Poke Ball
-Abandoned Ship HF - Room 4 Key: Iron
-Abandoned Ship HF - Item in Room 1: Hyper Potion
-Abandoned Ship HF - Scanner: Star Piece
-Abandoned Ship HF - Room 1 Key: Pokeblock Case
-Abandoned Ship HF - Item in Room 3: Net Ball
-New Mauville - Item 1: Ether
-New Mauville - Item 3: Mind Badge
-New Mauville - Item 2: X Attack
-New Mauville - Item 4: Great Ball
-New Mauville - Item 5: Bead Mail
-Scorched Slab - Item: Potion
-Mt Pyre 2F - Item: TM26
-Mt Pyre 3F - Item: Harbor Mail
-Mt Pyre 4F - Item: Elixir
-Mt Pyre 5F - Item: Max Ether
-Mt Pyre 6F - Item: PP Up
-Mt Pyre Exterior - Item 2: Rare Candy
-Mt Pyre Exterior - Item 1: Revive
-Mt Pyre Summit - Magma Emblem from Old Lady: Nest Ball
-Aqua Hideout B1F - Item in East Room: Potion
-Aqua Hideout B1F - Item in Center Room 1: TM23
-Aqua Hideout B1F - Item in Center Room 2: Rare Candy
-Aqua Hideout B2F - Item in Long Hallway: TM11
-Shoal Cave Entrance - Item on Ledge: Tropic Mail
-Shoal Cave Inner Room - Item in Center: Room 1 Key
-Shoal Cave Stairs Room - Item: Storage Key
-Shoal Cave Ice Room - Item 1: Protein
-Shoal Cave Ice Room - Item 2: Carbos
-Seafloor Cavern Room 9 - Item Before Kyogre: Water Stone
-Victory Road 1F - Item East: Room 2 Key
-Victory Road 1F - Item on Southeast Ledge: X Defend
-Victory Road B1F - Item on Northeast Ledge: Escape Rope
-Victory Road B1F - Item Behind Boulders: Nest Ball
-Victory Road B2F - Item Above Waterfall: Blue Shard
 Artisan Cave 1F - Item: Letter
 Artisan Cave B1F - Item: HM08 Dive
+Littleroot Town - Aurora Ticket from Norman: Aurora Ticket
+Littleroot Town - Eon Ticket from Norman: Eon Ticket
+Littleroot Town - Mystic Ticket from Norman: Mystic Ticket
+Littleroot Town - Old Sea Map from Norman: Old Sea Map
+Littleroot Town - S.S. Ticket from Norman: HP Up
+Petalburg City - Item Past Pond North: Paralyze Heal
+Petalburg City - Item Past Pond South: PP Up
+Petalburg City - HM03 from Wally's Uncle: Burn Heal
+Petalburg Gym - Balance Badge: Dive Ball
+Rustboro City - Item Behind Fences: Elixir
+Rustboro Gym - Stone Badge: HM07 Waterfall
+Devon Corp 3F - Letter from Mr. Stone: Nugget
+Rustboro City - HM01 from Cutter's House: Escape Rope
+Dewford Town - Old Rod from Fisherman: Old Rod
+Dewford Gym - Knuckle Badge: Knuckle Badge
+Mauville City - Item: Ultra Ball
+Mauville City - Basement Key from Wattson: Rare Candy
+Mauville Gym - Dynamo Badge: Revive
+Mauville City - Acro Bike: Acro Bike
+Mauville City - Mach Bike: Mach Bike
+Mauville City - HM06 from Rock Smash Guy: Dire Hit
+Mauville City - Coin Case from Lady in House: Calcium
+Lavaridge Town - Go Goggles from Rival: HM06 Rock Smash
+Lavaridge Gym - Heat Badge: Basement Key
+Fortree Gym - Feather Badge: HP Up
+Lilycove City - Item on Peninsula: Wailmer Pail
+Lilycove City - Pokeblock Case from Contest Hall: Ether
+Mossdeep City - Item: Super Repel
+Mossdeep Gym - Mind Badge: Stardust
+Mossdeep City - HM08 from Steven's House: Elixir
+Mossdeep City - Super Rod from Fisherman in House: Super Rod
+Sootopolis City - HM07 from Wallace: Ultra Ball
+Sootopolis Gym - Rain Badge: Fire Stone
 
 Playthrough:
 
@@ -8440,10 +8440,8 @@ MAP_ROUTE104_WATER_ENCOUNTERS_1
    =>   REGION_OLDALE_TOWN/MAIN -> REGION_OLDALE_TOWN/MAIN -> REGION_ROUTE102/MAIN
    =>   REGION_ROUTE102/MAIN -> REGION_ROUTE102/MAIN -> REGION_PETALBURG_CITY/MAIN
    =>   REGION_PETALBURG_CITY/MAIN -> REGION_PETALBURG_CITY/MAIN -> REGION_ROUTE104/SOUTH
-   =>   REGION_ROUTE104/SOUTH -> MAP_ROUTE104:4,5/MAP_PETALBURG_WOODS:2,3
-   =>   REGION_PETALBURG_WOODS/WEST_PATH -> MAP_PETALBURG_WOODS:0,1/MAP_ROUTE104:2,3
-   =>   REGION_ROUTE104/NORTH -> REGION_ROUTE104/NORTH -> REGION_ROUTE104/NORTH_POND
-   =>   REGION_ROUTE104/NORTH_POND -> REGION_ROUTE104/NORTH_POND -> MAP_ROUTE104_WATER_ENCOUNTERS
+   =>   REGION_ROUTE104/SOUTH -> REGION_ROUTE104/SOUTH -> REGION_ROUTE104/SOUTH_WATER
+   =>   REGION_ROUTE104/SOUTH_WATER -> REGION_ROUTE104/SOUTH_WATER -> MAP_ROUTE104_WATER_ENCOUNTERS
    =>   MAP_ROUTE104_WATER_ENCOUNTERS
 MAP_ROUTE104_WATER_ENCOUNTERS_2
         Menu -> Start Game
@@ -8452,10 +8450,8 @@ MAP_ROUTE104_WATER_ENCOUNTERS_2
    =>   REGION_OLDALE_TOWN/MAIN -> REGION_OLDALE_TOWN/MAIN -> REGION_ROUTE102/MAIN
    =>   REGION_ROUTE102/MAIN -> REGION_ROUTE102/MAIN -> REGION_PETALBURG_CITY/MAIN
    =>   REGION_PETALBURG_CITY/MAIN -> REGION_PETALBURG_CITY/MAIN -> REGION_ROUTE104/SOUTH
-   =>   REGION_ROUTE104/SOUTH -> MAP_ROUTE104:4,5/MAP_PETALBURG_WOODS:2,3
-   =>   REGION_PETALBURG_WOODS/WEST_PATH -> MAP_PETALBURG_WOODS:0,1/MAP_ROUTE104:2,3
-   =>   REGION_ROUTE104/NORTH -> REGION_ROUTE104/NORTH -> REGION_ROUTE104/NORTH_POND
-   =>   REGION_ROUTE104/NORTH_POND -> REGION_ROUTE104/NORTH_POND -> MAP_ROUTE104_WATER_ENCOUNTERS
+   =>   REGION_ROUTE104/SOUTH -> REGION_ROUTE104/SOUTH -> REGION_ROUTE104/SOUTH_WATER
+   =>   REGION_ROUTE104/SOUTH_WATER -> REGION_ROUTE104/SOUTH_WATER -> MAP_ROUTE104_WATER_ENCOUNTERS
    =>   MAP_ROUTE104_WATER_ENCOUNTERS
 MAP_ROUTE105_FISHING_ENCOUNTERS_GOOD_ROD_1
         Menu -> Start Game

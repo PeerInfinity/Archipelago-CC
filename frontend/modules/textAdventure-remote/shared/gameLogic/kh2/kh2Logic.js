@@ -182,7 +182,7 @@ export const helperFunctions = {
 
     // If AutoFormLogic is disabled or this is for fight logic, just check the form itself
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const autoFormLogic = settings.AutoFormLogic ?? false;
 
     if (!autoFormLogic || fightLogic) {
@@ -223,7 +223,7 @@ export const helperFunctions = {
    */
   get_form_level_requirement(snapshot, staticData, amount) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const finalFormLogic = settings.FinalFormLogic ?? 1; // Default: light_and_darkness
 
     let formsAvailable = 0;
@@ -277,7 +277,7 @@ export const helperFunctions = {
    */
   level_locking_unlock(snapshot, staticData, amount) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
 
     // Check if Promise Charm option is enabled and player has Promise Charm
     // Note: The Promise_Charm setting is not currently exported in rules.json
@@ -343,7 +343,7 @@ export const helperFunctions = {
    */
   get_prison_keeper_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const defensiveTool = ['Reflect Element', 'Guard'];
@@ -370,7 +370,7 @@ export const helperFunctions = {
    */
   get_shan_yu_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const gapCloser = ['Slide Dash', 'Flash Step'];
@@ -400,7 +400,7 @@ export const helperFunctions = {
    */
   get_dark_thorn_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
@@ -433,7 +433,7 @@ export const helperFunctions = {
    */
   get_fire_lord_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
@@ -462,7 +462,7 @@ export const helperFunctions = {
    */
   get_blizzard_lord_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
@@ -518,7 +518,7 @@ export const helperFunctions = {
    */
   get_thresholder_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     // Define item categories (from worlds/kh2/Logic.py)
@@ -567,7 +567,7 @@ export const helperFunctions = {
    */
   get_demyx_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const defensiveTool = ['Reflect Element', 'Guard'];
@@ -601,7 +601,7 @@ export const helperFunctions = {
    */
   get_cor_first_fight_movement_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     if (fightLogic === 0) { // easy: quick run 3 or wisdom 5
@@ -626,7 +626,7 @@ export const helperFunctions = {
    */
   get_cor_first_fight_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const notHardCorToolsDict = {
@@ -664,7 +664,7 @@ export const helperFunctions = {
    */
   get_cor_skip_first_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
 
     // Check if CoR skip is enabled
     if (!settings.CorSkipToggle) {
@@ -713,7 +713,7 @@ export const helperFunctions = {
    */
   get_cor_second_fight_movement_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
     const magic = ['Fire Element', 'Blizzard Element', 'Thunder Element', 'Reflect Element', 'Cure Element', 'Magnet Element'];
 
@@ -741,7 +741,7 @@ export const helperFunctions = {
    */
   get_cerberus_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const defensiveTool = ['Reflect Element', 'Guard'];
@@ -764,7 +764,7 @@ export const helperFunctions = {
    */
   get_olympus_pete_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const gapCloser = ['Slide Dash', 'Flash Step'];
@@ -791,7 +791,7 @@ export const helperFunctions = {
    */
   get_hydra_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const blackMagic = ['Fire Element', 'Blizzard Element', 'Thunder Element'];
@@ -818,7 +818,7 @@ export const helperFunctions = {
    */
   get_hades_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const gapCloser = ['Slide Dash', 'Flash Step'];
@@ -846,7 +846,7 @@ export const helperFunctions = {
    */
   get_ansem_riku_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const gapCloser = ['Slide Dash', 'Flash Step'];
@@ -920,7 +920,7 @@ export const helperFunctions = {
    */
   get_storm_rider_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const defensiveTool = ['Reflect Element', 'Guard'];
@@ -948,7 +948,7 @@ export const helperFunctions = {
    */
   get_barbosa_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const defensiveTool = ['Reflect Element', 'Guard'];
@@ -980,7 +980,7 @@ export const helperFunctions = {
    */
   get_scar_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     if (fightLogic === 0) { // easy: Reflect, Thunder, Fire
@@ -1002,7 +1002,7 @@ export const helperFunctions = {
    */
   get_hostile_program_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
@@ -1030,7 +1030,7 @@ export const helperFunctions = {
    */
   get_transport_fight_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const transportTools = {
@@ -1065,7 +1065,7 @@ export const helperFunctions = {
    */
   get_transport_movement_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const magic = ['Fire Element', 'Blizzard Element', 'Thunder Element',
@@ -1122,7 +1122,7 @@ export const helperFunctions = {
    */
   get_future_pete_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const defensiveTool = ['Reflect Element', 'Guard'];
@@ -1149,7 +1149,7 @@ export const helperFunctions = {
    */
   get_experiment_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
@@ -1177,7 +1177,7 @@ export const helperFunctions = {
    */
   get_groundshaker_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const airComboCount = snapshot?.inventory?.['Air Combo Plus'] || 0;
@@ -1205,7 +1205,7 @@ export const helperFunctions = {
    */
   get_xaldin_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const aerialMove = ['Aerial Dive', 'Aerial Spiral', 'Horizontal Slash', 'Aerial Sweep', 'Aerial Finish'];
@@ -1237,7 +1237,7 @@ export const helperFunctions = {
    */
   get_data_xaldin_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     if (fightLogic === 0) { // easy
@@ -1265,7 +1265,7 @@ export const helperFunctions = {
    */
   get_data_axel_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     // Limit level 5 requirement: form_list_unlock(Limit Form, 3)
@@ -1296,7 +1296,7 @@ export const helperFunctions = {
    */
   get_mcp_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
@@ -1324,7 +1324,7 @@ export const helperFunctions = {
    */
   get_titan_cup_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const summons = ['Chicken Little', 'Stitch', 'Genie', 'Peter Pan'];
@@ -1358,7 +1358,7 @@ export const helperFunctions = {
    */
   get_genie_jafar_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const defensiveTool = ['Reflect Element', 'Guard'];
@@ -1384,7 +1384,7 @@ export const helperFunctions = {
    */
   get_roxas_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const easyRoxasTools = {
@@ -1429,7 +1429,7 @@ export const helperFunctions = {
    */
   get_xigbar_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const easyXigbarTools = {
@@ -1478,7 +1478,7 @@ export const helperFunctions = {
    */
   get_luxord_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const easyLuxordTools = {
@@ -1526,7 +1526,7 @@ export const helperFunctions = {
    */
   get_saix_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const easySaixTools = {
@@ -1574,7 +1574,7 @@ export const helperFunctions = {
    */
   get_data_lexaeus_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const easyDataLexTools = {
@@ -1620,7 +1620,7 @@ export const helperFunctions = {
    */
   get_data_marluxia_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const easyDataMarluxiaTools = {
@@ -1668,7 +1668,7 @@ export const helperFunctions = {
    */
   get_cerberus_cup_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const forms = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
@@ -1709,7 +1709,7 @@ export const helperFunctions = {
    */
   get_pain_and_panic_cup_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const partyLimit = ['Donald Fantasia', 'Donald Flare Force', 'Teamwork', 'Tornado Fusion'];
@@ -1772,7 +1772,7 @@ export const helperFunctions = {
    */
   get_thousand_heartless_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const easyThousandHeartlessTools = {
@@ -1806,7 +1806,7 @@ export const helperFunctions = {
    */
   get_data_roxas_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const easyDataRoxasTools = {
@@ -1873,7 +1873,7 @@ export const helperFunctions = {
    */
   get_data_demyx_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const easyDataDemyxTools = {
@@ -1928,7 +1928,7 @@ export const helperFunctions = {
    */
   get_sephiroth_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const easySephirothTools = {
@@ -2004,7 +2004,7 @@ export const helperFunctions = {
    */
   get_grim_reaper2_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const defensiveTool = ['Reflect Element', 'Guard'];
@@ -2029,7 +2029,7 @@ export const helperFunctions = {
    */
   get_data_luxord_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const easyDataLuxordTools = {
@@ -2064,7 +2064,7 @@ export const helperFunctions = {
    */
   get_xemnas_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const gapCloser = ['Slide Dash', 'Flash Step'];
@@ -2110,7 +2110,7 @@ export const helperFunctions = {
    */
   get_armored_xemnas_one_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
@@ -2136,7 +2136,7 @@ export const helperFunctions = {
    */
   get_armored_xemnas_two_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const gapCloser = ['Slide Dash', 'Flash Step'];
@@ -2161,7 +2161,7 @@ export const helperFunctions = {
    */
   get_final_xemnas_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const gapCloser = ['Slide Dash', 'Flash Step'];
@@ -2183,7 +2183,7 @@ export const helperFunctions = {
    */
   get_data_xigbar_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
@@ -2230,7 +2230,7 @@ export const helperFunctions = {
    */
   get_data_zexion_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
@@ -2282,7 +2282,7 @@ export const helperFunctions = {
    */
   get_data_larxene_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const gapCloser = ['Slide Dash', 'Flash Step'];
@@ -2341,7 +2341,7 @@ export const helperFunctions = {
    */
   get_data_vexen_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const gapCloser = ['Slide Dash', 'Flash Step'];
@@ -2406,7 +2406,7 @@ export const helperFunctions = {
    */
   get_data_saix_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const gapCloser = ['Slide Dash', 'Flash Step'];
@@ -2468,7 +2468,7 @@ export const helperFunctions = {
    */
   get_data_xemnas_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const gapCloser = ['Slide Dash', 'Flash Step'];
@@ -2536,7 +2536,7 @@ export const helperFunctions = {
    */
   get_terra_rules(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || 1;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot] ?? {};
+    const settings = staticData?.world?.[playerSlot] ?? {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const gapCloser = ['Slide Dash', 'Flash Step'];

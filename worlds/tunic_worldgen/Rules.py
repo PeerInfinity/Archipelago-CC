@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachRegion, Compare, False_, Has, HasAll, HasAny, HelperCall, Not, Or
+from rule_builder import True_, False_, And, CanReachRegion, Compare, False_, Has, HasAll, HasAny, HasGroupUnique, HelperCall, Not, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -59,7 +59,7 @@ def _tunicworldgen_can_get_past_bushes(state: "CollectionState", player: int) ->
 
 
 def _tunicworldgen_can_ladder_storage(state: "CollectionState", player: int) -> bool:
-    return (False if not (0) else (True if False else (_tunicworldgen_has_melee(state, player)) or (state.has_any(('Magic Orb', 'Shield'), player))))
+    return (False if not (0) else ((True if False else None)) or ((_tunicworldgen_has_melee(state, player)) or (state.has_any(('Magic Orb', 'Shield'), player))))
 
 
 def _tunicworldgen_can_shop(state: "CollectionState", player: int) -> bool:
@@ -119,7 +119,7 @@ def _tunicworldgen_check_combat_reqs(state: "CollectionState", player: int, area
         return True
     else:
         if (sword_bool) and (('Sword' in equipment)) and (has_magic):
-            equip_list = True
+            equip_list = (item for item in equipment if (item != 'Sword'))
             if ('Magic' not in equip_list):
                 equip_list.append('Magic')
             more_modified_stats = True
@@ -127,7 +127,7 @@ def _tunicworldgen_check_combat_reqs(state: "CollectionState", player: int, area
                 return True
         else:
             if (stick_bool) and (('Stick' in equipment)) and (has_magic):
-                equip_list = True
+                equip_list = (item for item in equipment if (item != 'Stick'))
                 if ('Magic' not in equip_list):
                     equip_list.append('Magic')
                 more_modified_stats = True
@@ -136,6 +136,25 @@ def _tunicworldgen_check_combat_reqs(state: "CollectionState", player: int, area
             else:
                 return False
         return False
+
+
+def _tunicworldgen_get_att_level(state: "CollectionState", player: int) -> bool:
+    att_offerings = state.count('ATT Offering', player)
+    att_upgrades = state.count('Hero Relic - ATT', player)
+    sword_level = state.count('Sword Upgrade', player)
+    if (sword_level >= 3):
+        att_upgrades += min(2, (sword_level - 2))
+    return [(min(8, ((1 + att_offerings) + att_upgrades)) + (1 if state.has("Hero's Laurels", player) else 0)), att_offerings]
+
+
+def _tunicworldgen_get_def_level(state: "CollectionState", player: int) -> bool:
+    def_offerings = state.count('DEF Offering', player)
+    return [((min(8, ((1 + def_offerings) + state.count_from_list(['Hero Relic - DEF', 'Secret Legend', 'Phonomath'], player))) + (2 if state.has('Shield', player) else 0)) + (2 if state.has("Hero's Laurels", player) else 0)), def_offerings]
+
+
+def _tunicworldgen_get_hp_level(state: "CollectionState", player: int) -> bool:
+    hp_offerings = state.count('HP Offering', player)
+    return [((1 + hp_offerings) + state.count('Hero Relic - HP', player)), hp_offerings]
 
 
 def _tunicworldgen_get_money_count(state: "CollectionState", player: int) -> bool:
@@ -151,13 +170,28 @@ def _tunicworldgen_get_money_count(state: "CollectionState", player: int) -> boo
     return money
 
 
+def _tunicworldgen_get_mp_level(state: "CollectionState", player: int) -> bool:
+    mp_offerings = state.count('MP Offering', player)
+    return [((1 + mp_offerings) + state.count_from_list(['Hero Relic - MP', 'Sacred Geometry', 'Vintage', 'Dusty'], player)), mp_offerings]
+
+
 def _tunicworldgen_get_potion_count(state: "CollectionState", player: int) -> int:
     return (state.count('Potion Flask', player) + (state.count('Flask Shard', player) // 3))
 
 
+def _tunicworldgen_get_potion_level(state: "CollectionState", player: int) -> bool:
+    potion_offerings = min(2, state.count('Potion Offering', player))
+    return [((1 + potion_offerings) + state.count_from_list(['Hero Relic - POTION', 'Just Some Pals', 'Spring Falls', 'Back To Work'], player)), potion_offerings]
+
+
+def _tunicworldgen_get_sp_level(state: "CollectionState", player: int) -> bool:
+    sp_offerings = state.count('SP Offering', player)
+    return [((1 + sp_offerings) + state.count_from_list(['Hero Relic - SP', 'Mr Mayor', 'Power Up', 'Regal Weasel', 'Forever Friend'], player)), sp_offerings]
+
+
 def _tunicworldgen_has_ability(state: "CollectionState", player: int, ability = None) -> bool:
     options = state.multiworld.worlds[player].options
-    ability_unlocks = state.multiworld.worlds[player].ability_unlocks
+    ability_unlocks = {'Pages 42-43 (Holy Cross)': 1, 'Pages 52-53 (Icebolt)': 1, 'Pages 24-25 (Prayer)': 1}
     if not (options.ability_shuffling):
         return True
     if (options.hexagon_quest) and ((options.hexagon_quest_ability_type == 0)):
@@ -220,8 +254,10 @@ def _tunicworldgen_has_melee(state: "CollectionState", player: int) -> bool:
 def _tunicworldgen_has_required_stats(state: "CollectionState", player: int, data = None) -> bool:
     money_required = 0
     att_required = data.att_level
+    player_att, att_offerings = _tunicworldgen_get_att_level(state, player)
     if ((data.mp_level > 1)) and (('Magic' in data.equipment)):
         if (player_att < (data.att_level + 2)):
+            player_mp, mp_offerings = _tunicworldgen_get_mp_level(state, player)
             if (player_mp < data.mp_level):
                 return False
             else:
@@ -243,6 +279,8 @@ def _tunicworldgen_has_required_stats(state: "CollectionState", player: int, dat
             money_required += money_per_att
             money_per_att += 50
     if ((data.def_level + data.sp_level) > 2):
+        player_def, def_offerings = _tunicworldgen_get_def_level(state, player)
+        player_sp, sp_offerings = _tunicworldgen_get_sp_level(state, player)
         req_stats = (data.def_level + data.sp_level)
         if ((player_def + player_sp) < req_stats):
             return False
@@ -260,9 +298,11 @@ def _tunicworldgen_has_required_stats(state: "CollectionState", player: int, dat
                         if (sp_required < 0):
                             break
                         upgrade_options.add([paid_def, (stats_to_buy - paid_def)])
-                costs = True
+                costs = (_tunicworldgen_calc_def_sp_cost(state, player, defense, sp) for [defense, sp] in upgrade_options)
                 money_required += 0
     req_effective_hp = _tunicworldgen_calc_effective_hp(state, player, data.hp_level, data.potion_level, data.potion_count)
+    player_potion, potion_offerings = _tunicworldgen_get_potion_level(state, player)
+    player_hp, hp_offerings = _tunicworldgen_get_hp_level(state, player)
     player_potion_count = _tunicworldgen_get_potion_count(state, player)
     player_effective_hp = _tunicworldgen_calc_effective_hp(state, player, player_hp, player_potion, player_potion_count)
     if (player_effective_hp < req_effective_hp):
@@ -281,7 +321,7 @@ def _tunicworldgen_has_required_stats(state: "CollectionState", player: int, dat
                         upgrade_options.add([paid_hp, paid_potion])
                         lowest_hp_added = paid_hp
                         break
-            costs = True
+            costs = (_tunicworldgen_calc_hp_potion_cost(state, player, hp, potion) for [hp, potion] in upgrade_options)
             money_required += 0
     return (_tunicworldgen_get_money_count(state, player) >= money_required)
 
@@ -1362,7 +1402,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Spirit Arena -> Spirit Arena Victory", player),
-        And(HelperCall(helper_func=_tunicworldgen_has_sword, helper_name="has_sword"), True_(), Has('Unseal the Heir'))
+        And(HelperCall(helper_func=_tunicworldgen_has_sword, helper_name="has_sword"), HasGroupUnique('Hero Relics', 6), Has('Unseal the Heir'))
+    )
+    # Register indirect conditions for proper sphere calculation
+    multiworld.register_indirect_condition(
+        world.get_region("Shop"),
+        multiworld.get_entrance("Overworld -> Cube Cave Entrance Region", player)
     )
     # Location rules
     world.set_rule(

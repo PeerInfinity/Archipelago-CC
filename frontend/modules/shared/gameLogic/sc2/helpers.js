@@ -22,7 +22,7 @@ function getPlayer(staticData) {
  */
 function isAdvancedTactics(staticData) {
     const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-    const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+    const settings = staticData?.world?.[playerId];
     const logicLevel = settings?.required_tactics;
     // RequiredTactics.option_standard = 0, anything else means advanced tactics
     return logicLevel !== undefined && logicLevel !== 0;
@@ -304,7 +304,7 @@ export function enemy_intelligence_first_stage_requirement(snapshot, staticData)
  */
 export function enemy_intelligence_second_stage_requirement(snapshot, staticData) {
     const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-    const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+    const settings = staticData?.world?.[playerId];
     const storyTechGranted = settings?.story_tech_granted || false;
 
     return enemy_intelligence_first_stage_requirement(snapshot, staticData)
@@ -330,7 +330,7 @@ export function enemy_intelligence_second_stage_requirement(snapshot, staticData
  */
 export function enemy_intelligence_third_stage_requirement(snapshot, staticData) {
     const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-    const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+    const settings = staticData?.world?.[playerId];
     const storyTechGranted = settings?.story_tech_granted || false;
 
     return enemy_intelligence_second_stage_requirement(snapshot, staticData)
@@ -546,7 +546,7 @@ export function terran_power_rating(snapshot, staticData) {
 
     // Spear of Adun presence - check settings
     const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-    const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+    const settings = staticData?.world?.[playerId];
     const soaPresence = settings?.spear_of_adun_presence;
     const soaPassivePresence = settings?.spear_of_adun_passive_presence;
 
@@ -941,7 +941,7 @@ export function zerg_competent_anti_air(snapshot, staticData) {
 export function zerg_basic_anti_air(snapshot, staticData) {
     const advancedTactics = isAdvancedTactics(staticData);
     const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-    const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+    const settings = staticData?.world?.[playerId];
     const kerriganUnitAvailable = settings?.kerrigan_unit_available || false;
 
     // Check if zerg_competent_anti_air is satisfied
@@ -1097,7 +1097,7 @@ export function basic_kerrigan(snapshot, staticData) {
  */
 export function kerrigan_levels(snapshot, staticData, target) {
     const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-    const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId] ?? {};
+    const settings = staticData?.world?.[playerId] ?? {};
     const storyLevelsGranted = settings.story_levels_granted || false;
     const kerriganUnitAvailable = settings.kerrigan_unit_available || false;
 
@@ -1258,7 +1258,7 @@ function engine_of_destruction_requirement(snapshot, staticData) {
  */
 function the_escape_stuff_granted(snapshot, staticData) {
     const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-    const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+    const settings = staticData?.world?.[playerId];
     const storyTechGranted = settings?.story_tech_granted || false;
     const missionOrder = settings?.mission_order;
     const enabledCampaigns = settings?.enabled_campaigns;
@@ -1447,7 +1447,7 @@ export default {
     },
     zerg_pass_vents: (snapshot, staticData) => {
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+        const settings = staticData?.world?.[playerId];
         const storyTechGranted = settings?.story_tech_granted || false;
         const advancedTactics = isAdvancedTactics(staticData);
 
@@ -1604,7 +1604,7 @@ export default {
      */
     brothers_in_arms_requirement: (snapshot, staticData) => {
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+        const settings = staticData?.world?.[playerId];
         const take_over_ai_allies = settings?.take_over_ai_allies || false;
 
         return (
@@ -1676,7 +1676,7 @@ export default {
     },
     enemy_shadow_domination: (snapshot, staticData) => {
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+        const settings = staticData?.world?.[playerId];
         const storyTechGranted = settings?.story_tech_granted || false;
 
         return storyTechGranted
@@ -1690,7 +1690,7 @@ export default {
     },
     enemy_shadow_first_stage: (snapshot, staticData) => {
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+        const settings = staticData?.world?.[playerId];
         const storyTechGranted = settings?.story_tech_granted || false;
 
         // enemy_shadow_domination check
@@ -1720,7 +1720,7 @@ export default {
     },
     enemy_shadow_second_stage: (snapshot, staticData) => {
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+        const settings = staticData?.world?.[playerId];
         const storyTechGranted = settings?.story_tech_granted || false;
 
         // enemy_shadow_domination check
@@ -1758,7 +1758,7 @@ export default {
     },
     enemy_shadow_door_controls: (snapshot, staticData) => {
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+        const settings = staticData?.world?.[playerId];
         const storyTechGranted = settings?.story_tech_granted || false;
 
         // enemy_shadow_domination check
@@ -1807,7 +1807,7 @@ export default {
     },
     enemy_shadow_victory: (snapshot, staticData) => {
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+        const settings = staticData?.world?.[playerId];
         const storyTechGranted = settings?.story_tech_granted || false;
 
         // enemy_shadow_domination check
@@ -1874,7 +1874,7 @@ export default {
         // (has_any(Immortal, Annihilator) AND has_any(Colossus, Vanguard, Reaver, Dark Templar)
         //  AND has_any(Sentry, High Templar))
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+        const settings = staticData?.world?.[playerId];
         const storyTechGranted = settings?.story_tech_granted || false;
 
         return storyTechGranted
@@ -1899,7 +1899,7 @@ export default {
     },
     the_infinite_cycle_requirement: (snapshot, staticData) => {
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId] ?? {};
+        const settings = staticData?.world?.[playerId] ?? {};
         const storyTechGranted = settings.story_tech_granted || false;
         const kerriganUnitAvailable = settings.kerrigan_unit_available || false;
 
@@ -1911,7 +1911,7 @@ export default {
     },
     harbinger_of_oblivion_requirement: (snapshot, staticData) => {
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+        const settings = staticData?.world?.[playerId];
         const take_over_ai_allies = settings?.take_over_ai_allies || false;
 
         return protoss_anti_armor_anti_air(snapshot, staticData) && (
@@ -1922,7 +1922,7 @@ export default {
     },
     supreme_requirement: (snapshot, staticData) => {
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId] ?? {};
+        const settings = staticData?.world?.[playerId] ?? {};
         const storyTechGranted = settings.story_tech_granted || false;
         const kerriganUnitAvailable = settings.kerrigan_unit_available || false;
 
@@ -1939,7 +1939,7 @@ export default {
     },
     into_the_void_requirement: (snapshot, staticData) => {
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+        const settings = staticData?.world?.[playerId];
         const take_over_ai_allies = settings?.take_over_ai_allies || false;
 
         return protoss_competent_comp(snapshot, staticData)
@@ -1956,7 +1956,7 @@ export default {
     },
     essence_of_eternity_requirement: (snapshot, staticData) => {
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+        const settings = staticData?.world?.[playerId];
         const take_over_ai_allies = settings?.take_over_ai_allies || false;
 
         let defenseScore = terran_defense_rating(snapshot, staticData, false, true);
@@ -1977,7 +1977,7 @@ export default {
     },
     amons_fall_requirement: (snapshot, staticData) => {
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+        const settings = staticData?.world?.[playerId];
         const take_over_ai_allies = settings?.take_over_ai_allies || false;
 
         if (take_over_ai_allies) {
@@ -2011,7 +2011,7 @@ export default {
     },
     the_reckoning_requirement: (snapshot, staticData) => {
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+        const settings = staticData?.world?.[playerId];
         const take_over_ai_allies = settings?.take_over_ai_allies || false;
 
         if (take_over_ai_allies) {
@@ -2029,7 +2029,7 @@ export default {
     all_in_requirement: (snapshot, staticData) => {
         const advancedTactics = isAdvancedTactics(staticData);
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+        const settings = staticData?.world?.[playerId];
         const allInMap = settings?.all_in_map; // 0 = ground, 1 = air
 
         const beatsKerrigan = has_any(snapshot, ['Marine', 'Banshee', 'Ghost']) || advancedTactics;
@@ -2115,7 +2115,7 @@ export default {
     },
     terran_brothers_in_arms_requirement: function(snapshot, staticData) {
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+        const settings = staticData?.world?.[playerId];
         const take_over_ai_allies = settings?.take_over_ai_allies || false;
 
         return (
@@ -2170,7 +2170,7 @@ export default {
     terran_all_in_requirement: function(snapshot, staticData) {
         const advancedTactics = isAdvancedTactics(staticData);
         const playerId = staticData?.player || DEFAULT_PLAYER_ID;
-        const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId];
+        const settings = staticData?.world?.[playerId];
         const allInMap = settings?.all_in_map;
 
         // First check: weapon/armor upgrades must be high enough for very hard missions

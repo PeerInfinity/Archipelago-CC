@@ -897,11 +897,9 @@ export function getStaticGameData(sm) {
     mode: sm.mode,
     // Game-specific information
     game_info: sm.gameInfo,
-    // World data (new structure) with backwards compatibility for settings/world_attributes
-    world: sm.rules?.world || sm.rules?.settings,  // Full world object (game, options, runtime attributes) keyed by player ID
+    // World data - player options and runtime attributes keyed by player ID
+    world: sm.rules?.world,  // Full world object (game, options, runtime attributes) keyed by player ID
     exporter: sm.rules?.exporter,  // Exporter-specific settings (keyed by player ID for multiworld)
-    // Legacy aliases for backwards compatibility
-    settings: sm.rules?.world || sm.rules?.settings,  // Alias for world
     world_attributes: sm.rules?.world_attributes,  // Legacy: now merged into world
     helpers: sm.rules?.helpers,  // Helper function definitions (keyed by player ID for multiworld)
     // Starting items (precollected items)

@@ -24,8 +24,9 @@ class SoEGameExportHandler(BaseGameExportHandler):
         try:
             import pyevermizer
             self.pyevermizer = pyevermizer
-            # Map progress IDs to names
+            # Map progress IDs to names and vice versa
             self.progress_id_to_name = self._build_progress_map()
+            self.name_to_progress_id = {v: k for k, v in self.progress_id_to_name.items()}
             # Get location mapping
             self.location_id_to_raw = self._get_location_mapping()
             logger.info(f"SOE exporter initialized with {len(self.location_id_to_raw)} evermizer locations")
@@ -33,6 +34,7 @@ class SoEGameExportHandler(BaseGameExportHandler):
             logger.warning("Could not import pyevermizer - SOE export may be incomplete")
             self.pyevermizer = None
             self.progress_id_to_name = {}
+            self.name_to_progress_id = {}
             self.location_id_to_raw = {}
 
     def _build_progress_map(self) -> Dict[int, str]:
@@ -232,11 +234,7 @@ class SoEGameExportHandler(BaseGameExportHandler):
                     # Case 2: First arg is pyevermizer.P_XXX
                     elif args[0].get('type') == 'attribute' and args[0].get('object', {}).get('name') == 'pyevermizer':
                         progress_name = args[0].get('attr', '')
-                        # Look up the progress ID
-                        for pid, name in self.progress_id_to_name.items():
-                            if name == progress_name:
-                                progress_id = pid
-                                break
+                        progress_id = self.name_to_progress_id.get(progress_name)
 
                     # Extract count if provided (second argument)
                     if len(args) >= 2 and args[1].get('type') == 'constant':

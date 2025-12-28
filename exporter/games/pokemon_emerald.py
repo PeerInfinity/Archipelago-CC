@@ -39,16 +39,16 @@ class PokemonEmeraldGameExportHandler(GenericGameExportHandler):
 
         return game_info
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Export Pokemon Emerald specific settings."""
-        # Get base settings
-        settings_dict = super().get_settings_data(world, multiworld, player)
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Export Pokemon Emerald specific world data."""
+        # Get base world data
+        world_data = super().get_world_data(world, multiworld, player)
 
-        # Also include hm_requirements in settings for easy access
+        # Also include hm_requirements in world data for easy access
         if hasattr(world, 'hm_requirements'):
-            settings_dict['hm_requirements'] = world.hm_requirements
+            world_data['hm_requirements'] = world.hm_requirements
 
-        return settings_dict
+        return world_data
 
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """

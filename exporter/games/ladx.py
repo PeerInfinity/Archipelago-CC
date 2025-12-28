@@ -1,7 +1,16 @@
-"""Links Awakening DX game-specific export handler."""
+"""Links Awakening DX game-specific export handler.
+
+This exporter handles LADXR-specific data structures:
+- LADXR condition objects (AND, OR, COUNT, FOUND, COUNTS)
+- LADXR item name mapping to Archipelago item names
+- LADXR entrance objects with condition attributes
+
+Most of this code is truly game-specific and cannot be factored out to the base exporter.
+"""
 
 from typing import Dict, Any, Optional
 from .generic import GenericGameExportHandler
+from worlds.ladx.Items import ladxr_item_to_la_item_name
 import logging
 import re
 
@@ -67,24 +76,18 @@ class LADXGameExportHandler(GenericGameExportHandler):
 
     def _convert_ladxr_condition_to_rule(self, condition) -> Optional[Dict[str, Any]]:
         """
-        Convert a LADXR condition object (AND/OR) to a rule structure.
+        Convert a LADXR condition object (AND/OR/COUNT/FOUND/COUNTS) to a rule structure.
 
-        LADXR uses AND and OR classes with private __items and __children attributes.
-        We access them using Python's name mangling.
+        LADXR uses classes with private attributes accessed via Python's name mangling.
         """
-        # Get the class name
         class_name = condition.__class__.__name__
 
-        if class_name == 'OR':
-            # Access private attributes using name mangling
-            items = getattr(condition, '_OR__items', [])
-            children = getattr(condition, '_OR__children', [])
+        # Handle AND/OR conditions (have __items and __children)
+        if class_name in ('AND', 'OR'):
+            items = getattr(condition, f'_{class_name}__items', [])
+            children = getattr(condition, f'_{class_name}__children', [])
 
-            conditions = []
-            # Add item checks
-            for item in items:
-                conditions.append(self._parse_ladxr_item(item))
-            # Recursively convert children
+            conditions = [self._parse_ladxr_item(item) for item in items]
             for child in children:
                 child_rule = self._convert_ladxr_condition_to_rule(child)
                 if child_rule:
@@ -93,113 +96,45 @@ class LADXGameExportHandler(GenericGameExportHandler):
             if len(conditions) == 1:
                 return conditions[0]
             elif len(conditions) > 1:
-                return {
-                    'type': 'or',
-                    'conditions': conditions
-                }
-            else:
-                return None
+                return {'type': class_name.lower(), 'conditions': conditions}
+            return None
 
-        elif class_name == 'AND':
-            # Access private attributes using name mangling
-            items = getattr(condition, '_AND__items', [])
-            children = getattr(condition, '_AND__children', [])
-
-            conditions = []
-            # Add item checks
-            for item in items:
-                conditions.append(self._parse_ladxr_item(item))
-            # Recursively convert children
-            for child in children:
-                child_rule = self._convert_ladxr_condition_to_rule(child)
-                if child_rule:
-                    conditions.append(child_rule)
-
-            if len(conditions) == 1:
-                return conditions[0]
-            elif len(conditions) > 1:
-                return {
-                    'type': 'and',
-                    'conditions': conditions
-                }
-            else:
-                return None
-
-        elif class_name == 'COUNT':
-            # COUNT checks if you have >= amount of an item in current inventory
-            # Access private attributes using name mangling
-            item = getattr(condition, '_COUNT__item', None)
-            amount = getattr(condition, '_COUNT__amount', 1)
+        # Handle COUNT/FOUND conditions (single item with amount)
+        if class_name in ('COUNT', 'FOUND'):
+            item = getattr(condition, f'_{class_name}__item', None)
+            amount = getattr(condition, f'_{class_name}__amount', 1)
 
             if item is None:
-                logger.warning(f"COUNT condition missing item attribute")
+                logger.warning(f"{class_name} condition missing item attribute")
                 return None
 
-            # Map LADXR item name to Archipelago item name
             mapped_item = self._map_ladxr_item_name(item)
-
-            logger.debug(f"LADX COUNT condition: {item} (mapped to {mapped_item}) >= {amount}")
+            logger.debug(f"LADX {class_name} condition: {item} (mapped to {mapped_item}) >= {amount}")
             return {
                 'type': 'item_check',
                 'item': mapped_item,
-                'count': {
-                    'type': 'constant',
-                    'value': amount
-                }
+                'count': {'type': 'constant', 'value': amount}
             }
 
-        elif class_name == 'FOUND':
-            # FOUND checks if you have collected >= amount of an item total (current + used)
-            # For now, treat it the same as COUNT since we don't track "used" items
-            # Access private attributes using name mangling
-            item = getattr(condition, '_FOUND__item', None)
-            amount = getattr(condition, '_FOUND__amount', 1)
-
-            if item is None:
-                logger.warning(f"FOUND condition missing item attribute")
-                return None
-
-            # Map LADXR item name to Archipelago item name
-            mapped_item = self._map_ladxr_item_name(item)
-
-            logger.debug(f"LADX FOUND condition: {item} (mapped to {mapped_item}) >= {amount}")
-            return {
-                'type': 'item_check',
-                'item': mapped_item,
-                'count': {
-                    'type': 'constant',
-                    'value': amount
-                }
-            }
-
-        elif class_name == 'COUNTS':
-            # COUNTS checks if you have >= amount total of any items from a list
-            # Used for instrument count requirements (e.g., need 3 of 8 instruments)
-            # Access private attributes using name mangling
+        # Handle COUNTS condition (multiple items with combined amount)
+        if class_name == 'COUNTS':
             items = getattr(condition, '_COUNTS__items', [])
             amount = getattr(condition, '_COUNTS__amount', 1)
 
             if not items:
-                logger.warning(f"COUNTS condition missing items attribute")
+                logger.warning("COUNTS condition missing items attribute")
                 return None
 
-            # Map LADXR item names to Archipelago item names
             mapped_items = [self._map_ladxr_item_name(item) for item in items]
-
             logger.debug(f"LADX COUNTS condition: {items} (mapped to {mapped_items}) >= {amount}")
             return {
                 'type': 'counts',
                 'items': mapped_items,
-                'count': {
-                    'type': 'constant',
-                    'value': amount
-                }
+                'count': {'type': 'constant', 'value': amount}
             }
 
-        else:
-            # Unknown condition type
-            logger.warning(f"Unknown LADXR condition type: {class_name}")
-            return None
+        logger.warning(f"Unknown LADXR condition type: {class_name}")
+        return None
 
     def _parse_ladxr_condition_string(self, condition_str: str) -> Optional[Dict[str, Any]]:
         """
@@ -244,72 +179,16 @@ class LADXGameExportHandler(GenericGameExportHandler):
     def _map_ladxr_item_name(self, item_str: str) -> str:
         """Map LADXR internal item names to Archipelago item names.
 
-        These mappings must match the actual item names in worlds/ladx/Items.py
+        Uses the canonical mapping from worlds/ladx/Items.py which maps
+        LADXR IDs (e.g., 'POWER_BRACELET') to Archipelago names (e.g., 'Progressive Power Bracelet').
+
+        Special case: 'RUPEES' is an accumulator target, not an actual item.
         """
-        item_name_mapping = {
-            'POWER_BRACELET': 'Progressive Power Bracelet',
-            'SWORD': 'Progressive Sword',
-            'SHIELD': 'Progressive Shield',
-            'MAGIC_POWDER': 'Magic Powder',
-            'MAGIC_ROD': 'Magic Rod',
-            'OCARINA': 'Ocarina',
-            'FEATHER': 'Feather',  # Not "Roc's Feather" - that's just the description
-            'HOOKSHOT': 'Hookshot',
-            'PEGASUS_BOOTS': 'Pegasus Boots',
-            'SHOVEL': 'Shovel',
-            'BOMB': 'Bomb',
-            'BOOMERANG': 'Boomerang',
-            'BOW': 'Bow',
-            'BOWWOW': 'BowWow',
-            'ROOSTER': 'Rooster',
-            'FLIPPERS': 'Flippers',
-            'RUPEES': 'RUPEES',  # Special case for currency
-            # Small Keys - LADXR uses KEY1-KEY9 internally
-            'KEY1': 'Small Key (Tail Cave)',
-            'KEY2': 'Small Key (Bottle Grotto)',
-            'KEY3': 'Small Key (Key Cavern)',
-            'KEY4': 'Small Key (Angler\'s Tunnel)',
-            'KEY5': 'Small Key (Catfish\'s Maw)',
-            'KEY6': 'Small Key (Face Shrine)',
-            'KEY7': 'Small Key (Eagle\'s Tower)',
-            'KEY8': 'Small Key (Turtle Rock)',
-            'KEY9': 'Small Key (Color Dungeon)',
-            # Nightmare Keys - LADXR uses NIGHTMARE_KEY1-9 internally
-            'NIGHTMARE_KEY1': 'Nightmare Key (Tail Cave)',
-            'NIGHTMARE_KEY2': 'Nightmare Key (Bottle Grotto)',
-            'NIGHTMARE_KEY3': 'Nightmare Key (Key Cavern)',
-            'NIGHTMARE_KEY4': 'Nightmare Key (Angler\'s Tunnel)',
-            'NIGHTMARE_KEY5': 'Nightmare Key (Catfish\'s Maw)',
-            'NIGHTMARE_KEY6': 'Nightmare Key (Face Shrine)',
-            'NIGHTMARE_KEY7': 'Nightmare Key (Eagle\'s Tower)',
-            'NIGHTMARE_KEY8': 'Nightmare Key (Turtle Rock)',
-            'NIGHTMARE_KEY9': 'Nightmare Key (Color Dungeon)',
-            # Other special keys
-            'BIRD_KEY': 'Bird Key',
-            'ANGLER_KEY': 'Angler Key',
-            # Ocarina Songs
-            'SONG1': 'Ballad of the Wind Fish',
-            'SONG2': 'Manbo\'s Mambo',
-            'SONG3': 'Frog\'s Song of Soul',
-            # Instruments
-            'INSTRUMENT1': 'Full Moon Cello',
-            'INSTRUMENT2': 'Conch Horn',
-            'INSTRUMENT3': 'Sea Lily\'s Bell',
-            'INSTRUMENT4': 'Surf Harp',
-            'INSTRUMENT5': 'Wind Marimba',
-            'INSTRUMENT6': 'Coral Triangle',
-            'INSTRUMENT7': 'Organ of Evening Calm',
-            'INSTRUMENT8': 'Thunder Drum',
-            # Collectibles
-            'SEASHELL': 'Seashell',
-            'GOLD_LEAF': 'Gold Leaf',
-            # Trading Quest Items
-            'TRADING_ITEM_FISHING_HOOK': 'Fishing Hook',
-            'TRADING_ITEM_NECKLACE': 'Necklace',
-            'TRADING_ITEM_SCALE': 'Scale',
-            # Add more mappings as needed
-        }
-        return item_name_mapping.get(item_str, item_str)
+        # Special case for RUPEES accumulator target
+        if item_str == 'RUPEES':
+            return 'RUPEES'
+        # Use the canonical mapping from the world
+        return ladxr_item_to_la_item_name.get(item_str, item_str)
 
     def _parse_ladxr_item(self, item_str: str) -> Dict[str, Any]:
         """Parse a single LADXR item string into an item_check rule."""

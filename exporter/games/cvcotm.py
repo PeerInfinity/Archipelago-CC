@@ -1,6 +1,6 @@
 """Castlevania - Circle of the Moon specific exporter."""
 
-from typing import Dict, Any, List
+from typing import Dict, Any
 from .generic import GenericGameExportHandler
 import logging
 
@@ -8,6 +8,33 @@ logger = logging.getLogger(__name__)
 
 class CvCotMGameExportHandler(GenericGameExportHandler):
     """Expander for Castlevania - Circle of the Moon specific functions."""
+
+    # Options to export at top level of settings (simple value extractions)
+    # Note: required_last_keys is a computed world attribute, not an option,
+    # and is auto-discovered via AUTO_DISCOVER_WORLD_ATTRIBUTES (default True)
+    EXPORTED_OPTIONS = [
+        'nerf_roc_wing',
+        'ignore_cleansing',
+        'iron_maiden_behavior',
+        'completion_goal',
+    ]
+
+    # Helpers that should be preserved as helper calls (not expanded to item checks)
+    # These are defined in get_helper_definitions() and must be preserved
+    HELPERS_TO_PRESERVE = {
+        'has_jump_level_1',
+        'has_jump_level_2',
+        'has_jump_level_3',
+        'has_jump_level_4',
+        'has_jump_level_5',
+        'has_kick',
+        'has_tackle',
+        'has_push',
+        'has_ice_or_stone',
+        'can_touch_water',
+        'broke_iron_maidens',
+        'can_open_ceremonial_door',
+    }
 
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """Return CvCotM item data with corrected classifications.
@@ -38,11 +65,6 @@ class CvCotMGameExportHandler(GenericGameExportHandler):
                 item_data[item_name]['classification'] = 'progression'
 
         return item_data
-
-    def expand_helper(self, helper_name: str, args=None):
-        """Expand CvCotM-specific helper functions."""
-        # For now, preserve helper nodes as-is
-        return None
 
     def get_helper_definitions(self, world) -> Dict[str, Any]:
         """
@@ -178,40 +200,6 @@ class CvCotMGameExportHandler(GenericGameExportHandler):
 
         return helpers
 
-    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
-        """Recursively expand and fix rules for CvCotM."""
-        if not rule:
-            return rule
-
-        rule_type = rule.get('type')
-
-        # Convert function_call with self.method_name to helper calls
-        if rule_type == 'function_call':
-            func = rule.get('function', {})
-            if (func.get('type') == 'attribute' and
-                func.get('object', {}).get('type') == 'name' and
-                func.get('object', {}).get('name') == 'self'):
-                # This is a call to self.method_name - convert to helper
-                method_name = func.get('attr')
-                if method_name:
-                    return {
-                        'type': 'helper',
-                        'name': method_name,
-                        'args': rule.get('args', [])
-                    }
-
-        # Standard helper processing from base class
-        if rule_type == 'helper':
-            expanded = self.expand_helper(rule['name'])
-            return expanded if expanded else rule
-
-        # Recursively process conditions for and/or rules
-        if rule_type in ['and', 'or']:
-            if 'conditions' in rule:
-                rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule['conditions']]
-
-        return rule
-    
     def postprocess_regions(self, multiworld, player: int):
         """Add Menu region if it doesn't exist."""
         try:
@@ -366,29 +354,6 @@ class CvCotMGameExportHandler(GenericGameExportHandler):
             result[player_id] = formatted_regions
 
         return result
-    
-    def get_settings_data(self, world, multiworld, player: int) -> Dict[str, Any]:
-        """Export CvCotM-specific settings."""
-        # Get base settings from parent class
-        settings = super().get_settings_data(world, multiworld, player)
-
-        # Add all CvCotM-specific options that affect logic
-        if hasattr(world, 'options'):
-            options_to_export = [
-                'nerf_roc_wing',
-                'ignore_cleansing',
-                'iron_maiden_behavior',
-                'required_last_keys',
-                'completion_goal',
-            ]
-
-            for option_name in options_to_export:
-                if hasattr(world.options, option_name):
-                    option_value = getattr(world.options, option_name)
-                    # Extract the actual value from the option object
-                    settings[option_name] = getattr(option_value, 'value', option_value)
-
-        return settings
 
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Post-process the exported data to fix any issues."""

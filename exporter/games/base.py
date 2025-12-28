@@ -47,6 +47,12 @@ class BaseGameExportHandler:
     # The exporter will look for classes like ITEMS with attributes that map to item names
     ITEM_NAME_MODULES: List[str] = []
 
+    # Module-level variables to inject into closure_vars for helper analysis.
+    # Maps module path -> list of variable names to import.
+    # Used by prepare_closure_vars() to make module constants available during rule analysis.
+    # Example: {'worlds.mm2.rules': ['robot_masters', 'weapons_to_name']}
+    CLOSURE_VAR_IMPORTS: Dict[str, List[str]] = {}
+
     # Whether to automatically export discovered helpers as definitions
     # When False (default), only whitelisted helpers are exported
     # When True, discovered helpers are exported (minus blacklist)
@@ -67,6 +73,16 @@ class BaseGameExportHandler:
     # When False (default), only explicitly defined WORLD_ATTRIBUTES are exported
     # When True, all simple attributes (bool, int, float, str) on the world instance are exported
     AUTO_DISCOVER_WORLD_ATTRIBUTES: bool = True
+
+    # Whether the analyzer should process if-statements with multiple statements in the body
+    # When False (default), only simple if-statements with a single statement are handled
+    # When True, complex if-statements with multiple statements are combined into compound conditions
+    PROCESS_MULTISTATEMENT_IF_BODIES: bool = True
+
+    # Whether the analyzer should recursively analyze closure variable function calls
+    # When False (default), closure variables are converted to helper calls without recursive analysis
+    # When True, closure variables are recursively analyzed and inlined for complex rule logic
+    RECURSIVELY_ANALYZE_CLOSURES: bool = True
 
     # Whether to export Choice options as numeric values or string keys
     # When True (default), Choice options are exported as integers (e.g., 0, 1, 2)
@@ -92,7 +108,12 @@ class BaseGameExportHandler:
     HELPER_PARAM_MAPPINGS: Dict[str, Dict[str, str]] = {}
 
     # Settings class attributes that control export behavior
-    # These are applied in get_settings_data and can be overridden in subclasses
+    # These are applied in get_world_data and can be overridden in subclasses
+
+    # When True, method calls on 'self' or 'world' (e.g., self.quest_points(), world.quest_points())
+    # are automatically converted to helper function calls in expand_rule.
+    # This is useful for games that define methods on the World class that are used in rules.
+    CONVERT_WORLD_METHODS_TO_HELPERS: bool = True
 
     # When True, eventProcessor uses resolved_items from sphere log instead of base_items
     # Use for games with complex event items or computed tracking items
@@ -135,6 +156,16 @@ class BaseGameExportHandler:
     # (not inlined during rule analysis). This allows games to avoid manually
     # listing computed helpers in HELPERS_TO_PRESERVE.
     AUTO_PRESERVE_COMPUTED_HELPERS: bool = False
+
+    # Mapping of parameter/variable names used in inlined functions to their
+    # corresponding setting names. Applied during expand_rule for 'name' type rules.
+    # Example: {'ow_boss_req': 'ow_boss_requirement'}
+    NAME_REMAPPING: Dict[str, str] = {}
+
+    # Set of setting names that should be converted from 'name' type to 'setting_value' type.
+    # This ensures they are looked up via getSetting which checks the options.* path.
+    # Example: {'open_world', 'ow_boss_requirement'}
+    SETTINGS_TO_CONVERT: Set[str] = set()
 
     def __init__(self, world=None):
         """Initialize the handler with an empty set of discovered helpers.
@@ -181,6 +212,38 @@ class BaseGameExportHandler:
             if module_name and helper_name not in self._discovered_helper_modules:
                 self._discovered_helper_modules[helper_name] = module_name
                 logger.debug(f"Auto-detected module for helper '{helper_name}': {module_name}")
+
+    def register_helpers_from_rule(self, rule: Dict[str, Any]) -> None:
+        """
+        Recursively register all helpers referenced in a rule structure.
+
+        This is useful for games that construct rule structures manually
+        (e.g., from JSON data or hardcoded dictionaries) and need to ensure
+        all referenced helpers are discovered for export.
+
+        Walks through the rule tree and calls register_helper_usage() for
+        any helper nodes found.
+
+        Args:
+            rule: The rule dictionary to scan for helper references
+        """
+        if rule is None or not isinstance(rule, dict):
+            return
+
+        rule_type = rule.get('type')
+        if rule_type == 'helper':
+            helper_name = rule.get('name')
+            if helper_name:
+                self.register_helper_usage(helper_name)
+        elif rule_type in ('and', 'or'):
+            for condition in rule.get('conditions', []):
+                self.register_helpers_from_rule(condition)
+        elif rule_type == 'not':
+            self.register_helpers_from_rule(rule.get('condition'))
+        elif rule_type == 'conditional':
+            self.register_helpers_from_rule(rule.get('test'))
+            self.register_helpers_from_rule(rule.get('if_true'))
+            self.register_helpers_from_rule(rule.get('if_false'))
 
     def get_discovered_helpers(self) -> Set[str]:
         """
@@ -269,6 +332,42 @@ class BaseGameExportHandler:
             self._analyzed_helper_cache = {}
         return self._analyzed_helper_cache.get(helper_name)
 
+    def prepare_closure_vars(self, rule_func: Callable, closure_vars: Dict[str, Any]) -> Dict[str, Any]:
+        """Inject module-level variables into closure_vars for helper analysis.
+
+        This default implementation uses CLOSURE_VAR_IMPORTS to automatically
+        inject module-level constants that are needed during rule analysis.
+
+        Games can override this method for more complex injection logic, such as
+        processing Region objects or handling dynamic module discovery.
+
+        Args:
+            rule_func: The rule function being analyzed (unused in base implementation)
+            closure_vars: The existing closure variables dict
+
+        Returns:
+            Enhanced closure_vars dict with injected module-level variables
+        """
+        if not self.CLOSURE_VAR_IMPORTS:
+            return closure_vars
+
+        enhanced_closure = closure_vars.copy()
+
+        for module_path, var_names in self.CLOSURE_VAR_IMPORTS.items():
+            try:
+                module = importlib.import_module(module_path)
+                for var_name in var_names:
+                    if var_name not in enhanced_closure:
+                        if hasattr(module, var_name):
+                            enhanced_closure[var_name] = getattr(module, var_name)
+                            logger.debug(f"Injected {var_name} from {module_path} into closure_vars")
+                        else:
+                            logger.warning(f"Variable {var_name} not found in module {module_path}")
+            except ImportError as e:
+                logger.warning(f"Could not import module {module_path} for closure injection: {e}")
+
+        return enhanced_closure
+
     @staticmethod
     def count_rule_nodes(rule: Dict[str, Any]) -> int:
         """
@@ -323,10 +422,19 @@ class BaseGameExportHandler:
         if not rule or not isinstance(rule, dict):
             return rule
 
+        # Handle helper type in AST format: {'type': 'helper', 'name': 'helper_name', 'args': [...]}
         if rule.get('type') == 'helper':
             expanded = self.expand_helper(rule['name'], rule.get('args', []))
             if expanded:
                 return self.expand_rule(expanded, _depth + 1)
+
+        # Handle helper type in RB format: {'rule': 'helper_name', '_original_ast_type': 'helper', 'args': [...]}
+        if rule.get('_original_ast_type') == 'helper':
+            helper_name = rule.get('rule', '')
+            if helper_name:
+                expanded = self.expand_helper(helper_name, rule.get('args', []))
+                if expanded:
+                    return self.expand_rule(expanded, _depth + 1)
 
         # Recursively expand children of compound rules
         return self._recursively_expand_rule_children(rule, _depth)
@@ -337,6 +445,12 @@ class BaseGameExportHandler:
 
         This utility method can be called by game-specific expand_rule implementations
         to handle standard recursion after doing game-specific transformations.
+
+        Also handles:
+        - f_string conversion using resolve_f_string
+        - Name remapping using NAME_REMAPPING
+        - Settings conversion using SETTINGS_TO_CONVERT
+        - Recursive processing of item_check items
 
         Args:
             rule: The rule dictionary to process
@@ -350,6 +464,62 @@ class BaseGameExportHandler:
 
         rule_type = rule.get('type')
 
+        # Handle f_string conversion (AST format: type='f_string')
+        if rule_type == 'f_string':
+            resolved = self.resolve_f_string(rule)
+            if resolved is not None:
+                return {'type': 'constant', 'value': resolved}
+            # Fallback: return original rule if we can't resolve
+            return rule
+
+        # Handle f_string conversion (RB format: rule='AST_f_string' with args containing f_string data)
+        # RB format has args with 'parts', 'all_simple', 'value', '_original_ast_type': 'f_string'
+        if rule.get('rule') == 'AST_f_string':
+            args = rule.get('args', {})
+            # If all_simple is true and value is already resolved, use it directly
+            if args.get('all_simple') and 'value' in args:
+                return {'type': 'constant', 'value': args['value']}
+            # Otherwise try to resolve from parts
+            if args.get('_original_ast_type') == 'f_string':
+                resolved = self.resolve_f_string(args)
+                if resolved is not None:
+                    return {'type': 'constant', 'value': resolved}
+            return rule
+
+        # Handle name remapping and settings conversion
+        if rule_type == 'name':
+            name = rule.get('name', '')
+            # First apply any name remapping
+            if name in self.NAME_REMAPPING:
+                name = self.NAME_REMAPPING[name]
+                logger.debug(f"Remapped name '{rule.get('name')}' to '{name}'")
+
+            # Convert known setting names to setting_value type
+            if name in self.SETTINGS_TO_CONVERT:
+                logger.debug(f"Converting name '{name}' to setting_value type")
+                return {'type': 'setting_value', 'setting': name}
+
+            # Otherwise just update the name and return
+            rule['name'] = name
+            return rule
+
+        # Handle item_check with dict item names (e.g., f_string items)
+        # AST format: type='item_check'
+        if rule_type == 'item_check':
+            if isinstance(rule.get('item'), dict):
+                rule['item'] = self.expand_rule(rule['item'], _depth + 1)
+            if isinstance(rule.get('count'), dict):
+                rule['count'] = self.expand_rule(rule['count'], _depth + 1)
+
+        # Handle item_check in RB format: rule='ItemCheck' with args containing item/count
+        if rule.get('rule') == 'ItemCheck':
+            args = rule.get('args', {})
+            if isinstance(args.get('item'), dict):
+                args['item'] = self.expand_rule(args['item'], _depth + 1)
+            if isinstance(args.get('count'), dict):
+                args['count'] = self.expand_rule(args['count'], _depth + 1)
+
+        # Handle compound rules
         if rule_type in ['and', 'or']:
             rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
 
@@ -361,7 +531,96 @@ class BaseGameExportHandler:
             rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)
             rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)
 
+        # Handle compare operations (expand left/right recursively)
+        elif rule_type == 'compare':
+            if 'left' in rule:
+                rule['left'] = self.expand_rule(rule['left'], _depth + 1)
+            if 'right' in rule:
+                rule['right'] = self.expand_rule(rule['right'], _depth + 1)
+
+        # Handle state_method (expand args recursively)
+        elif rule_type == 'state_method':
+            if 'args' in rule:
+                rule['args'] = [
+                    self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) else arg
+                    for arg in rule.get('args', [])
+                ]
+
+        # Handle function_call - convert self.method() or world.method() to helper calls
+        # This allows games to define methods on the World class that are used as rules
+        elif rule_type == 'function_call' and self.CONVERT_WORLD_METHODS_TO_HELPERS:
+            function = rule.get('function', {})
+            if function.get('type') == 'attribute':
+                obj = function.get('object', {})
+                method_name = function.get('attr')
+                # Check if the object is 'self' or 'world' (both refer to the World instance)
+                if obj.get('type') == 'name' and obj.get('name') in ['self', 'world']:
+                    logger.debug(f"Converting {obj.get('name')}.{method_name}() to helper function")
+                    return {
+                        'type': 'helper',
+                        'name': method_name,
+                        'args': []
+                    }
+
+        # Handle option access patterns and resolve to constant values
+        # This handles patterns like:
+        # - self.options.X -> constant value
+        # - state.multiworld.worlds[player].options.X -> constant value
+        elif rule_type == 'attribute':
+            resolved = self._resolve_option_access(rule)
+            if resolved is not None:
+                return resolved
+
         return rule
+
+    def _resolve_option_access(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Resolve option access patterns to constant values.
+
+        Handles patterns like:
+        - self.options.X -> constant value
+        - state.multiworld.worlds[player].options.X -> constant value
+
+        Args:
+            rule: An attribute type rule node
+
+        Returns:
+            A constant rule node if the option was resolved, None otherwise
+        """
+        if rule.get('type') != 'attribute':
+            return None
+
+        option_name = rule.get('attr')
+        obj = rule.get('object', {})
+
+        # Pattern 1: self.options.X or world.options.X
+        if (obj.get('type') == 'attribute' and
+            obj.get('attr') == 'options' and
+            obj.get('object', {}).get('type') == 'name' and
+            obj.get('object', {}).get('name') in ['self', 'world']):
+
+            world = self.world
+            if world and hasattr(world, 'options'):
+                option_value = getattr(world.options, option_name, None)
+                if option_value is not None:
+                    value = getattr(option_value, 'value', option_value)
+                    logger.debug(f"Resolved self.options.{option_name} to constant: {value}")
+                    return {'type': 'constant', 'value': value}
+
+        # Pattern 2: state.multiworld.worlds[player].options.X
+        if (obj.get('type') == 'attribute' and
+            obj.get('attr') == 'options' and
+            obj.get('object', {}).get('type') == 'subscript'):
+
+            world = self.world
+            if world and hasattr(world, 'options'):
+                option_value = getattr(world.options, option_name, None)
+                if option_value is not None:
+                    value = getattr(option_value, 'value', option_value)
+                    logger.debug(f"Resolved state.multiworld.worlds[player].options.{option_name} to constant: {value}")
+                    return {'type': 'constant', 'value': value}
+
+        return None
         
     def expand_helper(self, helper_name: str, args: List[Any] = None) -> Dict[str, Any]:
         """Expand a helper function into basic rule conditions."""
@@ -455,11 +714,12 @@ class BaseGameExportHandler:
         in the body. Some games (like Mario Land 2) have complex if-statements with multiple
         statements that need to be combined into compound conditions.
 
+        Games can either override this method or set PROCESS_MULTISTATEMENT_IF_BODIES = True.
+
         Returns:
             True if multi-statement if-bodies should be processed, False otherwise
         """
-        # Default implementation: don't process multi-statement if-bodies
-        return False
+        return self.PROCESS_MULTISTATEMENT_IF_BODIES
 
     def should_recursively_analyze_closures(self) -> bool:
         """
@@ -469,11 +729,12 @@ class BaseGameExportHandler:
         Some games (like Mario Land 2) need closure variables to be recursively analyzed and
         inlined to properly export complex rule logic.
 
+        Games can either override this method or set RECURSIVELY_ANALYZE_CLOSURES = True.
+
         Returns:
             True if closure variables should be recursively analyzed, False otherwise
         """
-        # Default implementation: don't recursively analyze closures
-        return False
+        return self.RECURSIVELY_ANALYZE_CLOSURES
 
     def get_effective_item_type(self, item_name: str, original_type: str) -> str:
         """
@@ -729,6 +990,9 @@ class BaseGameExportHandler:
 
         Note: Exporter-specific settings are now in get_exporter_settings().
         """
+        # Store world reference for use in expand_rule (option resolution)
+        self.world = world
+
         world_data = {'game': multiworld.game[player]}
 
         # Common multiworld settings (like accessibility)
@@ -914,11 +1178,6 @@ class BaseGameExportHandler:
 
         return world_data
 
-    # Keep get_settings_data as an alias for backwards compatibility
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Deprecated: Use get_world_data instead."""
-        return self.get_world_data(world, multiworld, player)
-
     def get_world_attributes(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract world attributes (computed runtime values) for export.
 
@@ -1013,8 +1272,13 @@ class BaseGameExportHandler:
                     result.append(converted)
                 return result
             # For objects with a 'name' attribute (like Region, Location), just use the name
-            elif hasattr(value, 'name') and isinstance(getattr(value, 'name', None), str):
-                return value.name
+            # Use try/except because some objects (like LADXR Settings) have custom __getattr__
+            # that raises KeyError for unknown attributes instead of returning AttributeError
+            try:
+                if hasattr(value, 'name') and isinstance(getattr(value, 'name', None), str):
+                    return value.name
+            except (KeyError, TypeError):
+                pass  # Attribute lookup failed, object cannot be serialized by name
             return None
 
         def extract_nested_attributes(obj: Any, depth: int = 0) -> Optional[Dict[str, Any]]:
@@ -1034,7 +1298,13 @@ class BaseGameExportHandler:
             result = {}
 
             # Check for namedtuple FIRST (before tuple check, since namedtuples are tuples)
-            if hasattr(obj, '_fields'):
+            # Use try/except because some objects (like LADXR Settings) have custom __getattr__
+            # that raises KeyError for unknown attributes instead of returning AttributeError
+            try:
+                is_namedtuple = hasattr(obj, '_fields')
+            except (KeyError, TypeError):
+                is_namedtuple = False
+            if is_namedtuple:
                 for field in obj._fields:
                     if field.startswith('_'):
                         continue
@@ -1057,11 +1327,15 @@ class BaseGameExportHandler:
                 return None
 
             # Try to get attributes from __dict__ or __slots__
+            # Wrap in try/except in case of custom __getattr__ that raises exceptions
             attrs_to_check = []
-            if hasattr(obj, '__dict__'):
-                attrs_to_check = list(obj.__dict__.keys())
-            elif hasattr(obj, '__slots__'):
-                attrs_to_check = list(obj.__slots__)
+            try:
+                if hasattr(obj, '__dict__'):
+                    attrs_to_check = list(obj.__dict__.keys())
+                elif hasattr(obj, '__slots__'):
+                    attrs_to_check = list(obj.__slots__)
+            except (KeyError, TypeError, AttributeError):
+                pass
 
             for attr in attrs_to_check:
                 if attr.startswith('_'):

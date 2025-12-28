@@ -8,7 +8,7 @@ This document summarizes the exporter simplification work, tests performed, and 
 
 | Attribute | Purpose | Benefit |
 |-----------|---------|---------|
-| `EXPORTED_OPTIONS` | List of option names to extract from `world.options.<name>.value` | Eliminates boilerplate `get_settings_data` methods |
+| `EXPORTED_OPTIONS` | List of option names to extract from `world.options.<name>.value` | Eliminates boilerplate `get_world_data` methods |
 | `AUTO_PRESERVE_LARGE_HELPERS` | Default changed from `True` to `False` | 17/20 exporters had this set to False; now it's the default |
 
 ### 2. Files Removed
@@ -21,8 +21,8 @@ This document summarizes the exporter simplification work, tests performed, and 
 
 | File | Method | Reason |
 |------|--------|--------|
-| `celeste64.py` | `get_settings_data` | Just called `super().get_settings_data()` |
-| `soe.py` | `get_settings_data` | Just called `super().get_settings_data()` |
+| `celeste64.py` | `get_world_data` | Just called `super().get_world_data()` |
+| `soe.py` | `get_world_data` | Just called `super().get_world_data()` |
 | `wargroove.py` | `expand_helper` | Just called `super().expand_helper()` |
 | `sc2.py` | `expand_helper` | Just called `super().expand_helper()` |
 | `cvcotm.py` | `__init__` | Empty - just `super().__init__()` |
@@ -109,14 +109,14 @@ Moving more logic to base classes would break game-specific behavior.
 
 ### 1. COMPUTED_SETTINGS Pattern Adoption
 
-The `COMPUTED_SETTINGS` class attribute (dict mapping setting names to lambdas) is underutilized. Many exporters have simple `get_settings_data` methods that could use this pattern:
+The `COMPUTED_SETTINGS` class attribute (dict mapping setting names to lambdas) is underutilized. Many exporters have simple `get_world_data` methods that could use this pattern:
 
 ```python
 # Current pattern in many exporters:
-def get_settings_data(self, world, multiworld, player):
-    settings = super().get_settings_data(world, multiworld, player)
-    settings['some_value'] = world.some_attribute
-    return settings
+def get_world_data(self, world, multiworld, player):
+    world_data = super().get_world_data(world, multiworld, player)
+    world_data['some_value'] = world.some_attribute
+    return world_data
 
 # Could become:
 COMPUTED_SETTINGS = {
@@ -180,7 +180,7 @@ Some exporters may have methods that are never called due to inheritance. A syst
 
 ## Recommendations
 
-1. **Short-term**: Convert remaining simple `get_settings_data` methods to use `EXPORTED_OPTIONS` or `COMPUTED_SETTINGS`
+1. **Short-term**: Convert remaining simple `get_world_data` methods to use `EXPORTED_OPTIONS` or `COMPUTED_SETTINGS`
 
 2. **Medium-term**: Analyze Hollow Knight and Stardew Valley for size reduction opportunities similar to weighted_sum
 

@@ -4,22 +4,23 @@ Terraria uses a custom DSV (Rules.dsv) rule system with special Condition object
 This exporter converts those conditions to the standard JSON rule format.
 """
 
-from typing import Dict, Any, List, Union, Tuple
+from typing import Dict, Any, List, Union
 from .generic import GenericGameExportHandler
-from BaseClasses import ItemClassification
 import logging
 
 logger = logging.getLogger(__name__)
 
-class TerrariaGameExportHandler(GenericGameExportHandler):
-    """Terraria export handler with custom rule system support."""
 
-    # Export settings at top level so they can be resolved by 'name' type rules
-    COMPUTED_SETTINGS = {
-        'calamity': lambda w, m, p: bool(w.options.calamity.value) if hasattr(w.options, 'calamity') else False,
-        'grindy_achievements': lambda w, m, p: bool(w.options.grindy_achievements.value) if hasattr(w.options, 'grindy_achievements') else False,
-        'getfixedboi': lambda w, m, p: bool(w.options.getfixedboi.value) if hasattr(w.options, 'getfixedboi') else False,
-    }
+class TerrariaGameExportHandler(GenericGameExportHandler):
+    """Terraria export handler with custom rule system support.
+
+    Terraria uses a custom DSV (Rules.dsv) rule system with Condition objects.
+    This exporter converts those conditions to the standard JSON rule format.
+
+    Note: Options like calamity, grindy_achievements, getfixedboi are automatically
+    exported by the base class in the 'options' section. The frontend's getSetting()
+    falls back to options.* so no COMPUTED_SETTINGS are needed.
+    """
 
     def __init__(self):
         super().__init__()
@@ -320,17 +321,17 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
             ]
         }
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Export Terraria-specific settings including minion equipment data."""
-        settings = super().get_settings_data(world, multiworld, player)
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Export Terraria-specific world data including minion equipment data."""
+        world_data = super().get_world_data(world, multiworld, player)
 
         # Export armor minion data for has_minions helper
-        settings['armor_minions'] = dict(self.armor_minions)
+        world_data['armor_minions'] = dict(self.armor_minions)
 
         # Export accessory minion data for has_minions helper
-        settings['accessory_minions'] = dict(self.accessory_minions)
+        world_data['accessory_minions'] = dict(self.accessory_minions)
 
-        return settings
+        return world_data
 
     def get_helper_definitions(self, world) -> Dict[str, Any]:
         """Define computed helpers for Terraria.
