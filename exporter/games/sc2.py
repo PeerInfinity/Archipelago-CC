@@ -1502,26 +1502,8 @@ class SC2GameExportHandler(GenericGameExportHandler):
         """Extract Starcraft 2 settings for export."""
         settings_dict = super().get_world_data(world, multiworld, player)
 
-        # Export all SC2 options
-        if hasattr(world, 'options'):
-            for option_name in dir(world.options):
-                # Skip private attributes and methods
-                if option_name.startswith('_'):
-                    continue
-
-                option = getattr(world.options, option_name, None)
-                if option is None:
-                    continue
-
-                # Extract the value from the option
-                # Options typically have a 'value' attribute
-                if hasattr(option, 'value'):
-                    settings_dict[option_name] = option.value
-                elif isinstance(option, (bool, int, str, float)):
-                    settings_dict[option_name] = option
-
-        # Also export computed logic properties that are used in rules
-        # These are computed from options but accessed as attributes on the logic object
+        # Export computed SC2Logic properties that are used in rules
+        # Note: base class already exports all world.options, so we only add computed properties
         try:
             from worlds.sc2.rules import SC2Logic
             logic = SC2Logic(world)
@@ -1709,56 +1691,3 @@ class SC2GameExportHandler(GenericGameExportHandler):
                 processed[key] = value
 
         return processed
-
-    def _convert_simplified_to_rule_builder(self, simplified: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Convert simplified AST format rule to Rule Builder format.
-
-        The simplified rules from _get_simplified_helper use AST format with
-        'type' key, but we need Rule Builder format with 'rule' key.
-        """
-        if not isinstance(simplified, dict):
-            return simplified
-
-        rule_type = simplified.get('type', '')
-
-        if rule_type == 'constant':
-            value = simplified.get('value', True)
-            return {'rule': 'True' if value else 'False'}
-
-        if rule_type == 'and':
-            conditions = simplified.get('conditions', [])
-            children = [self._convert_simplified_to_rule_builder(c) for c in conditions]
-            return {'rule': 'And', 'children': children}
-
-        if rule_type == 'or':
-            conditions = simplified.get('conditions', [])
-            children = [self._convert_simplified_to_rule_builder(c) for c in conditions]
-            return {'rule': 'Or', 'children': children}
-
-        if rule_type == 'item_check':
-            item = simplified.get('item', '')
-            count = simplified.get('count', 1)
-            if count > 1:
-                return {'rule': 'Has', 'args': {'item_name': item, 'count': count}}
-            return {'rule': 'Has', 'args': {'item_name': item}}
-
-        if rule_type == 'helper':
-            helper_name = simplified.get('name', '')
-            # Check if this nested helper is also blacklisted
-            if helper_name in self.HELPERS_TO_EXPORT_BLACKLIST:
-                nested_simplified = self._get_simplified_helper(helper_name)
-                if nested_simplified:
-                    return self._convert_simplified_to_rule_builder(nested_simplified)
-            # Keep as helper reference
-            return {'rule': helper_name, '_original_ast_type': 'helper'}
-
-        if rule_type == 'count':
-            conditions = simplified.get('conditions', [])
-            count = simplified.get('count', 1)
-            children = [self._convert_simplified_to_rule_builder(c) for c in conditions]
-            return {'rule': 'CountTrue', 'count': count, 'children': children}
-
-        # Unknown type - return as-is with some cleanup
-        logger.debug(f"[SC2] Unknown simplified rule type: {rule_type}")
-        return simplified
