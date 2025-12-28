@@ -106,65 +106,6 @@ class MessengerGameExportHandler(GenericGameExportHandler):
                     ]
                 }
 
-        # Handle location dependency pattern: state.multiworld.get_location(loc, player).can_reach(state)
-        if (rule.get('type') == 'function_call' and
-            rule.get('function', {}).get('type') == 'attribute' and
-            rule.get('function', {}).get('attr') == 'can_reach'):
-
-            func = rule.get('function', {})
-            obj = func.get('object', {})
-
-            if (obj.get('type') == 'function_call' and
-                obj.get('function', {}).get('type') == 'attribute' and
-                obj.get('function', {}).get('attr') == 'get_location'):
-
-                get_loc_func = obj.get('function', {})
-                multiworld_obj = get_loc_func.get('object', {})
-
-                if (multiworld_obj.get('type') == 'attribute' and
-                    multiworld_obj.get('attr') == 'multiworld' and
-                    multiworld_obj.get('object', {}).get('type') == 'name' and
-                    multiworld_obj.get('object', {}).get('name') == 'state'):
-
-                    location_args = obj.get('args', [])
-                    if location_args:
-                        return {'type': 'location_check', 'location': location_args[0]}
-
-        # Handle state_method has_any/has_all rules - convert to or/and with item_check
-        # The frontend's executeStateManagerMethod doesn't handle these correctly,
-        # so we expand them to standard rule types that work reliably
-        if rule.get('type') == 'state_method':
-            method = rule.get('method')
-            args = rule.get('args', [])
-
-            if method == 'has_any' and args:
-                # has_any([item1, item2, ...]) -> or([item_check(item1), item_check(item2), ...])
-                items_arg = args[0]
-                items = self._resolve_items_collection(items_arg)
-
-                if items:
-                    return {
-                        'type': 'or',
-                        'conditions': [
-                            {'type': 'item_check', 'item': {'type': 'constant', 'value': item_name}}
-                            for item_name in items
-                        ]
-                    }
-
-            if method == 'has_all' and args:
-                # has_all([item1, item2, ...]) -> and([item_check(item1), item_check(item2), ...])
-                items_arg = args[0]
-                items = self._resolve_items_collection(items_arg)
-
-                if items:
-                    return {
-                        'type': 'and',
-                        'conditions': [
-                            {'type': 'item_check', 'item': {'type': 'constant', 'value': item_name}}
-                            for item_name in items
-                        ]
-                    }
-
         # Recursive expansion of children is handled by super().expand_rule()
         return rule
 
@@ -216,23 +157,6 @@ class MessengerGameExportHandler(GenericGameExportHandler):
 
         return mapping
 
-    def get_location_attributes(self, location, world) -> Dict[str, Any]:
-        """
-        Get game-specific location attributes to include in the export.
-        For Messenger, this includes shop costs for shop locations.
-        """
-        attributes = {}
-
-        # Check if this is a shop location by looking for 'cost' attribute
-        if hasattr(location, 'cost'):
-            try:
-                cost = location.cost
-                attributes['cost'] = cost
-                logger.debug(f"Exported cost {cost} for shop location {location.name}")
-            except Exception as e:
-                logger.warning(f"Could not get cost for location {location.name}: {e}")
-
-        return attributes
 
     def get_custom_location_access_rule(self, location, world):
         """

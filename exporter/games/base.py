@@ -540,27 +540,74 @@ class BaseGameExportHandler:
 
         # Handle state_method (expand args recursively)
         elif rule_type == 'state_method':
+            method = rule.get('method')
+            args = rule.get('args', [])
+
+            # Convert has_any to 'or' of item_checks
+            if method == 'has_any' and args:
+                items_arg = args[0]
+                items = self._resolve_items_collection(items_arg)
+                if items:
+                    return {
+                        'type': 'or',
+                        'conditions': [
+                            {'type': 'item_check', 'item': {'type': 'constant', 'value': item_name}}
+                            for item_name in items
+                        ]
+                    }
+
+            # Convert has_all to 'and' of item_checks
+            if method == 'has_all' and args:
+                items_arg = args[0]
+                items = self._resolve_items_collection(items_arg)
+                if items:
+                    return {
+                        'type': 'and',
+                        'conditions': [
+                            {'type': 'item_check', 'item': {'type': 'constant', 'value': item_name}}
+                            for item_name in items
+                        ]
+                    }
+
+            # Expand args recursively for other state methods
             if 'args' in rule:
                 rule['args'] = [
                     self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) else arg
                     for arg in rule.get('args', [])
                 ]
 
-        # Handle function_call - convert self.method() or world.method() to helper calls
-        # This allows games to define methods on the World class that are used as rules
-        elif rule_type == 'function_call' and self.CONVERT_WORLD_METHODS_TO_HELPERS:
+        # Handle function_call patterns
+        elif rule_type == 'function_call':
             function = rule.get('function', {})
             if function.get('type') == 'attribute':
                 obj = function.get('object', {})
                 method_name = function.get('attr')
-                # Check if the object is 'self' or 'world' (both refer to the World instance)
-                if obj.get('type') == 'name' and obj.get('name') in ['self', 'world']:
-                    logger.debug(f"Converting {obj.get('name')}.{method_name}() to helper function")
-                    return {
-                        'type': 'helper',
-                        'name': method_name,
-                        'args': []
-                    }
+
+                # Pattern 1: self.method() or world.method() -> helper calls
+                if self.CONVERT_WORLD_METHODS_TO_HELPERS:
+                    if obj.get('type') == 'name' and obj.get('name') in ['self', 'world']:
+                        logger.debug(f"Converting {obj.get('name')}.{method_name}() to helper function")
+                        return {
+                            'type': 'helper',
+                            'name': method_name,
+                            'args': []
+                        }
+
+                # Pattern 2: state.multiworld.get_location(loc, player).can_reach(state) -> location_check
+                if method_name == 'can_reach':
+                    if (obj.get('type') == 'function_call' and
+                        obj.get('function', {}).get('type') == 'attribute' and
+                        obj.get('function', {}).get('attr') == 'get_location'):
+                        get_loc_func = obj.get('function', {})
+                        multiworld_obj = get_loc_func.get('object', {})
+                        if (multiworld_obj.get('type') == 'attribute' and
+                            multiworld_obj.get('attr') == 'multiworld' and
+                            multiworld_obj.get('object', {}).get('type') == 'name' and
+                            multiworld_obj.get('object', {}).get('name') == 'state'):
+                            location_args = obj.get('args', [])
+                            if location_args:
+                                logger.debug(f"Converting get_location().can_reach() to location_check")
+                                return {'type': 'location_check', 'location': location_args[0]}
 
         # Handle option access patterns and resolve to constant values
         # This handles patterns like:
