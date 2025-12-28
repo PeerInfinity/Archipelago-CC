@@ -13,7 +13,7 @@ because some rule engine code paths use executeHelper() instead of
 evaluating the exported helper definitions directly.
 """
 
-from typing import Dict, Any, Set, Optional
+from typing import Dict, Any, Optional
 from .generic import GenericGameExportHandler
 import logging
 
@@ -28,13 +28,13 @@ class AHitGameExportHandler(GenericGameExportHandler):
     ASSUME_BIDIRECTIONAL_EXITS = True
 
     # Auto-discover region attributes
-    AUTO_DISCOVER_REGION_ATTRIBUTES = False
+    AUTO_DISCOVER_REGION_ATTRIBUTES = True
 
     # Auto-discover location attributes
     AUTO_DISCOVER_LOCATION_ATTRIBUTES = False
 
     # Auto-discover world attributes
-    AUTO_DISCOVER_WORLD_ATTRIBUTES = False
+    AUTO_DISCOVER_WORLD_ATTRIBUTES = True
 
     # Module containing helper functions for definition export
     HELPER_MODULES = ['worlds.ahit.Rules']
@@ -207,38 +207,3 @@ class AHitGameExportHandler(GenericGameExportHandler):
 
         return game_info
 
-    def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
-        """Return A Hat in Time item data with classifications."""
-        items_data = {}
-        try:
-            # Import the item_table from the world module
-            from worlds.ahit.Items import item_table
-            from BaseClasses import ItemClassification
-
-            # Classification mapping
-            classification_map = {
-                ItemClassification.progression: 'progression',
-                ItemClassification.progression_skip_balancing: 'progression',
-                ItemClassification.useful: 'useful',
-                ItemClassification.filler: 'filler',
-                ItemClassification.trap: 'trap',
-            }
-
-            for item_name, item_data in item_table.items():
-                # ItemData is a NamedTuple with (code, classification, dlc_flags)
-                classification = classification_map.get(item_data.classification, 'filler')
-                items_data[item_name] = {
-                    'name': item_name,
-                    'id': item_data.code,
-                    'classification': classification,
-                    'groups': [],
-                    'event': False,
-                    'type': None,
-                    'max_count': 1
-                }
-
-            logger.debug(f"Exported {len(items_data)} items for A Hat in Time")
-        except Exception as e:
-            logger.error(f"Error getting A Hat in Time item data: {e}")
-
-        return items_data
