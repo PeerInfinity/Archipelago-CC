@@ -204,7 +204,7 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   # python scripts/test/test-world-generator.py --include-list "Jak and Daxter The Precursor Legacy.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG  # Excluded: Takes too long to process
   python scripts/test/test-world-generator.py --include-list "Kingdom Hearts 2.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Kingdom Hearts.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
-  python scripts/test/test-world-generator.py --include-list "Kirby's Dream Land 3.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
+  # python scripts/test/test-world-generator.py --include-list "Kirby's Dream Land 3.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG # Excluded from worldgen
   python scripts/test/test-world-generator.py --include-list "Landstalker - The Treasures of King Nole.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Lingo.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Links Awakening DX.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
@@ -297,7 +297,7 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   # python Generate.py --weights_file_path "Templates/Jak and Daxter The Precursor Legacy WorldGen.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
   python Generate.py --weights_file_path "Templates/Kingdom Hearts 2 WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Kingdom Hearts WorldGen.yaml" --multi 1 --seed 1
-  python Generate.py --weights_file_path "Templates/Kirby's Dream Land 3 WorldGen.yaml" --multi 1 --seed 1
+  # python Generate.py --weights_file_path "Templates/Kirby's Dream Land 3 WorldGen.yaml" --multi 1 --seed 1  # Excluded from worldgen
   python Generate.py --weights_file_path "Templates/Landstalker - The Treasures of King Nole WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Lingo WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Links Awakening DX WorldGen.yaml" --multi 1 --seed 1

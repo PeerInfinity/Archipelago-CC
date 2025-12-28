@@ -177,6 +177,18 @@ class MessengerGameExportHandler(GenericGameExportHandler):
         # properly track Shards currency from Time Shard items
         world_data['use_paren_number_accumulator'] = True
 
+        # Calculate and export maximum_price for can_shop helper
+        # This is the max cost of the shop tree that can_shop checks against
+        try:
+            demons_bane = multiworld.get_location("The Shop - Demon's Bane", player)
+            focused_power = multiworld.get_location("The Shop - Focused Power Sense", player)
+            max_shop_price = demons_bane.cost + focused_power.cost
+            maximum_price = min(max_shop_price, world.total_shards)
+            world_data['maximum_price'] = maximum_price
+            logger.debug(f"Exported maximum_price={maximum_price} for Messenger")
+        except Exception as e:
+            logger.warning(f"Could not calculate maximum_price: {e}")
+
         return world_data
 
     def get_progression_mapping(self, world) -> Dict[str, Any]:

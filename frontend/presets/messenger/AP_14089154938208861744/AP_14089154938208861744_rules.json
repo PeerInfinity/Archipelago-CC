@@ -7897,6 +7897,7 @@
         ]
       },
       "use_paren_number_accumulator": true,
+      "maximum_price": 4566,
       "world_directory": "messenger"
     }
   },
