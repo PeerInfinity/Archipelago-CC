@@ -8,7 +8,8 @@ source .venv/bin/activate
 ## Common Commands
 | Task | Command |
 |------|---------|
-| Generate + export | `python Generate.py --weights_file_path "Templates/[GameName].yaml" --multi 1 --seed 1` |
+| Seed generation | `python Generate.py --weights_file_path "Templates/[GameName].yaml" --multi 1 --seed 1` |
+| World generation | `python -m world_generator path/to/rules.json` |
 | Test single game | `python scripts/test/test-all-templates.py --include-list "[GameName].yaml"` |
 | Spoiler test only | `npm test -- --mode=test-spoilers --game=[gamename] --seed=1` |
 | Regression test | `npm test --mode=test-regression` |
@@ -25,7 +26,54 @@ source .venv/bin/activate
 
 # Detailed Reference
 
-## Generation and Export
+## Key Concepts: World Generation vs Seed Generation
+
+| Concept | Purpose | Tool | Creates |
+|---------|---------|------|---------|
+| **World Generation** | Create Python world package from JSON rules | `world_generator/` | `worlds/{gamename}/` directory |
+| **Seed Generation** | Run the randomizer to create a playable game | `Generate.py` | `.archipelago`, `_rules.json`, `_Spoiler.txt` |
+
+**World Generation** converts a JSON rules file into a complete Archipelago world package (Python code). This is the *infrastructure* that defines how a game works with Archipelago.
+
+**Seed Generation** uses an existing world to create a randomized playable game instance for a specific seed number.
+
+## World Generation
+
+Creates a Python world package from JSON rules. Used to bootstrap new worlds or recreate worlds from exported rules.
+
+**Command:**
+```
+python -m world_generator frontend/presets/[gamename]/AP_[SEED_ID]/AP_[SEED_ID]_rules.json
+```
+
+**Common options:**
+```
+python -m world_generator rules.json --dry-run                    # preview without writing
+python -m world_generator rules.json --game-name "New Name"       # rename to avoid conflicts
+python -m world_generator rules.json -o worlds/custom/ --force    # specify output, overwrite
+python -m world_generator rules.json --canonical-seed1            # enable seed=1 canonical placement
+```
+
+**Input:**
+- JSON rules file (exported from an existing world via seed generation)
+
+**Output (in `worlds/{game_directory}/`):**
+- `__init__.py` - Main world class (uses `RuleWorldMixin`)
+- `Items.py` - Item definitions and classifications
+- `Locations.py` - Location definitions with region assignments
+- `Regions.py` - Region structure and entrance connections
+- `Rules.py` - Access rules using Rule Builder syntax
+- `Options.py` - Game options
+- `_worldgen_settings.json` - Generation metadata
+
+**WorldGen worlds** use the `_worldgen` suffix (e.g., `alttp_worldgen/`) and inherit from `RuleWorldMixin` for Rule Builder support.
+
+**After generating**, create a template YAML:
+```
+python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+```
+
+## Seed Generation and Export
 
 **Command:**
 ```
@@ -77,13 +125,17 @@ python scripts/setup/update_host_settings.py full-spoilers
 
 | Purpose | Path |
 |---------|------|
+| World generator module | `world_generator/` |
+| World packages | `worlds/` (original), `worlds/*_worldgen/` (generated) |
 | World/game/yaml mapping | `scripts/data/world-mapping.json` |
 | Preset files index | `frontend/presets/preset_files.json` |
 | Rules schema | `frontend/schema/rules.schema.json` |
+| Rule Builder module | `rule_builder/` |
 | Seed ID calculator | `scripts/lib/seed_utils.py` |
 | Frontend logging | `frontend/settings.json` |
 | Claude instructions | `CC/` |
 | Fork documentation | `docs/json/` |
+| World generator guide | `docs/json/developer/guides/world-generator.md` |
 | Repository diffs | `docs/json/developer/diffs/repository-changes.md` |
 | Cloud setup | `CC/cloud-setup.md` |
 
