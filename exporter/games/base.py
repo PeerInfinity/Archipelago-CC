@@ -740,6 +740,9 @@ class BaseGameExportHandler:
         2. Set AUTO_PRESERVE_COMPUTED_HELPERS = True and list helpers in COMPUTED_HELPERS
         3. Override this method for custom logic
 
+        Note: Helpers listed in HELPERS_TO_EXPORT_BLACKLIST are automatically preserved,
+        since complex helpers that can't be exported also shouldn't be inlined.
+
         Args:
             func_name: The name of the function being analyzed
 
@@ -748,6 +751,11 @@ class BaseGameExportHandler:
         """
         # Check the class attribute for preserved helpers
         if func_name in self.HELPERS_TO_PRESERVE:
+            return True
+
+        # Blacklisted helpers are automatically preserved - if a helper is too complex
+        # to export as a definition, it shouldn't be inlined during analysis either
+        if func_name in self.HELPERS_TO_EXPORT_BLACKLIST:
             return True
 
         # Check computed helpers if auto-preservation is enabled
