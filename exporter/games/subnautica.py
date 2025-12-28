@@ -1,5 +1,6 @@
 """Subnautica game-specific export handler."""
 
+import copy
 from typing import Dict, Any, List, Set
 from .generic import GenericGameExportHandler
 import logging
@@ -8,31 +9,23 @@ logger = logging.getLogger(__name__)
 
 
 class SubnauticaGameExportHandler(GenericGameExportHandler):
+    """Subnautica export handler with SwimRule property expansion.
+
+    The SwimRule option class has computed properties:
+    - base_depth: returns [200, 400, 600][value % 3]
+    - consider_items: returns value > 2
+
+    Since Choice options are exported as integers by default
+    (EXPORT_CHOICE_OPTIONS_AS_NUMERIC = True), we need to expand
+    these property accesses in helpers and rules to their computed
+    equivalents so the frontend can evaluate them.
+    """
+
     # Module containing helper functions to export
     HELPER_MODULES: List[str] = ['worlds.subnautica.rules']
 
     # Helpers that should always be exported (used in access rules)
     HELPERS_TO_EXPORT_WHITELIST: Set[str] = {'is_radiated'}
-
-    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Get world data with swim_rule exported as integer.
-
-        The SwimRule option class has computed properties that use the integer value:
-        - base_depth: returns [200, 400, 600][value % 3]
-        - consider_items: returns value > 2
-
-        The base exporter exports Choice options as string keys, but our helper
-        expansion relies on swim_rule being an integer for arithmetic operations.
-        We override the options export to use the integer value for swim_rule.
-        """
-        settings_data = super().get_world_data(world, multiworld, player)
-
-        # Ensure swim_rule is exported as integer value, not string key
-        if 'options' in settings_data and 'swim_rule' in settings_data['options']:
-            if hasattr(world, 'options') and hasattr(world.options, 'swim_rule'):
-                settings_data['options']['swim_rule'] = world.options.swim_rule.value
-
-        return settings_data
 
     def _expand_helper_definition(self, helper_def: dict, helper_name: str) -> dict:
         """Expand SwimRule property accesses in helper definitions.
@@ -51,7 +44,6 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
             return helper_def
 
         # Deep copy to avoid modifying the original
-        import copy
         helper_def = copy.deepcopy(helper_def)
 
         # Recursively expand SwimRule attribute accesses
@@ -138,7 +130,6 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
             return rule
 
         # Deep copy to avoid modifying the original when expanding attributes
-        import copy
         rule = copy.deepcopy(rule)
 
         # Expand SwimRule attribute accesses in this rule
