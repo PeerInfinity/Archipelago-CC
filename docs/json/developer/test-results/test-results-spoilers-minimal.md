@@ -6,11 +6,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-28 05:27:54
+**Generated:** 2025-12-28 05:56:44
 
-**Source Data Created:** 2025-12-28T04:46:40.353389
+**Source Data Created:** 2025-12-28T05:56:43.305790
 
-**Source Data Last Updated:** 2025-12-28T04:46:40.353394
+**Source Data Last Updated:** 2025-12-28T05:56:43.305797
 
 ## Summary
 
@@ -51,18 +51,18 @@
 | DOOM II | ✅ Passed | 0 | 21.2 | 21.2 | 🟢 Complete | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 4.3KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
-| Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 7.1KB | ✅ |
+| Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 5.5KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ✅ |
 | Heretic | ✅ Passed | 0 | 24.1 | 24.1 | 🟢 Complete | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
-| Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 8.0KB | ✅ |
-| Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | 57.9KB | 12.5KB |
-| Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 33.8KB | 107.3KB |
-| Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 18.6KB | 13.1KB |
+| Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 5.6KB | ✅ |
+| Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | 17.1KB | 12.5KB |
+| Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 23.2KB | 107.3KB |
+| Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 9.3KB | 13.1KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 18.5KB | ✅ |
-| Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 41.3KB | 10.8KB |
-| Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 18.1KB | ✅ |
+| Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 37.5KB | 10.8KB |
+| Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 13.5KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 0.3KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
