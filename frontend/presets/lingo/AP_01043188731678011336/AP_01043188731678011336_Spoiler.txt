@@ -1,0 +1,324 @@
+﻿Archipelago Version 0.6.5  -  Seed: 2
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Lingo
+Location Count:                  155
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Shuffle Doors:                   None
+Group Doors:                     No
+Progressive Orange Tower:        Yes
+Progressive Colorful:            Yes
+Location Checks:                 Normal
+Shuffle Colors:                  Yes
+Shuffle Panels:                  None
+Shuffle Paintings:               No
+Enable Pilgrimage:               No
+Allow Roof Access for Pilgrimage:Yes
+Allow Paintings for Pilgrimage:  Yes
+Sunwarp Access:                  Normal
+Shuffle Sunwarps:                No
+Victory Condition:               The End
+Mastery Achievements:            21
+Level 2 Requirement:             223
+Early Color Hallways:            No
+Shuffle Postgame:                No
+Trap Percentage:                 20
+Trap Weights:                    Atbash Trap: 1, Iceland Trap: 1, Slowness Trap: 1
+Speed Boost Mode:                No
+Puzzle Skip Percentage:          20
+Death Link:                      No
+Start Inventory from Pool:       
+
+
+Locations:
+
+Starting Room - HI: Puzzle Skip
+Starting Room - HIDDEN: Wanderlust
+Hidden Room - DEAD END: Iceland Trap
+Hidden Room - OPEN: :)
+The Seeker - Achievement: Wanderlust
+Second Room - LEVEL 2: Empty White Hallways
+Second Room - Good Luck: Slowness Trap
+Hub Room - ORDER: Wanderlust
+Hub Room - SLAUGHTER: The Feeling of Being Lost
+Hub Room - TRACE: :)
+Hub Room - RAT: Wanderlust
+Hub Room - OPEN: The Feeling of Being Lost
+Hub Room - LOST: Puzzle Skip
+Pilgrim Antechamber - PILGRIM: The Feeling of Being Lost
+Pilgrim Room - HOT CRUST: :)
+Pilgrim Room - THIS: Iceland Trap
+Crossroads - DECAY: The Feeling of Being Lost
+Crossroads - NOPE: Puzzle Skip
+Crossroads - WE ROT: :)
+Crossroads - BEND HI: Iceland Trap
+Crossroads - THE EYES: Blue
+Crossroads - TURN/RUNT: Wanderlust
+Crossroads - WORDS, SWORD: Empty White Hallways
+Crossroads - LOST Pair: Iceland Trap
+Amen Name Area - AMEN, NAME: Atbash Trap
+The Tenacious - Achievement: :)
+The Tenacious - Palindromes: Atbash Trap
+The Tenacious - White Palindromes: Empty White Hallways
+Symmetry Room - NEAR, FAR: Puzzle Skip
+Symmetry Room - WARTS, STRAW: Iceland Trap
+Symmetry Room - LEAF, FEEL: Slowness Trap
+Outside The Agreeable - MASSACRED: Iceland Trap
+Outside The Agreeable - BLACK: Empty White Hallways
+Outside The Agreeable - CLOSE: Slowness Trap
+Outside The Agreeable - RIGHT: The Feeling of Being Lost
+Outside The Agreeable - Lookout Panels: :)
+Dread Hallway - DREAD: Atbash Trap
+The Agreeable - Achievement: :)
+The Agreeable - BYE: Puzzle Skip
+Hedge Maze - DOWN: :)
+Hedge Maze - Hide and Seek: Empty White Hallways
+The Perceptive - Achievement: Wanderlust
+The Perceptive - GAZE: The Feeling of Being Lost
+The Fearless - First Floor Puzzles: :)
+The Fearless - Second Floor Puzzles: The Feeling of Being Lost
+The Fearless - Achievement: Puzzle Skip
+The Observant - Achievement: Puzzle Skip
+The Observant - SIX: :)
+The Observant - FOUR (1), FOUR (2): Brown
+The Incomparable - Achievement: Empty White Hallways
+Giant Sevens: Empty White Hallways
+Orange Tower First Floor - SECRET: Iceland Trap
+Orange Tower First Floor - DADS + ALE: :)
+Orange Tower First Floor - Salt Pepper Door: Empty White Hallways
+Orange Tower Third Floor - DEER + WREN: Empty White Hallways
+Color Barriers - RED and YELLOW: The Feeling of Being Lost
+Orange Tower Fourth Floor - LEARNS + UNSEW: :)
+Orange Tower Fourth Floor - HOT CRUSTS: Wanderlust
+Orange Tower Fourth Floor - IRK HORN: Wanderlust
+Orange Tower Fifth Floor - DRAWL + RUNS: Puzzle Skip
+Orange Tower Fifth Floor - SIZE (Small), SIZE (Big): :)
+The End (Solved): Victory
+Courtyard - FIRST, SECOND, THIRD, FOURTH: Wanderlust
+The Colorful - White: :)
+The Colorful - Black: Wanderlust
+The Colorful - Red: Slowness Trap
+The Colorful - Yellow: Puzzle Skip
+The Colorful - Blue: Wanderlust
+The Colorful - Purple: The Feeling of Being Lost
+The Colorful - Orange: Gray
+The Colorful - Green: Empty White Hallways
+The Colorful - Brown: :)
+The Colorful - Gray: Empty White Hallways
+The Colorful - Achievement: Puzzle Skip
+Welcome Back Area - WELCOME BACK: Atbash Trap
+Welcome Back Area - CLOCKWISE: Empty White Hallways
+Owl Hallway - STRAYS: Wanderlust
+Owl Hallway - READS + RUST: Puzzle Skip
+Outside The Initiated - UNCOVER: Slowness Trap
+Outside The Initiated - OXEN: Wanderlust
+Color Barriers - BLUE and YELLOW: :)
+Color Barriers - RED and BLUE: Iceland Trap
+Color Barriers - GREEN, ORANGE and PURPLE: Black
+The Initiated - Achievement: Empty White Hallways
+The Optimistic - Achievement: :)
+The Traveled - Achievement: Yellow
+The Traveled - HELLO: Wanderlust
+Outside The Bold - UNOPEN: Iceland Trap
+Outside The Bold - BEGIN: Puzzle Skip
+The Bold - Achievement: Wanderlust
+Outside The Undeterred - ART + ART: The Feeling of Being Lost
+Outside The Undeterred - PEN: Empty White Hallways
+Outside The Undeterred - RAINY: Atbash Trap
+Outside The Undeterred - ZERO: The Feeling of Being Lost
+Outside The Undeterred - ONE: Empty White Hallways
+Twos: :)
+Threes: Empty White Hallways
+Fours: :)
+The Undeterred - Achievement: Slowness Trap
+Fives: :)
+Sixes: The Feeling of Being Lost
+Sevens: Atbash Trap
+Eights: :)
+Nines: Pilgrim Room - Sun Painting
+Directional Gallery - 834283054: Iceland Trap
+Directional Gallery - PARANOID: Puzzle Skip
+Directional Gallery - WADED + WEE: Puzzle Skip
+Directional Gallery - TURN, LEARN: Empty White Hallways
+Color Hunt - EXIT: :)
+Color Hunt - RED: Puzzle Skip
+Color Hunt - BLUE: Atbash Trap
+Color Hunt - YELLOW: Red
+Color Hunt - GREEN: The Feeling of Being Lost
+Color Hunt - PURPLE: :)
+Color Hunt - ORANGE: Puzzle Skip
+Champion's Rest - YOU: The Feeling of Being Lost
+The Bearer - Achievement: :)
+The Bearer - MIDDLE: The Feeling of Being Lost
+The Bearer - FARTHER: Empty White Hallways
+The Bearer - SHORTCUT: Empty White Hallways
+The Steady - Achievement: Puzzle Skip
+Knight Night Room - TRUSTED: The Feeling of Being Lost
+The Artistic - Achievement: Puzzle Skip
+The Artistic - Smiley and Panda: :)
+The Artistic - Panda and Lattice: Wanderlust
+The Artistic - Lattice and Apple: Atbash Trap
+The Artistic - Apple and Smiley: Empty White Hallways
+The Discerning - Achievement: Purple
+The Eyes They See - NEAR: Slowness Trap
+Outside The Wondrous - SHRINK: Wanderlust
+The Wondrous - Achievement: :)
+Hallway Room (1) - OUT: Wanderlust
+Hallway Room - First Room: Slowness Trap
+Hallway Room - Second Room: Slowness Trap
+Hallway Room - Third Room: Atbash Trap
+Hallway Room - Fourth Room: Empty White Hallways
+Elements Area - UNDISTRACTED: :)
+Outside The Wanderer - WANDERLUST: The Feeling of Being Lost
+The Wanderer - Achievement: Slowness Trap
+Art Gallery - ORDER: The Feeling of Being Lost
+Art Gallery - First Floor Puzzles: Puzzle Skip
+Art Gallery - Second Floor Puzzles: Puzzle Skip
+Art Gallery - Third Floor Puzzles: Puzzle Skip
+Art Gallery - Fourth Floor Puzzles: :)
+Rhyme Room (Smiley) - Puzzles Toward Target: The Feeling of Being Lost
+Rhyme Room (Cross) - Exit Puzzles: Orange
+Rhyme Room - Circle/Smiley Wall: Wanderlust
+Rhyme Room - Circle/Looped Square Wall: Green
+Rhyme Room - Cross/Looped Square Wall: :)
+Rhyme Room - Target/Looped Square Wall: :)
+Rhyme Room (Target) - Puzzles Toward Cross: Wanderlust
+Room Room - BASE: The Feeling of Being Lost
+Outside The Wise - KITTEN, CAT: Puzzle Skip
+The Wise - Achievement: Puzzle Skip
+Challenge Room - WELCOME: Empty White Hallways
+Challenge Room - Achievement: Empty White Hallways
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  The Traveled - Achievement: Yellow
+}
+2: {
+  Color Barriers - GREEN, ORANGE and PURPLE: Black
+  Color Hunt - YELLOW: Red
+  Crossroads - THE EYES: Blue
+  The Discerning - Achievement: Purple
+}
+3: {
+  Rhyme Room (Cross) - Exit Puzzles: Orange
+  Rhyme Room - Circle/Looped Square Wall: Green
+}
+4: {
+  Nines: Pilgrim Room - Sun Painting
+  The Colorful - Orange: Gray
+  The End (Solved): Victory
+  The Observant - FOUR (1), FOUR (2): Brown
+}
+
+Paths:
+
+Color Barriers - GREEN, ORANGE and PURPLE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Orange Tower Fourth Floor (through Crossroads - Tower Entrance)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Hot Crusts Area (through Orange Tower Fourth Floor - Hot Crusts Door)
+   =>   Hot Crusts Area -> Hot Crusts Area to Orange Tower Third Floor (through Sunwarps - 2 Sunwarp)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Outside The Initiated (through Sunwarps - 3 Sunwarp)
+   =>   Outside The Initiated
+Color Hunt - YELLOW
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Orange Tower Fourth Floor (through Crossroads - Tower Entrance)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Color Hunt (through Sunwarps - 5 Sunwarp)
+   =>   Color Hunt
+Crossroads - THE EYES
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads
+Nines
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred -> Outside The Undeterred to Number Hunt (through Outside The Undeterred - Number Hunt)
+   =>   Number Hunt
+Rhyme Room (Cross) - Exit Puzzles
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Orange Tower Fourth Floor (through Crossroads - Tower Entrance)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Hot Crusts Area (through Orange Tower Fourth Floor - Hot Crusts Door)
+   =>   Hot Crusts Area -> Hot Crusts Area to Orange Tower Third Floor (through Sunwarps - 2 Sunwarp)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Rhyme Room (Smiley) (through Orange Tower Third Floor - Rhyme Room Entrance)
+   =>   Rhyme Room (Smiley) -> Rhyme Room (Smiley) to Rhyme Room (Target) (through Rhyme Room (Smiley) - Door to Target)
+   =>   Rhyme Room (Target) -> Rhyme Room (Target) to Rhyme Room (Cross) (through Rhyme Room (Target) - Door to Cross)
+   =>   Rhyme Room (Cross)
+Rhyme Room - Circle/Looped Square Wall
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Rhyme Room (Looped Square) (through Starting Room - Rhyme Room Entrance)
+   =>   Rhyme Room (Looped Square)
+The Colorful - Orange
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Orange Tower Fourth Floor (through Crossroads - Tower Entrance)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Courtyard
+   =>   Courtyard -> Courtyard to The Colorful (White)
+   =>   The Colorful (White) -> The Colorful (White) to The Colorful (Black) (through The Colorful (White) - Progress Door)
+   =>   The Colorful (Black) -> The Colorful (Black) to The Colorful (Red) (through The Colorful (Black) - Progress Door)
+   =>   The Colorful (Red) -> The Colorful (Red) to The Colorful (Yellow) (through The Colorful (Red) - Progress Door)
+   =>   The Colorful (Yellow) -> The Colorful (Yellow) to The Colorful (Blue) (through The Colorful (Yellow) - Progress Door)
+   =>   The Colorful (Blue) -> The Colorful (Blue) to The Colorful (Purple) (through The Colorful (Blue) - Progress Door)
+   =>   The Colorful (Purple) -> The Colorful (Purple) to The Colorful (Orange) (through The Colorful (Purple) - Progress Door)
+   =>   The Colorful (Orange)
+The Discerning - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to The Discerning (through Crossroads - Discerning Entrance)
+   =>   The Discerning
+The End (Solved)
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Orange Tower Fourth Floor (through Crossroads - Tower Entrance)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Orange Tower Fifth Floor (through Orange Tower - Fifth Floor)
+   =>   Orange Tower Fifth Floor -> Orange Tower Fifth Floor to Orange Tower Sixth Floor (through Orange Tower - Sixth Floor)
+   =>   Orange Tower Sixth Floor -> Orange Tower Sixth Floor to Ending Area (through Orange Tower - Seventh Floor)
+   =>   Ending Area
+The Observant - FOUR (1), FOUR (2)
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Hedge Maze (through Hub Room - Shortcut to Hedge Maze)
+   =>   Hedge Maze -> Hedge Maze to The Observant (through Hedge Maze - Observant Entrance)
+   =>   The Observant
+The Traveled - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to The Traveled (through Hub Room - Traveled Entrance)
+   =>   The Traveled

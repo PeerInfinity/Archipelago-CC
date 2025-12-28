@@ -3,7 +3,7 @@
   "game_name": "Lingo",
   "game_directory": "lingo",
   "archipelago_version": "0.6.5",
-  "generation_seed": 1,
+  "generation_seed": 2,
   "player_names": {
     "1": "Player1"
   },
@@ -379,7 +379,7 @@
               ]
             },
             "item": {
-              "name": "Slowness Trap",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -422,7 +422,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": "Wanderlust",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -619,7 +619,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Iceland Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -768,7 +768,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": "Wanderlust",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -858,7 +858,7 @@
               "_converted_from_ast": true
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -901,7 +901,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "Slowness Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1224,7 +1224,7 @@
               ]
             },
             "item": {
-              "name": "Empty White Hallways",
+              "name": "Wanderlust",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1269,7 +1269,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1314,7 +1314,7 @@
               ]
             },
             "item": {
-              "name": "Atbash Trap",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1357,7 +1357,7 @@
               ]
             },
             "item": {
-              "name": "Empty White Hallways",
+              "name": "Wanderlust",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1402,7 +1402,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1599,7 +1599,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1724,7 +1724,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Iceland Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2077,7 +2077,7 @@
               ]
             },
             "item": {
-              "name": "Atbash Trap",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2122,7 +2122,7 @@
               ]
             },
             "item": {
-              "name": "Atbash Trap",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2167,7 +2167,7 @@
               ]
             },
             "item": {
-              "name": "Atbash Trap",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2212,7 +2212,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Iceland Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2257,9 +2257,9 @@
               ]
             },
             "item": {
-              "name": "Atbash Trap",
+              "name": "Blue",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -2304,7 +2304,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": "Wanderlust",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2539,7 +2539,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Atbash Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2816,7 +2816,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": "Atbash Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2861,7 +2861,7 @@
               ]
             },
             "item": {
-              "name": "Slowness Trap",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2946,7 +2946,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3054,7 +3054,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Iceland Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3162,7 +3162,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": "Slowness Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3382,7 +3382,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Iceland Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3427,7 +3427,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3472,7 +3472,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": "Slowness Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3517,7 +3517,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3611,7 +3611,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3727,7 +3727,7 @@
               ]
             },
             "item": {
-              "name": "Empty White Hallways",
+              "name": "Atbash Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3835,9 +3835,9 @@
               ]
             },
             "item": {
-              "name": "Red",
+              "name": ":)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -3882,7 +3882,7 @@
               ]
             },
             "item": {
-              "name": "Slowness Trap",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4116,7 +4116,7 @@
               ]
             },
             "item": {
-              "name": "Empty White Hallways",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4161,7 +4161,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4274,7 +4274,7 @@
               ]
             },
             "item": {
-              "name": "Iceland Trap",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4380,7 +4380,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4431,7 +4431,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4482,7 +4482,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4604,7 +4604,7 @@
               ]
             },
             "item": {
-              "name": "Iceland Trap",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4651,7 +4651,7 @@
               ]
             },
             "item": {
-              "name": "Empty White Hallways",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4696,9 +4696,9 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "Brown",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -4811,7 +4811,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4860,7 +4860,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5121,7 +5121,7 @@
               ]
             },
             "item": {
-              "name": "Empty White Hallways",
+              "name": "Iceland Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5164,7 +5164,7 @@
               ]
             },
             "item": {
-              "name": "Slowness Trap",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5209,7 +5209,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5493,7 +5493,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5538,7 +5538,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5759,7 +5759,7 @@
               ]
             },
             "item": {
-              "name": "Slowness Trap",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6089,7 +6089,7 @@
               ]
             },
             "item": {
-              "name": "Empty White Hallways",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6134,7 +6134,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6833,7 +6833,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": "Wanderlust",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6918,7 +6918,7 @@
               ]
             },
             "item": {
-              "name": "Slowness Trap",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7024,7 +7024,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Wanderlust",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7132,7 +7132,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Slowness Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7240,7 +7240,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7348,9 +7348,9 @@
               ]
             },
             "item": {
-              "name": "Brown",
+              "name": "Wanderlust",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -7456,7 +7456,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7564,9 +7564,9 @@
               ]
             },
             "item": {
-              "name": "Empty White Hallways",
+              "name": "Gray",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -7672,7 +7672,7 @@
               ]
             },
             "item": {
-              "name": "Slowness Trap",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7888,7 +7888,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7975,7 +7975,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8130,7 +8130,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Atbash Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8267,7 +8267,7 @@
               ]
             },
             "item": {
-              "name": "Iceland Trap",
+              "name": "Wanderlust",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8312,7 +8312,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8581,9 +8581,9 @@
               ]
             },
             "item": {
-              "name": "Orange",
+              "name": "Slowness Trap",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -8626,9 +8626,9 @@
               ]
             },
             "item": {
-              "name": "Pilgrim Room - Sun Painting",
+              "name": "Wanderlust",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -8671,7 +8671,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8717,7 +8717,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": "Iceland Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8763,9 +8763,9 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Black",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -8819,9 +8819,9 @@
               ]
             },
             "item": {
-              "name": "Gray",
+              "name": "Empty White Hallways",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -8885,7 +8885,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8999,9 +8999,9 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Yellow",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -9044,7 +9044,7 @@
               ]
             },
             "item": {
-              "name": "Iceland Trap",
+              "name": "Wanderlust",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9331,7 +9331,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": "Iceland Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9376,7 +9376,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9610,7 +9610,7 @@
               ]
             },
             "item": {
-              "name": "Empty White Hallways",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9655,9 +9655,9 @@
               ]
             },
             "item": {
-              "name": "Green",
+              "name": "Empty White Hallways",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -9700,7 +9700,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Atbash Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9749,7 +9749,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9817,7 +9817,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9950,7 +9950,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10004,7 +10004,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "Slowness Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10168,7 +10168,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10278,7 +10278,7 @@
               ]
             },
             "item": {
-              "name": "Empty White Hallways",
+              "name": "Atbash Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10337,7 +10337,7 @@
               ]
             },
             "item": {
-              "name": "Atbash Trap",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10400,9 +10400,9 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "Pilgrim Room - Sun Painting",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -10684,7 +10684,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10738,7 +10738,7 @@
               ]
             },
             "item": {
-              "name": "Empty White Hallways",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10783,7 +10783,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10899,7 +10899,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10985,7 +10985,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": "Atbash Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11028,9 +11028,9 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Red",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -11071,7 +11071,7 @@
               ]
             },
             "item": {
-              "name": "Slowness Trap",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11118,7 +11118,7 @@
               ]
             },
             "item": {
-              "name": "Atbash Trap",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11165,7 +11165,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11247,7 +11247,7 @@
               ]
             },
             "item": {
-              "name": "Empty White Hallways",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11439,7 +11439,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11501,7 +11501,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11544,7 +11544,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11956,7 +11956,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13483,7 +13483,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13797,7 +13797,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14082,7 +14082,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14201,7 +14201,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Wanderlust",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14348,7 +14348,7 @@
               ]
             },
             "item": {
-              "name": "Empty White Hallways",
+              "name": "Atbash Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14467,7 +14467,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14527,9 +14527,9 @@
               ]
             },
             "item": {
-              "name": "Iceland Trap",
+              "name": "Purple",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -14621,9 +14621,9 @@
               ]
             },
             "item": {
-              "name": "Blue",
+              "name": "Slowness Trap",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -14986,7 +14986,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -15129,7 +15129,7 @@
               ]
             },
             "item": {
-              "name": "Iceland Trap",
+              "name": "Wanderlust",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -15172,9 +15172,9 @@
               ]
             },
             "item": {
-              "name": "Purple",
+              "name": "Slowness Trap",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -15259,7 +15259,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "Slowness Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -15346,7 +15346,7 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Atbash Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -15433,9 +15433,9 @@
               ]
             },
             "item": {
-              "name": "Black",
+              "name": "Empty White Hallways",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -15527,7 +15527,7 @@
               ]
             },
             "item": {
-              "name": "Slowness Trap",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -15640,9 +15640,9 @@
               ]
             },
             "item": {
-              "name": "Yellow",
+              "name": "The Feeling of Being Lost",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -15691,7 +15691,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Slowness Trap",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -15883,7 +15883,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -16010,7 +16010,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -16072,7 +16072,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -16131,7 +16131,7 @@
               ]
             },
             "item": {
-              "name": "Atbash Trap",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -16385,9 +16385,9 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Orange",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -16500,7 +16500,7 @@
               ]
             },
             "item": {
-              "name": ":)",
+              "name": "Wanderlust",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -16667,9 +16667,9 @@
               ]
             },
             "item": {
-              "name": "Puzzle Skip",
+              "name": "Green",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -16763,7 +16763,7 @@
               ]
             },
             "item": {
-              "name": "The Feeling of Being Lost",
+              "name": ":)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -16880,7 +16880,7 @@
               ]
             },
             "item": {
-              "name": "Slowness Trap",
+              "name": "Wanderlust",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -16967,7 +16967,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "The Feeling of Being Lost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -17126,7 +17126,7 @@
               ]
             },
             "item": {
-              "name": "Atbash Trap",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -17178,7 +17178,7 @@
               ]
             },
             "item": {
-              "name": "Iceland Trap",
+              "name": "Puzzle Skip",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -17379,7 +17379,7 @@
               ]
             },
             "item": {
-              "name": "Iceland Trap",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -17422,7 +17422,7 @@
               ]
             },
             "item": {
-              "name": "Wanderlust",
+              "name": "Empty White Hallways",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -17578,7 +17578,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 26,
+        "max_count": 30,
         "classification": "filler"
       },
       "Slowness Trap": {
@@ -19560,7 +19560,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 22,
+        "max_count": 20,
         "classification": "filler"
       },
       "Wanderlust": {
@@ -19572,7 +19572,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 29,
+        "max_count": 20,
         "classification": "filler"
       },
       "Empty White Hallways": {
@@ -19584,7 +19584,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 16,
+        "max_count": 23,
         "classification": "filler"
       },
       "Outside The Initiated - Eight Door": {
@@ -20835,12 +20835,12 @@
   },
   "itempool_counts": {
     "1": {
-      ":)": 26,
+      ":)": 30,
       "Atbash Trap": 9,
       "Black": 1,
       "Blue": 1,
       "Brown": 1,
-      "Empty White Hallways": 16,
+      "Empty White Hallways": 23,
       "Gray": 1,
       "Green": 1,
       "Iceland Trap": 10,
@@ -20850,9 +20850,9 @@
       "Puzzle Skip": 23,
       "Red": 1,
       "Slowness Trap": 10,
-      "The Feeling of Being Lost": 22,
+      "The Feeling of Being Lost": 20,
       "Victory": 1,
-      "Wanderlust": 29,
+      "Wanderlust": 20,
       "Yellow": 1
     }
   },
@@ -25349,7 +25349,7 @@
       "base_id": 444400,
       "world_description": "Lingo is a first person indie puzzle game in the vein of The Witness. You find yourself in a mazelike, non-Euclidean\nworld filled with 800 word puzzles that use a variety of different mechanics.",
       "slot_data": {
-        "seed": 143971,
+        "seed": 207654,
         "death_link": 0,
         "victory_condition": 0,
         "shuffle_colors": 1,
