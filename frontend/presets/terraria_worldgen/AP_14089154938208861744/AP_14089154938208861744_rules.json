@@ -26,7 +26,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Guide",
@@ -38,7 +39,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Squire Slime",
@@ -50,7 +52,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Traveling Merchant",
@@ -111,7 +114,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Lifeform Analyzer",
@@ -129,7 +133,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "DPS Meter",
@@ -147,7 +152,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Stopwatch",
@@ -165,7 +171,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Timber!!",
@@ -261,7 +268,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Bug Net",
@@ -279,7 +287,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Heavy Metal",
@@ -352,7 +361,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Dye Hard",
@@ -388,7 +398,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Lucky Break",
@@ -436,7 +447,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Unusual Survival Strategies",
@@ -460,7 +472,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Radar",
@@ -472,7 +485,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Wand of Sparking",
@@ -484,7 +498,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Heliophobia",
@@ -508,7 +523,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Zoologist",
@@ -520,7 +536,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Cat",
@@ -538,7 +555,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Feeling Petty",
@@ -576,7 +594,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Painter",
@@ -637,7 +656,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Enchanted Sword",
@@ -649,7 +669,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Angler",
@@ -661,7 +682,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Fisherman's Pocket Guide",
@@ -681,7 +703,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Weather Radio",
@@ -701,7 +724,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Sextant",
@@ -721,7 +745,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Water Walking Boots",
@@ -733,7 +758,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Into Orbit",
@@ -757,7 +783,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Celestial Magnet",
@@ -769,7 +796,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Clumsy Slime",
@@ -781,7 +809,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Watch Your Step!",
@@ -841,7 +870,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Compass",
@@ -853,7 +883,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Hey! Listen!",
@@ -889,7 +920,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Heart Breaker",
@@ -919,7 +951,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "The Frequent Flyer",
@@ -979,7 +1012,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Gold Pickaxe",
@@ -991,7 +1025,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Gold Watch",
@@ -1003,7 +1038,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Like a Boss",
@@ -1027,7 +1063,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Jeepers Creepers",
@@ -1051,7 +1088,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Funkytown",
@@ -1075,7 +1113,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Dead Men Tell No Tales",
@@ -1099,7 +1138,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Obsidian Skull",
@@ -1117,7 +1157,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Lava Charm",
@@ -1129,7 +1170,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Demonite Ore",
@@ -1141,7 +1183,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Demonite Bar",
@@ -1159,7 +1202,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Evil Sword",
@@ -1177,7 +1221,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Ice Skates",
@@ -1189,7 +1234,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Flinx Fur Coat",
@@ -1201,7 +1247,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Golfer",
@@ -1213,7 +1260,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Party Girl",
@@ -1274,7 +1322,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Cool Slime",
@@ -1292,7 +1341,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Anklet of the Wind",
@@ -1304,7 +1354,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Feral Claws",
@@ -1316,7 +1367,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Stinger",
@@ -1328,7 +1380,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Jungle Spores",
@@ -1340,7 +1393,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Vine",
@@ -1352,7 +1406,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Blade of Grass",
@@ -1373,7 +1428,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Nature's Gift",
@@ -1385,7 +1441,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Bezoar",
@@ -1397,7 +1454,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Summoning Potion",
@@ -1409,7 +1467,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "A Shimmer In The Dark",
@@ -1457,7 +1516,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Magma Stone",
@@ -1469,7 +1529,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Smashing, Poppet!",
@@ -1493,7 +1554,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Leading Landlord",
@@ -1551,7 +1613,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "King Slime",
@@ -1587,7 +1650,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Nerdy Slime",
@@ -1599,7 +1663,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Sandstorm",
@@ -1628,7 +1693,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Shark Tooth Necklace",
@@ -1640,7 +1706,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Quiet Neighborhood",
@@ -1664,7 +1731,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Eye of Cthulhu",
@@ -1697,7 +1765,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Pumpkin Seeds",
@@ -1715,7 +1784,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Pumpkin",
@@ -1735,7 +1805,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Purification Powder",
@@ -1776,7 +1847,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Mystic Slime",
@@ -1794,7 +1866,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Evil Boss",
@@ -1818,7 +1891,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Evil Pickaxe",
@@ -1836,7 +1910,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Obsidian Armor",
@@ -1856,7 +1931,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Tavernkeep",
@@ -1874,7 +1950,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Old One's Army Tier 1",
@@ -1906,7 +1983,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Meteorite Bar",
@@ -1926,7 +2004,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Meteor Hamaxe",
@@ -1944,7 +2023,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Hellforge",
@@ -1983,7 +2063,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Hellstone",
@@ -2024,7 +2105,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Hellstone Bar",
@@ -2042,7 +2124,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Fiery Greatsword",
@@ -2060,7 +2143,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Molten Hamaxe",
@@ -2078,7 +2162,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Molten Pickaxe",
@@ -2096,7 +2181,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Miner for Fire",
@@ -2164,7 +2250,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Tinkerer's Workshop",
@@ -2182,7 +2269,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Mana Flower",
@@ -2202,7 +2290,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Rocket Boots",
@@ -2220,7 +2309,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Spectre Boots",
@@ -2241,7 +2331,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Lightning Boots",
@@ -2263,7 +2354,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Frostspark Boots",
@@ -2284,7 +2376,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Lava Waders",
@@ -2307,7 +2400,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Terraspark Boots",
@@ -2328,7 +2422,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "GPS",
@@ -2350,7 +2445,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Goblin Tech",
@@ -2372,7 +2468,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Fish Finder",
@@ -2394,7 +2491,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Diving Gear",
@@ -2412,7 +2510,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Where's My Honey?",
@@ -2448,7 +2547,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Bee Wax",
@@ -2460,7 +2560,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Bee Armor",
@@ -2478,7 +2579,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Not the Bees!",
@@ -2514,7 +2616,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Pygmy Necklace",
@@ -2532,7 +2635,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Skeletron",
@@ -2562,7 +2666,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Dungeon",
@@ -2580,7 +2685,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Dungeon Heist",
@@ -2616,7 +2722,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Tally Counter",
@@ -2634,7 +2741,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "R.E.K. 3000",
@@ -2656,7 +2764,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "PDA",
@@ -2679,7 +2788,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Cell Phone",
@@ -2700,7 +2810,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Bewitching Table",
@@ -2734,7 +2845,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Alchemy Table",
@@ -2754,7 +2866,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Mechanic",
@@ -2772,7 +2885,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Wire",
@@ -2790,7 +2904,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Actuator",
@@ -2808,7 +2923,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Muramasa",
@@ -2826,7 +2942,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Cobalt Shield",
@@ -2844,7 +2961,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Obsidian Shield",
@@ -2865,7 +2983,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Elder Slime",
@@ -2885,7 +3004,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Deerclops",
@@ -2942,7 +3062,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Wall of Flesh",
@@ -2978,7 +3099,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Emblem",
@@ -2998,7 +3120,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Fast Clock",
@@ -3018,7 +3141,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Wizard",
@@ -3036,7 +3160,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Titan Glove",
@@ -3056,7 +3181,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Power Glove",
@@ -3077,7 +3203,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Magic Quiver",
@@ -3095,7 +3222,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Hallowed Seeds",
@@ -3127,7 +3255,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Armor Polish",
@@ -3147,7 +3276,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Adhesive Bandage",
@@ -3165,7 +3295,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Medicated Bandage",
@@ -3186,7 +3317,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Megaphone",
@@ -3206,7 +3338,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Pocket Mirror",
@@ -3226,7 +3359,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Trifold Map",
@@ -3246,7 +3380,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "The Plan",
@@ -3267,7 +3402,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Tax Collector",
@@ -3287,7 +3423,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Spider Fangs",
@@ -3305,7 +3442,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Spider Armor",
@@ -3323,7 +3461,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Cross Necklace",
@@ -3341,7 +3480,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Altar",
@@ -3380,7 +3520,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Begone, Evil!",
@@ -3468,7 +3609,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Extra Shiny!",
@@ -3510,7 +3652,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Cobalt Pickaxe",
@@ -3528,7 +3671,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Blindfold",
@@ -3548,7 +3692,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Reflective Shades",
@@ -3569,7 +3714,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Vitamins",
@@ -3589,7 +3735,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Armor Bracing",
@@ -3610,7 +3757,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Nazar",
@@ -3630,7 +3778,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Countercurse Mantra",
@@ -3651,7 +3800,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Ankh Charm",
@@ -3675,7 +3825,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Ankh Shield",
@@ -3696,7 +3847,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Soul of Night",
@@ -3714,7 +3866,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Hallow",
@@ -3732,7 +3885,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Pixie Dust",
@@ -3753,7 +3907,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Holy Water",
@@ -3773,7 +3928,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Unicorn Horn",
@@ -3791,7 +3947,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Crystal Shard",
@@ -3809,7 +3966,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Soul of Light",
@@ -3830,7 +3988,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Meteor Staff",
@@ -3864,7 +4023,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Blessed Apple",
@@ -3882,7 +4042,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Rod of Discord",
@@ -3900,7 +4061,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Soul of Flight",
@@ -3918,7 +4080,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Head in the Clouds",
@@ -4112,7 +4275,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Forbidden Fragment",
@@ -4132,7 +4296,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Don't Dread on Me",
@@ -4168,7 +4333,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "It Can Talk?!",
@@ -4222,7 +4388,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Queen Slime",
@@ -4258,7 +4425,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Diva Slime",
@@ -4276,7 +4444,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "The Great Slime Mitosis",
@@ -4370,7 +4539,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Mythril Bar",
@@ -4390,7 +4560,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Hardmode Anvil",
@@ -4408,7 +4579,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Mythril Pickaxe",
@@ -4428,7 +4600,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Adamantite Ore",
@@ -4512,7 +4685,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Hardmode Forge",
@@ -4533,7 +4707,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Adamantite Bar",
@@ -4565,7 +4740,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Adamantite Pickaxe",
@@ -4585,7 +4761,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Forbidden Armor",
@@ -4606,7 +4783,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Mechanical Eye",
@@ -4626,7 +4804,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Mechanical Worm",
@@ -4646,7 +4825,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Mechanical Skull",
@@ -4668,7 +4848,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "The Twins",
@@ -9353,30 +9534,28 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Terraria WorldGen",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
-        "accessibility": "full",
-        "calamity": "false",
-        "death_link": "false",
-        "early_achievements": "true",
+        "accessibility": 0,
+        "calamity": false,
+        "death_link": false,
+        "early_achievements": true,
         "exclude_locations": [],
-        "fill_extra_checks_with": "useful_items",
-        "fishing_achievements": "false",
-        "getfixedboi": "false",
-        "goal": "mechanical_bosses",
-        "grindy_achievements": "false",
+        "fill_extra_checks_with": 1,
+        "fishing_achievements": false,
+        "getfixedboi": false,
+        "goal": 0,
+        "grindy_achievements": false,
         "item_links": [],
         "local_items": [],
         "non_local_items": [],
-        "normal_achievements": "true",
+        "normal_achievements": true,
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": "false",
+        "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
@@ -9470,92 +9649,522 @@
           "display_name": "Randomize Items"
         }
       },
-      "armor_minions": {
-        "Wulfrum Armor": 1,
-        "Flinx Fur Coat": 1,
-        "Victide Armor": 1,
-        "Obsidian Armor": 1,
-        "Bee Armor": 2,
-        "Aerospec Armor": 1,
-        "Statigel Armor": 1,
-        "Spider Armor": 3,
-        "Forbidden Armor": 2,
-        "Daedalus Armor": 2,
-        "Hallowed Armor": 3,
-        "Fathom Swarmer Armor": 2,
-        "Tiki Armor": 4,
-        "Hydrothermic Armor": 2,
-        "Plaguebringer Armor": 3,
-        "Spooky Armor": 4,
-        "Astral Armor": 3,
-        "Stardust Armor": 5,
-        "Tarragon Armor": 3,
-        "Bloodflare Armor": 3,
-        "Omega Blue Armor": 2,
-        "Fearmonger Armor": 2,
-        "Silva Armor": 5,
-        "Auric Tesla Armor": 6,
-        "Demonshade Armor": 10
+      "calamity": false,
+      "grindy_achievements": false,
+      "getfixedboi": false,
+      "shops": [],
+      "ter_items": [
+        "Copper Shortsword",
+        "Guide",
+        "Squire Slime",
+        "Traveling Merchant",
+        "Lifeform Analyzer",
+        "DPS Meter",
+        "Stopwatch",
+        "Merchant",
+        "Bug Net",
+        "Dye Trader",
+        "Demolitionist",
+        "Cactus",
+        "Aglet",
+        "Radar",
+        "Wand of Sparking",
+        "Evil Powder",
+        "Zoologist",
+        "Cat",
+        "Dog",
+        "Painter",
+        "Enchanted Sword",
+        "Angler",
+        "Fisherman's Pocket Guide",
+        "Weather Radio",
+        "Sextant",
+        "Water Walking Boots",
+        "Starfury",
+        "Celestial Magnet",
+        "Clumsy Slime",
+        "Torch God",
+        "Depth Meter",
+        "Compass",
+        "Magic Mirror",
+        "Nurse",
+        "Gold Hammer",
+        "Gold Pickaxe",
+        "Gold Watch",
+        "Hermes Boots",
+        "Stylist",
+        "Metal Detector",
+        "Obsidian",
+        "Obsidian Skull",
+        "Lava Charm",
+        "Demonite Ore",
+        "Demonite Bar",
+        "Evil Sword",
+        "Ice Skates",
+        "Flinx Fur Coat",
+        "Golfer",
+        "Party Girl",
+        "Cool Slime",
+        "Anklet of the Wind",
+        "Feral Claws",
+        "Stinger",
+        "Jungle Spores",
+        "Vine",
+        "Blade of Grass",
+        "Nature's Gift",
+        "Bezoar",
+        "Summoning Potion",
+        "Obsidian Rose",
+        "Magma Stone",
+        "Arms Dealer",
+        "Illegal Gun Parts",
+        "King Slime",
+        "Solidifier",
+        "Nerdy Slime",
+        "Sandstorm",
+        "Shark Tooth Necklace",
+        "Surly Slime",
+        "Eye of Cthulhu",
+        "Dryad",
+        "Pumpkin Seeds",
+        "Pumpkin",
+        "Purification Powder",
+        "Mystic Slime",
+        "Evil Boss",
+        "Evil Boss Part",
+        "Evil Pickaxe",
+        "Obsidian Armor",
+        "Tavernkeep",
+        "Old One's Army Tier 1",
+        "Meteorite",
+        "Meteorite Bar",
+        "Meteor Hamaxe",
+        "Hellforge",
+        "Hellstone",
+        "Hellstone Bar",
+        "Fiery Greatsword",
+        "Molten Hamaxe",
+        "Molten Pickaxe",
+        "Goblin Army",
+        "Goblin Tinkerer",
+        "Tinkerer's Workshop",
+        "Mana Flower",
+        "Rocket Boots",
+        "Spectre Boots",
+        "Lightning Boots",
+        "Frostspark Boots",
+        "Lava Waders",
+        "Terraspark Boots",
+        "GPS",
+        "Goblin Tech",
+        "Fish Finder",
+        "Diving Gear",
+        "Queen Bee",
+        "Bee Keeper",
+        "Bee Wax",
+        "Bee Armor",
+        "Witch Doctor",
+        "Pygmy Necklace",
+        "Skeletron",
+        "Clothier",
+        "Dungeon",
+        "Bone",
+        "Tally Counter",
+        "R.E.K. 3000",
+        "PDA",
+        "Cell Phone",
+        "Bewitching Table",
+        "Alchemy Table",
+        "Mechanic",
+        "Wire",
+        "Actuator",
+        "Muramasa",
+        "Cobalt Shield",
+        "Obsidian Shield",
+        "Elder Slime",
+        "Deerclops",
+        "Night's Edge",
+        "Wall of Flesh",
+        "Pwnhammer",
+        "Emblem",
+        "Fast Clock",
+        "Wizard",
+        "Titan Glove",
+        "Power Glove",
+        "Magic Quiver",
+        "Hallowed Seeds",
+        "Armor Polish",
+        "Adhesive Bandage",
+        "Medicated Bandage",
+        "Megaphone",
+        "Pocket Mirror",
+        "Trifold Map",
+        "The Plan",
+        "Tax Collector",
+        "Spider Fangs",
+        "Spider Armor",
+        "Cross Necklace",
+        "Altar",
+        "Cobalt Ore",
+        "Cobalt Bar",
+        "Cobalt Pickaxe",
+        "Blindfold",
+        "Reflective Shades",
+        "Vitamins",
+        "Armor Bracing",
+        "Nazar",
+        "Countercurse Mantra",
+        "Ankh Charm",
+        "Ankh Shield",
+        "Soul of Night",
+        "Hallow",
+        "Pixie Dust",
+        "Holy Water",
+        "Unicorn Horn",
+        "Crystal Shard",
+        "Soul of Light",
+        "Meteor Staff",
+        "Blessed Apple",
+        "Rod of Discord",
+        "Soul of Flight",
+        "Bunny",
+        "Forbidden Fragment",
+        "Truffle",
+        "Pirate Invasion",
+        "Pirate",
+        "Queen Slime",
+        "Sparkle Slime Balloon",
+        "Diva Slime",
+        "Mythril Ore",
+        "Mythril Bar",
+        "Hardmode Anvil",
+        "Mythril Pickaxe",
+        "Adamantite Ore",
+        "Hardmode Forge",
+        "Adamantite Bar",
+        "Adamantite Pickaxe",
+        "Forbidden Armor",
+        "Mechanical Eye",
+        "Mechanical Worm",
+        "Mechanical Skull",
+        "Reward: Hermes Boots",
+        "Reward: Magic Mirror",
+        "Reward: Demon Conch",
+        "Reward: Magic Conch",
+        "Reward: Grappling Hook",
+        "Reward: Cloud in a Bottle",
+        "Reward: Climbing Claws",
+        "Reward: Ancient Chisel",
+        "Reward: Fledgling Wings",
+        "Reward: Rod of Discord",
+        "Reward: Stopwatch",
+        "Reward: DPS Meter",
+        "Reward: Sextant",
+        "Reward: Weather Radio",
+        "Reward: Neptune's Shell",
+        "Reward: Gold Ring",
+        "Reward: Ice Skates",
+        "Reward: Tally Counter",
+        "Reward: Putrid Scent",
+        "Reward: Yoyo Glove",
+        "Reward: Titan Glove",
+        "Reward: Red Counterweight",
+        "Reward: Water Walking Boots",
+        "Reward: Celestial Magnet",
+        "Reward: Flying Carpet",
+        "Reward: Flipper",
+        "Reward: Lava Charm",
+        "Reward: Megaphone",
+        "Reward: Feral Claws",
+        "Reward: Trifold Map",
+        "Reward: Black Belt",
+        "Reward: Armor Polish",
+        "Reward: Lucky Coin",
+        "Reward: Fisherman's Pocket Guide",
+        "Reward: Nature's Gift",
+        "Reward: Moon Charm",
+        "Reward: Shoe Spikes",
+        "Reward: Star Cloak",
+        "Reward: Lavaproof Fishing Hook",
+        "Reward: Paint Sprayer",
+        "Reward: Fast Clock",
+        "Reward: Obsidian Rose",
+        "Reward: Step Stool",
+        "Reward: Rifle Scope",
+        "Reward: Treasure Magnet",
+        "Reward: Brick Layer",
+        "Reward: Shark Tooth Necklace",
+        "Reward: Nazar"
+      ],
+      "ter_locations": [
+        "Copper Shortsword",
+        "Guide",
+        "Squire Slime",
+        "Traveling Merchant",
+        "Lifeform Analyzer",
+        "DPS Meter",
+        "Stopwatch",
+        "Timber!!",
+        "Benched",
+        "Stop! Hammer Time!",
+        "Matching Attire",
+        "Fashion Statement",
+        "Ooo! Shiny!",
+        "No Hobo",
+        "Merchant",
+        "Bug Net",
+        "Heavy Metal",
+        "Dye Trader",
+        "Dye Hard",
+        "Demolitionist",
+        "Lucky Break",
+        "Star Power",
+        "You Can Do It!",
+        "Cactus",
+        "Unusual Survival Strategies",
+        "Aglet",
+        "Radar",
+        "Wand of Sparking",
+        "Heliophobia",
+        "Evil Powder",
+        "Zoologist",
+        "Cat",
+        "Feeling Petty",
+        "Dog",
+        "Painter",
+        "Enchanted Sword",
+        "Angler",
+        "Fisherman's Pocket Guide",
+        "Weather Radio",
+        "Sextant",
+        "Water Walking Boots",
+        "Into Orbit",
+        "Starfury",
+        "Celestial Magnet",
+        "Clumsy Slime",
+        "Watch Your Step!",
+        "Throwing Lines",
+        "Torch God",
+        "Vehicular Manslaughter",
+        "Depth Meter",
+        "Compass",
+        "Hey! Listen!",
+        "I Am Loot!",
+        "Magic Mirror",
+        "Heart Breaker",
+        "Nurse",
+        "The Frequent Flyer",
+        "Feast of Midas",
+        "Hold on Tight!",
+        "Gold Hammer",
+        "Gold Pickaxe",
+        "Gold Watch",
+        "Like a Boss",
+        "Hermes Boots",
+        "Jeepers Creepers",
+        "Stylist",
+        "Funkytown",
+        "Metal Detector",
+        "Dead Men Tell No Tales",
+        "Obsidian",
+        "Obsidian Skull",
+        "Lava Charm",
+        "Demonite Ore",
+        "Demonite Bar",
+        "Evil Sword",
+        "Ice Skates",
+        "Flinx Fur Coat",
+        "Golfer",
+        "Party Girl",
+        "Cool Slime",
+        "Anklet of the Wind",
+        "Feral Claws",
+        "Stinger",
+        "Jungle Spores",
+        "Vine",
+        "Blade of Grass",
+        "Nature's Gift",
+        "Bezoar",
+        "Summoning Potion",
+        "A Shimmer In The Dark",
+        "It's Getting Hot in Here",
+        "Rock Bottom",
+        "Obsidian Rose",
+        "Magma Stone",
+        "Smashing, Poppet!",
+        "Arms Dealer",
+        "Leading Landlord",
+        "Completely Awesome",
+        "Illegal Gun Parts",
+        "King Slime",
+        "The Cavalry",
+        "Solidifier",
+        "Nerdy Slime",
+        "Sandstorm",
+        "Shark Tooth Necklace",
+        "Quiet Neighborhood",
+        "Surly Slime",
+        "Eye of Cthulhu",
+        "Dryad",
+        "Pumpkin Seeds",
+        "Pumpkin",
+        "Purification Powder",
+        "Mystic Slime",
+        "Evil Boss",
+        "Evil Boss Part",
+        "Evil Pickaxe",
+        "Obsidian Armor",
+        "Tavernkeep",
+        "Old One's Army Tier 1",
+        "Meteorite",
+        "Meteorite Bar",
+        "Meteor Hamaxe",
+        "Hellforge",
+        "Hellstone",
+        "Hellstone Bar",
+        "Fiery Greatsword",
+        "Molten Hamaxe",
+        "Molten Pickaxe",
+        "Miner for Fire",
+        "Hot Reels!",
+        "Goblin Army",
+        "Goblin Tinkerer",
+        "Tinkerer's Workshop",
+        "Mana Flower",
+        "Rocket Boots",
+        "Spectre Boots",
+        "Lightning Boots",
+        "Frostspark Boots",
+        "Lava Waders",
+        "Terraspark Boots",
+        "GPS",
+        "Goblin Tech",
+        "Fish Finder",
+        "Diving Gear",
+        "Where's My Honey?",
+        "Queen Bee",
+        "Bee Keeper",
+        "Bee Wax",
+        "Bee Armor",
+        "Not the Bees!",
+        "Witch Doctor",
+        "Pygmy Necklace",
+        "Skeletron",
+        "Clothier",
+        "Dungeon",
+        "Dungeon Heist",
+        "Bone",
+        "Tally Counter",
+        "R.E.K. 3000",
+        "PDA",
+        "Cell Phone",
+        "Bewitching Table",
+        "Alchemy Table",
+        "Mechanic",
+        "Wire",
+        "Actuator",
+        "Muramasa",
+        "Cobalt Shield",
+        "Obsidian Shield",
+        "Elder Slime",
+        "Deerclops",
+        "Night's Edge",
+        "Wall of Flesh",
+        "Pwnhammer",
+        "Emblem",
+        "Fast Clock",
+        "Wizard",
+        "Titan Glove",
+        "Power Glove",
+        "Magic Quiver",
+        "Hallowed Seeds",
+        "Armor Polish",
+        "Adhesive Bandage",
+        "Medicated Bandage",
+        "Megaphone",
+        "Pocket Mirror",
+        "Trifold Map",
+        "The Plan",
+        "Tax Collector",
+        "Spider Fangs",
+        "Spider Armor",
+        "Cross Necklace",
+        "Altar",
+        "Begone, Evil!",
+        "Cobalt Ore",
+        "Extra Shiny!",
+        "Cobalt Bar",
+        "Cobalt Pickaxe",
+        "Blindfold",
+        "Reflective Shades",
+        "Vitamins",
+        "Armor Bracing",
+        "Nazar",
+        "Countercurse Mantra",
+        "Ankh Charm",
+        "Ankh Shield",
+        "Soul of Night",
+        "Hallow",
+        "Pixie Dust",
+        "Holy Water",
+        "Unicorn Horn",
+        "Crystal Shard",
+        "Soul of Light",
+        "Meteor Staff",
+        "Blessed Apple",
+        "Rod of Discord",
+        "Soul of Flight",
+        "Head in the Clouds",
+        "Bunny",
+        "Forbidden Fragment",
+        "Don't Dread on Me",
+        "Truffle",
+        "It Can Talk?!",
+        "Pirate Invasion",
+        "Pirate",
+        "Queen Slime",
+        "Sparkle Slime Balloon",
+        "Diva Slime",
+        "The Great Slime Mitosis",
+        "Mythril Ore",
+        "Mythril Bar",
+        "Hardmode Anvil",
+        "Mythril Pickaxe",
+        "Adamantite Ore",
+        "Hardmode Forge",
+        "Adamantite Bar",
+        "Adamantite Pickaxe",
+        "Forbidden Armor",
+        "Mechanical Eye",
+        "Mechanical Worm",
+        "Mechanical Skull",
+        "The Twins",
+        "The Destroyer",
+        "Skeletron Prime"
+      ],
+      "ter_goals": {
+        "Post-The Twins": "The Twins",
+        "Post-Skeletron Prime": "Skeletron Prime",
+        "Post-The Destroyer": "The Destroyer"
       },
-      "accessory_minions": {
-        "Summoning Potion": 1,
-        "Voltaic Jelly": 1,
-        "Pygmy Necklace": 1,
-        "Bewitching Table": 1,
-        "The First Shadowflame": 1,
-        "Nuclear Fuel Rod": 1,
-        "Starbuster Core": 1,
-        "Necromantic Scroll": 1,
-        "Papyrus Scarab": 1,
-        "Eldritch Soul Artifact": 1,
-        "Profaned Soul Artifact": 1,
-        "Angelic Alliance": 2
+      "world_description": "Terraria WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "web": {
+        "theme": "grass"
       },
       "world_directory": "terraria_worldgen"
     }
   },
-  "world_attributes": {
+  "exporter": {
     "1": {
-      "calamity": false,
-      "grindy_achievements": false,
-      "getfixedboi": false
-    }
-  },
-  "game_info": {
-    "1": {
-      "name": "Terraria WorldGen",
       "rule_format": {
         "version": "1.0"
       },
-      "web_theme": "grass",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Terraria randomizer connected to an Archipelago Multiworld.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Seldom"
-          ]
-        }
-      ],
-      "world_description": "Terraria is a 2D multiplayer sandbox game featuring mining, building, exploration, and combat.\nFeatures 18 bosses and 4 classes.",
-      "slot_data": {
-        "goal": [
-          "Skeletron Prime",
-          "The Destroyer",
-          "The Twins"
-        ],
-        "deathlink": false,
-        "calamity": 0,
-        "getfixedboi": 0,
-        "early_achievements": 1,
-        "normal_achievements": 1,
-        "grindy_achievements": 0,
-        "fishing_achievements": 0
-      }
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {
     "1": {

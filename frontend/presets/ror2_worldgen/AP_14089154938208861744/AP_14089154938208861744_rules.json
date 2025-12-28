@@ -4288,7 +4288,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false
+            "show_in_spoiler": false,
+            "event": true
           }
         ]
       },
@@ -4753,7 +4754,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5728,32 +5730,30 @@
       "Distant Roost"
     ]
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Risk of Rain 2 WorldGen",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
-        "accessibility": "full",
+        "accessibility": 0,
         "altars_per_stage": 1,
         "boss_item": 4,
         "chests_per_stage": 10,
         "combat_trap": 20,
         "common_item": 64,
-        "death_link": "false",
-        "dlc_sotv": "false",
-        "enable_lunar": "true",
-        "enable_trap": "false",
+        "death_link": false,
+        "dlc_sotv": false,
+        "enable_lunar": true,
+        "enable_trap": false,
         "equipment": 32,
         "exclude_locations": [],
         "experience": 40,
-        "final_stage_death": "false",
-        "goal": "explore",
+        "final_stage_death": false,
+        "goal": 1,
         "green_scrap": 16,
         "item_links": [],
         "item_pickup_step": 1,
-        "item_pool_presets": "false",
-        "item_weights": "default",
+        "item_pool_presets": false,
+        "item_weights": 0,
         "legendary_item": 8,
         "local_items": [],
         "lunar_coin": 20,
@@ -5764,10 +5764,10 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "progressive_stages": "true",
-        "randomize_items": "false",
+        "progressive_stages": true,
+        "randomize_items": false,
         "red_scrap": 4,
-        "require_stages": "true",
+        "require_stages": true,
         "scanner_per_stage": 1,
         "scavengers_per_stage": 0,
         "shrine_use_step": 0,
@@ -5775,13 +5775,13 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
-        "start_with_revive": "true",
+        "start_with_revive": true,
         "teleport_trap": 20,
         "time_warp_trap": 20,
         "total_locations": 40,
         "total_revivals": 4,
         "uncommon_item": 32,
-        "victory": "any",
+        "victory": 0,
         "void_item": 16,
         "white_scrap": 32,
         "yellow_scrap": 1
@@ -6080,11 +6080,9 @@
           "display_name": "Yellow Scraps"
         }
       },
-      "world_directory": "ror2_worldgen"
-    }
-  },
-  "world_attributes": {
-    "1": {
+      "shops": [],
+      "total_revivals": 7,
+      "world_description": "Risk of Rain 2 WorldGen for Archipelago.\n\nAuto-generated world implementation.",
       "settings": {
         "game": "Risk of Rain 2",
         "assume_bidirectional_exits": false,
@@ -6142,51 +6140,24 @@
           "yellow_scrap": 1
         },
         "world_directory": "ror2"
-      }
+      },
+      "web": {
+        "theme": "grass"
+      },
+      "world_directory": "ror2_worldgen"
     }
   },
-  "game_info": {
+  "exporter": {
     "1": {
-      "name": "Risk of Rain 2 WorldGen",
       "rule_format": {
         "version": "1.0"
       },
-      "web_theme": "grass",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Risk of Rain 2 integration for Archipelago multiworld games.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Ijwu",
-            "Kindasneaki"
-          ]
-        }
-      ],
-      "world_description": "Escape a chaotic alien planet by fighting through hordes of frenzied monsters \u2013 with your friends, or on your own.\nCombine loot in surprising ways and master each character until you become the havoc you feared upon your\nfirst crash landing.",
-      "slot_data": {
-        "itemPickupStep": 1,
-        "shrineUseStep": 0,
-        "goal": 1,
-        "victory": 0,
-        "totalLocations": 40,
-        "chestsPerStage": 10,
-        "shrinesPerStage": 5,
-        "scavengersPerStage": 0,
-        "scannerPerStage": 1,
-        "altarsPerStage": 1,
-        "totalRevivals": 4,
-        "startWithRevive": 1,
-        "finalStageDeath": 0,
-        "deathLink": 0,
-        "requireStages": 1,
-        "progressiveStages": 1,
-        "seed": "3991975562123098",
-        "offset": 37000
-      }
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }

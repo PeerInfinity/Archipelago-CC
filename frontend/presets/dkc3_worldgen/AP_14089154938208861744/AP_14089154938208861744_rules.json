@@ -4047,26 +4047,24 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Donkey Kong Country 3 WorldGen",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
-        "accessibility": "full",
-        "autosave": "true",
-        "difficulty": "norml",
+        "accessibility": 0,
+        "autosave": true,
+        "difficulty": 0,
         "dk_coins_for_gyrocopter": 30,
         "exclude_locations": [],
-        "goal": "knautilus",
+        "goal": 0,
         "item_links": [],
-        "kong_palette_swap": "default",
-        "kongsanity": "false",
+        "kong_palette_swap": 0,
+        "kongsanity": false,
         "krematoa_bonus_coin_cost": 15,
-        "level_shuffle": "false",
+        "level_shuffle": false,
         "local_items": [],
-        "merry": "false",
-        "music_shuffle": "false",
+        "merry": false,
+        "music_shuffle": false,
         "non_local_items": [],
         "number_of_banana_birds": 15,
         "percentage_of_banana_birds": 100,
@@ -4074,7 +4072,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": "false",
+        "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
@@ -4205,11 +4203,50 @@
           "display_name": "Starting Life Count"
         }
       },
-      "world_directory": "dkc3_worldgen"
-    }
-  },
-  "world_attributes": {
-    "1": {
+      "shops": [],
+      "active_level_list": [
+        "Lakeside Limbo",
+        "Doorstop Dash",
+        "Tidal Trouble",
+        "Skidda's Row",
+        "Murky Mill",
+        "Barrel Shield Bust-Up",
+        "Riverside Race",
+        "Squeals On Wheels",
+        "Springin' Spiders",
+        "Bobbing Barrel Brawl",
+        "Bazza's Blockade",
+        "Rocket Barrel Ride",
+        "Kreeping Klasps",
+        "Tracker Barrel Trek",
+        "Fish Food Frenzy",
+        "Fire-Ball Frenzy",
+        "Demolition Drain-Pipe",
+        "Ripsaw Rage",
+        "Blazing Bazukas",
+        "Low-G Labyrinth",
+        "Krevice Kreepers",
+        "Tearaway Toboggan",
+        "Barrel Drop Bounce",
+        "Krack-Shot Kroc",
+        "Lemguin Lunge",
+        "Buzzer Barrage",
+        "Kong-Fused Cliffs",
+        "Floodlit Fish",
+        "Pothole Panic",
+        "Ropey Rumpus",
+        "Konveyor Rope Klash",
+        "Creepy Caverns",
+        "Lightning Lookout",
+        "Koindozer Klamber",
+        "Poisonous Pipeline",
+        "Stampede Sprint",
+        "Criss Kross Cliffs",
+        "Tyrant Twin Tussle",
+        "Swoopy Salvo"
+      ],
+      "rom_name": "DKC3_ROM_NOT_GENERATED",
+      "world_description": "Donkey Kong Country 3 WorldGen for Archipelago.\n\nAuto-generated world implementation.",
       "settings": {
         "game": "Donkey Kong Country 3",
         "assume_bidirectional_exits": false,
@@ -4242,87 +4279,24 @@
           "starting_life_count": 5
         },
         "world_directory": "dkc3"
-      }
+      },
+      "web": {
+        "theme": "jungle"
+      },
+      "world_directory": "dkc3_worldgen"
     }
   },
-  "game_info": {
+  "exporter": {
     "1": {
-      "name": "Donkey Kong Country 3 WorldGen",
       "rule_format": {
         "version": "1.0"
       },
-      "web_theme": "jungle",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Donkey Kong Country 3 randomizer connected to an Archipelago Multiworld.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "PoryGone"
-          ]
-        }
-      ],
-      "world_description": "Donkey Kong Country 3 is an action platforming game.\nPlay as Dixie Kong and her baby cousin Kiddy as they try to solve the\nmystery of why Donkey Kong and Diddy disappeared while on vacation.",
-      "slot_data": {
-        "active_levels": [
-          "Lakeside Limbo",
-          "Doorstop Dash",
-          "Tidal Trouble",
-          "Skidda's Row",
-          "Murky Mill",
-          "Barrel Shield Bust-Up",
-          "Riverside Race",
-          "Squeals On Wheels",
-          "Springin' Spiders",
-          "Bobbing Barrel Brawl",
-          "Bazza's Blockade",
-          "Rocket Barrel Ride",
-          "Kreeping Klasps",
-          "Tracker Barrel Trek",
-          "Fish Food Frenzy",
-          "Fire-Ball Frenzy",
-          "Demolition Drain-Pipe",
-          "Ripsaw Rage",
-          "Blazing Bazukas",
-          "Low-G Labyrinth",
-          "Krevice Kreepers",
-          "Tearaway Toboggan",
-          "Barrel Drop Bounce",
-          "Krack-Shot Kroc",
-          "Lemguin Lunge",
-          "Buzzer Barrage",
-          "Kong-Fused Cliffs",
-          "Floodlit Fish",
-          "Pothole Panic",
-          "Ropey Rumpus",
-          "Konveyor Rope Klash",
-          "Creepy Caverns",
-          "Lightning Lookout",
-          "Koindozer Klamber",
-          "Poisonous Pipeline",
-          "Stampede Sprint",
-          "Criss Kross Cliffs",
-          "Tyrant Twin Tussle",
-          "Swoopy Salvo"
-        ],
-        "goal": 0,
-        "krematoa_bonus_coin_cost": 15,
-        "percentage_of_extra_bonus_coins": 100,
-        "number_of_banana_birds": 15,
-        "percentage_of_banana_birds": 100,
-        "dk_coins_for_gyrocopter": 30,
-        "kongsanity": 0,
-        "level_shuffle": 0,
-        "difficulty": 0,
-        "autosave": 1,
-        "merry": 0,
-        "music_shuffle": 0,
-        "kong_palette_swap": 0,
-        "starting_life_count": 5
-      }
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }

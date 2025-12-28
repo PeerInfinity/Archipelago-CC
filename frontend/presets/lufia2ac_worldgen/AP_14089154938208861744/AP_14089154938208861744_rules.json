@@ -485,7 +485,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false
+            "show_in_spoiler": false,
+            "event": true
           },
           {
             "name": "Chest access 11-15",
@@ -504,7 +505,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false
+            "show_in_spoiler": false,
+            "event": true
           },
           {
             "name": "Chest access 16-20",
@@ -523,7 +525,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false
+            "show_in_spoiler": false,
+            "event": true
           },
           {
             "name": "Chest access 21-25",
@@ -542,7 +545,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false
+            "show_in_spoiler": false,
+            "event": true
           },
           {
             "name": "Iris treasure 4",
@@ -725,7 +729,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Boss",
@@ -5504,21 +5509,48 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Lufia II Ancient Cave WorldGen",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
-        "accessibility": "full",
+        "accessibility": 0,
+        "blue_chest_chance": 25,
+        "blue_chest_count": 25,
+        "boss": 38,
+        "capsule_cravings_jp_style": false,
+        "capsule_starting_form": 1,
+        "capsule_starting_level": 1,
+        "crowded_floor_chance": 16,
+        "death_link": false,
+        "default_capsule": 0,
+        "default_party": "M",
+        "enemy_floor_numbers": 0,
+        "enemy_movement_patterns": 0,
+        "enemy_sprites": 0,
         "exclude_locations": [],
+        "exp_modifier": 100,
+        "final_floor": 99,
+        "gear_variety_after_b9": false,
+        "goal": 1,
+        "gold_modifier": 100,
+        "healing_floor_chance": 16,
+        "inactive_exp_gain": 0,
+        "initial_floor": 1,
+        "iris_floor_chance": 5,
+        "iris_treasures_required": 9,
         "item_links": [],
         "local_items": [],
+        "master_hp": 9980,
         "non_local_items": [],
+        "party_starting_level": 1,
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": "false",
+        "randomize_items": false,
+        "run_speed": 8,
+        "shop_interval": 0,
+        "shuffle_capsule_monsters": false,
+        "shuffle_party_members": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
@@ -5533,6 +5565,235 @@
           "default": 0,
           "display_name": "Accessibility"
         },
+        "blue_chest_chance": {
+          "type": "range",
+          "range_start": 5,
+          "range_end": 75,
+          "default": 25,
+          "display_name": "Blue chest chance"
+        },
+        "blue_chest_count": {
+          "type": "range",
+          "range_start": 10,
+          "range_end": 100,
+          "default": 25,
+          "display_name": "Blue chest count"
+        },
+        "boss": {
+          "type": "choice",
+          "name_lookup": {
+            "1": "lizard_man",
+            "2": "big_catfish",
+            "5": "regal_goblin",
+            "6": "follower_x2",
+            "7": "camu",
+            "8": "tarantula",
+            "9": "pierre",
+            "10": "daniele",
+            "11": "gades_a",
+            "12": "mummy_x4",
+            "13": "troll_x3",
+            "14": "gades_b",
+            "15": "idura_a",
+            "18": "lion_x2",
+            "19": "idura_b",
+            "20": "idura_c",
+            "21": "rogue_flower",
+            "22": "soldier_x4",
+            "23": "gargoyle_x4",
+            "24": "venge_ghost",
+            "25": "white_dragon_x3",
+            "26": "fire_dragon",
+            "27": "ghost_ship",
+            "30": "tank",
+            "31": "gades_c",
+            "32": "amon",
+            "35": "erim",
+            "36": "daos",
+            "37": "egg_dragon",
+            "38": "master",
+            "39": "random_low",
+            "40": "random_middle",
+            "41": "random_high",
+            "42": "random_sinistral"
+          },
+          "default": 38,
+          "display_name": "Boss"
+        },
+        "capsule_cravings_jp_style": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Capsule cravings JP style"
+        },
+        "capsule_starting_form": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 5,
+          "default": 1,
+          "display_name": "Capsule monster starting form"
+        },
+        "capsule_starting_level": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 99,
+          "default": 1,
+          "display_name": "Capsule monster starting level"
+        },
+        "crowded_floor_chance": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 255,
+          "default": 16,
+          "display_name": "Crowded floor chance"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "default_capsule": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "jelze",
+            "1": "flash",
+            "2": "gusto",
+            "3": "zeppy",
+            "4": "darbi",
+            "5": "sully",
+            "6": "blaze"
+          },
+          "default": 0,
+          "display_name": "Default capsule monster"
+        },
+        "default_party": {
+          "type": "choice",
+          "name_lookup": {},
+          "default": "M",
+          "display_name": "Default party lineup"
+        },
+        "enemy_floor_numbers": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "shuffle",
+            "2": "randomize"
+          },
+          "default": 0,
+          "display_name": "Enemy floor numbers"
+        },
+        "enemy_movement_patterns": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "shuffle_by_pattern",
+            "2": "randomize_by_pattern",
+            "3": "shuffle_by_sprite",
+            "4": "randomize_by_sprite",
+            "5": "singularity"
+          },
+          "default": 0,
+          "display_name": "Enemy movement patterns"
+        },
+        "enemy_sprites": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "vanilla",
+            "1": "shuffle",
+            "2": "randomize",
+            "3": "singularity"
+          },
+          "default": 0,
+          "display_name": "Enemy sprites"
+        },
+        "exp_modifier": {
+          "type": "range",
+          "range_start": 100,
+          "range_end": 500,
+          "default": 100,
+          "display_name": "EXP modifier"
+        },
+        "final_floor": {
+          "type": "range",
+          "range_start": 2,
+          "range_end": 99,
+          "default": 99,
+          "display_name": "Final floor"
+        },
+        "gear_variety_after_b9": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Increase gear variety after B9"
+        },
+        "goal": {
+          "type": "choice",
+          "name_lookup": {
+            "1": "boss",
+            "2": "iris_treasure_hunt",
+            "3": "boss_iris_treasure_hunt",
+            "4": "final_floor"
+          },
+          "default": 1,
+          "display_name": "Goal"
+        },
+        "gold_modifier": {
+          "type": "range",
+          "range_start": 25,
+          "range_end": 400,
+          "default": 100,
+          "display_name": "Gold modifier"
+        },
+        "healing_floor_chance": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 255,
+          "default": 16,
+          "display_name": "Healing tile floor chance"
+        },
+        "inactive_exp_gain": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "disabled",
+            "50": "half",
+            "100": "full"
+          },
+          "default": 0,
+          "display_name": "Inactive character EXP gain"
+        },
+        "initial_floor": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 98,
+          "default": 1,
+          "display_name": "Initial floor"
+        },
+        "iris_floor_chance": {
+          "type": "range",
+          "range_start": 5,
+          "range_end": 255,
+          "default": 5,
+          "display_name": "Iris treasure floor chance"
+        },
+        "iris_treasures_required": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9,
+          "default": 9,
+          "display_name": "Iris treasures required"
+        },
+        "master_hp": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 9980,
+          "default": 9980,
+          "display_name": "Master HP"
+        },
+        "party_starting_level": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 99,
+          "default": 1,
+          "display_name": "Party starting level"
+        },
         "progression_balancing": {
           "type": "range",
           "range_start": 0,
@@ -5544,33 +5805,109 @@
           "type": "toggle",
           "default": true,
           "display_name": "Randomize Items"
+        },
+        "run_speed": {
+          "type": "choice",
+          "name_lookup": {
+            "8": "disabled",
+            "16": "double",
+            "22": "triple",
+            "32": "quadruple"
+          },
+          "default": 8,
+          "display_name": "Run speed"
+        },
+        "shop_interval": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 0,
+          "display_name": "Shop interval"
+        },
+        "shuffle_capsule_monsters": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle capsule monsters"
+        },
+        "shuffle_party_members": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Shuffle party members"
         }
+      },
+      "shops": [],
+      "world_description": "Lufia II Ancient Cave WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "settings": {
+        "game": "Lufia II Ancient Cave",
+        "assume_bidirectional_exits": false,
+        "use_resolved_items": false,
+        "options": {
+          "accessibility": "full",
+          "blue_chest_chance": 25,
+          "blue_chest_count": 25,
+          "boss": "master",
+          "capsule_cravings_jp_style": "false",
+          "capsule_starting_form": 1,
+          "capsule_starting_level": 1,
+          "crowded_floor_chance": 16,
+          "custom_item_pool": {},
+          "death_link": "false",
+          "default_capsule": "jelze",
+          "default_party": "M",
+          "enemy_floor_numbers": "vanilla",
+          "enemy_movement_patterns": "vanilla",
+          "enemy_sprites": "vanilla",
+          "exclude_locations": [],
+          "exp_modifier": 100,
+          "final_floor": 99,
+          "gear_variety_after_b9": "false",
+          "goal": "boss",
+          "gold_modifier": 100,
+          "healing_floor_chance": 16,
+          "inactive_exp_gain": "disabled",
+          "initial_floor": 1,
+          "iris_floor_chance": 5,
+          "iris_treasures_required": 9,
+          "item_links": [],
+          "local_items": [],
+          "master_hp": 9980,
+          "non_local_items": [],
+          "party_starting_level": 1,
+          "plando_items": [],
+          "priority_locations": [],
+          "progression_balancing": 50,
+          "run_speed": "disabled",
+          "shop_interval": 0,
+          "shop_inventory": {
+            "gear": 45,
+            "spell": 30,
+            "weapon": 82
+          },
+          "shuffle_capsule_monsters": "false",
+          "shuffle_party_members": "false",
+          "start_hints": [],
+          "start_inventory": {},
+          "start_location_hints": []
+        },
+        "world_directory": "lufia2ac"
+      },
+      "web": {
+        "theme": "dirt"
       },
       "world_directory": "lufia2ac_worldgen"
     }
   },
-  "world_attributes": {},
-  "game_info": {
+  "exporter": {
     "1": {
-      "name": "Lufia II Ancient Cave WorldGen",
       "rule_format": {
         "version": "1.0"
       },
-      "web_theme": "dirt",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up Lufia II Ancient Cave for MultiWorld.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "word_fcuk"
-          ]
-        }
-      ],
-      "world_description": "The Ancient Cave is a roguelike dungeon crawling game built into\nthe RGP Lufia II. Face 99 floors of ever harder to beat monsters,\nrandom items and find new companions on the way to face the Royal\nJelly in the end. Can you beat it?"
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }

@@ -192,6 +192,10 @@ def _yoshisislandworldgen_bowserdoor_3(state: "CollectionState", player: int) ->
     return (True if ('Easy' == 'Easy') else (True if ('Easy' == 'Normal') else True))
 
 
+def _yoshisislandworldgen_bowserdoor_4(state: "CollectionState", player: int) -> bool:
+    return (True if ('Easy' == 'Easy') else (True if ('Easy' == 'Normal') else True))
+
+
 def _yoshisislandworldgen_cansee_clouds(state: "CollectionState", player: int) -> bool:
     return (True if ('Easy' != 'Easy') else (_yoshisislandworldgen_default_vis(state, player)) or (state.has('Secret Lens', player)) or (_yoshisislandworldgen_combat_item(state, player)))
 
@@ -222,6 +226,10 @@ def _yoshisislandworldgen_item_bonus(state: "CollectionState", player: int) -> b
 
 def _yoshisislandworldgen_melon_item(state: "CollectionState", player: int) -> bool:
     return (False if not (True) else (_yoshisislandworldgen_item_bonus(state, player) if ('Easy' == 'Easy') else (state.has('Bandit Watermelons', player)) or (_yoshisislandworldgen_item_bonus(state, player))))
+
+
+def _yoshisislandworldgen_reconstitute_luigi(state: "CollectionState", player: int) -> bool:
+    return state.has('Piece of Luigi', player, 25)
 
 
 def set_rules(world: "World") -> None:

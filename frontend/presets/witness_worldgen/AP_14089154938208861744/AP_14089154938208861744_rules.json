@@ -113,7 +113,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Desert Laser Activated",
@@ -130,7 +131,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Quarry Laser Activated",
@@ -164,7 +166,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Shadows Laser Activated",
@@ -181,7 +184,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Keep Laser Activated",
@@ -278,7 +282,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Monastery Laser Activated",
@@ -307,7 +312,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Town Laser Activated",
@@ -324,7 +330,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Jungle Laser Activated",
@@ -353,7 +360,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Bunker Laser Activated",
@@ -370,7 +378,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Swamp Laser Activated",
@@ -387,7 +396,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Treehouse Laser Activated",
@@ -404,7 +414,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1293,7 +1304,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2893,7 +2905,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Town Wooden Roof Lower Row 5",
@@ -5525,7 +5538,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6244,7 +6258,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -9781,14 +9796,11 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "The Witness WorldGen",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
-      "add_sphere_items_upfront": true,
       "options": {
-        "accessibility": "full",
+        "accessibility": 0,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -9796,7 +9808,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": "false",
+        "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
@@ -9824,50 +9836,6 @@
           "display_name": "Randomize Items"
         }
       },
-      "world_directory": "witness_worldgen"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "The Witness WorldGen",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "jungle",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to playing The Witness with Archipelago.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "NewSoupVi",
-            "Jarno"
-          ]
-        },
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to playing The Witness with Archipelago.",
-          "language": "German",
-          "file_name": "setup_de.md",
-          "link": "setup/de",
-          "authors": [
-            "NewSoupVi"
-          ]
-        },
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to playing The Witness with Archipelago.",
-          "language": "Fran\u00e7ais",
-          "file_name": "setup_fr.md",
-          "link": "setup/fr",
-          "authors": [
-            "Rever"
-          ]
-        }
-      ],
       "world_description": "The Witness is an open-world puzzle game with dozens of locations\nto explore and over 500 puzzles. Play the popular puzzle randomizer\nby sigma144, with an added layer of progression randomization!",
       "slot_data": {
         "seed": 9335755,
@@ -12119,8 +12087,58 @@
         "puzzle_randomization_seed": 9335755,
         "shuffle_dog": 1,
         "easter_egg_hunt": 0
-      }
+      },
+      "web": {
+        "theme": "jungle",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to playing The Witness with Archipelago.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "NewSoupVi",
+              "Jarno"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to playing The Witness with Archipelago.",
+            "language": "German",
+            "file_name": "setup_de.md",
+            "link": "setup/de",
+            "authors": [
+              "NewSoupVi"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to playing The Witness with Archipelago.",
+            "language": "Fran\u00e7ais",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "Rever"
+            ]
+          }
+        ]
+      },
+      "world_directory": "witness_worldgen"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false,
+      "add_sphere_items_upfront": true
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }

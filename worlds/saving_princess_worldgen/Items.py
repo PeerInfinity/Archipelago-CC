@@ -40,12 +40,7 @@ item_table: Dict[str, ItemData] = {
     "Quick-fire Mode": ItemData(91630179862877, ItemClassification.filler),
     "Active Camouflage": ItemData(91630179862878, ItemClassification.filler),
     "Ice Trap": ItemData(91630179862879, ItemClassification.trap),
-    "Shake Trap": ItemData(91630179862880, ItemClassification.trap),
+    "Shake Trap": ItemData(91630179862880, ItemClassification.filler),
     "Ninja Trap": ItemData(91630179862881, ItemClassification.trap),
-    "Guard neutralized": ItemData(None, ItemClassification.progression),
-    "Cliff neutralized": ItemData(None, ItemClassification.progression),
-    "Ace neutralized": ItemData(None, ItemClassification.progression),
-    "Snake neutralized": ItemData(None, ItemClassification.progression),
-    "Power restored": ItemData(None, ItemClassification.progression),
     "PRINCESS": ItemData(None, ItemClassification.progression),
 }

@@ -709,294 +709,251 @@
       "Powered Blaster": {
         "name": "Powered Blaster",
         "id": 91630179862862,
-        "classification": "progression",
         "groups": [
           "Everything",
           "Weapons"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Flamethrower": {
         "name": "Flamethrower",
         "id": 91630179862863,
-        "classification": "progression",
         "groups": [
           "Everything",
           "Weapons"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ice Spreadshot": {
         "name": "Ice Spreadshot",
         "id": 91630179862864,
-        "classification": "progression",
         "groups": [
           "Everything",
           "Weapons"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Volt Laser": {
         "name": "Volt Laser",
         "id": 91630179862865,
-        "classification": "progression",
         "groups": [
           "Everything",
           "Weapons"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Life Extension": {
         "name": "Life Extension",
         "id": 91630179862866,
-        "classification": "progression",
         "groups": [
           "Everything",
           "Upgrades"
         ],
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification": "progression"
       },
       "Clip Extension": {
         "name": "Clip Extension",
         "id": 91630179862867,
-        "classification": "progression",
         "groups": [
           "Everything",
           "Upgrades"
         ],
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification": "progression"
       },
       "Faster Reload": {
         "name": "Faster Reload",
         "id": 91630179862868,
-        "classification": "progression",
         "groups": [
           "Everything",
           "Upgrades"
         ],
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification": "progression"
       },
       "Special Extension": {
         "name": "Special Extension",
         "id": 91630179862869,
-        "classification": "useful",
         "groups": [
           "Everything",
           "Upgrades"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Jacket": {
         "name": "Jacket",
         "id": 91630179862870,
-        "classification": "useful",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Cave Key": {
         "name": "Cave Key",
         "id": 91630179862871,
-        "classification": "progression",
         "groups": [
           "Everything",
           "Keys"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Volcanic Key": {
         "name": "Volcanic Key",
         "id": 91630179862872,
-        "classification": "progression",
         "groups": [
           "Everything",
           "Keys"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Arctic Key": {
         "name": "Arctic Key",
         "id": 91630179862873,
-        "classification": "progression",
         "groups": [
           "Everything",
           "Keys"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Swamp Key": {
         "name": "Swamp Key",
         "id": 91630179862874,
-        "classification": "progression",
         "groups": [
           "Everything",
           "Keys"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "System Power": {
         "name": "System Power",
         "id": 91630179862875,
-        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Full Heal": {
         "name": "Full Heal",
         "id": 91630179862876,
-        "classification": "filler",
         "groups": [
           "Everything",
           "Filler"
         ],
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "filler"
       },
       "Quick-fire Mode": {
         "name": "Quick-fire Mode",
         "id": 91630179862877,
-        "classification": "filler",
         "groups": [
           "Everything",
           "Filler"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Active Camouflage": {
         "name": "Active Camouflage",
         "id": 91630179862878,
-        "classification": "filler",
         "groups": [
           "Everything",
           "Filler"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ice Trap": {
         "name": "Ice Trap",
         "id": 91630179862879,
-        "classification": "trap",
         "groups": [
           "Everything",
           "Traps"
         ],
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "trap"
       },
       "Shake Trap": {
         "name": "Shake Trap",
         "id": 91630179862880,
-        "classification": "trap",
         "groups": [
           "Everything",
           "Traps"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ninja Trap": {
         "name": "Ninja Trap",
         "id": 91630179862881,
-        "classification": "trap",
         "groups": [
           "Everything",
           "Traps"
         ],
         "event": false,
         "type": null,
-        "max_count": 2
-      },
-      "Guard neutralized": {
-        "name": "Guard neutralized",
-        "id": null,
-        "classification": "progression",
-        "groups": [],
-        "event": true,
-        "type": null,
-        "max_count": 1
-      },
-      "Cliff neutralized": {
-        "name": "Cliff neutralized",
-        "id": null,
-        "classification": "progression",
-        "groups": [],
-        "event": true,
-        "type": null,
-        "max_count": 1
-      },
-      "Ace neutralized": {
-        "name": "Ace neutralized",
-        "id": null,
-        "classification": "progression",
-        "groups": [],
-        "event": true,
-        "type": null,
-        "max_count": 1
-      },
-      "Snake neutralized": {
-        "name": "Snake neutralized",
-        "id": null,
-        "classification": "progression",
-        "groups": [],
-        "event": true,
-        "type": null,
-        "max_count": 1
-      },
-      "Power restored": {
-        "name": "Power restored",
-        "id": null,
-        "classification": "progression",
-        "groups": [],
-        "event": true,
-        "type": null,
-        "max_count": 1
+        "max_count": 2,
+        "classification": "trap"
       },
       "PRINCESS": {
         "name": "PRINCESS",
         "id": null,
-        "classification": "progression",
-        "groups": [],
+        "groups": [
+          "Event"
+        ],
         "event": true,
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
