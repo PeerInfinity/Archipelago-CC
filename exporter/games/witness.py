@@ -42,6 +42,28 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         """Store the current location name for context-aware processing."""
         self._current_location_name = location_name
 
+    @staticmethod
+    def _is_bound_method(v) -> bool:
+        """Check if a value is a bound method (either actual or string representation)."""
+        return (isinstance(v, str) and '<bound method' in v) or \
+               (hasattr(v, '__self__') and hasattr(v, '__name__'))
+
+    @staticmethod
+    def _extract_region_name_from_bound_method(item) -> Optional[str]:
+        """Extract region name from a bound method or its string representation."""
+        # Case 1: Actual bound method object
+        if hasattr(item, '__self__') and hasattr(item.__self__, 'name'):
+            # Verify it's a Region by checking for 'entrances' attribute
+            if hasattr(item.__self__, 'entrances'):
+                return item.__self__.name
+        # Case 2: String representation from serialization
+        if isinstance(item, str) and '<bound method Region.can_reach of ' in item:
+            try:
+                return item.split(' of ')[1].rstrip('>')
+            except (IndexError, AttributeError):
+                pass
+        return None
+
     def _is_all_of_comprehension_with_only_bound_methods(self, rule: Optional[Dict[str, Any]]) -> bool:
         """
         Check if a rule is an "all_of" comprehension pattern where ALL iterator values are bound methods.
@@ -83,12 +105,7 @@ class WitnessGameExportHandler(GenericGameExportHandler):
 
         # Check if ALL values are bound methods (not just at least one)
         # This is safe to simplify to True only when the ENTIRE iterator is region reachability checks
-        # Values can be either actual method objects (during analysis) or string representations (in JSON)
-        def is_bound_method(v):
-            return (isinstance(v, str) and '<bound method' in v) or \
-                   (hasattr(v, '__self__') and hasattr(v, '__name__'))
-
-        return all(is_bound_method(v) for v in values)
+        return all(self._is_bound_method(v) for v in values)
 
     def _simplify_any_of_with_nested_bound_methods(self, rule: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
         """
@@ -139,22 +156,6 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         if not all(isinstance(item, (list, tuple)) for item in values):
             return None
 
-        def extract_region_name(item):
-            """Extract region name from a bound method or its string representation."""
-            # Case 1: Actual bound method object
-            if hasattr(item, '__self__') and hasattr(item.__self__, 'name'):
-                # Verify it's a Region by checking for 'entrances' attribute
-                if hasattr(item.__self__, 'entrances'):
-                    return item.__self__.name
-            # Case 2: String representation from serialization
-            if isinstance(item, str) and '<bound method Region.can_reach of ' in item:
-                try:
-                    region_name = item.split(' of ')[1].rstrip('>')
-                    return region_name
-                except (IndexError, AttributeError):
-                    pass
-            return None
-
         def is_skippable_lambda(item):
             """Check if item is a lambda function we should skip."""
             # Actual lambda function
@@ -170,7 +171,7 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         for inner_list in values:
             inner_can_reach = []
             for item in inner_list:
-                region_name = extract_region_name(item)
+                region_name = self._extract_region_name_from_bound_method(item)
                 if region_name:
                     inner_can_reach.append({
                         'type': 'can_reach',
@@ -235,13 +236,9 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         if not isinstance(values, list) or not values:
             return None
 
-        def is_bound_method(v):
-            return (isinstance(v, str) and '<bound method' in v) or \
-                   (hasattr(v, '__self__') and hasattr(v, '__name__'))
-
         # Check if there are both bound methods and non-bound methods
-        bound_methods = [v for v in values if is_bound_method(v)]
-        other_conditions = [v for v in values if not is_bound_method(v)]
+        bound_methods = [v for v in values if self._is_bound_method(v)]
+        other_conditions = [v for v in values if not self._is_bound_method(v)]
 
         if not bound_methods or not other_conditions:
             # Either all bound methods (handled elsewhere) or no bound methods (not our pattern)
@@ -253,29 +250,15 @@ class WitnessGameExportHandler(GenericGameExportHandler):
 
         # Convert bound methods to can_reach rule types
         for bm in bound_methods:
-            if hasattr(bm, '__self__') and hasattr(bm.__self__, 'name'):
-                # Extract region name from the bound method's self (Region object)
-                region_name = bm.__self__.name
+            region_name = self._extract_region_name_from_bound_method(bm)
+            if region_name:
                 logger.debug(f"Converting bound method to can_reach rule for '{region_name}'")
                 analyzed_conditions.append({
                     'type': 'can_reach',
                     'region': region_name
                 })
-            elif isinstance(bm, str) and '<bound method Region.can_reach of ' in bm:
-                # Extract region name from string representation
-                # Format: "<bound method Region.can_reach of RegionName>"
-                try:
-                    region_name = bm.split(' of ')[1].rstrip('>')
-                    logger.debug(f"Converting bound method string to can_reach rule for '{region_name}'")
-                    analyzed_conditions.append({
-                        'type': 'can_reach',
-                        'region': region_name
-                    })
-                except (IndexError, AttributeError):
-                    logger.warning(f"Could not extract region name from bound method string: {bm}")
-                    return None
             else:
-                logger.warning(f"Unknown bound method format: {bm}")
+                logger.warning(f"Could not extract region name from bound method: {bm}")
                 return None
 
         # Analyze each non-bound-method condition
@@ -493,51 +476,6 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         # For other rule types, return as-is
         return rule
 
-    def _convert_region_reach_to_helper(self, rule: Optional[Dict[str, Any]], region_name: str = None) -> Optional[Dict[str, Any]]:
-        """
-        Convert region.can_reach patterns to can_reach helper calls.
-
-        The pattern checks region reachability using a conditional that tests state.stale
-        and state.reachable_regions. We convert this to a simpler can_reach helper call
-        that takes the region name as a parameter.
-
-        To extract the region name, we need to track which region object the method is
-        bound to. For now, we look for the region name in the surrounding context or
-        accept it as a parameter.
-        """
-        if not rule or not isinstance(rule, dict):
-            return rule
-
-        # Check if this is a region reachability pattern
-        if self._is_region_reachability_pattern(rule):
-            # For now, we can't extract the region name from the pattern itself
-            # because it's a bound method. We would need analyzer-level changes.
-            # As a workaround, we return the pattern as-is and let the frontend
-            # handle it, OR we could try to extract context from the calling location.
-
-            # TODO: Implement proper region name extraction
-            # For now, just log that we found the pattern
-            logger.debug(f"Found region reachability pattern but cannot extract region name")
-            return rule
-
-        # Recursively process compound rules
-        rule_type = rule.get('type')
-
-        if rule_type in ('and', 'or'):
-            conditions = rule.get('conditions', [])
-            simplified_conditions = [
-                self._convert_region_reach_to_helper(cond, region_name)
-                for cond in conditions
-            ]
-            return {**rule, 'conditions': simplified_conditions}
-
-        elif rule_type == 'not':
-            condition = rule.get('condition')
-            simplified = self._convert_region_reach_to_helper(condition, region_name)
-            return {**rule, 'condition': simplified}
-
-        return rule
-
     def postprocess_rule(self, rule: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
         """
         Post-process location access rules to handle region reachability patterns.
@@ -601,25 +539,15 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         if not closure:
             return region_names
 
-        def extract_from_item(item):
-            """Check if an item is a bound method with a Region object and extract its name."""
-            if hasattr(item, '__self__') and hasattr(item.__self__, 'name'):
-                # Verify it's a Region by checking for 'entrances' attribute
-                if hasattr(item.__self__, 'entrances'):
-                    return item.__self__.name
-            return None
-
         def extract_from_list(lst, depth=0):
             """Recursively extract region names from lists."""
             if depth > 3:  # Prevent infinite recursion
                 return
             for item in lst:
                 if isinstance(item, (list, tuple)):
-                    # Nested list - recurse
                     extract_from_list(item, depth + 1)
                 else:
-                    # Check if it's a bound method
-                    region_name = extract_from_item(item)
+                    region_name = self._extract_region_name_from_bound_method(item)
                     if region_name:
                         region_names.append(region_name)
 
