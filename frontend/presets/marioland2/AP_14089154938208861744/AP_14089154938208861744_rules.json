@@ -1904,84 +1904,6 @@
         "max_count": 1,
         "classification": "progression"
       },
-      "Tree Coin": {
-        "name": "Tree Coin",
-        "id": null,
-        "groups": [
-          "Event",
-          "Everything",
-          "Golden Coins"
-        ],
-        "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
-      },
-      "Space Coin": {
-        "name": "Space Coin",
-        "id": null,
-        "groups": [
-          "Event",
-          "Everything",
-          "Golden Coins"
-        ],
-        "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
-      },
-      "Macro Coin": {
-        "name": "Macro Coin",
-        "id": null,
-        "groups": [
-          "Event",
-          "Everything",
-          "Golden Coins"
-        ],
-        "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
-      },
-      "Pumpkin Coin": {
-        "name": "Pumpkin Coin",
-        "id": null,
-        "groups": [
-          "Event",
-          "Everything",
-          "Golden Coins"
-        ],
-        "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
-      },
-      "Mario Coin": {
-        "name": "Mario Coin",
-        "id": null,
-        "groups": [
-          "Event",
-          "Everything",
-          "Golden Coins"
-        ],
-        "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
-      },
-      "Turtle Coin": {
-        "name": "Turtle Coin",
-        "id": null,
-        "groups": [
-          "Event",
-          "Everything",
-          "Golden Coins"
-        ],
-        "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
-      },
       "Mario Coin Fragment": {
         "name": "Mario Coin Fragment",
         "id": 25,
@@ -31955,6 +31877,84 @@
         "max_count": 1,
         "classification": "filler"
       },
+      "Tree Coin": {
+        "name": "Tree Coin",
+        "id": null,
+        "groups": [
+          "Event",
+          "Everything",
+          "Golden Coins"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Space Coin": {
+        "name": "Space Coin",
+        "id": null,
+        "groups": [
+          "Event",
+          "Everything",
+          "Golden Coins"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Macro Coin": {
+        "name": "Macro Coin",
+        "id": null,
+        "groups": [
+          "Event",
+          "Everything",
+          "Golden Coins"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Pumpkin Coin": {
+        "name": "Pumpkin Coin",
+        "id": null,
+        "groups": [
+          "Event",
+          "Everything",
+          "Golden Coins"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Mario Coin": {
+        "name": "Mario Coin",
+        "id": null,
+        "groups": [
+          "Event",
+          "Everything",
+          "Golden Coins"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Turtle Coin": {
+        "name": "Turtle Coin",
+        "id": null,
+        "groups": [
+          "Event",
+          "Everything",
+          "Golden Coins"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
       "Wario Defeated": {
         "name": "Wario Defeated",
         "id": null,
@@ -38953,8 +38953,6 @@
           }
         ]
       },
-      "required_golden_coins": 6,
-      "shuffle_midway_bells": 0,
       "world_directory": "marioland2"
     }
   },
