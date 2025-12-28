@@ -3,18 +3,18 @@
 from typing import Dict, Any, List, Optional
 from .generic import GenericGameExportHandler
 import logging
-import inspect
 
 logger = logging.getLogger(__name__)
+
 
 class LandstalkerGameExportHandler(GenericGameExportHandler):
     """Export handler for Landstalker - The Treasures of King Nole.
 
     This handler extends GenericGameExportHandler to provide custom handling
     for Landstalker-specific rule patterns, particularly:
-    - Complex nested has_all(set(...)) patterns from path requirements
-    - Shop item rules with duplicate checking
-    - Region visit tracking
+    - Region visit tracking via event_visited_* items
+    - Converting Region objects to their string codes in closures
+    - Resolving all_of iterator patterns for region requirements
     """
 
 
@@ -67,44 +67,15 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
 
         return enhanced_closure
 
-    def _extract_required_regions(self, rule_func) -> Optional[List]:
-        """Extract required_regions list from a path requirement lambda's closure."""
-        if not hasattr(rule_func, '__closure__') or not rule_func.__closure__:
-            return None
-
-        if not hasattr(rule_func, '__code__'):
-            return None
-
-        freevars = rule_func.__code__.co_freevars
-
-        for i, var_name in enumerate(freevars):
-            if i >= len(rule_func.__closure__):
-                break
-
-            if var_name == 'required_regions':
-                try:
-                    cell_contents = rule_func.__closure__[i].cell_contents
-                    if isinstance(cell_contents, list):
-                        # Verify these are region objects with .code attribute
-                        if all(hasattr(r, 'code') for r in cell_contents):
-                            return cell_contents
-                except (ValueError, AttributeError) as e:
-                    logger.debug(f"Could not extract required_regions: {e}")
-
-        return None
-
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand rule functions with Landstalker-specific handling.
 
-        This method handles the complex pattern from make_path_requirement_lambda:
-        state.has_all(set(required_items), player) and _landstalker_has_visited_regions(...)
+        Handles Landstalker-specific patterns:
+        - all_of with unresolved iterator (from generator expressions over regions)
+        - item_check with binary_op for event_visited_ + region.code
+        - _landstalker_has_visited_regions helper expansion
 
-        Which exports as:
-        {
-          "type": "state_method",
-          "method": "has_all",
-          "args": [{"type": "helper", "name": "set", "args": [...]}]
-        }
+        Note: state.has_all(set(items)) is now handled by the base class.
         """
         if not rule or not isinstance(rule, dict):
             return rule
@@ -113,11 +84,6 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
         if 'conditions' in rule and isinstance(rule['conditions'], list):
             rule = rule.copy()  # Make a copy to avoid modifying the original
             rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule['conditions']]
-
-        # Handle state_method: has_all with helper: set pattern
-        # This comes from: state.has_all(set(required_items), player)
-        if rule.get('type') == 'state_method' and rule.get('method') == 'has_all':
-            return self._simplify_has_all(rule)
 
         # Handle all_of pattern with unresolved iterator
         # This comes from: all(state.has("event_visited_" + region.code, player) for region in regions)
@@ -139,7 +105,7 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
         if rule.get('type') == 'helper' and rule.get('name') == '_landstalker_has_visited_regions':
             return self._expand_has_visited_regions_helper(rule)
 
-        # Let parent handle standard cases
+        # Let parent handle standard cases (including has_all/has_any expansion)
         return super().expand_rule(rule, _depth)
 
     def _expand_has_visited_regions_helper(self, rule: Dict[str, Any]) -> Dict[str, Any]:
@@ -355,79 +321,5 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
                         return f"event_visited_{region_code}"
 
         logger.debug(f"Could not simplify binary_op: left={left}, right={right}")
-        return None
-
-    def _simplify_has_all(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Simplify state.has_all(set([items]), player) patterns.
-
-        Converts:
-          state.has_all(set(["Safety Pass"]), player)
-        To:
-          {"type": "item_check", "item": "Safety Pass"}
-
-        Or for multiple items:
-          state.has_all(set(["Item1", "Item2"]), player)
-        To:
-          {"type": "and", "conditions": [
-            {"type": "item_check", "item": "Item1"},
-            {"type": "item_check", "item": "Item2"}
-          ]}
-        """
-        args = rule.get('args', [])
-
-        # Look for the pattern: args[0] is {"type": "helper", "name": "set", ...}
-        if not args or len(args) == 0:
-            logger.warning("has_all with no args, keeping as-is")
-            return rule
-
-        first_arg = args[0]
-
-        # Check if first arg is a set() helper call
-        if isinstance(first_arg, dict) and first_arg.get('type') == 'helper' and first_arg.get('name') == 'set':
-            # Extract the items from set(items)
-            set_args = first_arg.get('args', [])
-            if set_args and len(set_args) > 0:
-                items_arg = set_args[0]
-
-                # Extract the actual list of item names
-                items = self._extract_items_from_constant(items_arg)
-
-                if items is not None:
-                    # Convert to item checks
-                    if len(items) == 0:
-                        # Empty set, always true
-                        return {"type": "constant", "value": True}
-                    elif len(items) == 1:
-                        # Single item, simple item_check
-                        return {"type": "item_check", "item": items[0]}
-                    else:
-                        # Multiple items, AND them together
-                        return {
-                            "type": "and",
-                            "conditions": [
-                                {"type": "item_check", "item": item}
-                                for item in items
-                            ]
-                        }
-
-        # Couldn't simplify, log and return original
-        logger.warning(f"Could not simplify has_all pattern: {rule}")
-        return rule
-
-    def _extract_items_from_constant(self, arg: Any) -> Optional[List[str]]:
-        """Extract list of item names from a constant value argument.
-
-        Handles patterns like:
-          {"type": "constant", "value": ["Safety Pass"]}
-          {"type": "constant", "value": ["Item1", "Item2"]}
-          {"type": "constant", "value": []}  (empty list)
-        """
-        if isinstance(arg, dict) and arg.get('type') == 'constant':
-            value = arg.get('value')
-            if isinstance(value, list):
-                # Filter to only string items (item names)
-                # Return empty list for empty value, not None
-                return [item for item in value if isinstance(item, str)]
-
         return None
 

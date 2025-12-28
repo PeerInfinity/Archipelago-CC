@@ -328,6 +328,39 @@ class BaseGameExportHandler:
             if expanded:
                 return self.expand_rule(expanded, _depth + 1)
 
+        # Handle state.has_all(items, player) -> and of item_checks
+        # Commonly used pattern: state.has_all(set([items]), player)
+        if rule.get('type') == 'state_method' and rule.get('method') == 'has_all':
+            args = rule.get('args', [])
+            if len(args) >= 1:
+                items = self._resolve_items_collection(args[0])
+                if items is not None:
+                    if len(items) == 0:
+                        return {'type': 'constant', 'value': True}
+                    elif len(items) == 1:
+                        return {'type': 'item_check', 'item': items[0]}
+                    else:
+                        return {
+                            'type': 'and',
+                            'conditions': [{'type': 'item_check', 'item': item} for item in items]
+                        }
+
+        # Handle state.has_any(items, player) -> or of item_checks
+        if rule.get('type') == 'state_method' and rule.get('method') == 'has_any':
+            args = rule.get('args', [])
+            if len(args) >= 1:
+                items = self._resolve_items_collection(args[0])
+                if items is not None:
+                    if len(items) == 0:
+                        return {'type': 'constant', 'value': False}
+                    elif len(items) == 1:
+                        return {'type': 'item_check', 'item': items[0]}
+                    else:
+                        return {
+                            'type': 'or',
+                            'conditions': [{'type': 'item_check', 'item': item} for item in items]
+                        }
+
         # Recursively expand children of compound rules
         return self._recursively_expand_rule_children(rule, _depth)
 
@@ -2442,6 +2475,7 @@ class BaseGameExportHandler:
         - Constant nodes with list/tuple values (already resolved by analyzer)
         - Tuple/list/set nodes with attribute or constant elements
         - Set nodes used in has_any/has_all patterns
+        - Helper nodes with name 'set' (from set() function calls like set(items))
 
         Args:
             collection_node: The collection node dictionary from the analyzer
@@ -2460,6 +2494,14 @@ class BaseGameExportHandler:
             value = collection_node.get('value')
             if isinstance(value, (list, tuple)):
                 return list(value)
+
+        # Handle helper type with name 'set' (from set() function calls)
+        # Pattern: {"type": "helper", "name": "set", "args": [{"type": "constant", "value": [...]}]}
+        if node_type == 'helper' and collection_node.get('name') == 'set':
+            set_args = collection_node.get('args', [])
+            if set_args and len(set_args) > 0:
+                # Recursively resolve the first argument (should be a list/constant)
+                return self._resolve_items_collection(set_args[0])
 
         # Handle tuple, list, or set types
         if node_type in ('tuple', 'list', 'set'):
