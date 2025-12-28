@@ -446,8 +446,9 @@ class CelesteOpenWorldWorldGenWorld(RuleWorldMixin, World):
         create_regions(self.multiworld, self.player)
 
     def set_rules(self) -> None:
-        """Set access rules."""
-        set_rules(self)
+        """Set access rules (only when randomizing items)."""
+        if self.options.randomize_items.value:
+            set_rules(self)
 
     def create_items(self) -> None:
         """Create randomized item pool."""

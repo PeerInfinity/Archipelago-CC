@@ -1009,6 +1009,14 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
                     self.multiworld.itempool.remove(pool_item)
                     break
 '''
+        # When not randomizing items, skip access rules - they're for frontend only
+        # and create circular dependencies that fail the accessibility check
+        set_rules_section = '''
+    def set_rules(self) -> None:
+        """Set access rules (only when randomizing items)."""
+        if self.options.randomize_items.value:
+            set_rules(self)
+'''
     else:
         pre_fill_section = ''
         generate_early_section = '''
@@ -1018,6 +1026,11 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
 '''
         create_items_section = '''
     def create_items(self) -> None:
+'''
+        set_rules_section = '''
+    def set_rules(self) -> None:
+        """Set access rules."""
+        set_rules(self)
 '''
 
     # Build locked_placements dictionary
@@ -1536,11 +1549,7 @@ class {world_class}(RuleWorldMixin, World):
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
-
-    def set_rules(self) -> None:
-        """Set access rules."""
-        set_rules(self)
-{collect_remove_section}{create_items_section}        """Create randomized item pool."""
+{set_rules_section}{collect_remove_section}{create_items_section}        """Create randomized item pool."""
         # First, place any locked items
         self._place_locked_items()
 
