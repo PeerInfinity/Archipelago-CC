@@ -4,7 +4,7 @@ Inlines location and region rules from the logic mappings, eliminating
 the need for JavaScript helper implementations.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 from .generic import GenericGameExportHandler
 import logging
 
@@ -13,11 +13,6 @@ logger = logging.getLogger(__name__)
 
 class Celeste64GameExportHandler(GenericGameExportHandler):
     """Celeste 64 expander that inlines rules from logic mappings."""
-
-    # Simple world attributes that can be automatically exported via base class
-    COMPUTED_SETTINGS = {
-        'strawberries_required': lambda w, m, p: getattr(w, 'strawberries_required', 0),
-    }
 
     def __init__(self, world=None):
         """Initialize with world instance to access options."""
