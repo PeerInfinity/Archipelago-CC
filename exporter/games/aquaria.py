@@ -1,6 +1,5 @@
 """Aquaria game-specific export handler."""
 
-from typing import Dict, Any
 from BaseClasses import Region
 from .generic import GenericGameExportHandler
 import logging
@@ -19,17 +18,17 @@ class AquariaGameExportHandler(GenericGameExportHandler):
     def postprocess_regions(self, multiworld, player):
         """
         Fix missing regions that aren't added to multiworld.regions in Aquaria.
-        
+
         Some regions in Aquaria are created but not added to multiworld.regions,
         causing them to be missing from the export. This function finds and adds them.
         """
         if not hasattr(multiworld, 'worlds') or player not in multiworld.worlds:
             return
-            
+
         world = multiworld.worlds[player]
         if not hasattr(world, 'regions'):
             return
-            
+
         # List of region attributes that should be added if they exist
         missing_region_attrs = [
             'first_secret',
@@ -45,7 +44,7 @@ class AquariaGameExportHandler(GenericGameExportHandler):
             'mithalas_city_urns',
             'mithalas_castle_urns'
         ]
-        
+
         regions_added = []
         for attr_name in missing_region_attrs:
             if hasattr(world.regions, attr_name):
@@ -60,25 +59,10 @@ class AquariaGameExportHandler(GenericGameExportHandler):
                     if attr_name == 'sunken_city_l_crates' and region.name == "Sunken City left area":
                         region.name = "Sunken City left area crates"
 
+                    # Mark as dynamically added so base class auto-discovers it
+                    region.dynamically_added = True
                     multiworld.regions.append(region)
                     regions_added.append(region.name)
 
-        # Store the names of dynamically added regions for later marking
-        self.dynamically_added_regions = set(regions_added)
-
         if regions_added:
             logger.info(f"Added {len(regions_added)} missing Aquaria regions to multiworld: {', '.join(regions_added)}")
-    
-    def get_region_attributes(self, region) -> Dict[str, Any]:
-        """Add game-specific region attributes."""
-        # First get base attributes (includes dynamically_added from region object)
-        attributes = super().get_region_attributes(region)
-
-        # Also mark regions that were dynamically added by postprocess_regions
-        if hasattr(self, 'dynamically_added_regions') and region.name in self.dynamically_added_regions:
-            attributes['dynamically_added'] = True
-
-        return attributes
-
-    # Note: get_item_data is NOT overridden - GenericGameExportHandler handles
-    # both static items from item_name_to_id and dynamic event items automatically.
