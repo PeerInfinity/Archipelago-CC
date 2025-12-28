@@ -91,7 +91,7 @@
   },
   "Aquaria": {
     "exporter_path": "exporter/games/aquaria.py",
-    "exporter_size": 3654,
+    "exporter_size": 2894,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -550,7 +550,7 @@
   },
   "Kingdom Hearts 2": {
     "exporter_path": "exporter/games/kh2.py",
-    "exporter_size": 34594,
+    "exporter_size": 34592,
     "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
     "game_logic_size": 109854,
     "has_custom_exporter": true,
