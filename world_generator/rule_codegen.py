@@ -562,6 +562,7 @@ class RuleCodeGenerator:
                     'HasAny': 'group_check',
                     'HasAllCounts': 'group_check',
                     'HasGroup': 'group_check',
+                    'HasGroupUnique': 'has_group_unique',
                     'HasFromList': 'has_from_list',
                     'HasFromListUnique': 'has_from_list_unique',
                     'Count': 'count_check',
@@ -828,6 +829,16 @@ class RuleCodeGenerator:
                 return f'HasGroup({repr(group)})'
             else:
                 return f'HasGroup({repr(group)}, {count})'
+
+        if rb_rule == 'HasGroupUnique':
+            group = args.get('group', '')
+            count_raw = args.get('count', 1)
+            count = self._extract_constant_value(count_raw, 1)
+            self.required_imports.add('HasGroupUnique')
+            if count == 1:
+                return f'HasGroupUnique({repr(group)})'
+            else:
+                return f'HasGroupUnique({repr(group)}, {count})'
 
         if rb_rule == 'HasFromList':
             items = args.get('items', [])
