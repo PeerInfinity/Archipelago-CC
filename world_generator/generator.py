@@ -153,7 +153,8 @@ class WorldGenerator:
         worldgen_data = {}
 
         # Extract settings (options and internal flags only)
-        source_settings = source_json.get('settings', {}).get('1', {})
+        # New format uses 'world', legacy format uses 'settings'
+        source_settings = source_json.get('world', {}).get('1', {}) or source_json.get('settings', {}).get('1', {})
         if source_settings:
             # Keep only actual settings, not world attributes
             # Remove option_definitions - it's redundant since the exporter extracts
