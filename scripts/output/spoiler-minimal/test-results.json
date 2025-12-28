@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-28T05:56:43.305790",
-    "last_updated": "2025-12-28T05:56:43.305797",
+    "last_updated": "2025-12-28T18:29:16.030890",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3789,27 +3789,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "1271ed081cf71d4de0583bb1fcd9c863a8de260b830ff5cdb0a8c28b50d3b746",
-          "new_sphere_log_hash": "17543bd414f95ddc5fcfac5878b81603b7f17f4f885bfc57e25ce0d3ca10771a",
-          "original_rules_hash": "64cf4431c9e76cdb4f0fe52167f23739af2ef47eb26dee887868c51465b9e10c",
-          "original_sphere_log_hash": "17543bd414f95ddc5fcfac5878b81603b7f17f4f885bfc57e25ce0d3ca10771a",
-          "rules_identical": false,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-28T05:55:18.104996"
-        }
-      },
       "game_name_from_filename": "tww",
       "game_name_from_yaml": "The Wind Waker",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 18.7,
+        "processing_time_seconds": 37.71,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/tww/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -3821,7 +3809,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.73,
+        "processing_time_seconds": 12.69,
         "return_code": 0,
         "sphere_reached": 18.1,
         "success": true,
@@ -3829,10 +3817,10 @@
         "warning_count": 0
       },
       "template_filename": "The Wind Waker.yaml",
-      "timestamp": "2025-12-28T05:54:03.424583",
+      "timestamp": "2025-12-28T18:28:25.202156",
       "world_info": {
         "exporter_path": "exporter/games/tww.py",
-        "exporter_size": 5476,
+        "exporter_size": 4476,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "tww",
