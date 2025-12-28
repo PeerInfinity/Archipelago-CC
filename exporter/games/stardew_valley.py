@@ -28,30 +28,6 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
         self._has_rule_cache: Dict[str, Dict[str, Any]] = {}
         # Set of Has rule item names that should be exported as helpers
         self._has_rules_to_export: Set[str] = set()
-        # Add Stardew Valley-specific helper recognition patterns
-        self.known_helpers = {
-            # Skill-related helpers
-            'can_earn_level',
-            'can_earn_mastery',
-            'has_level',
-
-            # Tool-related helpers
-            'has_tool',
-            'can_reach_region',
-
-            # Season/time-related helpers
-            'has_season',
-
-            # Item-related helpers
-            'has_item',
-            'has_relationship',
-
-            # Quest-related helpers
-            'can_complete_quest',
-
-            # Bundle-related helpers
-            'can_complete_bundle',
-        }
 
     def get_item_data(self, world):
         """Override to add Stardew Valley's virtual event items.
@@ -427,24 +403,6 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
         except Exception as e:
             logger.error(f"Error serializing StardewRule {type(rule_obj).__name__}: {e}", exc_info=True)
             return None
-
-    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
-        """Expand Stardew Valley-specific rules."""
-        if not rule:
-            return rule
-
-        # Check for Stardew Valley helper patterns
-        if rule.get('type') == 'helper':
-            helper_name = rule.get('name', '')
-
-            # Log helpers for debugging
-            logger.debug(f"Processing Stardew Valley helper: {helper_name}")
-
-            # Return the helper as-is for now (frontend will handle it)
-            return rule
-
-        # Use default generic expansion for other rule types
-        return super().expand_rule(rule, _depth)
 
     def _sanitize_helper_name(self, item_name: str) -> str:
         """Convert an item name to a valid helper function name.
