@@ -10461,7 +10461,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -10480,7 +10480,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -10821,7 +10821,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -10840,7 +10840,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -11181,7 +11181,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -11200,7 +11200,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -11541,7 +11541,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -11560,7 +11560,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -11901,7 +11901,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -11920,7 +11920,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -12261,7 +12261,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -12280,7 +12280,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -12627,7 +12627,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -12646,7 +12646,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -12987,7 +12987,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -13006,7 +13006,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -13347,7 +13347,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -13366,7 +13366,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -13707,7 +13707,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -13726,7 +13726,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -14067,7 +14067,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -14086,7 +14086,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -14427,7 +14427,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -14446,7 +14446,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -14793,7 +14793,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -14812,7 +14812,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -15153,7 +15153,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -15172,7 +15172,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -15513,7 +15513,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -15532,7 +15532,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -15873,7 +15873,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -15892,7 +15892,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -16233,7 +16233,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -16252,7 +16252,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -16593,7 +16593,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -16612,7 +16612,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -16965,7 +16965,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -16984,7 +16984,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -17331,7 +17331,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -17350,7 +17350,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -17697,7 +17697,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -17716,7 +17716,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -18063,7 +18063,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -18082,7 +18082,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -18429,7 +18429,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -18448,7 +18448,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -18795,7 +18795,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -18814,7 +18814,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -19161,7 +19161,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -19180,7 +19180,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -19521,7 +19521,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -19540,7 +19540,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -19881,7 +19881,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -19900,7 +19900,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -20241,7 +20241,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -20260,7 +20260,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -20601,7 +20601,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -20620,7 +20620,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -20961,7 +20961,7 @@
                         },
                         "right": {
                           "type": "constant",
-                          "value": "no_light_and_darkness"
+                          "value": 0
                         },
                         "_original_ast_type": "comparison"
                       },
@@ -20980,7 +20980,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "light_and_darkness"
+                              "value": 1
                             },
                             "_original_ast_type": "comparison"
                           },
@@ -29770,7 +29770,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(TT3) Underground Concourse Mythril Gem"
+                    "value": "Roxas Event Location"
                   }
                 ]
               },
@@ -29798,7 +29798,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "Roxas Event Location"
+                    "value": "(TT3) Underground Concourse Mythril Gem"
                   }
                 ]
               },
@@ -30912,7 +30912,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -30926,7 +30926,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -31186,7 +31186,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -31200,7 +31200,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -31573,7 +31573,7 @@
                                 },
                                 "right": {
                                   "type": "constant",
-                                  "value": "no_light_and_darkness"
+                                  "value": 0
                                 }
                               },
                               "if_true": {
@@ -31587,7 +31587,7 @@
                                   },
                                   "right": {
                                     "type": "constant",
-                                    "value": "light_and_darkness"
+                                    "value": 1
                                   }
                                 },
                                 "if_true": {
@@ -31891,7 +31891,7 @@
                                 },
                                 "right": {
                                   "type": "constant",
-                                  "value": "no_light_and_darkness"
+                                  "value": 0
                                 }
                               },
                               "if_true": {
@@ -31905,7 +31905,7 @@
                                   },
                                   "right": {
                                     "type": "constant",
-                                    "value": "light_and_darkness"
+                                    "value": 1
                                   }
                                 },
                                 "if_true": {
@@ -32177,7 +32177,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -32191,7 +32191,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -32479,7 +32479,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -32493,7 +32493,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -32753,7 +32753,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -32767,7 +32767,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -33352,7 +33352,7 @@
                                 },
                                 "right": {
                                   "type": "constant",
-                                  "value": "no_light_and_darkness"
+                                  "value": 0
                                 }
                               },
                               "if_true": {
@@ -33366,7 +33366,7 @@
                                   },
                                   "right": {
                                     "type": "constant",
-                                    "value": "light_and_darkness"
+                                    "value": 1
                                   }
                                 },
                                 "if_true": {
@@ -34027,7 +34027,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -34041,7 +34041,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -34304,7 +34304,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -34318,7 +34318,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -34581,7 +34581,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -34595,7 +34595,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -34894,7 +34894,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -34908,7 +34908,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -35212,7 +35212,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -35226,7 +35226,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -35522,7 +35522,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -35536,7 +35536,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -35827,7 +35827,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -35841,7 +35841,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -36128,7 +36128,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -36142,7 +36142,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -36617,7 +36617,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -36631,7 +36631,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -36919,7 +36919,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -36933,7 +36933,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -37543,7 +37543,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -37557,7 +37557,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -37892,7 +37892,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -37906,7 +37906,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -38262,7 +38262,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -38276,7 +38276,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -38582,7 +38582,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -38596,7 +38596,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -38894,7 +38894,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -38908,7 +38908,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -39209,7 +39209,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -39223,7 +39223,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -39494,7 +39494,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -39508,7 +39508,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -39774,7 +39774,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -39788,7 +39788,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -40289,7 +40289,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -40303,7 +40303,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -40579,7 +40579,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -40593,7 +40593,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -40859,7 +40859,7 @@
                                     },
                                     "right": {
                                       "type": "constant",
-                                      "value": "no_light_and_darkness"
+                                      "value": 0
                                     }
                                   },
                                   "if_true": {
@@ -40873,7 +40873,7 @@
                                       },
                                       "right": {
                                         "type": "constant",
-                                        "value": "light_and_darkness"
+                                        "value": 1
                                       }
                                     },
                                     "if_true": {
@@ -41211,7 +41211,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -41225,7 +41225,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -41487,7 +41487,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -41501,7 +41501,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -41795,7 +41795,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -41809,7 +41809,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -45478,7 +45478,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -45492,7 +45492,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -46858,7 +46858,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -46872,7 +46872,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
@@ -47185,7 +47185,7 @@
                             },
                             "right": {
                               "type": "constant",
-                              "value": "no_light_and_darkness"
+                              "value": 0
                             }
                           },
                           "if_true": {
@@ -47199,7 +47199,7 @@
                               },
                               "right": {
                                 "type": "constant",
-                                "value": "light_and_darkness"
+                                "value": 1
                               }
                             },
                             "if_true": {
