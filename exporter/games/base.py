@@ -115,6 +115,13 @@ class BaseGameExportHandler:
     # This is useful for games that define methods on the World class that are used in rules.
     CONVERT_WORLD_METHODS_TO_HELPERS: bool = True
 
+    # Set of object names whose method calls/attribute access should be converted to helper calls.
+    # When a function_call like obj.method() is found where obj is one of these names,
+    # it's converted to a helper call with name='method'.
+    # Default includes 'self' and 'world' for World class methods.
+    # Games like Yoshi's Island can extend this to include 'logic', 'bosses', etc.
+    HELPER_OBJECT_NAMES: Set[str] = {'self', 'world'}
+
     # When True, eventProcessor uses resolved_items from sphere log instead of base_items
     # Use for games with complex event items or computed tracking items
     USE_RESOLVED_ITEMS: bool = False
@@ -546,15 +553,15 @@ class BaseGameExportHandler:
                     for arg in rule.get('args', [])
                 ]
 
-        # Handle function_call - convert self.method() or world.method() to helper calls
-        # This allows games to define methods on the World class that are used as rules
+        # Handle function_call - convert obj.method() to helper calls for configured objects
+        # This allows games to define methods on the World class (or logic objects) that are used as rules
         elif rule_type == 'function_call' and self.CONVERT_WORLD_METHODS_TO_HELPERS:
             function = rule.get('function', {})
             if function.get('type') == 'attribute':
                 obj = function.get('object', {})
                 method_name = function.get('attr')
-                # Check if the object is 'self' or 'world' (both refer to the World instance)
-                if obj.get('type') == 'name' and obj.get('name') in ['self', 'world']:
+                # Check if the object is in HELPER_OBJECT_NAMES (default: self, world)
+                if obj.get('type') == 'name' and obj.get('name') in self.HELPER_OBJECT_NAMES:
                     logger.debug(f"Converting {obj.get('name')}.{method_name}() to helper function")
                     return {
                         'type': 'helper',
@@ -567,6 +574,22 @@ class BaseGameExportHandler:
         # - self.options.X -> constant value
         # - state.multiworld.worlds[player].options.X -> constant value
         elif rule_type == 'attribute':
+            # First check for helper object attribute access (e.g., logic.method_name without parentheses)
+            # This handles cases where Python code accessed a method without calling it
+            # NOTE: Excludes 'self' and 'world' since their attribute access is usually settings,
+            # not helper methods. Only convert attribute access for game-specific logic objects.
+            obj = rule.get('object', {})
+            obj_name = obj.get('name') if obj.get('type') == 'name' else None
+            # Only convert if in HELPER_OBJECT_NAMES and NOT self/world (which have settings)
+            if obj_name and obj_name in self.HELPER_OBJECT_NAMES and obj_name not in {'self', 'world'}:
+                attr_name = rule.get('attr')
+                logger.debug(f"Converting {obj_name}.{attr_name} attribute access to helper function")
+                return {
+                    'type': 'helper',
+                    'name': attr_name,
+                    'args': []
+                }
+            # Otherwise try to resolve as option access
             resolved = self._resolve_option_access(rule)
             if resolved is not None:
                 return resolved
