@@ -47,6 +47,12 @@ class BaseGameExportHandler:
     # The exporter will look for classes like ITEMS with attributes that map to item names
     ITEM_NAME_MODULES: List[str] = []
 
+    # Module-level variables to inject into closure_vars for helper analysis.
+    # Maps module path -> list of variable names to import.
+    # Used by prepare_closure_vars() to make module constants available during rule analysis.
+    # Example: {'worlds.mm2.rules': ['robot_masters', 'weapons_to_name']}
+    CLOSURE_VAR_IMPORTS: Dict[str, List[str]] = {}
+
     # Whether to automatically export discovered helpers as definitions
     # When False (default), only whitelisted helpers are exported
     # When True, discovered helpers are exported (minus blacklist)
@@ -278,6 +284,42 @@ class BaseGameExportHandler:
         if not hasattr(self, '_analyzed_helper_cache'):
             self._analyzed_helper_cache = {}
         return self._analyzed_helper_cache.get(helper_name)
+
+    def prepare_closure_vars(self, rule_func: Callable, closure_vars: Dict[str, Any]) -> Dict[str, Any]:
+        """Inject module-level variables into closure_vars for helper analysis.
+
+        This default implementation uses CLOSURE_VAR_IMPORTS to automatically
+        inject module-level constants that are needed during rule analysis.
+
+        Games can override this method for more complex injection logic, such as
+        processing Region objects or handling dynamic module discovery.
+
+        Args:
+            rule_func: The rule function being analyzed (unused in base implementation)
+            closure_vars: The existing closure variables dict
+
+        Returns:
+            Enhanced closure_vars dict with injected module-level variables
+        """
+        if not self.CLOSURE_VAR_IMPORTS:
+            return closure_vars
+
+        enhanced_closure = closure_vars.copy()
+
+        for module_path, var_names in self.CLOSURE_VAR_IMPORTS.items():
+            try:
+                module = importlib.import_module(module_path)
+                for var_name in var_names:
+                    if var_name not in enhanced_closure:
+                        if hasattr(module, var_name):
+                            enhanced_closure[var_name] = getattr(module, var_name)
+                            logger.debug(f"Injected {var_name} from {module_path} into closure_vars")
+                        else:
+                            logger.warning(f"Variable {var_name} not found in module {module_path}")
+            except ImportError as e:
+                logger.warning(f"Could not import module {module_path} for closure injection: {e}")
+
+        return enhanced_closure
 
     @staticmethod
     def count_rule_nodes(rule: Dict[str, Any]) -> int:
