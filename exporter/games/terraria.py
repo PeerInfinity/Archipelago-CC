@@ -321,17 +321,17 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
             ]
         }
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Export Terraria-specific settings including minion equipment data."""
-        settings = super().get_settings_data(world, multiworld, player)
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Export Terraria-specific world data including minion equipment data."""
+        world_data = super().get_world_data(world, multiworld, player)
 
         # Export armor minion data for has_minions helper
-        settings['armor_minions'] = dict(self.armor_minions)
+        world_data['armor_minions'] = dict(self.armor_minions)
 
         # Export accessory minion data for has_minions helper
-        settings['accessory_minions'] = dict(self.accessory_minions)
+        world_data['accessory_minions'] = dict(self.accessory_minions)
 
-        return settings
+        return world_data
 
     def get_helper_definitions(self, world) -> Dict[str, Any]:
         """Define computed helpers for Terraria.

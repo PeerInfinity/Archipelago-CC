@@ -296,10 +296,10 @@ class OOTGameExportHandler(GenericGameExportHandler):
             ]
         }
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Export OOT-specific settings needed for logic evaluation."""
-        # Start with common settings from base handler
-        settings_dict = super().get_settings_data(world, multiworld, player)
+        # Start with common world data from base handler
+        world_data = super().get_world_data(world, multiworld, player)
 
         # OOT-specific settings that affect logic
         oot_settings = [
@@ -334,14 +334,14 @@ class OOTGameExportHandler(GenericGameExportHandler):
                 value = getattr(world, setting_name)
                 # Handle Option objects vs direct values
                 if hasattr(value, 'value'):
-                    settings_dict[setting_name] = value.value
+                    world_data[setting_name] = value.value
                 elif hasattr(value, 'current_key'):
-                    settings_dict[setting_name] = value.current_key
+                    world_data[setting_name] = value.current_key
                 else:
-                    settings_dict[setting_name] = value
-                logger.debug(f"OOT: Exported setting {setting_name} = {settings_dict[setting_name]}")
+                    world_data[setting_name] = value
+                logger.debug(f"OOT: Exported setting {setting_name} = {world_data[setting_name]}")
 
-        return settings_dict
+        return world_data
 
     def post_process_location_data(self, location_data: Dict[str, Any], location_name: str) -> Dict[str, Any]:
         """Post-process location data after export, adding OOT-specific requirements."""

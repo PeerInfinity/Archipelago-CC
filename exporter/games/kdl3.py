@@ -83,9 +83,9 @@ class KDL3GameExportHandler(GenericGameExportHandler):
             logger.warning(f"Could not load location_name module: {e}")
             self.level_names_inverse = {}
 
-    def get_settings_data(self, world, multiworld, player):
-        """Override to add KDL3-specific settings like ability_map."""
-        settings = super().get_settings_data(world, multiworld, player)
+    def get_world_data(self, world, multiworld, player):
+        """Override to add KDL3-specific world data like ability_map."""
+        world_data = super().get_world_data(world, multiworld, player)
 
         # Export ability_map as a dictionary mapping ability names to helper function names
         try:
@@ -98,11 +98,11 @@ class KDL3GameExportHandler(GenericGameExportHandler):
                         ability_map[ability_name] = func_name if func_name else str(func)
                     else:
                         ability_map[ability_name] = str(func)
-                settings['ability_map'] = ability_map
+                world_data['ability_map'] = ability_map
         except Exception as e:
             logger.warning(f"Could not export ability_map: {e}")
 
-        return settings
+        return world_data
 
     def _resolve_f_string_value(self, value_node: Dict[str, Any]) -> Optional[Any]:
         """Handle KDL3-specific subscript expressions in f-strings."""

@@ -31,14 +31,14 @@ class KH2WorldGenGameExportHandler(BaseGameExportHandler):
     # Module paths containing helper functions for the worldgen
     HELPER_MODULES = ['worlds.kh2_worldgen.Rules']
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Export KH2 WorldGen settings for frontend logic.
+    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Export KH2 WorldGen world data for frontend logic.
 
         Extracts settings from fill_slot_data() and converts numeric option
         values to string keys that match the helper dictionary keys.
         """
-        # Get base settings from parent class
-        settings_dict = super().get_settings_data(world, multiworld, player)
+        # Get base world data from parent class
+        world_data = super().get_world_data(world, multiworld, player)
 
         # Get slot data which contains the game settings
         slot_data = {}
@@ -52,43 +52,43 @@ class KH2WorldGenGameExportHandler(BaseGameExportHandler):
         # These override any settings that may have been set by the parent class
         if 'FightLogic' in slot_data:
             value = slot_data['FightLogic']
-            settings_dict['FightLogic'] = FIGHT_LOGIC_MAP.get(value, 'normal')
+            world_data['FightLogic'] = FIGHT_LOGIC_MAP.get(value, 'normal')
 
         if 'FinalFormLogic' in slot_data:
             value = slot_data['FinalFormLogic']
-            settings_dict['FinalFormLogic'] = FINAL_FORM_LOGIC_MAP.get(value, 'light_and_darkness')
+            world_data['FinalFormLogic'] = FINAL_FORM_LOGIC_MAP.get(value, 'light_and_darkness')
 
         if 'AutoFormLogic' in slot_data:
             value = slot_data['AutoFormLogic']
-            settings_dict['AutoFormLogic'] = AUTO_FORM_LOGIC_MAP.get(value, 'false')
+            world_data['AutoFormLogic'] = AUTO_FORM_LOGIC_MAP.get(value, 'false')
 
         # Add other settings that don't need conversion
         settings_to_copy = ['CorSkipToggle', 'Goal', 'FinalXemnas',
                            'LuckyEmblemsRequired', 'BountyRequired', 'LevelDepth']
         for setting_name in settings_to_copy:
             if setting_name in slot_data:
-                settings_dict[setting_name] = slot_data[setting_name]
+                world_data[setting_name] = slot_data[setting_name]
 
         # Ensure Promise_Charm is set (default to false if not in slot_data)
         if 'Promise_Charm' not in slot_data or slot_data['Promise_Charm'] is None:
-            settings_dict['Promise_Charm'] = 'false'
+            world_data['Promise_Charm'] = 'false'
         else:
-            settings_dict['Promise_Charm'] = str(slot_data['Promise_Charm']).lower()
+            world_data['Promise_Charm'] = str(slot_data['Promise_Charm']).lower()
 
         # CorSkipToggle should also be a string for consistency
         if 'CorSkipToggle' in slot_data:
-            settings_dict['CorSkipToggle'] = 'true' if slot_data['CorSkipToggle'] else 'false'
+            world_data['CorSkipToggle'] = 'true' if slot_data['CorSkipToggle'] else 'false'
 
         # Ensure the options dict exists and copy key settings there too
         # The frontend may check settings in multiple places
-        if 'options' not in settings_dict:
-            settings_dict['options'] = {}
+        if 'options' not in world_data:
+            world_data['options'] = {}
 
         # Copy key settings to options dict for consistency with original KH2 export
         options_to_copy = ['FightLogic', 'AutoFormLogic', 'FinalFormLogic',
                           'Promise_Charm', 'CorSkipToggle']
         for key in options_to_copy:
-            if key in settings_dict and key not in settings_dict['options']:
-                settings_dict['options'][key] = settings_dict[key]
+            if key in world_data and key not in world_data['options']:
+                world_data['options'][key] = world_data[key]
 
-        return settings_dict
+        return world_data

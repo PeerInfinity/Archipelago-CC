@@ -152,9 +152,9 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
         return location_data
 
-    def get_settings_data(self, world, multiworld, player: int) -> Dict[str, Any]:
+    def get_world_data(self, world, multiworld, player: int) -> Dict[str, Any]:
         """
-        Override to add SMZ3-specific reward data to settings.
+        Override to add SMZ3-specific reward data to world data.
 
         This exports which reward (pendant/crystal) is assigned to which dungeon,
         which is necessary for evaluating CanAcquire() rules.
@@ -163,8 +163,8 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         the semantic difference between Python's cumulative sphere calculation
         and the frontend's real-time rule evaluation for anti-softlock key logic.
         """
-        # Get base settings from parent class
-        settings = super().get_settings_data(world, multiworld, player)
+        # Get base world data from parent class
+        world_data = super().get_world_data(world, multiworld, player)
 
         # SMZ3 has anti-softlock logic where acquiring certain items (Bow+Hammer+Lamp)
         # INCREASES the key requirements for Palace of Darkness locations. This creates
@@ -175,16 +175,16 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         # When enabled, the spoiler test will treat "accessible in LOG but not in STATE"
         # as an acceptable mismatch (warning instead of error) for locations that may
         # have regressive accessibility due to anti-softlock key requirements.
-        settings['allow_regressive_accessibility_mismatches'] = True
+        world_data['allow_regressive_accessibility_mismatches'] = True
 
         # SMZ3's Python Progression class uses boolean flags for items like PowerBomb
         # and TwoPowerBombs. The TwoPowerBombs flag is set to True when you've collected
         # at least 2 PowerBomb items, regardless of whether they're marked as advancement.
         # Since filler PowerBombs still contribute to the count for logic purposes,
         # we need to count all items (not just advancement) in spoiler test mode.
-        settings['count_non_advancement_items'] = True
+        world_data['count_non_advancement_items'] = True
 
-        logger.info(f"Getting settings data for SMZ3 world")
+        logger.info(f"Getting world data for SMZ3 world")
         logger.info(f"World type: {type(world)}")
         logger.info(f"World attributes: {dir(world)[:10]}")  # First 10 attributes
 
@@ -195,7 +195,7 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             # Get the TotalSMZ3 world (not the Archipelago wrapper)
             if not hasattr(world, 'smz3World'):
                 logger.warning(f"SMZ3 world does not have smz3World attribute, cannot export rewards. Available attrs: {[a for a in dir(world) if not a.startswith('_')][:20]}")
-                return settings
+                return world_data
 
             smz3_world = world.smz3World
             logger.info(f"Found smz3World: {type(smz3_world)}")
@@ -219,13 +219,13 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
             if reward_regions:
                 logger.info(f"Exported {len(reward_regions)} reward regions for SMZ3")
-                settings['reward_regions'] = reward_regions
+                world_data['reward_regions'] = reward_regions
 
         except Exception as e:
             logger.error(f"Error exporting SMZ3 reward data: {e}")
             logger.exception(e)
 
-        return settings
+        return world_data
 
     def _handle_medallion_entrance(self, region_object, entrance_name: str) -> Optional[Dict[str, Any]]:
         """

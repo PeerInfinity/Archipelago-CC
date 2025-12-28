@@ -108,7 +108,7 @@ class BaseGameExportHandler:
     HELPER_PARAM_MAPPINGS: Dict[str, Dict[str, str]] = {}
 
     # Settings class attributes that control export behavior
-    # These are applied in get_settings_data and can be overridden in subclasses
+    # These are applied in get_world_data and can be overridden in subclasses
 
     # When True, method calls on 'self' or 'world' (e.g., self.quest_points(), world.quest_points())
     # are automatically converted to helper function calls in expand_rule.
@@ -1177,11 +1177,6 @@ class BaseGameExportHandler:
                 world_data['web'] = web_data
 
         return world_data
-
-    # Keep get_settings_data as an alias for backwards compatibility
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Deprecated: Use get_world_data instead."""
-        return self.get_world_data(world, multiworld, player)
 
     def get_world_attributes(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract world attributes (computed runtime values) for export.

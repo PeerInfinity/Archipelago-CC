@@ -1298,8 +1298,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // Special case: If we're accessing world.* and the property doesn't exist on the world object,
-        // check the settings for game-specific runtime data (like auto_scroll_levels, sprite_data).
-        // Some games export runtime data via get_settings_data() which ends up in settings,
+        // check the world data for game-specific runtime data (like auto_scroll_levels, sprite_data).
+        // Games export runtime data via get_world_data() which ends up in world[playerId],
         // but the rule references world.attribute_name.
         if (rule.object?.type === 'name' && rule.object?.name === 'world' &&
             baseObject && typeof baseObject === 'object' && baseObject[rule.attr] === undefined) {
