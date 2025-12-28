@@ -198,8 +198,8 @@ export class ComparisonEngine {
     // key requirements (anti-softlock logic), causing a semantic difference between
     // Python's cumulative sphere calculation and frontend's real-time evaluation.
     let allowRegressiveMismatches = false;
-    if (staticData?.settings) {
-      for (const playerSettings of Object.values(staticData.settings)) {
+    if (staticData?.world) {
+      for (const playerSettings of Object.values(staticData.world)) {
         if (playerSettings?.allow_regressive_accessibility_mismatches) {
           allowRegressiveMismatches = true;
           break;

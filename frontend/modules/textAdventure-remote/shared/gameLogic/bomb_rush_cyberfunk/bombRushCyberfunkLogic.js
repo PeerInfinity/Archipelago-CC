@@ -552,7 +552,7 @@ function mataan_faux(snapshot, staticData, limit, glitched) {
 // Helper to get options from static data
 function getOptionsFromStaticData(snapshot, staticData) {
     const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
-    const settings = staticData?.world?.[playerSlot] ?? staticData?.settings?.[playerSlot];
+    const settings = staticData?.world?.[playerSlot];
     if (!settings) {
         return {
             movestyle: 2,  // Default: skateboard

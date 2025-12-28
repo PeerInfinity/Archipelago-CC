@@ -75,7 +75,7 @@ export async function debugGanonDefeatRuleTest(testController) {
 
     // Check settings
     testController.log('=== 4. SETTINGS CHECK ===');
-    const settings = staticData?.world?.['1'] ?? staticData?.settings?.['1'] ?? {};
+    const settings = staticData?.world?.['1'] ?? {};
     testController.log(`swordless: ${settings.swordless || false}`);
     testController.log(`glitches_required: ${settings.glitches_required || 'none'}`);
     testController.log(`flags: ${JSON.stringify(snapshot.flags)}`);

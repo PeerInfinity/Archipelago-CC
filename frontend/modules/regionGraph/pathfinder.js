@@ -59,7 +59,7 @@ export class PathFinder {
    */
   buildAccessibilityMap(staticData, snapshot, snapshotInterface) {
     const adjacencyMap = new Map();
-    const playerSettings = staticData?.settings ? Object.values(staticData.settings)[0] : null;
+    const playerSettings = staticData?.world ? Object.values(staticData.world)[0] : null;
     const assumeBidirectional = playerSettings?.assume_bidirectional_exits === true;
 
     // Initialize map
