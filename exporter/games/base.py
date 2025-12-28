@@ -136,6 +136,16 @@ class BaseGameExportHandler:
     # listing computed helpers in HELPERS_TO_PRESERVE.
     AUTO_PRESERVE_COMPUTED_HELPERS: bool = False
 
+    # Mapping of parameter/variable names used in inlined functions to their
+    # corresponding setting names. Applied during expand_rule for 'name' type rules.
+    # Example: {'ow_boss_req': 'ow_boss_requirement'}
+    NAME_REMAPPING: Dict[str, str] = {}
+
+    # Set of setting names that should be converted from 'name' type to 'setting_value' type.
+    # This ensures they are looked up via getSetting which checks the options.* path.
+    # Example: {'open_world', 'ow_boss_requirement'}
+    SETTINGS_TO_CONVERT: Set[str] = set()
+
     def __init__(self, world=None):
         """Initialize the handler with an empty set of discovered helpers.
 
@@ -323,10 +333,19 @@ class BaseGameExportHandler:
         if not rule or not isinstance(rule, dict):
             return rule
 
+        # Handle helper type in AST format: {'type': 'helper', 'name': 'helper_name', 'args': [...]}
         if rule.get('type') == 'helper':
             expanded = self.expand_helper(rule['name'], rule.get('args', []))
             if expanded:
                 return self.expand_rule(expanded, _depth + 1)
+
+        # Handle helper type in RB format: {'rule': 'helper_name', '_original_ast_type': 'helper', 'args': [...]}
+        if rule.get('_original_ast_type') == 'helper':
+            helper_name = rule.get('rule', '')
+            if helper_name:
+                expanded = self.expand_helper(helper_name, rule.get('args', []))
+                if expanded:
+                    return self.expand_rule(expanded, _depth + 1)
 
         # Recursively expand children of compound rules
         return self._recursively_expand_rule_children(rule, _depth)
@@ -337,6 +356,12 @@ class BaseGameExportHandler:
 
         This utility method can be called by game-specific expand_rule implementations
         to handle standard recursion after doing game-specific transformations.
+
+        Also handles:
+        - f_string conversion using resolve_f_string
+        - Name remapping using NAME_REMAPPING
+        - Settings conversion using SETTINGS_TO_CONVERT
+        - Recursive processing of item_check items
 
         Args:
             rule: The rule dictionary to process
@@ -350,6 +375,62 @@ class BaseGameExportHandler:
 
         rule_type = rule.get('type')
 
+        # Handle f_string conversion (AST format: type='f_string')
+        if rule_type == 'f_string':
+            resolved = self.resolve_f_string(rule)
+            if resolved is not None:
+                return {'type': 'constant', 'value': resolved}
+            # Fallback: return original rule if we can't resolve
+            return rule
+
+        # Handle f_string conversion (RB format: rule='AST_f_string' with args containing f_string data)
+        # RB format has args with 'parts', 'all_simple', 'value', '_original_ast_type': 'f_string'
+        if rule.get('rule') == 'AST_f_string':
+            args = rule.get('args', {})
+            # If all_simple is true and value is already resolved, use it directly
+            if args.get('all_simple') and 'value' in args:
+                return {'type': 'constant', 'value': args['value']}
+            # Otherwise try to resolve from parts
+            if args.get('_original_ast_type') == 'f_string':
+                resolved = self.resolve_f_string(args)
+                if resolved is not None:
+                    return {'type': 'constant', 'value': resolved}
+            return rule
+
+        # Handle name remapping and settings conversion
+        if rule_type == 'name':
+            name = rule.get('name', '')
+            # First apply any name remapping
+            if name in self.NAME_REMAPPING:
+                name = self.NAME_REMAPPING[name]
+                logger.debug(f"Remapped name '{rule.get('name')}' to '{name}'")
+
+            # Convert known setting names to setting_value type
+            if name in self.SETTINGS_TO_CONVERT:
+                logger.debug(f"Converting name '{name}' to setting_value type")
+                return {'type': 'setting_value', 'setting': name}
+
+            # Otherwise just update the name and return
+            rule['name'] = name
+            return rule
+
+        # Handle item_check with dict item names (e.g., f_string items)
+        # AST format: type='item_check'
+        if rule_type == 'item_check':
+            if isinstance(rule.get('item'), dict):
+                rule['item'] = self.expand_rule(rule['item'], _depth + 1)
+            if isinstance(rule.get('count'), dict):
+                rule['count'] = self.expand_rule(rule['count'], _depth + 1)
+
+        # Handle item_check in RB format: rule='ItemCheck' with args containing item/count
+        if rule.get('rule') == 'ItemCheck':
+            args = rule.get('args', {})
+            if isinstance(args.get('item'), dict):
+                args['item'] = self.expand_rule(args['item'], _depth + 1)
+            if isinstance(args.get('count'), dict):
+                args['count'] = self.expand_rule(args['count'], _depth + 1)
+
+        # Handle compound rules
         if rule_type in ['and', 'or']:
             rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
 
