@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-28 22:46:53
+**Generated:** 2025-12-28 15:46:53
 
 ## Summary
 
@@ -73,7 +73,7 @@
 | Muse Dash | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Noita | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | ✅ Passed | 5 | 5 | 3.6KB | ✅ |
-| Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 29.0KB | 6.7KB |
+| Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 29.1KB | 6.7KB |
 | Paint | ✅ Passed | ✅ Passed | 5 | 5 | 6.9KB | ✅ |
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 11.4KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
@@ -81,27 +81,27 @@
 | Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 13.4KB | 6.9KB |
 | Shivers | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | ❌ Failed | 6 | 6 | 83.8KB | 86.2KB |
+| Starcraft 2 | ✅ Passed | ❌ Failed | 6 | 6 | 32.2KB | 86.2KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 19.7KB | 10.7KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 7.5KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 13.2KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 1.0KB | ✅ |
+| Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Mario World | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Metroid | ✅ Passed | ✅ Passed | 6 | 6 | 64.6KB | 114.5KB |
 | TOEM original | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | TUNIC | ✅ Passed | ✅ Passed | 7 | 7 | 2.0KB | ✅ |
 | Terraria | ✅ Passed | ❌ Failed | 7 | 7 | 19.2KB | ✅ |
-| The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | 5.8KB | ✅ |
-| The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 12.3KB | ✅ |
-| The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 5.3KB | ✅ |
-| The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 28.4KB | ✅ |
-| Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 4.5KB | ✅ |
+| The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | 2.2KB | ✅ |
+| The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 9.0KB | ✅ |
+| The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 4.4KB | ✅ |
+| The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 24.9KB | ✅ |
+| Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 3.1KB | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
-| VVVVVV | ✅ Passed | ✅ Passed | 7 | 7 | 5.4KB | ✅ |
-| Wargroove | ✅ Passed | ✅ Passed | 7 | 7 | 9.3KB | ✅ |
+| VVVVVV | ✅ Passed | ✅ Passed | 7 | 7 | 3.6KB | ✅ |
+| Wargroove | ✅ Passed | ✅ Passed | 7 | 7 | 6.8KB | ✅ |
 | WebDevJourney | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
-| Yoshi's Island | ✅ Passed | ❌ Failed | 8 | 8 | 12.0KB | ✅ |
+| Yoshi's Island | ✅ Passed | ❌ Failed | 8 | 8 | 5.4KB | ✅ |
 | shapez | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
 
 ## Templates in Multiworld

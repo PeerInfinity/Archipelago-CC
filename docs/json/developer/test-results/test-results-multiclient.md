@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-28 22:46:53
+**Generated:** 2025-12-28 15:46:53
 
 ## Summary
 
@@ -69,7 +69,7 @@
 | Muse Dash | ✅ Passed | 0 | ✅ | 90/90 | 90/90 | 0/0 | ✅ | 90/90 | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | ✅ | 117/117 | 109/109 | 8/8 | ✅ | 117/117 | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | 0 | ✅ | 76/76 | 54/54 | 22/22 | ✅ | 76/76 | 3.6KB | ✅ |
-| Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 29.0KB | 6.7KB |
+| Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 29.1KB | 6.7KB |
 | Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 6.9KB | ✅ |
 | Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 11.4KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223/223 | 221/221 | 2/2 | ✅ | 223/223 | ✅ | ✅ |
@@ -77,27 +77,27 @@
 | Secret of Evermore | ✅ Passed | 0 | ✅ | 340/340 | 339/339 | 1/1 | ✅ | 340/340 | 13.4KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | ✅ | 114/114 | 76/76 | 38/38 | ✅ | 114/114 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 83.8KB | 86.2KB |
+| Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 32.2KB | 86.2KB |
 | Stardew Valley | ✅ Passed | 0 | ✅ | 500/500 | 491/491 | 9/9 | ✅ | 500/500 | 19.7KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | 7.5KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | 13.2KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60/60 | 53/53 | 7/7 | ✅ | 60/60 | 1.0KB | ✅ |
+| Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60/60 | 53/53 | 7/7 | ✅ | 60/60 | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 0 | ✅ | 108/108 | 108/108 | 0/0 | ✅ | 108/108 | ✅ | ✅ |
 | Super Metroid | ✅ Passed | 0 | ✅ | 109/109 | 100/100 | 9/9 | ✅ | 109/109 | 64.6KB | 114.5KB |
 | TOEM original | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
 | TUNIC | ✅ Passed | 0 | ✅ | 317/317 | 302/302 | 15/15 | ✅ | 317/317 | 2.0KB | ✅ |
 | Terraria | ✅ Passed | 0 | ✅ | 244/244 | 63/63 | 181/181 | ✅ | 244/244 | 19.2KB | ✅ |
-| The Legend of Zelda | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | 5.8KB | ✅ |
-| The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 12.3KB | ✅ |
-| The Wind Waker | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | 5.3KB | ✅ |
-| The Witness | ✅ Passed | 0 | ✅ | 147/147 | 132/132 | 15/15 | ✅ | 147/147 | 28.4KB | ✅ |
-| Timespinner | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | 4.5KB | ✅ |
+| The Legend of Zelda | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | 2.2KB | ✅ |
+| The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 9.0KB | ✅ |
+| The Wind Waker | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | 4.4KB | ✅ |
+| The Witness | ✅ Passed | 0 | ✅ | 147/147 | 132/132 | 15/15 | ✅ | 147/147 | 24.9KB | ✅ |
+| Timespinner | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | 3.1KB | ✅ |
 | Undertale | ✅ Passed | 0 | ✅ | 51/51 | 48/48 | 3/3 | ✅ | 51/51 | ✅ | ✅ |
-| VVVVVV | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | 5.4KB | ✅ |
-| Wargroove | ✅ Passed | 0 | ✅ | 39/39 | 38/38 | 1/1 | ✅ | 39/39 | 9.3KB | ✅ |
+| VVVVVV | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | 3.6KB | ✅ |
+| Wargroove | ✅ Passed | 0 | ✅ | 39/39 | 38/38 | 1/1 | ✅ | 39/39 | 6.8KB | ✅ |
 | WebDevJourney | ✅ Passed | 0 | ✅ | 62/62 | 61/61 | 1/1 | ✅ | 62/62 | ✅ | ✅ |
-| Yoshi's Island | ✅ Passed | 0 | ✅ | 207/207 | 191/191 | 16/16 | ✅ | 207/207 | 12.0KB | ✅ |
+| Yoshi's Island | ✅ Passed | 0 | ✅ | 207/207 | 191/191 | 16/16 | ✅ | 207/207 | 5.4KB | ✅ |
 | shapez | ✅ Passed | 0 | ✅ | 140/140 | 139/139 | 1/1 | ✅ | 140/140 | ✅ | ✅ |
 
 ## Notes
