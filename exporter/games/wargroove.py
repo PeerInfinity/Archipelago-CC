@@ -24,9 +24,7 @@ class WargrooveGameExportHandler(GenericGameExportHandler):
         """Initialize handler."""
         super().__init__(world=world)
         self.player = world.player if world and hasattr(world, 'player') else 1
-        self.region_to_locations = None
         self.current_region = None
-        self.location_rules_cache = {}
 
     def set_context(self, context_name: str):
         """Set the current region context for exit processing."""
@@ -101,25 +99,6 @@ class WargrooveGameExportHandler(GenericGameExportHandler):
 
         return None  # Let normal analysis proceed
 
-    def _build_region_location_mapping(self):
-        """Build a mapping of region names to their location lists based on Rules.py."""
-        # This mapping is based on the set_region_exit_rules calls in Rules.py
-        self.region_to_locations = {
-            'Humble Beginnings': ['Humble Beginnings: Victory'],
-            'Best Friendssss': ['Best Friendssss: Victory'],
-            'A Knight\'s Folly': ['A Knight\'s Folly: Victory'],
-            'Denrunaway': ['Denrunaway: Victory'],
-            'Dragon Freeway': ['Dragon Freeway: Victory'],
-            'Deep Thicket': ['Deep Thicket: Victory'],
-            'Corrupted Inlet': ['Corrupted Inlet: Victory'],
-            'Mage Mayhem': ['Mage Mayhem: Victory'],
-            'Endless Knight': ['Endless Knight: Victory'],
-            'Ambushed in the Middle': ['Ambushed in the Middle: Victory (Blue)', 'Ambushed in the Middle: Victory (Green)'],
-            'The Churning Sea': ['The Churning Sea: Victory'],
-            'Frigid Archery': ['Frigid Archery: Victory'],
-            'Archery Lessons': ['Archery Lessons: Victory'],
-        }
-
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand Wargroove rules, inlining LogicMixin helper methods.
 
@@ -132,50 +111,29 @@ class WargrooveGameExportHandler(GenericGameExportHandler):
         if not rule or not isinstance(rule, dict):
             return rule
 
-        rule_type = rule.get('type')
-
         # Handle state_method calls to Wargroove's LogicMixin helpers
-        if rule_type == 'state_method':
+        if rule.get('type') == 'state_method':
             method = rule.get('method')
             args = rule.get('args', [])
 
             # _wargroove_has_item(player, item) -> item_check
-            if method == '_wargroove_has_item' and len(args) >= 1:
-                item_arg = args[0]
-                # Extract the item name from the constant
-                if isinstance(item_arg, dict) and item_arg.get('type') == 'constant':
-                    item_name = item_arg.get('value')
-                else:
-                    item_name = item_arg
-                logger.debug(f"Expanding _wargroove_has_item to item_check: {item_name}")
+            if method == '_wargroove_has_item' and args:
+                item = args[0]
+                item_name = item.get('value') if isinstance(item, dict) else item
                 return {'type': 'item_check', 'item': item_name}
 
             # _wargroove_has_region(player, region) -> can_reach
-            if method == '_wargroove_has_region' and len(args) >= 1:
-                region_arg = args[0]
-                # Extract the region name from the constant
-                if isinstance(region_arg, dict) and region_arg.get('type') == 'constant':
-                    region_name = region_arg.get('value')
-                else:
-                    region_name = region_arg
-                logger.debug(f"Expanding _wargroove_has_region to can_reach: {region_name}")
+            if method == '_wargroove_has_region' and args:
+                region = args[0]
+                region_name = region.get('value') if isinstance(region, dict) else region
                 return {'type': 'can_reach', 'region': region_name}
 
             # _wargroove_has_item_and_region(player, item, region) -> and(item_check, can_reach)
             if method == '_wargroove_has_item_and_region' and len(args) >= 2:
-                item_arg = args[0]
-                region_arg = args[1]
-                # Extract the item name
-                if isinstance(item_arg, dict) and item_arg.get('type') == 'constant':
-                    item_name = item_arg.get('value')
-                else:
-                    item_name = item_arg
-                # Extract the region name
-                if isinstance(region_arg, dict) and region_arg.get('type') == 'constant':
-                    region_name = region_arg.get('value')
-                else:
-                    region_name = region_arg
-                logger.debug(f"Expanding _wargroove_has_item_and_region: item={item_name}, region={region_name}")
+                item = args[0]
+                region = args[1]
+                item_name = item.get('value') if isinstance(item, dict) else item
+                region_name = region.get('value') if isinstance(region, dict) else region
                 return {
                     'type': 'and',
                     'conditions': [
@@ -184,11 +142,5 @@ class WargrooveGameExportHandler(GenericGameExportHandler):
                     ]
                 }
 
-        # For compound types (and, or), recursively expand children
-        if rule_type in ('and', 'or'):
-            conditions = rule.get('conditions', [])
-            expanded_conditions = [self.expand_rule(c, _depth + 1) for c in conditions]
-            return {'type': rule_type, 'conditions': expanded_conditions}
-
-        # For other types, delegate to parent
+        # Delegate compound types and other rules to parent
         return super().expand_rule(rule, _depth)
