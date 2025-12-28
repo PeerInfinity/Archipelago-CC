@@ -49,7 +49,7 @@
   },
   "homepage": "https://github.com/PeerInfinity/Archipelago/tree/JSONExport#readme",
   "devDependencies": {
-    "@playwright/test": "^1.52.0",
+    "@playwright/test": "^1.57.0",
     "@vitest/coverage-v8": "^4.0.15",
     "jsdoc": "^4.0.5",
     "vitest": "^4.0.15"
