@@ -35,29 +35,44 @@ class LingoGameExportHandler(GenericGameExportHandler):
         'lingo_can_use_level_2_location', # has nested for loops over regions and panels
     }
 
-    def should_preserve_as_helper(self, func_name: str) -> bool:
-        """
-        Preserve Lingo helper functions as helper calls instead of inlining them.
+    # Preserve these helpers as helper calls instead of inlining them
+    # This prevents the analyzer from recursively analyzing and inlining function bodies
+    # that contain complex logic like state.update_reachable_regions()
+    # Note: 'lingo_can_use_location' is intentionally not preserved - it inlines to _lingo_can_satisfy_requirements
+    HELPERS_TO_PRESERVE = {
+        'lingo_can_use_entrance',
+        'lingo_can_do_pilgrimage',
+        'lingo_can_use_mastery_location',
+        'lingo_can_use_level_2_location',
+        '_lingo_can_satisfy_requirements',
+        '_lingo_can_open_door',
+    }
 
-        This prevents the analyzer from recursively analyzing and inlining the function bodies,
-        which can cause issues when the functions contain complex logic like state.update_reachable_regions().
+    # Export these options at the top level of settings (for rule engine compatibility)
+    EXPORTED_OPTIONS = [
+        'shuffle_colors',
+        'shuffle_doors',
+        'shuffle_panels',
+        'shuffle_paintings',
+        'shuffle_sunwarps',
+        'shuffle_postgame',
+        'group_doors',
+        'mastery_achievements',
+        'level_2_requirement',
+    ]
 
-        Args:
-            func_name: The name of the function being analyzed
-
-        Returns:
-            True if the function should be preserved as a helper, False otherwise
-        """
-        lingo_helpers = [
-            'lingo_can_use_entrance',
-            'lingo_can_do_pilgrimage',
-            # 'lingo_can_use_location' - intentionally not preserved, will be inlined to _lingo_can_satisfy_requirements
-            'lingo_can_use_mastery_location',
-            'lingo_can_use_level_2_location',
-            '_lingo_can_satisfy_requirements',
-            '_lingo_can_open_door',
-        ]
-        return func_name in lingo_helpers
+    @staticmethod
+    def _serialize_access_requirements(access_req) -> Dict[str, Any]:
+        """Serialize an AccessRequirements object to a JSON-compatible dict."""
+        return {
+            'rooms': sorted(list(access_req.rooms)) if hasattr(access_req, 'rooms') else [],
+            'doors': [{'room': d.room, 'door': d.door} for d in sorted(access_req.doors, key=lambda d: (d.room or '', d.door))] if hasattr(access_req, 'doors') else [],
+            'colors': sorted(list(access_req.colors)) if hasattr(access_req, 'colors') else [],
+            'items': sorted(list(access_req.items)) if hasattr(access_req, 'items') else [],
+            'progression': dict(access_req.progression) if hasattr(access_req, 'progression') else {},
+            'the_master': access_req.the_master if hasattr(access_req, 'the_master') else False,
+            'postgame': access_req.postgame if hasattr(access_req, 'postgame') else False
+        }
 
     def expand_rule(self, analyzed_rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """
@@ -373,18 +388,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
                     break
 
             if player_location and hasattr(player_location, 'access'):
-                access_req = player_location.access
-
-                # Serialize the AccessRequirements object
-                attributes['access'] = {
-                    'rooms': sorted(list(access_req.rooms)) if hasattr(access_req, 'rooms') else [],
-                    'doors': [{'room': door.room, 'door': door.door} for door in sorted(access_req.doors, key=lambda d: (d.room or '', d.door))] if hasattr(access_req, 'doors') else [],
-                    'colors': sorted(list(access_req.colors)) if hasattr(access_req, 'colors') else [],
-                    'items': sorted(list(access_req.items)) if hasattr(access_req, 'items') else [],
-                    'progression': dict(access_req.progression) if hasattr(access_req, 'progression') else {},
-                    'the_master': access_req.the_master if hasattr(access_req, 'the_master') else False,
-                    'postgame': access_req.postgame if hasattr(access_req, 'postgame') else False
-                }
+                attributes['access'] = self._serialize_access_requirements(player_location.access)
 
                 logger.debug(f"Added AccessRequirements to location {location_name}: {attributes['access']}")
 
@@ -402,53 +406,17 @@ class LingoGameExportHandler(GenericGameExportHandler):
         # Get base world data from parent class
         settings = super().get_world_data(world, multiworld, player)
 
-        # Check if this is a worldgen world
+        # Check if this is a worldgen world - load settings from saved file
         if self._is_worldgen_world(world):
-            # For worldgen, load settings from the saved settings file
             worldgen_settings = self._get_worldgen_settings(world)
-            lingo_setting_keys = [
-                'shuffle_colors',
-                'shuffle_doors',
-                'shuffle_panels',
-                'shuffle_paintings',
-                'shuffle_sunwarps',
-                'shuffle_postgame',
-                'group_doors',
-                'mastery_achievements',
-                'level_2_requirement',
-                'item_by_door',
-                'mastery_reqs',
-                'door_reqs',
-                'counting_panel_reqs',
-                'PROGRESSIVE_ITEMS',
-                'PROGRESSIVE_DOORS_BY_ROOM',
-            ]
-            for key in lingo_setting_keys:
+            # Options are already exported by EXPORTED_OPTIONS, just add game-specific data
+            for key in ['item_by_door', 'mastery_reqs', 'door_reqs', 'counting_panel_reqs',
+                        'PROGRESSIVE_ITEMS', 'PROGRESSIVE_DOORS_BY_ROOM']:
                 if key in worldgen_settings:
                     settings[key] = worldgen_settings[key]
             return settings
 
-        # Export world-specific options
-        if hasattr(world, 'options'):
-            # List of Lingo-specific options to export
-            lingo_options = [
-                'shuffle_colors',
-                'shuffle_doors',
-                'shuffle_panels',
-                'shuffle_paintings',
-                'shuffle_sunwarps',
-                'shuffle_postgame',
-                'group_doors',
-                'mastery_achievements',
-                'level_2_requirement',
-            ]
-
-            for option_name in lingo_options:
-                if hasattr(world.options, option_name):
-                    option_value = getattr(world.options, option_name)
-                    # Get the actual value (options are often Option objects)
-                    settings[option_name] = getattr(option_value, 'value', option_value)
-                    logger.debug(f"Exported option {option_name}={settings[option_name]}")
+        # Options are exported by EXPORTED_OPTIONS class attribute (handled by base class)
 
         if hasattr(world, 'player_logic'):
             # Export item_by_door: which doors require which items
@@ -460,53 +428,32 @@ class LingoGameExportHandler(GenericGameExportHandler):
 
             # Export mastery_reqs: AccessRequirements for mastery achievements
             if hasattr(world.player_logic, 'mastery_reqs'):
-                settings['mastery_reqs'] = []
-                for access_req in world.player_logic.mastery_reqs:
-                    serialized_req = {
-                        'rooms': sorted(list(access_req.rooms)) if hasattr(access_req, 'rooms') else [],
-                        'doors': [{'room': d.room, 'door': d.door} for d in sorted(access_req.doors, key=lambda d: (d.room or '', d.door))] if hasattr(access_req, 'doors') else [],
-                        'colors': sorted(list(access_req.colors)) if hasattr(access_req, 'colors') else [],
-                        'items': sorted(list(access_req.items)) if hasattr(access_req, 'items') else [],
-                        'progression': dict(access_req.progression) if hasattr(access_req, 'progression') else {},
-                        'the_master': access_req.the_master if hasattr(access_req, 'the_master') else False,
-                        'postgame': access_req.postgame if hasattr(access_req, 'postgame') else False
-                    }
-                    settings['mastery_reqs'].append(serialized_req)
+                settings['mastery_reqs'] = [
+                    self._serialize_access_requirements(req)
+                    for req in world.player_logic.mastery_reqs
+                ]
                 logger.debug(f"Exported mastery_reqs with {len(settings['mastery_reqs'])} requirements")
 
             # Export door_reqs: AccessRequirements for doors without items
             if hasattr(world.player_logic, 'door_reqs'):
-                settings['door_reqs'] = {}
-                for room, doors in world.player_logic.door_reqs.items():
-                    settings['door_reqs'][room] = {}
-                    for door_name, access_req in doors.items():
-                        settings['door_reqs'][room][door_name] = {
-                            'rooms': sorted(list(access_req.rooms)) if hasattr(access_req, 'rooms') else [],
-                            'doors': [{'room': d.room, 'door': d.door} for d in sorted(access_req.doors, key=lambda d: (d.room or '', d.door))] if hasattr(access_req, 'doors') else [],
-                            'colors': sorted(list(access_req.colors)) if hasattr(access_req, 'colors') else [],
-                            'items': sorted(list(access_req.items)) if hasattr(access_req, 'items') else [],
-                            'progression': dict(access_req.progression) if hasattr(access_req, 'progression') else {},
-                            'the_master': access_req.the_master if hasattr(access_req, 'the_master') else False,
-                            'postgame': access_req.postgame if hasattr(access_req, 'postgame') else False
-                        }
+                settings['door_reqs'] = {
+                    room: {
+                        door_name: self._serialize_access_requirements(access_req)
+                        for door_name, access_req in doors.items()
+                    }
+                    for room, doors in world.player_logic.door_reqs.items()
+                }
                 logger.debug(f"Exported door_reqs with {len(settings['door_reqs'])} rooms")
 
             # Export counting_panel_reqs: panel count requirements for LEVEL 2 location
             if hasattr(world.player_logic, 'counting_panel_reqs'):
-                settings['counting_panel_reqs'] = {}
-                for room, panel_reqs in world.player_logic.counting_panel_reqs.items():
-                    settings['counting_panel_reqs'][room] = []
-                    for access_req, panel_count in panel_reqs:
-                        serialized_req = {
-                            'rooms': sorted(list(access_req.rooms)) if hasattr(access_req, 'rooms') else [],
-                            'doors': [{'room': d.room, 'door': d.door} for d in sorted(access_req.doors, key=lambda d: (d.room or '', d.door))] if hasattr(access_req, 'doors') else [],
-                            'colors': sorted(list(access_req.colors)) if hasattr(access_req, 'colors') else [],
-                            'items': sorted(list(access_req.items)) if hasattr(access_req, 'items') else [],
-                            'progression': dict(access_req.progression) if hasattr(access_req, 'progression') else {},
-                            'the_master': access_req.the_master if hasattr(access_req, 'the_master') else False,
-                            'postgame': access_req.postgame if hasattr(access_req, 'postgame') else False
-                        }
-                        settings['counting_panel_reqs'][room].append([serialized_req, panel_count])
+                settings['counting_panel_reqs'] = {
+                    room: [
+                        [self._serialize_access_requirements(access_req), panel_count]
+                        for access_req, panel_count in panel_reqs
+                    ]
+                    for room, panel_reqs in world.player_logic.counting_panel_reqs.items()
+                }
                 logger.debug(f"Exported counting_panel_reqs with {len(settings['counting_panel_reqs'])} rooms")
 
         # Export PROGRESSIVE_ITEMS constant (sorted for consistency)
