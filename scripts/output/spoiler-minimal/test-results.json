@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-28T02:52:32.428951",
-    "last_updated": "2025-12-28T02:52:32.428957",
+    "last_updated": "2025-12-28T05:06:18.829535",
     "script_version": "1.0.0"
   },
   "results": {
@@ -72,27 +72,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "bcaad74e38f1f63621620639dc0aa5232fd0b92759c62835f3e2696c6e214d34",
-          "new_sphere_log_hash": "d36bc0bd35be1031e331f500e0dce8115d27796f983860130d3a4fc05f723225",
-          "original_rules_hash": "bcaad74e38f1f63621620639dc0aa5232fd0b92759c62835f3e2696c6e214d34",
-          "original_sphere_log_hash": "d36bc0bd35be1031e331f500e0dce8115d27796f983860130d3a4fc05f723225",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-28T02:51:14.765589"
-        }
-      },
       "game_name_from_filename": "alttp",
       "game_name_from_yaml": "A Link to the Past",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 15.99,
+        "processing_time_seconds": 30.3,
         "return_code": 0,
         "success": true,
-        "warning_count": 3
+        "warning_count": 2
       },
       "rules_file": {
         "path": "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -104,7 +92,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 20.73,
+        "processing_time_seconds": 21.86,
         "return_code": 0,
         "sphere_reached": 22.1,
         "success": true,
@@ -112,7 +100,7 @@
         "warning_count": 0
       },
       "template_filename": "A Link to the Past.yaml",
-      "timestamp": "2025-12-28T02:48:22.824442",
+      "timestamp": "2025-12-28T05:05:04.169589",
       "world_info": {
         "exporter_path": "exporter/games/alttp.py",
         "exporter_size": 2547,
@@ -1724,27 +1712,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "1a5cd2e524cae54f229648ab71c6f5bca749a2577e592d7348b9265f567084e4",
-          "new_sphere_log_hash": "ef43b5a9e462c7438f8a9d2367bbabcedcf7fe7d6d79c8cbf6e417c0b07208ee",
-          "original_rules_hash": "1a5cd2e524cae54f229648ab71c6f5bca749a2577e592d7348b9265f567084e4",
-          "original_sphere_log_hash": "ef43b5a9e462c7438f8a9d2367bbabcedcf7fe7d6d79c8cbf6e417c0b07208ee",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-28T02:51:30.431302"
-        }
-      },
       "game_name_from_filename": "kdl3",
       "game_name_from_yaml": "Kirby's Dream Land 3",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.91,
+        "processing_time_seconds": 9.87,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/kdl3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -1756,7 +1732,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 66.56,
+        "processing_time_seconds": 80.75,
         "return_code": 0,
         "sphere_reached": 11.1,
         "success": true,
@@ -1764,10 +1740,10 @@
         "warning_count": 0
       },
       "template_filename": "Kirby's Dream Land 3.yaml",
-      "timestamp": "2025-12-28T02:49:02.879738",
+      "timestamp": "2025-12-28T05:03:12.027539",
       "world_info": {
         "exporter_path": "exporter/games/kdl3.py",
-        "exporter_size": 19019,
+        "exporter_size": 9487,
         "game_logic_path": "frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js",
         "game_logic_size": 13380,
         "game_name_from_filename": "kdl3",
@@ -3671,27 +3647,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "c4a90c7d67b5187dfaf05303fbfbf102921a984a9f1b42681229f0b6feaaed2d",
-          "new_sphere_log_hash": "e8463da9b0e938233cca9fccd49e43bebd25e5bfd20e86433264f836786c19c2",
-          "original_rules_hash": "c4a90c7d67b5187dfaf05303fbfbf102921a984a9f1b42681229f0b6feaaed2d",
-          "original_sphere_log_hash": "e8463da9b0e938233cca9fccd49e43bebd25e5bfd20e86433264f836786c19c2",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-28T02:52:03.524721"
-        }
-      },
       "game_name_from_filename": "tloz",
       "game_name_from_yaml": "The Legend of Zelda",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.3,
+        "processing_time_seconds": 9.12,
         "return_code": 0,
         "success": true,
-        "warning_count": 3
+        "warning_count": 2
       },
       "rules_file": {
         "path": "frontend/presets/tloz/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -3703,7 +3667,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 8.76,
+        "processing_time_seconds": 12.55,
         "return_code": 0,
         "sphere_reached": 10.1,
         "success": true,
@@ -3711,7 +3675,7 @@
         "warning_count": 0
       },
       "template_filename": "The Legend of Zelda.yaml",
-      "timestamp": "2025-12-28T02:50:56.095962",
+      "timestamp": "2025-12-28T05:05:56.766552",
       "world_info": {
         "exporter_path": "exporter/games/tloz.py",
         "exporter_size": 5940,
