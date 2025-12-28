@@ -346,11 +346,12 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
     const proxyInitConfig = {
       rulesConfig: rulesConfigToUse,
       playerId: playerInfo.playerId,
+      // Check world first (current), then settings (deprecated) for backwards compatibility
       settings:
         settingsToUse ||
-        (rulesConfigToUse.settings
-          ? rulesConfigToUse.settings[playerInfo.playerId]
-          : {}),
+        rulesConfigToUse.world?.[playerInfo.playerId] ||
+        rulesConfigToUse.settings?.[playerInfo.playerId] ||
+        {},
     };
     await stateManagerProxySingleton.initialize(proxyInitConfig);
     logger.info(

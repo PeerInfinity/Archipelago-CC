@@ -6,13 +6,13 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-27 14:11:34
+**Generated:** 2025-12-27 23:00:39
 
 ## Summary
 
-- **Total Games:** 74
-- **Passed:** 72 (97.3%)
-- **Failed:** 2 (2.7%)
+- **Total Games:** 73
+- **Passed:** 72 (98.6%)
+- **Failed:** 1 (1.4%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
@@ -58,7 +58,7 @@
 | Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 18.6KB | 13.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | ✅ | 298/298 | 291/291 | 7/7 | ✅ | 298/298 | 18.5KB | ✅ |
 | Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 41.3KB | 10.7KB |
-| Links Awakening DX | ✅ Passed | 0 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | 18.1KB | ✅ |
+| Links Awakening DX | ❌ Failed | 1 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | 18.1KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | ✅ | 40/40 | 35/35 | 5/5 | ✅ | 40/40 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | ✅ | 557/557 | 556/556 | 1/1 | ✅ | 557/557 | 0.3KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | ✅ | 11/11 | 10/10 | 1/1 | ✅ | 11/11 | ✅ | ✅ |
@@ -71,7 +71,6 @@
 | Old School Runescape | ✅ Passed | 0 | ✅ | 76/76 | 54/54 | 22/22 | ✅ | 76/76 | 6.0KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 30.0KB | 6.7KB |
 | Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 7.1KB | ✅ |
-| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 962/1010 | 153/161 | 805/845 | ❌ | 960/1010 | 12.2KB | 13.0KB |
 | Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 12.0KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223/223 | 221/221 | 2/2 | ✅ | 223/223 | ✅ | ✅ |
 | Saving Princess | ✅ Passed | 0 | ✅ | 37/37 | 36/36 | 1/1 | ✅ | 37/37 | 3.2KB | ✅ |
@@ -87,7 +86,7 @@
 | Super Metroid | ✅ Passed | 0 | ✅ | 109/109 | 100/100 | 9/9 | ✅ | 109/109 | 72.0KB | 114.5KB |
 | TOEM original | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
-| TUNIC | ❌ Failed | 0 | ❌ | 205/317 | 202/302 | 3/15 | ❌ | 205/317 | 1.9KB | ✅ |
+| TUNIC | ✅ Passed | 0 | ✅ | 317/317 | 302/302 | 15/15 | ✅ | 317/317 | 1.9KB | ✅ |
 | Terraria | ✅ Passed | 0 | ✅ | 244/244 | 63/63 | 181/181 | ✅ | 244/244 | 19.3KB | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | 5.8KB | ✅ |
 | The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 11.6KB | ✅ |

@@ -179,9 +179,11 @@ export function resolveHelperScope(helperDefinition, args, staticData, playerIdS
     return helperScope;
   }
 
-  const playerSettings = staticData?.settings?.[playerIdStr] || {};
-  const playerSlotData = staticData?.game_info?.[playerIdStr]?.slot_data || {};
-  const playerOptions = playerSettings.options || playerSettings;
+  // Use world with fallback to settings for backwards compatibility
+  const playerWorld = staticData?.world?.[playerIdStr] || staticData?.settings?.[playerIdStr] || {};
+  // slot_data now in world, with fallback to game_info for backwards compatibility
+  const playerSlotData = playerWorld?.slot_data || staticData?.game_info?.[playerIdStr]?.slot_data || {};
+  const playerOptions = playerWorld.options || playerWorld;
   // Get param_mappings from the helper definition (exported from Python game handler)
   const paramMappings = helperDefinition.param_mappings || {};
 
@@ -445,6 +447,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
     return rule; // Return the primitive value itself
   }
 
+  // Handle arrays directly - they're literal values, not rules
+  // This happens when Compare rules have raw arrays for placement lookups like ["Item", 1]
+  if (Array.isArray(rule)) {
+    return rule;
+  }
+
   // Check if context is provided and is a valid snapshot interface
   const isValidContext = context && context._isSnapshotInterface === true;
   if (!isValidContext) {
@@ -460,7 +468,30 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
   // Rule Builder format: {"rule": "Has", "options": [], "args": {"item_name": "Sword"}}
   // AST format: {"type": "item_check", "item": "Sword"}
   if (rule.rule && !rule.type) {
-    return evaluateRuleBuilderRule(rule, context, depth, localScope);
+    let rbResult = evaluateRuleBuilderRule(rule, context, depth, localScope);
+
+    // Handle SMBool objects from SM helpers at depth 0
+    // Convert to boolean based on maxDiff check
+    if (depth === 0 && rbResult && typeof rbResult === 'object' && 'bool' in rbResult && 'difficulty' in rbResult) {
+      let maxDiff = 50; // Default to hardcore for Super Metroid
+      if (typeof context?.getPlayerId === 'function' && typeof context?.resolveName === 'function') {
+        const playerId = context.getPlayerId();
+        const state = context.resolveName('state');
+        if (state?.smbm?.[playerId]?.maxDiff !== undefined) {
+          maxDiff = state.smbm[playerId].maxDiff;
+        }
+      }
+      rbResult = rbResult.bool === true && rbResult.difficulty <= maxDiff;
+    }
+
+    return rbResult;
+  }
+
+  // Handle plain object literals (dicts) that are not rules
+  // These are literal values passed as arguments to helpers (e.g., location data dicts)
+  // They have neither 'type' (AST format) nor 'rule' (Rule Builder format) properties
+  if (!rule.type && !rule.rule) {
+    return rule;
   }
 
   let result;
@@ -1189,7 +1220,43 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       case 'value': // Handles literal values encoded as nodes
       case 'constant': {
         // Keep constant for backward compatibility
-        result = rule.value;
+        // However, if the value is an object or array containing nested rule objects,
+        // we need to recursively evaluate them. This happens when helper definitions
+        // have parameterized dictionaries like: {"item": {"type": "name", "name": "level"}}
+        const constValue = rule.value;
+
+        if (constValue !== null && typeof constValue === 'object') {
+          if (Array.isArray(constValue)) {
+            // Evaluate each element if it's a rule
+            result = constValue.map(elem => {
+              if (elem && typeof elem === 'object' && (elem.type || elem.rule)) {
+                return evaluateRule(elem, context, depth + 1, localScope);
+              }
+              return elem;
+            });
+          } else {
+            // Check if any values in the object are rules that need evaluation
+            const hasNestedRules = Object.values(constValue).some(
+              v => v && typeof v === 'object' && (v.type || v.rule)
+            );
+
+            if (hasNestedRules) {
+              // Recursively evaluate nested rule objects
+              result = {};
+              for (const [key, val] of Object.entries(constValue)) {
+                if (val && typeof val === 'object' && (val.type || val.rule)) {
+                  result[key] = evaluateRule(val, context, depth + 1, localScope);
+                } else {
+                  result[key] = val;
+                }
+              }
+            } else {
+              result = constValue;
+            }
+          }
+        } else {
+          result = constValue;
+        }
         break;
       }
 
@@ -1218,7 +1285,38 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'attribute': {
-        const baseObject = evaluateRule(rule.object, context, depth + 1, localScope);
+        // Check if object is already a plain value (not a rule to evaluate)
+        // This happens when evaluateRuleBuilderRule passes an already-evaluated object
+        // Plain objects have no 'type' (AST format) or 'rule' (Rule Builder format) key
+        let baseObject;
+        if (rule.object && typeof rule.object === 'object' &&
+            !rule.object.type && !rule.object.rule && !Array.isArray(rule.object)) {
+          // Object is already evaluated, use directly
+          baseObject = rule.object;
+        } else {
+          baseObject = evaluateRule(rule.object, context, depth + 1, localScope);
+        }
+
+        // Special case: If we're accessing world.* and the property doesn't exist on the world object,
+        // check the settings for game-specific runtime data (like auto_scroll_levels, sprite_data).
+        // Some games export runtime data via get_settings_data() which ends up in settings,
+        // but the rule references world.attribute_name.
+        if (rule.object?.type === 'name' && rule.object?.name === 'world' &&
+            baseObject && typeof baseObject === 'object' && baseObject[rule.attr] === undefined) {
+          if (context.getStaticData) {
+            const staticData = context.getStaticData();
+            const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+
+            // Check world (new) or settings (legacy) for backwards compatibility
+            const worldData = staticData?.world || staticData?.settings;
+            if (worldData && worldData[playerId]) {
+              const settingValue = worldData[playerId][rule.attr];
+              if (settingValue !== undefined) {
+                return settingValue;
+              }
+            }
+          }
+        }
 
         // Special case: if baseObject is undefined and the object was "self",
         // try to resolve from game settings (self in Python rules = world/rules class instance with options)
@@ -1228,14 +1326,17 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             const staticData = context.getStaticData ? context.getStaticData() : context.staticData;
             const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
-            // Special case: if accessing self.options, return the settings object so nested attributes work
-            if (rule.attr === 'options' && staticData?.settings && staticData.settings[playerId]) {
-              return staticData.settings[playerId];
+            // Check world (new) or settings (legacy) for backwards compatibility
+            const worldData = staticData?.world || staticData?.settings;
+
+            // Special case: if accessing self.options, return the world data so nested attributes work
+            if (rule.attr === 'options' && worldData && worldData[playerId]) {
+              return worldData[playerId];
             }
 
-            // Check if the setting exists
-            if (staticData?.settings && staticData.settings[playerId]) {
-              const settingValue = staticData.settings[playerId][rule.attr];
+            // Check if the setting/attribute exists
+            if (worldData && worldData[playerId]) {
+              const settingValue = worldData[playerId][rule.attr];
               if (settingValue !== undefined) {
                 return settingValue;
               }
@@ -1246,16 +1347,17 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // Special case: if baseObject is undefined and the object was "options",
-        // try to resolve from game settings
+        // try to resolve from game world/settings
         if (baseObject === undefined && rule.object && rule.object.type === 'name' && rule.object.name === 'options') {
           // Try to get the setting value from context
           if (context.getStaticData) {
             const staticData = context.getStaticData();
             const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
-            // Check if the setting exists
-            if (staticData.settings && staticData.settings[playerId]) {
-              const settingValue = staticData.settings[playerId][rule.attr];
+            // Check world (new) or settings (legacy) for backwards compatibility
+            const worldData = staticData?.world || staticData?.settings;
+            if (worldData && worldData[playerId]) {
+              const settingValue = worldData[playerId][rule.attr];
               if (settingValue !== undefined) {
                 return settingValue;
               }
@@ -1273,16 +1375,19 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           return undefined;
         }
 
-        // Special case: if baseObject is undefined and the object was "settings",
-        // return the setting value from the player's settings object
-        // This allows exported helpers to reference settings.door_reqs, settings.item_by_door, etc.
-        if (baseObject === undefined && rule.object && rule.object.type === 'name' && rule.object.name === 'settings') {
+        // Special case: if baseObject is undefined and the object was "settings" or "world",
+        // return the value from the player's world/settings object
+        // This allows exported helpers to reference settings.door_reqs, world.difficulty_requirements, etc.
+        if (baseObject === undefined && rule.object && rule.object.type === 'name' &&
+            (rule.object.name === 'settings' || rule.object.name === 'world')) {
           if (context.getStaticData) {
             const staticData = context.getStaticData();
             const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
 
-            if (staticData?.settings && staticData.settings[playerId]) {
-              const settingValue = staticData.settings[playerId][rule.attr];
+            // Check world (new) or settings (legacy) for backwards compatibility
+            const worldData = staticData?.world || staticData?.settings;
+            if (worldData && worldData[playerId]) {
+              const settingValue = worldData[playerId][rule.attr];
               if (settingValue !== undefined) {
                 return settingValue;
               }
@@ -1315,6 +1420,13 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             return undefined;
           }
 
+          // Special handling for shop.region - return a region reference for can_reach checks
+          // Shop objects have 'inventory' array and 'region' string (region name)
+          if (rule.attr === 'region' && baseObject.inventory && typeof baseObject.region === 'string') {
+            // Return a region reference object that can_reach handling will recognize
+            return { __regionRef: true, regionName: baseObject.region };
+          }
+
           // Special handling for boss attribute - redirect to bosses["None"] if bosses exists
           if (rule.attr === 'boss') {
             const hasBoss = baseObject.boss !== undefined;
@@ -1322,10 +1434,11 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
             if (!hasBoss && hasBosses) {
               // Use the new bosses format - default to "None" entry
-              return baseObject.bosses["None"] || Object.values(baseObject.bosses)[0];
+              const boss = baseObject.bosses["None"] || Object.values(baseObject.bosses)[0];
+              return boss;
             }
           }
-          
+
           // Special handling for dungeon attribute - resolve string to actual dungeon object
           if (rule.attr === 'dungeon') {
             const hasDungeon = baseObject.dungeon !== undefined;
@@ -1404,6 +1517,18 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           if (rule.attr === 'value' && baseObject !== undefined && baseObject !== null) {
             return baseObject;
           }
+
+          // Special case: Allow resolveAttribute to handle string baseObjects
+          // This is needed for cases like region.dungeon.boss where:
+          // - region.dungeon returns a string dungeon name "Tower of Hera"
+          // - We then need to resolve .boss on that string by looking up the dungeon object
+          if (typeof baseObject === 'string' && typeof context.resolveAttribute === 'function') {
+            const resolvedValue = context.resolveAttribute(baseObject, rule.attr);
+            if (resolvedValue !== undefined) {
+              return resolvedValue;
+            }
+          }
+
           return undefined;
         }
       }
@@ -1595,7 +1720,41 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
           return undefined;
         }
-        
+
+        // Special handling for shop.has(item) method calls
+        // Shop objects have 'inventory' array; has() checks if any inventory item matches
+        if (rule.function?.type === 'attribute' &&
+            rule.function.attr === 'has' &&
+            rule.function.object?.type === 'name') {
+          // Resolve the shop object from local scope (bound in any_of iteration)
+          const shopObj = evaluateRule(rule.function.object, context, depth + 1, localScope);
+          if (shopObj && Array.isArray(shopObj.inventory)) {
+            const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
+            const itemName = args[0];
+            // Check if any inventory entry has this item
+            const hasItem = shopObj.inventory.some(inv => inv && inv.item === itemName);
+            result = hasItem;
+            break;
+          }
+        }
+
+        // Special handling for shop.has_unlimited(item) method calls
+        // Checks if shop has the item with unlimited stock (max === 0)
+        if (rule.function?.type === 'attribute' &&
+            rule.function.attr === 'has_unlimited' &&
+            rule.function.object?.type === 'name') {
+          // Resolve the shop object from local scope (bound in any_of iteration)
+          const shopObj = evaluateRule(rule.function.object, context, depth + 1, localScope);
+          if (shopObj && Array.isArray(shopObj.inventory)) {
+            const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
+            const itemName = args[0];
+            // Check if any inventory entry has this item with unlimited stock
+            const hasUnlimited = shopObj.inventory.some(inv => inv && inv.item === itemName && inv.max === 0);
+            result = hasUnlimited;
+            break;
+          }
+        }
+
         // Special handling for boss.can_defeat function calls
         // These need to be redirected to use the boss's defeat_rule data
         if (
@@ -1609,7 +1768,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           // Look for patterns:
           // 1. location.parent_region.dungeon.boss.can_defeat
           // 2. location.parent_region.dungeon.bosses["index"].can_defeat (subscript pattern)
-          
+
           // First check if immediate parent is a subscript accessing bosses
           if (current && current.type === 'subscript') {
             // Check if the subscript is accessing a bosses attribute
@@ -1622,7 +1781,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
               subscriptValue = subscriptValue.object;
             }
           }
-          
+
           // Also check the standard attribute chain
           while (current && current.type === 'attribute') {
             if (current.attr === 'boss' || current.attr === 'bosses') {
@@ -2342,7 +2501,11 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           result = undefined;
         } else if (rule.count !== undefined) {
           // If there's a count field, use count-based checking
-          const requiredCount = evaluateRule(rule.count, context, depth + 1, localScope);
+          let requiredCount = evaluateRule(rule.count, context, depth + 1, localScope);
+          // Unwrap return marker if block was used as expression
+          if (requiredCount && typeof requiredCount === 'object' && requiredCount.__isReturn) {
+            requiredCount = requiredCount.value;
+          }
           if (requiredCount === undefined) {
             result = undefined;
           } else if (typeof context.countItem === 'function') {
@@ -2746,15 +2909,28 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           result = context.resolveName(rule.name);
         }
 
-        // If not resolved, try to get from settings
+        // If not resolved, try to get from settings or world data
         // This is needed for helper definitions that reference settings like 'floating'
         if (result === undefined && typeof context?.getStaticData === 'function') {
           const staticData = context.getStaticData();
           const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
-          const settingValue = staticData?.settings?.[playerId]?.[rule.name];
+
+          // Special case: 'world' name should resolve to the world data object
+          // This enables world.shops, world.dungeons, etc. attribute access
+          if (rule.name === 'world') {
+            const worldData = staticData?.world?.[playerId];
+            if (worldData !== undefined) {
+              result = worldData;
+              log('debug', `[evaluateRule] Resolved 'world' to world data object`);
+              break;
+            }
+          }
+
+          // Check world first (current), then settings (deprecated) for backwards compatibility
+          const settingValue = staticData?.world?.[playerId]?.[rule.name] ?? staticData?.settings?.[playerId]?.[rule.name];
           if (settingValue !== undefined) {
             result = settingValue;
-            log('debug', `[evaluateRule] Resolved name '${rule.name}' from settings: ${typeof result === 'object' ? 'object' : result}`);
+            log('debug', `[evaluateRule] Resolved name '${rule.name}' from world/settings: ${typeof result === 'object' ? 'object' : result}`);
           }
         }
 
@@ -2797,9 +2973,17 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'binary_op': {
-        const left = evaluateRule(rule.left, context, depth + 1, localScope);
-        const right = evaluateRule(rule.right, context, depth + 1, localScope);
+        let left = evaluateRule(rule.left, context, depth + 1, localScope);
+        let right = evaluateRule(rule.right, context, depth + 1, localScope);
         const op = rule.op;
+
+        // Unwrap return markers from block expressions used as operands
+        if (left && typeof left === 'object' && left.__isReturn) {
+          left = left.value;
+        }
+        if (right && typeof right === 'object' && right.__isReturn) {
+          right = right.value;
+        }
 
         if (left === undefined || right === undefined) {
           result = undefined;
@@ -3184,7 +3368,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           // Create a new context with the iterator variable bound
           const boundContext = createBoundContext(context, rule.iterator_info, item);
 
-          const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1);
+          // Pass localScope to preserve helper parameter bindings
+          const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1, localScope);
           if (itemResult === false) {
             result = false;
             break;
@@ -3239,7 +3424,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           // Create a new context with the iterator variable bound
           const boundContext = createBoundContext(context, rule.iterator_info, item);
 
-          const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1);
+          // Pass localScope to preserve helper parameter bindings (e.g., 'item' in can_buy(item))
+          const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1, localScope);
           if (itemResult === true) {
             result = true;
             break;
@@ -3727,8 +3913,16 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       case 'compare': {
         // Handle comparison operations: ==, !=, <, <=, >, >=
         // Note: 'compare' is the type from Python analyzer, 'comparison' is the canonical name
-        const left = evaluateRule(rule.left, context, depth + 1, localScope);
-        const right = evaluateRule(rule.right, context, depth + 1, localScope);
+        let left = evaluateRule(rule.left, context, depth + 1, localScope);
+        let right = evaluateRule(rule.right, context, depth + 1, localScope);
+
+        // Unwrap return markers from block expressions used as operands
+        if (left && typeof left === 'object' && left.__isReturn) {
+          left = left.value;
+        }
+        if (right && typeof right === 'object' && right.__isReturn) {
+          right = right.value;
+        }
 
         if (left === undefined || right === undefined) {
           result = undefined;
@@ -3753,8 +3947,16 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       case 'binary_op': {
         // Handle binary arithmetic operations: +, -, *, /, //, %
         // Note: 'binary_op' is the type from Python analyzer, 'binop' is the canonical name
-        const left = evaluateRule(rule.left, context, depth + 1, localScope);
-        const right = evaluateRule(rule.right, context, depth + 1, localScope);
+        let left = evaluateRule(rule.left, context, depth + 1, localScope);
+        let right = evaluateRule(rule.right, context, depth + 1, localScope);
+
+        // Unwrap return markers from block expressions used as operands
+        if (left && typeof left === 'object' && left.__isReturn) {
+          left = left.value;
+        }
+        if (right && typeof right === 'object' && right.__isReturn) {
+          right = right.value;
+        }
 
         if (left === undefined || right === undefined) {
           result = undefined;
@@ -3935,10 +4137,33 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
-        // Create a new scope for this block (inheriting from parent scope)
-        // Track if this is a top-level block (localScope was null)
+        // Determine if this block should have its own scope:
+        // 1. Top-level blocks (localScope === null) always get a new scope
+        // 2. Blocks that contain a return statement are treated as function bodies
+        //    and get their own scope to avoid variable shadowing issues
+        // 3. Regular nested blocks (if/for bodies) share the parent scope
         const isTopLevelBlock = localScope === null;
-        const blockScope = isTopLevelBlock ? {} : { ...localScope };
+        const hasReturnStatement = rule.statements.some(
+          stmt => stmt.type === 'return' ||
+                 (stmt.type === 'if_statement' &&
+                  (stmt.body?.some(s => s.type === 'return') ||
+                   stmt.orelse?.some(s => s.type === 'return')))
+        );
+
+        // Create scope based on block type:
+        // - Top-level: new empty scope
+        // - Function-like (has return): new scope copying parent values (read-only inheritance)
+        // - Statement block: share parent scope
+        let blockScope;
+        if (isTopLevelBlock) {
+          blockScope = {};
+        } else if (hasReturnStatement) {
+          // Create a new scope that inherits parent values but is isolated
+          // This prevents function-like blocks from mutating parent variables
+          blockScope = Object.assign({}, localScope);
+        } else {
+          blockScope = localScope;
+        }
 
         for (let i = 0; i < rule.statements.length; i++) {
           const stmt = rule.statements[i];
@@ -3952,9 +4177,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           result = stmtResult;
         }
 
-        // If this is a top-level block, unwrap the return value
-        // Nested blocks keep the marker so outer blocks can propagate
-        if (isTopLevelBlock && result && typeof result === 'object' && result.__isReturn) {
+        // If this is a top-level block or function-like block, unwrap the return value
+        if ((isTopLevelBlock || hasReturnStatement) && result && typeof result === 'object' && result.__isReturn) {
           result = result.value;
         }
         break;
@@ -3977,7 +4201,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
-        const value = evaluateRule(rule.value, context, depth + 1, localScope);
+        let value = evaluateRule(rule.value, context, depth + 1, localScope);
+
+        // Unwrap return marker if block was used as expression
+        if (value && typeof value === 'object' && value.__isReturn) {
+          value = value.value;
+        }
 
         if (rule.op && rule.op !== '=') {
           // Compound assignment
@@ -4252,7 +4481,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
       case 'if_statement': {
         // Execute body or orelse statements based on test condition
-        const testResult = evaluateRule(rule.test, context, depth + 1, localScope);
+        let testResult = evaluateRule(rule.test, context, depth + 1, localScope);
+
+        // Unwrap return marker if block was used as test expression
+        if (testResult && typeof testResult === 'object' && testResult.__isReturn) {
+          testResult = testResult.value;
+        }
 
         if (testResult === undefined) {
           result = undefined;
@@ -4520,6 +4754,90 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       return undefined;
     }
 
+    // AST_placement_search (from converted AST format) - search for an item at specific locations
+    // Returns true if the item is found at any of the locations, false otherwise
+    case 'AST_placement_search': {
+      // Evaluate item name
+      let searchItem = args.item;
+      if (searchItem && typeof searchItem === 'object' && (searchItem.type || searchItem.rule)) {
+        searchItem = evaluateRule(searchItem, context, depth + 1, localScope);
+      }
+
+      // Evaluate player
+      let searchPlayer = args.player;
+      if (searchPlayer && typeof searchPlayer === 'object' && (searchPlayer.type || searchPlayer.rule)) {
+        searchPlayer = evaluateRule(searchPlayer, context, depth + 1, localScope);
+      }
+      searchPlayer = searchPlayer ?? 1;
+
+      // Evaluate locations list
+      let locations = args.locations;
+      if (locations && typeof locations === 'object') {
+        if (locations.type === 'constant') {
+          locations = locations.value;
+        } else if (locations.type === 'list' && Array.isArray(locations.value)) {
+          // Recursively evaluate list items
+          locations = locations.value.map(item => {
+            if (item && typeof item === 'object' && (item.type || item.rule)) {
+              return evaluateRule(item, context, depth + 1, localScope);
+            }
+            return item;
+          });
+        } else if (locations.type || locations.rule) {
+          locations = evaluateRule(locations, context, depth + 1, localScope);
+        }
+      }
+
+      if (!Array.isArray(locations) || !searchItem) {
+        return undefined;
+      }
+
+      // Search each location for the item
+      for (const locEntry of locations) {
+        let locName, locPlayer;
+        if (Array.isArray(locEntry)) {
+          [locName, locPlayer] = locEntry;
+        } else if (locEntry && typeof locEntry === 'object') {
+          locName = locEntry.location || locEntry.name;
+          locPlayer = locEntry.player ?? 1;
+        } else {
+          continue;
+        }
+
+        locPlayer = locPlayer ?? 1;
+
+        // Get the item at this location
+        if (typeof context?.getLocationItem === 'function') {
+          const foundItem = context.getLocationItem(locName);
+          if (foundItem) {
+            const itemName = foundItem.name || foundItem.item;
+            const itemPlayer = foundItem.player || 1;
+            // Check if this matches what we're searching for
+            if (itemName === searchItem && itemPlayer === searchPlayer) {
+              return true;
+            }
+          }
+        }
+      }
+
+      return false;
+    }
+
+    // AST_function_call (from converted AST format) - evaluate a function call like boss.can_defeat()
+    case 'AST_function_call': {
+      // Convert Rule Builder format to legacy function_call format
+      // Structure: { rule: 'AST_function_call', args: { function: {...}, args: [...], _original_ast_type: 'function_call' } }
+      const funcExpr = args.function;
+      const funcArgs = args.args || [];
+
+      // Build the legacy format and evaluate it
+      return evaluateRule({
+        type: 'function_call',
+        function: funcExpr,
+        args: funcArgs
+      }, context, depth + 1, localScope);
+    }
+
     // Item check: Has(item_name, count)
     case 'Has': {
       const itemName = args.item_name;
@@ -4650,24 +4968,89 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
     case 'And': {
       if (children.length === 0) return true;
       let hasUndefined = false;
+      let hasSMBool = false;
+      let totalDifficulty = 0;
       for (const childRule of children) {
-        const result = evaluateRule(childRule, context, depth + 1, localScope);
-        if (result === false) return false;
-        if (result === undefined) hasUndefined = true;
+        let result = evaluateRule(childRule, context, depth + 1, localScope);
+        // Handle SMBool objects from SM helpers - extract bool property and accumulate difficulty
+        let boolValue = result;
+        if (result && typeof result === 'object' && 'bool' in result) {
+          boolValue = result.bool;
+          hasSMBool = true;
+          totalDifficulty += result.difficulty || 0;
+        }
+        // Check for falsy values (false, 0, "", null) but not undefined
+        // Use !boolValue to catch all falsy values including 0, not just === false
+        if (!boolValue && boolValue !== undefined) return false;
+        if (boolValue === undefined) hasUndefined = true;
       }
-      return hasUndefined ? undefined : true;
+      if (hasUndefined) return undefined;
+      // If any child was SMBool, return SMBool with accumulated difficulty
+      if (hasSMBool) {
+        return { bool: true, difficulty: totalDifficulty };
+      }
+      return true;
     }
 
     // Composite rules: Or
     case 'Or': {
       if (children.length === 0) return false;
       let hasUndefined = false;
+      let hasSMBool = false;
+      let minDifficulty = Infinity;
       for (const childRule of children) {
-        const result = evaluateRule(childRule, context, depth + 1, localScope);
-        if (result === true) return true;
-        if (result === undefined) hasUndefined = true;
+        let result = evaluateRule(childRule, context, depth + 1, localScope);
+        // Handle SMBool objects from SM helpers - extract bool property and track min difficulty
+        let boolValue = result;
+        if (result && typeof result === 'object' && 'bool' in result) {
+          boolValue = result.bool;
+          hasSMBool = true;
+          // Track min difficulty for truthy SMBool results
+          if (boolValue && (result.difficulty || 0) < minDifficulty) {
+            minDifficulty = result.difficulty || 0;
+          }
+        }
+        // Check for truthy values (not just === true) but exclude undefined
+        if (boolValue && boolValue !== undefined) {
+          // For Or, return immediately with the min difficulty seen so far
+          if (hasSMBool) {
+            return { bool: true, difficulty: minDifficulty };
+          }
+          return true;
+        }
+        if (boolValue === undefined) hasUndefined = true;
       }
       return hasUndefined ? undefined : false;
+    }
+
+    // Conditional: ternary rule (test ? if_true : if_false)
+    // Rule Builder: {"rule": "Conditional", "args": {"test": {...}, "if_true": {...}, "if_false": {...}}}
+    case 'Conditional': {
+      const testRule = args.test;
+      const ifTrueRule = args.if_true;
+      const ifFalseRule = args.if_false;
+
+      if (!testRule) {
+        log('warn', '[evaluateRuleBuilderRule] Conditional rule missing test');
+        return undefined;
+      }
+
+      const testResult = evaluateRule(testRule, context, depth + 1, localScope);
+
+      if (testResult === undefined) {
+        // If test is unknown, outcome is unknown
+        return undefined;
+      } else if (testResult) {
+        // Test is truthy - evaluate if_true branch
+        return ifTrueRule
+          ? evaluateRule(ifTrueRule, context, depth + 1, localScope)
+          : true;
+      } else {
+        // Test is falsy - evaluate if_false branch
+        return ifFalseRule
+          ? evaluateRule(ifFalseRule, context, depth + 1, localScope)
+          : false;
+      }
     }
 
     // Wrapper rules: Not (inverts child)
@@ -4701,6 +5084,15 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         return result === 'reachable' || result === true;
       }
       return undefined;
+    }
+
+    // AST_block (from rule analyzer) - execute a sequence of statements
+    // This is the Rule Builder format for code blocks with statements, variable assignments,
+    // and control flow (if/else, return). Converts to AST 'block' type for evaluation.
+    case 'AST_block': {
+      const statements = args.statements || [];
+      // Delegate to the AST format 'block' handler
+      return evaluateRule({ type: 'block', statements }, context, depth + 1, localScope);
     }
 
     // AST_count_true (from Stardew Valley) - count how many conditions are true
@@ -4753,6 +5145,18 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       if (weightSum >= requiredCount) return true;
       if (weightSum + undefinedWeightSum >= requiredCount) return undefined;
       return false;
+    }
+
+    // AST_prog_item_count (from DLCQuest and other games with accumulator items)
+    // Returns the count of a progression item from state.prog_items[player][key]
+    case 'AST_prog_item_count': {
+      const progKey = args.key;
+      if (progKey === undefined) {
+        log('warn', '[evaluateRuleBuilderRule] AST_prog_item_count: missing key');
+        return undefined;
+      }
+      // Delegate to the prog_item_count handler
+      return evaluateRule({ type: 'prog_item_count', key: progKey }, context, depth + 1, localScope);
     }
 
     // Reachability rules
@@ -4857,9 +5261,19 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       switch (op) {
         case '==':
         case 'eq':
+          // Handle array comparison by value (JS === compares by reference)
+          if (Array.isArray(leftValue) && Array.isArray(rightValue)) {
+            return leftValue.length === rightValue.length &&
+                   leftValue.every((val, index) => val === rightValue[index]);
+          }
           return leftValue === rightValue;
         case '!=':
         case 'ne':
+          // Handle array comparison by value
+          if (Array.isArray(leftValue) && Array.isArray(rightValue)) {
+            return leftValue.length !== rightValue.length ||
+                   leftValue.some((val, index) => val !== rightValue[index]);
+          }
           return leftValue !== rightValue;
         case '<':
         case 'lt':
@@ -4873,6 +5287,44 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         case '>=':
         case 'ge':
           return leftValue >= rightValue;
+        case 'in':
+          // Check if leftValue is in rightValue (array)
+          if (Array.isArray(rightValue)) {
+            // Handle array comparison with deep equality for nested arrays
+            if (Array.isArray(leftValue)) {
+              return rightValue.some(item => {
+                if (Array.isArray(item)) {
+                  // Deep array comparison
+                  return item.length === leftValue.length &&
+                         item.every((val, index) => val === leftValue[index]);
+                }
+                return item === leftValue;
+              });
+            }
+            return rightValue.includes(leftValue);
+          }
+          if (typeof rightValue === 'string') {
+            return rightValue.includes(leftValue);
+          }
+          return false;
+        case 'not in':
+          // Negate the 'in' check
+          if (Array.isArray(rightValue)) {
+            if (Array.isArray(leftValue)) {
+              return !rightValue.some(item => {
+                if (Array.isArray(item)) {
+                  return item.length === leftValue.length &&
+                         item.every((val, index) => val === leftValue[index]);
+                }
+                return item === leftValue;
+              });
+            }
+            return !rightValue.includes(leftValue);
+          }
+          if (typeof rightValue === 'string') {
+            return !rightValue.includes(leftValue);
+          }
+          return true;
         default:
           log('warn', `[evaluateRuleBuilderRule] Unknown Compare operator '${op}'`);
           return undefined;
@@ -4953,9 +5405,11 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       return Math.max(leftValue, rightValue);
     }
 
-    // Count: get the count of an item (used as operand in Compare/Arithmetic)
+    // Count/CountItem: get the count of an item (used as operand in Compare/Arithmetic)
     // Rule Builder: {"rule": "Count", "args": {"item_name": "Key"}}
-    case 'Count': {
+    // Rule Builder: {"rule": "CountItem", "args": {"item_name": "Key"}}
+    case 'Count':
+    case 'CountItem': {
       const itemName = args.item_name;
       if (!itemName) {
         log('warn', '[evaluateRuleBuilderRule] Count rule missing item_name');
@@ -4970,13 +5424,192 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       return hasItem ? 1 : 0;
     }
 
-    // Unknown rule type - try to find as a custom helper
+    // CountGroup: get the count of items in a group
+    // Rule Builder: {"rule": "CountGroup", "args": {"group": "Keys"}}
+    case 'CountGroup': {
+      const groupName = args.group;
+      if (!groupName) {
+        log('warn', '[evaluateRuleBuilderRule] CountGroup rule missing group');
+        return 0;
+      }
+      if (typeof context?.countGroup === 'function') {
+        return context.countGroup(groupName) || 0;
+      }
+      // Fallback: delegate to AST evaluator
+      return evaluateRule({ type: 'state_method', method: 'count_group', args: [{ type: 'constant', value: groupName }] }, context, depth + 1, localScope);
+    }
+
+    // CountGroupUnique: get the count of unique items in a group
+    // Rule Builder: {"rule": "CountGroupUnique", "args": {"group": "Keys"}}
+    case 'CountGroupUnique': {
+      const groupName = args.group;
+      if (!groupName) {
+        log('warn', '[evaluateRuleBuilderRule] CountGroupUnique rule missing group');
+        return 0;
+      }
+      if (typeof context?.countGroupUnique === 'function') {
+        return context.countGroupUnique(groupName) || 0;
+      }
+      // Fallback: delegate to AST evaluator
+      return evaluateRule({ type: 'state_method', method: 'count_group_unique', args: [{ type: 'constant', value: groupName }] }, context, depth + 1, localScope);
+    }
+
+    // SettingValue: get a game setting value
+    // Rule Builder: {"rule": "SettingValue", "args": {"setting": "difficulty"}}
+    case 'SettingValue': {
+      const settingName = args.setting;
+      if (!settingName) {
+        log('warn', '[evaluateRuleBuilderRule] SettingValue rule missing setting');
+        return undefined;
+      }
+      // Try to get setting from context
+      if (context.getStaticData || context.staticData) {
+        const staticData = context.getStaticData ? context.getStaticData() : context.staticData;
+        const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+        // Check world (new) or settings (legacy) for backwards compatibility
+        const worldData = staticData?.world || staticData?.settings;
+        if (worldData && worldData[playerId]) {
+          const playerWorld = worldData[playerId];
+
+          // Check direct setting first
+          let settingValue = playerWorld[settingName];
+
+          // If not found, check in options sub-object
+          if (settingValue === undefined && playerWorld.options) {
+            settingValue = playerWorld.options[settingName];
+          }
+
+          if (settingValue !== undefined) {
+            // Convert string booleans to actual booleans
+            if (settingValue === 'true') return true;
+            if (settingValue === 'false') return false;
+            return settingValue;
+          }
+        }
+      }
+      log('debug', `[evaluateRuleBuilderRule] SettingValue: setting '${settingName}' not found`);
+      return undefined;
+    }
+
+    // ItemCheck: complex item check (fallback from converter when item couldn't be resolved)
+    // Rule Builder: {"rule": "ItemCheck", "args": {"item": {...}, "count": ...}}
+    case 'ItemCheck': {
+      const item = args.item;
+      const count = args.count ?? 1;
+      // Try to resolve item to a string
+      let itemName;
+      if (typeof item === 'string') {
+        itemName = item;
+      } else if (item && typeof item === 'object') {
+        // Try to evaluate item expression
+        const resolvedItem = evaluateRule(item, context, depth + 1, localScope);
+        if (typeof resolvedItem === 'string') {
+          itemName = resolvedItem;
+        }
+      }
+      if (!itemName) {
+        log('warn', '[evaluateRuleBuilderRule] ItemCheck could not resolve item', { item });
+        return false;
+      }
+      // Resolve count if it's a complex expression
+      let countValue = count;
+      if (typeof count === 'object') {
+        countValue = evaluateRule(count, context, depth + 1, localScope);
+      }
+      // Delegate to AST evaluator
+      return evaluateRule({ type: 'item_check', item: itemName, count: countValue ?? 1 }, context, depth + 1, localScope);
+    }
+
+    // StateMethod: complex state method call (fallback from converter)
+    // Rule Builder: {"rule": "StateMethod", "args": {"method": "...", "args": [...]}}
+    case 'StateMethod': {
+      const method = args.method;
+      const methodArgs = args.args || [];
+      if (!method) {
+        log('warn', '[evaluateRuleBuilderRule] StateMethod missing method');
+        return false;
+      }
+      // Pass args directly to AST evaluator - it will evaluate them
+      return evaluateRule({ type: 'state_method', method, args: methodArgs }, context, depth + 1, localScope);
+    }
+
+    // Attribute: complex attribute access (fallback from converter)
+    // Rule Builder: {"rule": "Attribute", "args": {"object": {...}, "attr": "..."}}
+    case 'Attribute': {
+      const obj = args.object;
+      const attr = args.attr;
+      if (!attr) {
+        log('warn', '[evaluateRuleBuilderRule] Attribute missing attr');
+        return undefined;
+      }
+      // Convert object if it's Rule Builder format
+      let convertedObj = obj;
+      if (obj && typeof obj === 'object' && obj.rule) {
+        convertedObj = evaluateRule(obj, context, depth + 1, localScope);
+      }
+      // Delegate to AST evaluator
+      return evaluateRule({ type: 'attribute', object: convertedObj, attr }, context, depth + 1, localScope);
+    }
+
+    // Name: variable/name reference (fallback from converter)
+    // Rule Builder: {"rule": "Name", "args": {"name": "..."}}
+    case 'Name': {
+      const name = args.name;
+      if (!name) {
+        log('warn', '[evaluateRuleBuilderRule] Name missing name');
+        return undefined;
+      }
+      // Delegate to AST evaluator
+      return evaluateRule({ type: 'name', name }, context, depth + 1, localScope);
+    }
+
+    // Tuple: tuple expression (fallback from converter)
+    // Rule Builder: {"rule": "Tuple", "args": {"value": [...]}}
+    case 'Tuple': {
+      const value = args.value || [];
+      // Evaluate each element
+      return value.map(item => {
+        if (item && typeof item === 'object') {
+          return evaluateRule(item, context, depth + 1, localScope);
+        }
+        return item;
+      });
+    }
+
+    // Unknown rule type - try to find as a custom helper or delegate to AST evaluator
     default: {
-      log('debug', `[evaluateRuleBuilderRule] Unknown Rule Builder type '${ruleName}', checking helpers`);
-      // Handle converted helper rules (from AST format)
-      // These have structure: {rule: "helper_name", args: {args: [...], _original_ast_type: "helper"}}
+      log('debug', `[evaluateRuleBuilderRule] Unknown Rule Builder type '${ruleName}', checking options`);
+
+      // Check for _original_ast_type to determine if this should be delegated to AST evaluator
+      const originalAstType = args?._original_ast_type;
+      if (originalAstType && originalAstType !== 'helper') {
+        // This was converted from an AST rule that we should try to evaluate as AST
+        log('debug', `[evaluateRuleBuilderRule] Delegating to AST evaluator for type '${originalAstType}'`);
+
+        // Build AST rule from the args
+        const astRule = { type: originalAstType };
+
+        // Copy non-metadata args to AST rule
+        if (args) {
+          for (const [key, value] of Object.entries(args)) {
+            if (!key.startsWith('_')) {
+              astRule[key] = value;
+            }
+          }
+        }
+
+        return evaluateRule(astRule, context, depth + 1, localScope);
+      }
+
+      // Handle as helper (converted from AST helper or unknown Rule Builder type)
+      // New format: {rule: "helper_name", args: [...], _original_ast_type: "helper"}
+      // Old format: {rule: "helper_name", args: {args: [...], _original_ast_type: "helper"}}
       let helperArgs;
-      if (args._original_ast_type === 'helper' && Array.isArray(args.args)) {
+      if (Array.isArray(args)) {
+        // New flattened format - args is directly an array
+        helperArgs = args;
+      } else if (args._original_ast_type === 'helper' && Array.isArray(args.args)) {
+        // Old nested format - args.args contains the helper arguments
         helperArgs = args.args;
       } else {
         // For simpler Rule Builder rules, use all arg values (excluding metadata keys)
