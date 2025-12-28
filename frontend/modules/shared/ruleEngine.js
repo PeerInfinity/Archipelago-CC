@@ -732,6 +732,22 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
+        if (rule.name === 'tuple') {
+          // Python's tuple() function - convert iterable to tuple (array in JS)
+          // This is used by worldgen worlds for generator expressions with .count()
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (Array.isArray(value)) {
+            result = value;
+          } else if (value && typeof value === 'object') {
+            result = Object.values(value);
+          } else if (typeof value === 'string') {
+            result = value.split('');
+          } else {
+            result = value ? [value] : [];
+          }
+          break;
+        }
+
         if (rule.name === 'int') {
           // Python's int() function - truncate a float to an integer
           const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;

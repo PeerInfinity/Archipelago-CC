@@ -562,6 +562,7 @@ class RuleCodeGenerator:
                     'HasAny': 'group_check',
                     'HasAllCounts': 'group_check',
                     'HasGroup': 'group_check',
+                    'HasGroupUnique': 'has_group_unique',
                     'HasFromList': 'has_from_list',
                     'HasFromListUnique': 'has_from_list_unique',
                     'Count': 'count_check',
@@ -828,6 +829,16 @@ class RuleCodeGenerator:
                 return f'HasGroup({repr(group)})'
             else:
                 return f'HasGroup({repr(group)}, {count})'
+
+        if rb_rule == 'HasGroupUnique':
+            group = args.get('group', '')
+            count_raw = args.get('count', 1)
+            count = self._extract_constant_value(count_raw, 1)
+            self.required_imports.add('HasGroupUnique')
+            if count == 1:
+                return f'HasGroupUnique({repr(group)})'
+            else:
+                return f'HasGroupUnique({repr(group)}, {count})'
 
         if rb_rule == 'HasFromList':
             items = args.get('items', [])
@@ -4817,6 +4828,20 @@ class HelperCodeGenerator:
                 value = self.settings[attr]
                 # Use _expr_constant to convert the value to Python code
                 return self._expr_constant({'type': 'constant', 'value': value})
+
+        # Special case: when accessing world.xxx.yyy where xxx is a known world attribute
+        # that contains a dict/object (e.g., world.difficulty_requirements.progressive_bottle_limit).
+        # Instead of generating invalid code like {dict}.yyy, we look up the nested value directly.
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'attribute':
+            inner_obj = obj_expr.get('object', {})
+            inner_attr = obj_expr.get('attr', '')
+            if isinstance(inner_obj, dict) and inner_obj.get('type') == 'name' and inner_obj.get('name') == 'world':
+                if inner_attr in self.settings:
+                    inner_value = self.settings[inner_attr]
+                    if isinstance(inner_value, dict) and attr in inner_value:
+                        # Access the nested attribute directly
+                        nested_value = inner_value[attr]
+                        return self._expr_constant({'type': 'constant', 'value': nested_value})
 
         obj = self._generate_expression(obj_expr)
         return f"{obj}.{attr}"
