@@ -6,11 +6,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-28 03:34:00
+**Generated:** 2025-12-28 05:27:54
 
-**Source Data Created:** 2025-12-28T03:02:09.866369
+**Source Data Created:** 2025-12-28T04:56:28.572590
 
-**Source Data Last Updated:** 2025-12-28T03:02:09.866375
+**Source Data Last Updated:** 2025-12-28T04:56:28.572596
 
 ## Summary
 
@@ -30,26 +30,26 @@
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
-| A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 10.0KB | ✅ |
+| A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 8.5KB | ✅ |
 | A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 2.5KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
-| Aquaria | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 3.6KB | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.18 | 10.18 | 🟢 Complete | 2.0KB | 40.3KB |
+| Aquaria | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 2.8KB | ✅ |
+| Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.18 | 10.18 | 🟢 Complete | 1.5KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
-| Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.41 | 4.41 | 🟢 Complete | 16.3KB | ✅ |
+| Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.41 | 4.41 | 🟢 Complete | 14.7KB | ✅ |
 | Castlevania 64 | ✅ Passed | 0 | 5.6 | 5.6 | 🟢 Complete | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed | 0 | 16.5 | 16.5 | 🟢 Complete | ✅ | ✅ |
-| Celeste 64 | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 8.6KB | ✅ |
+| Celeste 64 | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 8.4KB | ✅ |
 | ChecksFinder | ✅ Passed | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
 | ChocolateChipCookies | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
-| Civilization VI | ✅ Passed | 0 | 8.15 | 8.15 | 🟢 Complete | 8.8KB | ✅ |
-| DLCQuest | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 9.5KB | ✅ |
+| Civilization VI | ✅ Passed | 0 | 8.15 | 8.15 | 🟢 Complete | 1.9KB | ✅ |
+| DLCQuest | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 4.5KB | ✅ |
 | DOOM 1993 | ✅ Passed | 0 | 18.5 | 18.5 | 🟢 Complete | ✅ | ✅ |
 | DOOM II | ✅ Passed | 0 | 21.4 | 21.4 | 🟢 Complete | ✅ | ✅ |
-| Dark Souls III | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | 4.5KB | ✅ |
+| Dark Souls III | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | 4.3KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 7.1KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
@@ -110,7 +110,7 @@ These seeds were previously failing but passed during a retest run:
 
 | Template | Seed | Timestamp | Notes |
 |----------|------|-----------|-------|
-| DOOM II | 1 | 2025-12-28 02:58 | Previously failed, now passing |
+| Super Mario Land 2 | 1 | 2025-12-28 04:50 | Previously failed, now passing |
 
 
 ## Notes
