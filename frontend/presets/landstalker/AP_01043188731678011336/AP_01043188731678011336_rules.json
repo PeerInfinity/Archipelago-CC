@@ -3,7 +3,7 @@
   "game_name": "Landstalker - The Treasures of King Nole",
   "game_directory": "landstalker",
   "archipelago_version": "0.6.5",
-  "generation_seed": 1,
+  "generation_seed": 2,
   "player_names": {
     "1": "Player1"
   },
@@ -51,8 +51,7 @@
                           {
                             "type": "constant",
                             "value": [
-                              "Axe Magic",
-                              "Lantern"
+                              "Axe Magic"
                             ]
                           }
                         ]
@@ -116,7 +115,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -132,9 +131,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Gola's Horn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -148,9 +147,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Anti Paralyze",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -164,9 +163,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Lithograph",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -196,13 +195,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Lantern",
+              "name": "Restoration",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 200,
+            "price": 40,
             "type_string": "shop"
           },
           {
@@ -212,13 +211,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Gola's Horn",
+              "name": "Life Stock",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 800,
+            "price": 250,
             "type_string": "shop"
           },
           {
@@ -242,7 +241,7 @@
       },
       "Massan Cave": {
         "name": "Massan Cave",
-        "hint_text": "in a large cave",
+        "hint_text": "in a region inhabited by bears",
         "exits": [
           {
             "name": "massan_cave -> massan",
@@ -265,8 +264,7 @@
                           {
                             "type": "constant",
                             "value": [
-                              "Axe Magic",
-                              "Lantern"
+                              "Axe Magic"
                             ]
                           }
                         ]
@@ -288,9 +286,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Yellow Jewel",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -400,7 +398,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Detox Grass",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -414,7 +412,7 @@
       },
       "Waterfall Shrine": {
         "name": "Waterfall Shrine",
-        "hint_text": "in a region inhabited by bears",
+        "hint_text": "in a shrine",
         "exits": [
           {
             "name": "waterfall_shrine -> route_massan_gumi",
@@ -448,7 +446,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Pawn Ticket",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -464,9 +462,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Garlic",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -480,7 +478,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -494,7 +492,7 @@
       },
       "Swamp Shrine": {
         "name": "Swamp Shrine",
-        "hint_text": "near a swamp",
+        "hint_text": "in a region inhabited by bears",
         "exits": [
           {
             "name": "swamp_shrine -> route_massan_gumi",
@@ -539,7 +537,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Anti Paralyze",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -555,7 +553,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "50 Golds",
+              "name": "Restoration",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -571,9 +569,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Armlet",
+              "name": "Golden Statue",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -603,7 +601,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Oracle Stone",
+              "name": "Gola's Nail",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -619,7 +617,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Venus Stone",
+              "name": "Dahl",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -635,7 +633,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "50 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -667,7 +665,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Golden Statue",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -707,9 +705,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Gola's Fang",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -731,9 +729,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statue of Gaia",
+              "name": "Safety Pass",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -745,7 +743,7 @@
       },
       "Gumi": {
         "name": "Gumi",
-        "hint_text": "in a region inhabited by bears",
+        "hint_text": "in the village of Gumi",
         "exits": [
           {
             "name": "gumi -> route_massan_gumi",
@@ -805,9 +803,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Safety Pass",
+              "name": "Mind Repair",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -821,7 +819,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Detox Grass",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -853,13 +851,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Mars Stone",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 150,
+            "price": 250,
             "type_string": "shop"
           }
         ],
@@ -977,7 +975,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "1 Gold",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1007,7 +1005,7 @@
       },
       "Route from Gumi to Ryuma (Tibor tree)": {
         "name": "Route from Gumi to Ryuma (Tibor tree)",
-        "hint_text": "in a region inhabited by bears",
+        "hint_text": "on a route",
         "exits": [
           {
             "name": "tibor_tree -> route_gumi_ryuma",
@@ -1022,7 +1020,7 @@
       },
       "Route from Gumi to Ryuma (Mercator gate tree)": {
         "name": "Route from Gumi to Ryuma (Mercator gate tree)",
-        "hint_text": "on a route",
+        "hint_text": "between Gumi and Ryuma",
         "exits": [
           {
             "name": "mercator_gate_tree -> route_gumi_ryuma",
@@ -1055,9 +1053,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Buyer Card",
+              "name": "Life Stock",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -1071,7 +1069,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "50 Golds",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1087,7 +1085,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "50 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1103,9 +1101,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Idol Stone",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -1117,7 +1115,7 @@
       },
       "Ryuma": {
         "name": "Ryuma",
-        "hint_text": "in a town",
+        "hint_text": "in the town of Ryuma",
         "exits": [
           {
             "name": "ryuma -> route_gumi_ryuma",
@@ -1211,7 +1209,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "100 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1241,7 +1239,7 @@
       },
       "Ryuma (after Thieves Hideout)": {
         "name": "Ryuma (after Thieves Hideout)",
-        "hint_text": "in a town",
+        "hint_text": "in the town of Ryuma",
         "exits": [],
         "locations": [
           {
@@ -1251,50 +1249,18 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Anti Paralyze",
+              "name": "Pawn Ticket",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 25,
+            "price": 280,
             "type_string": "shop"
           },
           {
             "name": "Ryuma: Shop item #2",
             "id": 4293,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Detox Grass",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "price": 35,
-            "type_string": "shop"
-          },
-          {
-            "name": "Ryuma: Shop item #3",
-            "id": 4294,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Golden Statue",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "price": 210,
-            "type_string": "shop"
-          },
-          {
-            "name": "Ryuma: Shop item #4",
-            "id": 4295,
             "access_rule": {
               "rule": "True_"
             },
@@ -1309,19 +1275,51 @@
             "type_string": "shop"
           },
           {
+            "name": "Ryuma: Shop item #3",
+            "id": 4294,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Dahl",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false,
+            "price": 140,
+            "type_string": "shop"
+          },
+          {
+            "name": "Ryuma: Shop item #4",
+            "id": 4295,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Restoration",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false,
+            "price": 55,
+            "type_string": "shop"
+          },
+          {
             "name": "Ryuma: Shop item #5",
             "id": 4296,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Magic Sword",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 425,
+            "price": 350,
             "type_string": "shop"
           },
           {
@@ -1331,7 +1329,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1347,7 +1345,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1361,7 +1359,7 @@
       },
       "Ryuma (repaired lighthouse)": {
         "name": "Ryuma (repaired lighthouse)",
-        "hint_text": "in the town of Ryuma",
+        "hint_text": "in a town",
         "exits": [
           {
             "name": "ryuma_lighthouse_repaired -> ryuma",
@@ -1406,7 +1404,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Anti Paralyze",
+              "name": "Dahl",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1436,7 +1434,7 @@
       },
       "Thieves Hideout (before keydoor)": {
         "name": "Thieves Hideout (before keydoor)",
-        "hint_text": "close to a waterfall",
+        "hint_text": "in a large cave",
         "exits": [
           {
             "name": "thieves_hideout_pre_key -> ryuma",
@@ -1488,9 +1486,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Casino Ticket",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -1504,9 +1502,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -1520,7 +1518,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Detox Grass",
+              "name": "20 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1536,7 +1534,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dahl",
+              "name": "20 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1552,7 +1550,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statue of Gaia",
+              "name": "Dahl",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1568,7 +1566,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dahl",
+              "name": "20 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1600,7 +1598,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1616,7 +1614,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "20 Golds",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1632,7 +1630,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Magic Sword",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1648,7 +1646,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dahl",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1664,7 +1662,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1680,9 +1678,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Axe Magic",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -1696,7 +1694,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Mind Repair",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1712,9 +1710,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Life Stock",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -1728,9 +1726,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Pawn Ticket",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -1744,7 +1742,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "100 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1760,7 +1758,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Detox Grass",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1776,9 +1774,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -1792,7 +1790,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Pawn Ticket",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1808,9 +1806,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Casino Ticket",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -1886,7 +1884,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Golden Statue",
+              "name": "50 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1902,7 +1900,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Golden Statue",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2119,9 +2117,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -2135,7 +2133,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dahl",
+              "name": "Mind Repair",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2167,7 +2165,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "50 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2183,9 +2181,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "50 Golds",
+              "name": "Sword of Gaia",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -2199,9 +2197,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Einstein Whistle",
+              "name": "Life Stock",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -2221,7 +2219,7 @@
               "type": "None"
             },
             "locked": true,
-            "price": 20,
+            "price": 25,
             "type_string": "shop"
           },
           {
@@ -2231,18 +2229,34 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Restoration",
+              "name": "Statue of Gaia",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 40,
+            "price": 90,
             "type_string": "shop"
           },
           {
             "name": "Mercator: Shop item #3",
             "id": 4300,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Dahl",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false,
+            "price": 125,
+            "type_string": "shop"
+          },
+          {
+            "name": "Mercator: Shop item #4",
+            "id": 4301,
             "access_rule": {
               "rule": "True_"
             },
@@ -2253,23 +2267,7 @@
               "type": "None"
             },
             "locked": false,
-            "price": 160,
-            "type_string": "shop"
-          },
-          {
-            "name": "Mercator: Shop item #4",
-            "id": 4301,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Mind Repair",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "price": 25,
+            "price": 185,
             "type_string": "shop"
           },
           {
@@ -2279,13 +2277,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Restoration",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 270,
+            "price": 50,
             "type_string": "shop"
           },
           {
@@ -2295,13 +2293,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Anti Paralyze",
+              "name": "Detox Grass",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 20,
+            "price": 30,
             "type_string": "shop"
           },
           {
@@ -2311,7 +2309,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2338,7 +2336,7 @@
               ]
             },
             "item": {
-              "name": "Restoration",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2352,7 +2350,7 @@
       },
       "Mercator (docks with repaired lighthouse)": {
         "name": "Mercator (docks with repaired lighthouse)",
-        "hint_text": "in the town of Mercator",
+        "hint_text": "in a town",
         "exits": [
           {
             "name": "mercator_repaired_docks -> verla_shore",
@@ -2370,13 +2368,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Dahl",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 25,
+            "price": 155,
             "type_string": "shop"
           },
           {
@@ -2392,7 +2390,7 @@
               "type": "None"
             },
             "locked": false,
-            "price": 310,
+            "price": 395,
             "type_string": "shop"
           },
           {
@@ -2402,13 +2400,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dahl",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 125,
+            "price": 30,
             "type_string": "shop"
           }
         ],
@@ -2491,7 +2489,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Pawn Ticket",
+              "name": "20 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2507,7 +2505,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "100 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2523,7 +2521,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Mind Repair",
+              "name": "50 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2539,7 +2537,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2555,7 +2553,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Detox Grass",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2571,7 +2569,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Death Statue",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2587,9 +2585,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Life Stock",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -2619,7 +2617,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Mind Repair",
+              "name": "Statue of Gaia",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2635,7 +2633,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "50 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2694,13 +2692,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Red Jewel",
+              "name": "Statue of Gaia",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 540,
+            "price": 115,
             "type_string": "shop"
           },
           {
@@ -2710,13 +2708,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Anti Paralyze",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 20,
+            "price": 30,
             "type_string": "shop"
           },
           {
@@ -2732,7 +2730,7 @@
               "type": "None"
             },
             "locked": false,
-            "price": 270,
+            "price": 395,
             "type_string": "shop"
           },
           {
@@ -2742,13 +2740,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dahl",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 105,
+            "price": 30,
             "type_string": "shop"
           }
         ],
@@ -2918,7 +2916,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "50 Golds",
+              "name": "Dahl",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2934,9 +2932,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Fireproof",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -2950,9 +2948,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Dahl",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -2966,9 +2964,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sun Stone",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -2980,7 +2978,7 @@
       },
       "Mir Tower sector (ledge behind sacred tree)": {
         "name": "Mir Tower sector (ledge behind sacred tree)",
-        "hint_text": "on a route",
+        "hint_text": "among the trees",
         "exits": [
           {
             "name": "mir_tower_sector_tree_ledge -> mir_tower_sector",
@@ -3025,9 +3023,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Gola's Eye",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -3039,7 +3037,7 @@
       },
       "Mir Tower sector (coast behind sacred tree)": {
         "name": "Mir Tower sector (coast behind sacred tree)",
-        "hint_text": "among the trees",
+        "hint_text": "near Mir Tower",
         "exits": [
           {
             "name": "mir_tower_sector_tree_coast -> mir_tower_sector",
@@ -3084,7 +3082,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Mind Repair",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3116,9 +3114,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Blue Jewel",
+              "name": "Dahl",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -3132,7 +3130,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3148,9 +3146,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Logs",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -3214,7 +3212,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "200 Golds",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3230,7 +3228,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Dahl",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3246,7 +3244,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "20 Golds",
+              "name": "Thunder Sword",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3262,7 +3260,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Golden Statue",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3278,9 +3276,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statue of Gaia",
+              "name": "Garlic",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -3294,7 +3292,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Pawn Ticket",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3310,7 +3308,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Progressive Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3326,7 +3324,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3340,7 +3338,7 @@
       },
       "Mir Tower (post-garlic)": {
         "name": "Mir Tower (post-garlic)",
-        "hint_text": "inside a tower",
+        "hint_text": "in Mir Tower",
         "exits": [
           {
             "name": "mir_tower_post_garlic -> mir_tower_pre_garlic",
@@ -3365,9 +3363,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Life Stock",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -3381,9 +3379,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Restoration",
+              "name": "Life Stock",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -3397,9 +3395,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Armor",
+              "name": "Snow Spikes",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -3413,9 +3411,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Green Jewel",
+              "name": "Detox Grass",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -3429,7 +3427,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Short Cake",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3445,7 +3443,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Statue of Gaia",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3461,9 +3459,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Gola's Fang",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -3477,7 +3475,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "20 Golds",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3493,7 +3491,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "20 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3509,7 +3507,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3525,7 +3523,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statue of Gaia",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3541,9 +3539,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Yellow Jewel",
+              "name": "Dahl",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -3557,7 +3555,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Dahl",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3571,7 +3569,7 @@
       },
       "Greenmaze (pre-whistle)": {
         "name": "Greenmaze (pre-whistle)",
-        "hint_text": "in the infamous Greenmaze",
+        "hint_text": "among the trees",
         "exits": [
           {
             "name": "greenmaze_pre_whistle -> greenmaze_post_whistle",
@@ -3700,7 +3698,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Golden Statue",
+              "name": "200 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3716,7 +3714,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "20 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3732,7 +3730,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "20 Golds",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3748,7 +3746,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "100 Golds",
+              "name": "Dahl",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3780,9 +3778,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -3796,9 +3794,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Restoration",
+              "name": "Oracle Stone",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -3855,9 +3853,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Idol Stone",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -3871,7 +3869,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "200 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3885,7 +3883,7 @@
       },
       "Greenmaze (post-whistle)": {
         "name": "Greenmaze (post-whistle)",
-        "hint_text": "in the infamous Greenmaze",
+        "hint_text": "among the trees",
         "exits": [
           {
             "name": "greenmaze_post_whistle -> greenmaze_post_whistle_tree",
@@ -3944,9 +3942,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Green Jewel",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -3960,7 +3958,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Mind Repair",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3989,7 +3987,7 @@
       },
       "Verla shore": {
         "name": "Verla shore",
-        "hint_text": "near the town of Verla",
+        "hint_text": "on a route",
         "exits": [
           {
             "name": "verla_shore -> verla",
@@ -4086,7 +4084,7 @@
       },
       "Verla shore tree": {
         "name": "Verla shore tree",
-        "hint_text": "near the town of Verla",
+        "hint_text": "on a route",
         "exits": [
           {
             "name": "verla_shore_tree -> verla_shore",
@@ -4126,7 +4124,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sword of Ice",
+              "name": "Bell",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4140,7 +4138,7 @@
       },
       "Verla": {
         "name": "Verla",
-        "hint_text": "in a town",
+        "hint_text": "in the town of Verla",
         "exits": [
           {
             "name": "verla -> verla_shore",
@@ -4199,7 +4197,7 @@
               "type": "None"
             },
             "locked": true,
-            "price": 25,
+            "price": 30,
             "type_string": "shop"
           },
           {
@@ -4209,13 +4207,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Mind Repair",
+              "name": "Restoration",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 30,
+            "price": 60,
             "type_string": "shop"
           },
           {
@@ -4225,13 +4223,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Golden Statue",
+              "name": "Short Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 185,
+            "price": 395,
             "type_string": "shop"
           },
           {
@@ -4247,7 +4245,7 @@
               "type": "None"
             },
             "locked": false,
-            "price": 310,
+            "price": 395,
             "type_string": "shop"
           }
         ],
@@ -4255,7 +4253,7 @@
       },
       "Verla (after mines)": {
         "name": "Verla (after mines)",
-        "hint_text": "in a town",
+        "hint_text": "in the town of Verla",
         "exits": [
           {
             "name": "verla_after_mines -> verla",
@@ -4301,7 +4299,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Dahl",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4317,13 +4315,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Golden Statue",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 330,
+            "price": 245,
             "type_string": "shop"
           }
         ],
@@ -4397,9 +4395,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -4413,9 +4411,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -4429,7 +4427,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statue of Gaia",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4445,9 +4443,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -4461,9 +4459,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Garlic",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -4477,7 +4475,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dahl",
+              "name": "Statue of Gaia",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4493,7 +4491,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "100 Golds",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4509,9 +4507,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Restoration",
+              "name": "Lithograph",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -4525,9 +4523,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sword of Gaia",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -4541,9 +4539,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Logs",
+              "name": "Statue of Jypta",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -4557,7 +4555,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4632,7 +4630,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "20 Golds",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4664,7 +4662,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dahl",
+              "name": "Detox Grass",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4680,7 +4678,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dahl",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4712,13 +4710,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Restoration",
+              "name": "Statue of Gaia",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 50,
+            "price": 110,
             "type_string": "shop"
           },
           {
@@ -4734,7 +4732,7 @@
               "type": "None"
             },
             "locked": false,
-            "price": 25,
+            "price": 30,
             "type_string": "shop"
           },
           {
@@ -4744,13 +4742,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Gola's Nail",
+              "name": "Golden Statue",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 1000,
+            "price": 225,
             "type_string": "shop"
           },
           {
@@ -4760,13 +4758,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Restoration",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 310,
+            "price": 60,
             "type_string": "shop"
           },
           {
@@ -4776,13 +4774,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statue of Gaia",
+              "name": "Anti Paralyze",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 90,
+            "price": 30,
             "type_string": "shop"
           }
         ],
@@ -4810,7 +4808,34 @@
             "name": "destel -> destel_well",
             "connected_region": "Destel Well",
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "True_"
+                },
+                {
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "helper",
+                        "name": "set",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Lantern"
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           }
         ],
@@ -4822,9 +4847,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Blue Ribbon",
+              "name": "Buyer Card",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -4844,7 +4869,7 @@
               "type": "None"
             },
             "locked": true,
-            "price": 25,
+            "price": 30,
             "type_string": "shop"
           },
           {
@@ -4854,13 +4879,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statue of Gaia",
+              "name": "Mind Repair",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 90,
+            "price": 35,
             "type_string": "shop"
           },
           {
@@ -4870,13 +4895,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Armor",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 310,
+            "price": 375,
             "type_string": "shop"
           },
           {
@@ -4892,7 +4917,7 @@
               "type": "None"
             },
             "locked": false,
-            "price": 125,
+            "price": 150,
             "type_string": "shop"
           },
           {
@@ -4902,13 +4927,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Detox Grass",
+              "name": "Statue of Gaia",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 30,
+            "price": 110,
             "type_string": "shop"
           },
           {
@@ -4918,13 +4943,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Anti Paralyze",
+              "name": "Blue Jewel",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
-            "price": 25,
+            "price": 750,
             "type_string": "shop"
           }
         ],
@@ -4932,7 +4957,7 @@
       },
       "Route after Destel": {
         "name": "Route after Destel",
-        "hint_text": "in Destel region",
+        "hint_text": "on a route",
         "exits": [
           {
             "name": "route_after_destel -> destel",
@@ -4966,7 +4991,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "20 Golds",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4982,7 +5007,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statue of Gaia",
+              "name": "Progressive Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4998,7 +5023,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Thunder Sword",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5012,13 +5037,40 @@
       },
       "Destel Well": {
         "name": "Destel Well",
-        "hint_text": "in Destel region",
+        "hint_text": "in a large cave",
         "exits": [
           {
             "name": "destel_well -> destel",
             "connected_region": "Destel",
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "True_"
+                },
+                {
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "helper",
+                        "name": "set",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Lantern"
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
+                }
+              ]
             }
           },
           {
@@ -5037,7 +5089,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "50 Golds",
+              "name": "20 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5053,7 +5105,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5069,7 +5121,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "1 Gold",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5085,7 +5137,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dahl",
+              "name": "Golden Statue",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5101,7 +5153,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Detox Grass",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5117,9 +5169,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Axe Magic",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -5133,7 +5185,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "20 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5181,9 +5233,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Logs",
+              "name": "20 Golds",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -5197,7 +5249,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "20 Golds",
+              "name": "Golden Statue",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5215,7 +5267,7 @@
             "item": {
               "name": "Life Stock",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -5245,7 +5297,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Golden Statue",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5261,7 +5313,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Detox Grass",
+              "name": "Statue of Gaia",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5277,9 +5329,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Purple Jewel",
+              "name": "Life Stock",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -5343,7 +5395,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5359,9 +5411,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Key",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -5375,7 +5427,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Armor",
+              "name": "20 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5407,13 +5459,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statue of Gaia",
+              "name": "Golden Statue",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 90,
+            "price": 210,
             "type_string": "shop"
           },
           {
@@ -5423,13 +5475,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Restoration",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 310,
+            "price": 55,
             "type_string": "shop"
           },
           {
@@ -5439,13 +5491,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Mind Repair",
+              "name": "Anti Paralyze",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 30,
+            "price": 25,
             "type_string": "shop"
           }
         ],
@@ -5544,9 +5596,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Fireproof",
+              "name": "Detox Grass",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -5576,7 +5628,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "20 Golds",
+              "name": "Restoration",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5592,7 +5644,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "50 Golds",
+              "name": "Dahl",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5608,9 +5660,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Mind Repair",
+              "name": "Life Stock",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -5624,7 +5676,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5640,7 +5692,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "100 Golds",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5656,9 +5708,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statue of Gaia",
+              "name": "Gola's Eye",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -5672,9 +5724,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Golden Statue",
+              "name": "Sun Stone",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -5688,7 +5740,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Statue of Gaia",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5704,7 +5756,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5720,7 +5772,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Lantern",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5752,9 +5804,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Purple Jewel",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -5768,7 +5820,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Restoration",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5800,9 +5852,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Red Jewel",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -5816,7 +5868,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Golden Statue",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5832,7 +5884,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statue of Gaia",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5864,9 +5916,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Progressive Armor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -5880,7 +5932,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Healing Boots",
+              "name": "Blue Ribbon",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5896,7 +5948,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "20 Golds",
+              "name": "Sword of Ice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6030,7 +6082,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Restoration",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6046,9 +6098,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Iron Boots",
+              "name": "100 Golds",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -6062,9 +6114,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "50 Golds",
+              "name": "Einstein Whistle",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -6078,7 +6130,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Pawn Ticket",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6094,7 +6146,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "100 Golds",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6110,9 +6162,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Pawn Ticket",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -6126,7 +6178,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dahl",
+              "name": "Statue of Gaia",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6142,9 +6194,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "100 Golds",
+              "name": "Life Stock",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -6174,7 +6226,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6190,9 +6242,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Detox Grass",
+              "name": "Logs",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -6206,7 +6258,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Statue of Gaia",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6222,7 +6274,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dahl",
+              "name": "Venus Stone",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6238,7 +6290,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Death Statue",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6373,7 +6425,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Statue of Gaia",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6389,7 +6441,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Restoration",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6405,9 +6457,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Detox Grass",
+              "name": "Life Stock",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -6437,7 +6489,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Golden Statue",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6453,7 +6505,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "20 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6508,18 +6560,34 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Bell",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 330,
+            "price": 395,
             "type_string": "shop"
           },
           {
             "name": "Kazalt: Shop item #3",
             "id": 4333,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Anti Paralyze",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false,
+            "price": 30,
+            "type_string": "shop"
+          },
+          {
+            "name": "Kazalt: Shop item #4",
+            "id": 4334,
             "access_rule": {
               "rule": "True_"
             },
@@ -6530,23 +6598,7 @@
               "type": "None"
             },
             "locked": false,
-            "price": 165,
-            "type_string": "shop"
-          },
-          {
-            "name": "Kazalt: Shop item #4",
-            "id": 4334,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Statue of Jypta",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false,
-            "price": 415,
+            "price": 155,
             "type_string": "shop"
           },
           {
@@ -6556,13 +6608,13 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Mars Stone",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
             "locked": false,
-            "price": 415,
+            "price": 235,
             "type_string": "shop"
           }
         ],
@@ -6570,7 +6622,7 @@
       },
       "King Nole's Labyrinth (before door)": {
         "name": "King Nole's Labyrinth (before door)",
-        "hint_text": "in King Nole's domain",
+        "hint_text": "in King Nole's labyrinth",
         "exits": [
           {
             "name": "king_nole_labyrinth_pre_door -> kazalt",
@@ -6656,9 +6708,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Snow Spikes",
+              "name": "Dahl",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -6672,7 +6724,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "50 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6688,9 +6740,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "20 Golds",
+              "name": "Life Stock",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -6720,7 +6772,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6734,7 +6786,7 @@
       },
       "King Nole's Labyrinth (after door)": {
         "name": "King Nole's Labyrinth (after door)",
-        "hint_text": "in King Nole's labyrinth",
+        "hint_text": "in King Nole's domain",
         "exits": [
           {
             "name": "king_nole_labyrinth_post_door -> king_nole_labyrinth_pre_door",
@@ -6857,7 +6909,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Anti Paralyze",
+              "name": "Healing Boots",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6873,9 +6925,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Detox Grass",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -6889,9 +6941,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Anti Paralyze",
+              "name": "Iron Boots",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -6905,7 +6957,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Detox Grass",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6921,7 +6973,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Restoration",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6937,7 +6989,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dahl",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6953,7 +7005,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "20 Golds",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6969,9 +7021,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Golden Statue",
+              "name": "Armlet",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -6985,7 +7037,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Saturn Stone",
+              "name": "Statue of Gaia",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7001,7 +7053,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7019,7 +7071,7 @@
             "item": {
               "name": "Life Stock",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -7033,7 +7085,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "Detox Grass",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7049,7 +7101,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "200 Golds",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7065,9 +7117,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Life Stock",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -7081,7 +7133,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Moon Stone",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7099,7 +7151,7 @@
             "item": {
               "name": "Life Stock",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -7113,7 +7165,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Anti Paralyze",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7127,7 +7179,7 @@
       },
       "King Nole's Labyrinth (exterior)": {
         "name": "King Nole's Labyrinth (exterior)",
-        "hint_text": "in King Nole's domain",
+        "hint_text": "in King Nole's labyrinth",
         "exits": [
           {
             "name": "king_nole_labyrinth_exterior -> king_nole_labyrinth_fall_from_exterior",
@@ -7172,9 +7224,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Garlic",
+              "name": "EkeEke",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false,
@@ -7204,9 +7256,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dahl",
+              "name": "Life Stock",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -7302,7 +7354,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Progressive Armor",
+              "name": "Mind Repair",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7318,7 +7370,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dahl",
+              "name": "20 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7334,7 +7386,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Progressive Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7350,7 +7402,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "20 Golds",
+              "name": "100 Golds",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7366,7 +7418,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Saturn Stone",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7382,7 +7434,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Moon Stone",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7396,7 +7448,7 @@
       },
       "King Nole's Labyrinth (sacred tree)": {
         "name": "King Nole's Labyrinth (sacred tree)",
-        "hint_text": "among the trees",
+        "hint_text": "in King Nole's labyrinth",
         "exits": [],
         "locations": [
           {
@@ -7406,7 +7458,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Life Stock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7461,7 +7513,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Life Stock",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7477,9 +7529,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Anti Paralyze",
+              "name": "Life Stock",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -7545,9 +7597,9 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Life Stock",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false,
@@ -7561,7 +7613,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "EkeEke",
+              "name": "Mind Repair",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7577,7 +7629,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Dahl",
+              "name": "EkeEke",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8720,9 +8772,9 @@
         "king_nole_palace": "King Nole's Palace",
         "end": "The End"
       },
-      "dark_dungeon_id": "Massan Cave",
+      "dark_dungeon_id": "Destel Well",
       "dark_region_ids": [
-        "massan_cave"
+        "destel_well"
       ],
       "teleport_tree_pairs": [
         [
@@ -8804,23 +8856,23 @@
         "death_link": 0,
         "revive_using_ekeeke": 1,
         "spawn_region": "massan",
-        "seed": 2089113674,
-        "dark_region": "Massan Cave",
+        "seed": 3672975132,
+        "dark_region": "Destel Well",
         "hints": {
-          "Foxy (right after making Miro flee with Garlic in Mir Tower)": "I can sense Gola's Horn in the village of Massan.",
-          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Red Jewel in a town.",
-          "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "I can sense Fireproof near a lake.",
-          "Foxy (in Gumi boulder map)": "I can sense Lithograph in the village of Massan.",
-          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Gola's Fang inside a tower.",
-          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Iron Boots in a mountainous area.",
-          "Foxy (in Destel)": "I can sense Sun Stone on a route.",
-          "Foxy (in room next to green golem roundabout in Lake Shrine)": "I can sense Logs in Destel region.",
-          "Foxy (on Kazalt bridge)": "I can sense Safety Pass in a region inhabited by bears.",
-          "Foxy (inside Mercator Crypt)": "I can sense Armlet near a swamp.",
-          "Foxy (at Waterfall Shrine crossroads)": "I can sense Casino Ticket close to a waterfall.",
-          "Foxy (in King Nole's Palace entrance room)": "I can sense Purple Jewel in Destel region.",
-          "Lithograph": "It's barely readable:\nRED MERCATOR ITEM\nPURPLE ITEM DESTEL\nTOWER GREEN CHALLENGE\nFIRST GROUND BLUE\nYELLOW ROOM TOWER",
-          "Oracle Stone": "It shows Massan Cave\nenshrouded in darkness."
+          "Foxy (contemplating fast currents below Kelketo shop)": "I can sense Axe Magic in a large cave.",
+          "Foxy (bathing in the swamp next to Swamp Shrine entrance)": "I can sense Armlet in King Nole's domain.",
+          "Foxy (atop Mercator Dungeon tower)": "I can sense Safety Pass in a village.",
+          "Foxy (in Destel)": "I can sense Blue Jewel in the village of Destel.",
+          "Foxy (on a beach between Ryuma and Mercator)": "I can sense Logs in Twinkle village.",
+          "Foxy (on Mir Tower sector crossroads)": "I can sense Iron Boots in King Nole's domain.",
+          "Foxy (in Gumi boulder map)": "I can sense Yellow Jewel in a region inhabited by bears.",
+          "Foxy (right after making Miro flee with Garlic in Mir Tower)": "I can sense Gola's Nail in a region inhabited by bears.",
+          "Foxy (at crossroads on route to Lake Shrine)": "I can sense Lithograph in Verla Mines.",
+          "Foxy (in Mir Tower activatable bridge room)": "Have you found all of the 283 items in this universe?",
+          "Foxy (in empty secret room inside Mountainous Area cave)": "I can sense Gola's Horn in the village of Massan.",
+          "Foxy (in reapers room at Greenmaze entrance)": "I can sense Sword of Gaia in the town of Mercator.",
+          "Lithograph": "It's barely readable:\nGOLEMS SHRINE RED\nPURPLE CHEST BOSS\nSHORTCUT GREEN MASSAN\nBLUE ITEM SHOP\nMASSAN RIGHT YELLOW",
+          "Oracle Stone": "It shows Destel Well\nenshrouded in darkness."
         },
         "teleport_tree_pairs": [
           [
@@ -8846,54 +8898,54 @@
         ],
         "location_prices": {
           "Massan: Shop item #1": 20,
-          "Massan: Shop item #2": 200,
-          "Massan: Shop item #3": 800,
+          "Massan: Shop item #2": 40,
+          "Massan: Shop item #3": 250,
           "Gumi: Inn item #1": 20,
-          "Gumi: Inn item #2": 150,
-          "Ryuma: Shop item #1": 25,
-          "Ryuma: Shop item #2": 35,
-          "Ryuma: Shop item #3": 210,
-          "Ryuma: Shop item #4": 25,
-          "Ryuma: Shop item #5": 425,
+          "Gumi: Inn item #2": 250,
+          "Ryuma: Shop item #1": 280,
+          "Ryuma: Shop item #2": 25,
+          "Ryuma: Shop item #3": 140,
+          "Ryuma: Shop item #4": 55,
+          "Ryuma: Shop item #5": 350,
           "Ryuma: Inn item": 20,
-          "Mercator: Shop item #1": 20,
-          "Mercator: Shop item #2": 40,
-          "Mercator: Shop item #3": 160,
-          "Mercator: Shop item #4": 25,
-          "Mercator: Shop item #5": 270,
-          "Mercator: Shop item #6": 20,
-          "Mercator: Special shop item #1": 540,
-          "Mercator: Special shop item #2": 20,
-          "Mercator: Special shop item #3": 270,
-          "Mercator: Special shop item #4": 105,
-          "Mercator: Docks shop item #1": 25,
-          "Mercator: Docks shop item #2": 310,
-          "Mercator: Docks shop item #3": 125,
-          "Verla: Shop item #1": 25,
-          "Verla: Shop item #2": 30,
-          "Verla: Shop item #3": 185,
-          "Verla: Shop item #4": 310,
-          "Verla: Shop item #5 (extra item after saving town)": 330,
-          "Route from Verla to Destel: Kelketo shop item #1": 50,
-          "Route from Verla to Destel: Kelketo shop item #2": 25,
-          "Route from Verla to Destel: Kelketo shop item #3": 1000,
-          "Route from Verla to Destel: Kelketo shop item #4": 310,
-          "Route from Verla to Destel: Kelketo shop item #5": 90,
-          "Destel: Inn item": 25,
-          "Destel: Shop item #1": 90,
-          "Destel: Shop item #2": 310,
-          "Destel: Shop item #3": 125,
-          "Destel: Shop item #4": 30,
-          "Destel: Shop item #5": 25,
+          "Mercator: Shop item #1": 25,
+          "Mercator: Shop item #2": 90,
+          "Mercator: Shop item #3": 125,
+          "Mercator: Shop item #4": 185,
+          "Mercator: Shop item #5": 50,
+          "Mercator: Shop item #6": 30,
+          "Mercator: Special shop item #1": 115,
+          "Mercator: Special shop item #2": 30,
+          "Mercator: Special shop item #3": 395,
+          "Mercator: Special shop item #4": 30,
+          "Mercator: Docks shop item #1": 155,
+          "Mercator: Docks shop item #2": 395,
+          "Mercator: Docks shop item #3": 30,
+          "Verla: Shop item #1": 30,
+          "Verla: Shop item #2": 60,
+          "Verla: Shop item #3": 395,
+          "Verla: Shop item #4": 395,
+          "Verla: Shop item #5 (extra item after saving town)": 245,
+          "Route from Verla to Destel: Kelketo shop item #1": 110,
+          "Route from Verla to Destel: Kelketo shop item #2": 30,
+          "Route from Verla to Destel: Kelketo shop item #3": 225,
+          "Route from Verla to Destel: Kelketo shop item #4": 60,
+          "Route from Verla to Destel: Kelketo shop item #5": 30,
+          "Destel: Inn item": 30,
+          "Destel: Shop item #1": 35,
+          "Destel: Shop item #2": 375,
+          "Destel: Shop item #3": 150,
+          "Destel: Shop item #4": 110,
+          "Destel: Shop item #5": 750,
           "Route to Lake Shrine: Greedly's shop item #1": 25,
-          "Route to Lake Shrine: Greedly's shop item #2": 90,
-          "Route to Lake Shrine: Greedly's shop item #3": 310,
-          "Route to Lake Shrine: Greedly's shop item #4": 30,
+          "Route to Lake Shrine: Greedly's shop item #2": 210,
+          "Route to Lake Shrine: Greedly's shop item #3": 55,
+          "Route to Lake Shrine: Greedly's shop item #4": 25,
           "Kazalt: Shop item #1": 30,
-          "Kazalt: Shop item #2": 330,
-          "Kazalt: Shop item #3": 165,
-          "Kazalt: Shop item #4": 415,
-          "Kazalt: Shop item #5": 415
+          "Kazalt: Shop item #2": 395,
+          "Kazalt: Shop item #3": 30,
+          "Kazalt: Shop item #4": 155,
+          "Kazalt: Shop item #5": 235
         }
       },
       "web": {

@@ -4990,13 +4990,21 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Cane of Somaria",
-                      "Fire Rod"
-                    ]
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Cane of Somaria"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Fire Rod"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -5030,13 +5038,21 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Cane of Somaria",
-                      "Fire Rod"
-                    ]
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Cane of Somaria"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Fire Rod"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -5070,13 +5086,21 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Cane of Somaria",
-                      "Fire Rod"
-                    ]
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Cane of Somaria"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Fire Rod"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -5110,13 +5134,21 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Cane of Somaria",
-                      "Fire Rod"
-                    ]
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Cane of Somaria"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Fire Rod"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -5150,13 +5182,21 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Cane of Somaria",
-                      "Fire Rod"
-                    ]
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Cane of Somaria"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Fire Rod"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -12805,17 +12845,45 @@
                           "_converted_from_ast": true
                         },
                         {
-                          "rule": "HasAny",
-                          "args": {
-                            "items": [
-                              "Blue Boomerang",
-                              "Cane of Somaria",
-                              "Fire Rod",
-                              "Hookshot",
-                              "Ice Rod",
-                              "Red Boomerang"
-                            ]
-                          }
+                          "rule": "Or",
+                          "children": [
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Blue Boomerang"
+                              }
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Cane of Somaria"
+                              }
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Fire Rod"
+                              }
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Hookshot"
+                              }
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Ice Rod"
+                              }
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Red Boomerang"
+                              }
+                            }
+                          ]
                         }
                       ]
                     },
@@ -22687,20 +22755,35 @@
             "name": "can_shoot_arrows"
           },
           {
-            "type": "state_method",
-            "method": "has_any",
-            "args": [
+            "type": "or",
+            "conditions": [
               {
-                "type": "constant",
-                "value": [
-                  "Blue Boomerang",
-                  "Cane of Byrna",
-                  "Cane of Somaria",
-                  "Fire Rod",
-                  "Hookshot",
-                  "Ice Rod",
-                  "Red Boomerang"
-                ]
+                "type": "item_check",
+                "item": "Blue Boomerang"
+              },
+              {
+                "type": "item_check",
+                "item": "Cane of Byrna"
+              },
+              {
+                "type": "item_check",
+                "item": "Cane of Somaria"
+              },
+              {
+                "type": "item_check",
+                "item": "Fire Rod"
+              },
+              {
+                "type": "item_check",
+                "item": "Hookshot"
+              },
+              {
+                "type": "item_check",
+                "item": "Ice Rod"
+              },
+              {
+                "type": "item_check",
+                "item": "Red Boomerang"
               }
             ]
           }
