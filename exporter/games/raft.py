@@ -132,19 +132,6 @@ class RaftGameExportHandler(GenericGameExportHandler):
         except Exception as e:
             logger.error(f"Error loading Raft data files: {e}")
 
-    def _register_helpers_from_rule(self, rule: Dict[str, Any]) -> None:
-        """Register all helpers referenced in a rule structure for export."""
-        if rule is None:
-            return
-        rule_type = rule.get('type')
-        if rule_type == 'helper':
-            helper_name = rule.get('name')
-            if helper_name:
-                self.register_helper_usage(helper_name)
-        elif rule_type in ('and', 'or'):
-            for condition in rule.get('conditions', []):
-                self._register_helpers_from_rule(condition)
-
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None):
         """
         Override rule analysis for Raft locations that use the regionChecks pattern.
@@ -177,14 +164,14 @@ class RaftGameExportHandler(GenericGameExportHandler):
                     if item_rule.get('type') == 'constant' and item_rule.get('value') is True:
                         continue
                     # Register any helpers referenced in this rule
-                    self._register_helpers_from_rule(item_rule)
+                    self.register_helpers_from_rule(item_rule)
                     item_conditions.append(item_rule)
                 else:
                     # Unknown item - log a warning
                     logger.warning(f"Unknown item check for '{item_name}' in location '{rule_target_name}'")
 
             # Register helpers in region rule
-            self._register_helpers_from_rule(region_rule)
+            self.register_helpers_from_rule(region_rule)
 
             # Combine region rule with item requirements
             if region_rule.get('value') is True:
@@ -204,7 +191,7 @@ class RaftGameExportHandler(GenericGameExportHandler):
 
         # Simple region check only
         result = self._get_region_access_rule(region)
-        self._register_helpers_from_rule(result)
+        self.register_helpers_from_rule(result)
         return result
 
     def _get_region_access_rule(self, region: str) -> Dict[str, Any]:
