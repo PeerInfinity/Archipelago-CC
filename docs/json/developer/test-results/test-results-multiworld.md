@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-28 05:27:54
+**Generated:** 2025-12-28 06:37:02
 
 ## Summary
 
@@ -51,18 +51,18 @@
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | ✅ Passed | 2 | 2 | 4.3KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 7.1KB | ✅ |
+| Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 5.5KB | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Heretic | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 8.0KB | ✅ |
-| Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 57.9KB | 12.5KB |
-| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 33.8KB | 107.3KB |
-| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 3 | 3 | 18.6KB | 13.1KB |
+| Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 5.6KB | ✅ |
+| Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 17.1KB | 12.5KB |
+| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 23.2KB | 107.3KB |
+| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 3 | 3 | 9.3KB | 13.1KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 18.5KB | ✅ |
-| Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 41.3KB | 10.8KB |
-| Links Awakening DX | ✅ Passed | ✅ Passed | 4 | 4 | 18.1KB | ✅ |
+| Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 37.5KB | 10.8KB |
+| Links Awakening DX | ✅ Passed | ✅ Passed | 4 | 4 | 13.5KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | 4 | 4 | 0.3KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
