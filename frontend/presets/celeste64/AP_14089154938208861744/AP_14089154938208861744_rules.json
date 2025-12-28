@@ -2345,7 +2345,6 @@
           "display_name": "Total Strawberries"
         }
       },
-      "strawberries_required": 16,
       "madeline_one_dash_hair_color": 14363648,
       "madeline_two_dash_hair_color": 16421375,
       "madeline_no_dash_hair_color": 7258367,
@@ -2595,6 +2594,7 @@
           ]
         ]
       },
+      "strawberries_required": 16,
       "prog_strawberries": 16,
       "world_description": "Relive the magic of Celeste Mountain alongside Madeline in this small, heartfelt 3D platformer.\nCreated in a week(ish) by the Celeste team to celebrate the game\u2019s sixth anniversary \ud83c\udf53\u2728",
       "slot_data": {

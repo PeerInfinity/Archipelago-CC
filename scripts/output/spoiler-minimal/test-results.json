@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-28T02:52:32.428951",
-    "last_updated": "2025-12-28T02:52:32.428957",
+    "last_updated": "2025-12-28T04:14:02.914612",
     "script_version": "1.0.0"
   },
   "results": {
@@ -662,27 +662,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "93de670d23797242aff150f04b374822fccb507c043ca12bd1c41f120964028f",
-          "new_sphere_log_hash": "d4839752701855082f15103b57ccf0fefd4075694e879b84d22674191ab28640",
-          "original_rules_hash": "93de670d23797242aff150f04b374822fccb507c043ca12bd1c41f120964028f",
-          "original_sphere_log_hash": "d4839752701855082f15103b57ccf0fefd4075694e879b84d22674191ab28640",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-28T02:51:18.589364"
-        }
-      },
       "game_name_from_filename": "celeste64",
       "game_name_from_yaml": "Celeste 64",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.81,
+        "processing_time_seconds": 7.63,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/celeste64/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -694,7 +682,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.65,
+        "processing_time_seconds": 9.66,
         "return_code": 0,
         "sphere_reached": 5.2,
         "success": true,
@@ -702,10 +690,10 @@
         "warning_count": 0
       },
       "template_filename": "Celeste 64.yaml",
-      "timestamp": "2025-12-28T02:49:00.649866",
+      "timestamp": "2025-12-28T04:13:45.202955",
       "world_info": {
         "exporter_path": "exporter/games/celeste64.py",
-        "exporter_size": 8826,
+        "exporter_size": 8614,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "celeste64",
