@@ -3492,6 +3492,14 @@
       "logic_percent": 80,
       "shops": [],
       "world_description": "Paint WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "slot_data": {
+        "logic_percent": 80,
+        "goal_percent": 80,
+        "goal_image": 1,
+        "death_link": 0,
+        "canvas_size_increment": 100,
+        "version": "0.5.2"
+      },
       "web": {
         "theme": "partyTime"
       },

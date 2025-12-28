@@ -6809,744 +6809,762 @@
       "Yarn": {
         "name": "Yarn",
         "id": 2000300001,
-        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 50
+        "max_count": 50,
+        "classification": "progression_skip_balancing"
       },
       "Time Piece": {
         "name": "Time Piece",
         "id": 2000300002,
-        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 40
+        "max_count": 40,
+        "classification": "progression"
       },
-      "Sprint Hat": {
-        "name": "Sprint Hat",
-        "id": 2000300049,
-        "classification": "progression",
+      "Progressive Painting Unlock": {
+        "name": "Progressive Painting Unlock",
+        "id": 2000300003,
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
-      },
-      "Brewing Hat": {
-        "name": "Brewing Hat",
-        "id": 2000300050,
-        "classification": "progression",
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Ice Hat": {
-        "name": "Ice Hat",
-        "id": 2000300051,
-        "classification": "progression",
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Dweller Mask": {
-        "name": "Dweller Mask",
-        "id": 2000300052,
-        "classification": "progression",
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Time Stop Hat": {
-        "name": "Time Stop Hat",
-        "id": 2000300053,
-        "classification": "progression",
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Projectile Badge": {
-        "name": "Projectile Badge",
-        "id": 2000300024,
-        "classification": "useful",
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Fast Hatter Badge": {
-        "name": "Fast Hatter Badge",
-        "id": 2000300025,
-        "classification": "useful",
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Hover Badge": {
-        "name": "Hover Badge",
-        "id": 2000300026,
-        "classification": "useful",
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Hookshot Badge": {
-        "name": "Hookshot Badge",
-        "id": 2000300027,
-        "classification": "progression",
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Item Magnet Badge": {
-        "name": "Item Magnet Badge",
-        "id": 2000300028,
-        "classification": "useful",
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "No Bonk Badge": {
-        "name": "No Bonk Badge",
-        "id": 2000300029,
-        "classification": "useful",
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Compass Badge": {
-        "name": "Compass Badge",
-        "id": 2000300030,
-        "classification": "useful",
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Scooter Badge": {
-        "name": "Scooter Badge",
-        "id": 2000300031,
-        "classification": "useful",
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "One-Hit Hero Badge": {
-        "name": "One-Hit Hero Badge",
-        "id": 2000300038,
-        "classification": "progression",
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Camera Badge": {
-        "name": "Camera Badge",
-        "id": 2000300042,
-        "classification": "progression",
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Relic (Burger Patty)": {
         "name": "Relic (Burger Patty)",
         "id": 2000300006,
-        "classification": "progression",
         "groups": [
           "Burger",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Burger Cushion)": {
         "name": "Relic (Burger Cushion)",
         "id": 2000300007,
-        "classification": "progression",
         "groups": [
           "Burger",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Mountain Set)": {
         "name": "Relic (Mountain Set)",
         "id": 2000300008,
-        "classification": "progression",
         "groups": [
           "Everything",
           "Train"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Train)": {
         "name": "Relic (Train)",
         "id": 2000300009,
-        "classification": "progression",
         "groups": [
           "Everything",
           "Train"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (UFO)": {
         "name": "Relic (UFO)",
         "id": 2000300010,
-        "classification": "progression",
         "groups": [
           "Everything",
           "UFO"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Cow)": {
         "name": "Relic (Cow)",
         "id": 2000300011,
-        "classification": "progression",
         "groups": [
           "Everything",
           "UFO"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Cool Cow)": {
         "name": "Relic (Cool Cow)",
         "id": 2000300012,
-        "classification": "progression",
         "groups": [
           "Everything",
           "UFO"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Tin-foil Hat Cow)": {
         "name": "Relic (Tin-foil Hat Cow)",
         "hint_text": "Relic (Tin foil Hat Cow)",
         "id": 2000300013,
-        "classification": "progression",
         "groups": [
           "Everything",
           "UFO"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Crayon Box)": {
         "name": "Relic (Crayon Box)",
         "id": 2000300014,
-        "classification": "progression",
         "groups": [
           "Crayon",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Red Crayon)": {
         "name": "Relic (Red Crayon)",
         "id": 2000300015,
-        "classification": "progression",
         "groups": [
           "Crayon",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Blue Crayon)": {
         "name": "Relic (Blue Crayon)",
         "id": 2000300016,
-        "classification": "progression",
         "groups": [
           "Crayon",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Green Crayon)": {
         "name": "Relic (Green Crayon)",
         "id": 2000300017,
-        "classification": "progression",
         "groups": [
           "Crayon",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Relic (Cake Stand)": {
         "name": "Relic (Cake Stand)",
         "id": 2000300018,
-        "classification": "progression",
         "groups": [
           "Cake",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Relic (Shortcake)": {
         "name": "Relic (Shortcake)",
         "id": 2000300019,
-        "classification": "progression",
         "groups": [
           "Cake",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Relic (Chocolate Cake Slice)": {
         "name": "Relic (Chocolate Cake Slice)",
         "id": 2000300020,
-        "classification": "progression",
         "groups": [
           "Cake",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Relic (Chocolate Cake)": {
         "name": "Relic (Chocolate Cake)",
         "id": 2000300021,
-        "classification": "progression",
         "groups": [
           "Cake",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Relic (Necklace Bust)": {
         "name": "Relic (Necklace Bust)",
         "id": 2000300022,
-        "classification": "progression",
         "groups": [
           "Everything",
           "Necklace"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Relic (Necklace)": {
         "name": "Relic (Necklace)",
         "id": 2000300023,
-        "classification": "progression",
         "groups": [
           "Everything",
           "Necklace"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
-      "25 Pons": {
-        "name": "25 Pons",
-        "id": 2000300034,
-        "classification": "filler",
+      "Projectile Badge": {
+        "name": "Projectile Badge",
+        "id": 2000300024,
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 39
+        "max_count": 1,
+        "classification": "useful"
       },
-      "50 Pons": {
-        "name": "50 Pons",
-        "id": 2000300035,
-        "classification": "filler",
+      "Fast Hatter Badge": {
+        "name": "Fast Hatter Badge",
+        "id": 2000300025,
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 1,
+        "classification": "useful"
       },
-      "100 Pons": {
-        "name": "100 Pons",
-        "id": 2000300036,
-        "classification": "filler",
+      "Hover Badge": {
+        "name": "Hover Badge",
+        "id": 2000300026,
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 1,
+        "classification": "useful"
       },
-      "Health Pon": {
-        "name": "Health Pon",
-        "id": 2000300037,
-        "classification": "filler",
+      "Hookshot Badge": {
+        "name": "Hookshot Badge",
+        "id": 2000300027,
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 31
+        "max_count": 1,
+        "classification": "progression"
       },
-      "Random Cosmetic": {
-        "name": "Random Cosmetic",
-        "id": 2000300044,
-        "classification": "filler",
+      "Item Magnet Badge": {
+        "name": "Item Magnet Badge",
+        "id": 2000300028,
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 24
+        "max_count": 1,
+        "classification": "useful"
       },
-      "Baby Trap": {
-        "name": "Baby Trap",
-        "id": 2000300039,
-        "classification": "trap",
+      "No Bonk Badge": {
+        "name": "No Bonk Badge",
+        "id": 2000300029,
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
-      "Laser Trap": {
-        "name": "Laser Trap",
-        "id": 2000300040,
-        "classification": "trap",
+      "Compass Badge": {
+        "name": "Compass Badge",
+        "id": 2000300030,
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
-      "Parade Trap": {
-        "name": "Parade Trap",
-        "id": 2000300041,
-        "classification": "trap",
+      "Scooter Badge": {
+        "name": "Scooter Badge",
+        "id": 2000300031,
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
-      },
-      "Badge Pin": {
-        "name": "Badge Pin",
-        "id": 2000300043,
-        "classification": "useful",
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Umbrella": {
         "name": "Umbrella",
         "id": 2000300033,
-        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
-      "Progressive Painting Unlock": {
-        "name": "Progressive Painting Unlock",
-        "id": 2000300003,
-        "classification": "progression",
+      "25 Pons": {
+        "name": "25 Pons",
+        "id": 2000300034,
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 39,
+        "classification": "filler"
+      },
+      "50 Pons": {
+        "name": "50 Pons",
+        "id": 2000300035,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 12,
+        "classification": "filler"
+      },
+      "100 Pons": {
+        "name": "100 Pons",
+        "id": 2000300036,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 5,
+        "classification": "filler"
+      },
+      "Health Pon": {
+        "name": "Health Pon",
+        "id": 2000300037,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 31,
+        "classification": "filler"
+      },
+      "One-Hit Hero Badge": {
+        "name": "One-Hit Hero Badge",
+        "id": 2000300038,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Baby Trap": {
+        "name": "Baby Trap",
+        "id": 2000300039,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Laser Trap": {
+        "name": "Laser Trap",
+        "id": 2000300040,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Parade Trap": {
+        "name": "Parade Trap",
+        "id": 2000300041,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Camera Badge": {
+        "name": "Camera Badge",
+        "id": 2000300042,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Badge Pin": {
+        "name": "Badge Pin",
+        "id": 2000300043,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "useful"
+      },
+      "Random Cosmetic": {
+        "name": "Random Cosmetic",
+        "id": 2000300044,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 24,
+        "classification": "filler"
       },
       "Metro Ticket - Yellow": {
         "name": "Metro Ticket - Yellow",
         "id": 2000300045,
-        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Metro Ticket - Green": {
         "name": "Metro Ticket - Green",
         "id": 2000300046,
-        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Metro Ticket - Blue": {
         "name": "Metro Ticket - Blue",
         "id": 2000300047,
-        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Metro Ticket - Pink": {
         "name": "Metro Ticket - Pink",
         "id": 2000300048,
-        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Sprint Hat": {
+        "name": "Sprint Hat",
+        "id": 2000300049,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Brewing Hat": {
+        "name": "Brewing Hat",
+        "id": 2000300050,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ice Hat": {
+        "name": "Ice Hat",
+        "id": 2000300051,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dweller Mask": {
+        "name": "Dweller Mask",
+        "id": 2000300052,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Time Stop Hat": {
+        "name": "Time Stop Hat",
+        "id": 2000300053,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Snatcher's Contract - The Subcon Well": {
         "name": "Snatcher's Contract - The Subcon Well",
         "hint_text": "Snatcher's Contract   The Subcon Well",
         "id": 2000300200,
-        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Snatcher's Contract - Toilet of Doom": {
         "name": "Snatcher's Contract - Toilet of Doom",
         "hint_text": "Snatcher's Contract   Toilet of Doom",
         "id": 2000300201,
-        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Snatcher's Contract - Queen Vanessa's Manor": {
         "name": "Snatcher's Contract - Queen Vanessa's Manor",
         "hint_text": "Snatcher's Contract   Queen Vanessa's Manor",
         "id": 2000300202,
-        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Snatcher's Contract - Mail Delivery Service": {
         "name": "Snatcher's Contract - Mail Delivery Service",
         "hint_text": "Snatcher's Contract   Mail Delivery Service",
         "id": 2000300203,
-        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Zipline Unlock - The Birdhouse Path": {
         "name": "Zipline Unlock - The Birdhouse Path",
         "id": 2000300204,
-        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Zipline Unlock - The Lava Cake Path": {
         "name": "Zipline Unlock - The Lava Cake Path",
         "id": 2000300205,
-        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Zipline Unlock - The Windmill Path": {
         "name": "Zipline Unlock - The Windmill Path",
         "id": 2000300206,
-        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Zipline Unlock - The Twilight Bell Path": {
         "name": "Zipline Unlock - The Twilight Bell Path",
         "id": 2000300207,
-        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "HUMT Access": {
         "name": "HUMT Access",
         "id": null,
-        "groups": [],
-        "classification": "progression",
+        "groups": [
+          "Event"
+        ],
         "event": true,
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       },
       "TOD Access": {
         "name": "TOD Access",
         "id": null,
-        "groups": [],
-        "classification": "progression",
+        "groups": [
+          "Event"
+        ],
         "event": true,
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       },
       "AFR Access": {
         "name": "AFR Access",
         "id": null,
-        "groups": [],
-        "classification": "progression",
+        "groups": [
+          "Event"
+        ],
         "event": true,
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       },
       "TIHS Access": {
         "name": "TIHS Access",
         "id": null,
-        "groups": [],
-        "classification": "progression",
+        "groups": [
+          "Event"
+        ],
         "event": true,
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       },
       "Birdhouse Cleared": {
         "name": "Birdhouse Cleared",
         "id": null,
-        "groups": [],
-        "classification": "progression",
+        "groups": [
+          "Event"
+        ],
         "event": true,
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       },
       "Lava Cake Cleared": {
         "name": "Lava Cake Cleared",
         "id": null,
-        "groups": [],
-        "classification": "progression",
+        "groups": [
+          "Event"
+        ],
         "event": true,
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       },
       "Windmill Cleared": {
         "name": "Windmill Cleared",
         "id": null,
-        "groups": [],
-        "classification": "progression",
+        "groups": [
+          "Event"
+        ],
         "event": true,
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       },
       "Twilight Bell Cleared": {
         "name": "Twilight Bell Cleared",
         "id": null,
-        "groups": [],
-        "classification": "progression",
+        "groups": [
+          "Event"
+        ],
         "event": true,
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       },
       "Time Piece Cluster": {
         "name": "Time Piece Cluster",
         "id": null,
-        "groups": [],
-        "classification": "progression",
+        "groups": [
+          "Event"
+        ],
         "event": true,
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -8148,6 +8166,66 @@
           "display_name": "Progression Balancing"
         }
       },
+      "act_connections": {
+        "chapter1_tutorial": "chapter1_tutorial",
+        "TimeRift_Cave_Mafia": "TimeRift_Cave_Mafia",
+        "TimeRift_Cave_BirdBasement": "TimeRift_Cave_Alps",
+        "TimeRift_Water_TWreck_Panels": "TimeRift_Water_AlpineSkyline_Cats",
+        "TimeRift_Water_Subcon_Hookshot": "TimeRift_Water_TWreck_Parade",
+        "TimeRift_Water_Mafia_Hard": "TimeRift_Water_Alp_Goats",
+        "Spaceship_WaterRift_MailRoom": "TimeRift_Water_Subcon_Dwellers",
+        "TimeRift_Water_TWreck_Parade": "TimeRift_Water_Mafia_Easy",
+        "TimeRift_Cave_Raccoon": "TimeRift_Cave_BirdBasement",
+        "TimeRift_Water_AlpineSkyline_Cats": "TimeRift_Water_Subcon_Hookshot",
+        "TimeRift_Cave_Alps": "TimeRift_Cave_Raccoon",
+        "TimeRift_Water_Alp_Goats": "TimeRift_Water_Mafia_Hard",
+        "TimeRift_Water_Mafia_Easy": "Spaceship_WaterRift_Gallery",
+        "Spaceship_WaterRift_Gallery": "Spaceship_WaterRift_MailRoom",
+        "TimeRift_Water_Subcon_Dwellers": "TimeRift_Water_TWreck_Panels",
+        "chapter3_secret_finale": "subcon_maildelivery",
+        "AlpineSkyline_Finale": "chapter2_toiletboss",
+        "snatcher_boss": "AlpineSkyline_Finale",
+        "AlpineFreeRoam": "moon_camerasnap",
+        "subcon_cave": "chapter3_murder",
+        "subcon_village_icewall": "snatcher_boss",
+        "mafiatown_goldenvault": "vanessa_manor_attic",
+        "chapter3_murder": "chapter1_boss",
+        "chapter1_cannon_repair": "subcon_village_icewall",
+        "trainwreck_selfdestruct": "DeadBirdStudio",
+        "DeadBirdStudio": "chapter1_cannon_repair",
+        "moon_camerasnap": "chapter1_barrelboss",
+        "chapter2_toiletboss": "AlpineFreeRoam",
+        "moon_parade": "trainwreck_selfdestruct",
+        "vanessa_manor_attic": "harbor_impossible_race",
+        "harbor_impossible_race": "mafiatown_goldenvault",
+        "chapter1_boss": "moon_parade",
+        "mafiatown_lava": "subcon_cave",
+        "subcon_maildelivery": "mafiatown_lava",
+        "chapter1_barrelboss": "chapter3_secret_finale",
+        "award_ceremony": "award_ceremony"
+      },
+      "shop_locs": [
+        "Mafia Boss Shop Item",
+        "Badge Seller - Item 1",
+        "Badge Seller - Item 2",
+        "Badge Seller - Item 3",
+        "Badge Seller - Item 4",
+        "Badge Seller - Item 5",
+        "Badge Seller - Item 6",
+        "Badge Seller - Item 7",
+        "Badge Seller - Item 8"
+      ],
+      "hat_craft_order": [
+        3,
+        2,
+        4,
+        1,
+        0
+      ],
+      "excluded_dws": [],
+      "excluded_bonuses": [],
+      "dw_shuffle": [],
+      "badge_seller_count": 8,
       "world_description": "A Hat in Time is a cute-as-peck 3D platformer featuring a little girl who stitches hats for wicked powers!\nFreely explore giant worlds and recover Time Pieces to travel to new heights!",
       "slot_data": {
         "Chapter1Cost": 0,
@@ -8684,48 +8762,54 @@
             }
           },
           "if_false": {
-            "type": "conditional",
-            "test": {
-              "type": "compare",
-              "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
+            "type": "or",
+            "conditions": [
+              {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "subscript",
+                    "value": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "world"
+                      },
+                      "attr": "hat_yarn_costs"
+                    },
+                    "index": {
+                      "type": "name",
+                      "name": "hat"
+                    }
                   },
-                  "attr": "hat_yarn_costs"
-                },
-                "index": {
-                  "type": "name",
-                  "name": "hat"
-                }
-              },
-              "op": "<=",
-              "right": {
-                "type": "constant",
-                "value": 0
-              }
-            },
-            "if_true": {
-              "type": "constant",
-              "value": true
-            },
-            "if_false": {
-              "type": "item_check",
-              "item": "Yarn",
-              "count": {
-                "type": "helper",
-                "name": "get_hat_cost",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "hat"
+                  "op": "<=",
+                  "right": {
+                    "type": "constant",
+                    "value": 0
                   }
-                ]
+                },
+                "if_true": {
+                  "type": "constant",
+                  "value": true
+                },
+                "if_false": null
+              },
+              {
+                "type": "item_check",
+                "item": "Yarn",
+                "count": {
+                  "type": "helper",
+                  "name": "get_hat_cost",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "hat"
+                    }
+                  ]
+                }
               }
-            }
+            ]
           }
         }
       },
@@ -8841,51 +8925,57 @@
             "value": true
           },
           "if_false": {
-            "type": "conditional",
-            "test": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "not",
-                  "condition": {
-                    "type": "setting_value",
-                    "setting": "NoPaintingSkips"
-                  }
+            "type": "or",
+            "conditions": [
+              {
+                "type": "conditional",
+                "test": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "not",
+                      "condition": {
+                        "type": "setting_value",
+                        "setting": "NoPaintingSkips"
+                      }
+                    },
+                    {
+                      "type": "name",
+                      "name": "allow_skip"
+                    }
+                  ]
                 },
-                {
+                "if_true": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "helper",
+                      "name": "get_difficulty"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "if_false": null
+                },
+                "if_false": null
+              },
+              {
+                "type": "item_check",
+                "item": "Progressive Painting Unlock",
+                "count": {
                   "type": "name",
-                  "name": "allow_skip"
+                  "name": "count"
                 }
-              ]
-            },
-            "if_true": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "helper",
-                  "name": "get_difficulty"
-                },
-                "op": ">=",
-                "right": {
-                  "type": "constant",
-                  "value": 0
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": null
-            },
-            "if_false": {
-              "type": "item_check",
-              "item": "Progressive Painting Unlock",
-              "count": {
-                "type": "name",
-                "name": "count"
               }
-            }
+            ]
           }
         },
         "defaults": {

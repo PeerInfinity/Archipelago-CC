@@ -1313,7 +1313,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Zelda's Chest", player),
-        And(Has('Small Key (Hyrule Castle)', 4), Or(True_(), HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,))), Has('Big Key (Hyrule Castle)'))
+        And(Has('Small Key (Hyrule Castle)', 4), Or(Compare(1, "in", ['easy', 'default']), HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(1,))), Has('Big Key (Hyrule Castle)'))
     )
 
     world.set_rule(

@@ -1,19 +1,17 @@
 {
   "settings": {
     "game": "Landstalker - The Treasures of King Nole",
-    "assume_bidirectional_exits": false,
-    "use_resolved_items": true,
     "options": {
-      "accessibility": "full",
-      "allow_whistle_usage_behind_trees": "true",
-      "combat_difficulty": "normal",
-      "death_link": "false",
-      "ensure_ekeeke_in_shops": "true",
+      "accessibility": 0,
+      "allow_whistle_usage_behind_trees": true,
+      "combat_difficulty": 2,
+      "death_link": false,
+      "ensure_ekeeke_in_shops": true,
       "exclude_locations": [],
-      "goal": "beat_gola",
-      "handle_damage_boosting_in_logic": "false",
-      "handle_enemy_jumping_in_logic": "false",
-      "handle_tree_cutting_glitch_in_logic": "false",
+      "goal": 0,
+      "handle_damage_boosting_in_logic": false,
+      "handle_enemy_jumping_in_logic": false,
+      "handle_tree_cutting_glitch_in_logic": false,
       "hint_count": 12,
       "item_links": [],
       "jewel_count": 5,
@@ -22,19 +20,277 @@
       "plando_items": [],
       "priority_locations": [],
       "progression_balancing": 50,
-      "progressive_armors": "true",
-      "remove_gumi_boulder": "false",
-      "revive_using_ekeeke": "true",
+      "progressive_armors": true,
+      "remove_gumi_boulder": false,
+      "revive_using_ekeeke": true,
       "shop_prices_factor": 100,
-      "shuffle_trees": "false",
-      "spawn_region": "massan",
+      "shuffle_trees": false,
+      "spawn_region": 0,
       "start_hints": [],
       "start_inventory": {},
       "start_location_hints": [],
-      "teleport_tree_requirements": "clear_tibor_and_visit_trees",
-      "use_record_book": "true",
-      "use_spell_book": "true"
+      "teleport_tree_requirements": 3,
+      "use_record_book": true,
+      "use_spell_book": true
     },
     "world_directory": "landstalker"
+  },
+  "world_attributes": {
+    "regions_table": {
+      "menu": "Menu",
+      "massan": "Massan",
+      "massan_cave": "Massan Cave",
+      "route_massan_gumi": "Route between Massan and Gumi",
+      "waterfall_shrine": "Waterfall Shrine",
+      "swamp_shrine": "Swamp Shrine",
+      "massan_after_swamp_shrine": "Massan (after Swamp Shrine)",
+      "gumi_after_swamp_shrine": "Gumi (after Swamp Shrine)",
+      "gumi": "Gumi",
+      "route_gumi_ryuma": "Route from Gumi to Ryuma",
+      "tibor_tree": "Route from Gumi to Ryuma (Tibor tree)",
+      "mercator_gate_tree": "Route from Gumi to Ryuma (Mercator gate tree)",
+      "tibor": "Tibor",
+      "ryuma": "Ryuma",
+      "ryuma_after_thieves_hideout": "Ryuma (after Thieves Hideout)",
+      "ryuma_lighthouse_repaired": "Ryuma (repaired lighthouse)",
+      "thieves_hideout_pre_key": "Thieves Hideout (before keydoor)",
+      "thieves_hideout_post_key": "Thieves Hideout (after keydoor)",
+      "helga_hut": "Witch Helga's Hut",
+      "mercator": "Mercator",
+      "mercator_repaired_docks": "Mercator (docks with repaired lighthouse)",
+      "mercator_casino": "Mercator casino",
+      "mercator_dungeon": "Mercator Dungeon",
+      "crypt": "Crypt",
+      "mercator_special_shop": "Mercator special shop",
+      "mir_tower_sector": "Mir Tower sector",
+      "mir_tower_sector_tree_ledge": "Mir Tower sector (ledge behind sacred tree)",
+      "mir_tower_sector_tree_coast": "Mir Tower sector (coast behind sacred tree)",
+      "twinkle_village": "Twinkle village",
+      "mir_tower_pre_garlic": "Mir Tower (pre-garlic)",
+      "mir_tower_post_garlic": "Mir Tower (post-garlic)",
+      "greenmaze_pre_whistle": "Greenmaze (pre-whistle)",
+      "greenmaze_cutter": "Greenmaze (Cutter hidden sector)",
+      "greenmaze_post_whistle": "Greenmaze (post-whistle)",
+      "greenmaze_post_whistle_tree": "Greenmaze (post-whistle tree)",
+      "verla_shore": "Verla shore",
+      "verla_shore_tree": "Verla shore tree",
+      "verla_shore_cliff": "Verla shore cliff (accessible from Verla Mines)",
+      "verla": "Verla",
+      "verla_after_mines": "Verla (after mines)",
+      "verla_mines": "Verla Mines",
+      "verla_mines_behind_lava": "Verla Mines (behind lava)",
+      "route_verla_destel": "Route between Verla and Destel",
+      "destel": "Destel",
+      "route_after_destel": "Route after Destel",
+      "destel_well": "Destel Well",
+      "route_lake_shrine": "Route to Lake Shrine",
+      "route_lake_shrine_cliff": "Route to Lake Shrine cliff",
+      "lake_shrine": "Lake Shrine",
+      "mountainous_area": "Mountainous Area",
+      "mountainous_area_tree": "Mountainous Area tree",
+      "king_nole_cave": "King Nole's Cave",
+      "kazalt": "Kazalt",
+      "king_nole_labyrinth_pre_door": "King Nole's Labyrinth (before door)",
+      "king_nole_labyrinth_post_door": "King Nole's Labyrinth (after door)",
+      "king_nole_labyrinth_exterior": "King Nole's Labyrinth (exterior)",
+      "king_nole_labyrinth_fall_from_exterior": "King Nole's Labyrinth (fall from exterior)",
+      "king_nole_labyrinth_raft_entrance": "King Nole's Labyrinth (raft entrance)",
+      "king_nole_labyrinth_raft": "King Nole's Labyrinth (raft)",
+      "king_nole_labyrinth_sacred_tree": "King Nole's Labyrinth (sacred tree)",
+      "king_nole_labyrinth_path_to_palace": "King Nole's Labyrinth (path to palace)",
+      "king_nole_palace": "King Nole's Palace",
+      "end": "The End"
+    },
+    "dark_dungeon_id": "Massan Cave",
+    "dark_region_ids": [
+      "massan_cave"
+    ],
+    "teleport_tree_pairs": [
+      [
+        {
+          "name": "Massan tree",
+          "region": "route_massan_gumi"
+        },
+        {
+          "name": "Tibor tree",
+          "region": "tibor_tree"
+        }
+      ],
+      [
+        {
+          "name": "Mercator front gate tree",
+          "region": "mercator_gate_tree"
+        },
+        {
+          "name": "Verla shore tree",
+          "region": "verla_shore_tree"
+        }
+      ],
+      [
+        {
+          "name": "Destel sector tree",
+          "region": "route_after_destel"
+        },
+        {
+          "name": "Lake Shrine sector tree",
+          "region": "route_lake_shrine"
+        }
+      ],
+      [
+        {
+          "name": "Mir Tower sector tree",
+          "region": "mir_tower_sector"
+        },
+        {
+          "name": "Mountainous area tree",
+          "region": "mountainous_area_tree"
+        }
+      ],
+      [
+        {
+          "name": "Greenmaze entrance tree",
+          "region": "greenmaze_pre_whistle"
+        },
+        {
+          "name": "Greenmaze end tree",
+          "region": "greenmaze_post_whistle_tree"
+        }
+      ]
+    ],
+    "jewel_items": [
+      "Red Jewel",
+      "Purple Jewel",
+      "Green Jewel",
+      "Blue Jewel",
+      "Yellow Jewel"
+    ],
+    "world_description": "Landstalker: The Treasures of King Nole is a classic Action-RPG with an isometric view (also known as \"2.5D\").\nYou play Nigel, a treasure hunter exploring the island of Mercator trying to find the legendary treasure.\nRoam freely on the island, get stronger to beat dungeons and gather the required key items in order to reach the\nhidden palace and claim the treasure.",
+    "slot_data": {
+      "goal": 0,
+      "jewel_count": 5,
+      "progressive_armors": 1,
+      "use_record_book": 1,
+      "use_spell_book": 1,
+      "shop_prices_factor": 100,
+      "combat_difficulty": 2,
+      "teleport_tree_requirements": 3,
+      "shuffle_trees": 0,
+      "ensure_ekeeke_in_shops": 1,
+      "remove_gumi_boulder": 0,
+      "allow_whistle_usage_behind_trees": 1,
+      "handle_damage_boosting_in_logic": 0,
+      "handle_enemy_jumping_in_logic": 0,
+      "handle_tree_cutting_glitch_in_logic": 0,
+      "hint_count": 12,
+      "death_link": 0,
+      "revive_using_ekeeke": 1,
+      "spawn_region": "massan",
+      "seed": 2089113674,
+      "dark_region": "Massan Cave",
+      "hints": {
+        "Foxy (right after making Miro flee with Garlic in Mir Tower)": "Have you found all of the 283 items in this universe?",
+        "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Casino Ticket close to a waterfall.",
+        "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "I can sense Fireproof near a lake.",
+        "Foxy (in Gumi boulder map)": "I can sense Iron Boots in a mountainous area.",
+        "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Oracle Stone near a swamp.",
+        "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Snow Spikes in King Nole's domain.",
+        "Foxy (in Destel)": "I can sense Axe Magic in Destel region.",
+        "Foxy (in room next to green golem roundabout in Lake Shrine)": "I can sense Armlet near a swamp.",
+        "Foxy (on Kazalt bridge)": "I can sense Garlic in Verla Mines.",
+        "Foxy (inside Mercator Crypt)": "I can sense Idol Stone among the trees.",
+        "Foxy (at Waterfall Shrine crossroads)": "I can sense Blue Jewel in Twinkle village.",
+        "Foxy (in King Nole's Palace entrance room)": "I can sense Einstein Whistle in the town of Mercator.",
+        "Lithograph": "It's barely readable:\nRED MERCATOR ITEM\nPURPLE ITEM DESTEL\nTOWER GREEN CHALLENGE\nFIRST GROUND BLUE\nYELLOW ROOM TOWER",
+        "Oracle Stone": "It shows Massan Cave\nenshrouded in darkness."
+      },
+      "teleport_tree_pairs": [
+        [
+          "Massan tree",
+          "Tibor tree"
+        ],
+        [
+          "Mercator front gate tree",
+          "Verla shore tree"
+        ],
+        [
+          "Destel sector tree",
+          "Lake Shrine sector tree"
+        ],
+        [
+          "Mir Tower sector tree",
+          "Mountainous area tree"
+        ],
+        [
+          "Greenmaze entrance tree",
+          "Greenmaze end tree"
+        ]
+      ],
+      "location_prices": {
+        "Massan: Shop item #1": 20,
+        "Massan: Shop item #2": 200,
+        "Massan: Shop item #3": 800,
+        "Gumi: Inn item #1": 20,
+        "Gumi: Inn item #2": 150,
+        "Ryuma: Shop item #1": 25,
+        "Ryuma: Shop item #2": 35,
+        "Ryuma: Shop item #3": 210,
+        "Ryuma: Shop item #4": 25,
+        "Ryuma: Shop item #5": 425,
+        "Ryuma: Inn item": 20,
+        "Mercator: Shop item #1": 20,
+        "Mercator: Shop item #2": 40,
+        "Mercator: Shop item #3": 160,
+        "Mercator: Shop item #4": 25,
+        "Mercator: Shop item #5": 270,
+        "Mercator: Shop item #6": 20,
+        "Mercator: Special shop item #1": 540,
+        "Mercator: Special shop item #2": 20,
+        "Mercator: Special shop item #3": 270,
+        "Mercator: Special shop item #4": 105,
+        "Mercator: Docks shop item #1": 25,
+        "Mercator: Docks shop item #2": 310,
+        "Mercator: Docks shop item #3": 125,
+        "Verla: Shop item #1": 25,
+        "Verla: Shop item #2": 30,
+        "Verla: Shop item #3": 185,
+        "Verla: Shop item #4": 310,
+        "Verla: Shop item #5 (extra item after saving town)": 330,
+        "Route from Verla to Destel: Kelketo shop item #1": 50,
+        "Route from Verla to Destel: Kelketo shop item #2": 25,
+        "Route from Verla to Destel: Kelketo shop item #3": 1000,
+        "Route from Verla to Destel: Kelketo shop item #4": 310,
+        "Route from Verla to Destel: Kelketo shop item #5": 90,
+        "Destel: Inn item": 25,
+        "Destel: Shop item #1": 90,
+        "Destel: Shop item #2": 310,
+        "Destel: Shop item #3": 125,
+        "Destel: Shop item #4": 30,
+        "Destel: Shop item #5": 25,
+        "Route to Lake Shrine: Greedly's shop item #1": 25,
+        "Route to Lake Shrine: Greedly's shop item #2": 90,
+        "Route to Lake Shrine: Greedly's shop item #3": 310,
+        "Route to Lake Shrine: Greedly's shop item #4": 30,
+        "Kazalt: Shop item #1": 30,
+        "Kazalt: Shop item #2": 330,
+        "Kazalt: Shop item #3": 165,
+        "Kazalt: Shop item #4": 415,
+        "Kazalt: Shop item #5": 415
+      }
+    },
+    "web": {
+      "theme": "grass",
+      "tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Landstalker Randomizer software on your computer.",
+          "language": "English",
+          "file_name": "landstalker_setup_en.md",
+          "link": "landstalker_setup/en",
+          "authors": [
+            "Dinopony"
+          ]
+        }
+      ]
+    }
   }
 }

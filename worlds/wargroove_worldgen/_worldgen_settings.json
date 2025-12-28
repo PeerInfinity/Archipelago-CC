@@ -1,15 +1,13 @@
 {
   "settings": {
     "game": "Wargroove",
-    "assume_bidirectional_exits": false,
-    "use_resolved_items": false,
     "options": {
-      "accessibility": "full",
+      "accessibility": 0,
       "ai_sacrifice_limit": 0,
       "ai_summon_limit": 0,
-      "commander_choice": "locked_random",
+      "commander_choice": 0,
       "commander_defense_boost": 2,
-      "death_link": "false",
+      "death_link": false,
       "exclude_locations": [],
       "income_boost": 25,
       "item_links": [],
@@ -26,5 +24,36 @@
       "start_location_hints": []
     },
     "world_directory": "wargroove"
+  },
+  "world_attributes": {
+    "world_description": "Command an army, in this retro style turn based strategy game!",
+    "slot_data": {
+      "seed": "jpYxoraZuFulnbuu",
+      "income_boost": 25,
+      "commander_defense_boost": 2,
+      "can_choose_commander": false,
+      "commander_choice": 0,
+      "player_sacrifice_limit": 0,
+      "player_summon_limit": 0,
+      "ai_sacrifice_limit": 0,
+      "ai_summon_limit": 0,
+      "death_link": 0,
+      "starting_groove_multiplier": 20
+    },
+    "web": {
+      "theme": "grass",
+      "tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up Wargroove for Archipelago.",
+          "language": "English",
+          "file_name": "wargroove_en.md",
+          "link": "wargroove/en",
+          "authors": [
+            "Fly Sniper"
+          ]
+        }
+      ]
+    }
   }
 }

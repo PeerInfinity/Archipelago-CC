@@ -3482,14 +3482,23 @@
           "display_name": "Sub-weapon Shuffle"
         }
       },
-      "shops": [],
-      "total_last_keys": 1,
-      "required_last_keys": 1,
-      "world_description": "Castlevania - Circle of the Moon WorldGen for Archipelago.\n\nAuto-generated world implementation.",
       "nerf_roc_wing": 0,
       "ignore_cleansing": 0,
       "iron_maiden_behavior": 0,
       "completion_goal": 0,
+      "shops": [],
+      "total_last_keys": 1,
+      "required_last_keys": 1,
+      "world_description": "Castlevania - Circle of the Moon WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "slot_data": {
+        "death_link": 0,
+        "iron_maiden_behavior": 0,
+        "ignore_cleansing": 0,
+        "skip_tutorials": 0,
+        "required_last_keys": 1,
+        "completion_goal": 0,
+        "nerf_roc_wing": 0
+      },
       "web": {
         "theme": "stone"
       },

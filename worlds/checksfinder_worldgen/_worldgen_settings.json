@@ -1,10 +1,8 @@
 {
   "settings": {
     "game": "ChecksFinder",
-    "assume_bidirectional_exits": false,
-    "use_resolved_items": false,
     "options": {
-      "accessibility": "full",
+      "accessibility": 0,
       "exclude_locations": [],
       "item_links": [],
       "local_items": [],
@@ -17,5 +15,31 @@
       "start_location_hints": []
     },
     "world_directory": "checksfinder"
+  },
+  "world_attributes": {
+    "world_description": "ChecksFinder is a game where you avoid mines and collect checks by beating boards!\nYou win when you get all your items and beat the last board!",
+    "slot_data": {
+      "world_seed": 2277925128,
+      "seed_name": "14089154938208861744",
+      "player_name": "Player1",
+      "player_id": 1,
+      "client_version": 7,
+      "race": false
+    },
+    "web": {
+      "theme": "grass",
+      "tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to playing Archipelago ChecksFinder.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "SunCat"
+          ]
+        }
+      ]
+    }
   }
 }

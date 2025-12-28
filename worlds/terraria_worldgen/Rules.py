@@ -21,7 +21,7 @@ def _terrariaworldgen_has_n_from_list(state: "CollectionState", player: int, ite
 
 
 def _terrariaworldgen_has_minions(state: "CollectionState", player: int, required_count = None) -> bool:
-    return (((1 + (0 if any(state.has(armor, player) for armor in False.keys()) else 0)) + sum((bonus for (acc, bonus) in False.items()))) >= required_count)
+    return (((1 + (0 if any(state.has(armor, player) for armor in {'Wulfrum Armor': 1, 'Flinx Fur Coat': 1, 'Victide Armor': 1, 'Obsidian Armor': 1, 'Bee Armor': 2, 'Aerospec Armor': 1, 'Statigel Armor': 1, 'Spider Armor': 3, 'Forbidden Armor': 2, 'Daedalus Armor': 2, 'Hallowed Armor': 3, 'Fathom Swarmer Armor': 2, 'Tiki Armor': 4, 'Hydrothermic Armor': 2, 'Plaguebringer Armor': 3, 'Spooky Armor': 4, 'Astral Armor': 3, 'Stardust Armor': 5, 'Tarragon Armor': 3, 'Bloodflare Armor': 3, 'Omega Blue Armor': 2, 'Fearmonger Armor': 2, 'Silva Armor': 5, 'Auric Tesla Armor': 6, 'Demonshade Armor': 10}.keys()) else 0)) + sum((bonus for (acc, bonus) in {'Summoning Potion': 1, 'Voltaic Jelly': 1, 'Pygmy Necklace': 1, 'Bewitching Table': 1, 'The First Shadowflame': 1, 'Nuclear Fuel Rod': 1, 'Starbuster Core': 1, 'Necromantic Scroll': 1, 'Papyrus Scarab': 1, 'Eldritch Soul Artifact': 1, 'Profaned Soul Artifact': 1, 'Angelic Alliance': 2}.items()))) >= required_count)
 
 
 def set_rules(world: "World") -> None:

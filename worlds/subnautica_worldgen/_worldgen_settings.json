@@ -1,15 +1,13 @@
 {
   "settings": {
     "game": "Subnautica",
-    "assume_bidirectional_exits": false,
-    "use_resolved_items": false,
     "options": {
-      "accessibility": "full",
-      "creature_scan_logic": "stasis",
+      "accessibility": 0,
+      "creature_scan_logic": 0,
       "creature_scans": 0,
-      "death_link": "false",
-      "early_seaglide": "true",
-      "empty_tanks": "true",
+      "death_link": false,
+      "early_seaglide": true,
+      "empty_tanks": true,
       "exclude_locations": [],
       "filler_items_distribution": {
         "Copper Ore": 1,
@@ -27,8 +25,8 @@
         "Silver Ore": 1,
         "Titanium": 1
       },
-      "free_samples": "false",
-      "goal": "launch",
+      "free_samples": false,
+      "goal": 0,
       "item_links": [],
       "local_items": [],
       "non_local_items": [],
@@ -42,5 +40,33 @@
       "swim_rule": 0
     },
     "world_directory": "subnautica"
+  },
+  "world_attributes": {
+    "creatures_to_scan": [],
+    "world_description": "Subnautica is an undersea exploration game. Stranded on an alien world, you become infected by\nan unknown bacteria. The planet's automatic quarantine will shoot you down if you try to leave.\nYou must find a cure for yourself, build an escape rocket, and leave the planet.",
+    "slot_data": {
+      "goal": "launch",
+      "swim_rule": "easy",
+      "vanilla_tech": [],
+      "creatures_to_scan": [],
+      "death_link": 0,
+      "free_samples": 0,
+      "empty_tanks": 1
+    },
+    "web": {
+      "theme": "grass",
+      "tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Subnautica randomizer connected to an Archipelago Multiworld",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Berserker"
+          ]
+        }
+      ]
+    }
   }
 }

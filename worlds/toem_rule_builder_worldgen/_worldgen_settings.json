@@ -1,15 +1,13 @@
 {
   "settings": {
     "game": "TOEM rule builder",
-    "assume_bidirectional_exits": false,
-    "use_resolved_items": false,
     "options": {
-      "accessibility": "full",
+      "accessibility": 0,
       "exclude_locations": [],
-      "include_achievements": "false",
-      "include_basto": "false",
-      "include_casettes": "true",
-      "include_items": "true",
+      "include_achievements": false,
+      "include_basto": false,
+      "include_casettes": true,
+      "include_items": true,
       "item_links": [],
       "local_items": [],
       "non_local_items": [],
@@ -22,5 +20,31 @@
       "start_location_hints": []
     },
     "world_directory": "toem_rule_builder"
+  },
+  "world_attributes": {
+    "slot_data": {
+      "version": "0.1.0",
+      "options": {
+        "include_basto": 0,
+        "include_items": 1,
+        "include_casettes": 1,
+        "include_achievements": 0
+      }
+    },
+    "web": {
+      "theme": "grassFlowers",
+      "tutorials": [
+        {
+          "name": "Setup Guide",
+          "description": "A guide to setting up the TOEM randomizer.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "DrTChops"
+          ]
+        }
+      ]
+    }
   }
 }

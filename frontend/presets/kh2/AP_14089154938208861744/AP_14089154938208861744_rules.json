@@ -21312,7 +21312,63 @@
                 "args": [
                   {
                     "type": "constant",
+                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
                     "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
                   }
                 ]
               },
@@ -21369,62 +21425,6 @@
                   {
                     "type": "constant",
                     "value": "Roxas Event Location"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
                   }
                 ]
               },

@@ -3787,37 +3787,9 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "Attribute",
+                          "rule": "Constant",
                           "args": {
-                            "object": {
-                              "rule": "Attribute",
-                              "args": {
-                                "object": {
-                                  "rule": "AST_subscript",
-                                  "args": {
-                                    "value": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "world"
-                                      },
-                                      "attr": "worlds"
-                                    },
-                                    "index": {
-                                      "type": "constant",
-                                      "value": 2
-                                    },
-                                    "_original_ast_type": "subscript"
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                "attr": "options",
-                                "_original_ast_type": "attribute"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "attr": "enemy_health",
-                            "_original_ast_type": "attribute"
+                            "value": 1
                           },
                           "_converted_from_ast": true
                         },
@@ -17476,17 +17448,25 @@
                   "rule": "False_"
                 },
                 "if_false": {
-                  "rule": "Conditional",
-                  "args": {
-                    "test": {
-                      "rule": "has_melee_weapon",
-                      "_original_ast_type": "helper",
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Conditional",
+                      "args": {
+                        "test": {
+                          "rule": "has_melee_weapon",
+                          "_original_ast_type": "helper",
+                          "_converted_from_ast": true
+                        },
+                        "if_true": {
+                          "rule": "True_"
+                        },
+                        "if_false": null,
+                        "_original_ast_type": "conditional"
+                      },
                       "_converted_from_ast": true
                     },
-                    "if_true": {
-                      "rule": "True_"
-                    },
-                    "if_false": {
+                    {
                       "rule": "Or",
                       "children": [
                         {
@@ -17560,10 +17540,8 @@
                           ]
                         }
                       ]
-                    },
-                    "_original_ast_type": "conditional"
-                  },
-                  "_converted_from_ast": true
+                    }
+                  ]
                 },
                 "_original_ast_type": "conditional"
               },
@@ -23027,48 +23005,54 @@
             }
           },
           "if_false": {
-            "type": "conditional",
-            "test": {
-              "type": "compare",
-              "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
+            "type": "or",
+            "conditions": [
+              {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "subscript",
+                    "value": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "world"
+                      },
+                      "attr": "hat_yarn_costs"
+                    },
+                    "index": {
+                      "type": "name",
+                      "name": "hat"
+                    }
                   },
-                  "attr": "hat_yarn_costs"
-                },
-                "index": {
-                  "type": "name",
-                  "name": "hat"
-                }
-              },
-              "op": "<=",
-              "right": {
-                "type": "constant",
-                "value": 0
-              }
-            },
-            "if_true": {
-              "type": "constant",
-              "value": true
-            },
-            "if_false": {
-              "type": "item_check",
-              "item": "Yarn",
-              "count": {
-                "type": "helper",
-                "name": "get_hat_cost",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "hat"
+                  "op": "<=",
+                  "right": {
+                    "type": "constant",
+                    "value": 0
                   }
-                ]
+                },
+                "if_true": {
+                  "type": "constant",
+                  "value": true
+                },
+                "if_false": null
+              },
+              {
+                "type": "item_check",
+                "item": "Yarn",
+                "count": {
+                  "type": "helper",
+                  "name": "get_hat_cost",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "hat"
+                    }
+                  ]
+                }
               }
-            }
+            ]
           }
         }
       },
@@ -23184,51 +23168,57 @@
             "value": true
           },
           "if_false": {
-            "type": "conditional",
-            "test": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "not",
-                  "condition": {
-                    "type": "setting_value",
-                    "setting": "NoPaintingSkips"
-                  }
+            "type": "or",
+            "conditions": [
+              {
+                "type": "conditional",
+                "test": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "not",
+                      "condition": {
+                        "type": "setting_value",
+                        "setting": "NoPaintingSkips"
+                      }
+                    },
+                    {
+                      "type": "name",
+                      "name": "allow_skip"
+                    }
+                  ]
                 },
-                {
+                "if_true": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "helper",
+                      "name": "get_difficulty"
+                    },
+                    "op": ">=",
+                    "right": {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "if_false": null
+                },
+                "if_false": null
+              },
+              {
+                "type": "item_check",
+                "item": "Progressive Painting Unlock",
+                "count": {
                   "type": "name",
-                  "name": "allow_skip"
+                  "name": "count"
                 }
-              ]
-            },
-            "if_true": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "helper",
-                  "name": "get_difficulty"
-                },
-                "op": ">=",
-                "right": {
-                  "type": "constant",
-                  "value": 0
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": null
-            },
-            "if_false": {
-              "type": "item_check",
-              "item": "Progressive Painting Unlock",
-              "count": {
-                "type": "name",
-                "name": "count"
               }
-            }
+            ]
           }
         },
         "defaults": {

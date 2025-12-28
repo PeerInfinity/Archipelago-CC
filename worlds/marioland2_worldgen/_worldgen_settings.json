@@ -1,33 +1,31 @@
 {
   "settings": {
     "game": "Super Mario Land 2",
-    "assume_bidirectional_exits": false,
-    "use_resolved_items": false,
     "options": {
-      "accessibility": "items",
+      "accessibility": 1,
       "auto_scroll_chances": -1,
-      "auto_scroll_mode": "always",
-      "coinsanity": "false",
+      "auto_scroll_mode": 0,
+      "coinsanity": false,
       "coinsanity_checks": 150,
-      "difficulty_mode": "normal",
-      "energy_link": "true",
+      "difficulty_mode": 0,
+      "energy_link": true,
       "exclude_locations": [],
       "item_links": [],
       "local_items": [],
       "mario_coin_fragment_percentage": 20,
       "mario_coin_fragments_required_percentage": 75,
-      "marios_castle_midway_bell": "false",
+      "marios_castle_midway_bell": false,
       "non_local_items": [],
       "plando_items": [],
       "priority_locations": [],
       "progression_balancing": 50,
-      "randomize_enemies": "false",
-      "randomize_music": "false",
-      "randomize_platforms": "false",
+      "randomize_enemies": false,
+      "randomize_music": false,
+      "randomize_platforms": false,
       "required_golden_coins": 6,
-      "shuffle_golden_coins": "vanilla",
-      "shuffle_midway_bells": "false",
-      "shuffle_pipe_traversal": "off",
+      "shuffle_golden_coins": 0,
+      "shuffle_midway_bells": false,
+      "shuffle_pipe_traversal": 0,
       "start_hints": [],
       "start_inventory": {},
       "start_location_hints": []
@@ -35,8 +33,6 @@
     "world_directory": "marioland2"
   },
   "world_attributes": {
-    "required_golden_coins": 6,
-    "shuffle_midway_bells": 0,
     "auto_scroll_levels": [
       0,
       0,
@@ -71,6 +67,7 @@
       0,
       0
     ],
+    "num_coin_locations": [],
     "sprite_data": {
       "Mushroom Zone": [
         {
@@ -6777,6 +6774,26 @@
           "x": 17,
           "y": 14,
           "misc": 0
+        }
+      ]
+    },
+    "coin_fragments_required": 1,
+    "world_description": "Super Mario Land 2 is a classic platformer that follows Mario on a quest to reclaim his castle from the\nvillainous Wario. This iconic game features 32 levels, unique power-ups, and introduces Wario as Mario's\narch-rival.",
+    "slot_data": {
+      "energy_link": 1
+    },
+    "web": {
+      "theme": "grass",
+      "tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to playing Super Mario Land 2 with Archipelago.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Alchav"
+          ]
         }
       ]
     }

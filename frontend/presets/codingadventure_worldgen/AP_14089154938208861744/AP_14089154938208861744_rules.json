@@ -2303,26 +2303,6 @@
       },
       "shops": [],
       "world_description": "WebDevJourney WorldGen for Archipelago.\n\nAuto-generated world implementation.",
-      "settings": {
-        "game": "WebDevJourney",
-        "assume_bidirectional_exits": false,
-        "use_resolved_items": false,
-        "options": {
-          "accessibility": "full",
-          "exclude_locations": [],
-          "item_links": [],
-          "local_items": [],
-          "non_local_items": [],
-          "plando_items": [],
-          "priority_locations": [],
-          "progression_balancing": 50,
-          "randomize_items": "false",
-          "start_hints": [],
-          "start_inventory": {},
-          "start_location_hints": []
-        },
-        "world_directory": "codingadventure"
-      },
       "web": {
         "theme": "ocean"
       },

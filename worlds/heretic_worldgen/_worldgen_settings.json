@@ -1,31 +1,29 @@
 {
   "settings": {
     "game": "Heretic",
-    "assume_bidirectional_exits": false,
-    "use_resolved_items": false,
     "options": {
-      "accessibility": "full",
+      "accessibility": 0,
       "added_ammo_arrows": 50,
       "added_ammo_claw_orbs": 200,
       "added_ammo_crystals": 100,
       "added_ammo_flame_orbs": 20,
       "added_ammo_runes": 200,
       "added_ammo_spheres": 150,
-      "allow_death_logic": "false",
+      "allow_death_logic": false,
       "bag_of_holding_count": 1,
-      "check_sanity": "false",
-      "death_link": "false",
-      "difficulty": "medium",
-      "episode1": "true",
-      "episode2": "true",
-      "episode3": "true",
-      "episode4": "false",
-      "episode5": "false",
+      "check_sanity": false,
+      "death_link": false,
+      "difficulty": 2,
+      "episode1": true,
+      "episode2": true,
+      "episode3": true,
+      "episode4": false,
+      "episode5": false,
       "exclude_locations": [
         "Ramparts of Perdition (E4M7) - Ethereal Crossbow 2",
         "Ramparts of Perdition (E4M7) - Ring of Invincibility"
       ],
-      "goal": "complete_all_levels",
+      "goal": 0,
       "item_links": [],
       "local_items": [],
       "max_ammo_arrows": 50,
@@ -37,19 +35,79 @@
       "non_local_items": [],
       "plando_items": [],
       "priority_locations": [],
-      "pro": "false",
+      "pro": false,
       "progression_balancing": 50,
-      "random_monsters": "shuffle",
-      "random_music": "vanilla",
-      "random_pickups": "shuffle",
-      "reset_level_on_death": "true",
-      "split_bag_of_holding": "false",
+      "random_monsters": 1,
+      "random_music": 0,
+      "random_pickups": 1,
+      "reset_level_on_death": true,
+      "split_bag_of_holding": false,
       "start_hints": [],
       "start_inventory": {},
       "start_inventory_from_pool": {},
       "start_location_hints": [],
-      "start_with_map_scrolls": "false"
+      "start_with_map_scrolls": false
     },
     "world_directory": "heretic"
+  },
+  "world_attributes": {
+    "included_episodes": [
+      1,
+      1,
+      1,
+      0,
+      0
+    ],
+    "location_count": 475,
+    "starting_levels": [
+      "The Docks (E1M1)",
+      "The Crater (E2M1)",
+      "The Storehouse (E3M1)"
+    ],
+    "world_description": "Heretic is a dark fantasy first-person shooter video game released in December 1994. It was developed by Raven Software.",
+    "slot_data": {
+      "goal": 0,
+      "difficulty": 2,
+      "random_monsters": 1,
+      "random_pickups": 1,
+      "random_music": 0,
+      "allow_death_logic": 0,
+      "pro": 0,
+      "death_link": 0,
+      "reset_level_on_death": 1,
+      "check_sanity": 0,
+      "episode1": 1,
+      "episode2": 1,
+      "episode3": 1,
+      "episode4": 0,
+      "episode5": 0,
+      "ammo1start": 100,
+      "ammo2start": 50,
+      "ammo3start": 200,
+      "ammo4start": 200,
+      "ammo5start": 20,
+      "ammo6start": 150,
+      "ammo1add": 100,
+      "ammo2add": 50,
+      "ammo3add": 200,
+      "ammo4add": 200,
+      "ammo5add": 20,
+      "ammo6add": 150
+    },
+    "web": {
+      "theme": "dirt",
+      "tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Heretic randomizer connected to an Archipelago Multiworld",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Daivuk"
+          ]
+        }
+      ]
+    }
   }
 }

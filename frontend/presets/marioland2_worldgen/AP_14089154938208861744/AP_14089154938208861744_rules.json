@@ -38933,8 +38933,9 @@
       },
       "coin_fragments_required": 1,
       "world_description": "Super Mario Land 2 WorldGen for Archipelago.\n\nAuto-generated world implementation.",
-      "required_golden_coins": 6,
-      "shuffle_midway_bells": 0,
+      "slot_data": {
+        "energy_link": 1
+      },
       "web": {
         "theme": "grass"
       },
