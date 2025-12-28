@@ -17,7 +17,7 @@ from .analyzer import analyze_rule, reset_analyze_rule_counter
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
 from .converter import convert_rules_file_to_rule_builder
-from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB, SAFE_TO_SORT_KEYS
+from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB, SAFE_TO_SORT_KEYS, SAFE_TO_SORT_DICT_KEYS
 from BaseClasses import ItemClassification
 
 logger = logging.getLogger(__name__)
@@ -2011,7 +2011,11 @@ def sort_lists_for_consistency(data, key_name=None):
         return processed
 
     if isinstance(data, dict):
-        return {k: sort_lists_for_consistency(v, key_name=k) for k, v in data.items()}
+        # Sort dict keys if this key is in the whitelist for dict key sorting
+        items = data.items()
+        if key_name in SAFE_TO_SORT_DICT_KEYS:
+            items = sorted(items, key=lambda x: x[0])
+        return {k: sort_lists_for_consistency(v, key_name=k) for k, v in items}
 
     return data
 
@@ -2072,6 +2076,18 @@ def cleanup_export_data(data):
     if 'game_info' in data:
         for player_id, game_info in data['game_info'].items():
             data['game_info'][player_id] = sort_lists_for_consistency(game_info)
+
+    # Sort lists/dicts in world data for consistent output
+    # This handles cases like TWW's item_classification_overrides
+    if 'world' in data:
+        for player_id, world_data in data['world'].items():
+            data['world'][player_id] = sort_lists_for_consistency(world_data)
+
+    # Sort lists in metamath_data for consistent output
+    # This handles cases like dependencies arrays in theorem data
+    if 'metamath_data' in data:
+        for player_id, metamath_data in data['metamath_data'].items():
+            data['metamath_data'][player_id] = sort_lists_for_consistency(metamath_data)
 
     return data
 

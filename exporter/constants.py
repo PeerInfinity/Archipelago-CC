@@ -52,3 +52,12 @@ SAFE_TO_SORT_KEYS = {
     'goal',
     'move_rando_actions',
 }
+
+# Keys where sorting dict keys is safe (key order is not semantically meaningful).
+# These are dicts where the insertion order comes from non-deterministic sources
+# (e.g., set iteration in original world code) but the order has no semantic meaning.
+SAFE_TO_SORT_DICT_KEYS = {
+    'item_classification_overrides',
+    'PARENT_ITEM_COUNT_PER_BASE_ITEM',  # The Witness
+    'PROGRESSIVE_LISTS',  # The Witness
+}

@@ -436,8 +436,8 @@ class KH2GameExportHandler(GenericGameExportHandler):
         if helper_name == 'final_form_region_access':
             try:
                 from worlds.kh2.Logic import final_leveling_access
-                # final_leveling_access is a set of location names
-                locations = list(final_leveling_access)
+                # final_leveling_access is a set of location names - sort for deterministic output
+                locations = sorted(list(final_leveling_access))
                 conditions = [{'type': 'location_check', 'location': {'type': 'constant', 'value': loc}} for loc in locations]
                 if len(conditions) == 1:
                     return conditions[0]
