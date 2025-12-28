@@ -46,7 +46,7 @@ export function wrapState(snapshot, staticData) {
 
     // Get player settings
     const playerId = snapshot?.player?.id || snapshot?.player?.slot || 1;
-    const settings = staticData?.settings?.[playerId] || {};
+    const settings = staticData?.world?.[playerId] ?? staticData?.settings?.[playerId] ?? {};
 
     // Compute power rating
     // In Python: power_rating is base_power_rating + various upgrade bonuses

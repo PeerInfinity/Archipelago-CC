@@ -7776,22 +7776,22 @@
     "1": {
       "game": "Yacht Dice",
       "options": {
-        "accessibility": "full",
-        "add_bonus_points": "sure",
-        "add_story_chapters": "never",
-        "allow_manual_input": "yes_allow",
+        "accessibility": 0,
+        "add_bonus_points": 2,
+        "add_story_chapters": 3,
+        "allow_manual_input": 1,
         "alternative_categories": 0,
         "exclude_locations": [],
-        "game_difficulty": "medium",
+        "game_difficulty": 2,
         "item_links": [],
         "local_items": [],
-        "minimal_number_of_dice_and_rolls": "5_dice_and_3_rolls",
-        "minimize_extra_items": "no_dont",
+        "minimal_number_of_dice_and_rolls": 2,
+        "minimize_extra_items": 1,
         "non_local_items": [],
         "number_of_dice_fragments_per_dice": 4,
         "number_of_roll_fragments_per_roll": 4,
         "plando_items": [],
-        "points_size": "medium",
+        "points_size": 2,
         "priority_locations": [],
         "progression_balancing": 50,
         "score_for_goal": 777,
@@ -7805,7 +7805,7 @@
         "weight_of_points": 20,
         "weight_of_roll": 20,
         "weight_of_step_score_multiplier": 0,
-        "which_story": "random_story"
+        "which_story": -1
       },
       "option_definitions": {
         "accessibility": {

@@ -12057,20 +12057,20 @@
     "1": {
       "game": "Terraria",
       "options": {
-        "accessibility": "full",
-        "calamity": "false",
-        "death_link": "false",
-        "early_achievements": "true",
+        "accessibility": 0,
+        "calamity": false,
+        "death_link": false,
+        "early_achievements": true,
         "exclude_locations": [],
-        "fill_extra_checks_with": "useful_items",
-        "fishing_achievements": "false",
-        "getfixedboi": "false",
-        "goal": "mechanical_bosses",
-        "grindy_achievements": "false",
+        "fill_extra_checks_with": 1,
+        "fishing_achievements": false,
+        "getfixedboi": false,
+        "goal": 0,
+        "grindy_achievements": false,
         "item_links": [],
         "local_items": [],
         "non_local_items": [],
-        "normal_achievements": "true",
+        "normal_achievements": true,
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
@@ -12655,16 +12655,16 @@
         "Skeletron Prime"
       ],
       "ter_goals": {
-        "Post-The Destroyer": "The Destroyer",
+        "Post-The Twins": "The Twins",
         "Post-Skeletron Prime": "Skeletron Prime",
-        "Post-The Twins": "The Twins"
+        "Post-The Destroyer": "The Destroyer"
       },
       "world_description": "Terraria is a 2D multiplayer sandbox game featuring mining, building, exploration, and combat.\nFeatures 18 bosses and 4 classes.",
       "slot_data": {
         "goal": [
-          "The Destroyer",
+          "The Twins",
           "Skeletron Prime",
-          "The Twins"
+          "The Destroyer"
         ],
         "deathlink": false,
         "calamity": 0,

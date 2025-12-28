@@ -144,7 +144,9 @@ export function checkLocation(sm, locationName, addItems = true, forceCheck = fa
             // Most games: only add advancement items (Python's state.count() behavior)
             // Some games (e.g., Super Metroid): need non-advancement items for logic (Missiles open red doors)
             // Check game setting 'count_non_advancement_items' to determine behavior
-            const countNonAdvancement = sm.rules?.settings?.[currentPlayerId]?.count_non_advancement_items ?? false;
+            // Check both 'world' (where game-specific exporters put it) and 'settings' (legacy location)
+            const countNonAdvancement = sm.rules?.world?.[currentPlayerId]?.count_non_advancement_items ??
+                                        sm.rules?.settings?.[currentPlayerId]?.count_non_advancement_items ?? false;
             const shouldAddItem = !sm.spoilerTestMode || location.item.advancement !== false || countNonAdvancement;
 
             if (shouldAddItem) {

@@ -36659,7 +36659,7 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "False_"
+                  "rule": "True_"
                 },
                 {
                   "rule": "True_"
@@ -36723,7 +36723,7 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "False_"
+                  "rule": "True_"
                 },
                 {
                   "rule": "True_"
@@ -36787,7 +36787,7 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "False_"
+                  "rule": "True_"
                 },
                 {
                   "rule": "True_"
@@ -36851,7 +36851,7 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "False_"
+                  "rule": "True_"
                 },
                 {
                   "rule": "True_"
@@ -36915,7 +36915,7 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "False_"
+                  "rule": "True_"
                 },
                 {
                   "rule": "True_"
@@ -36979,7 +36979,7 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "False_"
+                  "rule": "True_"
                 },
                 {
                   "rule": "True_"
@@ -37043,7 +37043,7 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "False_"
+                  "rule": "True_"
                 },
                 {
                   "rule": "True_"
@@ -67425,10 +67425,10 @@
     "1": {
       "game": "Starcraft 2",
       "options": {
-        "accessibility": "full",
-        "all_in_map": "air",
-        "basebust_locations": "enabled",
-        "challenge_locations": "enabled",
+        "accessibility": 0,
+        "all_in_map": 1,
+        "basebust_locations": 0,
+        "challenge_locations": 0,
         "custom_mission_order": {
           "Default Campaign": {
             "display_name": [],
@@ -67651,22 +67651,22 @@
             }
           }
         },
-        "difficulty_curve": "standard",
-        "difficulty_damage_modifier": "true",
-        "disable_forced_camera": "true",
-        "enable_morphling": "false",
-        "enable_race_swap": "disabled",
-        "enable_void_trade": "false",
+        "difficulty_curve": 0,
+        "difficulty_damage_modifier": true,
+        "disable_forced_camera": true,
+        "enable_morphling": false,
+        "enable_race_swap": 0,
+        "enable_void_trade": false,
         "enabled_campaigns": [
           "Wings of Liberty"
         ],
         "ensure_generic_items": 25,
         "exclude_locations": [],
-        "exclude_overpowered_items": "false",
-        "exclude_very_hard_missions": "default",
+        "exclude_overpowered_items": false,
+        "exclude_very_hard_missions": 0,
         "excluded_items": {},
         "excluded_missions": [],
-        "extra_locations": "enabled",
+        "extra_locations": 0,
         "filler_items_distribution": {
           "1 Kerrigan Level": 0,
           "Additional Maximum Supply": 1,
@@ -67680,86 +67680,86 @@
           "Reduced Upgrade Research Cost": 1
         },
         "filler_percentage": 0,
-        "game_difficulty": "normal",
-        "game_speed": "default",
-        "generic_upgrade_items": "individual_items",
+        "game_difficulty": 1,
+        "game_speed": 0,
+        "generic_upgrade_items": 0,
         "generic_upgrade_missions": 0,
-        "generic_upgrade_research": "vanilla",
-        "generic_upgrade_research_speedup": "false",
-        "grant_story_levels": "minimum",
-        "grant_story_tech": "no_grant",
+        "generic_upgrade_research": 0,
+        "generic_upgrade_research_speedup": false,
+        "grant_story_levels": 2,
+        "grant_story_tech": 0,
         "item_links": [],
-        "kerrigan_level_item_distribution": "smooth",
+        "kerrigan_level_item_distribution": 1,
         "kerrigan_level_item_sum": 70,
         "kerrigan_levels_per_mission_completed": 0,
         "kerrigan_levels_per_mission_completed_cap": -1,
         "kerrigan_max_active_abilities": 12,
         "kerrigan_max_passive_abilities": 5,
-        "kerrigan_presence": "vanilla",
-        "kerrigan_primal_status": "vanilla",
+        "kerrigan_presence": 0,
+        "kerrigan_primal_status": 0,
         "kerrigan_total_level_cap": -1,
-        "key_mode": "disabled",
+        "key_mode": 0,
         "local_items": [],
         "locked_items": {},
         "lowest_maximum_supply": 180,
-        "mastery_locations": "enabled",
+        "mastery_locations": 0,
         "max_number_of_upgrades": -1,
         "max_upgrade_level": 3,
         "maximum_campaign_size": 83,
         "maximum_supply_per_item": 1,
         "maximum_supply_reduction_per_item": 1,
-        "mercenary_highlanders": "true",
+        "mercenary_highlanders": true,
         "min_number_of_upgrades": 2,
         "minerals_per_item": 25,
-        "mission_order": "golden_path",
-        "mission_order_scouting": "none",
-        "mission_race_balancing": "semi_balanced",
+        "mission_order": 10,
+        "mission_order_scouting": 0,
+        "mission_race_balancing": 1,
         "non_local_items": [],
-        "nova_ghost_of_a_chance_variant": "wol",
+        "nova_ghost_of_a_chance_variant": 0,
         "nova_max_gadgets": 5,
         "nova_max_weapons": 5,
         "plando_items": [],
-        "player_color_nova": "default",
-        "player_color_protoss": "default",
-        "player_color_terran_raynor": "default",
-        "player_color_zerg": "default",
-        "player_color_zerg_primal": "default",
-        "preventative_locations": "enabled",
+        "player_color_nova": 22,
+        "player_color_protoss": 22,
+        "player_color_terran_raynor": 22,
+        "player_color_zerg": 22,
+        "player_color_zerg_primal": 22,
+        "preventative_locations": 0,
         "priority_locations": [],
         "progression_balancing": 50,
-        "required_tactics": "standard",
+        "required_tactics": 0,
         "research_cost_reduction_per_item": 2,
         "selected_races": [
           "Protoss",
           "Terran",
           "Zerg"
         ],
-        "shuffle_campaigns": "true",
-        "shuffle_no_build": "true",
-        "skip_cutscenes": "false",
+        "shuffle_campaigns": true,
+        "shuffle_no_build": true,
+        "skip_cutscenes": false,
         "spear_of_adun_max_active_abilities": 13,
         "spear_of_adun_max_passive_abilities": 3,
-        "spear_of_adun_passive_ability_presence": "vanilla",
-        "spear_of_adun_passive_present_in_no_build": "false",
-        "spear_of_adun_presence": "vanilla",
-        "spear_of_adun_present_in_no_build": "false",
-        "speedrun_locations": "enabled",
+        "spear_of_adun_passive_ability_presence": 4,
+        "spear_of_adun_passive_present_in_no_build": false,
+        "spear_of_adun_presence": 4,
+        "spear_of_adun_present_in_no_build": false,
+        "speedrun_locations": 0,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
         "start_primary_abilities": 0,
-        "starter_unit": "off",
+        "starter_unit": 0,
         "starting_supply_per_item": 2,
-        "take_over_ai_allies": "false",
-        "two_start_positions": "false",
+        "take_over_ai_allies": false,
+        "two_start_positions": false,
         "unexcluded_items": {},
-        "vanilla_items_only": "false",
-        "vanilla_locations": "enabled",
+        "vanilla_items_only": false,
+        "vanilla_locations": 0,
         "vespene_per_item": 25,
         "victory_cache": 0,
-        "void_trade_age_limit": "30_minutes",
-        "void_trade_workers": "false",
-        "war_council_nerfs": "false"
+        "void_trade_age_limit": 6,
+        "void_trade_workers": false,
+        "war_council_nerfs": false
       },
       "option_definitions": {
         "accessibility": {

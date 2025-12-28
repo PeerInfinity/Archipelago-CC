@@ -1,6 +1,7 @@
 """Aquaria game-specific export handler."""
 
 from typing import Dict, Any
+from BaseClasses import Region
 from .generic import GenericGameExportHandler
 import logging
 
@@ -49,6 +50,10 @@ class AquariaGameExportHandler(GenericGameExportHandler):
         for attr_name in missing_region_attrs:
             if hasattr(world.regions, attr_name):
                 region = getattr(world.regions, attr_name)
+                # Skip if region is not a Region object (e.g., in worldgen worlds where
+                # regions are stored as strings rather than Region objects)
+                if not isinstance(region, Region):
+                    continue
                 if region and region not in multiworld.regions:
                     # Special case: sunken_city_l_crates has duplicate name with sunken_city_l
                     # Rename it to avoid collision

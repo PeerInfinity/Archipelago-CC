@@ -304,7 +304,7 @@ export const helperFunctions = {
 
     // Default difficulty adjustment (assume normal difficulty = 1)
     // Without difficulty setting, use normal: bossStrength + 0 (no adjustment)
-    const difficulty = staticData?.settings?.[snapshot.player]?.difficulty ?? 1;
+    const difficulty = (staticData?.world?.[snapshot.player] ?? staticData?.settings?.[snapshot.player])?.difficulty ?? 1;
     const adjustment = difficulty >= 2 ? -0.10 : (difficulty >= 1 ? 0 : 0.10);
 
     if (!bossName) {
@@ -661,7 +661,7 @@ export const helperFunctions = {
    * Requires Dawn Heart + Dash + difficulty >= 1
    */
   can_dawn_jump(snapshot, staticData) {
-    const difficulty = staticData?.settings?.[snapshot.player]?.difficulty ?? 1;
+    const difficulty = (staticData?.world?.[snapshot.player] ?? staticData?.settings?.[snapshot.player])?.difficulty ?? 1;
     return (
       this.dawn_heart(snapshot, staticData) &&
       this.dash(snapshot, staticData) &&
@@ -681,7 +681,7 @@ export const helperFunctions = {
    * Requires ranged > 0 + difficulty >= 1
    */
   can_air_stall(snapshot, staticData) {
-    const difficulty = staticData?.settings?.[snapshot.player]?.difficulty ?? 1;
+    const difficulty = (staticData?.world?.[snapshot.player] ?? staticData?.settings?.[snapshot.player])?.difficulty ?? 1;
     return (
       this.ranged(snapshot, staticData) > 0 &&
       difficulty >= 1
@@ -771,8 +771,8 @@ export const helperFunctions = {
    * Check if enemy skips are allowed
    */
   enemy_skips_allowed(snapshot, staticData) {
-    const difficulty = staticData?.settings?.[snapshot.player]?.difficulty ?? 1;
-    const enemyRandomizer = staticData?.settings?.[snapshot.player]?.enemy_randomizer ?? false;
+    const difficulty = (staticData?.world?.[snapshot.player] ?? staticData?.settings?.[snapshot.player])?.difficulty ?? 1;
+    const enemyRandomizer = (staticData?.world?.[snapshot.player] ?? staticData?.settings?.[snapshot.player])?.enemy_randomizer ?? false;
     return difficulty >= 2 && !enemyRandomizer;
   },
 
@@ -1114,8 +1114,8 @@ export const helperFunctions = {
    * Requires difficulty >= 2 and enemy_randomizer is false
    */
   enemy_skips_allowed(snapshot, staticData) {
-    const difficulty = staticData?.settings?.[snapshot.player]?.difficulty ?? 1;
-    const enemyRandomizer = staticData?.settings?.[snapshot.player]?.enemy_randomizer ?? false;
+    const difficulty = (staticData?.world?.[snapshot.player] ?? staticData?.settings?.[snapshot.player])?.difficulty ?? 1;
+    const enemyRandomizer = (staticData?.world?.[snapshot.player] ?? staticData?.settings?.[snapshot.player])?.enemy_randomizer ?? false;
     return difficulty >= 2 && !enemyRandomizer;
   },
 
@@ -1131,7 +1131,7 @@ export const helperFunctions = {
    * Requires difficulty >= 2
    */
   obscure_skips_allowed(snapshot, staticData) {
-    const difficulty = staticData?.settings?.[snapshot.player]?.difficulty ?? 1;
+    const difficulty = (staticData?.world?.[snapshot.player] ?? staticData?.settings?.[snapshot.player])?.difficulty ?? 1;
     return difficulty >= 2;
   },
 
@@ -1147,7 +1147,7 @@ export const helperFunctions = {
    * Requires difficulty >= 2
    */
   precise_skips_allowed(snapshot, staticData) {
-    const difficulty = staticData?.settings?.[snapshot.player]?.difficulty ?? 1;
+    const difficulty = (staticData?.world?.[snapshot.player] ?? staticData?.settings?.[snapshot.player])?.difficulty ?? 1;
     return difficulty >= 2;
   },
 

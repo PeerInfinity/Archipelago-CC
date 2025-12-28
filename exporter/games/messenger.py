@@ -168,16 +168,16 @@ class MessengerGameExportHandler(GenericGameExportHandler):
         # Recursive expansion of children is handled by super().expand_rule()
         return rule
 
-    def get_settings_data(self, world, multiworld, player):
-        """Extract Messenger-specific settings."""
-        settings = super().get_settings_data(world, multiworld, player)
+    def get_world_data(self, world, multiworld, player):
+        """Extract Messenger-specific world data."""
+        world_data = super().get_world_data(world, multiworld, player)
 
         # Enable Pattern 4 accumulator for "Time Shard (N)" items -> "Shards" counter
         # This allows the world generator to create collect/remove methods that
         # properly track Shards currency from Time Shard items
-        settings['use_paren_number_accumulator'] = True
+        world_data['use_paren_number_accumulator'] = True
 
-        return settings
+        return world_data
 
     def get_progression_mapping(self, world) -> Dict[str, Any]:
         """

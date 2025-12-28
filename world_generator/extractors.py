@@ -260,7 +260,14 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
             resolved_settings[k] = v
 
     # Extract option definitions (type, range, choices, etc.)
+    # Check both settings and world_data since different exporters store them in different places
     option_definitions = settings.get('option_definitions', {})
+    world_option_definitions = world_data.get('option_definitions', {})
+    if world_option_definitions and not option_definitions:
+        option_definitions = world_option_definitions
+    elif world_option_definitions:
+        # Merge: world_data takes precedence
+        option_definitions = {**option_definitions, **world_option_definitions}
 
     return GameMetadata(
         game_name=game_name,
@@ -904,9 +911,14 @@ def extract_world_attributes(json_data: Dict[str, Any]) -> Dict[str, Any]:
     if new_world_attrs:
         world_attributes.update(new_world_attrs)
 
-    # Always ensure 'shops' exists as an empty list for games with shop-related helpers
-    # This prevents AttributeError when iterating over world.shops
-    if 'shops' not in world_attributes:
+    # Extract shops data from world.1.shops for games with shop-related helpers
+    # This is needed for cross-validation where can_buy/can_buy_unlimited helpers
+    # iterate over shops to check item availability
+    world_data = json_data.get('world', {}).get('1', {})
+    if 'shops' in world_data and world_data['shops']:
+        world_attributes['shops'] = world_data['shops']
+    elif 'shops' not in world_attributes:
+        # Ensure 'shops' exists as an empty list to prevent AttributeError
         world_attributes['shops'] = []
 
     if not new_world_attrs:
@@ -933,6 +945,7 @@ def extract_world_attributes(json_data: Dict[str, Any]) -> Dict[str, Any]:
             'assume_bidirectional_exits',
             'use_resolved_items',
             'use_auto_indirect_conditions',
+            'player_name',  # Read-only property on base World class
         }
 
         for key, value in settings.items():
