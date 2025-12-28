@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2025-12-28 03:02:10
+**Generated:** 2025-12-28 03:08:22
 
 [View Original Template Results](./test-results-summary.md)
 
