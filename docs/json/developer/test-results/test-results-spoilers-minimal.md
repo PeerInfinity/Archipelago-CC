@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-28 05:56:44
+**Generated:** 2025-12-28 06:06:28
 
 **Source Data Created:** 2025-12-28T05:56:43.305790
 
