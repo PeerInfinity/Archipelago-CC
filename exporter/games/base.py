@@ -47,6 +47,12 @@ class BaseGameExportHandler:
     # The exporter will look for classes like ITEMS with attributes that map to item names
     ITEM_NAME_MODULES: List[str] = []
 
+    # Module-level variables to inject into closure_vars for helper analysis.
+    # Maps module path -> list of variable names to import.
+    # Used by prepare_closure_vars() to make module constants available during rule analysis.
+    # Example: {'worlds.mm2.rules': ['robot_masters', 'weapons_to_name']}
+    CLOSURE_VAR_IMPORTS: Dict[str, List[str]] = {}
+
     # Whether to automatically export discovered helpers as definitions
     # When False (default), only whitelisted helpers are exported
     # When True, discovered helpers are exported (minus blacklist)
@@ -93,6 +99,11 @@ class BaseGameExportHandler:
 
     # Settings class attributes that control export behavior
     # These are applied in get_settings_data and can be overridden in subclasses
+
+    # When True, method calls on 'self' or 'world' (e.g., self.quest_points(), world.quest_points())
+    # are automatically converted to helper function calls in expand_rule.
+    # This is useful for games that define methods on the World class that are used in rules.
+    CONVERT_WORLD_METHODS_TO_HELPERS: bool = True
 
     # When True, eventProcessor uses resolved_items from sphere log instead of base_items
     # Use for games with complex event items or computed tracking items
@@ -192,6 +203,38 @@ class BaseGameExportHandler:
                 self._discovered_helper_modules[helper_name] = module_name
                 logger.debug(f"Auto-detected module for helper '{helper_name}': {module_name}")
 
+    def register_helpers_from_rule(self, rule: Dict[str, Any]) -> None:
+        """
+        Recursively register all helpers referenced in a rule structure.
+
+        This is useful for games that construct rule structures manually
+        (e.g., from JSON data or hardcoded dictionaries) and need to ensure
+        all referenced helpers are discovered for export.
+
+        Walks through the rule tree and calls register_helper_usage() for
+        any helper nodes found.
+
+        Args:
+            rule: The rule dictionary to scan for helper references
+        """
+        if rule is None or not isinstance(rule, dict):
+            return
+
+        rule_type = rule.get('type')
+        if rule_type == 'helper':
+            helper_name = rule.get('name')
+            if helper_name:
+                self.register_helper_usage(helper_name)
+        elif rule_type in ('and', 'or'):
+            for condition in rule.get('conditions', []):
+                self.register_helpers_from_rule(condition)
+        elif rule_type == 'not':
+            self.register_helpers_from_rule(rule.get('condition'))
+        elif rule_type == 'conditional':
+            self.register_helpers_from_rule(rule.get('test'))
+            self.register_helpers_from_rule(rule.get('if_true'))
+            self.register_helpers_from_rule(rule.get('if_false'))
+
     def get_discovered_helpers(self) -> Set[str]:
         """
         Return the set of helper names discovered during rule analysis.
@@ -278,6 +321,42 @@ class BaseGameExportHandler:
         if not hasattr(self, '_analyzed_helper_cache'):
             self._analyzed_helper_cache = {}
         return self._analyzed_helper_cache.get(helper_name)
+
+    def prepare_closure_vars(self, rule_func: Callable, closure_vars: Dict[str, Any]) -> Dict[str, Any]:
+        """Inject module-level variables into closure_vars for helper analysis.
+
+        This default implementation uses CLOSURE_VAR_IMPORTS to automatically
+        inject module-level constants that are needed during rule analysis.
+
+        Games can override this method for more complex injection logic, such as
+        processing Region objects or handling dynamic module discovery.
+
+        Args:
+            rule_func: The rule function being analyzed (unused in base implementation)
+            closure_vars: The existing closure variables dict
+
+        Returns:
+            Enhanced closure_vars dict with injected module-level variables
+        """
+        if not self.CLOSURE_VAR_IMPORTS:
+            return closure_vars
+
+        enhanced_closure = closure_vars.copy()
+
+        for module_path, var_names in self.CLOSURE_VAR_IMPORTS.items():
+            try:
+                module = importlib.import_module(module_path)
+                for var_name in var_names:
+                    if var_name not in enhanced_closure:
+                        if hasattr(module, var_name):
+                            enhanced_closure[var_name] = getattr(module, var_name)
+                            logger.debug(f"Injected {var_name} from {module_path} into closure_vars")
+                        else:
+                            logger.warning(f"Variable {var_name} not found in module {module_path}")
+            except ImportError as e:
+                logger.warning(f"Could not import module {module_path} for closure injection: {e}")
+
+        return enhanced_closure
 
     @staticmethod
     def count_rule_nodes(rule: Dict[str, Any]) -> int:
@@ -441,6 +520,37 @@ class BaseGameExportHandler:
             rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)
             rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)
             rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)
+
+        # Handle compare operations (expand left/right recursively)
+        elif rule_type == 'compare':
+            if 'left' in rule:
+                rule['left'] = self.expand_rule(rule['left'], _depth + 1)
+            if 'right' in rule:
+                rule['right'] = self.expand_rule(rule['right'], _depth + 1)
+
+        # Handle state_method (expand args recursively)
+        elif rule_type == 'state_method':
+            if 'args' in rule:
+                rule['args'] = [
+                    self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) else arg
+                    for arg in rule.get('args', [])
+                ]
+
+        # Handle function_call - convert self.method() or world.method() to helper calls
+        # This allows games to define methods on the World class that are used as rules
+        elif rule_type == 'function_call' and self.CONVERT_WORLD_METHODS_TO_HELPERS:
+            function = rule.get('function', {})
+            if function.get('type') == 'attribute':
+                obj = function.get('object', {})
+                method_name = function.get('attr')
+                # Check if the object is 'self' or 'world' (both refer to the World instance)
+                if obj.get('type') == 'name' and obj.get('name') in ['self', 'world']:
+                    logger.debug(f"Converting {obj.get('name')}.{method_name}() to helper function")
+                    return {
+                        'type': 'helper',
+                        'name': method_name,
+                        'args': []
+                    }
 
         return rule
         
