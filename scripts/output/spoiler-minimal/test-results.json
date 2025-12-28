@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-28T02:52:32.428951",
-    "last_updated": "2025-12-28T02:52:32.428957",
+    "last_updated": "2025-12-28T05:00:48.557825",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1901,27 +1901,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "598e7ffffcd6d76c911686e2f7ebc931b939dddacbbb06812742a0f3011b05af",
-          "new_sphere_log_hash": "bc5f4424e79806863c230f950e800c62a489a7a5669c8932bfdfbd125b1c5090",
-          "original_rules_hash": "598e7ffffcd6d76c911686e2f7ebc931b939dddacbbb06812742a0f3011b05af",
-          "original_sphere_log_hash": "bc5f4424e79806863c230f950e800c62a489a7a5669c8932bfdfbd125b1c5090",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-28T02:51:44.941601"
-        }
-      },
       "game_name_from_filename": "links_awakening_dx",
       "game_name_from_yaml": "Links Awakening DX",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 7.97,
+        "processing_time_seconds": 11.25,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/ladx/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -1933,7 +1921,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 16.78,
+        "processing_time_seconds": 21.84,
         "return_code": 0,
         "sphere_reached": 15.1,
         "success": true,
@@ -1941,10 +1929,10 @@
         "warning_count": 0
       },
       "template_filename": "Links Awakening DX.yaml",
-      "timestamp": "2025-12-28T02:49:09.160351",
+      "timestamp": "2025-12-28T05:00:15.047823",
       "world_info": {
         "exporter_path": "exporter/games/ladx.py",
-        "exporter_size": 18500,
+        "exporter_size": 13788,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "links_awakening_dx",
