@@ -4818,6 +4818,20 @@ class HelperCodeGenerator:
                 # Use _expr_constant to convert the value to Python code
                 return self._expr_constant({'type': 'constant', 'value': value})
 
+        # Special case: when accessing world.xxx.yyy where xxx is a known world attribute
+        # that contains a dict/object (e.g., world.difficulty_requirements.progressive_bottle_limit).
+        # Instead of generating invalid code like {dict}.yyy, we look up the nested value directly.
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'attribute':
+            inner_obj = obj_expr.get('object', {})
+            inner_attr = obj_expr.get('attr', '')
+            if isinstance(inner_obj, dict) and inner_obj.get('type') == 'name' and inner_obj.get('name') == 'world':
+                if inner_attr in self.settings:
+                    inner_value = self.settings[inner_attr]
+                    if isinstance(inner_value, dict) and attr in inner_value:
+                        # Access the nested attribute directly
+                        nested_value = inner_value[attr]
+                        return self._expr_constant({'type': 'constant', 'value': nested_value})
+
         obj = self._generate_expression(obj_expr)
         return f"{obj}.{attr}"
 
