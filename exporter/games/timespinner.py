@@ -11,17 +11,21 @@ class TimespinnerGameExportHandler(GenericGameExportHandler):
     All helpers are automatically exported and evaluated by the frontend.
     """
 
-
     # Module containing helper functions
     HELPER_MODULES = ['worlds.timespinner.LogicExtensions']
 
-    def replace_name(self, name: str) -> str:
-        """Replace variable names with their world equivalents."""
-        # 'flooded' is a local variable that references precalculated_weights
-        if name == 'flooded':
-            return 'precalculated_weights'
-        # Keep 'self' as-is so frontend can resolve self.flag_* to settings
-        return name
+    # Map 'flooded' local variable to 'precalculated_weights' world attribute
+    # This is used in helper functions where 'flooded' references precalculated_weights
+    NAME_REMAPPING = {'flooded': 'precalculated_weights'}
+
+    def _is_common_helper_pattern(self, helper_name: str) -> bool:
+        """Override to prevent GenericGameExportHandler from expanding helpers.
+
+        Timespinner has exported helper definitions from HELPER_MODULES that should
+        be preserved as-is. The base class's pattern matching would incorrectly
+        expand has_*, can_* patterns into simple item checks.
+        """
+        return False
 
     def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Export Timespinner-specific settings including option flags and warp unlocks."""
@@ -53,46 +57,3 @@ class TimespinnerGameExportHandler(GenericGameExportHandler):
             settings_dict['time_keys_unlock'] = getattr(weights, 'time_key_unlock', None)
 
         return settings_dict
-
-    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
-        """Expand Timespinner-specific rules with variable name replacements."""
-        if not rule:
-            return rule
-
-        # Handle name nodes - replace special variable names
-        if rule.get('type') == 'name':
-            original_name = rule.get('name')
-            if original_name:
-                new_name = self.replace_name(original_name)
-                if new_name != original_name:
-                    rule['name'] = new_name
-
-        # Handle attribute nodes - replace names in object references
-        if rule.get('type') == 'attribute':
-            obj = rule.get('object')
-            if isinstance(obj, dict) and obj.get('type') == 'name':
-                original_name = obj.get('name')
-                if original_name:
-                    new_name = self.replace_name(original_name)
-                    if new_name != original_name:
-                        obj['name'] = new_name
-
-        # Recursively process helper arguments
-        if rule.get('type') == 'helper':
-            args = rule.get('args', [])
-            if args:
-                rule['args'] = [self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) else arg for arg in args]
-            return rule
-
-        # Recursively check nested conditions
-        if rule.get('type') in ['and', 'or']:
-            rule['conditions'] = [
-                self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', []) if cond
-            ]
-
-        if rule.get('type') == 'not':
-            cond = rule.get('condition')
-            if cond:
-                rule['condition'] = self.expand_rule(cond, _depth + 1)
-
-        return rule
