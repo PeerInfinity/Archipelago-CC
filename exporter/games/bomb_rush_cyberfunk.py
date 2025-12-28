@@ -8,7 +8,7 @@ class BombRushCyberfunkGameExportHandler(GenericGameExportHandler):
     """Export handler for Bomb Rush Cyberfunk."""
 
     # Complex helpers that use loops/globals() and need JavaScript implementations
-    # These are excluded from auto-export and preserved as helper calls
+    # These are excluded from auto-export and automatically preserved as helper calls
     # JS implementations: frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/
     HELPERS_TO_EXPORT_BLACKLIST: Set[str] = {
         'graffiti_spots',
@@ -22,9 +22,6 @@ class BombRushCyberfunkGameExportHandler(GenericGameExportHandler):
         'spots_xl_glitchless',
         'spots_xl_glitched',
     }
-
-    # Same helpers need to be preserved as calls (not inlined)
-    HELPERS_TO_PRESERVE = HELPERS_TO_EXPORT_BLACKLIST
 
     def get_progression_mapping(self, world) -> Dict[str, Any]:
         """Return progression mapping for REP items.

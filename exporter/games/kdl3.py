@@ -20,10 +20,8 @@ class KDL3GameExportHandler(GenericGameExportHandler):
     HELPER_MODULES = ['worlds.kdl3.rules']
 
     # Blacklist helpers that have loops or complex logic (don't export as definitions)
+    # Blacklisted helpers are automatically preserved as helper calls
     HELPERS_TO_EXPORT_BLACKLIST = {'can_assemble_rob', 'can_fix_angel_wings'}
-
-    # Preserve these helpers as helper calls (don't inline them - use JavaScript instead)
-    HELPERS_TO_PRESERVE = {'can_assemble_rob', 'can_fix_angel_wings'}
 
     # Map parameter names used in inlined functions to actual setting names
     NAME_REMAPPING = {
