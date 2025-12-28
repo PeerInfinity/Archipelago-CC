@@ -1664,7 +1664,16 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                 # Size check every 10 regions to catch runaway data growth
                 if region_count % 10 == 0:
                     try:
-                        current_size = len(json.dumps(regions_data, default=str))
+                        # Use a custom encoder that handles non-string dict keys
+                        # by converting them to string representations
+                        def stringify_keys(obj):
+                            if isinstance(obj, dict):
+                                return {str(k): stringify_keys(v) for k, v in obj.items()}
+                            elif isinstance(obj, list):
+                                return [stringify_keys(item) for item in obj]
+                            return obj
+                        serializable_data = stringify_keys(regions_data)
+                        current_size = len(json.dumps(serializable_data, default=str))
                         current_size_mb = current_size / (1024 * 1024)
                         if current_size_mb > MAX_EXPORT_SIZE_MB:
                             error_msg = (f"Export data size ({current_size_mb:.1f} MB) exceeded limit "
@@ -1672,7 +1681,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                         f"This likely indicates a rule analysis loop. Aborting export.")
                             logger.error(error_msg)
                             raise RuntimeError(error_msg)
-                    except (TypeError, ValueError) as e:
+                    except (TypeError, ValueError, RecursionError) as e:
                         # If serialization fails, just log and continue
                         logger.warning(f"Could not check export size: {e}")
 

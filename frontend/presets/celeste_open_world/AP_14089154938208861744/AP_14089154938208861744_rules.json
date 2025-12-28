@@ -1896,21 +1896,13 @@
             "name": "1a_7zb_east -> 1a_7zb_west",
             "connected_region": "1a_7zb_west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Springs"
+                ]
+              }
             }
           },
           {
@@ -3445,21 +3437,13 @@
             "name": "1a_11_south-east -> 1a_11_north",
             "connected_region": "1a_11_north",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Traffic Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Springs",
+                  "Traffic Blocks"
+                ]
+              }
             }
           },
           {
@@ -3639,21 +3623,13 @@
             "name": "Forsaken City A - Cassette",
             "id": 211886080,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Cassette Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pink Cassette Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Cassette Blocks",
+                  "Pink Cassette Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Strawberry",
@@ -5205,27 +5181,14 @@
             "name": "Old Site A - Cassette",
             "id": 211886081,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Cassette Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dream Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pink Cassette Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Cassette Blocks",
+                  "Dream Blocks",
+                  "Pink Cassette Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -5279,21 +5242,13 @@
             "name": "Old Site A - Room d1 Strawberry",
             "id": 211877913,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dream Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Strawberry Seeds"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dream Blocks",
+                  "Strawberry Seeds"
+                ]
+              }
             },
             "item": {
               "name": "Swap Blocks",
@@ -5495,21 +5450,13 @@
             "name": "Old Site A - Room d4 Strawberry",
             "id": 211877915,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dream Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Traffic Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dream Blocks",
+                  "Traffic Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Strawberry",
@@ -5923,21 +5870,13 @@
             "name": "2a_6_bottom -> 2a_6_top",
             "connected_region": "2a_6_top",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dream Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Dream Blocks"
+                ]
+              }
             }
           },
           {
@@ -5992,21 +5931,13 @@
             "name": "2a_7_bottom -> 2a_7_top",
             "connected_region": "2a_7_top",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dream Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Dream Blocks"
+                ]
+              }
             }
           },
           {
@@ -6367,27 +6298,14 @@
             "name": "2a_10_top -> 2a_10_bottom",
             "connected_region": "2a_10_bottom",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dream Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Dash Refills",
+                  "Dream Blocks"
+                ]
+              }
             }
           },
           {
@@ -8374,21 +8292,59 @@
             "name": "3a_02-a_west -> 3a_02-a_main",
             "connected_region": "3a_02-a_main",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
+              "rule": "AST_block",
+              "args": {
+                "statements": [
+                  {
+                    "type": "for_iter",
+                    "iterable": {
+                      "type": "constant",
+                      "value": [
+                        [
+                          "Sinking Platforms"
+                        ],
+                        [
+                          "Dash Refills"
+                        ]
+                      ]
+                    },
+                    "body": [
+                      {
+                        "type": "if_statement",
+                        "test": {
+                          "type": "state_method",
+                          "method": "has_all",
+                          "args": [
+                            {
+                              "type": "name",
+                              "name": "sublist"
+                            }
+                          ]
+                        },
+                        "body": [
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "constant",
+                              "value": true
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "var": "sublist"
+                  },
+                  {
+                    "type": "return",
+                    "value": {
+                      "type": "constant",
+                      "value": false
+                    }
                   }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sinking Platforms"
-                  }
-                }
-              ]
+                ],
+                "_original_ast_type": "block"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -9218,21 +9174,13 @@
             "name": "3a_05-a_west -> 3a_05-a_east",
             "connected_region": "3a_05-a_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moving Platforms"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Moving Platforms"
+                ]
+              }
             }
           },
           {
@@ -9259,21 +9207,13 @@
             "name": "3a_05-a_east -> 3a_05-a_west",
             "connected_region": "3a_05-a_west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moving Platforms"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Moving Platforms"
+                ]
+              }
             }
           },
           {
@@ -9372,21 +9312,13 @@
             "name": "3a_07-a_west -> 3a_07-a_east",
             "connected_region": "3a_07-a_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Celestial Resort A - Hallway Key 2"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Celestial Resort A - Hallway Key 2",
+                  "Dash Refills"
+                ]
+              }
             }
           },
           {
@@ -9447,21 +9379,13 @@
             "name": "3a_07-a_east -> 3a_07-a_west",
             "connected_region": "3a_07-a_west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Celestial Resort A - Hallway Key 2"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Celestial Resort A - Hallway Key 2",
+                  "Dash Refills"
+                ]
+              }
             }
           },
           {
@@ -9878,27 +9802,14 @@
             "name": "3a_08-c_west -> 3a_08-c_east",
             "connected_region": "3a_08-c_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moving Platforms"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Moving Platforms",
+                  "Springs"
+                ]
+              }
             }
           },
           {
@@ -9970,21 +9881,13 @@
             "name": "3a_08-b_east -> 3a_08-b_west",
             "connected_region": "3a_08-b_west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sinking Platforms"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Sinking Platforms"
+                ]
+              }
             }
           },
           {
@@ -10038,27 +9941,62 @@
             "name": "3a_08-a_west -> 3a_08-a_bottom",
             "connected_region": "3a_08-a_bottom",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Celestial Resort A - Brown Clutter"
+              "rule": "AST_block",
+              "args": {
+                "statements": [
+                  {
+                    "type": "for_iter",
+                    "iterable": {
+                      "type": "constant",
+                      "value": [
+                        [
+                          "Celestial Resort A - Brown Clutter"
+                        ],
+                        [
+                          "Celestial Resort A - Green Clutter"
+                        ],
+                        [
+                          "Celestial Resort A - Pink Clutter"
+                        ]
+                      ]
+                    },
+                    "body": [
+                      {
+                        "type": "if_statement",
+                        "test": {
+                          "type": "state_method",
+                          "method": "has_all",
+                          "args": [
+                            {
+                              "type": "name",
+                              "name": "sublist"
+                            }
+                          ]
+                        },
+                        "body": [
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "constant",
+                              "value": true
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "var": "sublist"
+                  },
+                  {
+                    "type": "return",
+                    "value": {
+                      "type": "constant",
+                      "value": false
+                    }
                   }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Celestial Resort A - Green Clutter"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Celestial Resort A - Pink Clutter"
-                  }
-                }
-              ]
+                ],
+                "_original_ast_type": "block"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -10204,27 +10142,62 @@
             "name": "3a_09-b_center -> 3a_09-b_south-west",
             "connected_region": "3a_09-b_south-west",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Celestial Resort A - Brown Clutter"
+              "rule": "AST_block",
+              "args": {
+                "statements": [
+                  {
+                    "type": "for_iter",
+                    "iterable": {
+                      "type": "constant",
+                      "value": [
+                        [
+                          "Celestial Resort A - Brown Clutter"
+                        ],
+                        [
+                          "Celestial Resort A - Green Clutter"
+                        ],
+                        [
+                          "Celestial Resort A - Pink Clutter"
+                        ]
+                      ]
+                    },
+                    "body": [
+                      {
+                        "type": "if_statement",
+                        "test": {
+                          "type": "state_method",
+                          "method": "has_all",
+                          "args": [
+                            {
+                              "type": "name",
+                              "name": "sublist"
+                            }
+                          ]
+                        },
+                        "body": [
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "constant",
+                              "value": true
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "var": "sublist"
+                  },
+                  {
+                    "type": "return",
+                    "value": {
+                      "type": "constant",
+                      "value": false
+                    }
                   }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Celestial Resort A - Green Clutter"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Celestial Resort A - Pink Clutter"
-                  }
-                }
-              ]
+                ],
+                "_original_ast_type": "block"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -10282,27 +10255,14 @@
             "name": "Celestial Resort A - Huge Mess Key",
             "id": 211902467,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Celestial Resort A - Brown Clutter"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Celestial Resort A - Green Clutter"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Celestial Resort A - Pink Clutter"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Celestial Resort A - Brown Clutter",
+                  "Celestial Resort A - Green Clutter",
+                  "Celestial Resort A - Pink Clutter"
+                ]
+              }
             },
             "item": {
               "name": "Celestial Resort A - Huge Mess Key",
@@ -10321,27 +10281,62 @@
             "name": "3a_09-b_south-west -> 3a_09-b_center",
             "connected_region": "3a_09-b_center",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Celestial Resort A - Brown Clutter"
+              "rule": "AST_block",
+              "args": {
+                "statements": [
+                  {
+                    "type": "for_iter",
+                    "iterable": {
+                      "type": "constant",
+                      "value": [
+                        [
+                          "Celestial Resort A - Brown Clutter"
+                        ],
+                        [
+                          "Celestial Resort A - Green Clutter"
+                        ],
+                        [
+                          "Celestial Resort A - Pink Clutter"
+                        ]
+                      ]
+                    },
+                    "body": [
+                      {
+                        "type": "if_statement",
+                        "test": {
+                          "type": "state_method",
+                          "method": "has_all",
+                          "args": [
+                            {
+                              "type": "name",
+                              "name": "sublist"
+                            }
+                          ]
+                        },
+                        "body": [
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "constant",
+                              "value": true
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "var": "sublist"
+                  },
+                  {
+                    "type": "return",
+                    "value": {
+                      "type": "constant",
+                      "value": false
+                    }
                   }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Celestial Resort A - Green Clutter"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Celestial Resort A - Pink Clutter"
-                  }
-                }
-              ]
+                ],
+                "_original_ast_type": "block"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -12338,21 +12333,13 @@
             "name": "3a_08-d_east -> 3a_08-d_west",
             "connected_region": "3a_08-d_west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Dash Refills"
+                ]
+              }
             }
           },
           {
@@ -12959,21 +12946,13 @@
             "name": "Celestial Resort A - Cassette",
             "id": 211886082,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Cassette Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pink Cassette Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Cassette Blocks",
+                  "Pink Cassette Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -13295,27 +13274,14 @@
             "name": "3a_roof03_west -> 3a_roof03_east",
             "connected_region": "3a_roof03_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Dash Refills",
+                  "Springs"
+                ]
+              }
             }
           },
           {
@@ -14073,21 +14039,13 @@
             "name": "4a_a-04_west -> 4a_a-04_east",
             "connected_region": "4a_a-04_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Clouds"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pink Clouds"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Clouds",
+                  "Pink Clouds"
+                ]
+              }
             }
           },
           {
@@ -14306,21 +14264,13 @@
             "name": "4a_a-07_west -> 4a_a-07_east",
             "connected_region": "4a_a-07_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Coins"
+                ]
+              }
             }
           },
           {
@@ -14387,21 +14337,13 @@
             "name": "4a_a-08_west -> 4a_a-08_north-west",
             "connected_region": "4a_a-08_north-west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Clouds"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Blue Clouds"
+                ]
+              }
             }
           },
           {
@@ -14550,21 +14492,13 @@
             "name": "Golden Ridge A - Room a-10 Strawberry",
             "id": 211877957,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Strawberry Seeds"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Springs",
+                  "Strawberry Seeds"
+                ]
+              }
             },
             "item": {
               "name": "Strawberry",
@@ -14604,21 +14538,13 @@
             "name": "Golden Ridge A - Cassette",
             "id": 211886083,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Cassette Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pink Cassette Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Cassette Blocks",
+                  "Pink Cassette Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -15142,21 +15068,13 @@
             "name": "4a_b-06_east -> 4a_b-06_west",
             "connected_region": "4a_b-06_west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Move Blocks"
+                ]
+              }
             }
           },
           {
@@ -15188,21 +15106,13 @@
             "name": "4a_b-07_west -> 4a_b-07_east",
             "connected_region": "4a_b-07_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Move Blocks"
+                ]
+              }
             }
           },
           {
@@ -15225,21 +15135,13 @@
             "name": "Golden Ridge A - Room b-07 Strawberry",
             "id": 211877962,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Move Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -15626,21 +15528,13 @@
             "name": "4a_b-05_center -> 4a_b-05_west",
             "connected_region": "4a_b-05_west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pink Clouds"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Move Blocks",
+                  "Pink Clouds"
+                ]
+              }
             }
           },
           {
@@ -15742,21 +15636,13 @@
             "name": "4a_b-08b_west -> 4a_b-08b_east",
             "connected_region": "4a_b-08b_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Move Blocks"
+                ]
+              }
             }
           },
           {
@@ -15818,21 +15704,13 @@
             "name": "4a_b-08_west -> 4a_b-08_east",
             "connected_region": "4a_b-08_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Clouds"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Clouds",
+                  "Move Blocks"
+                ]
+              }
             }
           },
           {
@@ -15855,21 +15733,13 @@
             "name": "Golden Ridge A - Room b-08 Strawberry",
             "id": 211877967,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Clouds"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Clouds",
+                  "Move Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -16188,21 +16058,13 @@
             "name": "4a_c-05_west -> 4a_c-05_east",
             "connected_region": "4a_c-05_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Move Blocks"
+                ]
+              }
             }
           },
           {
@@ -16255,21 +16117,13 @@
             "name": "Golden Ridge A - Room c-05 Strawberry",
             "id": 211877970,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Move Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Strawberry",
@@ -16293,27 +16147,14 @@
             "name": "4a_c-06_bottom -> 4a_c-06_west",
             "connected_region": "4a_c-06_west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Clouds"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Blue Clouds",
+                  "Move Blocks"
+                ]
+              }
             }
           },
           {
@@ -16373,21 +16214,13 @@
             "name": "Golden Ridge A - Room c-06 Strawberry",
             "id": 211877971,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Move Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -16447,21 +16280,13 @@
             "name": "Golden Ridge A - Room c-06b Strawberry",
             "id": 211877972,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Dash Refills"
+                ]
+              }
             },
             "item": {
               "name": "Crystal Heart 16",
@@ -16485,21 +16310,13 @@
             "name": "4a_c-09_west -> 4a_c-09_east",
             "connected_region": "4a_c-09_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Move Blocks"
+                ]
+              }
             }
           },
           {
@@ -16930,21 +16747,13 @@
             "name": "Golden Ridge A - Room d-00b Strawberry",
             "id": 211877975,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Move Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -17042,33 +16851,15 @@
             "name": "4a_d-02_west -> 4a_d-02_east",
             "connected_region": "4a_d-02_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pink Clouds"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Coins",
+                  "Move Blocks",
+                  "Pink Clouds"
+                ]
+              }
             }
           },
           {
@@ -17457,21 +17248,13 @@
             "name": "4a_d-08_west -> 4a_d-08_east",
             "connected_region": "4a_d-08_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Clouds"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Blue Clouds"
+                ]
+              }
             }
           },
           {
@@ -17876,21 +17659,13 @@
             "name": "5a_a-00_west -> 5a_a-00_east",
             "connected_region": "5a_a-00_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Switches"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Switches",
+                  "Red Boosters"
+                ]
+              }
             }
           },
           {
@@ -18382,21 +18157,13 @@
             "name": "Mirror Temple A - Room a-04 Strawberry",
             "id": 211877985,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Springs",
+                  "Swap Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Strawberry",
@@ -18674,21 +18441,13 @@
             "name": "Mirror Temple A - Room a-06 Strawberry",
             "id": 211877987,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Red Boosters",
+                  "Swap Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -18728,21 +18487,13 @@
             "name": "Mirror Temple A - Room a-07 Strawberry",
             "id": 211877988,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Swap Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -18800,21 +18551,13 @@
             "name": "5a_a-08_center -> 5a_a-08_north-east",
             "connected_region": "5a_a-08_north-east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Red Boosters",
+                  "Swap Blocks"
+                ]
+              }
             }
           },
           {
@@ -19162,21 +18905,13 @@
             "name": "Mirror Temple A - Room a-11 Strawberry",
             "id": 211877989,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Swap Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Strawberry",
@@ -19250,21 +18985,13 @@
             "name": "5a_a-12_south-west -> 5a_a-12_east",
             "connected_region": "5a_a-12_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Switches"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Switches",
+                  "Red Boosters"
+                ]
+              }
             }
           },
           {
@@ -19332,21 +19059,13 @@
             "name": "Mirror Temple A - Room a-15 Strawberry",
             "id": 211877990,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Red Boosters"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -19386,21 +19105,13 @@
             "name": "Mirror Temple A - Room a-14 Strawberry",
             "id": 211877991,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Swap Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Strawberry",
@@ -20165,21 +19876,13 @@
             "name": "Mirror Temple A - Room b-21 Strawberry",
             "id": 211877996,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Red Boosters"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -20622,21 +20325,13 @@
             "name": "Mirror Temple A - Room b-05 Strawberry",
             "id": 211877998,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Red Boosters"
+                ]
+              }
             },
             "item": {
               "name": "Crystal Heart 13",
@@ -20888,21 +20583,13 @@
             "name": "5a_b-09_north -> 5a_b-09_south",
             "connected_region": "5a_b-09_south",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Switches"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Switches",
+                  "Red Boosters"
+                ]
+              }
             }
           },
           {
@@ -21254,21 +20941,13 @@
             "name": "5a_b-13_west -> 5a_b-13_east",
             "connected_region": "5a_b-13_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Switches"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Switches",
+                  "Swap Blocks"
+                ]
+              }
             }
           },
           {
@@ -21370,21 +21049,13 @@
             "name": "Mirror Temple A - Room b-17 Strawberry 2",
             "id": 211878001,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Strawberry Seeds"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Springs",
+                  "Strawberry Seeds"
+                ]
+              }
             },
             "item": {
               "name": "Crystal Heart 7",
@@ -21486,27 +21157,14 @@
             "name": "Mirror Temple A - Cassette",
             "id": 211886084,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Cassette Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pink Cassette Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Cassette Blocks",
+                  "Pink Cassette Blocks",
+                  "Red Boosters"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -21540,21 +21198,13 @@
             "name": "5a_b-06_west -> 5a_b-06_east",
             "connected_region": "5a_b-06_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mirror Temple A - Depths Key"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Mirror Temple A - Depths Key",
+                  "Red Boosters"
+                ]
+              }
             }
           },
           {
@@ -21581,21 +21231,13 @@
             "name": "5a_b-06_east -> 5a_b-06_west",
             "connected_region": "5a_b-06_west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mirror Temple A - Depths Key"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Mirror Temple A - Depths Key",
+                  "Red Boosters"
+                ]
+              }
             }
           },
           {
@@ -21654,21 +21296,13 @@
             "name": "5a_b-19_west -> 5a_b-19_east",
             "connected_region": "5a_b-19_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Red Boosters"
+                ]
+              }
             }
           },
           {
@@ -21875,21 +21509,13 @@
             "name": "5a_b-16_bottom -> 5a_b-16_mirror",
             "connected_region": "5a_b-16_mirror",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Switches"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Switches",
+                  "Red Boosters"
+                ]
+              }
             }
           },
           {
@@ -22112,27 +21738,14 @@
             "name": "5a_c-01b_west -> 5a_c-01b_east",
             "connected_region": "5a_c-01b_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Switches"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Switches",
+                  "Red Boosters",
+                  "Swap Blocks"
+                ]
+              }
             }
           },
           {
@@ -22177,21 +21790,13 @@
             "name": "5a_c-01c_west -> 5a_c-01c_east",
             "connected_region": "5a_c-01c_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Red Boosters",
+                  "Swap Blocks"
+                ]
+              }
             }
           },
           {
@@ -23086,27 +22691,14 @@
             "name": "5a_d-09_east -> 5a_d-09_west",
             "connected_region": "5a_d-09_west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Red Boosters",
+                  "Swap Blocks"
+                ]
+              }
             }
           },
           {
@@ -23165,27 +22757,14 @@
             "name": "5a_d-04_east -> 5a_d-04_west",
             "connected_region": "5a_d-04_west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mirror Temple A - Search Key 1"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mirror Temple A - Search Key 2"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Mirror Temple A - Search Key 1",
+                  "Mirror Temple A - Search Key 2",
+                  "Red Boosters"
+                ]
+              }
             }
           },
           {
@@ -23332,21 +22911,13 @@
             "name": "Mirror Temple A - Room d-04 Strawberry 2",
             "id": 211878004,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Red Boosters",
+                  "Swap Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Crystal Heart 3",
@@ -23412,21 +22983,13 @@
             "name": "5a_d-05_north -> 5a_d-05_west",
             "connected_region": "5a_d-05_west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Red Boosters",
+                  "Swap Blocks"
+                ]
+              }
             }
           },
           {
@@ -23552,21 +23115,13 @@
             "name": "5a_d-06_south-east -> 5a_d-06_north-east",
             "connected_region": "5a_d-06_north-east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Red Boosters",
+                  "Swap Blocks"
+                ]
+              }
             }
           },
           {
@@ -23703,21 +23258,59 @@
             "name": "5a_d-02_east -> 5a_d-02_west",
             "connected_region": "5a_d-02_west",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Seekers"
+              "rule": "AST_block",
+              "args": {
+                "statements": [
+                  {
+                    "type": "for_iter",
+                    "iterable": {
+                      "type": "constant",
+                      "value": [
+                        [
+                          "Springs"
+                        ],
+                        [
+                          "Seekers"
+                        ]
+                      ]
+                    },
+                    "body": [
+                      {
+                        "type": "if_statement",
+                        "test": {
+                          "type": "state_method",
+                          "method": "has_all",
+                          "args": [
+                            {
+                              "type": "name",
+                              "name": "sublist"
+                            }
+                          ]
+                        },
+                        "body": [
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "constant",
+                              "value": true
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "var": "sublist"
+                  },
+                  {
+                    "type": "return",
+                    "value": {
+                      "type": "constant",
+                      "value": false
+                    }
                   }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+                ],
+                "_original_ast_type": "block"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -23769,21 +23362,13 @@
             "name": "5a_d-03_east -> 5a_d-03_west",
             "connected_region": "5a_d-03_west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Seekers"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Seekers"
+                ]
+              }
             }
           },
           {
@@ -23892,21 +23477,13 @@
             "name": "Mirror Temple A - Room d-15 Strawberry 2",
             "id": 211878006,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Swap Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -23920,21 +23497,13 @@
             "name": "Mirror Temple A - Search Key 3",
             "id": 211902473,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Seekers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Seekers",
+                  "Swap Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Mirror Temple A - Search Key 3",
@@ -24250,21 +23819,13 @@
             "name": "5a_d-19_east -> 5a_d-19_west",
             "connected_region": "5a_d-19_west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Springs",
+                  "Swap Blocks"
+                ]
+              }
             }
           },
           {
@@ -24389,21 +23950,13 @@
             "name": "5a_d-20_west -> 5a_d-20_east",
             "connected_region": "5a_d-20_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Seekers"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Seekers"
+                ]
+              }
             }
           },
           {
@@ -24511,21 +24064,13 @@
             "name": "5a_e-01_west -> 5a_e-01_east",
             "connected_region": "5a_e-01_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Switches"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Theo Crystal"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Switches",
+                  "Theo Crystal"
+                ]
+              }
             }
           },
           {
@@ -24570,21 +24115,13 @@
             "name": "5a_e-02_west -> 5a_e-02_east",
             "connected_region": "5a_e-02_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Switches"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Theo Crystal"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Switches",
+                  "Theo Crystal"
+                ]
+              }
             }
           },
           {
@@ -24629,21 +24166,13 @@
             "name": "5a_e-03_west -> 5a_e-03_east",
             "connected_region": "5a_e-03_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Switches"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Theo Crystal"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Switches",
+                  "Theo Crystal"
+                ]
+              }
             }
           },
           {
@@ -24688,21 +24217,13 @@
             "name": "5a_e-04_west -> 5a_e-04_east",
             "connected_region": "5a_e-04_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Theo Crystal"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Theo Crystal"
+                ]
+              }
             }
           },
           {
@@ -24747,27 +24268,14 @@
             "name": "5a_e-06_west -> 5a_e-06_east",
             "connected_region": "5a_e-06_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Switches"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Theo Crystal"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Switches",
+                  "Springs",
+                  "Theo Crystal"
+                ]
+              }
             }
           },
           {
@@ -24830,27 +24338,14 @@
             "name": "5a_e-05_west -> 5a_e-05_east",
             "connected_region": "5a_e-05_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Theo Crystal"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Swap Blocks",
+                  "Theo Crystal"
+                ]
+              }
             }
           },
           {
@@ -24943,21 +24438,13 @@
             "name": "5a_e-08_west -> 5a_e-08_east",
             "connected_region": "5a_e-08_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Theo Crystal"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Swap Blocks",
+                  "Theo Crystal"
+                ]
+              }
             }
           },
           {
@@ -25002,21 +24489,13 @@
             "name": "5a_e-09_west -> 5a_e-09_east",
             "connected_region": "5a_e-09_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Theo Crystal"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Swap Blocks",
+                  "Theo Crystal"
+                ]
+              }
             }
           },
           {
@@ -25061,33 +24540,15 @@
             "name": "5a_e-10_west -> 5a_e-10_east",
             "connected_region": "5a_e-10_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Switches"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Theo Crystal"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Switches",
+                  "Springs",
+                  "Swap Blocks",
+                  "Theo Crystal"
+                ]
+              }
             }
           },
           {
@@ -25827,27 +25288,14 @@
             "name": "Reflection A - Cassette",
             "id": 211886085,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Cassette Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pink Cassette Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Cassette Blocks",
+                  "Dash Refills",
+                  "Pink Cassette Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -25926,21 +25374,13 @@
             "name": "6a_06_west -> 6a_06_east",
             "connected_region": "6a_06_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Feathers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Kevins"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Feathers",
+                  "Kevins"
+                ]
+              }
             }
           },
           {
@@ -26085,21 +25525,13 @@
             "name": "6a_08a_west -> 6a_08a_east",
             "connected_region": "6a_08a_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Kevins"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Kevins"
+                ]
+              }
             }
           },
           {
@@ -26151,21 +25583,13 @@
             "name": "6a_08b_west -> 6a_08b_east",
             "connected_region": "6a_08b_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Feathers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Kevins"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Feathers",
+                  "Kevins"
+                ]
+              }
             }
           },
           {
@@ -26613,21 +26037,13 @@
             "name": "6a_12b_west -> 6a_12b_east",
             "connected_region": "6a_12b_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bumpers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Kevins"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Bumpers",
+                  "Kevins"
+                ]
+              }
             }
           },
           {
@@ -26802,21 +26218,13 @@
             "name": "6a_14a_west -> 6a_14a_east",
             "connected_region": "6a_14a_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bumpers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Bumpers",
+                  "Dash Refills"
+                ]
+              }
             }
           },
           {
@@ -26868,27 +26276,14 @@
             "name": "6a_14b_west -> 6a_14b_east",
             "connected_region": "6a_14b_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bumpers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Bumpers",
+                  "Coins",
+                  "Springs"
+                ]
+              }
             }
           },
           {
@@ -27108,21 +26503,13 @@
             "name": "6a_16b_west -> 6a_16b_east",
             "connected_region": "6a_16b_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Feathers"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Feathers"
+                ]
+              }
             }
           },
           {
@@ -27293,21 +26680,13 @@
             "name": "6a_18a_west -> 6a_18a_east",
             "connected_region": "6a_18a_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bumpers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Feathers"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Bumpers",
+                  "Feathers"
+                ]
+              }
             }
           },
           {
@@ -29031,21 +28410,13 @@
             "name": "6a_boss-18_west -> 6a_boss-18_east",
             "connected_region": "6a_boss-18_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bumpers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Feathers"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Bumpers",
+                  "Feathers"
+                ]
+              }
             }
           },
           {
@@ -29097,21 +28468,13 @@
             "name": "6a_boss-19_west -> 6a_boss-19_east",
             "connected_region": "6a_boss-19_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bumpers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Feathers"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Bumpers",
+                  "Feathers"
+                ]
+              }
             }
           },
           {
@@ -29699,21 +29062,13 @@
             "name": "7a_a-04_west -> 7a_a-04_east",
             "connected_region": "7a_a-04_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Springs"
+                ]
+              }
             }
           },
           {
@@ -29822,21 +29177,13 @@
             "name": "The Summit A - Room a-04b Strawberry 1",
             "id": 211878012,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Springs"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -29960,42 +29307,26 @@
             "name": "7a_a-06_bottom -> 7a_a-06_top",
             "connected_region": "7a_a-06_top",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Badeline Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Badeline Boosters",
+                  "Springs"
+                ]
+              }
             }
           },
           {
             "name": "7a_a-06_bottom -> 7a_a-06_top-side",
             "connected_region": "7a_a-06_top-side",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Badeline Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Badeline Boosters",
+                  "Springs"
+                ]
+              }
             }
           },
           {
@@ -30107,21 +29438,13 @@
             "name": "7a_b-00_bottom -> 7a_b-00_top",
             "connected_region": "7a_b-00_top",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Traffic Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Traffic Blocks"
+                ]
+              }
             }
           },
           {
@@ -30173,21 +29496,13 @@
             "name": "7a_b-01_west -> 7a_b-01_east",
             "connected_region": "7a_b-01_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Traffic Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Springs",
+                  "Traffic Blocks"
+                ]
+              }
             }
           },
           {
@@ -30232,42 +29547,26 @@
             "name": "7a_b-02_south -> 7a_b-02_north-west",
             "connected_region": "7a_b-02_north-west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Traffic Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Traffic Blocks"
+                ]
+              }
             }
           },
           {
             "name": "7a_b-02_south -> 7a_b-02_north-east",
             "connected_region": "7a_b-02_north-east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Traffic Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Traffic Blocks"
+                ]
+              }
             }
           },
           {
@@ -30405,42 +29704,26 @@
             "name": "7a_b-02b_south -> 7a_b-02b_north-west",
             "connected_region": "7a_b-02b_north-west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Traffic Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Traffic Blocks"
+                ]
+              }
             }
           },
           {
             "name": "7a_b-02b_south -> 7a_b-02b_north-east",
             "connected_region": "7a_b-02b_north-east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Traffic Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Traffic Blocks"
+                ]
+              }
             }
           },
           {
@@ -30591,21 +29874,13 @@
             "name": "7a_b-02c_west -> 7a_b-02c_east",
             "connected_region": "7a_b-02c_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Traffic Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Traffic Blocks"
+                ]
+              }
             }
           },
           {
@@ -30632,21 +29907,13 @@
             "name": "7a_b-02c_east -> 7a_b-02c_west",
             "connected_region": "7a_b-02c_west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Traffic Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Traffic Blocks"
+                ]
+              }
             }
           },
           {
@@ -30826,21 +30093,13 @@
             "name": "7a_b-03_east -> 7a_b-03_north",
             "connected_region": "7a_b-03_north",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Traffic Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Traffic Blocks"
+                ]
+              }
             }
           },
           {
@@ -30942,27 +30201,14 @@
             "name": "7a_b-05_west -> 7a_b-05_east",
             "connected_region": "7a_b-05_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Dash Refills",
+                  "Springs"
+                ]
+              }
             }
           },
           {
@@ -31221,21 +30467,13 @@
             "name": "7a_b-09_bottom -> 7a_b-09_top",
             "connected_region": "7a_b-09_top",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Badeline Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Traffic Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Badeline Boosters",
+                  "Traffic Blocks"
+                ]
+              }
             }
           },
           {
@@ -31470,27 +30708,14 @@
             "name": "7a_c-02_bottom -> 7a_c-02_top",
             "connected_region": "7a_c-02_top",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dream Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Dream Blocks",
+                  "Springs"
+                ]
+              }
             }
           },
           {
@@ -31643,21 +30868,13 @@
             "name": "The Summit A - Room c-03b Strawberry",
             "id": 211878021,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dream Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Dream Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -31958,21 +31175,13 @@
             "name": "7a_c-06b_south -> 7a_c-06b_east",
             "connected_region": "7a_c-06b_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dream Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dream Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dream Blocks",
+                  "Dream Blocks"
+                ]
+              }
             }
           },
           {
@@ -32115,21 +31324,13 @@
             "name": "The Summit A - Gem 3",
             "id": 211905026,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dream Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Dream Blocks"
+                ]
+              }
             },
             "item": {
               "name": "The Summit A - Gem 3",
@@ -32398,21 +31599,13 @@
             "name": "7a_c-09_bottom -> 7a_c-09_top",
             "connected_region": "7a_c-09_top",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Badeline Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dream Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Badeline Boosters",
+                  "Dream Blocks"
+                ]
+              }
             }
           },
           {
@@ -32916,21 +32109,13 @@
             "name": "The Summit A - Room d-01d Strawberry",
             "id": 211878029,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Coins",
+                  "Dash Refills"
+                ]
+              }
             },
             "item": {
               "name": "Theo Crystal",
@@ -33210,21 +32395,13 @@
             "name": "The Summit A - Cassette",
             "id": 211886086,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Cassette Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pink Cassette Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Cassette Blocks",
+                  "Pink Cassette Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -33322,21 +32499,59 @@
             "name": "7a_d-05_west -> 7a_d-05_east",
             "connected_region": "7a_d-05_east",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
+              "rule": "AST_block",
+              "args": {
+                "statements": [
+                  {
+                    "type": "for_iter",
+                    "iterable": {
+                      "type": "constant",
+                      "value": [
+                        [
+                          "Coins"
+                        ],
+                        [
+                          "Dash Refills"
+                        ]
+                      ]
+                    },
+                    "body": [
+                      {
+                        "type": "if_statement",
+                        "test": {
+                          "type": "state_method",
+                          "method": "has_all",
+                          "args": [
+                            {
+                              "type": "name",
+                              "name": "sublist"
+                            }
+                          ]
+                        },
+                        "body": [
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "constant",
+                              "value": true
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "var": "sublist"
+                  },
+                  {
+                    "type": "return",
+                    "value": {
+                      "type": "constant",
+                      "value": false
+                    }
                   }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                }
-              ]
+                ],
+                "_original_ast_type": "block"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -34171,21 +33386,13 @@
             "name": "7a_e-00_south-west -> 7a_e-00_east",
             "connected_region": "7a_e-00_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Clouds"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Blue Clouds"
+                ]
+              }
             }
           },
           {
@@ -34239,21 +33446,13 @@
             "name": "7a_e-00_east -> 7a_e-00_south-west",
             "connected_region": "7a_e-00_south-west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Clouds"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Blue Clouds"
+                ]
+              }
             }
           },
           {
@@ -34538,21 +33737,13 @@
             "name": "7a_e-03_south-west -> 7a_e-03_east",
             "connected_region": "7a_e-03_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moving Platforms"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Moving Platforms"
+                ]
+              }
             }
           },
           {
@@ -34638,21 +33829,13 @@
             "name": "7a_e-04_west -> 7a_e-04_east",
             "connected_region": "7a_e-04_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Springs"
+                ]
+              }
             }
           },
           {
@@ -34859,21 +34042,13 @@
             "name": "The Summit A - Room e-07 Strawberry",
             "id": 211878037,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Move Blocks"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -35093,21 +34268,13 @@
             "name": "7a_e-11_south -> 7a_e-11_east",
             "connected_region": "7a_e-11_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Boosters",
+                  "Move Blocks"
+                ]
+              }
             }
           },
           {
@@ -35217,21 +34384,13 @@
             "name": "The Summit A - Room e-12 Strawberry",
             "id": 211878040,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Strawberry Seeds"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Strawberry Seeds"
+                ]
+              }
             },
             "item": {
               "name": "Strawberry",
@@ -35348,27 +34507,14 @@
             "name": "7a_e-10b_west -> 7a_e-10b_east",
             "connected_region": "7a_e-10b_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Move Blocks",
+                  "Springs"
+                ]
+              }
             }
           },
           {
@@ -35420,39 +34566,16 @@
             "name": "7a_e-13_bottom -> 7a_e-13_top",
             "connected_region": "7a_e-13_top",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Badeline Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Move Blocks"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Badeline Boosters",
+                  "Blue Boosters",
+                  "Dash Refills",
+                  "Move Blocks",
+                  "Springs"
+                ]
+              }
             }
           },
           {
@@ -35866,33 +34989,15 @@
             "name": "7a_f-02b_west -> 7a_f-02b_east",
             "connected_region": "7a_f-02b_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Switches"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Dash Switches",
+                  "Red Boosters",
+                  "Swap Blocks"
+                ]
+              }
             }
           },
           {
@@ -36014,21 +35119,13 @@
             "name": "7a_f-03_west -> 7a_f-03_east",
             "connected_region": "7a_f-03_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Swap Blocks"
+                ]
+              }
             }
           },
           {
@@ -36055,21 +35152,13 @@
             "name": "7a_f-03_east -> 7a_f-03_west",
             "connected_region": "7a_f-03_west",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Swap Blocks"
+                ]
+              }
             }
           },
           {
@@ -36570,27 +35659,14 @@
             "name": "7a_f-08_west -> 7a_f-08_east",
             "connected_region": "7a_f-08_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Red Boosters",
+                  "Swap Blocks"
+                ]
+              }
             }
           },
           {
@@ -36752,21 +35828,13 @@
             "name": "7a_f-08d_west -> 7a_f-08d_east",
             "connected_region": "7a_f-08d_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Switches"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Switches",
+                  "Springs"
+                ]
+              }
             }
           },
           {
@@ -36818,21 +35886,13 @@
             "name": "7a_f-08c_west -> 7a_f-08c_east",
             "connected_region": "7a_f-08c_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Swap Blocks"
+                ]
+              }
             }
           },
           {
@@ -37029,27 +36089,14 @@
             "name": "7a_f-10b_west -> 7a_f-10b_east",
             "connected_region": "7a_f-10b_east",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Switches"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Dash Switches",
+                  "Springs"
+                ]
+              }
             }
           },
           {
@@ -37101,33 +36148,15 @@
             "name": "7a_f-11_bottom -> 7a_f-11_top",
             "connected_region": "7a_f-11_top",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Badeline Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swap Blocks"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Badeline Boosters",
+                  "Red Boosters",
+                  "Springs",
+                  "Swap Blocks"
+                ]
+              }
             }
           },
           {
@@ -37247,21 +36276,13 @@
             "name": "7a_g-00_bottom -> 7a_g-00_top",
             "connected_region": "7a_g-00_top",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Badeline Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Badeline Boosters",
+                  "Dash Refills"
+                ]
+              }
             }
           },
           {
@@ -37322,45 +36343,17 @@
             "name": "The Summit A - Crystal Heart",
             "id": 211890182,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Summit A - Gem 1"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Summit A - Gem 2"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Summit A - Gem 3"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Summit A - Gem 4"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Summit A - Gem 5"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Summit A - Gem 6"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "The Summit A - Gem 1",
+                  "The Summit A - Gem 2",
+                  "The Summit A - Gem 3",
+                  "The Summit A - Gem 4",
+                  "The Summit A - Gem 5",
+                  "The Summit A - Gem 6"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -37461,27 +36454,14 @@
             "name": "7a_g-00b_c21 -> 7a_g-00b_top",
             "connected_region": "7a_g-00b_top",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Badeline Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Badeline Boosters",
+                  "Dash Refills",
+                  "Springs"
+                ]
+              }
             }
           },
           {
@@ -37567,21 +36547,13 @@
             "name": "7a_g-01_c18 -> 7a_g-01_c16",
             "connected_region": "7a_g-01_c16",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Clouds"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Clouds",
+                  "Dash Refills"
+                ]
+              }
             }
           },
           {
@@ -37597,21 +36569,13 @@
             "name": "The Summit A - Room g-01 Strawberry 1",
             "id": 211878054,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Clouds"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Clouds",
+                  "Dash Refills"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",
@@ -37630,39 +36594,16 @@
             "name": "7a_g-01_c16 -> 7a_g-01_top",
             "connected_region": "7a_g-01_top",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Badeline Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coins"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pink Clouds"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Badeline Boosters",
+                  "Coins",
+                  "Dash Refills",
+                  "Pink Clouds",
+                  "Springs"
+                ]
+              }
             }
           },
           {
@@ -37736,21 +36677,13 @@
             "name": "7a_g-02_bottom -> 7a_g-02_top",
             "connected_region": "7a_g-02_top",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Clouds"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Feathers"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Clouds",
+                  "Feathers"
+                ]
+              }
             }
           },
           {
@@ -37795,27 +36728,14 @@
             "name": "7a_g-03_bottom -> 7a_g-03_goal",
             "connected_region": "7a_g-03_goal",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Feathers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Feathers",
+                  "Springs"
+                ]
+              }
             }
           },
           {
@@ -37831,27 +36751,14 @@
             "name": "The Summit A - Room g-03 Strawberry",
             "id": 211878057,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dash Refills"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Feathers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Springs"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dash Refills",
+                  "Feathers",
+                  "Springs"
+                ]
+              }
             },
             "item": {
               "name": "Raspberry",

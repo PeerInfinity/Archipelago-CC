@@ -32,7 +32,7 @@ def _alinktothepastworldgen_basement_key_rule(state: "CollectionState", player: 
 
 
 def _alinktothepastworldgen_bottle_count(state: "CollectionState", player: int) -> bool:
-    return min(state.multiworld.worlds[player].difficulty_requirements.progressive_bottle_limit, state.count_group('Bottles', player))
+    return min({'baseitems': ['Single Arrow', 'Sanctuary Heart Container', 'Arrows (10)', 'Bombs (10)', 'Rupees (300)', 'Rupees (300)', 'Rupees (300)', 'Boss Heart Container', 'Boss Heart Container', 'Boss Heart Container', 'Boss Heart Container', 'Boss Heart Container', 'Boss Heart Container', 'Boss Heart Container', 'Boss Heart Container', 'Boss Heart Container', 'Boss Heart Container', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart'], 'bottles': ['Bottle', 'Bottle (Red Potion)', 'Bottle (Green Potion)', 'Bottle (Blue Potion)', 'Bottle (Fairy)', 'Bottle (Bee)', 'Bottle (Good Bee)'], 'bottle_count': 4, 'same_bottle': False, 'progressiveshield': ['Progressive Shield', 'Progressive Shield', 'Progressive Shield'], 'basicshield': ['Blue Shield', 'Red Shield', 'Mirror Shield'], 'progressivearmor': ['Progressive Mail', 'Progressive Mail'], 'basicarmor': ['Blue Mail', 'Red Mail'], 'swordless': ['Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)'], 'progressivemagic': ['Magic Upgrade (1/2)', 'Rupees (300)'], 'basicmagic': ['Magic Upgrade (1/2)', 'Rupees (300)'], 'progressivesword': ['Progressive Sword', 'Progressive Sword', 'Progressive Sword', 'Progressive Sword'], 'basicsword': ['Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword'], 'progressivebow': ['Progressive Bow', 'Progressive Bow'], 'basicbow': ['Bow', 'Silver Bow'], 'timedohko': ['Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock'], 'timedother': ['Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Blue Clock', 'Blue Clock', 'Blue Clock', 'Blue Clock', 'Blue Clock', 'Blue Clock', 'Blue Clock', 'Blue Clock', 'Blue Clock', 'Blue Clock', 'Red Clock', 'Red Clock', 'Red Clock', 'Red Clock', 'Red Clock', 'Red Clock', 'Red Clock', 'Red Clock', 'Red Clock', 'Red Clock'], 'progressiveglove': ['Progressive Glove', 'Progressive Glove'], 'basicglove': ['Power Glove', 'Titans Mitts'], 'alwaysitems': ['Bombos', 'Book of Mudora', 'Cane of Somaria', 'Ether', 'Fire Rod', 'Flippers', 'Flute', 'Hammer', 'Hookshot', 'Ice Rod', 'Lamp', 'Cape', 'Magic Powder', 'Mushroom', 'Pegasus Boots', 'Quake', 'Shovel', 'Bug Catching Net', 'Cane of Byrna', 'Blue Boomerang', 'Red Boomerang'], 'legacyinsanity': ['Magic Mirror', 'Moon Pearl'], 'universal_keys': ['Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)'], 'extras': [['Rupees (100)', 'Rupees (300)', 'Rupees (50)', 'Arrows (10)', 'Arrows (10)', 'Arrows (10)', 'Arrows (10)', 'Arrows (10)', 'Arrows (10)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)'], ['Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Rupees (50)', 'Rupees (50)', 'Arrows (10)', 'Arrows (10)', 'Rupee (1)'], ['Rupees (50)', 'Rupees (50)', 'Rupees (50)', 'Rupees (50)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Arrows (10)', 'Rupee (1)', 'Rupees (5)'], ['Arrows (10)', 'Arrows (10)', 'Rupees (20)', 'Rupees (20)', 'Rupees (5)'], ['Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (5)', 'Rupees (5)']], 'progressive_sword_limit': 4, 'progressive_shield_limit': 3, 'progressive_armor_limit': 2, 'progressive_bottle_limit': 4, 'progressive_bow_limit': 2, 'heart_piece_limit': 24, 'boss_heart_container_limit': 10}.progressive_bottle_limit, state.count_group('Bottles', player))
 
 
 def _alinktothepastworldgen_can_activate_crystal_switch(state: "CollectionState", player: int) -> bool:
@@ -44,11 +44,11 @@ def _alinktothepastworldgen_can_bomb_or_bonk(state: "CollectionState", player: i
 
 
 def _alinktothepastworldgen_can_buy(state: "CollectionState", player: int, item = None) -> bool:
-    return any(state.can_reach(region, "Region", player) for region in {'Red Potion': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop']}, 'Small Heart': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Bombs (10)': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Red Shield': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Bee': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Arrows (10)': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Blue Shield': {'unlimited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop'], 'limited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop']}, 'Green Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Blue Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Bomb Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}, 'Arrow Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}}[item]['limited'])
+    return any((shop.has(item)) and (shop.region.can_reach(state)) for shop in state.multiworld.worlds[player].shops)
 
 
 def _alinktothepastworldgen_can_buy_unlimited(state: "CollectionState", player: int, item = None) -> bool:
-    return any(state.can_reach(region, "Region", player) for region in {'Red Potion': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop']}, 'Small Heart': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Bombs (10)': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Red Shield': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Bee': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Arrows (10)': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Blue Shield': {'unlimited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop'], 'limited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop']}, 'Green Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Blue Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Bomb Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}, 'Arrow Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}}[item]['unlimited'])
+    return any((shop.has_unlimited(item)) and (shop.region.can_reach(state)) for shop in state.multiworld.worlds[player].shops)
 
 
 def _alinktothepastworldgen_can_extend_magic(state: "CollectionState", player: int, smallmagic = 16, fullrefill: bool = False) -> bool:
@@ -147,8 +147,8 @@ def _alinktothepastworldgen_has_turtle_rock_medallion(state: "CollectionState", 
 
 
 def _alinktothepastworldgen_heart_count(state: "CollectionState", player: int) -> bool:
-    max_heart_pieces = state.multiworld.worlds[player].logical_heart_pieces
-    max_heart_containers = state.multiworld.worlds[player].logical_heart_containers
+    max_heart_pieces = 24
+    max_heart_containers = 10
     return (((min(state.count('Boss Heart Container', player), max_heart_containers) + state.count('Sanctuary Heart Container', player)) + (min(state.count('Piece of Heart', player), max_heart_pieces) // 4)) + 3)
 
 
@@ -156,8 +156,13 @@ def _alinktothepastworldgen_is_not_bunny(state: "CollectionState", player: int, 
     return (True if state.has('Moon Pearl', player) else (True if ('open' != 'inverted') else True))
 
 
-def _alinktothepastworldgen_can_defeat_boss(state: "CollectionState", player: int, location_name = None, boss_type = None) -> bool:
-    return _alinktothepastworldgen_can_kill_most_things(state, player, 1)
+def _alinktothepastworldgen_tr_big_key_chest_keys_needed(state: "CollectionState", player: int) -> bool:
+    item = ['Small Key (Turtle Rock)', 1]
+    if (item in [['Small Key (Turtle Rock)', 1]]):
+        return 0
+    if (item in [['Big Key (Turtle Rock)', 1]]):
+        return 4
+    return 6
 
 
 def set_rules(world: "World") -> None:
@@ -1903,7 +1908,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Big Key Chest", player),
-        And(And(And(And(And(Compare(CountItem('Small Key (Turtle Rock)'), ">=", Conditional(test=True_(), if_true=False_(), if_false=Conditional(test=False_(), if_true=True_(), if_false=True_()))), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl'))
+        And(And(And(And(And(Compare(CountItem('Small Key (Turtle Rock)'), ">=", HelperCall(helper_func=_alinktothepastworldgen_tr_big_key_chest_keys_needed, helper_name="tr_big_key_chest_keys_needed")), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -2143,17 +2148,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Big Key Room - Left", player),
-        And(And(And(HelperCall(helper_func=_alinktothepastworldgen_can_defeat_boss, helper_name="can_defeat_boss", args=('Ganons Tower - Big Key Room - Left', 'bottom',)), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")), Has('Moon Pearl')), Has('Moon Pearl'))
+        And(And(And(True_(), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Big Key Room - Right", player),
-        And(And(And(HelperCall(helper_func=_alinktothepastworldgen_can_defeat_boss, helper_name="can_defeat_boss", args=('Ganons Tower - Big Key Room - Right', 'bottom',)), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")), Has('Moon Pearl')), Has('Moon Pearl'))
+        And(And(And(True_(), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Big Key Chest", player),
-        And(And(And(HelperCall(helper_func=_alinktothepastworldgen_can_defeat_boss, helper_name="can_defeat_boss", args=('Ganons Tower - Big Key Chest', 'bottom',)), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")), Has('Moon Pearl')), Has('Moon Pearl'))
+        And(And(And(True_(), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs")), Has('Moon Pearl')), Has('Moon Pearl'))
     )
 
     world.set_rule(

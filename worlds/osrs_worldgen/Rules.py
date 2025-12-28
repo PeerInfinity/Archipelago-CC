@@ -16,6 +16,22 @@ if TYPE_CHECKING:
 
 
 # Helper functions
+def _oldschoolrunescapeworldgen_can_gold(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach_region('Gold Ore', player)) and (state.can_reach_region('Furnace', player)) and (_oldschoolrunescapeworldgen_mould_access(state, player))
+
+
+def _oldschoolrunescapeworldgen_can_silver(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach_region('Silver Ore', player)) and (state.can_reach_region('Furnace', player)) and (_oldschoolrunescapeworldgen_mould_access(state, player))
+
+
+def _oldschoolrunescapeworldgen_can_tan(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach_region('Milk', player)) and (state.can_reach_region('Al Kharid', player))
+
+
+def _oldschoolrunescapeworldgen_mould_access(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach_region('Al Kharid', player)) or (state.can_reach_region('Rimmington', player))
+
+
 def _oldschoolrunescapeworldgen_quest_points(state: "CollectionState", player: int) -> int:
     return sum((qp_value if state.has(item_name, player) else 0) for (item_name, qp_value) in {"1 QP (Cook's Assistant)": 1, '3 QP (Demon Slayer)': 3, '1 QP (The Restless Ghost)': 1, '5 QP (Romeo & Juliet)': 5, '1 QP (Sheep Shearer)': 1, '1 QP (Shield of Arrav)': 1, '4 QP (Ernest the Chicken)': 4, '3 QP (Vampyre Slayer)': 3, '1 QP (Imp Catcher)': 1, '3 QP (Prince Ali Rescue)': 3, "1 QP (Doric's Quest)": 1, "3 QP (Black Knights' Fortress)": 3, "1 QP (Witch's Potion)": 1, "1 QP (The Knight's Sword)": 1, '5 QP (Goblin Diplomacy)': 5, "2 QP (Pirate's Treasure)": 2, '1 QP (Rune Mysteries)': 1, '1 QP (Misthalin Mystery)': 1, '2 QP (The Corsair Curse)': 2, '1 QP (X Marks The Spot)': 1, '1 QP (Below Ice Mountain)': 1}.items())
 
@@ -638,12 +654,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Crafting Guild Outskirts->Crafting Guild", player),
-        And(And(Or(And(And(Or(CanReachRegion('Al Kharid'), CanReachRegion('Rimmington')), CanReachRegion('Furnace'), CanReachRegion('Gold Ore')), And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'))), And(And(Or(CanReachRegion('Al Kharid'), CanReachRegion('Rimmington')), CanReachRegion('Furnace'), CanReachRegion('Silver Ore')), And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'))), And(CanReachRegion('Al Kharid'), CanReachRegion('Milk'))), Has('Area: Crafting Guild')), CanReachRegion('Central Varrock'))
+        And(And(Or(And(And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore')), HelperCall(helper_func=_oldschoolrunescapeworldgen_can_gold, helper_name="can_gold")), And(And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore')), HelperCall(helper_func=_oldschoolrunescapeworldgen_can_silver, helper_name="can_silver")), HelperCall(helper_func=_oldschoolrunescapeworldgen_can_tan, helper_name="can_tan")), Has('Area: Crafting Guild')), CanReachRegion('Central Varrock'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Crafting Guild->Crafting Guild", player),
-        And(And(Or(And(And(Or(CanReachRegion('Al Kharid'), CanReachRegion('Rimmington')), CanReachRegion('Furnace'), CanReachRegion('Gold Ore')), And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'))), And(And(Or(CanReachRegion('Al Kharid'), CanReachRegion('Rimmington')), CanReachRegion('Furnace'), CanReachRegion('Silver Ore')), And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'))), And(CanReachRegion('Al Kharid'), CanReachRegion('Milk'))), Has('Area: Crafting Guild')), CanReachRegion('Central Varrock'))
+        And(And(Or(And(And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore')), HelperCall(helper_func=_oldschoolrunescapeworldgen_can_gold, helper_name="can_gold")), And(And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore')), HelperCall(helper_func=_oldschoolrunescapeworldgen_can_silver, helper_name="can_silver")), HelperCall(helper_func=_oldschoolrunescapeworldgen_can_tan, helper_name="can_tan")), Has('Area: Crafting Guild')), CanReachRegion('Central Varrock'))
     )
 
     world.set_rule(
@@ -1018,12 +1034,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Cut a Diamond", player),
-        And(And(Or(And(And(Or(CanReachRegion('Al Kharid'), CanReachRegion('Rimmington')), CanReachRegion('Furnace'), CanReachRegion('Gold Ore')), And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'))), And(And(Or(CanReachRegion('Al Kharid'), CanReachRegion('Rimmington')), CanReachRegion('Furnace'), CanReachRegion('Silver Ore')), And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'))), And(CanReachRegion('Al Kharid'), CanReachRegion('Milk'))), CanReachRegion('Chisel')), Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points"), ">", 8))
+        And(And(Or(And(And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore')), HelperCall(helper_func=_oldschoolrunescapeworldgen_can_gold, helper_name="can_gold")), And(And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore')), HelperCall(helper_func=_oldschoolrunescapeworldgen_can_silver, helper_name="can_silver")), HelperCall(helper_func=_oldschoolrunescapeworldgen_can_tan, helper_name="can_tan")), CanReachRegion('Chisel')), Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points"), ">", 8))
     )
 
     world.set_rule(
         multiworld.get_location("Cut a Ruby", player),
-        And(And(Or(And(And(Or(CanReachRegion('Al Kharid'), CanReachRegion('Rimmington')), CanReachRegion('Furnace'), CanReachRegion('Gold Ore')), And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'))), And(And(Or(CanReachRegion('Al Kharid'), CanReachRegion('Rimmington')), CanReachRegion('Furnace'), CanReachRegion('Silver Ore')), And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore'))), And(CanReachRegion('Al Kharid'), CanReachRegion('Milk'))), CanReachRegion('Chisel')), Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points"), ">", 4))
+        And(And(Or(And(And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Coal Ore'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore')), HelperCall(helper_func=_oldschoolrunescapeworldgen_can_gold, helper_name="can_gold")), And(And(CanReachRegion('Anvil'), CanReachRegion('Bronze Ores'), CanReachRegion('Furnace'), CanReachRegion('Iron Ore')), HelperCall(helper_func=_oldschoolrunescapeworldgen_can_silver, helper_name="can_silver")), HelperCall(helper_func=_oldschoolrunescapeworldgen_can_tan, helper_name="can_tan")), CanReachRegion('Chisel')), Compare(HelperCall(helper_func=_oldschoolrunescapeworldgen_quest_points, helper_name="quest_points"), ">", 4))
     )
 
     world.set_rule(

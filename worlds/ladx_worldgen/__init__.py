@@ -185,22 +185,14 @@ STARTING_ITEMS: Dict[str, int] = {
 class LinksAwakeningDXWorldGenWeb(WebWorld):
     """Web interface for Links Awakening DX WorldGen."""
     theme = "ocean"
-    tutorials = [
-        Tutorial(
-            "Multiworld Setup Guide",
-            "A guide to setting up Links Awakening DX for MultiWorld.",
-            "English",
-            "setup_en.md",
-            "setup/en",
-            ["zig"]
-        )
-    ]
+    tutorials = []
 
 
 class LinksAwakeningDXWorldGenWorld(RuleWorldMixin, World):
     """
-    After a previous adventure, Link is stranded on Koholint Island, full of mystery and familiar faces.
-    Gather the 8 Instruments of the Sirens to wake the Wind Fish, so that Link can go home!
+    Links Awakening DX WorldGen for Archipelago.
+
+    Auto-generated world implementation.
     """
 
     game: ClassVar[str] = "Links Awakening DX WorldGen"
@@ -209,7 +201,6 @@ class LinksAwakeningDXWorldGenWorld(RuleWorldMixin, World):
     options_dataclass = LinksAwakeningDXWorldGenOptions
     options: LinksAwakeningDXWorldGenOptions
 
-    base_id: ClassVar[int] = 10000000
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
@@ -486,6 +477,13 @@ class LinksAwakeningDXWorldGenWorld(RuleWorldMixin, World):
         "MEDICINE2": "MEDICINE2",
     }
 
+    def __init__(self, multiworld: "MultiWorld", player: int):
+        super().__init__(multiworld, player)
+        # Game-specific world attributes
+        self.shops = []
+        self.error = "Error exporting world data for player 1: 'name'"
+        self.details = 'Failed to read world data. Check logs for more information.'
+
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
         self._push_starting_items()
@@ -610,25 +608,4 @@ class LinksAwakeningDXWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {
-            "world_version": "2.0.1",
-            "instrument_count": 8,
-            "logic": "normal",
-            "tradequest": "false",
-            "rooster": "true",
-            "experimental_dungeon_shuffle": "false",
-            "experimental_entrance_shuffle": "none",
-            "goal": "instruments",
-            "trendy_game": "normal",
-            "gfxmod": "false",
-            "shuffle_nightmare_keys": "original_dungeon",
-            "shuffle_small_keys": "original_dungeon",
-            "shuffle_maps": "original_dungeon",
-            "shuffle_compasses": "original_dungeon",
-            "shuffle_stone_beaks": "original_dungeon",
-            "shuffle_instruments": "vanilla",
-            "nag_messages": "false",
-            "hard_mode": "none",
-            "overworld": "normal",
-            "entrance_mapping": {'d8': 'd8', 'phone_d8': 'phone_d8', 'fire_cave_exit': 'fire_cave_exit', 'fire_cave_entrance': 'fire_cave_entrance', 'madbatter_taltal': 'madbatter_taltal', 'left_taltal_entrance': 'left_taltal_entrance', 'obstacle_cave_entrance': 'obstacle_cave_entrance', 'left_to_right_taltalentrance': 'left_to_right_taltalentrance', 'obstacle_cave_outside_chest': 'obstacle_cave_outside_chest', 'obstacle_cave_exit': 'obstacle_cave_exit', 'papahl_entrance': 'papahl_entrance', 'papahl_exit': 'papahl_exit', 'rooster_house': 'rooster_house', 'bird_cave': 'bird_cave', 'multichest_left': 'multichest_left', 'multichest_right': 'multichest_right', 'multichest_top': 'multichest_top', 'right_taltal_connector1': 'right_taltal_connector1', 'right_taltal_connector2': 'right_taltal_connector2', 'right_taltal_connector3': 'right_taltal_connector3', 'right_taltal_connector4': 'right_taltal_connector4', 'right_taltal_connector5': 'right_taltal_connector5', 'right_taltal_connector6': 'right_taltal_connector6', 'right_fairy': 'right_fairy', 'd7': 'd7', 'writes_cave_left': 'writes_cave_left', 'writes_cave_right': 'writes_cave_right', 'writes_house': 'writes_house', 'writes_phone': 'writes_phone', 'd2': 'd2', 'moblin_cave': 'moblin_cave', 'photo_house': 'photo_house', 'mambo': 'mambo', 'd4': 'd4', 'heartpiece_swim_cave': 'heartpiece_swim_cave', 'raft_return_exit': 'raft_return_exit', 'raft_house': 'raft_house', 'raft_return_enter': 'raft_return_enter', 'hookshot_cave': 'hookshot_cave', 'toadstool_exit': 'toadstool_exit', 'forest_madbatter': 'forest_madbatter', 'toadstool_entrance': 'toadstool_entrance', 'crazy_tracy': 'crazy_tracy', 'witch': 'witch', 'graveyard_cave_left': 'graveyard_cave_left', 'graveyard_cave_right': 'graveyard_cave_right', 'd0': 'd0', 'castle_jump_cave': 'castle_jump_cave', 'castle_main_entrance': 'castle_main_entrance', 'castle_upper_left': 'castle_upper_left', 'castle_upper_right': 'castle_upper_right', 'castle_secret_exit': 'castle_secret_exit', 'castle_secret_entrance': 'castle_secret_entrance', 'castle_phone': 'castle_phone', 'papahl_house_left': 'papahl_house_left', 'papahl_house_right': 'papahl_house_right', 'dream_hut': 'dream_hut', 'rooster_grave': 'rooster_grave', 'shop': 'shop', 'madambowwow': 'madambowwow', 'kennel': 'kennel', 'start_house': 'start_house', 'library': 'library', 'ulrira': 'ulrira', 'mabe_phone': 'mabe_phone', 'trendy_shop': 'trendy_shop', 'prairie_left_phone': 'prairie_left_phone', 'prairie_left_cave1': 'prairie_left_cave1', 'prairie_left_cave2': 'prairie_left_cave2', 'prairie_left_fairy': 'prairie_left_fairy', 'mamu': 'mamu', 'd3': 'd3', 'prairie_right_phone': 'prairie_right_phone', 'seashell_mansion': 'seashell_mansion', 'prairie_right_cave_top': 'prairie_right_cave_top', 'prairie_right_cave_bottom': 'prairie_right_cave_bottom', 'prairie_right_cave_high': 'prairie_right_cave_high', 'prairie_to_animal_connector': 'prairie_to_animal_connector', 'animal_to_prairie_connector': 'animal_to_prairie_connector', 'd6': 'd6', 'd6_connector_exit': 'd6_connector_exit', 'd6_connector_entrance': 'd6_connector_entrance', 'armos_fairy': 'armos_fairy', 'armos_maze_cave': 'armos_maze_cave', 'armos_temple': 'armos_temple', 'd1': 'd1', 'boomerang_cave': 'boomerang_cave', 'banana_seller': 'banana_seller', 'ghost_house': 'ghost_house', 'richard_house': 'richard_house', 'richard_maze': 'richard_maze', 'prairie_low_phone': 'prairie_low_phone', 'prairie_madbatter_connector_entrance': 'prairie_madbatter_connector_entrance', 'prairie_madbatter_connector_exit': 'prairie_madbatter_connector_exit', 'prairie_madbatter': 'prairie_madbatter', 'd5': 'd5', 'animal_phone': 'animal_phone', 'animal_house1': 'animal_house1', 'animal_house2': 'animal_house2', 'animal_house3': 'animal_house3', 'animal_house4': 'animal_house4', 'animal_house5': 'animal_house5', 'animal_cave': 'animal_cave', 'desert_cave': 'desert_cave'},
-        }
+        return {}

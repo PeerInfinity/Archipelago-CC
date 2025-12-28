@@ -16,8 +16,41 @@ if TYPE_CHECKING:
 
 
 # Helper functions
+def _megamanbattlenetwork3worldgen_can_unlock(state: "CollectionState", player: int) -> bool:
+    return (state.can_reach_region('SciLab Overworld', player)) or (state.can_reach_region('SciLab Cyberworld', player)) or (state.can_reach_region('Yoka Cyberworld', player)) or (state.has('Unlocker', player, 8))
+
+
 def _megamanbattlenetwork3worldgen_explore_score(state: "CollectionState", player: int) -> bool:
-    return (999 if (state.can_reach('WWW Island', "Region", player) == True) else (((((((((3 if (state.can_reach('SciLab Overworld', "Region", player) == True) else 0) + (1 if (state.can_reach('SciLab Cyberworld', "Region", player) == True) else 0)) + (2 if (state.can_reach('Yoka Overworld', "Region", player) == True) else 0)) + (1 if (state.can_reach('Yoka Cyberworld', "Region", player) == True) else 0)) + (3 if (state.can_reach('Beach Overworld', "Region", player) == True) else 0)) + (1 if (state.can_reach('Beach Cyberworld', "Region", player) == True) else 0)) + (2 if (state.can_reach('Undernet', "Region", player) == True) else 0)) + (1 if (state.can_reach('Deep Undernet', "Region", player) == True) else 0)) + (1 if (state.can_reach('Secret Area', "Region", player) == True) else 0)))
+    score = 0
+    if state.can_reach_region('WWW Island', player):
+        return 999
+    if state.can_reach_region('SciLab Overworld', player):
+        score += 3
+    if state.can_reach_region('SciLab Cyberworld', player):
+        score += 1
+    if state.can_reach_region('Yoka Overworld', player):
+        score += 2
+    if state.can_reach_region('Yoka Cyberworld', player):
+        score += 1
+    if state.can_reach_region('Beach Overworld', player):
+        score += 3
+    if state.can_reach_region('Beach Cyberworld', player):
+        score += 1
+    if state.can_reach_region('Undernet', player):
+        score += 2
+    if state.can_reach_region('Deep Undernet', player):
+        score += 1
+    if state.can_reach_region('Secret Area', player):
+        score += 1
+    return score
+
+
+def _megamanbattlenetwork3worldgen_has_press(state: "CollectionState", player: int) -> bool:
+    return state.has('Press', player)
+
+
+def _megamanbattlenetwork3worldgen_has_www_id(state: "CollectionState", player: int) -> bool:
+    return state.has('WWW ID', player)
 
 
 def set_rules(world: "World") -> None:
@@ -139,87 +172,6 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("Beach Cyberworld -> Undernet", player),
         And(Compare(HelperCall(helper_func=_megamanbattlenetwork3worldgen_explore_score, helper_name="explore_score"), ">", 8), Has('Press'))
-    )
-    # Register indirect conditions for proper sphere calculation
-    multiworld.register_indirect_condition(
-        world.get_region("SciLab Overworld"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("SciLab Cyberworld"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Yoka Overworld"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Yoka Cyberworld"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Beach Overworld"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Beach Cyberworld"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Undernet"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Deep Undernet"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Secret Area"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("WWW Island"),
-        multiworld.get_entrance("Yoka Overworld -> Secret Area", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("SciLab Overworld"),
-        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("SciLab Cyberworld"),
-        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Yoka Overworld"),
-        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Yoka Cyberworld"),
-        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Beach Overworld"),
-        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Beach Cyberworld"),
-        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Undernet"),
-        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Deep Undernet"),
-        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("Secret Area"),
-        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
-    )
-    multiworld.register_indirect_condition(
-        world.get_region("WWW Island"),
-        multiworld.get_entrance("Beach Cyberworld -> Undernet", player)
     )
     # Location rules
     world.set_rule(
@@ -359,7 +311,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("ACDC 1 PMD", player),
-        And(Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8)), Has('WWW ID'))
+        And(HelperCall(helper_func=_megamanbattlenetwork3worldgen_can_unlock, helper_name="can_unlock"), HelperCall(helper_func=_megamanbattlenetwork3worldgen_has_www_id, helper_name="has_www_id"))
     )
 
     world.set_rule(
@@ -539,7 +491,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Yoka 1 PMD", player),
-        And(Or(CanReachRegion('SciLab Cyberworld'), CanReachRegion('SciLab Overworld'), CanReachRegion('Yoka Cyberworld'), Has('Unlocker', 8)), Has('Press'))
+        And(HelperCall(helper_func=_megamanbattlenetwork3worldgen_can_unlock, helper_name="can_unlock"), HelperCall(helper_func=_megamanbattlenetwork3worldgen_has_press, helper_name="has_press"))
     )
 
     world.set_rule(

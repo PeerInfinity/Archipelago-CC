@@ -197,6 +197,58 @@ STARTING_ITEMS: Dict[str, int] = {
 }
 
 
+class _RegionWrapper:
+    """Wrapper for region to provide can_reach interface for worldgen shops."""
+    def __init__(self, region_name: str, world):
+        self.name = region_name
+        self._world = world
+
+    def can_reach(self, state) -> bool:
+        """Check if the region is reachable."""
+        try:
+            region = self._world.multiworld.get_region(self.name, self._world.player)
+            return state.can_reach_region(self.name, self._world.player)
+        except KeyError:
+            return False
+
+
+class _ShopWrapper:
+    """Wrapper for shop data to provide has/has_unlimited interface for worldgen."""
+    def __init__(self, shop_data: dict, world):
+        self._data = shop_data
+        self.region = _RegionWrapper(shop_data.get('region', ''), world)
+        self.inventory = shop_data.get('inventory', [])
+        self.room_id = shop_data.get('room_id', 0)
+        self.shopkeeper_config = shop_data.get('shopkeeper_config', 0)
+        self.custom = shop_data.get('custom', False)
+        self.locked = shop_data.get('locked', False)
+        self.sram_offset = shop_data.get('sram_offset', 0)
+
+    def has_unlimited(self, item: str) -> bool:
+        """Check if the shop has unlimited supply of an item."""
+        for inv in self.inventory:
+            if inv is None:
+                continue
+            if inv.get('max'):
+                if inv.get('replacement') == item:
+                    return True
+            elif inv.get('item') == item:
+                return True
+        return False
+
+    def has(self, item: str) -> bool:
+        """Check if the shop has an item."""
+        for inv in self.inventory:
+            if inv is None:
+                continue
+            if inv.get('item') == item:
+                return True
+            if inv.get('replacement') == item:
+                return True
+        return False
+
+
+
 class ALinktothePastWorldGenWeb(WebWorld):
     """Web interface for A Link to the Past WorldGen."""
     theme = "ocean"
@@ -239,9 +291,6 @@ class ALinktothePastWorldGenWorld(RuleWorldMixin, World):
         "Bottles": frozenset(["Bottle", "Bottle (Red Potion)", "Bottle (Green Potion)", "Bottle (Blue Potion)", "Bottle (Fairy)", "Bottle (Bee)", "Bottle (Good Bee)"]),
         "Potions": frozenset(["Bottle (Red Potion)", "Bottle (Green Potion)", "Bottle (Blue Potion)", "Red Potion", "Green Potion", "Blue Potion"]),
         "Swords": frozenset(["Master Sword", "Tempered Sword", "Fighter Sword", "Golden Sword", "Progressive Sword"]),
-        "Event": frozenset(["Green Pendant", "Blue Pendant", "Red Pendant", "Triforce", "Crystal 1", "Crystal 2", "Crystal 3", "Crystal 4", "Crystal 5", "Crystal 6", "Crystal 7", "Activated Flute", "Beat Agahnim 1", "Beat Agahnim 2", "Get Frog", "Return Smith", "Pick Up Purple Chest", "Open Floodgate", "Capacity Upgrade Shop"]),
-        "Pendants": frozenset(["Green Pendant", "Blue Pendant", "Red Pendant"]),
-        "Crystals": frozenset(["Crystal 1", "Crystal 2", "Crystal 3", "Crystal 4", "Crystal 5", "Crystal 6", "Crystal 7"]),
         "Non Progression Items": frozenset(["Single Arrow", "Arrows (10)", "Single Bomb", "Bombs (3)", "Bombs (10)", "Blue Mail", "Red Mail", "Progressive Mail", "Blue Shield", "Red Shield", "Boss Heart Container", "Sanctuary Heart Container", "Piece of Heart", "Rupee (1)", "Rupees (5)", "Rupees (20)", "Rupees (50)", "Rupees (100)", "Rupees (300)", "Rupoor", "Red Clock", "Blue Clock", "Green Clock", "Single RNG", "Multi RNG", "Compass (Eastern Palace)", "Map (Eastern Palace)", "Compass (Desert Palace)", "Map (Desert Palace)", "Compass (Tower of Hera)", "Map (Tower of Hera)", "Compass (Hyrule Castle)", "Map (Hyrule Castle)", "Compass (Agahnims Tower)", "Map (Agahnims Tower)", "Compass (Palace of Darkness)", "Map (Palace of Darkness)", "Compass (Thieves Town)", "Map (Thieves Town)", "Compass (Skull Woods)", "Map (Skull Woods)", "Compass (Swamp Palace)", "Map (Swamp Palace)", "Compass (Ice Palace)", "Map (Ice Palace)", "Compass (Misery Mire)", "Map (Misery Mire)", "Compass (Turtle Rock)", "Map (Turtle Rock)", "Compass (Ganons Tower)", "Map (Ganons Tower)", "Small Key (Universal)", "Nothing", "Bee Trap", "Faerie", "Good Bee", "Magic Jar", "Apple", "Red Potion", "Green Potion", "Blue Potion", "Bee", "Small Heart"]),
         "Upgrades": frozenset(["Arrow Upgrade (+10)", "Arrow Upgrade (+5)", "Arrow Upgrade (70)", "Bomb Upgrade (+10)", "Bomb Upgrade (+5)", "Bomb Upgrade (50)", "Magic Upgrade (1/2)", "Magic Upgrade (1/4)"]),
         "Mails": frozenset(["Blue Mail", "Red Mail", "Progressive Mail"]),
@@ -253,6 +302,8 @@ class ALinktothePastWorldGenWorld(RuleWorldMixin, World):
         "Big Keys": frozenset(["Big Key (Eastern Palace)", "Big Key (Desert Palace)", "Big Key (Tower of Hera)", "Big Key (Hyrule Castle)", "Big Key (Agahnims Tower)", "Big Key (Palace of Darkness)", "Big Key (Thieves Town)", "Big Key (Skull Woods)", "Big Key (Swamp Palace)", "Big Key (Ice Palace)", "Big Key (Misery Mire)", "Big Key (Turtle Rock)", "Big Key (Ganons Tower)"]),
         "Compasses": frozenset(["Compass (Eastern Palace)", "Compass (Desert Palace)", "Compass (Tower of Hera)", "Compass (Hyrule Castle)", "Compass (Agahnims Tower)", "Compass (Palace of Darkness)", "Compass (Thieves Town)", "Compass (Skull Woods)", "Compass (Swamp Palace)", "Compass (Ice Palace)", "Compass (Misery Mire)", "Compass (Turtle Rock)", "Compass (Ganons Tower)"]),
         "Maps": frozenset(["Map (Eastern Palace)", "Map (Desert Palace)", "Map (Tower of Hera)", "Map (Hyrule Castle)", "Map (Agahnims Tower)", "Map (Palace of Darkness)", "Map (Thieves Town)", "Map (Skull Woods)", "Map (Swamp Palace)", "Map (Ice Palace)", "Map (Misery Mire)", "Map (Turtle Rock)", "Map (Ganons Tower)"]),
+        "Pendants": frozenset(["Red Pendant", "Green Pendant", "Blue Pendant"]),
+        "Crystals": frozenset(["Crystal 2", "Crystal 7", "Crystal 5", "Crystal 4", "Crystal 1", "Crystal 6", "Crystal 3"]),
     }
 
     # Progressive item mapping: progressive_item -> [component_items_in_order]
@@ -541,15 +592,41 @@ class ALinktothePastWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.treasure_hunt_required = 0
-        self.can_take_damage = True
-        self.logical_heart_pieces = 24
-        self.logical_heart_containers = 10
-        self.difficulty_requirements = types.SimpleNamespace(progressive_bottle_limit=4, boss_heart_container_limit=10, heart_piece_limit=24)
+        self.shops = self._create_shops([{'region': 'Cave Shop (Dark Death Mountain)', 'room_id': 274, 'inventory': [{'item': 'Red Potion', 'price': 150, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Small Heart', 'price': 10, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Bombs (10)', 'price': 50, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}], 'shopkeeper_config': 193, 'custom': True, 'locked': False, 'sram_offset': 0}, {'region': 'Red Shield Shop', 'room_id': 272, 'inventory': [{'item': 'Red Shield', 'price': 500, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Bee', 'price': 10, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Arrows (10)', 'price': 30, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}], 'shopkeeper_config': 193, 'custom': True, 'locked': False, 'sram_offset': 3}, {'region': 'Dark Lake Hylia Shop', 'room_id': 271, 'inventory': [{'item': 'Red Potion', 'price': 150, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Blue Shield', 'price': 50, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Bombs (10)', 'price': 50, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}], 'shopkeeper_config': 193, 'custom': True, 'locked': False, 'sram_offset': 6}, {'region': 'Dark World Lumberjack Shop', 'room_id': 271, 'inventory': [{'item': 'Red Potion', 'price': 150, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Blue Shield', 'price': 50, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Bombs (10)', 'price': 50, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}], 'shopkeeper_config': 193, 'custom': True, 'locked': False, 'sram_offset': 9}, {'region': 'Village of Outcasts Shop', 'room_id': 271, 'inventory': [{'item': 'Red Potion', 'price': 150, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Blue Shield', 'price': 50, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Bombs (10)', 'price': 50, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}], 'shopkeeper_config': 193, 'custom': True, 'locked': False, 'sram_offset': 12}, {'region': 'Dark World Potion Shop', 'room_id': 271, 'inventory': [{'item': 'Red Potion', 'price': 150, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Blue Shield', 'price': 50, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Bombs (10)', 'price': 50, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}], 'shopkeeper_config': 193, 'custom': True, 'locked': False, 'sram_offset': 15}, {'region': 'Light World Death Mountain Shop', 'room_id': 255, 'inventory': [{'item': 'Red Potion', 'price': 150, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Small Heart', 'price': 10, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Bombs (10)', 'price': 50, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}], 'shopkeeper_config': 160, 'custom': True, 'locked': False, 'sram_offset': 18}, {'region': 'Kakariko Shop', 'room_id': 287, 'inventory': [{'item': 'Red Potion', 'price': 150, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Small Heart', 'price': 10, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Bombs (10)', 'price': 50, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}], 'shopkeeper_config': 160, 'custom': True, 'locked': False, 'sram_offset': 21}, {'region': 'Cave Shop (Lake Hylia)', 'room_id': 274, 'inventory': [{'item': 'Red Potion', 'price': 150, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Small Heart', 'price': 10, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Bombs (10)', 'price': 50, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}], 'shopkeeper_config': 160, 'custom': True, 'locked': False, 'sram_offset': 24}, {'region': 'Potion Shop', 'room_id': 265, 'inventory': [{'item': 'Red Potion', 'price': 120, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Green Potion', 'price': 60, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Blue Potion', 'price': 160, 'price_type': 0, 'max': 0, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}], 'shopkeeper_config': 160, 'custom': True, 'locked': True, 'sram_offset': 27}, {'region': 'Capacity Upgrade', 'room_id': 277, 'inventory': [{'item': 'Bomb Upgrade (+5)', 'price': 100, 'price_type': 0, 'max': 7, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, {'item': 'Arrow Upgrade (+5)', 'price': 100, 'price_type': 0, 'max': 7, 'replacement_price': 0, 'replacement_price_type': 0, 'player': 0}, None], 'shopkeeper_config': 4, 'custom': True, 'locked': True, 'sram_offset': 30}])
+        self.has_progressive_bows = True
+        self.waterfall_fairy_bottle_fill = 'Bottle (Red Potion)'
+        self.pyramid_fairy_bottle_fill = 'Bottle (Good Bee)'
+        self.fix_trock_doors = False
+        self.fix_skullwoods_exit = False
+        self.fix_palaceofdarkness_exit = False
+        self.fix_trock_exit = False
         self.required_medallions = ['Quake', 'Ether']
-        self.misery_mire_medallion = 'Quake'
-        self.turtle_rock_medallion = 'Ether'
-        self.shop_items = {'Red Potion': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)', 'Potion Shop']}, 'Small Heart': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Bombs (10)': {'unlimited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)'], 'limited': ['Cave Shop (Dark Death Mountain)', 'Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop', 'Light World Death Mountain Shop', 'Kakariko Shop', 'Cave Shop (Lake Hylia)']}, 'Red Shield': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Bee': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Arrows (10)': {'unlimited': ['Red Shield Shop'], 'limited': ['Red Shield Shop']}, 'Blue Shield': {'unlimited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop'], 'limited': ['Dark Lake Hylia Shop', 'Dark World Lumberjack Shop', 'Village of Outcasts Shop', 'Dark World Potion Shop']}, 'Green Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Blue Potion': {'unlimited': ['Potion Shop'], 'limited': ['Potion Shop']}, 'Bomb Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}, 'Arrow Upgrade (+5)': {'unlimited': [], 'limited': ['Capacity Upgrade']}}
+        self.escape_assist = []
+        self.logical_heart_containers = 10
+        self.logical_heart_pieces = 24
+        self.er_seed = 'vanilla'
+        self.difficulty_requirements = types.SimpleNamespace(baseitems=['Single Arrow', 'Sanctuary Heart Container', 'Arrows (10)', 'Bombs (10)', 'Rupees (300)', 'Rupees (300)', 'Rupees (300)', 'Boss Heart Container', 'Boss Heart Container', 'Boss Heart Container', 'Boss Heart Container', 'Boss Heart Container', 'Boss Heart Container', 'Boss Heart Container', 'Boss Heart Container', 'Boss Heart Container', 'Boss Heart Container', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart', 'Piece of Heart'], bottles=['Bottle', 'Bottle (Red Potion)', 'Bottle (Green Potion)', 'Bottle (Blue Potion)', 'Bottle (Fairy)', 'Bottle (Bee)', 'Bottle (Good Bee)'], bottle_count=4, same_bottle=False, progressiveshield=['Progressive Shield', 'Progressive Shield', 'Progressive Shield'], basicshield=['Blue Shield', 'Red Shield', 'Mirror Shield'], progressivearmor=['Progressive Mail', 'Progressive Mail'], basicarmor=['Blue Mail', 'Red Mail'], swordless=['Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)'], progressivemagic=['Magic Upgrade (1/2)', 'Rupees (300)'], basicmagic=['Magic Upgrade (1/2)', 'Rupees (300)'], progressivesword=['Progressive Sword', 'Progressive Sword', 'Progressive Sword', 'Progressive Sword'], basicsword=['Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword'], progressivebow=['Progressive Bow', 'Progressive Bow'], basicbow=['Bow', 'Silver Bow'], timedohko=['Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock'], timedother=['Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Green Clock', 'Blue Clock', 'Blue Clock', 'Blue Clock', 'Blue Clock', 'Blue Clock', 'Blue Clock', 'Blue Clock', 'Blue Clock', 'Blue Clock', 'Blue Clock', 'Red Clock', 'Red Clock', 'Red Clock', 'Red Clock', 'Red Clock', 'Red Clock', 'Red Clock', 'Red Clock', 'Red Clock', 'Red Clock'], progressiveglove=['Progressive Glove', 'Progressive Glove'], basicglove=['Power Glove', 'Titans Mitts'], alwaysitems=['Bombos', 'Book of Mudora', 'Cane of Somaria', 'Ether', 'Fire Rod', 'Flippers', 'Flute', 'Hammer', 'Hookshot', 'Ice Rod', 'Lamp', 'Cape', 'Magic Powder', 'Mushroom', 'Pegasus Boots', 'Quake', 'Shovel', 'Bug Catching Net', 'Cane of Byrna', 'Blue Boomerang', 'Red Boomerang'], legacyinsanity=['Magic Mirror', 'Moon Pearl'], universal_keys=['Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Small Key (Universal)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)'], extras=[['Rupees (100)', 'Rupees (300)', 'Rupees (50)', 'Arrows (10)', 'Arrows (10)', 'Arrows (10)', 'Arrows (10)', 'Arrows (10)', 'Arrows (10)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)'], ['Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Bombs (3)', 'Rupees (50)', 'Rupees (50)', 'Arrows (10)', 'Arrows (10)', 'Rupee (1)'], ['Rupees (50)', 'Rupees (50)', 'Rupees (50)', 'Rupees (50)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Arrows (10)', 'Rupee (1)', 'Rupees (5)'], ['Arrows (10)', 'Arrows (10)', 'Rupees (20)', 'Rupees (20)', 'Rupees (5)'], ['Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (20)', 'Rupees (5)', 'Rupees (5)']], progressive_sword_limit=4, progressive_shield_limit=3, progressive_armor_limit=2, progressive_bottle_limit=4, progressive_bow_limit=2, heart_piece_limit=24, boss_heart_container_limit=10)
+        self.treasure_hunt_required = 0
+        self.treasure_hunt_total = 0
+        self.rom_name = 'ALTTP_ROM_NOT_GENERATED'
+        self.can_take_damage = True
+        self.swamp_patch_required = False
+        self.powder_patch_required = False
+        self.ganon_at_pyramid = True
+        self.ganonstower_vanilla = True
+        self.fix_fake_world = True
+        self.clock_mode = ''
+        self.light_world_light_cone = False
+        self.dark_world_light_cone = False
+        self.save_and_quit_from_boss = True
+        self.rupoor_cost = 10
+        self.world_description = 'The Legend of Zelda: A Link to the Past is an action/adventure game. Take on the role of\nLink, a boy who is destined to save the land of Hyrule. Delve through three palaces and nine\ndungeons on your quest to rescue the descendents of the seven wise men and defeat the evil\nGanon!'
+        self.slot_data = types.SimpleNamespace(crystals_needed_for_gt=7, crystals_needed_for_ganon=7, open_pyramid=2, big_key_shuffle=0, small_key_shuffle=0, compass_shuffle=0, map_shuffle=0, progressive=2, swordless=0, retro_bow=0, retro_caves=0, shop_item_slots=0, boss_shuffle=0, pot_shuffle=0, enemy_shuffle=0, key_drop_shuffle=1, bombless_start=0, randomize_shop_inventories=0, shuffle_shop_inventories=0, shuffle_capacity_upgrades=0, entrance_shuffle=0, dark_room_logic=0, goal=0, mode=1, triforce_pieces_mode=2, triforce_pieces_percentage=150, triforce_pieces_required=20, triforce_pieces_available=30, triforce_pieces_extra=10, mm_medalion='Quake', tr_medalion='Ether')
+        self.web = types.SimpleNamespace(theme='grass', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.', 'language': 'English', 'file_name': 'multiworld_en.md', 'link': 'multiworld/en', 'authors': ['Farrak Kilhn', 'Berserker']}, {'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.', 'language': 'Deutsch', 'file_name': 'multiworld_de.md', 'link': 'multiworld/de', 'authors': ['Fischfilet']}, {'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.', 'language': 'Español', 'file_name': 'multiworld_es.md', 'link': 'multiworld/es', 'authors': ['Edos']}, {'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.', 'language': 'Français', 'file_name': 'multiworld_fr.md', 'link': 'multiworld/fr', 'authors': ['Coxla']}, {'name': 'MSU-1 Setup Guide', 'description': 'A guide to setting up MSU-1, which allows for custom in-game music.', 'language': 'English', 'file_name': 'msu1_en.md', 'link': 'msu1/en', 'authors': ['Farrak Kilhn']}, {'name': 'MSU-1 Setup Guide', 'description': 'A guide to setting up MSU-1, which allows for custom in-game music.', 'language': 'Español', 'file_name': 'msu1_es.md', 'link': 'msu1/es', 'authors': ['Edos']}, {'name': 'MSU-1 Setup Guide', 'description': 'A guide to setting up MSU-1, which allows for custom in-game music.', 'language': 'Français', 'file_name': 'msu1_fr.md', 'link': 'msu1/fr', 'authors': ['Coxla']}, {'name': 'Plando Guide', 'description': 'A guide to creating Multiworld Plandos with LTTP', 'language': 'English', 'file_name': 'plando_en.md', 'link': 'plando/en', 'authors': ['Berserker']}, {'name': "'OOF' Sound Replacement", 'description': "A guide to customizing Link's 'oof' sound", 'language': 'English', 'file_name': 'oof_sound_en.md', 'link': 'oof_sound/en', 'authors': ['Nyx Edelstein']}])
+
+    def _create_shops(self, shops_data: list) -> list:
+        """Convert shop data dicts to ShopWrapper objects."""
+        return [_ShopWrapper(shop, self) for shop in shops_data]
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""

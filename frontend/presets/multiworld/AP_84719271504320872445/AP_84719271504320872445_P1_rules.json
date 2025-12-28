@@ -764,157 +764,31 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Conditional",
-                      "args": {
-                        "test": {
-                          "rule": "Not",
-                          "args": {
-                            "condition": {
-                              "rule": "painting_logic",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "not"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": {
-                          "rule": "Conditional",
-                          "args": {
-                            "test": {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "False_"
-                                },
-                                {
-                                  "rule": "Not",
-                                  "args": {
-                                    "condition": {
-                                      "rule": "AST_setting_value",
-                                      "args": {
-                                        "setting": "NoPaintingSkips",
-                                        "_original_ast_type": "setting_value"
-                                      },
-                                      "_converted_from_ast": true
-                                    },
-                                    "_original_ast_type": "not"
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            },
-                            "if_true": {
-                              "rule": "Conditional",
-                              "args": {
-                                "test": {
-                                  "rule": "Compare",
-                                  "args": {
-                                    "left": {
-                                      "rule": "get_difficulty",
-                                      "_original_ast_type": "helper",
-                                      "_converted_from_ast": true
-                                    },
-                                    "op": ">=",
-                                    "right": {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 0
-                                      },
-                                      "_converted_from_ast": true
-                                    },
-                                    "_original_ast_type": "compare"
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                "if_true": {
-                                  "rule": "True_"
-                                },
-                                "if_false": null,
-                                "_original_ast_type": "conditional"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "if_false": {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Painting Unlock"
-                              }
-                            },
-                            "_original_ast_type": "conditional"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "conditional"
-                      },
+                      "rule": "can_hit",
+                      "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Conditional",
-                      "args": {
-                        "test": {
-                          "rule": "Not",
-                          "args": {
-                            "condition": {
-                              "rule": "AST_setting_value",
-                              "args": {
-                                "setting": "UmbrellaLogic",
-                                "_original_ast_type": "setting_value"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "not"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "True_"
-                                },
-                                {
-                                  "rule": "can_use_hat",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 1
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Umbrella"
-                              }
-                            }
-                          ]
-                        },
-                        "_original_ast_type": "conditional"
-                      },
+                      "rule": "can_use_hookshot",
+                      "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot Badge"
-                      }
+                      "rule": "has_paintings",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": 1
+                          },
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "False_"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -1169,10 +1043,9 @@
             "name": "Mafia Town - Act 4: Connection 1",
             "connected_region": "Dead Bird Studio Basement",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -1949,157 +1822,31 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Conditional",
-                      "args": {
-                        "test": {
-                          "rule": "Not",
-                          "args": {
-                            "condition": {
-                              "rule": "painting_logic",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "not"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": {
-                          "rule": "Conditional",
-                          "args": {
-                            "test": {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "False_"
-                                },
-                                {
-                                  "rule": "Not",
-                                  "args": {
-                                    "condition": {
-                                      "rule": "AST_setting_value",
-                                      "args": {
-                                        "setting": "NoPaintingSkips",
-                                        "_original_ast_type": "setting_value"
-                                      },
-                                      "_converted_from_ast": true
-                                    },
-                                    "_original_ast_type": "not"
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            },
-                            "if_true": {
-                              "rule": "Conditional",
-                              "args": {
-                                "test": {
-                                  "rule": "Compare",
-                                  "args": {
-                                    "left": {
-                                      "rule": "get_difficulty",
-                                      "_original_ast_type": "helper",
-                                      "_converted_from_ast": true
-                                    },
-                                    "op": ">=",
-                                    "right": {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 0
-                                      },
-                                      "_converted_from_ast": true
-                                    },
-                                    "_original_ast_type": "compare"
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                "if_true": {
-                                  "rule": "True_"
-                                },
-                                "if_false": null,
-                                "_original_ast_type": "conditional"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "if_false": {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Painting Unlock"
-                              }
-                            },
-                            "_original_ast_type": "conditional"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "conditional"
-                      },
+                      "rule": "can_hit",
+                      "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Conditional",
-                      "args": {
-                        "test": {
-                          "rule": "Not",
-                          "args": {
-                            "condition": {
-                              "rule": "AST_setting_value",
-                              "args": {
-                                "setting": "UmbrellaLogic",
-                                "_original_ast_type": "setting_value"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "not"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "True_"
-                                },
-                                {
-                                  "rule": "can_use_hat",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 1
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Umbrella"
-                              }
-                            }
-                          ]
-                        },
-                        "_original_ast_type": "conditional"
-                      },
+                      "rule": "can_use_hookshot",
+                      "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot Badge"
-                      }
+                      "rule": "has_paintings",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": 1
+                          },
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "False_"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -2166,10 +1913,9 @@
             "name": "Battle of the Birds - Finale A: Connection 2",
             "connected_region": "Award Ceremony",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2178,10 +1924,9 @@
             "name": "Act Completion (Train Rush)",
             "id": 2000312481,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Seashell",
@@ -2247,10 +1992,9 @@
             "name": "Battle of the Birds - Finale A: Connection 1",
             "connected_region": "Award Ceremony",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2331,20 +2075,18 @@
             "name": "Mafia Town - Act 6: Connection 1",
             "connected_region": "Mail Delivery Service",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Mafia Town - Act 7: Connection 1",
             "connected_region": "The Golden Vault",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -2353,10 +2095,9 @@
             "name": "Dead Bird Studio Basement - Window Platform",
             "id": 2000305432,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Random Cosmetic",
@@ -2370,10 +2111,9 @@
             "name": "Dead Bird Studio Basement - Cardboard Conductor",
             "id": 2000305059,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Bait",
@@ -2387,10 +2127,9 @@
             "name": "Dead Bird Studio Basement - Above Conductor Sign",
             "id": 2000305057,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "25 Pons",
@@ -2418,10 +2157,9 @@
             "name": "Dead Bird Studio Basement - Disco Room",
             "id": 2000305061,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Golden Feather",
@@ -2463,10 +2201,9 @@
             "name": "Dead Bird Studio Basement - Tightrope",
             "id": 2000305058,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Bug Catching Net",
@@ -2480,10 +2217,9 @@
             "name": "Dead Bird Studio Basement - Cameras",
             "id": 2000305431,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Piece of Heart",
@@ -2497,10 +2233,9 @@
             "name": "Dead Bird Studio Basement - Locked Room",
             "id": 2000305819,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "27 Coins",
@@ -2514,10 +2249,9 @@
             "name": "Act Completion (Dead Bird Studio Basement)",
             "id": 2000312253,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Relic (Train)",
@@ -3090,157 +2824,31 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Conditional",
-                      "args": {
-                        "test": {
-                          "rule": "Not",
-                          "args": {
-                            "condition": {
-                              "rule": "painting_logic",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "not"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": {
-                          "rule": "Conditional",
-                          "args": {
-                            "test": {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "False_"
-                                },
-                                {
-                                  "rule": "Not",
-                                  "args": {
-                                    "condition": {
-                                      "rule": "AST_setting_value",
-                                      "args": {
-                                        "setting": "NoPaintingSkips",
-                                        "_original_ast_type": "setting_value"
-                                      },
-                                      "_converted_from_ast": true
-                                    },
-                                    "_original_ast_type": "not"
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            },
-                            "if_true": {
-                              "rule": "Conditional",
-                              "args": {
-                                "test": {
-                                  "rule": "Compare",
-                                  "args": {
-                                    "left": {
-                                      "rule": "get_difficulty",
-                                      "_original_ast_type": "helper",
-                                      "_converted_from_ast": true
-                                    },
-                                    "op": ">=",
-                                    "right": {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 0
-                                      },
-                                      "_converted_from_ast": true
-                                    },
-                                    "_original_ast_type": "compare"
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                "if_true": {
-                                  "rule": "True_"
-                                },
-                                "if_false": null,
-                                "_original_ast_type": "conditional"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "if_false": {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Painting Unlock"
-                              }
-                            },
-                            "_original_ast_type": "conditional"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "conditional"
-                      },
+                      "rule": "can_hit",
+                      "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Conditional",
-                      "args": {
-                        "test": {
-                          "rule": "Not",
-                          "args": {
-                            "condition": {
-                              "rule": "AST_setting_value",
-                              "args": {
-                                "setting": "UmbrellaLogic",
-                                "_original_ast_type": "setting_value"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "not"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "True_"
-                                },
-                                {
-                                  "rule": "can_use_hat",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 1
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Umbrella"
-                              }
-                            }
-                          ]
-                        },
-                        "_original_ast_type": "conditional"
-                      },
+                      "rule": "can_use_hookshot",
+                      "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot Badge"
-                      }
+                      "rule": "has_paintings",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": 1
+                          },
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "False_"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -3371,10 +2979,9 @@
             "name": "Mafia Town - Act 4: Connection 2",
             "connected_region": "Dead Bird Studio Basement",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -3411,10 +3018,9 @@
             "name": "Subcon Well - On Pipe",
             "id": 2000324311,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Boss Heart Container",
@@ -3442,10 +3048,9 @@
             "name": "Act Completion (The Subcon Well)",
             "id": 2000311160,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "13 Coins",
@@ -3596,157 +3201,31 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Conditional",
-                      "args": {
-                        "test": {
-                          "rule": "Not",
-                          "args": {
-                            "condition": {
-                              "rule": "painting_logic",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "not"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": {
-                          "rule": "Conditional",
-                          "args": {
-                            "test": {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "False_"
-                                },
-                                {
-                                  "rule": "Not",
-                                  "args": {
-                                    "condition": {
-                                      "rule": "AST_setting_value",
-                                      "args": {
-                                        "setting": "NoPaintingSkips",
-                                        "_original_ast_type": "setting_value"
-                                      },
-                                      "_converted_from_ast": true
-                                    },
-                                    "_original_ast_type": "not"
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            },
-                            "if_true": {
-                              "rule": "Conditional",
-                              "args": {
-                                "test": {
-                                  "rule": "Compare",
-                                  "args": {
-                                    "left": {
-                                      "rule": "get_difficulty",
-                                      "_original_ast_type": "helper",
-                                      "_converted_from_ast": true
-                                    },
-                                    "op": ">=",
-                                    "right": {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 0
-                                      },
-                                      "_converted_from_ast": true
-                                    },
-                                    "_original_ast_type": "compare"
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                "if_true": {
-                                  "rule": "True_"
-                                },
-                                "if_false": null,
-                                "_original_ast_type": "conditional"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "if_false": {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Painting Unlock"
-                              }
-                            },
-                            "_original_ast_type": "conditional"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "conditional"
-                      },
+                      "rule": "can_hit",
+                      "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Conditional",
-                      "args": {
-                        "test": {
-                          "rule": "Not",
-                          "args": {
-                            "condition": {
-                              "rule": "AST_setting_value",
-                              "args": {
-                                "setting": "UmbrellaLogic",
-                                "_original_ast_type": "setting_value"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "not"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "True_"
-                                },
-                                {
-                                  "rule": "can_use_hat",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 1
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Umbrella"
-                              }
-                            }
-                          ]
-                        },
-                        "_original_ast_type": "conditional"
-                      },
+                      "rule": "can_use_hookshot",
+                      "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot Badge"
-                      }
+                      "rule": "has_paintings",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": 1
+                          },
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "False_"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -3762,157 +3241,31 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Conditional",
-                  "args": {
-                    "test": {
-                      "rule": "Not",
-                      "args": {
-                        "condition": {
-                          "rule": "painting_logic",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "not"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    "if_true": {
-                      "rule": "True_"
-                    },
-                    "if_false": {
-                      "rule": "Conditional",
-                      "args": {
-                        "test": {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "False_"
-                            },
-                            {
-                              "rule": "Not",
-                              "args": {
-                                "condition": {
-                                  "rule": "AST_setting_value",
-                                  "args": {
-                                    "setting": "NoPaintingSkips",
-                                    "_original_ast_type": "setting_value"
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                "_original_ast_type": "not"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        "if_true": {
-                          "rule": "Conditional",
-                          "args": {
-                            "test": {
-                              "rule": "Compare",
-                              "args": {
-                                "left": {
-                                  "rule": "get_difficulty",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true
-                                },
-                                "op": ">=",
-                                "right": {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 0
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                "_original_ast_type": "compare"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "if_true": {
-                              "rule": "True_"
-                            },
-                            "if_false": null,
-                            "_original_ast_type": "conditional"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "if_false": {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Painting Unlock"
-                          }
-                        },
-                        "_original_ast_type": "conditional"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    "_original_ast_type": "conditional"
-                  },
+                  "rule": "can_hit",
+                  "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Conditional",
-                  "args": {
-                    "test": {
-                      "rule": "Not",
-                      "args": {
-                        "condition": {
-                          "rule": "AST_setting_value",
-                          "args": {
-                            "setting": "UmbrellaLogic",
-                            "_original_ast_type": "setting_value"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "not"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    "if_true": {
-                      "rule": "True_"
-                    },
-                    "if_false": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "True_"
-                            },
-                            {
-                              "rule": "can_use_hat",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 1
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Umbrella"
-                          }
-                        }
-                      ]
-                    },
-                    "_original_ast_type": "conditional"
-                  },
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge"
-                  }
+                  "rule": "has_paintings",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": 1
+                      },
+                      "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "False_"
+                    }
+                  ]
                 }
               ]
             },
@@ -4267,33 +3620,9 @@
             "name": "Alpine Skyline - Finale",
             "connected_region": "Down with the Mafia!",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Birdhouse Cleared"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Lava Cake Cleared"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Twilight Bell Cleared"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Windmill Cleared"
-                  }
-                }
-              ]
+              "rule": "can_clear_alpine",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
@@ -4313,10 +3642,9 @@
             "name": "AFR -> Alpine Skyline Area",
             "connected_region": "Alpine Skyline Area",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
@@ -4349,68 +3677,14 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Conditional",
-                      "args": {
-                        "test": {
-                          "rule": "Not",
-                          "args": {
-                            "condition": {
-                              "rule": "AST_setting_value",
-                              "args": {
-                                "setting": "UmbrellaLogic",
-                                "_original_ast_type": "setting_value"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "not"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "True_"
-                                },
-                                {
-                                  "rule": "can_use_hat",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 1
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Umbrella"
-                              }
-                            }
-                          ]
-                        },
-                        "_original_ast_type": "conditional"
-                      },
+                      "rule": "can_hit",
+                      "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot Badge"
-                      }
+                      "rule": "can_use_hookshot",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -4496,157 +3770,31 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Conditional",
-                      "args": {
-                        "test": {
-                          "rule": "Not",
-                          "args": {
-                            "condition": {
-                              "rule": "painting_logic",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "not"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": {
-                          "rule": "Conditional",
-                          "args": {
-                            "test": {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "False_"
-                                },
-                                {
-                                  "rule": "Not",
-                                  "args": {
-                                    "condition": {
-                                      "rule": "AST_setting_value",
-                                      "args": {
-                                        "setting": "NoPaintingSkips",
-                                        "_original_ast_type": "setting_value"
-                                      },
-                                      "_converted_from_ast": true
-                                    },
-                                    "_original_ast_type": "not"
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            },
-                            "if_true": {
-                              "rule": "Conditional",
-                              "args": {
-                                "test": {
-                                  "rule": "Compare",
-                                  "args": {
-                                    "left": {
-                                      "rule": "get_difficulty",
-                                      "_original_ast_type": "helper",
-                                      "_converted_from_ast": true
-                                    },
-                                    "op": ">=",
-                                    "right": {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 0
-                                      },
-                                      "_converted_from_ast": true
-                                    },
-                                    "_original_ast_type": "compare"
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                "if_true": {
-                                  "rule": "True_"
-                                },
-                                "if_false": null,
-                                "_original_ast_type": "conditional"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "if_false": {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Painting Unlock"
-                              }
-                            },
-                            "_original_ast_type": "conditional"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "_original_ast_type": "conditional"
-                      },
+                      "rule": "can_hit",
+                      "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Conditional",
-                      "args": {
-                        "test": {
-                          "rule": "Not",
-                          "args": {
-                            "condition": {
-                              "rule": "AST_setting_value",
-                              "args": {
-                                "setting": "UmbrellaLogic",
-                                "_original_ast_type": "setting_value"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "not"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "True_"
-                                },
-                                {
-                                  "rule": "can_use_hat",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 1
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Umbrella"
-                              }
-                            }
-                          ]
-                        },
-                        "_original_ast_type": "conditional"
-                      },
+                      "rule": "can_use_hookshot",
+                      "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot Badge"
-                      }
+                      "rule": "has_paintings",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": 1
+                          },
+                          "_converted_from_ast": true
+                        },
+                        {
+                          "rule": "False_"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -4703,10 +3851,9 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge"
-                  }
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4715,20 +3862,18 @@
             "name": "-> The Lava Cake",
             "connected_region": "The Lava Cake",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "-> The Windmill",
             "connected_region": "The Windmill",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
@@ -4752,10 +3897,9 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge"
-                  }
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -4925,61 +4069,18 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Conditional",
-                      "args": {
-                        "test": {
-                          "rule": "Not",
-                          "args": {
-                            "condition": {
-                              "rule": "AST_setting_value",
-                              "args": {
-                                "setting": "UmbrellaLogic",
-                                "_original_ast_type": "setting_value"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "not"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "if_true": {
+                      "rule": "can_hit",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
                           "rule": "True_"
-                        },
-                        "if_false": {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "False_"
-                                },
-                                {
-                                  "rule": "can_use_hat",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 1
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Umbrella"
-                              }
-                            }
-                          ]
-                        },
-                        "_original_ast_type": "conditional"
-                      },
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "can_use_hookshot",
+                      "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
                     {
@@ -4987,20 +4088,13 @@
                       "args": {
                         "item_name": "AFR Access"
                       }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot Badge"
-                      }
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge"
-                  }
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5016,10 +4110,9 @@
             "name": "Alpine Skyline - Bird Pass Fork",
             "id": 2000335911,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "13 Coins",
@@ -5050,10 +4143,9 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge"
-                  }
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -5069,10 +4161,9 @@
             "name": "Alpine Skyline - Ember Summit",
             "id": 2000336311,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Piece of Heart",
@@ -5086,10 +4177,9 @@
             "name": "Alpine Skyline - Goat Outpost Horn",
             "id": 2000334760,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Fast Hatter Badge",
@@ -5103,10 +4193,9 @@
             "name": "Alpine Skyline - Windy Passage",
             "id": 2000334776,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Bottle (Fairy)",
@@ -5525,20 +4614,18 @@
             "name": "Battle of the Birds - Act 2: Connection 1",
             "connected_region": "Dead Bird Studio",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Battle of the Birds - Act 3: Connection 1",
             "connected_region": "Barrel Battle",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             }
           }
         ],
@@ -5547,10 +4634,9 @@
             "name": "Act Completion (The Illness has Spread)",
             "id": 2000312022,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Freeincarnate",
@@ -6371,15 +5457,14 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "HUMT Access"
-                  }
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot Badge"
+                    "item_name": "HUMT Access"
                   }
                 }
               ]
@@ -6424,10 +5509,9 @@
             "name": "Mafia Town - Clock Tower Chest",
             "id": 2000303481,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Yarn",
@@ -6441,10 +5525,9 @@
             "name": "Mafia Town - Top of Lighthouse",
             "id": 2000304213,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Progressive Fishing Rod",
@@ -6699,93 +5782,21 @@
             "name": "SF Area -> SF Behind Boss Firewall",
             "connected_region": "Subcon Forest Behind Boss Firewall",
             "access_rule": {
-              "rule": "Conditional",
-              "args": {
-                "test": {
-                  "rule": "Not",
+              "rule": "has_paintings",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
                   "args": {
-                    "condition": {
-                      "rule": "painting_logic",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    "_original_ast_type": "not"
+                    "value": 1
                   },
                   "_converted_from_ast": true
                 },
-                "if_true": {
-                  "rule": "True_"
-                },
-                "if_false": {
-                  "rule": "Conditional",
-                  "args": {
-                    "test": {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "Not",
-                          "args": {
-                            "condition": {
-                              "rule": "AST_setting_value",
-                              "args": {
-                                "setting": "NoPaintingSkips",
-                                "_original_ast_type": "setting_value"
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "not"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "rule": "Conditional",
-                      "args": {
-                        "test": {
-                          "rule": "Compare",
-                          "args": {
-                            "left": {
-                              "rule": "get_difficulty",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true
-                            },
-                            "op": ">=",
-                            "right": {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 0
-                              },
-                              "_converted_from_ast": true
-                            },
-                            "_original_ast_type": "compare"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": null,
-                        "_original_ast_type": "conditional"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    "if_false": {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Painting Unlock"
-                      }
-                    },
-                    "_original_ast_type": "conditional"
-                  },
-                  "_converted_from_ast": true
-                },
-                "_original_ast_type": "conditional"
-              },
-              "_converted_from_ast": true
+                {
+                  "rule": "False_"
+                }
+              ]
             }
           },
           {
@@ -7106,10 +6117,9 @@
             "name": "Subcon Forest - Noose Treehouse",
             "id": 2000324856,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Piece of Heart",
@@ -7368,10 +6378,9 @@
             "name": "Subcon Forest - Tall Tree Hookshot Swing",
             "id": 2000324766,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Relic (UFO)",
@@ -7435,10 +6444,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge"
-                  }
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -7661,10 +6669,9 @@
             "name": "Act Completion (Time Rift - Pipe)",
             "id": 2000313069,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge"
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Golden Feather",
@@ -7874,10 +6881,9 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge"
-                  }
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -7910,10 +6916,9 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge"
-                  }
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -9326,45 +8331,43 @@
       "Compass Badge"
     ]
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "A Hat in Time",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
         "ActBlacklist": {},
         "ActPlando": {},
-        "ActRandomizer": "light",
+        "ActRandomizer": 1,
         "BabyTrapWeight": 40,
         "BadgeSellerMaxItems": 8,
         "BadgeSellerMinItems": 4,
-        "BaseballBat": "false",
-        "CTRLogic": "time_stop_only",
+        "BaseballBat": false,
+        "CTRLogic": 0,
         "ChapterCostIncrement": 4,
         "ChapterCostMinDifference": 4,
-        "CompassBadgeMode": "closest",
-        "DWAutoCompleteBonuses": "true",
-        "DWEnableBonus": "false",
-        "DWExcludeAnnoyingBonuses": "true",
-        "DWExcludeAnnoyingContracts": "true",
-        "DWExcludeCandles": "true",
-        "DWShuffle": "false",
+        "CompassBadgeMode": 1,
+        "DWAutoCompleteBonuses": true,
+        "DWEnableBonus": false,
+        "DWExcludeAnnoyingBonuses": true,
+        "DWExcludeAnnoyingContracts": true,
+        "DWExcludeCandles": true,
+        "DWShuffle": false,
         "DWShuffleCountMax": 25,
         "DWShuffleCountMin": 18,
         "DWTimePieceRequirement": 15,
-        "DeathWishOnly": "false",
-        "EnableDLC1": "false",
-        "EnableDLC2": "false",
-        "EnableDeathWish": "false",
-        "EndGoal": "finale",
-        "ExcludeTour": "false",
+        "DeathWishOnly": false,
+        "EnableDLC1": false,
+        "EnableDLC2": false,
+        "EnableDeathWish": false,
+        "EndGoal": 1,
+        "ExcludeTour": false,
         "FinalChapterMaxCost": 35,
         "FinalChapterMinCost": 30,
-        "FinaleShuffle": "false",
-        "HatItems": "false",
+        "FinaleShuffle": false,
+        "HatItems": false,
         "HighestChapterCost": 25,
         "LaserTrapWeight": 40,
-        "LogicDifficulty": "normal",
+        "LogicDifficulty": -1,
         "LowestChapterCost": 5,
         "MaxExtraTimePieces": 16,
         "MaxPonCost": 300,
@@ -9372,31 +8375,31 @@
         "MetroMinPonCost": 50,
         "MinExtraYarn": 10,
         "MinPonCost": 75,
-        "NoPaintingSkips": "false",
-        "NoTicketSkips": "false",
+        "NoPaintingSkips": false,
+        "NoTicketSkips": 0,
         "NyakuzaThugMaxShopItems": 4,
         "NyakuzaThugMinShopItems": 2,
         "ParadeTrapWeight": 20,
-        "RandomizeHatOrder": "true",
+        "RandomizeHatOrder": 1,
         "ShipShapeCustomTaskGoal": 0,
-        "ShuffleActContracts": "true",
-        "ShuffleAlpineZiplines": "false",
-        "ShuffleStorybookPages": "true",
-        "ShuffleSubconPaintings": "false",
-        "StartWithCompassBadge": "true",
-        "StartingChapter": "1",
-        "Tasksanity": "false",
+        "ShuffleActContracts": true,
+        "ShuffleAlpineZiplines": false,
+        "ShuffleStorybookPages": true,
+        "ShuffleSubconPaintings": false,
+        "StartWithCompassBadge": true,
+        "StartingChapter": 1,
+        "Tasksanity": false,
         "TasksanityCheckCount": 18,
         "TasksanityTaskStep": 1,
         "TimePieceBalancePercent": 35,
         "TrapChance": 0,
-        "UmbrellaLogic": "false",
+        "UmbrellaLogic": false,
         "YarnAvailable": 50,
         "YarnBalancePercent": 20,
         "YarnCostMax": 8,
         "YarnCostMin": 4,
-        "accessibility": "full",
-        "death_link": "false",
+        "accessibility": 0,
+        "death_link": false,
         "death_link_amnesty": 0,
         "dw_death_link_amnesty": 5,
         "exclude_locations": [],
@@ -9858,22 +8861,140 @@
           "display_name": "Progression Balancing"
         }
       },
-      "use_paren_number_accumulator": true,
-      "HatItems": false,
-      "UmbrellaLogic": false,
-      "ShuffleSubconPaintings": false,
-      "LogicDifficulty": -1,
-      "NoPaintingSkips": false,
-      "ShuffleAlpineZiplines": false,
+      "world_description": "A Hat in Time is a cute-as-peck 3D platformer featuring a little girl who stitches hats for wicked powers!\nFreely explore giant worlds and recover Time Pieces to travel to new heights!",
+      "slot_data": {
+        "Chapter1Cost": 0,
+        "Chapter2Cost": 11,
+        "Chapter3Cost": 15,
+        "Chapter4Cost": 7,
+        "Chapter5Cost": 32,
+        "Chapter6Cost": -1,
+        "Chapter7Cost": -1,
+        "BadgeSellerItemCount": 6,
+        "SeedNumber": "3",
+        "SeedName": "84719271504320872445",
+        "TotalLocations": 225,
+        "SprintYarnCost": 6,
+        "BrewingYarnCost": 5,
+        "IceYarnCost": 6,
+        "DwellerYarnCost": 6,
+        "TimeStopYarnCost": 8,
+        "Hat1": 1,
+        "Hat2": 4,
+        "Hat3": 3,
+        "Hat4": 2,
+        "Hat5": 0,
+        "chapter1_tutorial": "vanessa_manor_attic",
+        "Spaceship_WaterRift_Gallery": "TimeRift_Water_Mafia_Easy",
+        "TimeRift_Cave_BirdBasement": "TimeRift_Cave_Mafia",
+        "TimeRift_Water_Mafia_Easy": "TimeRift_Water_TWreck_Panels",
+        "TimeRift_Cave_Mafia": "TimeRift_Cave_Alps",
+        "TimeRift_Cave_Raccoon": "TimeRift_Cave_BirdBasement",
+        "TimeRift_Water_TWreck_Parade": "TimeRift_Water_Subcon_Hookshot",
+        "Spaceship_WaterRift_MailRoom": "TimeRift_Water_TWreck_Parade",
+        "TimeRift_Water_Subcon_Dwellers": "TimeRift_Water_AlpineSkyline_Cats",
+        "TimeRift_Water_AlpineSkyline_Cats": "Spaceship_WaterRift_Gallery",
+        "TimeRift_Water_Mafia_Hard": "TimeRift_Water_Mafia_Hard",
+        "TimeRift_Water_Alp_Goats": "Spaceship_WaterRift_MailRoom",
+        "TimeRift_Cave_Alps": "TimeRift_Cave_Raccoon",
+        "TimeRift_Water_TWreck_Panels": "TimeRift_Water_Alp_Goats",
+        "TimeRift_Water_Subcon_Hookshot": "TimeRift_Water_Subcon_Dwellers",
+        "AlpineSkyline_Finale": "chapter1_boss",
+        "snatcher_boss": "harbor_impossible_race",
+        "chapter3_secret_finale": "chapter1_tutorial",
+        "AlpineFreeRoam": "chapter3_murder",
+        "subcon_village_icewall": "moon_camerasnap",
+        "subcon_cave": "subcon_village_icewall",
+        "chapter1_barrelboss": "mafiatown_lava",
+        "moon_parade": "trainwreck_selfdestruct",
+        "mafiatown_goldenvault": "mafiatown_goldenvault",
+        "mafiatown_lava": "subcon_maildelivery",
+        "chapter1_boss": "chapter3_secret_finale",
+        "DeadBirdStudio": "AlpineSkyline_Finale",
+        "chapter2_toiletboss": "AlpineFreeRoam",
+        "chapter3_murder": "DeadBirdStudio",
+        "vanessa_manor_attic": "chapter1_cannon_repair",
+        "harbor_impossible_race": "snatcher_boss",
+        "chapter1_cannon_repair": "subcon_cave",
+        "moon_camerasnap": "chapter1_barrelboss",
+        "trainwreck_selfdestruct": "moon_parade",
+        "subcon_maildelivery": "chapter2_toiletboss",
+        "award_ceremony": "award_ceremony",
+        "ShopItemNames": {
+          "2000301013": "Rupees (5) (Player2)",
+          "2000301003": "13 Coins (Player3)",
+          "2000301004": "Piece of Heart (Player2)",
+          "2000301005": "Bottle (Blue Potion) (Player2)",
+          "2000301006": "Single Arrow (Player2)",
+          "2000301007": "Arrows (10) (Player2)",
+          "2000301008": "Yarn (Player1)"
+        },
+        "EndGoal": 1,
+        "ActRandomizer": 1,
+        "ShuffleAlpineZiplines": 0,
+        "LogicDifficulty": -1,
+        "CTRLogic": 0,
+        "RandomizeHatOrder": 1,
+        "UmbrellaLogic": 0,
+        "StartWithCompassBadge": 1,
+        "CompassBadgeMode": 1,
+        "ShuffleStorybookPages": 1,
+        "ShuffleActContracts": 1,
+        "ShuffleSubconPaintings": 0,
+        "NoPaintingSkips": 0,
+        "HatItems": 0,
+        "EnableDLC1": 0,
+        "Tasksanity": 0,
+        "TasksanityTaskStep": 1,
+        "TasksanityCheckCount": 18,
+        "ShipShapeCustomTaskGoal": 0,
+        "ExcludeTour": 0,
+        "EnableDeathWish": 0,
+        "DWShuffle": 0,
+        "DeathWishOnly": 0,
+        "DWEnableBonus": 0,
+        "DWAutoCompleteBonuses": 1,
+        "DWTimePieceRequirement": 15,
+        "EnableDLC2": 0,
+        "MetroMinPonCost": 50,
+        "MetroMaxPonCost": 200,
+        "BaseballBat": 0,
+        "NoTicketSkips": 0,
+        "MinPonCost": 75,
+        "MaxPonCost": 300,
+        "death_link": 0,
+        "death_link_amnesty": 0,
+        "dw_death_link_amnesty": 5
+      },
+      "web": {
+        "theme": "partyTime",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide for setting up A Hat in Time to be played in Archipelago.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "CookieCat"
+            ]
+          }
+        ]
+      },
       "world_directory": "ahit"
+    }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": true,
+      "use_resolved_items": false
     }
   },
   "game_info": {
     "1": {
-      "name": "A Hat in Time",
-      "rule_format": {
-        "version": "1.0"
-      },
       "chapter_costs": {
         "Mafia Town": 0,
         "Battle of the Birds": 11,
@@ -10003,6 +9124,27 @@
           "type": "name",
           "name": "value"
         }
+      },
+      "can_clear_alpine": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Birdhouse Cleared"
+          },
+          {
+            "type": "item_check",
+            "item": "Lava Cake Cleared"
+          },
+          {
+            "type": "item_check",
+            "item": "Windmill Cleared"
+          },
+          {
+            "type": "item_check",
+            "item": "Twilight Bell Cleared"
+          }
+        ]
       },
       "can_clear_required_act": {
         "params": [
@@ -10169,6 +9311,59 @@
           ]
         }
       },
+      "can_hit": {
+        "params": [
+          "umbrella_only"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "not",
+            "condition": {
+              "type": "setting_value",
+              "setting": "UmbrellaLogic"
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Umbrella"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "name",
+                      "name": "umbrella_only"
+                    }
+                  },
+                  {
+                    "type": "helper",
+                    "name": "can_use_hat",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "defaults": {
+          "umbrella_only": false
+        }
+      },
       "can_use_hat": {
         "params": [
           "hat"
@@ -10244,6 +9439,10 @@
             }
           }
         }
+      },
+      "can_use_hookshot": {
+        "type": "item_check",
+        "item": "Hookshot Badge"
       },
       "get_difficulty": {
         "type": "helper",
@@ -10332,6 +9531,76 @@
               }
             }
           ]
+        }
+      },
+      "has_paintings": {
+        "params": [
+          "count",
+          "allow_skip"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "not",
+            "condition": {
+              "type": "helper",
+              "name": "painting_logic"
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "not",
+                  "condition": {
+                    "type": "setting_value",
+                    "setting": "NoPaintingSkips"
+                  }
+                },
+                {
+                  "type": "name",
+                  "name": "allow_skip"
+                }
+              ]
+            },
+            "if_true": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "helper",
+                  "name": "get_difficulty"
+                },
+                "op": ">=",
+                "right": {
+                  "type": "constant",
+                  "value": 0
+                }
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": null
+            },
+            "if_false": {
+              "type": "item_check",
+              "item": "Progressive Painting Unlock",
+              "count": {
+                "type": "name",
+                "name": "count"
+              }
+            }
+          }
+        },
+        "defaults": {
+          "allow_skip": true
         }
       },
       "has_relic_combo": {
@@ -10651,35 +9920,56 @@
         ],
         "body": {
           "type": "any_of",
+          "element_rule": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "shop"
+                  },
+                  "attr": "has"
+                },
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "item"
+                  }
+                ]
+              },
+              {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "shop"
+                    },
+                    "attr": "region"
+                  },
+                  "attr": "can_reach"
+                }
+              }
+            ]
+          },
           "iterator_info": {
+            "type": "comprehension_details",
             "target": {
               "type": "name",
-              "name": "region"
+              "name": "shop"
             },
             "iterator": {
-              "type": "subscript",
-              "value": {
-                "type": "subscript",
-                "value": {
-                  "type": "setting_value",
-                  "setting": "shop_items"
-                },
-                "index": {
-                  "type": "name",
-                  "name": "item"
-                }
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
               },
-              "index": {
-                "type": "constant",
-                "value": "limited"
-              }
-            }
-          },
-          "element_rule": {
-            "type": "can_reach",
-            "region": {
-              "type": "name",
-              "name": "region"
+              "attr": "shops"
             }
           }
         }
@@ -10690,35 +9980,56 @@
         ],
         "body": {
           "type": "any_of",
+          "element_rule": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "shop"
+                  },
+                  "attr": "has_unlimited"
+                },
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "item"
+                  }
+                ]
+              },
+              {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "shop"
+                    },
+                    "attr": "region"
+                  },
+                  "attr": "can_reach"
+                }
+              }
+            ]
+          },
           "iterator_info": {
+            "type": "comprehension_details",
             "target": {
               "type": "name",
-              "name": "region"
+              "name": "shop"
             },
             "iterator": {
-              "type": "subscript",
-              "value": {
-                "type": "subscript",
-                "value": {
-                  "type": "setting_value",
-                  "setting": "shop_items"
-                },
-                "index": {
-                  "type": "name",
-                  "name": "item"
-                }
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
               },
-              "index": {
-                "type": "constant",
-                "value": "unlimited"
-              }
-            }
-          },
-          "element_rule": {
-            "type": "can_reach",
-            "region": {
-              "type": "name",
-              "name": "region"
+              "attr": "shops"
             }
           }
         }
@@ -12037,21 +11348,104 @@
           }
         }
       },
-      "can_defeat_boss": {
-        "params": [
-          "location_name",
-          "boss_type"
-        ],
-        "body": {
-          "type": "helper",
-          "name": "can_kill_most_things",
-          "args": [
-            {
-              "type": "constant",
-              "value": 1
+      "tr_big_key_chest_keys_needed": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "item",
+            "value": {
+              "type": "placement_lookup",
+              "location": {
+                "type": "constant",
+                "value": "Turtle Rock - Big Key Chest"
+              }
             }
-          ]
-        }
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "item"
+              },
+              "op": "in",
+              "right": {
+                "type": "list",
+                "value": [
+                  {
+                    "type": "list",
+                    "value": [
+                      {
+                        "type": "constant",
+                        "value": "Small Key (Turtle Rock)"
+                      },
+                      {
+                        "type": "constant",
+                        "value": 2
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "body": [
+              {
+                "type": "return",
+                "value": {
+                  "type": "constant",
+                  "value": 0
+                }
+              }
+            ]
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "item"
+              },
+              "op": "in",
+              "right": {
+                "type": "list",
+                "value": [
+                  {
+                    "type": "list",
+                    "value": [
+                      {
+                        "type": "constant",
+                        "value": "Big Key (Turtle Rock)"
+                      },
+                      {
+                        "type": "constant",
+                        "value": 2
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "body": [
+              {
+                "type": "return",
+                "value": {
+                  "type": "constant",
+                  "value": 4
+                }
+              }
+            ]
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "constant",
+              "value": 6
+            }
+          }
+        ]
       }
     }
   }

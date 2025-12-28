@@ -1013,8 +1013,13 @@ class BaseGameExportHandler:
                     result.append(converted)
                 return result
             # For objects with a 'name' attribute (like Region, Location), just use the name
-            elif hasattr(value, 'name') and isinstance(getattr(value, 'name', None), str):
-                return value.name
+            # Use try/except because some objects (like LADXR Settings) have custom __getattr__
+            # that raises KeyError for unknown attributes instead of returning AttributeError
+            try:
+                if hasattr(value, 'name') and isinstance(getattr(value, 'name', None), str):
+                    return value.name
+            except (KeyError, TypeError):
+                pass  # Attribute lookup failed, object cannot be serialized by name
             return None
 
         def extract_nested_attributes(obj: Any, depth: int = 0) -> Optional[Dict[str, Any]]:
@@ -1034,7 +1039,13 @@ class BaseGameExportHandler:
             result = {}
 
             # Check for namedtuple FIRST (before tuple check, since namedtuples are tuples)
-            if hasattr(obj, '_fields'):
+            # Use try/except because some objects (like LADXR Settings) have custom __getattr__
+            # that raises KeyError for unknown attributes instead of returning AttributeError
+            try:
+                is_namedtuple = hasattr(obj, '_fields')
+            except (KeyError, TypeError):
+                is_namedtuple = False
+            if is_namedtuple:
                 for field in obj._fields:
                     if field.startswith('_'):
                         continue
@@ -1057,11 +1068,15 @@ class BaseGameExportHandler:
                 return None
 
             # Try to get attributes from __dict__ or __slots__
+            # Wrap in try/except in case of custom __getattr__ that raises exceptions
             attrs_to_check = []
-            if hasattr(obj, '__dict__'):
-                attrs_to_check = list(obj.__dict__.keys())
-            elif hasattr(obj, '__slots__'):
-                attrs_to_check = list(obj.__slots__)
+            try:
+                if hasattr(obj, '__dict__'):
+                    attrs_to_check = list(obj.__dict__.keys())
+                elif hasattr(obj, '__slots__'):
+                    attrs_to_check = list(obj.__slots__)
+            except (KeyError, TypeError, AttributeError):
+                pass
 
             for attr in attrs_to_check:
                 if attr.startswith('_'):

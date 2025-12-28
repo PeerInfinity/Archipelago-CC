@@ -3001,31 +3001,29 @@
   "starting_items": {
     "3": []
   },
-  "settings": {
+  "world": {
     "3": {
       "game": "A Short Hike",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
-        "accessibility": "full",
+        "accessibility": 0,
         "buckets": 2,
-        "coins_in_shops": "false",
+        "coins_in_shops": false,
         "cost_multiplier": 100,
-        "easier_races": "false",
+        "easier_races": false,
         "exclude_locations": [],
-        "filler_coin_amount": "13_coins",
-        "goal": "help_everyone",
-        "golden_feather_progression": "normal",
+        "filler_coin_amount": 1,
+        "goal": 3,
+        "golden_feather_progression": 1,
         "golden_feathers": 20,
         "item_links": [],
         "local_items": [],
-        "min_shop_check_logic": "100_coins",
+        "min_shop_check_logic": 1,
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "random_walkie_talkie": "true",
-        "shop_check_logic": "fishing_rod",
+        "random_walkie_talkie": true,
+        "shop_check_logic": 1,
         "silver_feathers": 2,
         "start_hints": [],
         "start_inventory": {},
@@ -3171,28 +3169,6 @@
           "display_name": "Toy Shovels"
         }
       },
-      "world_directory": "shorthike"
-    }
-  },
-  "game_info": {
-    "3": {
-      "name": "A Short Hike",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "ocean",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the A Short Hike randomizer connected to an Archipelago Multiworld",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Chandler"
-          ]
-        }
-      ],
       "world_description": "A Short Hike is a relaxing adventure set on the islands of Hawk Peak. Fly and climb using Claire's wings and Golden Feathers\nto make your way up to the summit. Along the way you'll meet other hikers, discover hidden treasures,\nand take in the beautiful world around you.",
       "slot_data": {
         "settings": {
@@ -3203,8 +3179,36 @@
           "minShopCheckLogic": 1,
           "easierRaces": false
         }
-      }
+      },
+      "web": {
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the A Short Hike randomizer connected to an Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Chandler"
+            ]
+          }
+        ]
+      },
+      "world_directory": "shorthike"
     }
+  },
+  "exporter": {
+    "3": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "3": {}
   },
   "helpers": {
     "1": {
@@ -3216,6 +3220,27 @@
           "type": "name",
           "name": "value"
         }
+      },
+      "can_clear_alpine": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Birdhouse Cleared"
+          },
+          {
+            "type": "item_check",
+            "item": "Lava Cake Cleared"
+          },
+          {
+            "type": "item_check",
+            "item": "Windmill Cleared"
+          },
+          {
+            "type": "item_check",
+            "item": "Twilight Bell Cleared"
+          }
+        ]
       },
       "can_clear_required_act": {
         "params": [
@@ -3382,6 +3407,59 @@
           ]
         }
       },
+      "can_hit": {
+        "params": [
+          "umbrella_only"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "not",
+            "condition": {
+              "type": "setting_value",
+              "setting": "UmbrellaLogic"
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Umbrella"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "name",
+                      "name": "umbrella_only"
+                    }
+                  },
+                  {
+                    "type": "helper",
+                    "name": "can_use_hat",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "defaults": {
+          "umbrella_only": false
+        }
+      },
       "can_use_hat": {
         "params": [
           "hat"
@@ -3457,6 +3535,10 @@
             }
           }
         }
+      },
+      "can_use_hookshot": {
+        "type": "item_check",
+        "item": "Hookshot Badge"
       },
       "get_difficulty": {
         "type": "helper",
@@ -3545,6 +3627,76 @@
               }
             }
           ]
+        }
+      },
+      "has_paintings": {
+        "params": [
+          "count",
+          "allow_skip"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "not",
+            "condition": {
+              "type": "helper",
+              "name": "painting_logic"
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "not",
+                  "condition": {
+                    "type": "setting_value",
+                    "setting": "NoPaintingSkips"
+                  }
+                },
+                {
+                  "type": "name",
+                  "name": "allow_skip"
+                }
+              ]
+            },
+            "if_true": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "helper",
+                  "name": "get_difficulty"
+                },
+                "op": ">=",
+                "right": {
+                  "type": "constant",
+                  "value": 0
+                }
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": null
+            },
+            "if_false": {
+              "type": "item_check",
+              "item": "Progressive Painting Unlock",
+              "count": {
+                "type": "name",
+                "name": "count"
+              }
+            }
+          }
+        },
+        "defaults": {
+          "allow_skip": true
         }
       },
       "has_relic_combo": {
@@ -3864,35 +4016,56 @@
         ],
         "body": {
           "type": "any_of",
+          "element_rule": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "shop"
+                  },
+                  "attr": "has"
+                },
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "item"
+                  }
+                ]
+              },
+              {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "shop"
+                    },
+                    "attr": "region"
+                  },
+                  "attr": "can_reach"
+                }
+              }
+            ]
+          },
           "iterator_info": {
+            "type": "comprehension_details",
             "target": {
               "type": "name",
-              "name": "region"
+              "name": "shop"
             },
             "iterator": {
-              "type": "subscript",
-              "value": {
-                "type": "subscript",
-                "value": {
-                  "type": "setting_value",
-                  "setting": "shop_items"
-                },
-                "index": {
-                  "type": "name",
-                  "name": "item"
-                }
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
               },
-              "index": {
-                "type": "constant",
-                "value": "limited"
-              }
-            }
-          },
-          "element_rule": {
-            "type": "can_reach",
-            "region": {
-              "type": "name",
-              "name": "region"
+              "attr": "shops"
             }
           }
         }
@@ -3903,35 +4076,56 @@
         ],
         "body": {
           "type": "any_of",
+          "element_rule": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "shop"
+                  },
+                  "attr": "has_unlimited"
+                },
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "item"
+                  }
+                ]
+              },
+              {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "shop"
+                    },
+                    "attr": "region"
+                  },
+                  "attr": "can_reach"
+                }
+              }
+            ]
+          },
           "iterator_info": {
+            "type": "comprehension_details",
             "target": {
               "type": "name",
-              "name": "region"
+              "name": "shop"
             },
             "iterator": {
-              "type": "subscript",
-              "value": {
-                "type": "subscript",
-                "value": {
-                  "type": "setting_value",
-                  "setting": "shop_items"
-                },
-                "index": {
-                  "type": "name",
-                  "name": "item"
-                }
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
               },
-              "index": {
-                "type": "constant",
-                "value": "unlimited"
-              }
-            }
-          },
-          "element_rule": {
-            "type": "can_reach",
-            "region": {
-              "type": "name",
-              "name": "region"
+              "attr": "shops"
             }
           }
         }
@@ -5250,21 +5444,104 @@
           }
         }
       },
-      "can_defeat_boss": {
-        "params": [
-          "location_name",
-          "boss_type"
-        ],
-        "body": {
-          "type": "helper",
-          "name": "can_kill_most_things",
-          "args": [
-            {
-              "type": "constant",
-              "value": 1
+      "tr_big_key_chest_keys_needed": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "item",
+            "value": {
+              "type": "placement_lookup",
+              "location": {
+                "type": "constant",
+                "value": "Turtle Rock - Big Key Chest"
+              }
             }
-          ]
-        }
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "item"
+              },
+              "op": "in",
+              "right": {
+                "type": "list",
+                "value": [
+                  {
+                    "type": "list",
+                    "value": [
+                      {
+                        "type": "constant",
+                        "value": "Small Key (Turtle Rock)"
+                      },
+                      {
+                        "type": "constant",
+                        "value": 2
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "body": [
+              {
+                "type": "return",
+                "value": {
+                  "type": "constant",
+                  "value": 0
+                }
+              }
+            ]
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "item"
+              },
+              "op": "in",
+              "right": {
+                "type": "list",
+                "value": [
+                  {
+                    "type": "list",
+                    "value": [
+                      {
+                        "type": "constant",
+                        "value": "Big Key (Turtle Rock)"
+                      },
+                      {
+                        "type": "constant",
+                        "value": 2
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "body": [
+              {
+                "type": "return",
+                "value": {
+                  "type": "constant",
+                  "value": 4
+                }
+              }
+            ]
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "constant",
+              "value": 6
+            }
+          }
+        ]
       }
     }
   }

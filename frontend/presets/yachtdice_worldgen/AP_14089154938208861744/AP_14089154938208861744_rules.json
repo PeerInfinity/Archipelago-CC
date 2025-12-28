@@ -1175,7 +1175,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "806 score",
@@ -2014,14 +2015,11 @@
       "Roll"
     ]
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Yacht Dice WorldGen",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
-      "add_sphere_items_upfront": true,
       "options": {
-        "accessibility": "full",
+        "accessibility": 0,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -2029,7 +2027,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": "false",
+        "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
@@ -2057,40 +2055,6 @@
           "display_name": "Randomize Items"
         }
       },
-      "world_directory": "yachtdice_worldgen"
-    }
-  },
-  "world_attributes": {},
-  "game_info": {
-    "1": {
-      "name": "Yacht Dice WorldGen",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "accumulator_rules": [
-        {
-          "pattern": "^(\\d+) Points$",
-          "extract_value": true,
-          "target": "POINTS",
-          "discriminator": null
-        }
-      ],
-      "prog_items_init": {
-        "POINTS": 0
-      },
-      "web_theme": "grass",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up Yacht Dice. This guide covers single-player, multiworld, and website.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Spineraks"
-          ]
-        }
-      ],
       "world_description": "Yacht Dice is a straightforward game, custom-made for Archipelago,\nwhere you cast your dice to chart a course for high scores,\nunlocking valuable treasures along the way.\nDiscover more dice, extra rolls, multipliers,\nand unlockable categories to navigate the depths of the game.\nRoll your way to victory by reaching the target score!",
       "slot_data": {
         "seed_name": "14089154938208861744",
@@ -2125,6 +2089,47 @@
           "Category Yacht"
         ],
         "ap_world_version": "2.1.4"
+      },
+      "web": {
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up Yacht Dice. This guide covers single-player, multiworld, and website.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Spineraks"
+            ]
+          }
+        ]
+      },
+      "world_directory": "yachtdice_worldgen"
+    }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false,
+      "add_sphere_items_upfront": true
+    }
+  },
+  "game_info": {
+    "1": {
+      "accumulator_rules": [
+        {
+          "pattern": "^(\\d+) Points$",
+          "extract_value": true,
+          "target": "POINTS",
+          "discriminator": null
+        }
+      ],
+      "prog_items_init": {
+        "POINTS": 0
       }
     }
   },

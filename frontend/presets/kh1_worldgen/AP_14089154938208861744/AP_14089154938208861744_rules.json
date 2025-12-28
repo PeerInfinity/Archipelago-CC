@@ -11857,7 +11857,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -15370,13 +15371,11 @@
       "Dodge Roll"
     ]
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Kingdom Hearts WorldGen",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": true,
       "options": {
-        "accessibility": "full",
+        "accessibility": 0,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -15384,7 +15383,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": "false",
+        "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
@@ -15412,11 +15411,6 @@
           "display_name": "Randomize Items"
         }
       },
-      "world_directory": "kh1_worldgen"
-    }
-  },
-  "world_attributes": {
-    "1": {
       "end_of_the_world_unlock": 1,
       "super_bosses": 0,
       "atlantica": 0,
@@ -15443,28 +15437,7 @@
       "ap_increase": 18,
       "mp_increase": 7,
       "accessory_slot_increase": 1,
-      "item_slot_increase": 3
-    }
-  },
-  "game_info": {
-    "1": {
-      "name": "Kingdom Hearts WorldGen",
-      "rule_format": {
-        "version": "1.0"
-      },
-      "web_theme": "ocean",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Kingdom Hearts Randomizer software on your computer. This guide covers single-player, multiworld, and related software.",
-          "language": "English",
-          "file_name": "kh1_en.md",
-          "link": "kh1/en",
-          "authors": [
-            "Gicu"
-          ]
-        }
-      ],
+      "item_slot_increase": 3,
       "world_description": "Kingdom Hearts is an action RPG following Sora on his journey\nthrough many worlds to find Riku and Kairi.",
       "slot_data": {
         "atlantica": false,
@@ -15920,8 +15893,36 @@
         "unlock_0_volume": false,
         "unskippable": true,
         "warp_anywhere": false
-      }
+      },
+      "web": {
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Kingdom Hearts Randomizer software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "English",
+            "file_name": "kh1_en.md",
+            "link": "kh1/en",
+            "authors": [
+              "Gicu"
+            ]
+          }
+        ]
+      },
+      "world_directory": "kh1_worldgen"
     }
+  },
+  "exporter": {
+    "1": {
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": true
+    }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }

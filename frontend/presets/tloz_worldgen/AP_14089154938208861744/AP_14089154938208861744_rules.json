@@ -272,7 +272,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false
+            "show_in_spoiler": false,
+            "event": true
           }
         ]
       },
@@ -1449,7 +1450,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false
+            "show_in_spoiler": false,
+            "event": true
           }
         ]
       },
@@ -2804,7 +2806,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false
+            "show_in_spoiler": false,
+            "event": true
           }
         ]
       },
@@ -4075,7 +4078,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false
+            "show_in_spoiler": false,
+            "event": true
           }
         ]
       },
@@ -6027,7 +6031,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false
+            "show_in_spoiler": false,
+            "event": true
           }
         ]
       },
@@ -7580,7 +7585,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false
+            "show_in_spoiler": false,
+            "event": true
           }
         ]
       },
@@ -9983,7 +9989,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false
+            "show_in_spoiler": false,
+            "event": true
           }
         ]
       },
@@ -12517,7 +12524,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false
+            "show_in_spoiler": false,
+            "event": true
           }
         ]
       },
@@ -15278,7 +15286,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false
+            "show_in_spoiler": false,
+            "event": true
           },
           {
             "name": "Zelda",
@@ -15412,7 +15421,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false
+            "show_in_spoiler": false,
+            "event": true
           }
         ]
       },
@@ -16793,16 +16803,14 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "The Legend of Zelda WorldGen",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
-        "ExpandedPool": "true",
-        "StartingPosition": "safe",
-        "TriforceLocations": "vanilla",
-        "accessibility": "full",
+        "ExpandedPool": true,
+        "StartingPosition": 0,
+        "TriforceLocations": 0,
+        "accessibility": 0,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
@@ -16810,7 +16818,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": "false",
+        "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
@@ -16864,11 +16872,21 @@
           "display_name": "Randomize Items"
         }
       },
-      "world_directory": "tloz_worldgen"
-    }
-  },
-  "world_attributes": {
-    "1": {
+      "shops": [],
+      "levels": [
+        null,
+        "Level 1",
+        "Level 2",
+        "Level 3",
+        "Level 4",
+        "Level 5",
+        "Level 6",
+        "Level 7",
+        "Level 8",
+        "Level 9"
+      ],
+      "base_id": 7000,
+      "world_description": "The Legend of Zelda WorldGen for Archipelago.\n\nAuto-generated world implementation.",
       "settings": {
         "game": "The Legend of Zelda",
         "assume_bidirectional_exits": false,
@@ -16890,36 +16908,24 @@
           "start_location_hints": []
         },
         "world_directory": "tloz"
-      }
+      },
+      "web": {
+        "theme": "stone"
+      },
+      "world_directory": "tloz_worldgen"
     }
   },
-  "game_info": {
+  "exporter": {
     "1": {
-      "name": "The Legend of Zelda WorldGen",
       "rule_format": {
         "version": "1.0"
       },
-      "base_id": 7000,
-      "web_theme": "stone",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up The Legend of Zelda for Archipelago on your computer.",
-          "language": "English",
-          "file_name": "multiworld_en.md",
-          "link": "multiworld/en",
-          "authors": [
-            "Rosalie and Figment"
-          ]
-        }
-      ],
-      "world_description": "The Legend of Zelda needs almost no introduction. Gather the eight fragments of the\nTriforce of Wisdom, enter Death Mountain, defeat Ganon, and rescue Princess Zelda.\nThis randomizer shuffles all the items in the game around, leading to a new adventure\nevery time.",
-      "slot_data": {
-        "TakeAnyLeft": 7115,
-        "TakeAnyMiddle": 7126,
-        "TakeAnyRight": 7129
-      }
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }

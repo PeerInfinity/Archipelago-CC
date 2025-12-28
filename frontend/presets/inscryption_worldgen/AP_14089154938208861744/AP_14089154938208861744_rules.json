@@ -2944,32 +2944,30 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Inscryption WorldGen",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
-        "accessibility": "full",
-        "act1_death_link_behaviour": "sacrificed",
-        "death_link": "false",
-        "epitaph_pieces_randomization": "all_pieces",
+        "accessibility": 0,
+        "act1_death_link_behaviour": 0,
+        "death_link": false,
+        "epitaph_pieces_randomization": 0,
         "exclude_locations": [],
-        "goal": "full_story_in_order",
+        "goal": 0,
         "item_links": [],
         "local_items": [],
         "non_local_items": [],
-        "optional_death_card": "deathlink_only",
-        "painting_checks_balancing": "balanced",
+        "optional_death_card": 2,
+        "painting_checks_balancing": 1,
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_codes": "false",
-        "randomize_deck": "disable",
-        "randomize_items": "false",
-        "randomize_sigils": "disable",
-        "skip_epilogue": "false",
-        "skip_tutorial": "true",
+        "randomize_codes": false,
+        "randomize_deck": 0,
+        "randomize_items": false,
+        "randomize_sigils": 0,
+        "skip_epilogue": false,
+        "skip_tutorial": true,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
@@ -3087,11 +3085,222 @@
           "display_name": "Skip Tutorial"
         }
       },
-      "world_directory": "inscryption_worldgen"
-    }
-  },
-  "world_attributes": {
-    "1": {
+      "shops": [],
+      "all_items": [
+        {
+          "name": "Stinkbug Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Stunted Wolf Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Wardrobe Key",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Skink Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Ant Cards",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Caged Wolf Card",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Squirrel Totem Head",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Dagger",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Film Roll",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Ring",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Magnificus Eye",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Oil Painting's Clover Plant",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Extra Candle",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Bee Figurine",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Greater Smoke",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Angler Hook",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Camera Replica",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Pile Of Meat",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Epitaph Piece",
+          "count": 9,
+          "classification": 1
+        },
+        {
+          "name": "Epitaph Pieces",
+          "count": 3,
+          "classification": 1
+        },
+        {
+          "name": "Monocle",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Bone Lord Femur",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Bone Lord Horn",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Bone Lord Holo Key",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Mycologists Holo Key",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Ancient Obol",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Great Kraken Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Drowned Soul Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Salmon Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Dock's Clover Plant",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Extra Battery",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Nano Armor Generator",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Mrs. Bomb's Remote",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Inspectometer Battery",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Gems Module",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Lonely Wizbot Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Fishbot Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Ourobot Card",
+          "count": 1,
+          "classification": 2
+        },
+        {
+          "name": "Holo Pelt",
+          "count": 5,
+          "classification": 1
+        },
+        {
+          "name": "Quill",
+          "count": 1,
+          "classification": 1
+        },
+        {
+          "name": "Currency",
+          "count": 1,
+          "classification": 0
+        },
+        {
+          "name": "Card Pack",
+          "count": 1,
+          "classification": 0
+        }
+      ],
+      "required_epitaph_pieces_name": "Epitaph Piece",
+      "required_epitaph_pieces_count": 9,
+      "world_description": "Inscryption WorldGen for Archipelago.\n\nAuto-generated world implementation.",
       "settings": {
         "game": "Inscryption",
         "assume_bidirectional_exits": false,
@@ -3122,52 +3331,24 @@
           "start_location_hints": []
         },
         "world_directory": "inscryption"
-      }
+      },
+      "web": {
+        "theme": "dirt"
+      },
+      "world_directory": "inscryption_worldgen"
     }
   },
-  "game_info": {
+  "exporter": {
     "1": {
-      "name": "Inscryption WorldGen",
       "rule_format": {
         "version": "1.0"
       },
-      "web_theme": "dirt",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Inscryption Archipelago Multiworld",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "DrBibop"
-          ]
-        },
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "Un guide pour configurer Inscryption Archipelago Multiworld",
-          "language": "Fran\u00e7ais",
-          "file_name": "setup_fr.md",
-          "link": "setup/fr",
-          "authors": [
-            "Glowbuzz"
-          ]
-        }
-      ],
-      "world_description": "Inscryption is an inky black card-based odyssey that blends the deckbuilding roguelike,\nescape-room style puzzles, and psychological horror into a blood-laced smoothie.\nDarker still are the secrets inscrybed upon the cards...",
-      "slot_data": {
-        "death_link": 0,
-        "act1_death_link_behaviour": 0,
-        "goal": 0,
-        "randomize_codes": 0,
-        "randomize_deck": 0,
-        "randomize_sigils": 0,
-        "optional_death_card": 2,
-        "skip_tutorial": 1,
-        "skip_epilogue": 0,
-        "epitaph_pieces_randomization": 0
-      }
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }

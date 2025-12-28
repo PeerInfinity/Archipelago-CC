@@ -3619,7 +3619,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Disable Quarantine",
@@ -3641,7 +3642,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Full Infection",
@@ -3663,7 +3665,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Repair Aurora Drive",
@@ -3680,7 +3683,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       }
@@ -5115,59 +5119,181 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Subnautica WorldGen",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
-        "accessibility": "full",
+        "accessibility": 0,
+        "creature_scan_logic": 0,
+        "creature_scans": 0,
+        "death_link": false,
+        "early_seaglide": true,
+        "empty_tanks": true,
         "exclude_locations": [],
+        "free_samples": false,
+        "goal": 0,
         "item_links": [],
         "local_items": [],
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": "false",
+        "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
         "swim_rule": 0
       },
-      "world_directory": "subnautica"
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "creature_scan_logic": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "stasis",
+            "1": "containment",
+            "2": "either",
+            "3": "none",
+            "4": "removed"
+          },
+          "default": 0,
+          "display_name": "Aggressive Creature Scan Logic"
+        },
+        "creature_scans": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 50,
+          "default": 0,
+          "display_name": "Creature Scans"
+        },
+        "death_link": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Death Link"
+        },
+        "early_seaglide": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Early Seaglide"
+        },
+        "empty_tanks": {
+          "type": "default_on_toggle",
+          "default": 1,
+          "display_name": "Empty Tanks"
+        },
+        "free_samples": {
+          "type": "toggle",
+          "default": 0,
+          "display_name": "Free Samples"
+        },
+        "goal": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "launch",
+            "1": "free",
+            "2": "infected",
+            "3": "drive"
+          },
+          "default": 0,
+          "display_name": "Goal"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "swim_rule": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "easy",
+            "1": "normal",
+            "2": "hard",
+            "3": "items_easy",
+            "4": "items_normal",
+            "5": "items_hard"
+          },
+          "default": 0,
+          "display_name": "Swim Rule"
+        }
+      },
+      "shops": [],
+      "creatures_to_scan": [],
+      "world_description": "Subnautica WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "settings": {
+        "game": "Subnautica",
+        "assume_bidirectional_exits": false,
+        "use_resolved_items": false,
+        "options": {
+          "accessibility": "full",
+          "creature_scan_logic": "stasis",
+          "creature_scans": 0,
+          "death_link": "false",
+          "early_seaglide": "true",
+          "empty_tanks": "true",
+          "exclude_locations": [],
+          "filler_items_distribution": {
+            "Copper Ore": 1,
+            "Crystalline Sulfur": 1,
+            "Diamond": 1,
+            "Gold": 1,
+            "Kyanite": 1,
+            "Lead": 1,
+            "Lithium": 1,
+            "Magnetite": 1,
+            "Nickel Ore": 1,
+            "Reactor Rod": 1,
+            "Ruby": 1,
+            "Salt Deposit": 1,
+            "Silver Ore": 1,
+            "Titanium": 1
+          },
+          "free_samples": "false",
+          "goal": "launch",
+          "item_links": [],
+          "local_items": [],
+          "non_local_items": [],
+          "plando_items": [],
+          "priority_locations": [],
+          "progression_balancing": 50,
+          "start_hints": [],
+          "start_inventory": {},
+          "start_inventory_from_pool": {},
+          "start_location_hints": [],
+          "swim_rule": 0
+        },
+        "world_directory": "subnautica"
+      },
+      "web": {
+        "theme": "grass"
+      },
+      "world_directory": "subnautica_worldgen"
     }
   },
-  "game_info": {
+  "exporter": {
     "1": {
-      "name": "Subnautica WorldGen",
       "rule_format": {
         "version": "1.0"
       },
-      "web_theme": "grass",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Subnautica randomizer connected to an Archipelago Multiworld",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Berserker"
-          ]
-        }
-      ],
-      "world_description": "Subnautica is an undersea exploration game. Stranded on an alien world, you become infected by\nan unknown bacteria. The planet's automatic quarantine will shoot you down if you try to leave.\nYou must find a cure for yourself, build an escape rocket, and leave the planet.",
-      "slot_data": {
-        "goal": "launch",
-        "swim_rule": "easy",
-        "vanilla_tech": [],
-        "creatures_to_scan": [],
-        "death_link": 0,
-        "free_samples": 0,
-        "empty_tanks": 1
-      }
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {
     "1": {

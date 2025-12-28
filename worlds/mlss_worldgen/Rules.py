@@ -45,7 +45,11 @@ def _marioluigisuperstarsagaworldgen_canMini(state: "CollectionState", player: i
 
 
 def _marioluigisuperstarsagaworldgen_castleTown(state: "CollectionState", player: int) -> bool:
-    return ((state.has('Red Chuckola Fruit', player)) and (state.has('Purple Chuckola Fruit', player)) and (state.has('White Chuckola Fruit', player))) and (state.has('Beanbean Brooch', player))
+    return (_marioluigisuperstarsagaworldgen_fruits(state, player)) and (_marioluigisuperstarsagaworldgen_brooch(state, player))
+
+
+def _marioluigisuperstarsagaworldgen_dressBeanstar(state: "CollectionState", player: int) -> bool:
+    return (state.has("Peach's Extra Dress", player)) and (state.has('Fake Beanstar', player))
 
 
 def _marioluigisuperstarsagaworldgen_fire(state: "CollectionState", player: int) -> bool:
@@ -57,7 +61,7 @@ def _marioluigisuperstarsagaworldgen_fruits(state: "CollectionState", player: in
 
 
 def _marioluigisuperstarsagaworldgen_fungitown(state: "CollectionState", player: int) -> bool:
-    return (((state.has('Red Chuckola Fruit', player)) and (state.has('Purple Chuckola Fruit', player)) and (state.has('White Chuckola Fruit', player))) and (state.has('Beanbean Brooch', player))) and (state.has('Thunderhand', player)) and (state.has("Peasley's Rose", player)) and ((state.has('Hammers', player, 2)) or ((state.has('Red Pearl Bean', player)) and (state.has('Firebrand', player))))
+    return (_marioluigisuperstarsagaworldgen_castleTown(state, player)) and (_marioluigisuperstarsagaworldgen_thunder(state, player)) and (_marioluigisuperstarsagaworldgen_rose(state, player)) and ((_marioluigisuperstarsagaworldgen_super(state, player)) or (_marioluigisuperstarsagaworldgen_canDash(state, player)))
 
 
 def _marioluigisuperstarsagaworldgen_fungitown_birdo_shop(state: "CollectionState", player: int) -> bool:
@@ -89,7 +93,7 @@ def _marioluigisuperstarsagaworldgen_piranha_shop(state: "CollectionState", play
 
 
 def _marioluigisuperstarsagaworldgen_postJokes(state: "CollectionState", player: int, goal = None) -> bool:
-    return (((state.has('Hammers', player, 3)) and ((((state.has('Green Goblet', player)) and (state.has('Hammers', player))) and ((state.has('Red Goblet', player)) and (state.has('Hammers', player)))) or ((state.has('Membership Card', player)) and (state.has('Firebrand', player))))) and ((state.has('Green Goblet', player)) and (state.has('Hammers', player))) and ((state.has("Peach's Extra Dress", player)) and (state.has('Fake Beanstar', player))) and ((state.has('Beanstar Piece 1', player)) and (state.has('Beanstar Piece 2', player)) and (state.has('Beanstar Piece 3', player)) and (state.has('Beanstar Piece 4', player))) and ((state.has('Red Chuckola Fruit', player)) and (state.has('Purple Chuckola Fruit', player)) and (state.has('White Chuckola Fruit', player))) and (state.has('Beanbean Brooch', player)) and (state.has("Peasley's Rose", player)) and ((state.has('Red Pearl Bean', player)) and (state.has('Firebrand', player))) if (goal == 'vanilla') else ((state.has('Hammers', player, 3)) and ((((state.has('Green Goblet', player)) and (state.has('Hammers', player))) and ((state.has('Red Goblet', player)) and (state.has('Hammers', player)))) or ((state.has('Membership Card', player)) and (state.has('Firebrand', player))))) and ((state.has('Green Goblet', player)) and (state.has('Hammers', player))) and ((state.has('Red Pearl Bean', player)) and (state.has('Firebrand', player))))
+    return ((_marioluigisuperstarsagaworldgen_surfable(state, player)) and (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_dressBeanstar(state, player)) and (_marioluigisuperstarsagaworldgen_pieces(state, player)) and (_marioluigisuperstarsagaworldgen_fruits(state, player)) and (_marioluigisuperstarsagaworldgen_brooch(state, player)) and (_marioluigisuperstarsagaworldgen_rose(state, player)) and (_marioluigisuperstarsagaworldgen_canDash(state, player)) if (goal == 0) else (_marioluigisuperstarsagaworldgen_surfable(state, player)) and (_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_canDash(state, player)))
 
 
 def _marioluigisuperstarsagaworldgen_rose(state: "CollectionState", player: int) -> bool:
@@ -109,11 +113,11 @@ def _marioluigisuperstarsagaworldgen_super(state: "CollectionState", player: int
 
 
 def _marioluigisuperstarsagaworldgen_surfable(state: "CollectionState", player: int) -> bool:
-    return (state.has('Hammers', player, 3)) and ((((state.has('Green Goblet', player)) and (state.has('Hammers', player))) and ((state.has('Red Goblet', player)) and (state.has('Hammers', player)))) or ((state.has('Membership Card', player)) and (state.has('Firebrand', player))))
+    return (_marioluigisuperstarsagaworldgen_ultra(state, player)) and (((_marioluigisuperstarsagaworldgen_canDig(state, player)) and (_marioluigisuperstarsagaworldgen_canMini(state, player))) or ((_marioluigisuperstarsagaworldgen_membership(state, player)) and (_marioluigisuperstarsagaworldgen_fire(state, player))))
 
 
 def _marioluigisuperstarsagaworldgen_teehee(state: "CollectionState", player: int) -> bool:
-    return (state.has('Hammers', player, 2)) or ((state.has('Red Pearl Bean', player)) and (state.has('Firebrand', player)))
+    return (_marioluigisuperstarsagaworldgen_super(state, player)) or (_marioluigisuperstarsagaworldgen_canDash(state, player))
 
 
 def _marioluigisuperstarsagaworldgen_thunder(state: "CollectionState", player: int) -> bool:
@@ -211,7 +215,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Shop Birdo Flag", player),
-        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_postJokes, helper_name="postJokes", args=('vanilla',)))
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_postJokes, helper_name="postJokes", args=(0,)))
     )
 
     world.set_rule(
@@ -246,7 +250,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("PostJokes", player),
-        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_postJokes, helper_name="postJokes", args=('vanilla',))
+        HelperCall(helper_func=_marioluigisuperstarsagaworldgen_postJokes, helper_name="postJokes", args=(0,))
     )
 
     world.set_rule(
@@ -256,7 +260,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Fungitown Shop Birdo Flag", player),
-        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_postJokes, helper_name="postJokes", args=('vanilla',)))
+        And(HelperCall(helper_func=_marioluigisuperstarsagaworldgen_canCrash, helper_name="canCrash"), HelperCall(helper_func=_marioluigisuperstarsagaworldgen_postJokes, helper_name="postJokes", args=(0,)))
     )
 
     world.set_rule(

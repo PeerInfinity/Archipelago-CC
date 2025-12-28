@@ -194,7 +194,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -543,7 +544,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -957,7 +959,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1231,7 +1234,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1503,7 +1507,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1815,7 +1820,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1835,7 +1841,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2030,7 +2037,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2917,34 +2925,32 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Noita WorldGen",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
-        "accessibility": "full",
-        "bad_effects": "true",
-        "bosses_as_checks": "no_bosses",
-        "death_link": "false",
+        "accessibility": 0,
+        "bad_effects": true,
+        "bosses_as_checks": 0,
+        "death_link": false,
         "exclude_locations": [],
         "extra_orbs": 0,
         "hidden_chests": 3,
         "item_links": [],
         "local_items": [],
         "non_local_items": [],
-        "orbs_as_checks": "no_orbs",
-        "path_option": "main_path",
+        "orbs_as_checks": 0,
+        "path_option": 1,
         "pedestal_checks": 6,
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": "false",
-        "shop_price": "full_price",
+        "randomize_items": false,
+        "shop_price": 100,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
-        "victory_condition": "greed_ending"
+        "victory_condition": 0
       },
       "option_definitions": {
         "accessibility": {
@@ -3053,11 +3059,8 @@
           "display_name": "Victory Condition"
         }
       },
-      "world_directory": "noita_worldgen"
-    }
-  },
-  "world_attributes": {
-    "1": {
+      "shops": [],
+      "world_description": "Noita WorldGen for Archipelago.\n\nAuto-generated world implementation.",
       "settings": {
         "game": "Noita",
         "assume_bidirectional_exits": false,
@@ -3087,43 +3090,24 @@
           "victory_condition": "greed_ending"
         },
         "world_directory": "noita"
-      }
+      },
+      "web": {
+        "theme": "partyTime"
+      },
+      "world_directory": "noita_worldgen"
     }
   },
-  "game_info": {
+  "exporter": {
     "1": {
-      "name": "Noita WorldGen",
       "rule_format": {
         "version": "1.0"
       },
-      "web_theme": "partyTime",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Noita integration for Archipelago multiworld games.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Heinermann",
-            "ScipioWright",
-            "DaftBrit"
-          ]
-        }
-      ],
-      "world_description": "Noita is a magical action roguelite set in a world where every pixel is physically simulated. Fight, explore, melt,\nburn, freeze, and evaporate your way through the procedurally generated world using wands you've created yourself.",
-      "slot_data": {
-        "death_link": 0,
-        "victory_condition": 0,
-        "path_option": 1,
-        "hidden_chests": 3,
-        "pedestal_checks": 6,
-        "orbs_as_checks": 0,
-        "bosses_as_checks": 0,
-        "extra_orbs": 0,
-        "shop_price": 100
-      }
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }
