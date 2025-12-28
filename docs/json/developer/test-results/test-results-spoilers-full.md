@@ -6,11 +6,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-28 22:46:53
+**Generated:** 2025-12-28 23:41:58
 
-**Source Data Created:** 2025-12-28T22:16:38.816782
+**Source Data Created:** 2025-12-28T23:41:57.151536
 
-**Source Data Last Updated:** 2025-12-28T22:16:38.816787
+**Source Data Last Updated:** 2025-12-28T23:41:57.151540
 
 ## Summary
 
@@ -22,9 +22,9 @@
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 33/73 (45.2% of passed)
+- **Passing with Generic Exporter:** 34/73 (46.6% of passed)
 - **Passing with Generic Logic:** 65/73 (89.0% of passed)
-- **Passing with Both Generic:** 33/73 (45.2% of passed)
+- **Passing with Both Generic:** 34/73 (46.6% of passed)
 
 ## Test Results
 
@@ -73,7 +73,7 @@
 | Muse Dash | ✅ Passed | 0 | 8.6 | 8.6 | 🟢 Complete | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | 0.117 | 0.117 | 🟢 Complete | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | 0 | 7.6 | 7.6 | 🟢 Complete | 3.6KB | ✅ |
-| Overcooked! 2 | ✅ Passed | 0 | 18.3 | 18.3 | 🟢 Complete | 29.0KB | 6.7KB |
+| Overcooked! 2 | ✅ Passed | 0 | 18.3 | 18.3 | 🟢 Complete | 29.1KB | 6.7KB |
 | Paint | ✅ Passed | 0 | 13.2 | 13.2 | 🟢 Complete | 6.9KB | ✅ |
 | Raft | ✅ Passed | 0 | 11.6 | 11.6 | 🟢 Complete | 11.4KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.35 | 8.35 | 🟢 Complete | ✅ | ✅ |
@@ -85,23 +85,23 @@
 | Stardew Valley | ✅ Passed | 0 | 44.2 | 44.2 | 🟢 Complete | 19.7KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 7.5KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | 13.2KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 1.0KB | ✅ |
+| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.12 | 8.12 | 🟢 Complete | ✅ | ✅ |
 | Super Metroid | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 64.6KB | 114.5KB |
 | TOEM original | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | ✅ | ✅ |
 | TUNIC | ✅ Passed | 0 | 5.12 | 5.12 | 🟢 Complete | 2.0KB | ✅ |
 | Terraria | ✅ Passed | 0 | 9.6 | 9.6 | 🟢 Complete | 19.2KB | ✅ |
-| The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 5.8KB | ✅ |
-| The Messenger | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 12.3KB | ✅ |
-| The Wind Waker | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 5.3KB | ✅ |
-| The Witness | ✅ Passed | 0 | 9.15 | 9.15 | 🟢 Complete | 28.4KB | ✅ |
-| Timespinner | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 4.5KB | ✅ |
+| The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 2.2KB | ✅ |
+| The Messenger | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 9.0KB | ✅ |
+| The Wind Waker | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 4.4KB | ✅ |
+| The Witness | ✅ Passed | 0 | 9.15 | 9.15 | 🟢 Complete | 24.9KB | ✅ |
+| Timespinner | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 3.1KB | ✅ |
 | Undertale | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
-| VVVVVV | ✅ Passed | 0 | 3.4 | 3.4 | 🟢 Complete | 5.4KB | ✅ |
-| Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 9.3KB | ✅ |
+| VVVVVV | ✅ Passed | 0 | 3.4 | 3.4 | 🟢 Complete | 3.6KB | ✅ |
+| Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 6.8KB | ✅ |
 | WebDevJourney | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
-| Yoshi's Island | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 12.0KB | ✅ |
+| Yoshi's Island | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 5.4KB | ✅ |
 | shapez | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
 
 ## Notes
