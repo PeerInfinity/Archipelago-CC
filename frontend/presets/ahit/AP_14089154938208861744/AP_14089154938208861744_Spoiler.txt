@@ -618,8 +618,8 @@ Act Completion (Train Rush)
 Act Completion (Welcome to Mafia Town)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 5
-   =>   The Big Parade -> Subcon Forest - Finale: Connection 5
+   =>   Subcon Forest -> Subcon Forest - Act 1
+   =>   Your Contract has Expired -> Subcon Forest - Finale: Connection 1
    =>   Welcome to Mafia Town
 Act Completion (Your Contract has Expired)
         Menu -> Save File -> Spaceship
@@ -1017,15 +1017,15 @@ Mafia Town - Yellow Sphere Building Chest
 Mafia of Cooks - Page: Below Dock
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 5
-   =>   The Big Parade -> Subcon Forest - Finale: Connection 5
+   =>   Subcon Forest -> Subcon Forest - Act 1
+   =>   Your Contract has Expired -> Subcon Forest - Finale: Connection 1
    =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Top of Boat
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 5
-   =>   The Big Parade -> Subcon Forest - Finale: Connection 5
+   =>   Subcon Forest -> Subcon Forest - Act 1
+   =>   Your Contract has Expired -> Subcon Forest - Finale: Connection 1
    =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Murder on the Owl Express - Cafeteria
