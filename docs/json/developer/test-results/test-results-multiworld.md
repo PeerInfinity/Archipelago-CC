@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-28 03:34:00
+**Generated:** 2025-12-28 05:27:54
 
 ## Summary
 
@@ -30,26 +30,26 @@
 
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
-| A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 10.0KB | ✅ |
+| A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 8.5KB | ✅ |
 | A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 2.5KB | ✅ |
 | A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| Aquaria | ✅ Passed | ✅ Passed | 1 | 1 | 3.6KB | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | 1 | 1 | 2.0KB | 40.3KB |
+| Aquaria | ✅ Passed | ✅ Passed | 1 | 1 | 2.8KB | ✅ |
+| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | 1 | 1 | 1.5KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 16.3KB | ✅ |
+| Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 14.7KB | ✅ |
 | Castlevania 64 | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Celeste 64 | ✅ Passed | ✅ Passed | 2 | 2 | 8.6KB | ✅ |
+| Celeste 64 | ✅ Passed | ✅ Passed | 2 | 2 | 8.4KB | ✅ |
 | ChecksFinder | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | ChocolateChipCookies | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Civilization VI | ✅ Passed | ✅ Passed | 2 | 2 | 8.8KB | ✅ |
-| DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 9.5KB | ✅ |
+| Civilization VI | ✅ Passed | ✅ Passed | 2 | 2 | 1.9KB | ✅ |
+| DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 4.5KB | ✅ |
 | DOOM 1993 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Dark Souls III | ✅ Passed | ✅ Passed | 2 | 2 | 4.5KB | ✅ |
+| Dark Souls III | ✅ Passed | ✅ Passed | 2 | 2 | 4.3KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 7.1KB | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
