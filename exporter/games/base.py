@@ -203,6 +203,38 @@ class BaseGameExportHandler:
                 self._discovered_helper_modules[helper_name] = module_name
                 logger.debug(f"Auto-detected module for helper '{helper_name}': {module_name}")
 
+    def register_helpers_from_rule(self, rule: Dict[str, Any]) -> None:
+        """
+        Recursively register all helpers referenced in a rule structure.
+
+        This is useful for games that construct rule structures manually
+        (e.g., from JSON data or hardcoded dictionaries) and need to ensure
+        all referenced helpers are discovered for export.
+
+        Walks through the rule tree and calls register_helper_usage() for
+        any helper nodes found.
+
+        Args:
+            rule: The rule dictionary to scan for helper references
+        """
+        if rule is None or not isinstance(rule, dict):
+            return
+
+        rule_type = rule.get('type')
+        if rule_type == 'helper':
+            helper_name = rule.get('name')
+            if helper_name:
+                self.register_helper_usage(helper_name)
+        elif rule_type in ('and', 'or'):
+            for condition in rule.get('conditions', []):
+                self.register_helpers_from_rule(condition)
+        elif rule_type == 'not':
+            self.register_helpers_from_rule(rule.get('condition'))
+        elif rule_type == 'conditional':
+            self.register_helpers_from_rule(rule.get('test'))
+            self.register_helpers_from_rule(rule.get('if_true'))
+            self.register_helpers_from_rule(rule.get('if_false'))
+
     def get_discovered_helpers(self) -> Set[str]:
         """
         Return the set of helper names discovered during rule analysis.
