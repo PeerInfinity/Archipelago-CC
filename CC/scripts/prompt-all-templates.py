@@ -32,6 +32,48 @@ def load_world_mapping(project_root):
         return {}
 
 
+def load_prompt_exclusion_lists(project_root):
+    """Load the prompt exclusion lists from template-exclude-list.json.
+
+    Returns a dict with two sets:
+    - 'requires_javascript_helpers': Games that require JavaScript helpers
+      (excluded from new-rule-types prompts)
+    - 'exporter_fully_simplified': Games whose exporters are fully simplified
+      (excluded from helper-export and exporter-simplify prompts)
+    """
+    exclude_file = Path(project_root) / 'scripts' / 'data' / 'template-exclude-list.json'
+    result = {
+        'requires_javascript_helpers': set(),
+        'exporter_fully_simplified': set()
+    }
+
+    if not exclude_file.exists():
+        return result
+
+    try:
+        with open(exclude_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+
+        # Load requires_javascript_helpers_list
+        for item in data.get('requires_javascript_helpers_list', []):
+            if isinstance(item, dict) and 'name' in item:
+                result['requires_javascript_helpers'].add(item['name'])
+            elif isinstance(item, str):
+                result['requires_javascript_helpers'].add(item)
+
+        # Load exporter_fully_simplified_list
+        for item in data.get('exporter_fully_simplified_list', []):
+            if isinstance(item, dict) and 'name' in item:
+                result['exporter_fully_simplified'].add(item['name'])
+            elif isinstance(item, str):
+                result['exporter_fully_simplified'].add(item)
+
+        return result
+    except Exception as e:
+        print(f"Error loading prompt exclusion lists: {e}", file=sys.stderr)
+        return result
+
+
 def get_test_results_path(project_root, use_full_spoilers=False, use_minimal_spoilers=False, use_multiclient=False, use_multiworld=False):
     """Determine the correct test results path based on host.yaml configuration or command-line flags."""
     # If --multiworld is set, use the multiworld results path
@@ -1898,6 +1940,9 @@ def main():
     # Used by: --basic-spoiler-debug, --helper-export, normal mode, and worldgen modes
     world_mapping = load_world_mapping(project_root)
 
+    # Load prompt exclusion lists (for filtering specific prompt types)
+    prompt_exclusions = load_prompt_exclusion_lists(project_root)
+
     # Handle worldgen modes - these iterate through failures, not templates
     if args.worldgen_world_failures or args.worldgen_seed_failures or args.worldgen_spoiler_failures or args.worldgen_crossval_failures:
         quiet_mode = (args.text or args.prompt or args.promptfile) and not args.loud
@@ -2132,6 +2177,18 @@ def main():
                             break
                     continue
 
+                # Skip games whose exporters are fully simplified
+                if template_file in prompt_exclusions['exporter_fully_simplified']:
+                    if not quiet_mode:
+                        print(f"Skipping {game_name_from_yaml} - exporter is fully simplified")
+                    current_index = (current_index + 1) % len(template_files)
+                    processed_count += 1
+                    if processed_count % len(template_files) == 0:
+                        cycle_num = processed_count // len(template_files)
+                        if cycle_num >= args.max_loops:
+                            break
+                    continue
+
                 custom_code_info = get_custom_code_info(game_name_from_yaml, world_mapping)
 
                 # Handle --promptfile mode
@@ -2200,6 +2257,18 @@ def main():
                             break
                     continue
 
+                # Skip games whose exporters are fully simplified
+                if template_file in prompt_exclusions['exporter_fully_simplified']:
+                    if not quiet_mode:
+                        print(f"Skipping {game_name_from_yaml} - exporter is fully simplified")
+                    current_index = (current_index + 1) % len(template_files)
+                    processed_count += 1
+                    if processed_count % len(template_files) == 0:
+                        cycle_num = processed_count // len(template_files)
+                        if cycle_num >= args.max_loops:
+                            break
+                    continue
+
                 # Handle --promptfile mode
                 if args.promptfile:
                     simplify_prompt = generate_exporter_simplify_prompt(
@@ -2256,6 +2325,18 @@ def main():
                 if not has_javascript_helpers(game_name_from_yaml, world_mapping):
                     if not quiet_mode:
                         print(f"Skipping {game_name_from_yaml} - no JavaScript helpers")
+                    current_index = (current_index + 1) % len(template_files)
+                    processed_count += 1
+                    if processed_count % len(template_files) == 0:
+                        cycle_num = processed_count // len(template_files)
+                        if cycle_num >= args.max_loops:
+                            break
+                    continue
+
+                # Skip games that require JavaScript helpers (cannot be removed)
+                if template_file in prompt_exclusions['requires_javascript_helpers']:
+                    if not quiet_mode:
+                        print(f"Skipping {game_name_from_yaml} - requires JavaScript helpers")
                     current_index = (current_index + 1) % len(template_files)
                     processed_count += 1
                     if processed_count % len(template_files) == 0:

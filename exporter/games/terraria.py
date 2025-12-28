@@ -4,22 +4,23 @@ Terraria uses a custom DSV (Rules.dsv) rule system with special Condition object
 This exporter converts those conditions to the standard JSON rule format.
 """
 
-from typing import Dict, Any, List, Union, Tuple
+from typing import Dict, Any, List, Union
 from .generic import GenericGameExportHandler
-from BaseClasses import ItemClassification
 import logging
 
 logger = logging.getLogger(__name__)
 
-class TerrariaGameExportHandler(GenericGameExportHandler):
-    """Terraria export handler with custom rule system support."""
 
-    # Export settings at top level so they can be resolved by 'name' type rules
-    COMPUTED_SETTINGS = {
-        'calamity': lambda w, m, p: bool(w.options.calamity.value) if hasattr(w.options, 'calamity') else False,
-        'grindy_achievements': lambda w, m, p: bool(w.options.grindy_achievements.value) if hasattr(w.options, 'grindy_achievements') else False,
-        'getfixedboi': lambda w, m, p: bool(w.options.getfixedboi.value) if hasattr(w.options, 'getfixedboi') else False,
-    }
+class TerrariaGameExportHandler(GenericGameExportHandler):
+    """Terraria export handler with custom rule system support.
+
+    Terraria uses a custom DSV (Rules.dsv) rule system with Condition objects.
+    This exporter converts those conditions to the standard JSON rule format.
+
+    Note: Options like calamity, grindy_achievements, getfixedboi are automatically
+    exported by the base class in the 'options' section. The frontend's getSetting()
+    falls back to options.* so no COMPUTED_SETTINGS are needed.
+    """
 
     def __init__(self):
         super().__init__()

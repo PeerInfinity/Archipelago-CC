@@ -74,6 +74,16 @@ class BaseGameExportHandler:
     # When True, all simple attributes (bool, int, float, str) on the world instance are exported
     AUTO_DISCOVER_WORLD_ATTRIBUTES: bool = True
 
+    # Whether the analyzer should process if-statements with multiple statements in the body
+    # When False (default), only simple if-statements with a single statement are handled
+    # When True, complex if-statements with multiple statements are combined into compound conditions
+    PROCESS_MULTISTATEMENT_IF_BODIES: bool = False
+
+    # Whether the analyzer should recursively analyze closure variable function calls
+    # When False (default), closure variables are converted to helper calls without recursive analysis
+    # When True, closure variables are recursively analyzed and inlined for complex rule logic
+    RECURSIVELY_ANALYZE_CLOSURES: bool = False
+
     # Whether to export Choice options as numeric values or string keys
     # When True (default), Choice options are exported as integers (e.g., 0, 1, 2)
     #   - Enables proper ordered comparisons (< > <= >=) in JavaScript
@@ -552,7 +562,65 @@ class BaseGameExportHandler:
                         'args': []
                     }
 
+        # Handle option access patterns and resolve to constant values
+        # This handles patterns like:
+        # - self.options.X -> constant value
+        # - state.multiworld.worlds[player].options.X -> constant value
+        elif rule_type == 'attribute':
+            resolved = self._resolve_option_access(rule)
+            if resolved is not None:
+                return resolved
+
         return rule
+
+    def _resolve_option_access(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """
+        Resolve option access patterns to constant values.
+
+        Handles patterns like:
+        - self.options.X -> constant value
+        - state.multiworld.worlds[player].options.X -> constant value
+
+        Args:
+            rule: An attribute type rule node
+
+        Returns:
+            A constant rule node if the option was resolved, None otherwise
+        """
+        if rule.get('type') != 'attribute':
+            return None
+
+        option_name = rule.get('attr')
+        obj = rule.get('object', {})
+
+        # Pattern 1: self.options.X or world.options.X
+        if (obj.get('type') == 'attribute' and
+            obj.get('attr') == 'options' and
+            obj.get('object', {}).get('type') == 'name' and
+            obj.get('object', {}).get('name') in ['self', 'world']):
+
+            world = self.world
+            if world and hasattr(world, 'options'):
+                option_value = getattr(world.options, option_name, None)
+                if option_value is not None:
+                    value = getattr(option_value, 'value', option_value)
+                    logger.debug(f"Resolved self.options.{option_name} to constant: {value}")
+                    return {'type': 'constant', 'value': value}
+
+        # Pattern 2: state.multiworld.worlds[player].options.X
+        if (obj.get('type') == 'attribute' and
+            obj.get('attr') == 'options' and
+            obj.get('object', {}).get('type') == 'subscript'):
+
+            world = self.world
+            if world and hasattr(world, 'options'):
+                option_value = getattr(world.options, option_name, None)
+                if option_value is not None:
+                    value = getattr(option_value, 'value', option_value)
+                    logger.debug(f"Resolved state.multiworld.worlds[player].options.{option_name} to constant: {value}")
+                    return {'type': 'constant', 'value': value}
+
+        return None
         
     def expand_helper(self, helper_name: str, args: List[Any] = None) -> Dict[str, Any]:
         """Expand a helper function into basic rule conditions."""
@@ -646,11 +714,12 @@ class BaseGameExportHandler:
         in the body. Some games (like Mario Land 2) have complex if-statements with multiple
         statements that need to be combined into compound conditions.
 
+        Games can either override this method or set PROCESS_MULTISTATEMENT_IF_BODIES = True.
+
         Returns:
             True if multi-statement if-bodies should be processed, False otherwise
         """
-        # Default implementation: don't process multi-statement if-bodies
-        return False
+        return self.PROCESS_MULTISTATEMENT_IF_BODIES
 
     def should_recursively_analyze_closures(self) -> bool:
         """
@@ -660,11 +729,12 @@ class BaseGameExportHandler:
         Some games (like Mario Land 2) need closure variables to be recursively analyzed and
         inlined to properly export complex rule logic.
 
+        Games can either override this method or set RECURSIVELY_ANALYZE_CLOSURES = True.
+
         Returns:
             True if closure variables should be recursively analyzed, False otherwise
         """
-        # Default implementation: don't recursively analyze closures
-        return False
+        return self.RECURSIVELY_ANALYZE_CLOSURES
 
     def get_effective_item_type(self, item_name: str, original_type: str) -> str:
         """
@@ -920,6 +990,9 @@ class BaseGameExportHandler:
 
         Note: Exporter-specific settings are now in get_exporter_settings().
         """
+        # Store world reference for use in expand_rule (option resolution)
+        self.world = world
+
         world_data = {'game': multiworld.game[player]}
 
         # Common multiworld settings (like accessibility)
