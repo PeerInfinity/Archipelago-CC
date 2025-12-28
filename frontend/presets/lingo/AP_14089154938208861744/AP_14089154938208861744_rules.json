@@ -21072,6 +21072,15 @@
           "display_name": "Victory Condition"
         }
       },
+      "shuffle_colors": 1,
+      "shuffle_doors": 0,
+      "shuffle_panels": 0,
+      "shuffle_paintings": 0,
+      "shuffle_sunwarps": 0,
+      "shuffle_postgame": 0,
+      "group_doors": 0,
+      "mastery_achievements": 21,
+      "level_2_requirement": 223,
       "player_logic": {
         "item_by_door": {
           "Pilgrim Antechamber": {
@@ -25375,15 +25384,6 @@
           }
         ]
       },
-      "shuffle_colors": 1,
-      "shuffle_doors": 0,
-      "shuffle_panels": 0,
-      "shuffle_paintings": 0,
-      "shuffle_sunwarps": 0,
-      "shuffle_postgame": 0,
-      "group_doors": 0,
-      "mastery_achievements": 21,
-      "level_2_requirement": 223,
       "item_by_door": {
         "Pilgrim Antechamber": {
           "Sun Painting": "Pilgrim Room - Sun Painting"
