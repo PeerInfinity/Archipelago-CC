@@ -1,20 +1,18 @@
 {
   "settings": {
     "game": "The Messenger",
-    "assume_bidirectional_exits": false,
-    "use_resolved_items": false,
     "options": {
-      "accessibility": "full",
+      "accessibility": 0,
       "available_portals": 6,
-      "death_link": "false",
-      "early_meditation": "false",
+      "death_link": false,
+      "early_meditation": false,
       "exclude_locations": [],
-      "goal": "open_music_box",
+      "goal": 0,
       "item_links": [],
-      "limited_movement": "false",
+      "limited_movement": false,
       "local_items": [],
-      "logic_level": "normal",
-      "music_box": "true",
+      "logic_level": 0,
+      "music_box": true,
       "non_local_items": [],
       "notes_needed": 6,
       "percent_seals_required": 100,
@@ -25,18 +23,158 @@
       "progression_balancing": 50,
       "shop_price": 100,
       "shop_price_plan": {},
-      "shuffle_portals": "none",
-      "shuffle_shards": "false",
-      "shuffle_transitions": "none",
+      "shuffle_portals": 0,
+      "shuffle_shards": false,
+      "shuffle_transitions": 0,
       "start_hints": [],
       "start_inventory": {},
       "start_location_hints": [],
       "total_seals": 45,
-      "traps": "false"
+      "traps": false
     },
     "world_directory": "messenger"
   },
   "world_attributes": {
-    "use_paren_number_accumulator": true
+    "shop_prices": {
+      "Karuta Plates": 27,
+      "Serendipitous Bodies": 291,
+      "Path of Resilience": 149,
+      "Kusari Jacket": 357,
+      "Energy Shuriken": 92,
+      "Serendipitous Minds": 109,
+      "Prepared Mind": 345,
+      "Meditation": 147,
+      "Rejuvenative Spirit": 513,
+      "Centered Mind": 772,
+      "Strike of the Ninja": 67,
+      "Second Wind": 170,
+      "Currents Master": 506,
+      "Aerobatics Warrior": 381,
+      "Demon's Bane": 527,
+      "Devil's Due": 56,
+      "Time Sense": 142,
+      "Power Sense": 479,
+      "Focused Power Sense": 413
+    },
+    "figurine_prices": {
+      "Green Kappa Figurine": 236,
+      "Blue Kappa Figurine": 106,
+      "Ountarde Figurine": 264,
+      "Red Kappa Figurine": 348,
+      "Demon King Figurine": 1271,
+      "Quillshroom Figurine": 193,
+      "Jumping Quillshroom Figurine": 208,
+      "Scurubu Figurine": 108,
+      "Jumping Scurubu Figurine": 267,
+      "Wallaxer Figurine": 265,
+      "Barmath'azel Figurine": 714,
+      "Queen of Quills Figurine": 406,
+      "Demon Hive Figurine": 357
+    },
+    "starting_portals": [
+      "Autumn Hills Portal",
+      "Howling Grotto Portal",
+      "Glacial Peak Portal",
+      "Sunken Shrine Portal",
+      "Riviere Turquoise Portal",
+      "Searing Crags Portal"
+    ],
+    "filler": {
+      "Time Shard": 5,
+      "Time Shard (10)": 10,
+      "Time Shard (50)": 20,
+      "Time Shard (100)": 20,
+      "Time Shard (300)": 10,
+      "Time Shard (500)": 5
+    },
+    "plando_portals": [],
+    "portal_mapping": [],
+    "transitions": [],
+    "total_shards": 7600,
+    "total_seals": 0,
+    "required_seals": 0,
+    "created_seals": 0,
+    "reachable_locs": false,
+    "world_description": "As a demon army besieges his village, a young ninja ventures through a cursed world, to deliver a scroll paramount\nto his clan\u2019s survival. What begins as a classic action platformer soon unravels into an expansive time-traveling\nadventure full of thrills, surprises, and humor.",
+    "slot_data": {
+      "shop": {
+        "HP_UPGRADE_1": 27,
+        "ENEMY_DROP_HP": 291,
+        "DAMAGE_REDUCTION": 149,
+        "HP_UPGRADE_2": 357,
+        "SHURIKEN": 92,
+        "ENEMY_DROP_MANA": 109,
+        "SHURIKEN_UPGRADE_1": 345,
+        "CHECKPOINT_FULL": 147,
+        "POTION_FULL_HEAL_AND_HP": 513,
+        "SHURIKEN_UPGRADE_2": 772,
+        "ATTACK_PROJECTILE": 67,
+        "AIR_RECOVER": 170,
+        "SWIM_DASH": 506,
+        "GLIDE_ATTACK": 381,
+        "CHARGED_ATTACK": 527,
+        "QUARBLE_DISCOUNT_50": 56,
+        "TIME_WARP": 142,
+        "POWER_SEAL": 479,
+        "POWER_SEAL_WORLD_MAP": 413
+      },
+      "figures": {
+        "GREEN_KAPPA": 236,
+        "BLUE_KAPPA": 106,
+        "OUNTARDE": 264,
+        "RED_KAPPA": 348,
+        "DEMON_KING": 1271,
+        "QUILLSHROOM": 193,
+        "JUMPING_QUILLSHROOM": 208,
+        "SCURUBU": 108,
+        "JUMPING_SCURUBU": 267,
+        "WALLAXER": 265,
+        "BARMATHAZEL": 714,
+        "QUEEN_OF_QUILLS": 406,
+        "DEMON_HIVE": 357
+      },
+      "max_price": 7600,
+      "required_seals": 0,
+      "starting_portals": [
+        "Autumn Hills Portal",
+        "Howling Grotto Portal",
+        "Glacial Peak Portal",
+        "Sunken Shrine Portal",
+        "Riviere Turquoise Portal",
+        "Searing Crags Portal"
+      ],
+      "portal_exits": [],
+      "transitions": [],
+      "music_box": 1,
+      "death_link": 0,
+      "logic_level": 0
+    },
+    "web": {
+      "theme": "ocean",
+      "tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up The Messenger randomizer on your computer.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "alwaysintreble"
+          ]
+        },
+        {
+          "name": "The Messenger Plando Guide",
+          "description": "A guide detailing The Messenger's various supported plando options.",
+          "language": "English",
+          "file_name": "plando_en.md",
+          "link": "plando/en",
+          "authors": [
+            "alwaysintreble"
+          ]
+        }
+      ]
+    },
+    "use_paren_number_accumulator": true,
+    "maximum_price": 4566
   }
 }

@@ -16887,27 +16887,10 @@
       ],
       "base_id": 7000,
       "world_description": "The Legend of Zelda WorldGen for Archipelago.\n\nAuto-generated world implementation.",
-      "settings": {
-        "game": "The Legend of Zelda",
-        "assume_bidirectional_exits": false,
-        "use_resolved_items": false,
-        "options": {
-          "ExpandedPool": "true",
-          "StartingPosition": "safe",
-          "TriforceLocations": "vanilla",
-          "accessibility": "full",
-          "exclude_locations": [],
-          "item_links": [],
-          "local_items": [],
-          "non_local_items": [],
-          "plando_items": [],
-          "priority_locations": [],
-          "progression_balancing": 50,
-          "start_hints": [],
-          "start_inventory": {},
-          "start_location_hints": []
-        },
-        "world_directory": "tloz"
+      "slot_data": {
+        "TakeAnyLeft": 7115,
+        "TakeAnyMiddle": 7126,
+        "TakeAnyRight": 7129
       },
       "web": {
         "theme": "stone"

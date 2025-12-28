@@ -1877,33 +1877,18 @@
       },
       "shops": [],
       "world_description": "Wargroove WorldGen for Archipelago.\n\nAuto-generated world implementation.",
-      "settings": {
-        "game": "Wargroove",
-        "assume_bidirectional_exits": false,
-        "use_resolved_items": false,
-        "options": {
-          "accessibility": "full",
-          "ai_sacrifice_limit": 0,
-          "ai_summon_limit": 0,
-          "commander_choice": "locked_random",
-          "commander_defense_boost": 2,
-          "death_link": "false",
-          "exclude_locations": [],
-          "income_boost": 25,
-          "item_links": [],
-          "local_items": [],
-          "non_local_items": [],
-          "plando_items": [],
-          "player_sacrifice_limit": 0,
-          "player_summon_limit": 0,
-          "priority_locations": [],
-          "progression_balancing": 50,
-          "start_hints": [],
-          "start_inventory": {},
-          "start_inventory_from_pool": {},
-          "start_location_hints": []
-        },
-        "world_directory": "wargroove"
+      "slot_data": {
+        "seed": "jpYxoraZuFulnbuu",
+        "income_boost": 25,
+        "commander_defense_boost": 2,
+        "can_choose_commander": false,
+        "commander_choice": 0,
+        "player_sacrifice_limit": 0,
+        "player_summon_limit": 0,
+        "ai_sacrifice_limit": 0,
+        "ai_summon_limit": 0,
+        "death_link": 0,
+        "starting_groove_multiplier": 20
       },
       "web": {
         "theme": "grass"

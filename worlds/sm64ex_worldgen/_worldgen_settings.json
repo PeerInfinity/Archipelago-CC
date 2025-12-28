@@ -1,19 +1,17 @@
 {
   "settings": {
     "game": "Super Mario 64",
-    "assume_bidirectional_exits": false,
-    "use_resolved_items": false,
     "options": {
-      "accessibility": "full",
+      "accessibility": 0,
       "amount_of_stars": 120,
-      "area_rando": "off",
+      "area_rando": 0,
       "basement_star_door_cost": 25,
-      "buddy_checks": "false",
-      "completion_type": "last_bowser_stage",
-      "death_link": "false",
-      "enable_coin_stars": "off",
-      "enable_move_rando": "false",
-      "exclamation_boxes": "false",
+      "buddy_checks": false,
+      "completion_type": 0,
+      "death_link": false,
+      "enable_coin_stars": 0,
+      "enable_move_rando": false,
+      "exclamation_boxes": false,
       "exclude_locations": [],
       "first_bowser_star_door_cost": 7,
       "item_links": [],
@@ -36,23 +34,82 @@
       "plando_items": [],
       "priority_locations": [],
       "progression_balancing": 50,
-      "progressive_keys": "true",
+      "progressive_keys": true,
       "second_floor_star_door_cost": 42,
       "stars_to_finish": 58,
       "start_hints": [],
       "start_inventory": {},
       "start_location_hints": [],
-      "strict_cannon_requirements": "true",
-      "strict_cap_requirements": "true",
-      "strict_move_requirements": "true"
+      "strict_cannon_requirements": true,
+      "strict_cap_requirements": true,
+      "strict_move_requirements": true
     },
     "world_directory": "sm64ex"
   },
   "world_attributes": {
-    "enable_move_rando": false,
-    "strict_cap_requirements": true,
-    "strict_cannon_requirements": true,
-    "strict_move_requirements": true,
-    "area_rando": 0
+    "move_rando_bitvec": 0,
+    "number_of_stars": 105,
+    "filler_count": 0,
+    "star_costs": {
+      "FirstBowserDoorCost": 7,
+      "BasementDoorCost": 26,
+      "SecondFloorDoorCost": 44,
+      "MIPS1Cost": 13,
+      "MIPS2Cost": 44,
+      "StarsToFinish": 61
+    },
+    "world_description": "The first Super Mario game to feature 3D gameplay, it features freedom of movement within a large open world based on polygons,\ncombined with traditional Mario gameplay, visual style, and characters.",
+    "slot_data": {
+      "AreaRando": {
+        "91": 91,
+        "241": 241,
+        "121": 121,
+        "51": 51,
+        "41": 41,
+        "71": 71,
+        "221": 221,
+        "81": 81,
+        "231": 231,
+        "101": 101,
+        "111": 111,
+        "361": 361,
+        "132": 132,
+        "131": 131,
+        "141": 141,
+        "151": 151,
+        "271": 271,
+        "201": 201,
+        "171": 171,
+        "291": 291,
+        "281": 281,
+        "181": 181,
+        "191": 191,
+        "311": 311
+      },
+      "MoveRandoVec": 0,
+      "DeathLink": 0,
+      "CompletionType": 0,
+      "FirstBowserDoorCost": 7,
+      "BasementDoorCost": 26,
+      "SecondFloorDoorCost": 44,
+      "MIPS1Cost": 13,
+      "MIPS2Cost": 44,
+      "StarsToFinish": 61
+    },
+    "web": {
+      "theme": "grass",
+      "tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up SM64EX for MultiWorld.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "N00byKing"
+          ]
+        }
+      ]
+    }
   }
 }

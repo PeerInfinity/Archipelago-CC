@@ -1859,7 +1859,6 @@
           "display_name": "Total Strawberries"
         }
       },
-      "strawberries_required": 16,
       "shops": [],
       "madeline_one_dash_hair_color": 14363648,
       "madeline_two_dash_hair_color": 16421375,
@@ -2110,8 +2109,26 @@
           ]
         ]
       },
+      "strawberries_required": 16,
       "prog_strawberries": 16,
       "world_description": "Celeste 64 WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "slot_data": {
+        "death_link": 0,
+        "death_link_amnesty": 10,
+        "strawberries_required": 16,
+        "move_shuffle": 0,
+        "friendsanity": 0,
+        "signsanity": 0,
+        "carsanity": 0,
+        "checkpointsanity": 0,
+        "madeline_one_dash_hair_color": 14363648,
+        "madeline_two_dash_hair_color": 16421375,
+        "madeline_no_dash_hair_color": 7258367,
+        "madeline_feather_hair_color": 15914064,
+        "badeline_chaser_source": 0,
+        "badeline_chaser_frequency": 0,
+        "badeline_chaser_speed": 3
+      },
       "web": {
         "theme": "ice"
       },

@@ -8439,28 +8439,10 @@
       },
       "rom_name": "MMBN3_ROM_NOT_GENERATED",
       "world_description": "MegaMan Battle Network 3 WorldGen for Archipelago.\n\nAuto-generated world implementation.",
-      "settings": {
-        "game": "MegaMan Battle Network 3",
-        "assume_bidirectional_exits": false,
-        "use_resolved_items": false,
-        "options": {
-          "accessibility": "full",
-          "exclude_locations": [],
-          "extra_ranks": 0,
-          "include_jobs": "true",
-          "include_secret": "false",
-          "item_links": [],
-          "local_items": [],
-          "non_local_items": [],
-          "plando_items": [],
-          "priority_locations": [],
-          "progression_balancing": 50,
-          "start_hints": [],
-          "start_inventory": {},
-          "start_location_hints": [],
-          "trade_quest_hinting": "full"
-        },
-        "world_directory": "mmbn3"
+      "slot_data": {
+        "extra_ranks": 0,
+        "include_jobs": 1,
+        "trade_quest_hinting": 2
       },
       "web": {
         "theme": "ice"

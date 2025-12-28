@@ -3077,6 +3077,34 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Compare",
+                      "args": {
+                        "left": 1,
+                        "op": "in",
+                        "right": [
+                          "easy",
+                          "default"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "can_kill_most_things",
+                      "_original_ast_type": "helper",
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": 1
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Hyrule Castle)",
@@ -16311,135 +16339,53 @@
       "save_and_quit_from_boss": true,
       "rupoor_cost": 10,
       "world_description": "A Link to the Past WorldGen for Archipelago.\n\nAuto-generated world implementation.",
-      "misery_mire_medallion": "Quake",
-      "turtle_rock_medallion": "Ether",
-      "shop_items": {
-        "Red Potion": {
-          "unlimited": [
-            "Cave Shop (Dark Death Mountain)",
-            "Dark Lake Hylia Shop",
-            "Dark World Lumberjack Shop",
-            "Village of Outcasts Shop",
-            "Dark World Potion Shop",
-            "Light World Death Mountain Shop",
-            "Kakariko Shop",
-            "Cave Shop (Lake Hylia)",
-            "Potion Shop"
-          ],
-          "limited": [
-            "Cave Shop (Dark Death Mountain)",
-            "Dark Lake Hylia Shop",
-            "Dark World Lumberjack Shop",
-            "Village of Outcasts Shop",
-            "Dark World Potion Shop",
-            "Light World Death Mountain Shop",
-            "Kakariko Shop",
-            "Cave Shop (Lake Hylia)",
-            "Potion Shop"
-          ]
-        },
-        "Small Heart": {
-          "unlimited": [
-            "Cave Shop (Dark Death Mountain)",
-            "Light World Death Mountain Shop",
-            "Kakariko Shop",
-            "Cave Shop (Lake Hylia)"
-          ],
-          "limited": [
-            "Cave Shop (Dark Death Mountain)",
-            "Light World Death Mountain Shop",
-            "Kakariko Shop",
-            "Cave Shop (Lake Hylia)"
-          ]
-        },
-        "Bombs (10)": {
-          "unlimited": [
-            "Cave Shop (Dark Death Mountain)",
-            "Dark Lake Hylia Shop",
-            "Dark World Lumberjack Shop",
-            "Village of Outcasts Shop",
-            "Dark World Potion Shop",
-            "Light World Death Mountain Shop",
-            "Kakariko Shop",
-            "Cave Shop (Lake Hylia)"
-          ],
-          "limited": [
-            "Cave Shop (Dark Death Mountain)",
-            "Dark Lake Hylia Shop",
-            "Dark World Lumberjack Shop",
-            "Village of Outcasts Shop",
-            "Dark World Potion Shop",
-            "Light World Death Mountain Shop",
-            "Kakariko Shop",
-            "Cave Shop (Lake Hylia)"
-          ]
-        },
-        "Red Shield": {
-          "unlimited": [
-            "Red Shield Shop"
-          ],
-          "limited": [
-            "Red Shield Shop"
-          ]
-        },
-        "Bee": {
-          "unlimited": [
-            "Red Shield Shop"
-          ],
-          "limited": [
-            "Red Shield Shop"
-          ]
-        },
-        "Arrows (10)": {
-          "unlimited": [
-            "Red Shield Shop"
-          ],
-          "limited": [
-            "Red Shield Shop"
-          ]
-        },
-        "Blue Shield": {
-          "unlimited": [
-            "Dark Lake Hylia Shop",
-            "Dark World Lumberjack Shop",
-            "Village of Outcasts Shop",
-            "Dark World Potion Shop"
-          ],
-          "limited": [
-            "Dark Lake Hylia Shop",
-            "Dark World Lumberjack Shop",
-            "Village of Outcasts Shop",
-            "Dark World Potion Shop"
-          ]
-        },
-        "Green Potion": {
-          "unlimited": [
-            "Potion Shop"
-          ],
-          "limited": [
-            "Potion Shop"
-          ]
-        },
-        "Blue Potion": {
-          "unlimited": [
-            "Potion Shop"
-          ],
-          "limited": [
-            "Potion Shop"
-          ]
-        },
-        "Bomb Upgrade (+5)": {
-          "unlimited": [],
-          "limited": [
-            "Capacity Upgrade"
-          ]
-        },
-        "Arrow Upgrade (+5)": {
-          "unlimited": [],
-          "limited": [
-            "Capacity Upgrade"
-          ]
-        }
+      "dungeons": {
+        "Hyrule Castle": "Hyrule Castle",
+        "Eastern Palace": "Eastern Palace",
+        "Desert Palace": "Desert Palace",
+        "Tower of Hera": "Tower of Hera",
+        "Agahnims Tower": "Agahnims Tower",
+        "Palace of Darkness": "Palace of Darkness",
+        "Thieves Town": "Thieves Town",
+        "Skull Woods": "Skull Woods",
+        "Swamp Palace": "Swamp Palace",
+        "Ice Palace": "Ice Palace",
+        "Misery Mire": "Misery Mire",
+        "Turtle Rock": "Turtle Rock",
+        "Ganons Tower": "Ganons Tower"
+      },
+      "slot_data": {
+        "crystals_needed_for_gt": 7,
+        "crystals_needed_for_ganon": 7,
+        "open_pyramid": 2,
+        "big_key_shuffle": 0,
+        "small_key_shuffle": 0,
+        "compass_shuffle": 0,
+        "map_shuffle": 0,
+        "progressive": 2,
+        "swordless": 0,
+        "retro_bow": 0,
+        "retro_caves": 0,
+        "shop_item_slots": 0,
+        "boss_shuffle": 0,
+        "pot_shuffle": 0,
+        "enemy_shuffle": 0,
+        "key_drop_shuffle": 1,
+        "bombless_start": 0,
+        "randomize_shop_inventories": 0,
+        "shuffle_shop_inventories": 0,
+        "shuffle_capacity_upgrades": 0,
+        "entrance_shuffle": 0,
+        "dark_room_logic": 0,
+        "goal": 0,
+        "mode": 1,
+        "triforce_pieces_mode": 2,
+        "triforce_pieces_percentage": 150,
+        "triforce_pieces_required": 20,
+        "triforce_pieces_available": 30,
+        "triforce_pieces_extra": 10,
+        "mm_medalion": "Quake",
+        "tr_medalion": "Ether"
       },
       "web": {
         "theme": "grass"

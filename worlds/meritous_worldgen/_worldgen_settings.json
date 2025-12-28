@@ -1,16 +1,14 @@
 {
   "settings": {
     "game": "Meritous",
-    "assume_bidirectional_exits": false,
-    "use_resolved_items": false,
     "options": {
-      "accessibility": "full",
-      "death_link": "false",
+      "accessibility": 0,
+      "death_link": false,
       "exclude_locations": [],
-      "goal": "return_the_cursed_seal",
-      "include_evolution_traps": "false",
-      "include_psi_keys": "true",
-      "item_cache_cost": "vanilla",
+      "goal": 0,
+      "include_evolution_traps": false,
+      "include_psi_keys": true,
+      "item_cache_cost": 0,
       "item_links": [],
       "local_items": [],
       "non_local_items": [],
@@ -22,5 +20,37 @@
       "start_location_hints": []
     },
     "world_directory": "meritous"
+  },
+  "world_attributes": {
+    "goal": 0,
+    "include_evolution_traps": 0,
+    "include_psi_keys": 1,
+    "item_cache_cost": 0,
+    "death_link": 0,
+    "world_description": "Meritous Gaiden is a procedurally generated bullet-hell dungeon crawl game.\nFive generations after the Orcus Dome incident, strange experiments conducted in a new\nstructure on the moon are tearing at the very fabric of reality...",
+    "slot_data": {
+      "goal": 0,
+      "cost_scale": [
+        80,
+        5,
+        4
+      ],
+      "death_link": 0
+    },
+    "web": {
+      "theme": "ice",
+      "tutorials": [
+        {
+          "name": "Meritous Setup Guide",
+          "description": "A guide to setting up the Archipelago Meritous software on your computer.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "KewlioMZX"
+          ]
+        }
+      ]
+    }
   }
 }

@@ -247,6 +247,10 @@ class CastlevaniaCircleoftheMoonWorldGenWorld(RuleWorldMixin, World):
         super().__init__(multiworld, player)
         # Game-specific world attributes
         self.shops = []
+        self.nerf_roc_wing = 0
+        self.ignore_cleansing = 0
+        self.iron_maiden_behavior = 0
+        self.completion_goal = 0
         self.total_last_keys = 1
         self.required_last_keys = 1
         self.world_description = 'Castlevania: Circle of the Moon is a launch title for the Game Boy Advance and the first of three Castlevania games\nreleased for the handheld in the "Metroidvania" format. As Nathan Graves, wielding the Hunter Whip and utilizing the\nDual Set-Up System for new possibilities, you must battle your way through Camilla\'s castle and rescue your master\nfrom a demonic ritual to restore the Count\'s power...'
