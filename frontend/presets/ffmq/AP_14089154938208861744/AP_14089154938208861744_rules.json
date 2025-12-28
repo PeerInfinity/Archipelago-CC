@@ -81,9 +81,11 @@
             "name": "Subregion Foresta to Subregion Aquaria",
             "connected_region": "Subregion Aquaria",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Sand Coin"
+                "items": [
+                  "Sand Coin"
+                ]
               }
             }
           },
@@ -91,9 +93,11 @@
             "name": "Subregion Foresta to Subregion Fireburg",
             "connected_region": "Subregion Fireburg",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "River Coin"
+                "items": [
+                  "River Coin"
+                ]
               }
             }
           },
@@ -101,9 +105,11 @@
             "name": "Subregion Foresta to Subregion Windia",
             "connected_region": "Subregion Windia",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Sun Coin"
+                "items": [
+                  "Sun Coin"
+                ]
               }
             }
           }
@@ -176,9 +182,11 @@
             "name": "Subregion Aquaria to Subregion Foresta",
             "connected_region": "Subregion Foresta",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Sand Coin"
+                "items": [
+                  "Sand Coin"
+                ]
               }
             }
           },
@@ -186,51 +194,37 @@
             "name": "Subregion Aquaria to Subregion Fireburg",
             "connected_region": "Subregion Fireburg",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "River Coin"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sand Coin"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "River Coin",
+                  "Sand Coin"
+                ]
+              }
             }
           },
           {
             "name": "Subregion Aquaria to Subregion Windia",
             "connected_region": "Subregion Windia",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sand Coin"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sun Coin"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Sand Coin",
+                  "Sun Coin"
+                ]
+              }
             }
           },
           {
             "name": "Subregion Aquaria to Subregion Frozen Fields",
             "connected_region": "Subregion Frozen Fields",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Summer Aquaria"
+                "items": [
+                  "Summer Aquaria"
+                ]
               }
             }
           }
@@ -296,21 +290,13 @@
             "name": "Subregion Frozen Fields to Subregion Volcano Battlefield",
             "connected_region": "Subregion Volcano Battlefield",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dualhead Hydra"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Summer Aquaria"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dualhead Hydra",
+                  "Summer Aquaria"
+                ]
+              }
             }
           }
         ],
@@ -382,9 +368,11 @@
             "name": "Subregion Fireburg to Subregion Foresta",
             "connected_region": "Subregion Foresta",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "River Coin"
+                "items": [
+                  "River Coin"
+                ]
               }
             }
           },
@@ -392,51 +380,37 @@
             "name": "Subregion Fireburg to Subregion Aquaria",
             "connected_region": "Subregion Aquaria",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "River Coin"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sand Coin"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "River Coin",
+                  "Sand Coin"
+                ]
+              }
             }
           },
           {
             "name": "Subregion Fireburg to Subregion Windia",
             "connected_region": "Subregion Windia",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "River Coin"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sun Coin"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "River Coin",
+                  "Sun Coin"
+                ]
+              }
             }
           },
           {
             "name": "Subregion Fireburg to Subregion Volcano Battlefield",
             "connected_region": "Subregion Volcano Battlefield",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dualhead Hydra"
+                "items": [
+                  "Dualhead Hydra"
+                ]
               }
             }
           }
@@ -482,9 +456,11 @@
             "name": "Subregion Volcano Battlefield to Subregion Fireburg",
             "connected_region": "Subregion Fireburg",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dualhead Hydra"
+                "items": [
+                  "Dualhead Hydra"
+                ]
               }
             }
           },
@@ -492,9 +468,11 @@
             "name": "Subregion Volcano Battlefield to Subregion Frozen Fields",
             "connected_region": "Subregion Frozen Fields",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Summer Aquaria"
+                "items": [
+                  "Summer Aquaria"
+                ]
               }
             }
           }
@@ -530,9 +508,11 @@
             "name": "Overworld - Giant Tree",
             "connected_region": "Giant Tree 1F Main Area",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Barred"
+                "items": [
+                  "Barred"
+                ]
               }
             }
           },
@@ -575,9 +555,11 @@
             "name": "Subregion Windia to Subregion Foresta",
             "connected_region": "Subregion Foresta",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Sun Coin"
+                "items": [
+                  "Sun Coin"
+                ]
               }
             }
           },
@@ -585,51 +567,37 @@
             "name": "Subregion Windia to Subregion Aquaria",
             "connected_region": "Subregion Aquaria",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sand Coin"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sun Coin"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Sand Coin",
+                  "Sun Coin"
+                ]
+              }
             }
           },
           {
             "name": "Subregion Windia to Subregion Fireburg",
             "connected_region": "Subregion Fireburg",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "River Coin"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sun Coin"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "River Coin",
+                  "Sun Coin"
+                ]
+              }
             }
           },
           {
             "name": "Subregion Windia to Subregion Spencer's Cave",
             "connected_region": "Subregion Spencer's Cave",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Rainbow Bridge"
+                "items": [
+                  "Rainbow Bridge"
+                ]
               }
             }
           }
@@ -651,9 +619,11 @@
             "name": "Subregion Spencer's Cave to Subregion Windia",
             "connected_region": "Subregion Windia",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Rainbow Bridge"
+                "items": [
+                  "Rainbow Bridge"
+                ]
               }
             }
           }
@@ -675,21 +645,13 @@
             "name": "Subregion Ship Dock to Subregion Mac's Ship",
             "connected_region": "Subregion Mac's Ship",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ship Dock Access"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ship Liberated"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Ship Dock Access",
+                  "Ship Liberated"
+                ]
+              }
             }
           }
         ],
@@ -710,48 +672,27 @@
             "name": "Subregion Mac's Ship to Subregion Ship Dock",
             "connected_region": "Subregion Ship Dock",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ship Dock Access"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ship Liberated"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Ship Dock Access",
+                  "Ship Liberated"
+                ]
+              }
             }
           },
           {
             "name": "Subregion Mac's Ship to Subregion Doom Castle",
             "connected_region": "Subregion Doom Castle",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ship Dock Access"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ship Loaned"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ship Steering Wheel"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Ship Dock Access",
+                  "Ship Loaned",
+                  "Ship Steering Wheel"
+                ]
+              }
             }
           }
         ],
@@ -786,9 +727,11 @@
             "name": "Overworld - Mac Ship Doom",
             "connected_region": "Mac Ship Deck",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Barred"
+                "items": [
+                  "Barred"
+                ]
               }
             }
           },
@@ -796,27 +739,14 @@
             "name": "Subregion Doom Castle to Subregion Mac's Ship",
             "connected_region": "Subregion Mac's Ship",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ship Dock Access"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ship Loaned"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ship Steering Wheel"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Ship Dock Access",
+                  "Ship Loaned",
+                  "Ship Steering Wheel"
+                ]
+              }
             }
           }
         ],
@@ -837,21 +767,13 @@
             "name": "Doom Castle - Sand Floor - To Sky Door - Sand Floor",
             "connected_region": "Focus Tower B1 - Inner Loop",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon Claw"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mega Grenade"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dragon Claw",
+                  "Mega Grenade"
+                ]
+              }
             }
           }
         ],
@@ -863,7 +785,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -1040,9 +973,11 @@
             "name": "Doom Castle B2 - Hook Platform Box",
             "id": 4325407,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             },
             "item": {
@@ -1164,9 +1099,11 @@
             "name": "Focus Tower 1F Main Lobby to Focus Tower 1F SandCoin Room",
             "connected_region": "Focus Tower 1F SandCoin Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Sand Coin"
+                "items": [
+                  "Sand Coin"
+                ]
               }
             }
           },
@@ -1174,9 +1111,11 @@
             "name": "Focus Tower 1F Main Lobby to Focus Tower 1F RiverCoin Room",
             "connected_region": "Focus Tower 1F RiverCoin Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "River Coin"
+                "items": [
+                  "River Coin"
+                ]
               }
             }
           },
@@ -1184,9 +1123,11 @@
             "name": "Focus Tower 1F Main Lobby to Focus Tower 1F SunCoin Room",
             "connected_region": "Focus Tower 1F SunCoin Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Sun Coin"
+                "items": [
+                  "Sun Coin"
+                ]
               }
             }
           }
@@ -1217,9 +1158,11 @@
             "name": "Focus Tower 1F SandCoin Room to Focus Tower 1F Main Lobby",
             "connected_region": "Focus Tower 1F Main Lobby",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Sand Coin"
+                "items": [
+                  "Sand Coin"
+                ]
               }
             }
           },
@@ -1241,9 +1184,11 @@
             "name": "Focus Tower 1F RiverCoin Room to Focus Tower 1F Main Lobby",
             "connected_region": "Focus Tower 1F Main Lobby",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "River Coin"
+                "items": [
+                  "River Coin"
+                ]
               }
             }
           },
@@ -1265,9 +1210,11 @@
             "name": "Focus Tower 1F SunCoin Room to Focus Tower 1F Main Lobby",
             "connected_region": "Focus Tower 1F Main Lobby",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Sun Coin"
+                "items": [
+                  "Sun Coin"
+                ]
               }
             }
           },
@@ -1405,9 +1352,11 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Venus Key"
+                    "items": [
+                      "Venus Key"
+                    ]
                   }
                 },
                 {
@@ -1646,7 +1595,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -1811,7 +1771,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -1991,7 +1962,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -2156,7 +2138,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -2318,9 +2311,11 @@
             "name": "Minotaur",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Kaeli 1"
+                "items": [
+                  "Kaeli 1"
+                ]
               }
             },
             "item": {
@@ -2351,21 +2346,13 @@
             "name": "Level Forest - Kaeli",
             "id": 4325677,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Kaeli 1"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Minotaur"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Kaeli 1",
+                  "Minotaur"
+                ]
+              }
             },
             "item": {
               "name": "Heal Potion",
@@ -2426,7 +2413,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -2618,9 +2616,11 @@
             "name": "Kaeli Companion",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Tree Wither"
+                "items": [
+                  "Tree Wither"
+                ]
               }
             },
             "item": {
@@ -2636,27 +2636,14 @@
             "name": "Kaeli 2",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Elixir"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Kaeli 1"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Minotaur"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Elixir",
+                  "Kaeli 1",
+                  "Minotaur"
+                ]
+              }
             },
             "item": {
               "name": "Kaeli 2",
@@ -2677,9 +2664,11 @@
             "name": "Foresta Houses - Old Man's House Main to Foresta Houses - Old Man's House Back",
             "connected_region": "Foresta Houses - Old Man's House Back",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Barrel Pushed"
+                "items": [
+                  "Barrel Pushed"
+                ]
               }
             }
           },
@@ -2701,9 +2690,11 @@
             "name": "Foresta Houses - Old Man's House Back to Foresta Houses - Old Man's House Main",
             "connected_region": "Foresta Houses - Old Man's House Main",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Barrel Pushed"
+                "items": [
+                  "Barrel Pushed"
+                ]
               }
             }
           },
@@ -2786,9 +2777,11 @@
             "name": "Foresta Houses - Libra House - Libra House Script",
             "connected_region": "Alive Forest",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Libra Crest"
+                "items": [
+                  "Libra Crest"
+                ]
               }
             }
           }
@@ -2819,9 +2812,11 @@
             "name": "Foresta Houses - Gemini House - Gemini House Script",
             "connected_region": "Alive Forest",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Gemini Crest"
+                "items": [
+                  "Gemini Crest"
+                ]
               }
             }
           }
@@ -2852,9 +2847,11 @@
             "name": "Foresta Houses - Mobius House - Mobius House Script",
             "connected_region": "Alive Forest",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Mobius Crest"
+                "items": [
+                  "Mobius Crest"
+                ]
               }
             }
           }
@@ -3007,7 +3004,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -3166,7 +3174,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -3328,9 +3347,11 @@
             "name": "Bone Dungeon B1 - Tristam",
             "id": 4325678,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Tristam"
+                "items": [
+                  "Tristam"
+                ]
               }
             },
             "item": {
@@ -3346,9 +3367,11 @@
             "name": "Tristam Bone Dungeon Item Given",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Tristam"
+                "items": [
+                  "Tristam"
+                ]
               }
             },
             "item": {
@@ -3389,7 +3412,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -3594,9 +3628,11 @@
             "name": "Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room",
             "connected_region": "Bone Dungeon B2 - Exploding Skull Room - Second Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Long Spine Bombed"
+                "items": [
+                  "Long Spine Bombed"
+                ]
               }
             }
           }
@@ -3624,7 +3660,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -3792,9 +3839,11 @@
             "name": "Bonne Dungeon B2 - Exploding Skull Room - To Hidden Passage",
             "connected_region": "Bone Dungeon B1 - Hidden Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Long Spine Bombed"
+                "items": [
+                  "Long Spine Bombed"
+                ]
               }
             }
           },
@@ -3802,9 +3851,11 @@
             "name": "Bone Dungeon B2 - Exploding Skull Room - Second Room to Bone Dungeon B2 - Exploding Skull Room - Third Room",
             "connected_region": "Bone Dungeon B2 - Exploding Skull Room - Third Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Short Spine Bombed"
+                "items": [
+                  "Short Spine Bombed"
+                ]
               }
             }
           },
@@ -3812,9 +3863,11 @@
             "name": "Bone Dungeon B2 - Exploding Skull Room - Second Room to Bone Dungeon B2 - Exploding Skull Room - First Room",
             "connected_region": "Bone Dungeon B2 - Exploding Skull Room - First Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Long Spine Bombed"
+                "items": [
+                  "Long Spine Bombed"
+                ]
               }
             }
           }
@@ -3842,7 +3895,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -4017,9 +4081,11 @@
             "name": "Bone Dungeon B2 - Exploding Skull Room - Third Room to Bone Dungeon B2 - Exploding Skull Room - Second Room",
             "connected_region": "Bone Dungeon B2 - Exploding Skull Room - Second Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Short Spine Bombed"
+                "items": [
+                  "Short Spine Bombed"
+                ]
               }
             }
           }
@@ -4101,9 +4167,11 @@
             "name": "Bone Dungeon B2 - Two Skulls Room - First Room to Bone Dungeon B2 - Two Skulls Room - Second Room",
             "connected_region": "Bone Dungeon B2 - Two Skulls Room - Second Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Skull 1 Bombed"
+                "items": [
+                  "Skull 1 Bombed"
+                ]
               }
             }
           }
@@ -4131,7 +4199,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -4306,9 +4385,11 @@
             "name": "Bone Dungeon B2 - Two Skulls Room - Second Room to Bone Dungeon B2 - Two Skulls Room - Third Room",
             "connected_region": "Bone Dungeon B2 - Two Skulls Room - Third Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Skull 2 Bombed"
+                "items": [
+                  "Skull 2 Bombed"
+                ]
               }
             }
           },
@@ -4316,9 +4397,11 @@
             "name": "Bone Dungeon B2 - Two Skulls Room - Second Room to Bone Dungeon B2 - Two Skulls Room - First Room",
             "connected_region": "Bone Dungeon B2 - Two Skulls Room - First Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Skull 1 Bombed"
+                "items": [
+                  "Skull 1 Bombed"
+                ]
               }
             }
           }
@@ -4331,7 +4414,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -4509,7 +4603,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -4663,9 +4768,11 @@
             "name": "Bone Dungeon B2 - Two Skulls Room - Third Room to Bone Dungeon B2 - Two Skulls Room - Second Room",
             "connected_region": "Bone Dungeon B2 - Two Skulls Room - Second Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Skull 2 Bombed"
+                "items": [
+                  "Skull 2 Bombed"
+                ]
               }
             }
           }
@@ -4777,9 +4884,11 @@
             "name": "Libra Temple - Libra Tile Script",
             "connected_region": "Life Temple",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Libra Crest"
+                "items": [
+                  "Libra Crest"
+                ]
               }
             }
           }
@@ -4853,9 +4962,11 @@
             "name": "Aquaria Summer - Spencer's Place Entrance Top",
             "connected_region": "Spencer Waterfall",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Summer Aquaria"
+                "items": [
+                  "Summer Aquaria"
+                ]
               }
             }
           },
@@ -4863,9 +4974,11 @@
             "name": "Aquaria Summer - Spencer's Place Entrance Side",
             "connected_region": "Spencer Waterfall",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Summer Aquaria"
+                "items": [
+                  "Summer Aquaria"
+                ]
               }
             }
           }
@@ -4875,9 +4988,11 @@
             "name": "Summer Aquaria",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Wakewater"
+                "items": [
+                  "Wakewater"
+                ]
               }
             },
             "item": {
@@ -5026,7 +5141,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -5183,7 +5309,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -5372,7 +5509,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -5534,9 +5682,11 @@
             "name": "Wintry Cave 1F - Phoebe",
             "id": 4325681,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Phoebe 1"
+                "items": [
+                  "Phoebe 1"
+                ]
               }
             },
             "item": {
@@ -5561,7 +5711,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -5718,7 +5879,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -5877,7 +6049,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -6048,7 +6231,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -6205,7 +6399,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -6502,9 +6707,11 @@
             "name": "Wintry Cave 3F - Squidite Chest",
             "id": 4325385,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Phanquid"
+                "items": [
+                  "Phanquid"
+                ]
               }
             },
             "item": {
@@ -6563,9 +6770,11 @@
             "name": "Life Temple - Libra Tile Script",
             "connected_region": "Libra Temple",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Libra Crest"
+                "items": [
+                  "Libra Crest"
+                ]
               }
             }
           }
@@ -6620,9 +6829,11 @@
             "name": "Falls Basin - Snow Crab Chest",
             "id": 4325386,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Freezer Crab"
+                "items": [
+                  "Freezer Crab"
+                ]
               }
             },
             "item": {
@@ -6756,9 +6967,11 @@
             "name": "Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze",
             "connected_region": "Ice Pyramid 1F Maze",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Ice Pyramid 1F Statue"
+                "items": [
+                  "Ice Pyramid 1F Statue"
+                ]
               }
             }
           }
@@ -6771,7 +6984,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -6974,9 +7198,11 @@
             "name": "Ice Pyramid 1F Maze to Ice Pyramid 1F Maze Lobby",
             "connected_region": "Ice Pyramid 1F Maze Lobby",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Ice Pyramid 1F Statue"
+                "items": [
+                  "Ice Pyramid 1F Statue"
+                ]
               }
             }
           }
@@ -7071,7 +7297,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -7326,7 +7563,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -7513,7 +7761,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -7733,9 +7992,11 @@
             "name": "Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room",
             "connected_region": "Ice Pyramid 3F Blocked Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Ice Pyramid 3F Statue"
+                "items": [
+                  "Ice Pyramid 3F Statue"
+                ]
               }
             }
           }
@@ -7808,7 +8069,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -7983,9 +8255,11 @@
             "name": "Ice Pyramid 3F Blocked Room to Ice Pyramid 3F Main Loop",
             "connected_region": "Ice Pyramid 3F Main Loop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Ice Pyramid 3F Statue"
+                "items": [
+                  "Ice Pyramid 3F Statue"
+                ]
               }
             }
           }
@@ -8014,9 +8288,11 @@
             "name": "Ice Pyramid 4F Main Loop to Ice Pyramid 4F Treasure Room",
             "connected_region": "Ice Pyramid 4F Treasure Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Ice Pyramid 4F Statue"
+                "items": [
+                  "Ice Pyramid 4F Statue"
+                ]
               }
             }
           }
@@ -8031,9 +8307,11 @@
             "name": "Ice Pyramid 4F Treasure Room to Ice Pyramid 4F Main Loop",
             "connected_region": "Ice Pyramid 4F Main Loop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Ice Pyramid 4F Statue"
+                "items": [
+                  "Ice Pyramid 4F Statue"
+                ]
               }
             }
           }
@@ -8166,7 +8444,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -8796,7 +9085,18 @@
                   ]
                 },
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -8807,9 +9107,11 @@
             "name": "Ice Pyramid 5F - Glass Door Left Box",
             "id": 4325481,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Ice Pyramid 5F Statue"
+                "items": [
+                  "Ice Pyramid 5F Statue"
+                ]
               }
             },
             "item": {
@@ -8870,9 +9172,11 @@
             "name": "Ice Pyramid 5F - Glass Door Right Box",
             "id": 4325485,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Ice Pyramid 5F Statue"
+                "items": [
+                  "Ice Pyramid 5F Statue"
+                ]
               }
             },
             "item": {
@@ -8935,7 +9239,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -9113,7 +9428,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -9284,7 +9610,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -9461,9 +9798,11 @@
             "name": "Ice Pyramid 6F - Ice Golem Chest",
             "id": 4325390,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Ice Golem"
+                "items": [
+                  "Ice Golem"
+                ]
               }
             },
             "item": {
@@ -9540,7 +9879,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -9717,9 +10067,11 @@
             "name": "Spencer's Cave - Locked Chest",
             "id": 4325689,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Venus Key"
+                "items": [
+                  "Venus Key"
+                ]
               }
             },
             "item": {
@@ -9748,9 +10100,11 @@
             "name": "Spencer Cave Normal South Ledge to Spencer Cave Caved In Main Loop",
             "connected_region": "Spencer Cave Caved In Main Loop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Mega Grenade"
+                "items": [
+                  "Mega Grenade"
+                ]
               }
             }
           }
@@ -9760,9 +10114,11 @@
             "name": "Collapse Spencer's Cave",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Mega Grenade"
+                "items": [
+                  "Mega Grenade"
+                ]
               }
             },
             "item": {
@@ -9791,9 +10147,11 @@
             "name": "Spencer Cave Unplug - Mobius Teleporter Start Script",
             "connected_region": "Spencer Cave Caved In Mobius Chest",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Mobius Crest"
+                "items": [
+                  "Mobius Crest"
+                ]
               }
             }
           },
@@ -9804,7 +10162,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -9961,7 +10330,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -10125,7 +10505,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -10284,9 +10675,11 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Mega Grenade"
+                    "items": [
+                      "Mega Grenade"
+                    ]
                   }
                 },
                 {
@@ -10455,9 +10848,11 @@
             "name": "Spencer Cave Unplug - Libra Teleporter Start Script",
             "connected_region": "Spencer Cave Caved In Libra Corridor",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Libra Crest"
+                "items": [
+                  "Libra Crest"
+                ]
               }
             }
           }
@@ -10472,9 +10867,11 @@
             "name": "Spencer Cave Unplug - Libra Teleporter End Script",
             "connected_region": "Spencer Cave Caved In Libra Nook",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Libra Crest"
+                "items": [
+                  "Libra Crest"
+                ]
               }
             }
           },
@@ -10482,9 +10879,11 @@
             "name": "Spencer Cave Caved In Libra Corridor to Spencer Cave Caved In Mobius Chest",
             "connected_region": "Spencer Cave Caved In Mobius Chest",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Spencer Cave Libra Block Bombed"
+                "items": [
+                  "Spencer Cave Libra Block Bombed"
+                ]
               }
             }
           }
@@ -10499,9 +10898,11 @@
             "name": "Spencer Cave Unplug - Mobius Teleporter Chest Script",
             "connected_region": "Spencer Cave Caved In Main Loop",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Mobius Crest"
+                "items": [
+                  "Mobius Crest"
+                ]
               }
             }
           },
@@ -10512,7 +10913,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -10703,9 +11115,11 @@
             "name": "Wintry Temple Inner Room - Gemini Tile to Sealed temple",
             "connected_region": "Sealed Temple",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Gemini Crest"
+                "items": [
+                  "Gemini Crest"
+                ]
               }
             }
           }
@@ -10782,7 +11196,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -10946,7 +11371,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -11100,9 +11536,11 @@
             "name": "Fireburg - GrenadeMan House Script",
             "connected_region": "GrenadeMan's House",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Multi Key"
+                "items": [
+                  "Multi Key"
+                ]
               }
             }
           }
@@ -11142,9 +11580,11 @@
             "name": "Fireburg - Reuben's House Arion",
             "id": 4325690,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Reuben Dad Saved"
+                "items": [
+                  "Reuben Dad Saved"
+                ]
               }
             },
             "item": {
@@ -11196,9 +11636,11 @@
             "name": "GrenadeMan House - Entrance Script",
             "connected_region": "Fireburg Lower Plaza",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Multi Key"
+                "items": [
+                  "Multi Key"
+                ]
               }
             }
           },
@@ -11331,21 +11773,13 @@
             "name": "Fireburg - Tristam",
             "id": 4325686,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tristam"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tristam Bone Item Given"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Tristam",
+                  "Tristam Bone Item Given"
+                ]
+              }
             },
             "item": {
               "name": "Projectile Refill",
@@ -11390,7 +11824,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -11547,7 +11992,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -11704,7 +12160,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -11861,7 +12328,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -12025,7 +12503,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -12182,7 +12671,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -12346,7 +12846,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -12503,7 +13014,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -12664,9 +13186,11 @@
             "name": "Mine Exterior - To Cliff",
             "connected_region": "Mine Cliff",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Jinn"
+                "items": [
+                  "Jinn"
+                ]
               }
             }
           },
@@ -12684,7 +13208,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -12873,7 +13408,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -13038,7 +13584,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -13248,7 +13805,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -13485,9 +14053,11 @@
             "name": "Mine - Reuben",
             "id": 4325683,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Reuben 1"
+                "items": [
+                  "Reuben 1"
+                ]
               }
             },
             "item": {
@@ -13503,9 +14073,11 @@
             "name": "Reuben's dad Saved",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Mega Grenade"
+                "items": [
+                  "Mega Grenade"
+                ]
               }
             },
             "item": {
@@ -13534,9 +14106,11 @@
             "name": "Sealed Temple - Gemini Tile Script",
             "connected_region": "Wintry Temple Inner Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Gemini Crest"
+                "items": [
+                  "Gemini Crest"
+                ]
               }
             }
           }
@@ -13680,9 +14254,11 @@
             "name": "Volcano - Medusa Chest",
             "id": 4325394,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Medusa"
+                "items": [
+                  "Medusa"
+                ]
               }
             },
             "item": {
@@ -13994,7 +14570,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -14218,7 +14805,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -14375,7 +14973,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -14546,7 +15155,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -14714,9 +15334,11 @@
             "name": "Lava Dome Inner Ring Big Door Ledge - Hydra Gate 1",
             "connected_region": "Lava Dome Hydra Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Lava Dome Plate"
+                "items": [
+                  "Lava Dome Plate"
+                ]
               }
             }
           }
@@ -15134,7 +15756,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -15290,9 +15923,11 @@
             "name": "Lava Dome - Gold Bar Room Boulder Chest",
             "id": 4325404,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Mega Grenade"
+                "items": [
+                  "Mega Grenade"
+                ]
               }
             },
             "item": {
@@ -15324,7 +15959,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -15530,9 +16176,11 @@
             "name": "Lava Dome Big Jump Room Main Area to Lava Dome Big Jump Room MegaGrenade Area",
             "connected_region": "Lava Dome Big Jump Room MegaGrenade Area",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Mega Grenade"
+                "items": [
+                  "Mega Grenade"
+                ]
               }
             }
           }
@@ -15603,7 +16251,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -15911,9 +16570,11 @@
             "name": "Lava Dome Hydra Room - North Exit",
             "connected_region": "Lava Dome Escape Corridor",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dualhead Hydra"
+                "items": [
+                  "Dualhead Hydra"
+                ]
               }
             }
           }
@@ -15923,9 +16584,11 @@
             "name": "Lava Dome - Dualhead Hydra Chest",
             "id": 4325396,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dualhead Hydra"
+                "items": [
+                  "Dualhead Hydra"
+                ]
               }
             },
             "item": {
@@ -16054,7 +16717,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -16211,9 +16885,11 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Libra Crest"
+                    "items": [
+                      "Libra Crest"
+                    ]
                   }
                 },
                 {
@@ -16371,9 +17047,11 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Gemini Crest"
+                    "items": [
+                      "Gemini Crest"
+                    ]
                   }
                 },
                 {
@@ -16531,9 +17209,11 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Mobius Crest"
+                    "items": [
+                      "Mobius Crest"
+                    ]
                   }
                 },
                 {
@@ -16691,7 +17371,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -16850,7 +17541,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -17015,7 +17717,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -17180,7 +17893,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -17345,7 +18069,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -17520,9 +18255,11 @@
             "name": "Giant Tree 1F Main Area to Giant Tree 1F North Island",
             "connected_region": "Giant Tree 1F North Island",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           }
@@ -17605,9 +18342,11 @@
             "name": "Giant Tree 1F North Island to Giant Tree 1F Main Area",
             "connected_region": "Giant Tree 1F Main Area",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           }
@@ -17622,9 +18361,11 @@
             "name": "Giant Tree 1F Central Island to Giant Tree 1F North Island",
             "connected_region": "Giant Tree 1F North Island",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           }
@@ -17639,9 +18380,11 @@
             "name": "Giant Tree 2F Main Lobby to Giant Tree 1F Central Island",
             "connected_region": "Giant Tree 1F Central Island",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           },
@@ -17663,9 +18406,11 @@
             "name": "Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area",
             "connected_region": "Giant Tree 2F Lower Area",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           }
@@ -17699,7 +18444,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -17853,9 +18609,11 @@
             "name": "Giant Tree 2F West Ledge to Giant Tree 2F Central Island",
             "connected_region": "Giant Tree 2F Central Island",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           }
@@ -17889,7 +18647,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -18046,7 +18815,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -18226,7 +19006,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -18383,7 +19174,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -18547,7 +19349,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -18701,9 +19514,11 @@
             "name": "Giant Tree 2F East Ledge to Giant Tree 2F Central Island",
             "connected_region": "Giant Tree 2F Central Island",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           }
@@ -18751,7 +19566,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -18908,9 +19734,11 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Gidrah"
+                    "items": [
+                      "Gidrah"
+                    ]
                   }
                 },
                 {
@@ -19070,7 +19898,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -19235,7 +20074,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -19413,7 +20263,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -19567,9 +20428,11 @@
             "name": "Giant Tree 3F Central Island to Giant Tree 3F Lower Ledge",
             "connected_region": "Giant Tree 3F Lower Ledge",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           }
@@ -19603,7 +20466,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -19809,9 +20683,11 @@
             "name": "Giant Tree 3F Lower Ledge to Giant Tree 3F Central Island",
             "connected_region": "Giant Tree 3F Central Island",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           },
@@ -19822,7 +20698,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -20023,7 +20910,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -20187,7 +21085,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -20344,7 +21253,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -20515,7 +21435,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -20672,7 +21603,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -20829,7 +21771,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -20993,7 +21946,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -21445,7 +22409,18 @@
                   ]
                 },
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -21459,7 +22434,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -21624,7 +22610,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -21830,7 +22827,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -22001,7 +23009,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -22155,9 +23174,11 @@
             "name": "Giant Tree 4F Middle Floor to Giant Tree 4F South Ledge",
             "connected_region": "Giant Tree 4F South Ledge",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           }
@@ -22206,7 +23227,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -22363,7 +23395,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -22524,9 +23567,11 @@
             "name": "Giant Tree 4F South Ledge to Giant Tree 4F Middle Floor",
             "connected_region": "Giant Tree 4F Middle Floor",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           }
@@ -22584,7 +23629,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -22755,7 +23811,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -22912,7 +23979,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -23364,7 +24442,18 @@
                   ]
                 },
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -23390,7 +24479,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -23577,7 +24677,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -23809,7 +24920,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -23965,21 +25087,13 @@
             "name": "Gidrah",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "River Coin"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sand Coin"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "River Coin",
+                  "Sand Coin"
+                ]
+              }
             },
             "item": {
               "name": "Gidrah",
@@ -24010,7 +25124,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -24171,9 +25296,11 @@
             "name": "Kaidge Temple - Mobius Teleporter Script",
             "connected_region": "Light Temple",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Mobius Crest"
+                "items": [
+                  "Mobius Crest"
+                ]
               }
             }
           },
@@ -24184,7 +25311,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -24400,21 +25538,13 @@
             "name": "Mount Gale - Dullahan Chest",
             "id": 4325399,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon Claw"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dullahan"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dragon Claw",
+                  "Dullahan"
+                ]
+              }
             },
             "item": {
               "name": "Noble Armor",
@@ -24432,15 +25562,17 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon Claw"
-                  }
-                },
-                {
                   "rule": "hard_boss_logic",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Dragon Claw"
+                    ]
+                  }
                 }
               ]
             },
@@ -24457,9 +25589,11 @@
             "name": "Mount Gale - East Box",
             "id": 4325571,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             },
             "item": {
@@ -24561,9 +25695,11 @@
             "name": "Otto",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Thunder Rock"
+                "items": [
+                  "Thunder Rock"
+                ]
               }
             },
             "item": {
@@ -24685,9 +25821,11 @@
             "name": "Windia Old People House Basement - Mobius Teleporter Script",
             "connected_region": "Ship Dock",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Mobius Crest"
+                "items": [
+                  "Mobius Crest"
+                ]
               }
             }
           }
@@ -24793,9 +25931,11 @@
             "name": "Windia - Kaeli",
             "id": 4325691,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Kaeli 2"
+                "items": [
+                  "Kaeli 2"
+                ]
               }
             },
             "item": {
@@ -24863,21 +26003,13 @@
             "name": "Pazuzu 1F",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "River Coin"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sand Coin"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "River Coin",
+                  "Sand Coin"
+                ]
+              }
             },
             "item": {
               "name": "Pazuzu 1F",
@@ -24910,7 +26042,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -25075,7 +26218,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -25240,7 +26394,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -25430,9 +26595,11 @@
             "name": "Pazuzu Tower 1F Southern Platform to Pazuzu Tower 1F Main Lobby",
             "connected_region": "Pazuzu Tower 1F Main Lobby",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           }
@@ -25510,7 +26677,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -25675,7 +26853,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -25917,9 +27106,11 @@
             "name": "Pazuzu 3F Central Island to Pazuzu 3F Main Room",
             "connected_region": "Pazuzu 3F Main Room",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           },
@@ -25927,9 +27118,11 @@
             "name": "Pazuzu 3F Central Island to Pazuzu 3F Southern Island",
             "connected_region": "Pazuzu 3F Southern Island",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           }
@@ -25951,9 +27144,11 @@
             "name": "Pazuzu 3F Southern Island to Pazuzu 3F Central Island",
             "connected_region": "Pazuzu 3F Central Island",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           }
@@ -26017,7 +27212,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -26182,7 +27388,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -26362,7 +27579,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -26527,7 +27755,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -27142,7 +28381,18 @@
                   ]
                 },
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -27162,7 +28412,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -27337,9 +28598,11 @@
             "name": "Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area",
             "connected_region": "Pazuzu 7F Rest of the Area",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           }
@@ -27354,9 +28617,11 @@
             "name": "Pazuzu 7F Rest of the Area to Pazuzu 7F Southwest Area",
             "connected_region": "Pazuzu 7F Southwest Area",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           },
@@ -27378,69 +28643,21 @@
             "name": "Pazuzu 7F Rest of the Area to Pazuzu 7F Sky Room",
             "connected_region": "Pazuzu 7F Sky Room",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon Claw"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 1F"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 2F"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 2F Lock"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 3F"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 4F"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 4F Lock"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 5F"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 6F"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 6F Lock"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dragon Claw",
+                  "Pazuzu 1F",
+                  "Pazuzu 2F",
+                  "Pazuzu 2F Lock",
+                  "Pazuzu 3F",
+                  "Pazuzu 4F",
+                  "Pazuzu 4F Lock",
+                  "Pazuzu 5F",
+                  "Pazuzu 6F",
+                  "Pazuzu 6F Lock"
+                ]
+              }
             }
           }
         ],
@@ -27454,9 +28671,11 @@
             "name": "Pazuzu 7F Sky Room to Pazuzu 7F Rest of the Area",
             "connected_region": "Pazuzu 7F Rest of the Area",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             }
           }
@@ -27481,63 +28700,20 @@
             "name": "Pazuzu",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 1F"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 2F"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 2F Lock"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 3F"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 4F"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 4F Lock"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 5F"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 6F"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pazuzu 6F Lock"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Pazuzu 1F",
+                  "Pazuzu 2F",
+                  "Pazuzu 2F Lock",
+                  "Pazuzu 3F",
+                  "Pazuzu 4F",
+                  "Pazuzu 4F Lock",
+                  "Pazuzu 5F",
+                  "Pazuzu 6F",
+                  "Pazuzu 6F Lock"
+                ]
+              }
             },
             "item": {
               "name": "Pazuzu",
@@ -27670,9 +28846,11 @@
             "name": "Light Temple - Mobius Teleporter Script",
             "connected_region": "Kaidge Temple Upper Ledge",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Mobius Crest"
+                "items": [
+                  "Mobius Crest"
+                ]
               }
             }
           }
@@ -27710,9 +28888,11 @@
             "name": "Ship Dock - Mobius Teleporter Script",
             "connected_region": "Windia Old People House Basement",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Mobius Crest"
+                "items": [
+                  "Mobius Crest"
+                ]
               }
             }
           }
@@ -27883,9 +29063,11 @@
             "name": "Mac's Ship B1 - Northwest Hook Platform Box",
             "id": 4325604,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             },
             "item": {
@@ -27901,9 +29083,11 @@
             "name": "Mac's Ship B1 - Center Hook Platform Box",
             "id": 4325605,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             },
             "item": {
@@ -28131,9 +29315,11 @@
             "name": "Captain Mac",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Captain's Cap"
+                "items": [
+                  "Captain's Cap"
+                ]
               }
             },
             "item": {
@@ -28169,9 +29355,11 @@
             "name": "Doom Castle Corridor of Destiny - Lava Floor Entrance",
             "connected_region": "Doom Castle Lava Floor",
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Stone Golem"
+                "items": [
+                  "Stone Golem"
+                ]
               }
             }
           },
@@ -28179,48 +29367,27 @@
             "name": "Doom Castle Corridor of Destiny - Sky Floor Entrance",
             "connected_region": "Doom Castle Sky Floor",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Stone Golem"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Twinhead Wyvern"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Stone Golem",
+                  "Twinhead Wyvern"
+                ]
+              }
             }
           },
           {
             "name": "Doom Castle Corridor of Destiny - Hero Room Entrance",
             "connected_region": "Doom Castle Hero Room",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Stone Golem"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Twinhead Wyvern"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Zuh"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Stone Golem",
+                  "Twinhead Wyvern",
+                  "Zuh"
+                ]
+              }
             }
           }
         ],
@@ -28246,9 +29413,11 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Dragon Claw"
+                    "items": [
+                      "Dragon Claw"
+                    ]
                   }
                 },
                 {
@@ -28414,9 +29583,11 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Dragon Claw"
+                    "items": [
+                      "Dragon Claw"
+                    ]
                   }
                 },
                 {
@@ -28582,7 +29753,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "True_"
+                  "rule": "StateMethod",
+                  "args": {
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": []
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "StateMethod",
@@ -28747,9 +29929,11 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Dragon Claw"
+                    "items": [
+                      "Dragon Claw"
+                    ]
                   }
                 },
                 {
@@ -28915,9 +30099,11 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Dragon Claw"
+                    "items": [
+                      "Dragon Claw"
+                    ]
                   }
                 },
                 {
@@ -29095,9 +30281,11 @@
             "name": "Doom Castle 5F - North Left Box",
             "id": 4325611,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             },
             "item": {
@@ -29113,9 +30301,11 @@
             "name": "Doom Castle 5F - North Right Box",
             "id": 4325612,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             },
             "item": {
@@ -29131,9 +30321,11 @@
             "name": "Doom Castle 5F - South Left Box",
             "id": 4325613,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             },
             "item": {
@@ -29149,9 +30341,11 @@
             "name": "Doom Castle 5F - South Right Box",
             "id": 4325614,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             },
             "item": {
@@ -29167,9 +30361,11 @@
             "name": "Twinhead Wyvern",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             },
             "item": {
@@ -29237,9 +30433,11 @@
             "name": "Zuh",
             "id": null,
             "access_rule": {
-              "rule": "Has",
+              "rule": "HasAll",
               "args": {
-                "item_name": "Dragon Claw"
+                "items": [
+                  "Dragon Claw"
+                ]
               }
             },
             "item": {
@@ -39423,15 +40621,15 @@
   "helpers": {
     "1": {
       "hard_boss_logic": {
-        "type": "and",
-        "conditions": [
+        "type": "state_method",
+        "method": "has_all",
+        "args": [
           {
-            "type": "item_check",
-            "item": "River Coin"
-          },
-          {
-            "type": "item_check",
-            "item": "Sand Coin"
+            "type": "constant",
+            "value": [
+              "River Coin",
+              "Sand Coin"
+            ]
           }
         ]
       }

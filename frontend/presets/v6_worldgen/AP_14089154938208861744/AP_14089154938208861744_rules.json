@@ -20,56 +20,108 @@
             "name": "Menu -> Laboratory",
             "connected_region": "Laboratory",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Trinket 01",
-                  "Trinket 02",
-                  "Trinket 03"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Trinket 01"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Trinket 02"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Trinket 03"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Menu -> The Tower",
             "connected_region": "The Tower",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Trinket 04",
-                  "Trinket 05",
-                  "Trinket 06"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Trinket 04"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Trinket 05"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Trinket 06"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Menu -> Space Station 2",
             "connected_region": "Space Station 2",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Trinket 07",
-                  "Trinket 08",
-                  "Trinket 09"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Trinket 07"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Trinket 08"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Trinket 09"
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Menu -> Warp Zone",
             "connected_region": "Warp Zone",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Trinket 10",
-                  "Trinket 11",
-                  "Trinket 12"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Trinket 10"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Trinket 11"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Trinket 12"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -730,27 +782,25 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "VVVVVV WorldGen",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
-        "accessibility": "full",
-        "area_cost": "false",
-        "area_rando": "false",
-        "death_link": "false",
+        "accessibility": 0,
+        "area_cost": false,
+        "area_rando": false,
+        "death_link": false,
         "death_link_amnesty": 15,
         "door_cost": 3,
         "exclude_locations": [],
         "item_links": [],
         "local_items": [],
-        "music_rando": "false",
+        "music_rando": false,
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": "false",
+        "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
@@ -812,6 +862,8 @@
           "display_name": "Randomize Items"
         }
       },
+      "shops": [],
+      "world_description": "VVVVVV WorldGen for Archipelago.\n\nAuto-generated world implementation.",
       "door_cost": 3,
       "area_cost_map": {
         "1": 1,
@@ -820,58 +872,23 @@
         "4": 4,
         "0": 0
       },
-      "world_directory": "v6"
+      "web": {
+        "theme": "grass"
+      },
+      "world_directory": "v6_worldgen"
     }
   },
-  "game_info": {
+  "exporter": {
     "1": {
-      "name": "VVVVVV WorldGen",
       "rule_format": {
         "version": "1.0"
       },
-      "web_theme": "grass",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up VVVVVV for Multiworld.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "N00byKing"
-          ]
-        }
-      ],
-      "world_description": "VVVVVV is a platform game all about exploring one simple mechanical idea - what if you reversed gravity instead of jumping?",
-      "slot_data": {
-        "MusicRando": {
-          "1": 1,
-          "2": 2,
-          "3": 3,
-          "4": 4,
-          "9": 9,
-          "11": 11,
-          "12": 12
-        },
-        "AreaRando": {
-          "1": 1,
-          "2": 2,
-          "3": 3,
-          "4": 4,
-          "0": 0
-        },
-        "DoorCost": 3,
-        "AreaCostRando": {
-          "1": 1,
-          "2": 2,
-          "3": 3,
-          "4": 4,
-          "0": 0
-        },
-        "DeathLink": 0,
-        "DeathLink_Amnesty": 15
-      }
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {
     "1": {

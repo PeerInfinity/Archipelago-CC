@@ -106,7 +106,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -202,7 +203,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       }
@@ -354,30 +356,28 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "APQuest WorldGen",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
-        "accessibility": "full",
+        "accessibility": 0,
         "confetti_explosiveness": 3,
         "exclude_locations": [],
-        "extra_starting_chest": "false",
-        "hammer": "false",
-        "hard_mode": "false",
+        "extra_starting_chest": false,
+        "hammer": false,
+        "hard_mode": false,
         "item_links": [],
         "local_items": [],
         "non_local_items": [],
         "plando_items": [],
-        "player_sprite": "human",
+        "player_sprite": 0,
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": "false",
+        "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
-        "start_with_one_confetti_cannon": "false",
+        "start_with_one_confetti_cannon": false,
         "trap_chance": 0
       },
       "option_definitions": {
@@ -448,11 +448,8 @@
           "display_name": "Trap Chance"
         }
       },
-      "world_directory": "apquest_worldgen"
-    }
-  },
-  "world_attributes": {
-    "1": {
+      "shops": [],
+      "world_description": "APQuest WorldGen for Archipelago.\n\nAuto-generated world implementation.",
       "settings": {
         "game": "APQuest",
         "assume_bidirectional_exits": false,
@@ -478,47 +475,24 @@
           "trap_chance": 0
         },
         "world_directory": "apquest"
-      }
+      },
+      "web": {
+        "theme": "grassFlowers"
+      },
+      "world_directory": "apquest_worldgen"
     }
   },
-  "game_info": {
+  "exporter": {
     "1": {
-      "name": "APQuest WorldGen",
       "rule_format": {
         "version": "1.0"
       },
-      "web_theme": "grassFlowers",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up APQuest for MultiWorld.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "NewSoupVi"
-          ]
-        },
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up APQuest for MultiWorld.",
-          "language": "German",
-          "file_name": "setup_de.md",
-          "link": "setup/de",
-          "authors": [
-            "NewSoupVi"
-          ]
-        }
-      ],
-      "world_description": "APQuest is a minimal 8bit-era inspired adventure game with grid-like movement.\nGood games don't need more than six checks.",
-      "slot_data": {
-        "hard_mode": 0,
-        "hammer": 0,
-        "extra_starting_chest": 0,
-        "confetti_explosiveness": 3,
-        "player_sprite": 0
-      }
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {}
 }

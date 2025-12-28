@@ -8383,356 +8383,314 @@
   },
   "helpers": {
     "1": {
-      "has_www_id": {
-        "type": "item_check",
-        "item": "WWW ID"
+      "can_unlock": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "state_method",
+            "method": "can_reach_region",
+            "args": [
+              {
+                "type": "constant",
+                "value": "SciLab Overworld"
+              }
+            ]
+          },
+          {
+            "type": "state_method",
+            "method": "can_reach_region",
+            "args": [
+              {
+                "type": "constant",
+                "value": "SciLab Cyberworld"
+              }
+            ]
+          },
+          {
+            "type": "state_method",
+            "method": "can_reach_region",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Yoka Cyberworld"
+              }
+            ]
+          },
+          {
+            "type": "item_check",
+            "item": "Unlocker",
+            "count": {
+              "type": "constant",
+              "value": 8
+            }
+          }
+        ]
+      },
+      "explore_score": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "score",
+            "value": {
+              "type": "constant",
+              "value": 0
+            }
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "WWW Island"
+                }
+              ]
+            },
+            "body": [
+              {
+                "type": "return",
+                "value": {
+                  "type": "constant",
+                  "value": 999
+                }
+              }
+            ]
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "SciLab Overworld"
+                }
+              ]
+            },
+            "body": [
+              {
+                "type": "assign",
+                "name": "score",
+                "op": "+=",
+                "value": {
+                  "type": "constant",
+                  "value": 3
+                }
+              }
+            ]
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "SciLab Cyberworld"
+                }
+              ]
+            },
+            "body": [
+              {
+                "type": "assign",
+                "name": "score",
+                "op": "+=",
+                "value": {
+                  "type": "constant",
+                  "value": 1
+                }
+              }
+            ]
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Yoka Overworld"
+                }
+              ]
+            },
+            "body": [
+              {
+                "type": "assign",
+                "name": "score",
+                "op": "+=",
+                "value": {
+                  "type": "constant",
+                  "value": 2
+                }
+              }
+            ]
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Yoka Cyberworld"
+                }
+              ]
+            },
+            "body": [
+              {
+                "type": "assign",
+                "name": "score",
+                "op": "+=",
+                "value": {
+                  "type": "constant",
+                  "value": 1
+                }
+              }
+            ]
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Beach Overworld"
+                }
+              ]
+            },
+            "body": [
+              {
+                "type": "assign",
+                "name": "score",
+                "op": "+=",
+                "value": {
+                  "type": "constant",
+                  "value": 3
+                }
+              }
+            ]
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Beach Cyberworld"
+                }
+              ]
+            },
+            "body": [
+              {
+                "type": "assign",
+                "name": "score",
+                "op": "+=",
+                "value": {
+                  "type": "constant",
+                  "value": 1
+                }
+              }
+            ]
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Undernet"
+                }
+              ]
+            },
+            "body": [
+              {
+                "type": "assign",
+                "name": "score",
+                "op": "+=",
+                "value": {
+                  "type": "constant",
+                  "value": 2
+                }
+              }
+            ]
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Deep Undernet"
+                }
+              ]
+            },
+            "body": [
+              {
+                "type": "assign",
+                "name": "score",
+                "op": "+=",
+                "value": {
+                  "type": "constant",
+                  "value": 1
+                }
+              }
+            ]
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "state_method",
+              "method": "can_reach_region",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Secret Area"
+                }
+              ]
+            },
+            "body": [
+              {
+                "type": "assign",
+                "name": "score",
+                "op": "+=",
+                "value": {
+                  "type": "constant",
+                  "value": 1
+                }
+              }
+            ]
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "name",
+              "name": "score"
+            }
+          }
+        ]
       },
       "has_press": {
         "type": "item_check",
         "item": "Press"
       },
-      "can_unlock": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "compare",
-            "left": {
-              "type": "can_reach",
-              "region": {
-                "type": "constant",
-                "value": "SciLab Overworld"
-              }
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "type": "compare",
-            "left": {
-              "type": "can_reach",
-              "region": {
-                "type": "constant",
-                "value": "SciLab Cyberworld"
-              }
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "type": "compare",
-            "left": {
-              "type": "can_reach",
-              "region": {
-                "type": "constant",
-                "value": "Yoka Cyberworld"
-              }
-            },
-            "op": "==",
-            "right": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "type": "item_check",
-            "item": "Unlocker",
-            "count": 8
-          }
-        ]
-      },
-      "explore_score": {
-        "type": "conditional",
-        "test": {
-          "type": "compare",
-          "left": {
-            "type": "can_reach",
-            "region": {
-              "type": "constant",
-              "value": "WWW Island"
-            }
-          },
-          "op": "==",
-          "right": {
-            "type": "constant",
-            "value": true
-          }
-        },
-        "if_true": {
-          "type": "constant",
-          "value": 999
-        },
-        "if_false": {
-          "type": "binary_op",
-          "op": "+",
-          "left": {
-            "type": "binary_op",
-            "op": "+",
-            "left": {
-              "type": "binary_op",
-              "op": "+",
-              "left": {
-                "type": "binary_op",
-                "op": "+",
-                "left": {
-                  "type": "binary_op",
-                  "op": "+",
-                  "left": {
-                    "type": "binary_op",
-                    "op": "+",
-                    "left": {
-                      "type": "binary_op",
-                      "op": "+",
-                      "left": {
-                        "type": "binary_op",
-                        "op": "+",
-                        "left": {
-                          "type": "conditional",
-                          "test": {
-                            "type": "compare",
-                            "left": {
-                              "type": "can_reach",
-                              "region": {
-                                "type": "constant",
-                                "value": "SciLab Overworld"
-                              }
-                            },
-                            "op": "==",
-                            "right": {
-                              "type": "constant",
-                              "value": true
-                            }
-                          },
-                          "if_true": {
-                            "type": "constant",
-                            "value": 3
-                          },
-                          "if_false": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        },
-                        "right": {
-                          "type": "conditional",
-                          "test": {
-                            "type": "compare",
-                            "left": {
-                              "type": "can_reach",
-                              "region": {
-                                "type": "constant",
-                                "value": "SciLab Cyberworld"
-                              }
-                            },
-                            "op": "==",
-                            "right": {
-                              "type": "constant",
-                              "value": true
-                            }
-                          },
-                          "if_true": {
-                            "type": "constant",
-                            "value": 1
-                          },
-                          "if_false": {
-                            "type": "constant",
-                            "value": 0
-                          }
-                        }
-                      },
-                      "right": {
-                        "type": "conditional",
-                        "test": {
-                          "type": "compare",
-                          "left": {
-                            "type": "can_reach",
-                            "region": {
-                              "type": "constant",
-                              "value": "Yoka Overworld"
-                            }
-                          },
-                          "op": "==",
-                          "right": {
-                            "type": "constant",
-                            "value": true
-                          }
-                        },
-                        "if_true": {
-                          "type": "constant",
-                          "value": 2
-                        },
-                        "if_false": {
-                          "type": "constant",
-                          "value": 0
-                        }
-                      }
-                    },
-                    "right": {
-                      "type": "conditional",
-                      "test": {
-                        "type": "compare",
-                        "left": {
-                          "type": "can_reach",
-                          "region": {
-                            "type": "constant",
-                            "value": "Yoka Cyberworld"
-                          }
-                        },
-                        "op": "==",
-                        "right": {
-                          "type": "constant",
-                          "value": true
-                        }
-                      },
-                      "if_true": {
-                        "type": "constant",
-                        "value": 1
-                      },
-                      "if_false": {
-                        "type": "constant",
-                        "value": 0
-                      }
-                    }
-                  },
-                  "right": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "compare",
-                      "left": {
-                        "type": "can_reach",
-                        "region": {
-                          "type": "constant",
-                          "value": "Beach Overworld"
-                        }
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": true
-                      }
-                    },
-                    "if_true": {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    "if_false": {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  }
-                },
-                "right": {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "can_reach",
-                      "region": {
-                        "type": "constant",
-                        "value": "Beach Cyberworld"
-                      }
-                    },
-                    "op": "==",
-                    "right": {
-                      "type": "constant",
-                      "value": true
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": 1
-                  },
-                  "if_false": {
-                    "type": "constant",
-                    "value": 0
-                  }
-                }
-              },
-              "right": {
-                "type": "conditional",
-                "test": {
-                  "type": "compare",
-                  "left": {
-                    "type": "can_reach",
-                    "region": {
-                      "type": "constant",
-                      "value": "Undernet"
-                    }
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": true
-                  }
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "if_false": {
-                  "type": "constant",
-                  "value": 0
-                }
-              }
-            },
-            "right": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "can_reach",
-                  "region": {
-                    "type": "constant",
-                    "value": "Deep Undernet"
-                  }
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": true
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": 1
-              },
-              "if_false": {
-                "type": "constant",
-                "value": 0
-              }
-            }
-          },
-          "right": {
-            "type": "conditional",
-            "test": {
-              "type": "compare",
-              "left": {
-                "type": "can_reach",
-                "region": {
-                  "type": "constant",
-                  "value": "Secret Area"
-                }
-              },
-              "op": "==",
-              "right": {
-                "type": "constant",
-                "value": true
-              }
-            },
-            "if_true": {
-              "type": "constant",
-              "value": 1
-            },
-            "if_false": {
-              "type": "constant",
-              "value": 0
-            }
-          }
-        }
+      "has_www_id": {
+        "type": "item_check",
+        "item": "WWW ID"
       }
     }
   }

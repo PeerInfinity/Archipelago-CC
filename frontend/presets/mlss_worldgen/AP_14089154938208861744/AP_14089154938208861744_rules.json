@@ -4320,7 +4320,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "vanilla"
+                        "value": 0
                       }
                     }
                   ]
@@ -8666,7 +8666,7 @@
                 {
                   "rule": "Constant",
                   "args": {
-                    "value": "vanilla"
+                    "value": 0
                   }
                 }
               ]
@@ -9240,7 +9240,7 @@
                     {
                       "rule": "Constant",
                       "args": {
-                        "value": "vanilla"
+                        "value": 0
                       }
                     }
                   ]
@@ -10600,7 +10600,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -13420,47 +13421,45 @@
   "starting_items": {
     "1": []
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Mario & Luigi Superstar Saga WorldGen",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
-        "accessibility": "full",
-        "block_visibility": "disabled",
-        "castle_skip": "false",
-        "chuckle_beans": "all",
-        "coins": "false",
-        "difficult_logic": "false",
-        "disable_harhalls_pants": "false",
-        "disable_surf": "false",
+        "accessibility": 0,
+        "block_visibility": 0,
+        "castle_skip": false,
+        "chuckle_beans": 2,
+        "coins": false,
+        "difficult_logic": false,
+        "disable_harhalls_pants": false,
+        "disable_surf": false,
         "emblems_amount": 75,
         "emblems_required": 50,
         "exclude_locations": [],
-        "extra_pipes": "false",
-        "goal": "vanilla",
+        "extra_pipes": false,
+        "goal": 0,
         "item_links": [],
         "local_items": [],
-        "luigi_color": "green",
-        "luigi_pants": "vanilla",
-        "mario_color": "red",
-        "mario_pants": "vanilla",
-        "music_options": "default",
+        "luigi_color": 1,
+        "luigi_pants": 0,
+        "mario_color": 0,
+        "mario_pants": 0,
+        "music_options": 0,
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_backgrounds": "false",
-        "randomize_bosses": "disabled",
-        "randomize_enemies": "disabled",
-        "randomize_items": "false",
-        "randomize_sounds": "false",
-        "scale_stats": "false",
-        "skip_minecart": "false",
+        "randomize_backgrounds": false,
+        "randomize_bosses": 0,
+        "randomize_enemies": 0,
+        "randomize_items": false,
+        "randomize_sounds": false,
+        "scale_stats": false,
+        "skip_minecart": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
-        "tattle_hp": "false",
+        "tattle_hp": false,
         "xp_multiplier": 1
       },
       "option_definitions": {
@@ -13699,11 +13698,8 @@
           "display_name": "XP Multiplier"
         }
       },
-      "world_directory": "mlss_worldgen"
-    }
-  },
-  "world_attributes": {
-    "1": {
+      "shops": [],
+      "world_description": "Mario & Luigi Superstar Saga WorldGen for Archipelago.\n\nAuto-generated world implementation.",
       "settings": {
         "game": "Mario & Luigi Superstar Saga",
         "assume_bidirectional_exits": false,
@@ -13748,39 +13744,24 @@
           "xp_multiplier": 1
         },
         "world_directory": "mlss"
-      }
+      },
+      "web": {
+        "theme": "partyTime"
+      },
+      "world_directory": "mlss_worldgen"
     }
   },
-  "game_info": {
+  "exporter": {
     "1": {
-      "name": "Mario & Luigi Superstar Saga WorldGen",
       "rule_format": {
         "version": "1.0"
       },
-      "web_theme": "partyTime",
-      "web_tutorials": [
-        {
-          "name": "Setup Guide",
-          "description": "A guide to setting up Mario & Luigi: Superstar Saga for Archipelago.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "jamesbrq"
-          ]
-        }
-      ],
-      "world_description": "Adventure with Mario and Luigi together in the Beanbean Kingdom\nto stop the evil Cackletta and retrieve the Beanstar.",
-      "slot_data": {
-        "CastleSkip": 0,
-        "SkipMinecart": 0,
-        "DisableSurf": 0,
-        "HarhallsPants": 0,
-        "ChuckleBeans": 2,
-        "DifficultLogic": 0,
-        "Coins": 0
-      }
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
+  },
+  "game_info": {
+    "1": {}
   },
   "helpers": {
     "1": {
@@ -13891,25 +13872,25 @@
         "type": "and",
         "conditions": [
           {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Red Chuckola Fruit"
-              },
-              {
-                "type": "item_check",
-                "item": "Purple Chuckola Fruit"
-              },
-              {
-                "type": "item_check",
-                "item": "White Chuckola Fruit"
-              }
-            ]
+            "type": "helper",
+            "name": "fruits"
+          },
+          {
+            "type": "helper",
+            "name": "brooch"
+          }
+        ]
+      },
+      "dressBeanstar": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Peach's Extra Dress"
           },
           {
             "type": "item_check",
-            "item": "Beanbean Brooch"
+            "item": "Fake Beanstar"
           }
         ]
       },
@@ -13938,62 +13919,27 @@
         "type": "and",
         "conditions": [
           {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Red Chuckola Fruit"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Purple Chuckola Fruit"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "White Chuckola Fruit"
-                  }
-                ]
-              },
-              {
-                "type": "item_check",
-                "item": "Beanbean Brooch"
-              }
-            ]
+            "type": "helper",
+            "name": "castleTown"
           },
           {
-            "type": "item_check",
-            "item": "Thunderhand"
+            "type": "helper",
+            "name": "thunder"
           },
           {
-            "type": "item_check",
-            "item": "Peasley's Rose"
+            "type": "helper",
+            "name": "rose"
           },
           {
             "type": "or",
             "conditions": [
               {
-                "type": "item_check",
-                "item": "Hammers",
-                "count": {
-                  "type": "constant",
-                  "value": 2
-                }
+                "type": "helper",
+                "name": "super"
               },
               {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Red Pearl Bean"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Firebrand"
-                  }
-                ]
+                "type": "helper",
+                "name": "canDash"
               }
             ]
           }
@@ -14118,158 +14064,43 @@
             "op": "==",
             "right": {
               "type": "constant",
-              "value": "vanilla"
+              "value": 0
             }
           },
           "if_true": {
             "type": "and",
             "conditions": [
               {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Hammers",
-                    "count": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "and",
-                        "conditions": [
-                          {
-                            "type": "and",
-                            "conditions": [
-                              {
-                                "type": "item_check",
-                                "item": "Green Goblet"
-                              },
-                              {
-                                "type": "item_check",
-                                "item": "Hammers"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "and",
-                            "conditions": [
-                              {
-                                "type": "item_check",
-                                "item": "Red Goblet"
-                              },
-                              {
-                                "type": "item_check",
-                                "item": "Hammers"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "and",
-                        "conditions": [
-                          {
-                            "type": "item_check",
-                            "item": "Membership Card"
-                          },
-                          {
-                            "type": "item_check",
-                            "item": "Firebrand"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
+                "type": "helper",
+                "name": "surfable"
               },
               {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Green Goblet"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Hammers"
-                  }
-                ]
+                "type": "helper",
+                "name": "canDig"
               },
               {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Peach's Extra Dress"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Fake Beanstar"
-                  }
-                ]
+                "type": "helper",
+                "name": "dressBeanstar"
               },
               {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Beanstar Piece 1"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Beanstar Piece 2"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Beanstar Piece 3"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Beanstar Piece 4"
-                  }
-                ]
+                "type": "helper",
+                "name": "pieces"
               },
               {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Red Chuckola Fruit"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Purple Chuckola Fruit"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "White Chuckola Fruit"
-                  }
-                ]
+                "type": "helper",
+                "name": "fruits"
               },
               {
-                "type": "item_check",
-                "item": "Beanbean Brooch"
+                "type": "helper",
+                "name": "brooch"
               },
               {
-                "type": "item_check",
-                "item": "Peasley's Rose"
+                "type": "helper",
+                "name": "rose"
               },
               {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Red Pearl Bean"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Firebrand"
-                  }
-                ]
+                "type": "helper",
+                "name": "canDash"
               }
             ]
           },
@@ -14277,92 +14108,16 @@
             "type": "and",
             "conditions": [
               {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Hammers",
-                    "count": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  },
-                  {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "and",
-                        "conditions": [
-                          {
-                            "type": "and",
-                            "conditions": [
-                              {
-                                "type": "item_check",
-                                "item": "Green Goblet"
-                              },
-                              {
-                                "type": "item_check",
-                                "item": "Hammers"
-                              }
-                            ]
-                          },
-                          {
-                            "type": "and",
-                            "conditions": [
-                              {
-                                "type": "item_check",
-                                "item": "Red Goblet"
-                              },
-                              {
-                                "type": "item_check",
-                                "item": "Hammers"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "and",
-                        "conditions": [
-                          {
-                            "type": "item_check",
-                            "item": "Membership Card"
-                          },
-                          {
-                            "type": "item_check",
-                            "item": "Firebrand"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
+                "type": "helper",
+                "name": "surfable"
               },
               {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Green Goblet"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Hammers"
-                  }
-                ]
+                "type": "helper",
+                "name": "canDig"
               },
               {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Red Pearl Bean"
-                  },
-                  {
-                    "type": "item_check",
-                    "item": "Firebrand"
-                  }
-                ]
+                "type": "helper",
+                "name": "canDash"
               }
             ]
           }
@@ -14402,12 +14157,8 @@
         "type": "and",
         "conditions": [
           {
-            "type": "item_check",
-            "item": "Hammers",
-            "count": {
-              "type": "constant",
-              "value": 3
-            }
+            "type": "helper",
+            "name": "ultra"
           },
           {
             "type": "or",
@@ -14416,30 +14167,12 @@
                 "type": "and",
                 "conditions": [
                   {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Green Goblet"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Hammers"
-                      }
-                    ]
+                    "type": "helper",
+                    "name": "canDig"
                   },
                   {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": "Red Goblet"
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Hammers"
-                      }
-                    ]
+                    "type": "helper",
+                    "name": "canMini"
                   }
                 ]
               },
@@ -14447,12 +14180,12 @@
                 "type": "and",
                 "conditions": [
                   {
-                    "type": "item_check",
-                    "item": "Membership Card"
+                    "type": "helper",
+                    "name": "membership"
                   },
                   {
-                    "type": "item_check",
-                    "item": "Firebrand"
+                    "type": "helper",
+                    "name": "fire"
                   }
                 ]
               }
@@ -14464,25 +14197,12 @@
         "type": "or",
         "conditions": [
           {
-            "type": "item_check",
-            "item": "Hammers",
-            "count": {
-              "type": "constant",
-              "value": 2
-            }
+            "type": "helper",
+            "name": "super"
           },
           {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Red Pearl Bean"
-              },
-              {
-                "type": "item_check",
-                "item": "Firebrand"
-              }
-            ]
+            "type": "helper",
+            "name": "canDash"
           }
         ]
       },

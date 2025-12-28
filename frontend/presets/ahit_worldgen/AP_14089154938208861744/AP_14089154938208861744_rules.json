@@ -669,16 +669,24 @@
             "name": "Subcon Forest - Finale: Connection 4",
             "connected_region": "Welcome to Mafia Town",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Hookshot Badge",
-                  "Snatcher's Contract - The Subcon Well",
-                  "Snatcher's Contract - Toilet of Doom",
-                  "Snatcher's Contract - Queen Vanessa's Manor",
-                  "Snatcher's Contract - Mail Delivery Service"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Snatcher's Contract - Mail Delivery Service",
+                      "Snatcher's Contract - Queen Vanessa's Manor",
+                      "Snatcher's Contract - Toilet of Doom",
+                      "Snatcher's Contract - The Subcon Well"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -1497,6 +1505,10 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
+                },
+                {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
                   "args": [
@@ -1507,13 +1519,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge",
-                    "count": 1
-                  }
                 }
               ]
             }
@@ -1525,6 +1530,10 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
+                },
+                {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
                   "args": [
@@ -1535,13 +1544,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge",
-                    "count": 1
-                  }
                 }
               ]
             }
@@ -1552,11 +1554,8 @@
             "name": "Act Completion (Train Rush)",
             "id": 2000312481,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Yarn",
@@ -1602,16 +1601,24 @@
             "name": "Subcon Forest - Finale: Connection 5",
             "connected_region": "Welcome to Mafia Town",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Hookshot Badge",
-                  "Snatcher's Contract - The Subcon Well",
-                  "Snatcher's Contract - Toilet of Doom",
-                  "Snatcher's Contract - Queen Vanessa's Manor",
-                  "Snatcher's Contract - Mail Delivery Service"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Snatcher's Contract - Mail Delivery Service",
+                      "Snatcher's Contract - Queen Vanessa's Manor",
+                      "Snatcher's Contract - Toilet of Doom",
+                      "Snatcher's Contract - The Subcon Well"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -1690,16 +1697,24 @@
             "name": "Subcon Forest - Finale: Connection 2",
             "connected_region": "Welcome to Mafia Town",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Hookshot Badge",
-                  "Snatcher's Contract - The Subcon Well",
-                  "Snatcher's Contract - Toilet of Doom",
-                  "Snatcher's Contract - Queen Vanessa's Manor",
-                  "Snatcher's Contract - Mail Delivery Service"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Snatcher's Contract - Mail Delivery Service",
+                      "Snatcher's Contract - Queen Vanessa's Manor",
+                      "Snatcher's Contract - Toilet of Doom",
+                      "Snatcher's Contract - The Subcon Well"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -1708,11 +1723,8 @@
             "name": "Dead Bird Studio Basement - Window Platform",
             "id": 2000305432,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Yarn",
@@ -1726,11 +1738,8 @@
             "name": "Dead Bird Studio Basement - Cardboard Conductor",
             "id": 2000305059,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "50 Pons",
@@ -1744,11 +1753,8 @@
             "name": "Dead Bird Studio Basement - Above Conductor Sign",
             "id": 2000305057,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Random Cosmetic",
@@ -1776,11 +1782,8 @@
             "name": "Dead Bird Studio Basement - Disco Room",
             "id": 2000305061,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "50 Pons",
@@ -1822,11 +1825,8 @@
             "name": "Dead Bird Studio Basement - Tightrope",
             "id": 2000305058,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Time Piece",
@@ -1840,11 +1840,8 @@
             "name": "Dead Bird Studio Basement - Cameras",
             "id": 2000305431,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Yarn",
@@ -1858,11 +1855,8 @@
             "name": "Dead Bird Studio Basement - Locked Room",
             "id": 2000305819,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "25 Pons",
@@ -1876,11 +1870,8 @@
             "name": "Act Completion (Dead Bird Studio Basement)",
             "id": 2000312253,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Relic (Burger Cushion)",
@@ -2538,11 +2529,8 @@
             "name": "Subcon Well - On Pipe",
             "id": 2000324311,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Random Cosmetic",
@@ -2570,11 +2558,8 @@
             "name": "Act Completion (The Subcon Well)",
             "id": 2000311160,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Time Piece",
@@ -2661,93 +2646,27 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Conditional",
-                  "args": {
-                    "test": {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "painting_logic",
-                        "_original_ast_type": "helper"
-                      }
-                    },
-                    "if_true": {
-                      "rule": "True_"
-                    },
-                    "if_false": {
-                      "rule": "Conditional",
+                  "rule": "can_hit",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_paintings",
+                  "_original_ast_type": "helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
                       "args": {
-                        "test": {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "False_"
-                            },
-                            {
-                              "rule": "Not",
-                              "child": {
-                                "rule": "False_"
-                              }
-                            }
-                          ]
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Painting Unlock",
-                            "count": 1
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                {
-                  "rule": "Conditional",
-                  "args": {
-                    "test": {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "False_"
+                        "value": 1
                       }
                     },
-                    "if_true": {
-                      "rule": "True_"
-                    },
-                    "if_false": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "can_use_hat",
-                          "_original_ast_type": "helper",
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 1
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Umbrella",
-                            "count": 1
-                          }
-                        }
-                      ]
+                    {
+                      "rule": "False_"
                     }
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge",
-                    "count": 1
-                  }
+                  ]
                 }
               ]
             }
@@ -2759,93 +2678,27 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Conditional",
-                  "args": {
-                    "test": {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "painting_logic",
-                        "_original_ast_type": "helper"
-                      }
-                    },
-                    "if_true": {
-                      "rule": "True_"
-                    },
-                    "if_false": {
-                      "rule": "Conditional",
+                  "rule": "can_hit",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_paintings",
+                  "_original_ast_type": "helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
                       "args": {
-                        "test": {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "False_"
-                            },
-                            {
-                              "rule": "Not",
-                              "child": {
-                                "rule": "False_"
-                              }
-                            }
-                          ]
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Painting Unlock",
-                            "count": 1
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                {
-                  "rule": "Conditional",
-                  "args": {
-                    "test": {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "False_"
+                        "value": 1
                       }
                     },
-                    "if_true": {
-                      "rule": "True_"
-                    },
-                    "if_false": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "can_use_hat",
-                          "_original_ast_type": "helper",
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 1
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Umbrella",
-                            "count": 1
-                          }
-                        }
-                      ]
+                    {
+                      "rule": "False_"
                     }
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge",
-                    "count": 1
-                  }
+                  ]
                 }
               ]
             }
@@ -2859,93 +2712,27 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Conditional",
-                  "args": {
-                    "test": {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "painting_logic",
-                        "_original_ast_type": "helper"
-                      }
-                    },
-                    "if_true": {
-                      "rule": "True_"
-                    },
-                    "if_false": {
-                      "rule": "Conditional",
+                  "rule": "can_hit",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "has_paintings",
+                  "_original_ast_type": "helper",
+                  "args": [
+                    {
+                      "rule": "Constant",
                       "args": {
-                        "test": {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "False_"
-                            },
-                            {
-                              "rule": "Not",
-                              "child": {
-                                "rule": "False_"
-                              }
-                            }
-                          ]
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Painting Unlock",
-                            "count": 1
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                {
-                  "rule": "Conditional",
-                  "args": {
-                    "test": {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "False_"
+                        "value": 1
                       }
                     },
-                    "if_true": {
-                      "rule": "True_"
-                    },
-                    "if_false": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "can_use_hat",
-                          "_original_ast_type": "helper",
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 1
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Umbrella",
-                            "count": 1
-                          }
-                        }
-                      ]
+                    {
+                      "rule": "False_"
                     }
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge",
-                    "count": 1
-                  }
+                  ]
                 }
               ]
             },
@@ -3046,16 +2833,24 @@
             "name": "Subcon Forest - Finale: Connection 3",
             "connected_region": "Welcome to Mafia Town",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Hookshot Badge",
-                  "Snatcher's Contract - The Subcon Well",
-                  "Snatcher's Contract - Toilet of Doom",
-                  "Snatcher's Contract - Queen Vanessa's Manor",
-                  "Snatcher's Contract - Mail Delivery Service"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Snatcher's Contract - Mail Delivery Service",
+                      "Snatcher's Contract - Queen Vanessa's Manor",
+                      "Snatcher's Contract - Toilet of Doom",
+                      "Snatcher's Contract - The Subcon Well"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -3207,6 +3002,10 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
+                },
+                {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
                   "args": [
@@ -3217,13 +3016,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge",
-                    "count": 1
-                  }
                 }
               ]
             }
@@ -3235,6 +3027,10 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
+                },
+                {
                   "rule": "can_use_hat",
                   "_original_ast_type": "helper",
                   "args": [
@@ -3245,13 +3041,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge",
-                    "count": 1
-                  }
                 }
               ]
             }
@@ -3304,16 +3093,24 @@
             "name": "Subcon Forest - Finale: Connection 1",
             "connected_region": "Welcome to Mafia Town",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Hookshot Badge",
-                  "Snatcher's Contract - The Subcon Well",
-                  "Snatcher's Contract - Toilet of Doom",
-                  "Snatcher's Contract - Queen Vanessa's Manor",
-                  "Snatcher's Contract - Mail Delivery Service"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Snatcher's Contract - Mail Delivery Service",
+                      "Snatcher's Contract - Queen Vanessa's Manor",
+                      "Snatcher's Contract - Toilet of Doom",
+                      "Snatcher's Contract - The Subcon Well"
+                    ]
+                  }
+                }
+              ]
             }
           }
         ],
@@ -3326,15 +3123,8 @@
             "name": "Alpine Skyline - Finale",
             "connected_region": "Cheating the Race",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Birdhouse Cleared",
-                  "Lava Cake Cleared",
-                  "Twilight Bell Cleared",
-                  "Windmill Cleared"
-                ]
-              }
+              "rule": "can_clear_alpine",
+              "_original_ast_type": "helper"
             }
           },
           {
@@ -3354,11 +3144,8 @@
             "name": "AFR -> Alpine Skyline Area",
             "connected_region": "Alpine Skyline Area",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             }
           },
           {
@@ -3391,49 +3178,12 @@
                   ]
                 },
                 {
-                  "rule": "Conditional",
-                  "args": {
-                    "test": {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "False_"
-                      }
-                    },
-                    "if_true": {
-                      "rule": "True_"
-                    },
-                    "if_false": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "can_use_hat",
-                          "_original_ast_type": "helper",
-                          "args": [
-                            {
-                              "rule": "Constant",
-                              "args": {
-                                "value": 1
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Umbrella",
-                            "count": 1
-                          }
-                        }
-                      ]
-                    }
-                  }
+                  "rule": "can_hit",
+                  "_original_ast_type": "helper"
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge",
-                    "count": 1
-                  }
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
                 }
               ]
             }
@@ -3504,11 +3254,8 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge",
-                    "count": 1
-                  }
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
                 }
               ]
             }
@@ -3517,22 +3264,16 @@
             "name": "-> The Lava Cake",
             "connected_region": "The Lava Cake",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             }
           },
           {
             "name": "-> The Windmill",
             "connected_region": "The Windmill",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             }
           },
           {
@@ -3554,11 +3295,8 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge",
-                    "count": 1
-                  }
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
                 }
               ]
             }
@@ -3719,41 +3457,27 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Conditional",
-                  "args": {
-                    "test": {
-                      "rule": "Not",
-                      "child": {
-                        "rule": "False_"
-                      }
-                    },
-                    "if_true": {
-                      "rule": "True_"
-                    },
-                    "if_false": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Umbrella",
-                            "count": 1
-                          }
-                        }
-                      ]
-                    }
-                  }
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "can_hit",
+                  "_original_ast_type": "helper",
+                  "args": [
+                    {
+                      "rule": "True_"
+                    }
+                  ]
+                },
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "Has",
                   "args": {
-                    "items": [
-                      "Hookshot Badge",
-                      "AFR Access"
-                    ]
+                    "item_name": "AFR Access",
+                    "count": 1
                   }
                 }
               ]
@@ -3770,11 +3494,8 @@
             "name": "Alpine Skyline - Bird Pass Fork",
             "id": 2000335911,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Fast Hatter Badge",
@@ -3803,11 +3524,8 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge",
-                    "count": 1
-                  }
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -3823,11 +3541,8 @@
             "name": "Alpine Skyline - Ember Summit",
             "id": 2000336311,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Yarn",
@@ -3841,11 +3556,8 @@
             "name": "Alpine Skyline - Goat Outpost Horn",
             "id": 2000334760,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Random Cosmetic",
@@ -3859,11 +3571,8 @@
             "name": "Alpine Skyline - Windy Passage",
             "id": 2000334776,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "25 Pons",
@@ -4280,11 +3989,8 @@
             "name": "Act Completion (The Illness has Spread)",
             "id": 2000312022,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Time Piece",
@@ -5089,13 +4795,20 @@
             "name": "Mafia Town - Above Boats",
             "id": 2000305218,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "HUMT Access",
-                  "Hookshot Badge"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "HUMT Access",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Health Pon",
@@ -5137,11 +4850,8 @@
             "name": "Mafia Town - Clock Tower Chest",
             "id": 2000303481,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Health Pon",
@@ -5155,11 +4865,8 @@
             "name": "Mafia Town - Top of Lighthouse",
             "id": 2000304213,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Item Magnet Badge",
@@ -5414,48 +5121,19 @@
             "name": "SF Area -> SF Behind Boss Firewall",
             "connected_region": "Subcon Forest Behind Boss Firewall",
             "access_rule": {
-              "rule": "Conditional",
-              "args": {
-                "test": {
-                  "rule": "Not",
-                  "child": {
-                    "rule": "painting_logic",
-                    "_original_ast_type": "helper"
-                  }
-                },
-                "if_true": {
-                  "rule": "True_"
-                },
-                "if_false": {
-                  "rule": "Conditional",
+              "rule": "has_paintings",
+              "_original_ast_type": "helper",
+              "args": [
+                {
+                  "rule": "Constant",
                   "args": {
-                    "test": {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "False_"
-                        },
-                        {
-                          "rule": "Not",
-                          "child": {
-                            "rule": "False_"
-                          }
-                        }
-                      ]
-                    },
-                    "if_true": {
-                      "rule": "True_"
-                    },
-                    "if_false": {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Painting Unlock",
-                        "count": 1
-                      }
-                    }
+                    "value": 1
                   }
+                },
+                {
+                  "rule": "False_"
                 }
-              }
+              ]
             }
           },
           {
@@ -5774,11 +5452,8 @@
             "name": "Subcon Forest - Noose Treehouse",
             "id": 2000324856,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "50 Pons",
@@ -6023,11 +5698,8 @@
             "name": "Subcon Forest - Tall Tree Hookshot Swing",
             "id": 2000324766,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Yarn",
@@ -6088,13 +5760,20 @@
             "name": "SF Behind Boss Firewall -> SF Boss Arena",
             "connected_region": "Subcon Forest Boss Arena",
             "access_rule": {
-              "rule": "HasAll",
-              "args": {
-                "items": [
-                  "Hookshot Badge",
-                  "TOD Access"
-                ]
-              }
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "TOD Access",
+                    "count": 1
+                  }
+                }
+              ]
             }
           }
         ],
@@ -6309,11 +5988,8 @@
             "name": "Act Completion (Time Rift - Pipe)",
             "id": 2000313069,
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Hookshot Badge",
-                "count": 1
-              }
+              "rule": "can_use_hookshot",
+              "_original_ast_type": "helper"
             },
             "item": {
               "name": "Yarn",
@@ -6490,11 +6166,8 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge",
-                    "count": 1
-                  }
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -6525,11 +6198,8 @@
                   ]
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot Badge",
-                    "count": 1
-                  }
+                  "rule": "can_use_hookshot",
+                  "_original_ast_type": "helper"
                 }
               ]
             },
@@ -7601,43 +7271,41 @@
       "Compass Badge"
     ]
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "A Hat in Time WorldGen",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
-        "ActRandomizer": "light",
+        "ActRandomizer": 1,
         "BabyTrapWeight": 40,
         "BadgeSellerMaxItems": 8,
         "BadgeSellerMinItems": 4,
-        "BaseballBat": "false",
-        "CTRLogic": "time_stop_only",
+        "BaseballBat": false,
+        "CTRLogic": 0,
         "ChapterCostIncrement": 4,
         "ChapterCostMinDifference": 4,
-        "CompassBadgeMode": "closest",
-        "DWAutoCompleteBonuses": "true",
-        "DWEnableBonus": "false",
-        "DWExcludeAnnoyingBonuses": "true",
-        "DWExcludeAnnoyingContracts": "true",
-        "DWExcludeCandles": "true",
-        "DWShuffle": "false",
+        "CompassBadgeMode": 1,
+        "DWAutoCompleteBonuses": true,
+        "DWEnableBonus": false,
+        "DWExcludeAnnoyingBonuses": true,
+        "DWExcludeAnnoyingContracts": true,
+        "DWExcludeCandles": true,
+        "DWShuffle": false,
         "DWShuffleCountMax": 25,
         "DWShuffleCountMin": 18,
         "DWTimePieceRequirement": 15,
-        "DeathWishOnly": "false",
-        "EnableDLC1": "false",
-        "EnableDLC2": "false",
-        "EnableDeathWish": "false",
-        "EndGoal": "finale",
-        "ExcludeTour": "false",
+        "DeathWishOnly": false,
+        "EnableDLC1": false,
+        "EnableDLC2": false,
+        "EnableDeathWish": false,
+        "EndGoal": 1,
+        "ExcludeTour": false,
         "FinalChapterMaxCost": 35,
         "FinalChapterMinCost": 30,
-        "FinaleShuffle": "false",
-        "HatItems": "false",
+        "FinaleShuffle": false,
+        "HatItems": false,
         "HighestChapterCost": 25,
         "LaserTrapWeight": 40,
-        "LogicDifficulty": "normal",
+        "LogicDifficulty": -1,
         "LowestChapterCost": 5,
         "MaxExtraTimePieces": 16,
         "MaxPonCost": 300,
@@ -7645,31 +7313,31 @@
         "MetroMinPonCost": 50,
         "MinExtraYarn": 10,
         "MinPonCost": 75,
-        "NoPaintingSkips": "false",
-        "NoTicketSkips": "false",
+        "NoPaintingSkips": false,
+        "NoTicketSkips": 0,
         "NyakuzaThugMaxShopItems": 4,
         "NyakuzaThugMinShopItems": 2,
         "ParadeTrapWeight": 20,
-        "RandomizeHatOrder": "true",
+        "RandomizeHatOrder": 1,
         "ShipShapeCustomTaskGoal": 0,
-        "ShuffleActContracts": "true",
-        "ShuffleAlpineZiplines": "false",
-        "ShuffleStorybookPages": "true",
-        "ShuffleSubconPaintings": "false",
-        "StartWithCompassBadge": "true",
-        "StartingChapter": "1",
-        "Tasksanity": "false",
+        "ShuffleActContracts": true,
+        "ShuffleAlpineZiplines": false,
+        "ShuffleStorybookPages": true,
+        "ShuffleSubconPaintings": false,
+        "StartWithCompassBadge": true,
+        "StartingChapter": 1,
+        "Tasksanity": false,
         "TasksanityCheckCount": 18,
         "TasksanityTaskStep": 1,
         "TimePieceBalancePercent": 35,
         "TrapChance": 0,
-        "UmbrellaLogic": "false",
+        "UmbrellaLogic": false,
         "YarnAvailable": 50,
         "YarnBalancePercent": 20,
         "YarnCostMax": 8,
         "YarnCostMin": 4,
-        "accessibility": "full",
-        "death_link": "false",
+        "accessibility": 0,
+        "death_link": false,
         "death_link_amnesty": 0,
         "dw_death_link_amnesty": 5,
         "exclude_locations": [],
@@ -7679,7 +7347,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": "false",
+        "randomize_items": false,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
@@ -8143,25 +7811,34 @@
       "LogicDifficulty": -1,
       "NoPaintingSkips": false,
       "ShuffleAlpineZiplines": false,
+      "world_description": "A Hat in Time WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "web": {
+        "theme": "partyTime"
+      },
       "world_directory": "ahit_worldgen"
     }
   },
-  "world_attributes": {
+  "exporter": {
     "1": {
-      "use_paren_number_accumulator": true,
-      "HatItems": false,
-      "UmbrellaLogic": false,
-      "ShuffleSubconPaintings": false,
-      "LogicDifficulty": -1,
-      "NoPaintingSkips": false,
-      "ShuffleAlpineZiplines": false
+      "rule_format": {
+        "version": "1.0"
+      },
+      "assume_bidirectional_exits": true,
+      "use_resolved_items": false
     }
   },
   "game_info": {
     "1": {
-      "name": "A Hat in Time",
-      "rule_format": {
-        "version": "1.0"
+      "accumulator_rules": [
+        {
+          "pattern": "^(\\d+) Pons$",
+          "extract_value": true,
+          "target": "PONS",
+          "discriminator": null
+        }
+      ],
+      "prog_items_init": {
+        "PONS": 0
       },
       "chapter_costs": {},
       "hat_info": {
@@ -8284,6 +7961,27 @@
           "type": "name",
           "name": "value"
         }
+      },
+      "can_clear_alpine": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Birdhouse Cleared"
+          },
+          {
+            "type": "item_check",
+            "item": "Lava Cake Cleared"
+          },
+          {
+            "type": "item_check",
+            "item": "Windmill Cleared"
+          },
+          {
+            "type": "item_check",
+            "item": "Twilight Bell Cleared"
+          }
+        ]
       },
       "can_clear_required_act": {
         "params": [
@@ -8450,6 +8148,18 @@
           ]
         }
       },
+      "can_hit": {
+        "params": [
+          "umbrella_only"
+        ],
+        "body": {
+          "type": "constant",
+          "value": true
+        },
+        "defaults": {
+          "umbrella_only": false
+        }
+      },
       "can_use_hat": {
         "params": [
           "hat"
@@ -8499,9 +8209,19 @@
           }
         }
       },
+      "can_use_hookshot": {
+        "type": "item_check",
+        "item": "Hookshot Badge"
+      },
       "get_difficulty": {
-        "type": "constant",
-        "value": -1
+        "type": "helper",
+        "name": "Difficulty",
+        "args": [
+          {
+            "type": "constant",
+            "value": -1
+          }
+        ]
       },
       "get_hat_cost": {
         "params": [
@@ -8580,6 +8300,76 @@
               }
             }
           ]
+        }
+      },
+      "has_paintings": {
+        "params": [
+          "count",
+          "allow_skip"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "not",
+            "condition": {
+              "type": "helper",
+              "name": "painting_logic"
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "constant",
+                  "value": true
+                },
+                {
+                  "type": "name",
+                  "name": "allow_skip"
+                }
+              ]
+            },
+            "if_true": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "helper",
+                  "name": "get_difficulty"
+                },
+                "op": ">=",
+                "right": {
+                  "type": "constant",
+                  "value": 0
+                }
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": {
+                "type": "constant",
+                "value": null
+              }
+            },
+            "if_false": {
+              "type": "item_check",
+              "item": "Progressive Painting Unlock",
+              "count": {
+                "type": "name",
+                "name": "count"
+              }
+            }
+          }
+        },
+        "defaults": {
+          "allow_skip": true
         }
       },
       "has_relic_combo": {

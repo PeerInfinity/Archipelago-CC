@@ -391,7 +391,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -722,7 +723,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -944,7 +946,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -980,11 +983,16 @@
             "name": "Core Exit",
             "connected_region": "New Home",
             "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Mettaton Plush",
-                "count": 1
-              }
+              "rule": "_undertale_has_plot",
+              "_original_ast_type": "helper",
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Mettaton Plush"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -2258,36 +2266,34 @@
       "Ruins Key"
     ]
   },
-  "settings": {
+  "world": {
     "1": {
       "game": "Undertale WorldGen",
-      "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
       "options": {
-        "accessibility": "full",
+        "accessibility": 0,
         "exclude_locations": [],
         "item_links": [],
-        "key_hunt": "false",
+        "key_hunt": false,
         "key_pieces": 5,
         "local_items": [],
-        "no_equips": "false",
+        "no_equips": false,
         "non_local_items": [],
-        "only_flakes": "false",
+        "only_flakes": false,
         "plando_items": [],
         "priority_locations": [],
-        "prog_armor": "false",
-        "prog_weapons": "false",
+        "prog_armor": false,
+        "prog_weapons": false,
         "progression_balancing": 50,
-        "rando_item_button": "false",
-        "rando_love": "false",
-        "rando_stats": "false",
-        "randomize_items": "false",
-        "route_required": "neutral",
+        "rando_item_button": false,
+        "rando_love": false,
+        "rando_stats": false,
+        "randomize_items": false,
+        "route_required": 0,
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": [],
-        "starting_area": "ruins",
-        "temy_include": "false"
+        "starting_area": 0,
+        "temy_include": false
       },
       "option_definitions": {
         "accessibility": {
@@ -2387,11 +2393,8 @@
           "display_name": "Include Temy Armor"
         }
       },
-      "world_directory": "undertale_worldgen"
-    }
-  },
-  "world_attributes": {
-    "1": {
+      "shops": [],
+      "world_description": "Undertale WorldGen for Archipelago.\n\nAuto-generated world implementation.",
       "settings": {
         "game": "Undertale",
         "assume_bidirectional_exits": false,
@@ -2422,56 +2425,112 @@
           "temy_include": "true"
         },
         "world_directory": "undertale"
-      }
+      },
+      "web": {
+        "theme": "grass"
+      },
+      "world_directory": "undertale_worldgen"
     }
   },
-  "game_info": {
+  "exporter": {
     "1": {
-      "name": "Undertale WorldGen",
       "rule_format": {
         "version": "1.0"
       },
-      "web_theme": "grass",
-      "web_tutorials": [
-        {
-          "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Archipelago Undertale software on your computer. This guide covers single-player, multiworld, and related software.",
-          "language": "English",
-          "file_name": "setup_en.md",
-          "link": "setup/en",
-          "authors": [
-            "Mewlif"
-          ]
-        }
-      ],
-      "world_description": "Undertale is an RPG where every choice you make matters. You could choose to hurt all the enemies, eventually\ncausing genocide of the monster species. Or you can spare all the enemies, befriending them and freeing them\nfrom their underground prison.",
-      "slot_data": {
-        "world_seed": 3777206549,
-        "seed_name": "14089154938208861744",
-        "player_name": "Player1",
-        "player_id": 1,
-        "client_version": [
-          0,
-          1,
-          6
-        ],
-        "race": false,
-        "route": "neutral",
-        "starting_area": "ruins",
-        "temy_armor_include": true,
-        "only_flakes": false,
-        "no_equips": false,
-        "key_hunt": false,
-        "key_pieces": 5,
-        "rando_love": false,
-        "rando_stats": false,
-        "prog_armor": false,
-        "prog_weapons": false,
-        "rando_item_button": false,
-        "route_required": 0,
-        "temy_include": 1
-      }
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
     }
   },
-  "helpers": {}
+  "game_info": {
+    "1": {}
+  },
+  "helpers": {
+    "1": {
+      "_undertale_has_plot": {
+        "params": [
+          "item"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "name",
+              "name": "item"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Complete Skeleton"
+            }
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": "Complete Skeleton"
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "item"
+              },
+              "op": "==",
+              "right": {
+                "type": "constant",
+                "value": "Fish"
+              }
+            },
+            "if_true": {
+              "type": "item_check",
+              "item": "Fish"
+            },
+            "if_false": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "item"
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": "Mettaton Plush"
+                }
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": "Mettaton Plush"
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "name",
+                    "name": "item"
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": "DT Extractor"
+                  }
+                },
+                "if_true": {
+                  "type": "item_check",
+                  "item": "DT Extractor"
+                },
+                "if_false": {
+                  "type": "constant",
+                  "value": null
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
