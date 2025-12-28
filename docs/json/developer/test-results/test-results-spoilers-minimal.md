@@ -6,11 +6,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-28 06:37:02
+**Generated:** 2025-12-28 18:58:37
 
-**Source Data Created:** 2025-12-28T05:56:43.305790
+**Source Data Created:** 2025-12-28T18:58:36.859715
 
-**Source Data Last Updated:** 2025-12-28T05:56:43.305797
+**Source Data Last Updated:** 2025-12-28T18:58:36.859722
 
 ## Summary
 
@@ -66,32 +66,32 @@
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 0.3KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
-| Mega Man 2 | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 2.0KB | ✅ |
+| Mega Man 2 | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 1.0KB | ✅ |
 | MegaMan Battle Network 3 | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Meritous | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
 | Metamath | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Muse Dash | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | 0.15 | 0.15 | 🟢 Complete | ✅ | ✅ |
-| Old School Runescape | ✅ Passed | 0 | 7.5 | 7.5 | 🟢 Complete | 6.0KB | ✅ |
-| Overcooked! 2 | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 30.0KB | 6.7KB |
-| Paint | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 7.1KB | ✅ |
-| Raft | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 12.0KB | ✅ |
+| Old School Runescape | ✅ Passed | 0 | 7.5 | 7.5 | 🟢 Complete | 3.6KB | ✅ |
+| Overcooked! 2 | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 29.0KB | 6.7KB |
+| Paint | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 6.9KB | ✅ |
+| Raft | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 11.4KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | ✅ | ✅ |
 | Saving Princess | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
-| Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 13.5KB | 6.9KB |
+| Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 13.4KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 86.8KB | 87.2KB |
-| Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 20.9KB | 10.7KB |
-| Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 8.1KB | ✅ |
-| Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 14.6KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 13.9KB | ✅ |
+| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 83.8KB | 87.2KB |
+| Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 19.7KB | 10.7KB |
+| Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 7.5KB | ✅ |
+| Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 13.2KB | ✅ |
+| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 1.0KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
-| Super Metroid | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | 72.0KB | 114.5KB |
+| Super Metroid | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | 64.6KB | 114.5KB |
 | TOEM original | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
-| TUNIC | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 1.9KB | ✅ |
-| Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 19.3KB | ✅ |
+| TUNIC | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 2.0KB | ✅ |
+| Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 19.2KB | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 5.8KB | ✅ |
 | The Messenger | ✅ Passed | 0 | 6.3 | 6.3 | 🟢 Complete | 11.7KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | 5.3KB | ✅ |
