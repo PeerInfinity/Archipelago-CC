@@ -3774,6 +3774,28 @@ class HelperCodeGenerator:
     this generates raw Python code with lambda-compatible expressions.
     """
 
+    # Game-specific data constants that may be referenced by helpers
+    # Maps module_name.attribute to constant value
+    GAME_DATA_CONSTANTS: Dict[str, Dict[str, Any]] = {
+        "location_name": {
+            # Kirby's Dream Land 3 level name mappings
+            "level_names_inverse": {
+                1: "Grass Land",
+                2: "Ripple Field",
+                3: "Sand Canyon",
+                4: "Cloudy Park",
+                5: "Iceberg",
+            },
+            "level_names": {
+                "Grass Land": 1,
+                "Ripple Field": 2,
+                "Sand Canyon": 3,
+                "Cloudy Park": 4,
+                "Iceberg": 5,
+            },
+        }
+    }
+
     def __init__(self, game_name: str, settings: Optional[Dict[str, Any]] = None) -> None:
         """
         Initialize the helper code generator.
@@ -3790,6 +3812,7 @@ class HelperCodeGenerator:
         self.known_helpers: Set[str] = set()  # Track which helpers exist for validation
         self.uses_math: bool = False  # Track if math functions are used
         self.placements: Dict[str, str] = {}  # location_name -> item_name
+        self.used_game_constants: Set[str] = set()  # Track which game constants are used
 
     def set_known_helpers(self, helper_names: Set[str]) -> None:
         """Set the list of known helper names for this game."""
@@ -3798,6 +3821,28 @@ class HelperCodeGenerator:
     def set_placements(self, placements: Dict[str, str]) -> None:
         """Set the placement data for resolving placement_lookup rules."""
         self.placements = placements or {}
+
+    def get_game_constants_definitions(self) -> str:
+        """Generate Python code for game constants used by helpers.
+
+        Returns a string containing the constant definitions that should be
+        included at the module level in Rules.py.
+        """
+        if not self.used_game_constants:
+            return ""
+
+        definitions = []
+        for const_name in sorted(self.used_game_constants):
+            # Find the constant value in the GAME_DATA_CONSTANTS
+            for module_constants in self.GAME_DATA_CONSTANTS.values():
+                if const_name in module_constants:
+                    value = module_constants[const_name]
+                    definitions.append(f"{const_name} = {repr(value)}")
+                    break
+
+        if definitions:
+            return "\n# Game data constants\n" + "\n".join(definitions) + "\n"
+        return ""
 
     def get_function_name(self, helper_name: str) -> str:
         """
@@ -4817,6 +4862,18 @@ class HelperCodeGenerator:
                 value = self.settings[attr]
                 # Use _expr_constant to convert the value to Python code
                 return self._expr_constant({'type': 'constant', 'value': value})
+
+        # Special case: when accessing game data module attributes (e.g., location_name.level_names_inverse),
+        # output just the attribute name and track that a constant definition is needed.
+        # This handles references to game-specific data modules that aren't available in worldgen worlds.
+        if isinstance(obj_expr, dict) and obj_expr.get('type') == 'name':
+            module_name = obj_expr.get('name', '')
+            if module_name in self.GAME_DATA_CONSTANTS:
+                module_constants = self.GAME_DATA_CONSTANTS[module_name]
+                if attr in module_constants:
+                    # Track that this constant is used so we can generate it later
+                    self.used_game_constants.add(attr)
+                    return attr
 
         obj = self._generate_expression(obj_expr)
         return f"{obj}.{attr}"

@@ -315,7 +315,6 @@ Playthrough:
   Sand Canyon 6 - Enemy 7 (Bukiset (Clean)): Clean Ability
   Sand Canyon 6 - Enemy 8 (Bukiset (Spark)): Spark Ability
   Sand Canyon 6 - Enemy 9 (Bukiset (Ice)): Ice Ability
-  Sand Canyon 6 - Professor Hector & R.O.B: Nago
   Sand Canyon 6 - Stage Completion: Sand Canyon - Stage Completion
 }
 6: {
@@ -398,6 +397,7 @@ Playthrough:
   Cloudy Park 5 - Pick: Heart Star
   Level 4 Boss - Defeated: Level 4 Boss Defeated
   Level 4 Boss - Purified: Level 4 Boss Purified
+  Sand Canyon 6 - Professor Hector & R.O.B: Nago
 }
 9: {
   Iceberg 1 - Animal 1: Pitch Spawn

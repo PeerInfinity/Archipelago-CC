@@ -604,10 +604,17 @@ def generate_rules_py(data: ExtractedData) -> str:
     rule_builder_imports = rule_builder_generator.get_imports()
     rule_builder_imports_str = ', '.join(rule_builder_imports)
 
+    # Build game constants section (for game data module references like location_name.xxx)
+    game_constants_section = helper_generator.get_game_constants_definitions()
+
     # Build helper section
     helpers_section = ''
     if helper_functions:
         helpers_section = '\n\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
+
+    # Combine constants and helpers
+    if game_constants_section:
+        helpers_section = '\n' + game_constants_section + helpers_section
 
     # Build indirect condition registrations
     indirect_section = ''
