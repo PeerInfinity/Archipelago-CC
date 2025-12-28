@@ -1,9 +1,12 @@
 {
   "metadata": {
+    "average_time_per_template_seconds": 34.8,
+    "batch_processing_time_minutes": 1.2,
+    "batch_processing_time_seconds": 69.6,
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-28T04:46:40.353389",
-    "last_updated": "2025-12-28T04:46:40.353394",
+    "last_updated": "2025-12-28T06:04:16.016823",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2544,33 +2547,68 @@
         "world_directory": "osrs"
       }
     },
+    "Overcooked! 2 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name_from_filename": "overcooked2_worldgen",
+      "game_name_from_yaml": "Overcooked! 2 WorldGen",
+      "generation": {
+        "error_count": 1,
+        "error_type": null,
+        "processing_time_seconds": 8.09,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/overcooked2_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 480962,
+        "size_mb": 0.46
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 26.86,
+        "return_code": 0,
+        "sphere_reached": 18.2,
+        "success": true,
+        "total_spheres": 18.2,
+        "warning_count": 0
+      },
+      "template_filename": "Overcooked! 2 WorldGen.yaml",
+      "timestamp": "2025-12-28T06:03:06.503246",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "overcooked2_worldgen",
+        "game_name_from_yaml": "Overcooked! 2 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "overcooked2_worldgen"
+      }
+    },
     "Overcooked! 2.yaml": {
       "analysis": {
         "error_count": 0,
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "78b5f89850418218cf2cb204fffee0f2092ddaa359d7aab9b9be72cbb447f42d",
-          "new_sphere_log_hash": "7ab3e3c7753072e66d568d8f0c9982b8fdf4e875366003f69eac46870d49094e",
-          "original_rules_hash": "78b5f89850418218cf2cb204fffee0f2092ddaa359d7aab9b9be72cbb447f42d",
-          "original_sphere_log_hash": "7ab3e3c7753072e66d568d8f0c9982b8fdf4e875366003f69eac46870d49094e",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-28T04:45:04.355630"
-        }
-      },
       "game_name_from_filename": "overcooked2",
       "game_name_from_yaml": "Overcooked! 2",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.68,
+        "processing_time_seconds": 7.75,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/overcooked2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -2582,7 +2620,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 21.6,
+        "processing_time_seconds": 25.92,
         "return_code": 0,
         "sphere_reached": 18.2,
         "success": true,
@@ -2590,10 +2628,10 @@
         "warning_count": 0
       },
       "template_filename": "Overcooked! 2.yaml",
-      "timestamp": "2025-12-28T04:43:18.366312",
+      "timestamp": "2025-12-28T06:03:41.940060",
       "world_info": {
         "exporter_path": "exporter/games/overcooked2.py",
-        "exporter_size": 30691,
+        "exporter_size": 29702,
         "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
         "game_logic_size": 6818,
         "game_name_from_filename": "overcooked2",
