@@ -1,0 +1,242 @@
+﻿Archipelago Version 0.6.5  -  Seed: 2
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            The Messenger
+Location Count:                  106
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory from Pool:       
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Death Link:                      No
+Logic Level:                     Normal
+Shuffle Mega Time Shards:        No
+Limited Movement:                No
+Early Meditation:                No
+Available Starting Portals:      6
+Shuffle Portal Outputs:          None
+Shuffle Level Transitions:       None
+Goal:                            Open Music Box
+Music Box Gauntlet:              Yes
+Notes Needed:                    6
+Total Power Seals:               45
+Percent Seals Required:          100
+Include Traps:                   No
+Shop Prices Modifier:            100
+Shop Price Plando:               
+Portal Plando Connections:       
+Transition Plando Connections:   
+
+
+Locations:
+
+Money Wrench: Key of Love
+The Shop - Karuta Plates: Time Shard (50)
+The Shop - Serendipitous Bodies: Focused Power Sense
+The Shop - Path of Resilience: Time Shard (300)
+The Shop - Kusari Jacket: Time Shard (100)
+The Shop - Energy Shuriken: Time Shard (100)
+The Shop - Serendipitous Minds: Time Shard (50)
+The Shop - Prepared Mind: Second Wind
+The Shop - Meditation: Time Shard (10)
+The Shop - Rejuvenative Spirit: Time Shard (100)
+The Shop - Centered Mind: Time Shard (50)
+The Shop - Strike of the Ninja: Time Shard (500)
+The Shop - Second Wind: Time Shard (100)
+The Shop - Currents Master: Time Shard (100)
+The Shop - Aerobatics Warrior: Time Shard (100)
+The Shop - Demon's Bane: Prepared Mind
+The Shop - Devil's Due: Time Shard (300)
+The Shop - Time Sense: Time Shard (50)
+The Shop - Power Sense: Wingsuit
+The Shop - Focused Power Sense: Time Shard (300)
+Green Kappa Figurine: Seashell
+Blue Kappa Figurine: Key of Hope
+Ountarde Figurine: Key of Chaos
+Red Kappa Figurine: Time Shard (500)
+Demon King Figurine: Demon's Bane
+Quillshroom Figurine: Time Shard (100)
+Jumping Quillshroom Figurine: Kusari Jacket
+Scurubu Figurine: Serendipitous Bodies
+Jumping Scurubu Figurine: Magic Firefly
+Wallaxer Figurine: Moon Crest
+Barmath'azel Figurine: Time Shard
+Queen of Quills Figurine: Time Shard (10)
+Demon Hive Figurine: Power Thistle
+Corrupted Future - Key of Courage: Currents Master
+Rescue Phantom: Do the Thing!
+Ninja Village - Candle: Time Sense
+Ninja Village - Astral Seed: Time Shard (10)
+Ninja Village Seal - Tree House: Time Shard (10)
+Autumn Hills Portal: Autumn Hills Portal
+Autumn Hills - Climbing Claws: Aerobatics Warrior
+Autumn Hills Seal - Trip Saws: Pyro
+Autumn Hills - Leaf Golem: Key of Courage
+Autumn Hills - Key of Hope: Demon King Crown
+Autumn Hills Seal - Double Swing Saws: Centered Mind
+Autumn Hills Seal - Spike Ball Swing: Ruxxtin's Amulet
+Autumn Hills Seal - Spike Ball Darts: Time Shard (10)
+Forlorn Temple Seal - Rocket Sunset: Time Shard (100)
+Forlorn Temple - Demon King: Time Shard (100)
+Forlorn Temple Seal - Rocket Maze: Time Shard (50)
+Catacombs - Necro: Key of Symbiosis
+Catacombs Seal - Triple Spike Crushers: Time Shard (300)
+Catacombs - Ruxxtin's Amulet: Path of Resilience
+Catacombs - Ruxxtin: Strike of the Ninja
+Catacombs Seal - Crusher Gauntlet: Money Wrench
+Catacombs Seal - Dirty Pond: Time Shard (100)
+Bamboo Creek Seal - Spike Crushers and Doors: Time Shard (300)
+Bamboo Creek Seal - Spike Crushers and Doors v2: Time Shard (50)
+Bamboo Creek - Claustro: Windmill Shuriken
+Bamboo Creek Seal - Spike Ball Pits: Candle
+Howling Grotto Portal: Howling Grotto Portal
+Howling Grotto - Wingsuit: Time Shard (50)
+Howling Grotto Seal - Windy Saws and Balls: Meditation
+Howling Grotto Seal - Crushing Pits: Serendipitous Minds
+Howling Grotto - Emerald Golem: Lightfoot Tabi
+Howling Grotto Seal - Breezy Crushers: Time Shard (50)
+Quillshroom Marsh Seal - Spikey Window: Time Shard (10)
+Quillshroom Marsh Seal - Sand Trap: Rejuvenative Spirit
+Quillshroom Marsh - Queen of Quills: Time Shard (300)
+Quillshroom Marsh - Seashell: Time Shard (100)
+Quillshroom Marsh Seal - Do the Spike Wave: Time Shard (50)
+Searing Crags - Pyro: Karuta Plates
+Searing Crags Portal: Searing Crags Portal
+Searing Crags - Rope Dart: Power Sense
+Searing Crags Seal - Rhythm Rocks: Time Shard (10)
+Searing Crags - Power Thistle: Time Shard
+Searing Crags - Astral Tea Leaves: Time Shard (100)
+Searing Crags - Key of Strength: Time Shard (10)
+Searing Crags Seal - Triple Ball Spinner: Time Shard (10)
+Searing Crags Seal - Raining Rocks: Time Shard (100)
+Glacial Peak Portal: Glacial Peak Portal
+Glacial Peak Seal - Ice Climbers: Time Shard (100)
+Glacial Peak Seal - Projectile Spike Pit: Claustro
+Glacial Peak Seal - Glacial Air Swag: Devil's Due
+Tower of Time Seal - Time Waster: Time Shard (500)
+Tower of Time Seal - Lantern Climb: Time Shard (100)
+Tower of Time Seal - Arcane Orbs: Time Shard (100)
+Cloud Ruins - Acro: Key of Strength
+Cloud Ruins Seal - Money Farm Room: Time Shard
+Cloud Ruins Seal - Ghost Pit: Time Shard (50)
+Cloud Ruins Seal - Toothbrush Alley: Time Shard (100)
+Cloud Ruins Seal - Saw Pit: Time Shard (50)
+Underworld Seal - Sharp and Windy Climb: Time Shard (300)
+Underworld Seal - Spike Wall: Time Shard (100)
+Underworld Seal - Fireball Wave: Time Shard (50)
+Underworld - Key of Chaos: Sun Crest
+Underworld Seal - Rising Fanta: Time Shard (50)
+Riviere Turquoise Portal: Riviere Turquoise Portal
+Riviere Turquoise Seal - Bounces and Balls: Time Shard (10)
+Riviere Turquoise Seal - Launch of Faith: Time Shard (100)
+Riviere Turquoise Seal - Flower Power: Time Shard (100)
+Riviere Turquoise - Butterfly Matriarch: Rope Dart
+Elemental Skylands Seal - Air: Energy Shuriken
+Elemental Skylands Seal - Water: Time Shard (50)
+Elemental Skylands Seal - Fire: Time Shard (50)
+Elemental Skylands - Key of Symbiosis: Time Shard (10)
+Sunken Shrine - Key of Love: Time Shard (50)
+Sunken Shrine Portal: Sunken Shrine Portal
+Sunken Shrine Seal - Ultra Lifeguard: Necro
+Sunken Shrine Seal - Tabi Gauntlet: Time Shard (500)
+Sunken Shrine - Lightfoot Tabi: Acro
+Sunken Shrine - Sun Crest: Time Shard (50)
+Sunken Shrine Seal - Waterfall Paradise: Time Shard (10)
+Sunken Shrine - Moon Crest: Time Shard (100)
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Autumn Hills Portal: Autumn Hills Portal
+  Glacial Peak Portal: Glacial Peak Portal
+  Howling Grotto Portal: Howling Grotto Portal
+  Quillshroom Marsh - Queen of Quills: Time Shard (300)
+  Quillshroom Marsh - Seashell: Time Shard (100)
+  Riviere Turquoise Portal: Riviere Turquoise Portal
+  Searing Crags Portal: Searing Crags Portal
+  Sunken Shrine - Lightfoot Tabi: Acro
+  Sunken Shrine Portal: Sunken Shrine Portal
+  Sunken Shrine Seal - Ultra Lifeguard: Necro
+}
+2: {
+  The Shop - Devil's Due: Time Shard (300)
+  The Shop - Energy Shuriken: Time Shard (100)
+  The Shop - Second Wind: Time Shard (100)
+  The Shop - Strike of the Ninja: Time Shard (500)
+}
+3: {
+  The Shop - Aerobatics Warrior: Time Shard (100)
+  The Shop - Currents Master: Time Shard (100)
+  The Shop - Kusari Jacket: Time Shard (100)
+  The Shop - Path of Resilience: Time Shard (300)
+  The Shop - Power Sense: Wingsuit
+  The Shop - Prepared Mind: Second Wind
+}
+4: {
+  Autumn Hills - Climbing Claws: Aerobatics Warrior
+  Autumn Hills - Leaf Golem: Key of Courage
+  Autumn Hills Seal - Spike Ball Swing: Ruxxtin's Amulet
+  Autumn Hills Seal - Trip Saws: Pyro
+  Bamboo Creek Seal - Spike Ball Pits: Candle
+  Bamboo Creek Seal - Spike Crushers and Doors: Time Shard (300)
+  Catacombs - Necro: Key of Symbiosis
+  Catacombs - Ruxxtin: Strike of the Ninja
+  Catacombs - Ruxxtin's Amulet: Path of Resilience
+  Catacombs Seal - Crusher Gauntlet: Money Wrench
+  Catacombs Seal - Dirty Pond: Time Shard (100)
+  Catacombs Seal - Triple Spike Crushers: Time Shard (300)
+  Howling Grotto - Emerald Golem: Lightfoot Tabi
+  Howling Grotto Seal - Windy Saws and Balls: Meditation
+  Searing Crags - Astral Tea Leaves: Time Shard (100)
+  Searing Crags Seal - Raining Rocks: Time Shard (100)
+  The Shop - Focused Power Sense: Time Shard (300)
+  The Shop - Rejuvenative Spirit: Time Shard (100)
+}
+5: {
+  Cloud Ruins - Acro: Key of Strength
+  Glacial Peak Seal - Projectile Spike Pit: Claustro
+  Riviere Turquoise - Butterfly Matriarch: Rope Dart
+  Riviere Turquoise Seal - Flower Power: Time Shard (100)
+  Riviere Turquoise Seal - Launch of Faith: Time Shard (100)
+  Sunken Shrine - Moon Crest: Time Shard (100)
+  Sunken Shrine Seal - Tabi Gauntlet: Time Shard (500)
+  Underworld - Key of Chaos: Sun Crest
+  Underworld Seal - Sharp and Windy Climb: Time Shard (300)
+  Underworld Seal - Spike Wall: Time Shard (100)
+}
+6: {
+  Autumn Hills - Key of Hope: Demon King Crown
+  Cloud Ruins Seal - Toothbrush Alley: Time Shard (100)
+  Forlorn Temple - Demon King: Time Shard (100)
+  Forlorn Temple Seal - Rocket Sunset: Time Shard (100)
+  Glacial Peak Seal - Ice Climbers: Time Shard (100)
+  Tower of Time Seal - Arcane Orbs: Time Shard (100)
+  Tower of Time Seal - Lantern Climb: Time Shard (100)
+  Tower of Time Seal - Time Waster: Time Shard (500)
+}
+7: {
+  Blue Kappa Figurine: Key of Hope
+  Demon Hive Figurine: Power Thistle
+  Green Kappa Figurine: Seashell
+  Jumping Scurubu Figurine: Magic Firefly
+  Money Wrench: Key of Love
+  Ountarde Figurine: Key of Chaos
+  Quillshroom Figurine: Time Shard (100)
+  Red Kappa Figurine: Time Shard (500)
+  Wallaxer Figurine: Moon Crest
+}
+8: {
+  Corrupted Future - Key of Courage: Currents Master
+  Rescue Phantom: Do the Thing!
+}
