@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-28 19:39:37
+**Generated:** 2025-12-28 22:22:44
 
 ## Summary
 
@@ -54,10 +54,10 @@
 | Hylics 2 | ✅ Passed | 0 | ✅ | 134/134 | 133/133 | 1/1 | ✅ | 134/134 | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | 5.6KB | ✅ |
 | Kingdom Hearts | ✅ Passed | 0 | ✅ | 512/512 | 511/511 | 1/1 | ✅ | 512/512 | 17.1KB | 12.5KB |
-| Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 23.2KB | 107.3KB |
-| Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 9.3KB | 13.1KB |
+| Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 23.2KB | 105.1KB |
+| Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 9.3KB | 13.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | ✅ | 298/298 | 291/291 | 7/7 | ✅ | 298/298 | 18.5KB | ✅ |
-| Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 37.5KB | 10.8KB |
+| Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 37.5KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | 13.5KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | ✅ | 40/40 | 35/35 | 5/5 | ✅ | 40/40 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | ✅ | 557/557 | 556/556 | 1/1 | ✅ | 557/557 | 0.3KB | ✅ |
@@ -77,7 +77,7 @@
 | Secret of Evermore | ✅ Passed | 0 | ✅ | 340/340 | 339/339 | 1/1 | ✅ | 340/340 | 13.4KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | ✅ | 114/114 | 76/76 | 38/38 | ✅ | 114/114 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 83.8KB | 87.2KB |
+| Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 83.8KB | 86.2KB |
 | Stardew Valley | ✅ Passed | 0 | ✅ | 500/500 | 491/491 | 9/9 | ✅ | 500/500 | 19.7KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | 7.5KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | 13.2KB | ✅ |
@@ -89,7 +89,7 @@
 | TUNIC | ✅ Passed | 0 | ✅ | 317/317 | 302/302 | 15/15 | ✅ | 317/317 | 2.0KB | ✅ |
 | Terraria | ✅ Passed | 0 | ✅ | 244/244 | 63/63 | 181/181 | ✅ | 244/244 | 19.2KB | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | 5.8KB | ✅ |
-| The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 11.7KB | ✅ |
+| The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 12.3KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | 5.3KB | ✅ |
 | The Witness | ✅ Passed | 0 | ✅ | 147/147 | 132/132 | 15/15 | ✅ | 147/147 | 28.4KB | ✅ |
 | Timespinner | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | 4.5KB | ✅ |
