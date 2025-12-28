@@ -101,7 +101,3 @@ class DarkSouls3GameExportHandler(GenericGameExportHandler):
             rule['condition'] = self.postprocess_rule(rule.get('condition'))
 
         return rule
-
-    def postprocess_entrance_rule(self, rule: Dict[str, Any], entrance_name: str = None) -> Dict[str, Any]:
-        """Postprocess entrance rules using the same transformation logic."""
-        return self.postprocess_rule(rule)
