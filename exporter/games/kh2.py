@@ -18,10 +18,15 @@ class KH2GameExportHandler(GenericGameExportHandler):
     # Module paths containing item name constants and other resolvable variables
     ITEM_NAME_MODULES = ['worlds.kh2.Names', 'worlds.kh2.Logic', 'worlds.kh2.Items']
 
-    # Mapping of self.<attr> to setting names for the analyzer
+    # Mapping of self.<attr> to setting configuration for the analyzer
     # This enables conversion of patterns like self.fight_logic to setting_value rules
+    # Values can be:
+    #   - str: setting name (uses numeric value)
+    #   - dict: {'setting': name, 'use_current_key': True} (uses string key from name_lookup)
     SELF_ATTR_TO_SETTING = {
-        'fight_logic': 'FightLogic',  # self.fight_logic = world.options.FightLogic.current_key
+        # self.fight_logic = world.options.FightLogic.current_key
+        # The current_key returns the string key ("easy", "normal", "hard") not the numeric value
+        'fight_logic': {'setting': 'FightLogic', 'use_current_key': True},
     }
 
     # Helpers too complex for automatic export

@@ -2825,6 +2825,10 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         // Supports dot notation for nested access (e.g. "difficulty_requirements.progressive_bottle_limit")
         // Note: Choice options in Python use 0 for "off"/"none" states, which are exported
         // as strings like 'off', 'none', 'false'. These should be treated as falsy in JS.
+        //
+        // use_current_key: When true, returns the string key (e.g., "easy") instead of numeric value.
+        // This is used when Python code accesses option.current_key instead of option.value.
+        // The name_lookup mapping in option_definitions is used for conversion.
         let settingName = rule.setting || rule.attribute;
         if (typeof settingName === 'string') {
           let rawValue;
@@ -2855,6 +2859,23 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             // This handles Choice options where 0='off'/'none' etc.
             // The normalization of 'off'/'none' strings is now handled in stateInterface.getSetting
             result = rawValue;
+          }
+
+          // If use_current_key is set, convert numeric value to string key using name_lookup
+          // This handles Python patterns like: option.current_key which returns "easy" not 0
+          if (rule.use_current_key && result !== undefined && typeof context.getStaticData === 'function') {
+            const staticData = context.getStaticData();
+            const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+            const playerIdKey = String(playerId);
+            const optionDefs = staticData?.world?.[playerIdKey]?.option_definitions;
+            const optionDef = optionDefs?.[settingName];
+            if (optionDef?.name_lookup) {
+              const stringKey = optionDef.name_lookup[String(result)];
+              if (stringKey !== undefined) {
+                log('debug', `[evaluateRule] setting_value use_current_key: converted ${settingName}=${result} to "${stringKey}"`);
+                result = stringKey;
+              }
+            }
           }
         } else {
           log('warn', `[evaluateRule] Invalid name for ${rule.type}`, {

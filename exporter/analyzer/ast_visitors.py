@@ -2022,9 +2022,19 @@ class ASTVisitorMixin:
                 if hasattr(self, 'game_handler') and self.game_handler is not None:
                     setting_mapping = getattr(self.game_handler, 'SELF_ATTR_TO_SETTING', {})
                     if attr_name in setting_mapping:
-                        setting_name = setting_mapping[attr_name]
-                        logging.debug(f"visit_Attribute: Detected self.{attr_name}, converting to setting_value '{setting_name}'")
-                        return {'type': 'setting_value', 'setting': setting_name}
+                        mapping_value = setting_mapping[attr_name]
+                        # Handle both simple string format and dict format with use_current_key
+                        if isinstance(mapping_value, dict):
+                            setting_name = mapping_value.get('setting', attr_name)
+                            use_current_key = mapping_value.get('use_current_key', False)
+                        else:
+                            setting_name = mapping_value
+                            use_current_key = False
+                        logging.debug(f"visit_Attribute: Detected self.{attr_name}, converting to setting_value '{setting_name}' (use_current_key={use_current_key})")
+                        result = {'type': 'setting_value', 'setting': setting_name}
+                        if use_current_key:
+                            result['use_current_key'] = True
+                        return result
 
             # OPTIMIZATION: If the object is a simple Name node in closure_vars, try to resolve
             # the attribute directly BEFORE visiting the object. This handles NamedTuples and
