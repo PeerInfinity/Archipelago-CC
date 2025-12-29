@@ -116,11 +116,23 @@
   ],
   "requires_javascript_helpers_list": [
     {
+      "name": "Bomb Rush Cyberfunk.yaml",
+      "reason": "Game logic requires JavaScript helpers that cannot be removed."
+    },
+    {
       "name": "Lingo.yaml",
       "reason": "Game logic requires JavaScript helpers that cannot be removed."
     },
     {
       "name": "Secret of Evermore.yaml",
+      "reason": "Game logic requires JavaScript helpers that cannot be removed."
+    },
+    {
+      "name": "Starcraft 2.yaml",
+      "reason": "Game logic requires JavaScript helpers that cannot be removed."
+    },
+    {
+      "name": "Stardew Valley.yaml",
       "reason": "Game logic requires JavaScript helpers that cannot be removed."
     },
     {
