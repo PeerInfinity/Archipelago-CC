@@ -568,7 +568,7 @@
   },
   "Landstalker - The Treasures of King Nole": {
     "exporter_path": "exporter/games/landstalker.py",
-    "exporter_size": 18920,
+    "exporter_size": 15658,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
