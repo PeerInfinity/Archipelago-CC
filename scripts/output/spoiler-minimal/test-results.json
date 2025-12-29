@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-28T23:32:01.750905",
-    "last_updated": "2025-12-28T23:32:01.750911",
+    "last_updated": "2025-12-29T04:22:18.523241",
     "script_version": "1.0.0"
   },
   "results": {
@@ -72,31 +72,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "a6a6f0da3f6767e5cd242d57960fb6117da38b433dac0451ad5338a33f5ea239",
-          "new_sphere_log_hash": "d36bc0bd35be1031e331f500e0dce8115d27796f983860130d3a4fc05f723225",
-          "original_rules_hash": "a6a6f0da3f6767e5cd242d57960fb6117da38b433dac0451ad5338a33f5ea239",
-          "original_sphere_log_hash": "d36bc0bd35be1031e331f500e0dce8115d27796f983860130d3a4fc05f723225",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-28T23:30:32.375305"
-        }
-      },
       "game_name_from_filename": "alttp",
       "game_name_from_yaml": "A Link to the Past",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 15.74,
+        "processing_time_seconds": 28.53,
         "return_code": 0,
         "success": true,
-        "warning_count": 3
+        "warning_count": 2
       },
       "rules_file": {
         "path": "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 711928,
+        "size_bytes": 711718,
         "size_mb": 0.68
       },
       "seed": "1",
@@ -104,7 +92,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 20.71,
+        "processing_time_seconds": 21.78,
         "return_code": 0,
         "sphere_reached": 22.1,
         "success": true,
@@ -112,7 +100,7 @@
         "warning_count": 0
       },
       "template_filename": "A Link to the Past.yaml",
-      "timestamp": "2025-12-28T23:27:42.335502",
+      "timestamp": "2025-12-29T04:18:57.732124",
       "world_info": {
         "exporter_path": "exporter/games/alttp.py",
         "exporter_size": 2547,
@@ -1724,31 +1712,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "05fee80f746cd6a84f7ae01dc36b07131bbb6fd0de53cac4931b30289963bfbe",
-          "new_sphere_log_hash": "ef43b5a9e462c7438f8a9d2367bbabcedcf7fe7d6d79c8cbf6e417c0b07208ee",
-          "original_rules_hash": "05fee80f746cd6a84f7ae01dc36b07131bbb6fd0de53cac4931b30289963bfbe",
-          "original_sphere_log_hash": "ef43b5a9e462c7438f8a9d2367bbabcedcf7fe7d6d79c8cbf6e417c0b07208ee",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-28T23:31:04.502336"
-        }
-      },
       "game_name_from_filename": "kdl3",
       "game_name_from_yaml": "Kirby's Dream Land 3",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.93,
+        "processing_time_seconds": 9.46,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/kdl3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 768138,
+        "size_bytes": 769136,
         "size_mb": 0.73
       },
       "seed": "1",
@@ -1756,7 +1732,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 66.67,
+        "processing_time_seconds": 67.54,
         "return_code": 0,
         "sphere_reached": 11.1,
         "success": true,
@@ -1764,16 +1740,16 @@
         "warning_count": 0
       },
       "template_filename": "Kirby's Dream Land 3.yaml",
-      "timestamp": "2025-12-28T23:28:35.068249",
+      "timestamp": "2025-12-29T04:17:29.564670",
       "world_info": {
         "exporter_path": "exporter/games/kdl3.py",
-        "exporter_size": 9489,
-        "game_logic_path": "frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js",
-        "game_logic_size": 13339,
+        "exporter_size": 9711,
+        "game_logic_path": null,
+        "game_logic_size": 0,
         "game_name_from_filename": "kdl3",
         "game_name_from_yaml": "Kirby's Dream Land 3",
         "has_custom_exporter": true,
-        "has_custom_game_logic": true,
+        "has_custom_game_logic": false,
         "world_directory": "kdl3"
       }
     },
@@ -3553,39 +3529,27 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "46372ca940c7e00aea6da4fb22c187312a7ce3a55a362dec1e74f9f60ee633bc",
-          "new_sphere_log_hash": "ecfa4479bac210da7e5c3c5983788c11cb83eb43c94338afdded0c7523eb3b92",
-          "original_rules_hash": "46372ca940c7e00aea6da4fb22c187312a7ce3a55a362dec1e74f9f60ee633bc",
-          "original_sphere_log_hash": "ecfa4479bac210da7e5c3c5983788c11cb83eb43c94338afdded0c7523eb3b92",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-28T23:30:41.442938"
-        }
-      },
       "game_name_from_filename": "tunic",
       "game_name_from_yaml": "TUNIC",
       "generation": {
-        "error_count": 0,
+        "error_count": 15,
         "error_type": null,
-        "processing_time_seconds": 6.47,
+        "processing_time_seconds": 133.94,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/tunic/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 679995,
-        "size_mb": 0.65
+        "size_bytes": 578733,
+        "size_mb": 0.55
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 12.53,
+        "processing_time_seconds": 15.6,
         "return_code": 0,
         "sphere_reached": 5.1,
         "success": true,
@@ -3593,7 +3557,7 @@
         "warning_count": 0
       },
       "template_filename": "TUNIC.yaml",
-      "timestamp": "2025-12-28T23:29:29.534026",
+      "timestamp": "2025-12-29T04:19:48.579470",
       "world_info": {
         "exporter_path": "exporter/games/tunic.py",
         "exporter_size": 2069,
