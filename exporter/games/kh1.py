@@ -32,14 +32,14 @@ class KH1GameExportHandler(BaseGameExportHandler):
     HELPERS_TO_EXPORT_BLACKLIST: Set[str] = {
         'has_x_worlds',         # Has for loops, variable assignments - JS implementation in kh1Logic.js
         'has_emblems',          # Calls has_x_worlds which has loops
-        'has_defensive_tools',  # Called without args but definition needs logic_difficulty param
-        'has_puppies',          # Has loops over puppy items
+        # 'has_defensive_tools' - Now exported! Uses has_all_counts/has_any_count (supported via state_method)
+        # 'has_puppies' - Now exported! Simple arithmetic: count * value >= required
+        # 'has_lucky_emblems' - Now exported! Simple count_check
+        # 'has_final_rest_door' - Now exported! Simple conditional: if/else with item_check
+        # 'has_parasite_cage' - Now exported! Simple and/or with item checks and comparison
         'has_reports',          # Has loops over report items
         'has_torn_pages',       # Has loops over torn pages
-        'has_lucky_emblems',    # Simple but rarely used
-        'has_final_rest_door',  # Complex with multiple branches
-        'has_parasite_cage',    # Complex with nested calls
-        'has_key_item',         # Complex with multiple parameters
+        'has_key_item',         # Complex with multiple parameters and dict lookups
     }
 
     """KH1-specific expander that handles Kingdom Hearts 1 rules."""

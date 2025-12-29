@@ -27890,6 +27890,96 @@
           }
         ]
       },
+      "has_defensive_tools": {
+        "params": [
+          "logic_difficulty"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "name",
+              "name": "logic_difficulty"
+            },
+            "op": ">=",
+            "right": {
+              "type": "constant",
+              "value": 15
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "state_method",
+                "method": "has_all_counts",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": {
+                      "Dodge Roll": 1,
+                      "Leaf Bracer": 1,
+                      "Progressive Cure": 2
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "state_method",
+                "method": "has_any_count",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": {
+                      "Second Chance": 1,
+                      "MP Rage": 1,
+                      "Progressive Aero": 2
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "has_final_rest_door": {
+        "params": [
+          "final_rest_door_requirement",
+          "final_rest_door_required_lucky_emblems"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "name",
+              "name": "final_rest_door_requirement"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "lucky_emblems"
+            }
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": "Lucky Emblem",
+            "count": {
+              "type": "name",
+              "name": "final_rest_door_required_lucky_emblems"
+            }
+          },
+          "if_false": {
+            "type": "item_check",
+            "item": "Final Door Key"
+          }
+        }
+      },
       "has_item_workshop": {
         "params": [
           "logic_difficulty"
@@ -27927,6 +28017,19 @@
               ]
             }
           ]
+        }
+      },
+      "has_lucky_emblems": {
+        "params": [
+          "required_amt"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Lucky Emblem",
+          "count": {
+            "type": "name",
+            "name": "required_amt"
+          }
         }
       },
       "has_oogie_manor": {
@@ -28039,6 +28142,87 @@
               ]
             }
           ]
+        }
+      },
+      "has_parasite_cage": {
+        "params": [
+          "logic_difficulty",
+          "worlds"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Monstro"
+            },
+            {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "High Jump"
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "compare",
+                      "left": {
+                        "type": "name",
+                        "name": "logic_difficulty"
+                      },
+                      "op": ">",
+                      "right": {
+                        "type": "constant",
+                        "value": 0
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Progressive Glide"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "name",
+              "name": "worlds"
+            }
+          ]
+        }
+      },
+      "has_puppies": {
+        "params": [
+          "puppies_required",
+          "puppy_value"
+        ],
+        "body": {
+          "type": "compare",
+          "left": {
+            "type": "binary_op",
+            "left": {
+              "type": "state_method",
+              "method": "count",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Puppy"
+                }
+              ]
+            },
+            "op": "*",
+            "right": {
+              "type": "name",
+              "name": "puppy_value"
+            }
+          },
+          "op": ">=",
+          "right": {
+            "type": "name",
+            "name": "puppies_required"
+          }
         }
       }
     }
