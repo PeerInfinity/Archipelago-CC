@@ -575,24 +575,39 @@ def terran_base_trasher(self, state):
 }
 ```
 
-### Remaining Issue: Missing World Settings
+### Why Helpers Are Blacklisted
 
-**20 helpers remain blacklisted** because they reference world settings (e.g., `self.advanced_tactics`, `self.generic_upgrade_missions`) that aren't fully exported to `game_info`. These settings need to be exported for the helpers to evaluate correctly at runtime.
+**20 helpers remain blacklisted** for the following reasons:
 
-### Blacklisted Helpers (Missing World Settings)
+1. **JavaScript Fallback Implementations Exist**: SC2 has JavaScript implementations for these helpers in `frontend/modules/shared/gameLogic/sc2/helpers.js`. These provide equivalent logic for frontend evaluation.
 
-These helpers use the early-return pattern (which is now fixed) but depend on unexported world settings:
+2. **Settings Resolution Difference**: The Python export resolves settings like `self.advanced_tactics` at export time (as constants), while JavaScript implementations resolve them dynamically at runtime. This can cause evaluation differences.
+
+3. **Dependency Chain Complexity**: These helpers call each other. Exporting one helper without exporting its dependencies creates inconsistencies.
+
+### Blacklisted Helpers
+
+These helpers have JavaScript fallback implementations that work correctly:
 - `terran_competent_comp`, `protoss_competent_comp`, `zerg_competent_comp`
 - `terran_competent_ground_to_air`, `protoss_competent_ground_to_air`, `zerg_competent_ground_to_air`
 - `terran_beats_protoss_deathball`, `terran_base_trasher`, `terran_respond_to_colony_infestations`
 - Various mission requirement helpers that depend on the above
 
-### Next Steps
+### Current Strategy
 
-To unblock these helpers:
-1. Identify world settings used (e.g., `advanced_tactics`, `generic_upgrade_missions`)
-2. Export them to `game_info` in `sc2.py`
-3. Remove helpers from blacklist and test incrementally
+The safest approach is to keep these helpers blacklisted and rely on the JavaScript implementations:
+- JavaScript implementations handle settings dynamically
+- All location rules referencing these helpers work correctly via JavaScript fallback
+- Spoiler tests pass
+
+### Future Work (Optional)
+
+To fully migrate to Python exports:
+1. Convert settings like `self.advanced_tactics` to `setting_value` rules instead of constants
+2. Add `SELF_ATTR_TO_SETTING` mapping to `sc2.py` for dynamic setting resolution
+3. Export all helpers in dependency chains together
+4. Verify JavaScript and Python implementations produce identical results
+5. Consider removing JavaScript implementations once Python exports are verified
 
 ## See Also
 
