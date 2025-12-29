@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-28 15:46:53
+**Generated:** 2025-12-29 02:19:58
 
 ## Summary
 
@@ -30,26 +30,26 @@
 
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
-| A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 8.5KB | ✅ |
+| A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 7.7KB | ✅ |
 | A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 2.5KB | ✅ |
 | A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Aquaria | ✅ Passed | ✅ Passed | 1 | 1 | 2.8KB | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | 1 | 1 | 1.5KB | 40.3KB |
+| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | 1 | 1 | 1.4KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 14.7KB | ✅ |
+| Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 7.3KB | ✅ |
 | Castlevania 64 | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Celeste 64 | ✅ Passed | ✅ Passed | 2 | 2 | 8.4KB | ✅ |
+| Celeste 64 | ✅ Passed | ✅ Passed | 2 | 2 | 5.8KB | ✅ |
 | ChecksFinder | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | ChocolateChipCookies | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Civilization VI | ✅ Passed | ✅ Passed | 2 | 2 | 1.9KB | ✅ |
-| DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 4.5KB | ✅ |
+| Civilization VI | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
+| DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 2.9KB | ✅ |
 | DOOM 1993 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Dark Souls III | ✅ Passed | ✅ Passed | 2 | 2 | 4.3KB | ✅ |
+| Dark Souls III | ✅ Passed | ✅ Passed | 2 | 2 | 2.3KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 5.5KB | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
@@ -58,8 +58,8 @@
 | Hylics 2 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 5.6KB | ✅ |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 17.1KB | 12.5KB |
-| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 23.2KB | 105.1KB |
-| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 3 | 3 | 9.3KB | 13.0KB |
+| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 23.5KB | 105.1KB |
+| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 3 | 3 | 9.2KB | 13.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 18.5KB | ✅ |
 | Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 37.5KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | 4 | 4 | 13.5KB | ✅ |

@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2025-12-28 15:46:53
+**Generated:** 2025-12-29 02:19:58
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -10,8 +10,8 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 423.2s | 901.2s | 2004.7s | 1541.0s |
-| Average | 5.8s | 12.3s | 27.5s | 21.1s |
+| Total | 440.4s | 912.2s | 2004.7s | 1541.0s |
+| Average | 6.0s | 12.5s | 27.5s | 21.1s |
 | Max | 27.9s | 66.8s | 300.1s | 114.9s |
 | Min | 3.5s | 5.5s | 5.5s | 12.7s |
 
@@ -27,7 +27,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Game | Gen Time | Minimal Test | Full Test | Multiclient |
 |------|----------|--------------|-----------|-------------|
 | A Hat in Time | 7.2s | 14.6s | 29.3s | 21.6s |
-| A Link to the Past | 16.1s | 19.8s | 31.3s | 25.4s |
+| A Link to the Past | 27.6s | 20.4s | 31.3s | 25.4s |
 | A Short Hike | 4.2s | 10.2s | 15.2s | 19.7s |
 | APQuest | 3.8s | 8.6s | 15.9s | 13.7s |
 | Adventure | 3.7s | 8.9s | 8.4s | 18.1s |
@@ -54,7 +54,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Hylics 2 | 4.4s | 6.6s | 13.8s | 14.7s |
 | Inscryption | 3.9s | 6.7s | 10.8s | 13.9s |
 | Kingdom Hearts | 11.6s | 29.9s | 69.0s | 34.4s |
-| Kingdom Hearts 2 | 6.3s | 45.1s | 107.0s | 74.9s |
+| Kingdom Hearts 2 | 11.9s | 55.4s | 107.0s | 74.9s |
 | Kirby's Dream Land 3 | 6.0s | 66.8s | 96.7s | 32.8s |
 | Landstalker - The Treasures of King Nole | 4.1s | 8.7s | 26.8s | 19.0s |
 | Lingo | 4.3s | 5.7s | 17.7s | 20.1s |

@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-28 15:46:53
+**Generated:** 2025-12-29 02:19:58
 
 **Source Data Created:** 2025-12-28T22:16:38.816782
 
@@ -30,26 +30,26 @@
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
-| A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 8.5KB | ✅ |
+| A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 7.7KB | ✅ |
 | A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 2.5KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Aquaria | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 2.8KB | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.18 | 10.18 | 🟢 Complete | 1.5KB | 40.3KB |
+| Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.18 | 10.18 | 🟢 Complete | 1.4KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
-| Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.41 | 4.41 | 🟢 Complete | 14.7KB | ✅ |
+| Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.41 | 4.41 | 🟢 Complete | 7.3KB | ✅ |
 | Castlevania 64 | ✅ Passed | 0 | 5.6 | 5.6 | 🟢 Complete | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed | 0 | 16.5 | 16.5 | 🟢 Complete | ✅ | ✅ |
-| Celeste 64 | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 8.4KB | ✅ |
+| Celeste 64 | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 5.8KB | ✅ |
 | ChecksFinder | ✅ Passed | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
 | ChocolateChipCookies | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
-| Civilization VI | ✅ Passed | 0 | 8.15 | 8.15 | 🟢 Complete | 1.9KB | ✅ |
-| DLCQuest | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 4.5KB | ✅ |
+| Civilization VI | ✅ Passed | 0 | 8.15 | 8.15 | 🟢 Complete | ✅ | ✅ |
+| DLCQuest | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 2.9KB | ✅ |
 | DOOM 1993 | ✅ Passed | 0 | 18.5 | 18.5 | 🟢 Complete | ✅ | ✅ |
 | DOOM II | ✅ Passed | 0 | 21.4 | 21.4 | 🟢 Complete | ✅ | ✅ |
-| Dark Souls III | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | 4.3KB | ✅ |
+| Dark Souls III | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | 2.3KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 5.5KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
@@ -58,8 +58,8 @@
 | Hylics 2 | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | 10.2 | 10.2 | 🟢 Complete | 5.6KB | ✅ |
 | Kingdom Hearts | ✅ Passed | 0 | 10.8 | 10.8 | 🟢 Complete | 17.1KB | 12.5KB |
-| Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 23.2KB | 105.1KB |
-| Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 9.3KB | 13.0KB |
+| Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 23.5KB | 105.1KB |
+| Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 9.2KB | 13.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 18.5KB | ✅ |
 | Lingo | ✅ Passed | 0 | 6.12 | 6.12 | 🟢 Complete | 37.5KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 13.5KB | ✅ |
