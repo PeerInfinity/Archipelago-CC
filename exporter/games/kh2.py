@@ -49,36 +49,24 @@ class KH2GameExportHandler(GenericGameExportHandler):
         'form_list_unlock',           # Expanded to conditional has_any + get_form_level_requirement
         'get_form_level_requirement', # Expanded to form count comparison with FinalFormLogic
 
-        # Helpers with sum/loop patterns - NOW SUPPORTED
-        # 'level_locking_unlock' - Now supported (setting check + sum_of)
-        # 'summon_levels_unlocked' - Now supported via sum_of rule type
-        # 'kh2_list_count_sum' - Now supported (sum over parameter list)
-        # 'kh2_list_any_sum' - Now supported (sum with if clause)
-        # 'kh2_dict_count' - Now supported (all_of with dict.items())
-        # 'kh2_dict_one_count' - Now supported (sum with if clause over dict.items())
-        # 'kh2_has_all' - Now supported via self.player → player_id
-        # 'kh2_has_any' - Now supported via self.player → player_id
-
-        # Location-based helpers - NOW SUPPORTED via expand_helper → location_check
-        # 'kh2_can_reach' - Converted to location_check
-        # 'kh2_can_reach_any' - Converted to OR of location_checks
-        # 'kh2_can_reach_all' - Converted to AND of location_checks
-        # 'final_form_region_access' - Expanded inline to OR of location_checks
-
-        # Fight rule helpers - NOW SUPPORTED via sum(), closure vars, and setting_value
-        # These helpers use kh2_list_any_sum, kh2_dict_count, etc. which are now supported
-        # They also access self.fight_logic which maps to setting_value 'FightLogic'
-        # Removing from blacklist to allow export
-
-        # Fight rule helpers - now auto-exported via dict subscript with setting key
-        # These use patterns like: fight_rules_dict[self.fight_logic]
-        # The frontend evaluates the setting to get "easy"/"normal"/"hard" key,
-        # then evaluates the rule at that key.
-
-        # Static methods that return True - handled via helper_map expansion
-        # 'get_axel_one_rules', 'get_axel_two_rules', 'get_twilight_thorn_rules',
-        # 'get_beast_rules', 'get_grim_reaper1_rules', 'get_old_pete_rules', 'get_oogie_rules',
+        # Static methods that return True - handled via CONSTANT_HELPER_EXPANSIONS
         'limit_form_region_access', 'multi_form_region_access',
+    }
+
+    # Constant helper expansions - helpers that always return a constant value
+    # These are automatically expanded by the base class expand_helper method
+    CONSTANT_HELPER_EXPANSIONS = {
+        # Region access helpers that always return True
+        'limit_form_region_access': True,
+        'multi_form_region_access': True,
+        # Static fight rule methods that return True (no parameters needed)
+        'get_axel_one_rules': True,
+        'get_axel_two_rules': True,
+        'get_twilight_thorn_rules': True,
+        'get_beast_rules': True,
+        'get_grim_reaper1_rules': True,
+        'get_old_pete_rules': True,
+        'get_oogie_rules': True,
     }
 
     def prepare_closure_vars(self, rule_func, closure_vars: Dict[str, Any]) -> Dict[str, Any]:
@@ -108,19 +96,10 @@ class KH2GameExportHandler(GenericGameExportHandler):
 
     def expand_helper(self, helper_name: str, args=None):
         """Expand KH2-specific helper functions."""
-        # Map of KH2 helper functions to their simplified rules
-        helper_map = {
-            'limit_form_region_access': {'type': 'constant', 'value': True},
-            'multi_form_region_access': {'type': 'constant', 'value': True},
-            # Static methods that return True (no parameters needed)
-            'get_axel_one_rules': {'type': 'constant', 'value': True},
-            'get_axel_two_rules': {'type': 'constant', 'value': True},
-            'get_twilight_thorn_rules': {'type': 'constant', 'value': True},
-            'get_beast_rules': {'type': 'constant', 'value': True},
-            'get_grim_reaper1_rules': {'type': 'constant', 'value': True},
-            'get_old_pete_rules': {'type': 'constant', 'value': True},
-            'get_oogie_rules': {'type': 'constant', 'value': True},
-        }
+        # Let base class handle CONSTANT_HELPER_EXPANSIONS first
+        base_result = super().expand_helper(helper_name, args)
+        if base_result is not None:
+            return base_result
 
         # form_list_unlock(state, parent_form_list, level_required, fight_logic=False)
         # Expands the set mutation logic into a conditional rule structure
@@ -370,9 +349,6 @@ class KH2GameExportHandler(GenericGameExportHandler):
                 },
                 'if_false': no_ld_check
             }
-
-        if helper_name in helper_map:
-            return helper_map[helper_name]
 
         # Handle kh2_can_reach - convert to location_check
         # kh2_can_reach(loc, state) checks if a location is reachable (region + access rule)
