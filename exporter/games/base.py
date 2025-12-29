@@ -74,6 +74,12 @@ class BaseGameExportHandler:
     # When True, all simple attributes (bool, int, float, str) on the world instance are exported
     AUTO_DISCOVER_WORLD_ATTRIBUTES: bool = True
 
+    # Whether to auto-discover helper modules from the world directory
+    # When True, all Python files in the game's world directory are treated as potential helper modules
+    # This eliminates the need to manually specify HELPER_MODULES for most games
+    # The discovery only affects where helpers are searched for - it doesn't cause extra exports
+    AUTO_DISCOVER_WORLD_HELPER_MODULES: bool = True
+
     # Whether the analyzer should process if-statements with multiple statements in the body
     # When False (default), only simple if-statements with a single statement are handled
     # When True, complex if-statements with multiple statements are combined into compound conditions
@@ -1902,10 +1908,56 @@ class BaseGameExportHandler:
         """
         Return a list of module paths containing helper functions.
 
+        When AUTO_DISCOVER_WORLD_HELPER_MODULES is True, this method automatically
+        includes all Python files from the game's world directory as potential
+        helper modules. Non-callable objects (like lists, dicts) are filtered out
+        at the helper retrieval stage, so it's safe to include all modules.
+
         Returns:
             A list of module paths (e.g., ['worlds.shapez.regions'])
         """
-        return self.HELPER_MODULES
+        # Start with manually specified modules
+        modules = list(self.HELPER_MODULES)
+
+        # Auto-discover helper modules from world directory if enabled
+        if self.AUTO_DISCOVER_WORLD_HELPER_MODULES and self.world is not None:
+            try:
+                import pathlib
+
+                # Get the world class module path (e.g., 'worlds.mlss')
+                world_module = type(self.world).__module__
+                # Handle nested module paths - get the top-level world module
+                # e.g., 'worlds.mlss.something' -> 'worlds.mlss'
+                parts = world_module.split('.')
+                if len(parts) >= 2 and parts[0] == 'worlds':
+                    base_world_module = '.'.join(parts[:2])  # 'worlds.mlss'
+
+                    # Get the directory path for this module
+                    try:
+                        world_pkg = __import__(base_world_module, fromlist=[''])
+                        if hasattr(world_pkg, '__path__'):
+                            world_dir = pathlib.Path(world_pkg.__path__[0])
+
+                            # Find all Python files in this directory
+                            for py_file in world_dir.glob('*.py'):
+                                if py_file.name.startswith('_'):
+                                    continue  # Skip __init__.py, __pycache__, etc.
+
+                                module_name = py_file.stem  # e.g., 'StateLogic'
+
+                                # Convert to module path
+                                full_module_path = f"{base_world_module}.{module_name}"
+
+                                # Add if not already in the list
+                                if full_module_path not in modules:
+                                    modules.append(full_module_path)
+                                    logger.debug(f"Auto-discovered helper module: {full_module_path}")
+                    except ImportError as e:
+                        logger.debug(f"Could not import world package for helper discovery: {e}")
+            except Exception as e:
+                logger.debug(f"Error during helper module auto-discovery: {e}")
+
+        return modules
 
     def get_item_name_modules(self) -> List[str]:
         """
@@ -2611,8 +2663,14 @@ class BaseGameExportHandler:
                 for module in loaded_modules:
                     # Check module-level function
                     if hasattr(module, helper_name):
-                        helper_func = getattr(module, helper_name)
-                        break
+                        candidate = getattr(module, helper_name)
+                        # Only use callable objects (functions, methods, classes)
+                        # Skip non-callable objects like lists, dicts, strings, etc.
+                        if callable(candidate):
+                            helper_func = candidate
+                            break
+                        else:
+                            logger.debug(f"Skipping non-callable '{helper_name}' in {module.__name__}: {type(candidate).__name__}")
                     # Check methods in classes defined in the module
                     for name, obj in vars(module).items():
                         if isinstance(obj, type):  # It's a class
