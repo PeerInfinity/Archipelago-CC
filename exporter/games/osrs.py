@@ -24,8 +24,7 @@ class OSRSGameExportHandler(GenericGameExportHandler):
 
         # For worldgen worlds, qp_items is already loaded from _worldgen_settings.json
         # by the base exporter, so we don't need to compute it here
-        module_path = type(world).__module__
-        if module_path.endswith('_worldgen') or '_worldgen.' in module_path:
+        if self._is_worldgen_world(world):
             return settings
 
         # Export quest point data as a mapping of item_name -> qp_value
