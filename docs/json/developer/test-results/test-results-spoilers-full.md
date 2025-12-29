@@ -6,11 +6,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-28 15:46:53
+**Generated:** 2025-12-29 00:12:43
 
-**Source Data Created:** 2025-12-28T22:16:38.816782
+**Source Data Created:** 2025-12-28T23:41:57.151536
 
-**Source Data Last Updated:** 2025-12-28T22:16:38.816787
+**Source Data Last Updated:** 2025-12-28T23:41:57.151540
 
 ## Summary
 
@@ -22,9 +22,9 @@
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 33/73 (45.2% of passed)
+- **Passing with Generic Exporter:** 34/73 (46.6% of passed)
 - **Passing with Generic Logic:** 65/73 (89.0% of passed)
-- **Passing with Both Generic:** 33/73 (45.2% of passed)
+- **Passing with Both Generic:** 34/73 (46.6% of passed)
 
 ## Test Results
 
@@ -81,7 +81,7 @@
 | Secret of Evermore | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 13.4KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.18 | 7.18 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 32.2KB | 86.2KB |
+| Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 83.8KB | 86.2KB |
 | Stardew Valley | ✅ Passed | 0 | 44.2 | 44.2 | 🟢 Complete | 19.7KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 7.5KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | 13.2KB | ✅ |

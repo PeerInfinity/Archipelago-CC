@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-28 15:46:53
+**Generated:** 2025-12-29 00:12:43
 
 ## Summary
 
@@ -22,9 +22,9 @@
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 33/70 (47.1% of passed)
+- **Passing with Generic Exporter:** 34/70 (48.6% of passed)
 - **Passing with Generic Logic:** 63/70 (90.0% of passed)
-- **Passing with Both Generic:** 33/70 (47.1% of passed)
+- **Passing with Both Generic:** 34/70 (48.6% of passed)
 
 ## Test Results
 
@@ -81,7 +81,7 @@
 | Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 13.4KB | 6.9KB |
 | Shivers | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | ❌ Failed | 6 | 6 | 32.2KB | 86.2KB |
+| Starcraft 2 | ✅ Passed | ❌ Failed | 6 | 6 | 83.8KB | 86.2KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 19.7KB | 10.7KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 7.5KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 13.2KB | ✅ |

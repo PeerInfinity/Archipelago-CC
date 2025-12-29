@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2025-12-28 15:46:53
+**Generated:** 2025-12-29 00:12:43
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -44,9 +44,9 @@ Of the 61 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 247.7KB
+- **Total Exporter Code:** 299.2KB
 - **Total Game Logic Code:** 105.9KB
-- **Combined Total:** 353.6KB
+- **Combined Total:** 405.1KB
 
 ## Test Results
 
@@ -97,7 +97,7 @@ Of the 61 templates passing all 4 tests:
 | Saving Princess WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 33.5KB |
 | Shivers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 151.2KB |
 | Sonic Adventure 2 Battle WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 274.4KB |
-| Starcraft 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 32.2KB | 86.2KB | 1665.4KB |
+| Starcraft 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 83.8KB | 86.2KB | 1665.4KB |
 | Subnautica WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 7.5KB | ✅ | 182.3KB |
 | Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.2KB | ✅ | 100.2KB |
 | Super Mario Land 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 894.6KB |
@@ -131,29 +131,6 @@ Of the 61 templates passing all 4 tests:
 | 9 | Heretic WorldGen | 403.4KB |
 | 10 | Mario & Luigi Superstar Saga WorldGen | 397.9KB |
 
-### Largest Exporter Files
-
-| Rank | Game Name | Exporter Size |
-|------|-----------|---------------|
-| 1 | Starcraft 2 WorldGen | 32.2KB |
-| 2 | Overcooked! 2 WorldGen | 29.1KB |
-| 3 | Terraria WorldGen | 19.2KB |
-| 4 | Landstalker - The Treasures of King Nole WorldGen | 18.5KB |
-| 5 | Castlevania - Circle of the Moon WorldGen | 14.7KB |
-| 6 | Links Awakening DX WorldGen | 13.5KB |
-| 7 | Super Mario 64 WorldGen | 13.2KB |
-| 8 | Kirby's Dream Land 3 WorldGen | 9.3KB |
-| 9 | The Messenger WorldGen | 9.0KB |
-| 10 | A Hat in Time WorldGen | 8.5KB |
-
-### Largest GameLogic Files
-
-| Rank | Game Name | GameLogic Size |
-|------|-----------|----------------|
-| 1 | Starcraft 2 WorldGen | 86.2KB |
-| 2 | Kirby's Dream Land 3 WorldGen | 13.0KB |
-| 3 | Overcooked! 2 WorldGen | 6.7KB |
-
 ## Excluded Games
 
 The following games are excluded from automated testing:
@@ -182,7 +159,6 @@ The following games are excluded from automated testing:
 | Lingo | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Raft | Temporarily excluded. The WorldGen spoiler test times out at 300 seconds. |
 | Secret of Evermore | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Starcraft 2 | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Stardew Valley | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Super Metroid | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | The Witness | Temporarily excluded. The WorldGen spoiler test takes 261 seconds. |
