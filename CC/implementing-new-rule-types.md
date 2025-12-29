@@ -532,84 +532,69 @@ Ensure the context object has the methods your rule type needs. Check `StateMana
 - [ ] Removed helper from blacklist if applicable
 - [ ] Verified spoiler tests pass
 
-## Starcraft 2 - Remaining Work
+## Starcraft 2 - Current Status
 
-As of December 2024, SC2 has 20 helpers successfully exported and spoiler tests pass. However, 23 helpers remain blacklisted due to the following missing capabilities:
+As of December 2024, SC2 has **21 helpers** successfully exported and spoiler tests pass.
 
-### Root Cause: `weapon_armor_upgrade_count` Helper
+### Completed Work
 
-The `weapon_armor_upgrade_count` helper is the root blocker. It uses:
+The following capabilities were added to support `weapon_armor_upgrade_count`:
+
+1. ✅ **`count_from_list` state method** - Added to `stateInterface.js`
+2. ✅ **`upgrade_bundle_inverted_lookup` export** - Added to `sc2.py` game_info
+3. ✅ **`protoss_generic_upgrades` export** - Added to `sc2.py` game_info
+4. ✅ **`weapon_armor_upgrade_count` helper** - Now exported successfully
+
+### Remaining Issue: Multiple Early-Return Pattern
+
+**20 helpers remain blacklisted** due to a bug in the analyzer's handling of functions with multiple early-return statements. Example pattern:
 
 ```python
-def weapon_armor_upgrade_count(self, upgrade_item: str, state: CollectionState) -> int:
-    count = state.count(upgrade_item, self.player)
-    count += state.count_from_list(upgrade_bundle_inverted_lookup[upgrade_item], self.player)
-    if upgrade_item in item_groups.protoss_generic_upgrades:
-        # ... additional logic
-    return count
+def terran_base_trasher(self, state: CollectionState) -> bool:
+    if not self.terran_competent_comp(state):
+        return False  # Early return 1
+    if not self.terran_very_hard_mission_weapon_armor_level(state):
+        return False  # Early return 2
+    return (actual_condition)  # Final return
 ```
 
-### Missing Capabilities
+The analyzer produces broken JSON where `if_false: null` instead of the actual return value:
 
-| Missing Item | Location | Description |
-|--------------|----------|-------------|
-| `count_from_list` state method | `stateInterface.js` | Sum all item counts from a list (not unique) |
-| `upgrade_bundle_inverted_lookup` export | `exporter/games/sc2.py` | Dictionary mapping items to bundle items |
-| `protoss_generic_upgrades` export | `exporter/games/sc2.py` | Item group for membership check |
-
-### Implementation Steps
-
-**1. Add `count_from_list` to stateInterface.js** (after `count_from_list_unique`):
-
-```javascript
-// Handle count_from_list - returns the total count of items from a list
-if (methodName === 'count_from_list' && args.length >= 1) {
-  const items = args[0];
-  if (!Array.isArray(items)) return 0;
-  let totalCount = 0;
-  for (const itemName of items) {
-    totalCount += (finalSnapshotInterface.countItem(itemName) || 0);
-  }
-  return totalCount;
+```json
+{
+  "type": "conditional",
+  "test": { ... },
+  "if_true": false,
+  "if_false": null  // BUG: should contain the next conditional
 }
 ```
 
-**2. Export `upgrade_bundle_inverted_lookup` in `sc2.py`'s `get_game_info()`**:
+### Next Steps
 
-```python
-# At top of file, add import
-try:
-    from worlds.sc2.item.item_tables import upgrade_bundle_inverted_lookup
-    SC2_UPGRADE_BUNDLES_AVAILABLE = True
-except ImportError:
-    SC2_UPGRADE_BUNDLES_AVAILABLE = False
+To unblock the remaining 20 helpers, fix the analyzer to properly handle chained early returns:
 
-# In get_game_info():
-if SC2_UPGRADE_BUNDLES_AVAILABLE:
-    game_info['upgrade_bundle_inverted_lookup'] = {
-        k: list(v) for k, v in upgrade_bundle_inverted_lookup.items()
-    }
+**Location:** `exporter/analyzer/ast_visitors.py`
+
+**Expected behavior:** Multiple `if not X: return False` statements should produce:
+
+```json
+{
+  "type": "and",
+  "conditions": [
+    { "type": "helper", "name": "terran_competent_comp" },
+    { "type": "helper", "name": "terran_very_hard_mission_weapon_armor_level" },
+    { "type": "or", "conditions": [...] }  // actual return condition
+  ]
+}
 ```
 
-**3. Export `protoss_generic_upgrades` in `sc2.py`'s `get_game_info()`**:
+### Blacklisted Helpers (Multiple Early-Return Pattern)
 
-```python
-# Add to imports
-from worlds.sc2.item.item_groups import protoss_generic_upgrades
-
-# In get_game_info():
-game_info['protoss_generic_upgrades'] = list(protoss_generic_upgrades)
-```
-
-**4. Remove `weapon_armor_upgrade_count` from blacklist and test**
-
-### Helpers Blocked by `weapon_armor_upgrade_count`
-
-Once `weapon_armor_upgrade_count` works, these helpers can be unblocked:
+These helpers use the problematic pattern and are blacklisted until the analyzer is fixed:
 - `terran_competent_comp`, `protoss_competent_comp`, `zerg_competent_comp`
 - `terran_competent_ground_to_air`, `protoss_competent_ground_to_air`, `zerg_competent_ground_to_air`
-- `terran_beats_protoss_deathball`, `terran_base_trasher`
-- Various mission requirement helpers (`terran_all_in_requirement`, etc.)
+- `terran_beats_protoss_deathball`, `terran_base_trasher`, `terran_respond_to_colony_infestations`
+- Various mission requirement helpers that depend on the above
 
 ## See Also
 

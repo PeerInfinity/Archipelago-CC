@@ -24,12 +24,21 @@ except ImportError:
 try:
     from worlds.sc2.item.item_groups import (
         kerrigan_non_ulimates, kerrigan_logic_active_abilities,
-        kerrigan_abilities, kerrigan_passives, kerrigan_active_abilities
+        kerrigan_abilities, kerrigan_passives, kerrigan_active_abilities,
+        protoss_generic_upgrades
     )
     SC2_KERRIGAN_GROUPS_AVAILABLE = True
 except ImportError:
     SC2_KERRIGAN_GROUPS_AVAILABLE = False
     logger.debug("Could not import SC2 kerrigan item groups - kerrigan helper export disabled")
+
+# Import SC2 upgrade bundle lookup for weapon_armor_upgrade_count helper
+try:
+    from worlds.sc2.item.item_tables import upgrade_bundle_inverted_lookup
+    SC2_UPGRADE_BUNDLES_AVAILABLE = True
+except ImportError:
+    SC2_UPGRADE_BUNDLES_AVAILABLE = False
+    logger.debug("Could not import SC2 upgrade bundles - weapon_armor_upgrade_count helper disabled")
 
 class SC2GameExportHandler(GenericGameExportHandler):
     """Export handler for Starcraft 2 game-specific rules and items."""
@@ -39,27 +48,25 @@ class SC2GameExportHandler(GenericGameExportHandler):
 
     # Helpers too complex for automatic export (loops, closures, complex calculations)
     # NOTE: defense_rating helpers now work with game_info export for rating dictionaries
+    # NOTE: weapon_armor_upgrade_count now works with upgrade_bundle_inverted_lookup export
     HELPERS_TO_EXPORT_BLACKLIST = {
-        # weapon_armor_upgrade_count - references item_groups module which isn't available in frontend
-        'weapon_armor_upgrade_count',
         # is_item_placement - state check method, not applicable in frontend
         'is_item_placement',
-        # competent_comp helpers - complex conditional logic, but could work if dependencies are met
+        # Kerrigan helpers - kerrigan_levels uses get_full_item_list(), two_kerrigan_actives has a bug
+        'kerrigan_levels', 'two_kerrigan_actives',
+        # Helpers with multiple early-return patterns that produce broken export structures
+        # TODO: Fix analyzer to handle multiple if-return-early patterns correctly
         'terran_competent_comp', 'protoss_competent_comp', 'zerg_competent_comp',
-        # Mission requirements that call power_rating or other complex helpers
+        'terran_competent_ground_to_air', 'protoss_competent_ground_to_air',
+        'zerg_competent_ground_to_air', 'terran_beats_protoss_deathball',
+        'terran_base_trasher', 'terran_respond_to_colony_infestations',
+        # Mission requirement helpers that depend on the above
         'terran_havens_fall_requirement', 'terran_great_train_robbery_train_stopper',
         'terran_welcome_to_the_jungle_requirement', 'zerg_welcome_to_the_jungle_requirement',
         'protoss_welcome_to_the_jungle_requirement', 'terran_night_terrors_requirement',
         'terran_engine_of_destruction_requirement', 'engine_of_destruction_requirement',
         'terran_trouble_in_paradise_requirement', 'terran_media_blitz_requirement',
         'terran_gates_of_hell_requirement', 'terran_all_in_requirement',
-        # Kerrigan helpers - kerrigan_levels uses get_full_item_list(), two_kerrigan_actives has a bug
-        'kerrigan_levels', 'two_kerrigan_actives',
-        # Helpers that call other blacklisted helpers
-        'terran_competent_ground_to_air', 'protoss_competent_ground_to_air',
-        'zerg_competent_ground_to_air', 'terran_beats_protoss_deathball',
-        'terran_base_trasher',
-        'terran_respond_to_colony_infestations',
     }
 
     def _extract_closure_vars(self, rule_func: Callable) -> Dict[str, Any]:
@@ -691,6 +698,15 @@ class SC2GameExportHandler(GenericGameExportHandler):
                 'kerrigan_active_abilities': list(kerrigan_active_abilities),
             }
             game_info['kerrigan_groups'] = kerrigan_groups
+            # Export protoss_generic_upgrades for weapon_armor_upgrade_count helper
+            game_info['protoss_generic_upgrades'] = list(protoss_generic_upgrades)
             logger.debug(f"[SC2] Exported {len(kerrigan_groups)} kerrigan item groups to game_info")
+
+        # Export upgrade bundle lookup for weapon_armor_upgrade_count helper
+        if SC2_UPGRADE_BUNDLES_AVAILABLE:
+            game_info['upgrade_bundle_inverted_lookup'] = {
+                k: list(v) for k, v in upgrade_bundle_inverted_lookup.items()
+            }
+            logger.debug(f"[SC2] Exported upgrade_bundle_inverted_lookup with {len(upgrade_bundle_inverted_lookup)} entries")
 
         return game_info
