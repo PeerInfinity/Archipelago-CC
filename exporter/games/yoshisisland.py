@@ -16,13 +16,8 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
     # The base class handles converting logic.method() and bosses.method() to helper calls
     HELPER_OBJECT_NAMES = {'self', 'world', 'logic', 'bosses'}
 
-    # Specify the modules containing helper class methods
-    HELPER_MODULES = [
-        'worlds.yoshisisland.level_logic',  # YoshiLogic class
-        'worlds.yoshisisland.setup_bosses'  # BossReqs class (castle_access, castle_clear)
-    ]
-
     # Whitelist helpers that should always be exported
+    # (helper modules are auto-discovered from world directory)
     HELPERS_TO_EXPORT_WHITELIST = {
         # BossReqs class helpers
         'castle_access',
@@ -79,17 +74,8 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
             return value
 
         if hasattr(world, 'options'):
-            # Raw option values
-            world_data['StageLogic'] = extract_option('stage_logic')
-            world_data['HiddenObjectVisibility'] = extract_option('hidden_object_visibility')
-            world_data['ShuffleMiddleRings'] = extract_option('shuffle_midrings')
-            world_data['ItemLogic'] = extract_option('item_logic')
-            world_data['BowserDoorMode'] = extract_option('bowser_door_mode')
-            world_data['LuigiPiecesRequired'] = extract_option('luigi_pieces_required')
-            world_data['CastleClearCondition'] = extract_option('castle_clear_condition')
-            world_data['CastleOpenCondition'] = extract_option('castle_open_condition')
-
             # Computed values for YoshiLogic helpers
+            # (raw options are auto-exported by base class under 'options')
             stage_logic = extract_option('stage_logic')
             if stage_logic == 0:
                 world_data['game_logic'] = "Easy"
