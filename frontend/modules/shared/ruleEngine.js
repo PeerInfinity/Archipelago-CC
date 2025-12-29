@@ -484,6 +484,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       rbResult = rbResult.bool === true && rbResult.difficulty <= maxDiff;
     }
 
+    // If the result is itself a rule object (has 'type' property), evaluate it recursively
+    // This handles helpers that return rules (e.g., get_prison_keeper_rules returns a compare rule)
+    if (rbResult && typeof rbResult === 'object' && rbResult.type && !('__isReturn' in rbResult)) {
+      rbResult = evaluateRule(rbResult, context, depth + 1, localScope);
+    }
+
     return rbResult;
   }
 
@@ -538,6 +544,11 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             // Unwrap return marker if present (from block with return statement)
             if (result && typeof result === 'object' && result.__isReturn) {
               result = result.value;
+            }
+            // If the result is itself a rule object, evaluate it recursively
+            // This handles helpers that return rules (e.g., get_prison_keeper_rules returns a compare rule)
+            if (result && typeof result === 'object' && result.type) {
+              result = evaluateRule(result, context, depth + 1, helperLocalScope);
             }
             // If definition evaluation succeeded (not undefined), use that result
             // Otherwise, fall through to try JavaScript helpers as a fallback
@@ -1406,6 +1417,27 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
               const settingValue = worldData[playerId][rule.attr];
               if (settingValue !== undefined) {
                 return settingValue;
+              }
+            }
+          }
+          return undefined;
+        }
+
+        // Special case: if baseObject is undefined and the object was "location_name",
+        // return the value from the world data (used by KDL3 for level_names_inverse lookup)
+        // This allows exported helpers to reference location_name.level_names_inverse
+        if (baseObject === undefined && rule.object && rule.object.type === 'name' &&
+            rule.object.name === 'location_name') {
+          if (context.getStaticData) {
+            const staticData = context.getStaticData();
+            const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+
+            // Get world data - location_name attributes are exported in world data
+            const worldData = staticData?.world;
+            if (worldData && worldData[playerId]) {
+              const attrValue = worldData[playerId][rule.attr];
+              if (attrValue !== undefined) {
+                return attrValue;
               }
             }
           }
@@ -2814,6 +2846,10 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         // Supports dot notation for nested access (e.g. "difficulty_requirements.progressive_bottle_limit")
         // Note: Choice options in Python use 0 for "off"/"none" states, which are exported
         // as strings like 'off', 'none', 'false'. These should be treated as falsy in JS.
+        //
+        // use_current_key: When true, returns the string key (e.g., "easy") instead of numeric value.
+        // This is used when Python code accesses option.current_key instead of option.value.
+        // The name_lookup mapping in option_definitions is used for conversion.
         let settingName = rule.setting || rule.attribute;
         if (typeof settingName === 'string') {
           let rawValue;
@@ -2845,6 +2881,23 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             // The normalization of 'off'/'none' strings is now handled in stateInterface.getSetting
             result = rawValue;
           }
+
+          // If use_current_key is set, convert numeric value to string key using name_lookup
+          // This handles Python patterns like: option.current_key which returns "easy" not 0
+          if (rule.use_current_key && result !== undefined && typeof context.getStaticData === 'function') {
+            const staticData = context.getStaticData();
+            const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+            const playerIdKey = String(playerId);
+            const optionDefs = staticData?.world?.[playerIdKey]?.option_definitions;
+            const optionDef = optionDefs?.[settingName];
+            if (optionDef?.name_lookup) {
+              const stringKey = optionDef.name_lookup[String(result)];
+              if (stringKey !== undefined) {
+                log('debug', `[evaluateRule] setting_value use_current_key: converted ${settingName}=${result} to "${stringKey}"`);
+                result = stringKey;
+              }
+            }
+          }
         } else {
           log('warn', `[evaluateRule] Invalid name for ${rule.type}`, {
             rule,
@@ -2871,7 +2924,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             resultStr += part.value;
           } else if (part.type === 'formatted_value') {
             // Evaluate the value and convert to string
-            const value = evaluateRule(part.value, context, depth + 1);
+            // NOTE: Pass localScope to resolve helper parameters like 'level' in KDL3's can_reach_boss
+            const value = evaluateRule(part.value, context, depth + 1, localScope);
             if (value === undefined) {
               log('warn', '[evaluateRule] f_string formatted_value evaluated to undefined', { part });
               hasError = true;
@@ -5590,6 +5644,76 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
         }
         return item;
       });
+    }
+
+    // weighted_sum: Check if weighted sum of owned items meets threshold (Overcooked! 2)
+    // Rule Builder: {"rule": "weighted_sum", "args": [threshold, [[item, weight], ...]]}
+    // The logic: sum (count_of_item * weight) for each item, return true if sum >= threshold
+    case 'weighted_sum': {
+      // Handle both array format and object format for args
+      let thresholdArg, itemsArg;
+      if (Array.isArray(rule.args)) {
+        // New format: rule.args is an array [threshold, items]
+        thresholdArg = rule.args[0];
+        itemsArg = rule.args[1];
+      } else {
+        // Fallback for object format
+        thresholdArg = args[0];
+        itemsArg = args[1];
+      }
+
+      // Evaluate threshold (usually a Constant with value 1.0)
+      const threshold = evaluateRule(thresholdArg, context, depth + 1, localScope);
+      if (threshold === undefined || typeof threshold !== 'number') {
+        log('warn', '[evaluateRuleBuilderRule] weighted_sum: invalid threshold', { threshold });
+        return undefined;
+      }
+
+      // Evaluate items array (array of [item_name, weight] pairs)
+      const items = evaluateRule(itemsArg, context, depth + 1, localScope);
+      if (!Array.isArray(items)) {
+        log('warn', '[evaluateRuleBuilderRule] weighted_sum: invalid items array', { items });
+        return undefined;
+      }
+
+      // Calculate weighted sum of owned items
+      let total = 0;
+      let hasUndefined = false;
+
+      for (const pair of items) {
+        if (!Array.isArray(pair) || pair.length < 2) continue;
+
+        const [itemName, weight] = pair;
+        if (typeof itemName !== 'string' || typeof weight !== 'number') continue;
+
+        // Get count of this item from context
+        let itemCount;
+        if (typeof context.countItem === 'function') {
+          itemCount = context.countItem(itemName);
+        } else if (typeof context.count === 'function') {
+          itemCount = context.count(itemName);
+        }
+
+        if (itemCount === undefined) {
+          hasUndefined = true;
+          continue;
+        }
+
+        // Add weight for each copy of the item owned
+        total += itemCount * weight;
+
+        // Early exit if we've already met the threshold (with small tolerance for floating point)
+        if (total >= threshold - 0.01) {
+          return true;
+        }
+      }
+
+      // If we had undefined counts, we can't be certain
+      if (hasUndefined && total < threshold) {
+        return undefined;
+      }
+
+      return total >= threshold - 0.01;
     }
 
     // Unknown rule type - try to find as a custom helper or delegate to AST evaluator

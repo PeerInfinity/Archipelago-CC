@@ -82,7 +82,10 @@ class GenericGameExportHandler(BaseGameExportHandler):
         rule_type = rule.get('type')
         if rule_type == 'helper':
             expanded = self.expand_helper(rule['name'], rule.get('args', []))
-            return expanded if expanded else rule
+            if expanded:
+                # Recursively expand the result in case it contains nested helper calls
+                return self.expand_rule(expanded, _depth + 1)
+            return rule
 
         # Use base class for compound rules and other transformations
         # (f-string resolution, name remapping, settings conversion, etc.)

@@ -420,6 +420,8 @@ class ASTVisitorMixin:
                     if not should_preserve:
                         try:
                             # Helper function to check if a function contains for loops that can't be evaluated at export time
+                            # NOTE: The frontend now supports for_range/for_iter with state-dependent bodies,
+                            # so we only block truly unsupported patterns like dict.items() iteration.
                             def has_dynamic_for_loops_resolved(func):
                                 """Check if a function's body contains for loops that require runtime state."""
                                 try:
@@ -427,31 +429,22 @@ class ASTVisitorMixin:
                                     source = inspect.getsource(func)
                                     tree = ast.parse(source)
 
-                                    def contains_state_reference(node):
-                                        """Check if an AST node references 'state' anywhere."""
-                                        for child in ast.walk(node):
-                                            if isinstance(child, ast.Name) and child.id == 'state':
-                                                return True
-                                        return False
-
                                     for n in ast.walk(tree):
                                         if isinstance(n, ast.For):
-                                            # Check if the loop body contains state-dependent operations
-                                            # These loops can't be evaluated at export time
-                                            for body_node in n.body:
-                                                if contains_state_reference(body_node):
-                                                    logging.debug(f"Function has for loop with state-dependent body")
-                                                    return True
+                                            # NOTE: State-dependent loop bodies are now supported!
+                                            # The frontend's for_range/for_iter can evaluate state method calls.
+                                            # We only block patterns that truly can't be analyzed.
 
                                             # Check if iterator is a method call like .keys(), .values(), .items()
+                                            # These dict methods produce key-value tuples that need special handling
                                             if isinstance(n.iter, ast.Call):
                                                 if isinstance(n.iter.func, ast.Attribute):
                                                     method_name = n.iter.func.attr
                                                     if method_name in ('keys', 'values', 'items'):
+                                                        logging.debug(f"Function has for loop over .{method_name}() - not yet supported")
                                                         return True
-                                            # Check if iterator is a name (variable)
-                                            elif isinstance(n.iter, ast.Name):
-                                                return True
+                                            # NOTE: Iterating over a name (variable) like 'for x in WORLDS:' is now
+                                            # supported if the variable can be resolved to a constant by expression_resolver.
                                     return False
                                 except Exception:
                                     return False
@@ -544,6 +537,8 @@ class ASTVisitorMixin:
                  # --- Recursive analysis logic (enhanced for multiline lambdas) ---
                  try:
                      # Helper function to check if a function contains for loops that can't be evaluated at export time
+                     # NOTE: The frontend now supports for_range/for_iter with state-dependent bodies,
+                     # so we only block truly unsupported patterns like dict.items() iteration.
                      def has_dynamic_for_loops(func):
                          """Check if a function's body contains for loops that require runtime state."""
                          try:
@@ -551,34 +546,22 @@ class ASTVisitorMixin:
                              source = inspect.getsource(func)
                              tree = ast.parse(source)
 
-                             def contains_state_reference(node):
-                                 """Check if an AST node references 'state' anywhere."""
-                                 for child in ast.walk(node):
-                                     if isinstance(child, ast.Name) and child.id == 'state':
-                                         return True
-                                 return False
-
                              for node in ast.walk(tree):
                                  if isinstance(node, ast.For):
-                                     # Check if the loop body contains state-dependent operations
-                                     # These loops can't be evaluated at export time
-                                     for body_node in node.body:
-                                         if contains_state_reference(body_node):
-                                             logging.debug(f"Function has for loop with state-dependent body")
-                                             return True
+                                     # NOTE: State-dependent loop bodies are now supported!
+                                     # The frontend's for_range/for_iter can evaluate state method calls.
+                                     # We only block patterns that truly can't be analyzed.
 
                                      # Check if iterator is a method call like .keys(), .values(), .items()
+                                     # These dict methods produce key-value tuples that need special handling
                                      if isinstance(node.iter, ast.Call):
                                          if isinstance(node.iter.func, ast.Attribute):
                                              method_name = node.iter.func.attr
                                              if method_name in ('keys', 'values', 'items'):
-                                                 logging.debug(f"Function has for loop over .{method_name}()")
+                                                 logging.debug(f"Function has for loop over .{method_name}() - not yet supported")
                                                  return True
-                                     # Check if iterator is a name (variable) that's not a constant
-                                     elif isinstance(node.iter, ast.Name):
-                                         # Could be iterating over a variable - likely dynamic
-                                         logging.debug(f"Function has for loop over variable: {node.iter.id}")
-                                         return True
+                                     # NOTE: Iterating over a name (variable) like 'for x in WORLDS:' is now
+                                     # supported if the variable can be resolved to a constant by expression_resolver.
                              return False
                          except Exception:
                              return False
@@ -2022,9 +2005,19 @@ class ASTVisitorMixin:
                 if hasattr(self, 'game_handler') and self.game_handler is not None:
                     setting_mapping = getattr(self.game_handler, 'SELF_ATTR_TO_SETTING', {})
                     if attr_name in setting_mapping:
-                        setting_name = setting_mapping[attr_name]
-                        logging.debug(f"visit_Attribute: Detected self.{attr_name}, converting to setting_value '{setting_name}'")
-                        return {'type': 'setting_value', 'setting': setting_name}
+                        mapping_value = setting_mapping[attr_name]
+                        # Handle both simple string format and dict format with use_current_key
+                        if isinstance(mapping_value, dict):
+                            setting_name = mapping_value.get('setting', attr_name)
+                            use_current_key = mapping_value.get('use_current_key', False)
+                        else:
+                            setting_name = mapping_value
+                            use_current_key = False
+                        logging.debug(f"visit_Attribute: Detected self.{attr_name}, converting to setting_value '{setting_name}' (use_current_key={use_current_key})")
+                        result = {'type': 'setting_value', 'setting': setting_name}
+                        if use_current_key:
+                            result['use_current_key'] = True
+                        return result
 
             # OPTIMIZATION: If the object is a simple Name node in closure_vars, try to resolve
             # the attribute directly BEFORE visiting the object. This handles NamedTuples and
@@ -3166,8 +3159,33 @@ class ASTVisitorMixin:
 
             orelse_result = None
             if node.orelse:
-                if should_process_multistatement and len(node.orelse) > 1:
-                    # Multiple statements in the else-block
+                # PRIORITY: Check for "if without else followed by more statements" pattern first.
+                # This handles early-return guards like:
+                #   if not check1: return False
+                #   if not check2: return False
+                #   return actual_result
+                # These should be CHAINED (nested conditionals), not ORed together.
+                if (len(node.orelse) > 1 and
+                    isinstance(node.orelse[0], ast.If) and
+                    not node.orelse[0].orelse):
+                    logging.debug(f"visit_If: If statement without else in orelse, analyzing remaining {len(node.orelse) - 1} statements as implicit else")
+                    # Create a synthetic If node with the remaining statements as the else block
+                    if_node = node.orelse[0]
+                    remaining_stmts = node.orelse[1:]
+
+                    # Create a synthetic if-node that includes the remaining statements as the else block
+                    synthetic_if = ast.If(
+                        test=if_node.test,
+                        body=if_node.body,
+                        orelse=remaining_stmts,
+                        lineno=if_node.lineno if hasattr(if_node, 'lineno') else 0,
+                        col_offset=if_node.col_offset if hasattr(if_node, 'col_offset') else 0
+                    )
+
+                    # Visit this synthetic if-statement
+                    orelse_result = self.visit_If(synthetic_if)
+                elif should_process_multistatement and len(node.orelse) > 1:
+                    # Multiple statements in the else-block that don't match the early-return pattern
                     logging.debug(f"visit_If: Processing {len(node.orelse)} statements in else-block")
                     orelse_results = []
                     for stmt in node.orelse:
@@ -3187,29 +3205,7 @@ class ASTVisitorMixin:
                     else:
                         orelse_result = {'type': 'or', 'conditions': orelse_results}
                 else:
-                    # Special case: If statement without else in orelse, and more statements follow
-                    # This handles if-elif-else chains where elif/else are separate statements
-                    if (isinstance(node.orelse[0], ast.If) and
-                        not node.orelse[0].orelse and
-                        len(node.orelse) > 1):
-                        logging.debug(f"visit_If: If statement without else in orelse, analyzing remaining {len(node.orelse) - 1} statements as implicit else")
-                        # Create a synthetic If node with the remaining statements as the else block
-                        if_node = node.orelse[0]
-                        remaining_stmts = node.orelse[1:]
-
-                        # Create a synthetic if-node that includes the remaining statements as the else block
-                        synthetic_if = ast.If(
-                            test=if_node.test,
-                            body=if_node.body,
-                            orelse=remaining_stmts,
-                            lineno=if_node.lineno if hasattr(if_node, 'lineno') else 0,
-                            col_offset=if_node.col_offset if hasattr(if_node, 'col_offset') else 0
-                        )
-
-                        # Visit this synthetic if-statement
-                        orelse_result = self.visit_If(synthetic_if)
-                    else:
-                        orelse_result = self.visit(node.orelse[0])
+                    orelse_result = self.visit(node.orelse[0])
             else:
                  # Handle cases with no 'else' - could return None or a specific structure
                  logging.debug("visit_If: No 'else' block found.")

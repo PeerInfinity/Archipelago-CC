@@ -24,23 +24,24 @@ class KH1GameExportHandler(BaseGameExportHandler):
     # Complex helpers with for loops, assignments, etc. need localScope
     # which is only created when called as a helper, not when inlined
     HELPERS_TO_PRESERVE: Set[str] = {
-        'has_x_worlds',         # Has for loop and variable assignments
+        'has_x_worlds',         # Has for loop and variable assignments - needs localScope for loop variable
     }
 
     # Helpers that are too complex to export (have loops/complex logic)
     # These require JavaScript implementations
-    HELPERS_TO_EXPORT_BLACKLIST: Set[str] = {
-        'has_x_worlds',         # Has for loops, variable assignments - JS implementation in kh1Logic.js
-        'has_emblems',          # Calls has_x_worlds which has loops
-        'has_defensive_tools',  # Called without args but definition needs logic_difficulty param
-        'has_puppies',          # Has loops over puppy items
-        'has_reports',          # Has loops over report items
-        'has_torn_pages',       # Has loops over torn pages
-        'has_lucky_emblems',    # Simple but rarely used
-        'has_final_rest_door',  # Complex with multiple branches
-        'has_parasite_cage',    # Complex with nested calls
-        'has_key_item',         # Complex with multiple parameters
-    }
+    # NOTE: Use set() for empty set - {} creates an empty dict!
+    HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()
+    # All KH1 helpers are now exportable:
+    # - 'has_x_worlds' - Now exported! for_range with state method calls is supported
+    # - 'has_emblems' - Now exported! Calls has_x_worlds which is now exported
+    # - 'has_defensive_tools' - Now exported! Uses has_all_counts/has_any_count (supported via state_method)
+    # - 'has_puppies' - Now exported! Simple arithmetic: count * value >= required
+    # - 'has_lucky_emblems' - Now exported! Simple count_check
+    # - 'has_final_rest_door' - Now exported! Simple conditional: if/else with item_check
+    # - 'has_parasite_cage' - Now exported! Simple and/or with item checks and comparison
+    # - 'has_reports' - Removed! Function doesn't exist in KH1 codebase
+    # - 'has_torn_pages' - Removed! Function doesn't exist in KH1 codebase
+    # - 'has_key_item' - Now exported! Dict subscript with parameter key is supported
 
     """KH1-specific expander that handles Kingdom Hearts 1 rules."""
 

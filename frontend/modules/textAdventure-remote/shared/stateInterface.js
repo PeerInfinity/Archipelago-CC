@@ -1061,6 +1061,19 @@ export function createStateSnapshotInterface(
         return uniqueItemsFound;
       }
 
+      // Handle count_from_list - returns the total count of items from a list (sums all quantities)
+      if (methodName === 'count_from_list' && args.length >= 1) {
+        const items = args[0];
+        if (!Array.isArray(items)) return 0;
+
+        // Sum all item counts from the list
+        let totalCount = 0;
+        for (const itemName of items) {
+          totalCount += (finalSnapshotInterface.countItem(itemName) || 0);
+        }
+        return totalCount;
+      }
+
       // Handle has_group_unique - counts unique items from a group (ignores duplicates)
       if (methodName === 'has_group_unique' && args.length >= 2) {
         const groupName = args[0];

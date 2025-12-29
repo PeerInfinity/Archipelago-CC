@@ -116,6 +116,14 @@
   ],
   "requires_javascript_helpers_list": [
     {
+      "name": "Lingo.yaml",
+      "reason": "Game logic requires JavaScript helpers that cannot be removed."
+    },
+    {
+      "name": "Secret of Evermore.yaml",
+      "reason": "Game logic requires JavaScript helpers that cannot be removed."
+    },
+    {
       "name": "Super Metroid.yaml",
       "reason": "Game logic requires JavaScript helpers that cannot be removed."
     }
