@@ -506,6 +506,80 @@ class BaseGameExportHandler:
             result = 'item_' + result
         return result.lower()
 
+    def handle_complex_exit_rule(self, exit_name: str, exit_rule) -> Optional[Dict[str, Any]]:
+        """Handle complex exit rules by extracting locations from lambda closures.
+
+        Many games use patterns like set_region_exit_rules() which creates lambdas:
+            lambda state: any(location.access_rule(state) for location in locations)
+            lambda state: all(location.access_rule(state) for location in locations)
+
+        This method extracts the locations from the lambda's closure and analyzes
+        their access rules, combining them with 'or' (any) or 'and' (all).
+
+        Args:
+            exit_name: The name of the exit being processed
+            exit_rule: The exit's access rule function (lambda)
+
+        Returns:
+            A rule dict combining the location access rules, or None to let
+            normal analysis proceed
+        """
+        # Try to extract locations from the lambda's closure
+        if hasattr(exit_rule, '__closure__') and exit_rule.__closure__:
+            locations = None
+            for cell in exit_rule.__closure__:
+                try:
+                    cell_contents = cell.cell_contents
+                    # Check if this is a list of location objects
+                    if isinstance(cell_contents, list) and len(cell_contents) > 0:
+                        # Check if the first item looks like a location (has access_rule)
+                        if hasattr(cell_contents[0], 'access_rule'):
+                            locations = cell_contents
+                            break
+                except (AttributeError, ValueError):
+                    continue
+
+            # If we found locations, analyze their access rules
+            if locations:
+                from exporter.analyzer import analyze_rule
+                location_access_rules = []
+                player = getattr(self, 'player', 1)
+
+                for location in locations:
+                    if hasattr(location, 'access_rule') and location.access_rule:
+                        loc_name = getattr(location, 'name', 'Unknown')
+                        try:
+                            # Get the raw access rule function
+                            access_rule_func = location.access_rule
+
+                            # Analyze it with the proper context
+                            analyzed_rule = analyze_rule(
+                                rule_func=access_rule_func,
+                                game_handler=self,
+                                player_context=player
+                            )
+
+                            if analyzed_rule and analyzed_rule.get('type') != 'error':
+                                # Expand the rule using the game handler
+                                expanded_rule = self.expand_rule(analyzed_rule)
+                                if expanded_rule:
+                                    location_access_rules.append(expanded_rule)
+                                else:
+                                    # If expansion failed, use the analyzed rule as-is
+                                    location_access_rules.append(analyzed_rule)
+                        except Exception as e:
+                            logger.warning(f"Could not analyze location rule for {loc_name}: {e}")
+                            # Try to continue with other locations
+
+                # If we got location rules, combine them with 'or' (any pattern)
+                if location_access_rules:
+                    if len(location_access_rules) == 1:
+                        return location_access_rules[0]
+                    else:
+                        return {'type': 'or', 'conditions': location_access_rules}
+
+        return None  # Let normal analysis proceed
+
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand helper functions in a rule structure."""
         if _depth > MAX_RULE_EXPANSION_DEPTH:
@@ -639,6 +713,41 @@ class BaseGameExportHandler:
                 simplified = self._simplify_has_all(rule)
                 if simplified != rule:
                     return simplified
+
+            # Generic LogicMixin pattern handling
+            # Many games define wrapper methods like _game_has_item(player, item) that
+            # delegate to state.has(). We expand these inline to their underlying rule types.
+            method = rule.get('method', '')
+            args = rule.get('args', [])
+
+            # Pattern: _*_has_item(player, item) -> item_check
+            if method.endswith('_has_item') and len(args) >= 1:
+                item = args[0]
+                item_name = item.get('value') if isinstance(item, dict) else item
+                logger.debug(f"Expanding LogicMixin {method} to item_check for '{item_name}'")
+                return {'type': 'item_check', 'item': item_name}
+
+            # Pattern: _*_has_region(player, region) -> can_reach
+            if method.endswith('_has_region') and len(args) >= 1:
+                region = args[0]
+                region_name = region.get('value') if isinstance(region, dict) else region
+                logger.debug(f"Expanding LogicMixin {method} to can_reach for '{region_name}'")
+                return {'type': 'can_reach', 'region': region_name}
+
+            # Pattern: _*_has_item_and_region(player, item, region) -> and(item_check, can_reach)
+            if method.endswith('_has_item_and_region') and len(args) >= 2:
+                item = args[0]
+                region = args[1]
+                item_name = item.get('value') if isinstance(item, dict) else item
+                region_name = region.get('value') if isinstance(region, dict) else region
+                logger.debug(f"Expanding LogicMixin {method} to and(item_check, can_reach)")
+                return {
+                    'type': 'and',
+                    'conditions': [
+                        {'type': 'item_check', 'item': item_name},
+                        {'type': 'can_reach', 'region': region_name}
+                    ]
+                }
 
             if 'args' in rule:
                 rule['args'] = [
