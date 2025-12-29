@@ -1786,6 +1786,52 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
             for rank, (game_name, size) in enumerate(top_10, 1):
                 md_content += f"| {rank} | {game_name} | {size / 1024:.1f}KB |\n"
 
+    # Add Largest Exporter Files section
+    if world_mapping:
+        exporter_sizes = []
+        for game in all_games:
+            lookup_game = game
+            if is_worldgen and game.endswith(' WorldGen'):
+                lookup_game = game[:-9]  # Strip " WorldGen" suffix
+            if lookup_game in world_mapping:
+                exporter_size = world_mapping[lookup_game].get('exporter_size', 0)
+                if exporter_size > 0:
+                    exporter_sizes.append((game, exporter_size))
+
+        if exporter_sizes:
+            # Sort by size descending and take top 10
+            exporter_sizes.sort(key=lambda x: x[1], reverse=True)
+            top_10_exporters = exporter_sizes[:10]
+
+            md_content += "\n### Largest Exporter Files\n\n"
+            md_content += "| Rank | Game Name | Exporter Size |\n"
+            md_content += "|------|-----------|---------------|\n"
+            for rank, (game_name, size) in enumerate(top_10_exporters, 1):
+                md_content += f"| {rank} | {game_name} | {size / 1024:.1f}KB |\n"
+
+    # Add Largest GameLogic Files section
+    if world_mapping:
+        logic_sizes = []
+        for game in all_games:
+            lookup_game = game
+            if is_worldgen and game.endswith(' WorldGen'):
+                lookup_game = game[:-9]  # Strip " WorldGen" suffix
+            if lookup_game in world_mapping:
+                logic_size = world_mapping[lookup_game].get('game_logic_size', 0)
+                if logic_size > 0:
+                    logic_sizes.append((game, logic_size))
+
+        if logic_sizes:
+            # Sort by size descending and take top 10
+            logic_sizes.sort(key=lambda x: x[1], reverse=True)
+            top_10_logic = logic_sizes[:10]
+
+            md_content += "\n### Largest GameLogic Files\n\n"
+            md_content += "| Rank | Game Name | GameLogic Size |\n"
+            md_content += "|------|-----------|----------------|\n"
+            for rank, (game_name, size) in enumerate(top_10_logic, 1):
+                md_content += f"| {rank} | {game_name} | {size / 1024:.1f}KB |\n"
+
     # Add Multi-Template Results section if data exists
     if multitemplate_minimal_data or multitemplate_full_data:
         md_content += "\n## Multi-Template Test Results\n\n"
