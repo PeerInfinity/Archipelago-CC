@@ -532,6 +532,85 @@ Ensure the context object has the methods your rule type needs. Check `StateMana
 - [ ] Removed helper from blacklist if applicable
 - [ ] Verified spoiler tests pass
 
+## Starcraft 2 - Remaining Work
+
+As of December 2024, SC2 has 20 helpers successfully exported and spoiler tests pass. However, 23 helpers remain blacklisted due to the following missing capabilities:
+
+### Root Cause: `weapon_armor_upgrade_count` Helper
+
+The `weapon_armor_upgrade_count` helper is the root blocker. It uses:
+
+```python
+def weapon_armor_upgrade_count(self, upgrade_item: str, state: CollectionState) -> int:
+    count = state.count(upgrade_item, self.player)
+    count += state.count_from_list(upgrade_bundle_inverted_lookup[upgrade_item], self.player)
+    if upgrade_item in item_groups.protoss_generic_upgrades:
+        # ... additional logic
+    return count
+```
+
+### Missing Capabilities
+
+| Missing Item | Location | Description |
+|--------------|----------|-------------|
+| `count_from_list` state method | `stateInterface.js` | Sum all item counts from a list (not unique) |
+| `upgrade_bundle_inverted_lookup` export | `exporter/games/sc2.py` | Dictionary mapping items to bundle items |
+| `protoss_generic_upgrades` export | `exporter/games/sc2.py` | Item group for membership check |
+
+### Implementation Steps
+
+**1. Add `count_from_list` to stateInterface.js** (after `count_from_list_unique`):
+
+```javascript
+// Handle count_from_list - returns the total count of items from a list
+if (methodName === 'count_from_list' && args.length >= 1) {
+  const items = args[0];
+  if (!Array.isArray(items)) return 0;
+  let totalCount = 0;
+  for (const itemName of items) {
+    totalCount += (finalSnapshotInterface.countItem(itemName) || 0);
+  }
+  return totalCount;
+}
+```
+
+**2. Export `upgrade_bundle_inverted_lookup` in `sc2.py`'s `get_game_info()`**:
+
+```python
+# At top of file, add import
+try:
+    from worlds.sc2.item.item_tables import upgrade_bundle_inverted_lookup
+    SC2_UPGRADE_BUNDLES_AVAILABLE = True
+except ImportError:
+    SC2_UPGRADE_BUNDLES_AVAILABLE = False
+
+# In get_game_info():
+if SC2_UPGRADE_BUNDLES_AVAILABLE:
+    game_info['upgrade_bundle_inverted_lookup'] = {
+        k: list(v) for k, v in upgrade_bundle_inverted_lookup.items()
+    }
+```
+
+**3. Export `protoss_generic_upgrades` in `sc2.py`'s `get_game_info()`**:
+
+```python
+# Add to imports
+from worlds.sc2.item.item_groups import protoss_generic_upgrades
+
+# In get_game_info():
+game_info['protoss_generic_upgrades'] = list(protoss_generic_upgrades)
+```
+
+**4. Remove `weapon_armor_upgrade_count` from blacklist and test**
+
+### Helpers Blocked by `weapon_armor_upgrade_count`
+
+Once `weapon_armor_upgrade_count` works, these helpers can be unblocked:
+- `terran_competent_comp`, `protoss_competent_comp`, `zerg_competent_comp`
+- `terran_competent_ground_to_air`, `protoss_competent_ground_to_air`, `zerg_competent_ground_to_air`
+- `terran_beats_protoss_deathball`, `terran_base_trasher`
+- Various mission requirement helpers (`terran_all_in_requirement`, etc.)
+
 ## See Also
 
 - [Rule Types Reference](../docs/json/developer/reference/rule-types-reference.md) - Complete list of supported rule types
