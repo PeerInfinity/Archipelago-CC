@@ -532,6 +532,83 @@ Ensure the context object has the methods your rule type needs. Check `StateMana
 - [ ] Removed helper from blacklist if applicable
 - [ ] Verified spoiler tests pass
 
+## Starcraft 2 - Current Status
+
+As of December 2024, SC2 has **21 helpers** successfully exported and spoiler tests pass.
+
+### Completed Work
+
+The following capabilities were added to support `weapon_armor_upgrade_count`:
+
+1. ✅ **`count_from_list` state method** - Added to `stateInterface.js`
+2. ✅ **`upgrade_bundle_inverted_lookup` export** - Added to `sc2.py` game_info
+3. ✅ **`protoss_generic_upgrades` export** - Added to `sc2.py` game_info
+4. ✅ **`weapon_armor_upgrade_count` helper** - Now exported successfully
+5. ✅ **Early-return pattern fix** - Fixed in `ast_visitors.py` (see below)
+
+### Fixed: Multiple Early-Return Pattern
+
+The analyzer now correctly chains early-return patterns. When `PROCESS_MULTISTATEMENT_IF_BODIES` is True, the analyzer prioritizes chaining "if without else followed by more statements" over multi-statement OR processing.
+
+**Example pattern:**
+```python
+def terran_base_trasher(self, state):
+    if not self.terran_competent_comp(state):
+        return False
+    if not self.terran_very_hard_mission_weapon_armor_level(state):
+        return False
+    return (actual_condition)
+```
+
+**Now produces correctly nested conditionals:**
+```json
+{
+  "type": "conditional",
+  "test": { "type": "not", "condition": { "type": "helper", "name": "terran_competent_comp" } },
+  "if_true": false,
+  "if_false": {
+    "type": "conditional",
+    "test": { "type": "not", "condition": { "type": "helper", "name": "terran_very_hard..." } },
+    "if_true": false,
+    "if_false": { "type": "or", "conditions": [...] }
+  }
+}
+```
+
+### Why Helpers Are Blacklisted
+
+**20 helpers remain blacklisted** for the following reasons:
+
+1. **JavaScript Fallback Implementations Exist**: SC2 has JavaScript implementations for these helpers in `frontend/modules/shared/gameLogic/sc2/helpers.js`. These provide equivalent logic for frontend evaluation.
+
+2. **Settings Resolution Difference**: The Python export resolves settings like `self.advanced_tactics` at export time (as constants), while JavaScript implementations resolve them dynamically at runtime. This can cause evaluation differences.
+
+3. **Dependency Chain Complexity**: These helpers call each other. Exporting one helper without exporting its dependencies creates inconsistencies.
+
+### Blacklisted Helpers
+
+These helpers have JavaScript fallback implementations that work correctly:
+- `terran_competent_comp`, `protoss_competent_comp`, `zerg_competent_comp`
+- `terran_competent_ground_to_air`, `protoss_competent_ground_to_air`, `zerg_competent_ground_to_air`
+- `terran_beats_protoss_deathball`, `terran_base_trasher`, `terran_respond_to_colony_infestations`
+- Various mission requirement helpers that depend on the above
+
+### Current Strategy
+
+The safest approach is to keep these helpers blacklisted and rely on the JavaScript implementations:
+- JavaScript implementations handle settings dynamically
+- All location rules referencing these helpers work correctly via JavaScript fallback
+- Spoiler tests pass
+
+### Future Work (Optional)
+
+To fully migrate to Python exports:
+1. Convert settings like `self.advanced_tactics` to `setting_value` rules instead of constants
+2. Add `SELF_ATTR_TO_SETTING` mapping to `sc2.py` for dynamic setting resolution
+3. Export all helpers in dependency chains together
+4. Verify JavaScript and Python implementations produce identical results
+5. Consider removing JavaScript implementations once Python exports are verified
+
 ## See Also
 
 - [Rule Types Reference](../docs/json/developer/reference/rule-types-reference.md) - Complete list of supported rule types

@@ -3166,8 +3166,33 @@ class ASTVisitorMixin:
 
             orelse_result = None
             if node.orelse:
-                if should_process_multistatement and len(node.orelse) > 1:
-                    # Multiple statements in the else-block
+                # PRIORITY: Check for "if without else followed by more statements" pattern first.
+                # This handles early-return guards like:
+                #   if not check1: return False
+                #   if not check2: return False
+                #   return actual_result
+                # These should be CHAINED (nested conditionals), not ORed together.
+                if (len(node.orelse) > 1 and
+                    isinstance(node.orelse[0], ast.If) and
+                    not node.orelse[0].orelse):
+                    logging.debug(f"visit_If: If statement without else in orelse, analyzing remaining {len(node.orelse) - 1} statements as implicit else")
+                    # Create a synthetic If node with the remaining statements as the else block
+                    if_node = node.orelse[0]
+                    remaining_stmts = node.orelse[1:]
+
+                    # Create a synthetic if-node that includes the remaining statements as the else block
+                    synthetic_if = ast.If(
+                        test=if_node.test,
+                        body=if_node.body,
+                        orelse=remaining_stmts,
+                        lineno=if_node.lineno if hasattr(if_node, 'lineno') else 0,
+                        col_offset=if_node.col_offset if hasattr(if_node, 'col_offset') else 0
+                    )
+
+                    # Visit this synthetic if-statement
+                    orelse_result = self.visit_If(synthetic_if)
+                elif should_process_multistatement and len(node.orelse) > 1:
+                    # Multiple statements in the else-block that don't match the early-return pattern
                     logging.debug(f"visit_If: Processing {len(node.orelse)} statements in else-block")
                     orelse_results = []
                     for stmt in node.orelse:
@@ -3187,29 +3212,7 @@ class ASTVisitorMixin:
                     else:
                         orelse_result = {'type': 'or', 'conditions': orelse_results}
                 else:
-                    # Special case: If statement without else in orelse, and more statements follow
-                    # This handles if-elif-else chains where elif/else are separate statements
-                    if (isinstance(node.orelse[0], ast.If) and
-                        not node.orelse[0].orelse and
-                        len(node.orelse) > 1):
-                        logging.debug(f"visit_If: If statement without else in orelse, analyzing remaining {len(node.orelse) - 1} statements as implicit else")
-                        # Create a synthetic If node with the remaining statements as the else block
-                        if_node = node.orelse[0]
-                        remaining_stmts = node.orelse[1:]
-
-                        # Create a synthetic if-node that includes the remaining statements as the else block
-                        synthetic_if = ast.If(
-                            test=if_node.test,
-                            body=if_node.body,
-                            orelse=remaining_stmts,
-                            lineno=if_node.lineno if hasattr(if_node, 'lineno') else 0,
-                            col_offset=if_node.col_offset if hasattr(if_node, 'col_offset') else 0
-                        )
-
-                        # Visit this synthetic if-statement
-                        orelse_result = self.visit_If(synthetic_if)
-                    else:
-                        orelse_result = self.visit(node.orelse[0])
+                    orelse_result = self.visit(node.orelse[0])
             else:
                  # Handle cases with no 'else' - could return None or a specific structure
                  logging.debug("visit_If: No 'else' block found.")
