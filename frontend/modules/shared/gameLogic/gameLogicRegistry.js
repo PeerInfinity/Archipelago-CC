@@ -215,7 +215,7 @@ import * as genericLogic from './generic/genericLogic.js';
 import { helperFunctions as bombRushCyberfunkHelperFunctions } from './bomb_rush_cyberfunk/bombRushCyberfunkLogic.js';
 import * as jakanddaxterLogic from './jakanddaxter/jakanddaxterLogic.js';
 // kh1Logic removed - all helpers now exported to rules.json
-import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
+// kh2Logic removed - helpers now exported to rules.json with use_current_key support
 // kdl3Logic removed - helpers now exported to rules.json
 // LADX now uses generic helpers - RUPEES is set in prog_items from sphere log
 import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
@@ -294,7 +294,7 @@ const GAME_REGISTRY = {
   },
   'Kingdom Hearts 2': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: kh2HelperFunctions,
+    // Helper functions now exported to rules.json with use_current_key support
     worldClasses: ['KH2World'],
     aliases: ['Kingdom Hearts 2', 'KH2', 'Kingdom Hearts II']
   },

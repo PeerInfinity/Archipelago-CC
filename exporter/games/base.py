@@ -621,7 +621,122 @@ class BaseGameExportHandler:
             if resolved is not None:
                 return resolved
 
+        # Handle block type (contains statements array)
+        elif rule_type == 'block':
+            if 'statements' in rule:
+                rule['statements'] = [
+                    self.expand_rule(stmt, _depth + 1) if isinstance(stmt, dict) else stmt
+                    for stmt in rule.get('statements', [])
+                ]
+
+        # Handle assign type (contains value)
+        elif rule_type == 'assign':
+            if 'value' in rule and isinstance(rule['value'], dict):
+                rule['value'] = self.expand_rule(rule['value'], _depth + 1)
+
+        # Handle return type (contains value)
+        elif rule_type == 'return':
+            if 'value' in rule and isinstance(rule['value'], dict):
+                rule['value'] = self.expand_rule(rule['value'], _depth + 1)
+
+        # Handle if_statement type (contains test, body, orelse)
+        elif rule_type == 'if_statement':
+            if 'test' in rule and isinstance(rule['test'], dict):
+                rule['test'] = self.expand_rule(rule['test'], _depth + 1)
+            if 'body' in rule:
+                rule['body'] = [
+                    self.expand_rule(stmt, _depth + 1) if isinstance(stmt, dict) else stmt
+                    for stmt in rule.get('body', [])
+                ]
+            if 'orelse' in rule:
+                rule['orelse'] = [
+                    self.expand_rule(stmt, _depth + 1) if isinstance(stmt, dict) else stmt
+                    for stmt in rule.get('orelse', [])
+                ]
+
+        # Handle subscript type (contains value and slice)
+        elif rule_type == 'subscript':
+            if 'value' in rule and isinstance(rule['value'], dict):
+                rule['value'] = self.expand_rule(rule['value'], _depth + 1)
+            if 'slice' in rule and isinstance(rule['slice'], dict):
+                rule['slice'] = self.expand_rule(rule['slice'], _depth + 1)
+
+        # Handle list/set types (contain value array)
+        elif rule_type in ['list', 'set']:
+            if 'value' in rule and isinstance(rule['value'], list):
+                rule['value'] = [
+                    self.expand_rule(item, _depth + 1) if isinstance(item, dict) else item
+                    for item in rule['value']
+                ]
+
+        # Handle sum_of/any_of/all_of types (contain iterable and optionally condition)
+        elif rule_type in ['sum_of', 'any_of', 'all_of']:
+            if 'iterable' in rule and isinstance(rule['iterable'], dict):
+                rule['iterable'] = self.expand_rule(rule['iterable'], _depth + 1)
+            if 'element_rule' in rule and isinstance(rule['element_rule'], dict):
+                rule['element_rule'] = self.expand_rule(rule['element_rule'], _depth + 1)
+            if 'condition' in rule and isinstance(rule['condition'], dict):
+                rule['condition'] = self.expand_rule(rule['condition'], _depth + 1)
+
+        # Handle sum type (contains iterable)
+        elif rule_type == 'sum':
+            if 'iterable' in rule and isinstance(rule['iterable'], dict):
+                rule['iterable'] = self.expand_rule(rule['iterable'], _depth + 1)
+
+        # Handle binary_op type (contains left and right)
+        elif rule_type == 'binary_op':
+            if 'left' in rule and isinstance(rule['left'], dict):
+                rule['left'] = self.expand_rule(rule['left'], _depth + 1)
+            if 'right' in rule and isinstance(rule['right'], dict):
+                rule['right'] = self.expand_rule(rule['right'], _depth + 1)
+
+        # Handle comparison type (alias for compare, contains left and right)
+        elif rule_type == 'comparison':
+            if 'left' in rule and isinstance(rule['left'], dict):
+                rule['left'] = self.expand_rule(rule['left'], _depth + 1)
+            if 'right' in rule and isinstance(rule['right'], dict):
+                rule['right'] = self.expand_rule(rule['right'], _depth + 1)
+
+        # Handle constant type where value is a dict containing rule structures
+        # This handles cases where Python code defines dicts with rule objects as values
+        elif rule_type == 'constant':
+            value = rule.get('value')
+            if isinstance(value, dict):
+                # Recursively expand any rule structures in the dict values
+                expanded_value = self._expand_dict_values(value, _depth + 1)
+                rule['value'] = expanded_value
+            elif isinstance(value, list):
+                # Recursively expand any rule structures in the list
+                rule['value'] = [
+                    self._expand_dict_values(item, _depth + 1) if isinstance(item, dict) else item
+                    for item in value
+                ]
+
         return rule
+
+    def _expand_dict_values(self, d: Dict[str, Any], _depth: int) -> Dict[str, Any]:
+        """Recursively expand rule structures in a dict.
+
+        This handles constant dicts that contain rule structures as values.
+        """
+        result = {}
+        for key, value in d.items():
+            if isinstance(value, dict):
+                # Check if this is a rule structure (has 'type' key)
+                if 'type' in value:
+                    result[key] = self.expand_rule(value, _depth)
+                else:
+                    # Recurse into nested dicts
+                    result[key] = self._expand_dict_values(value, _depth)
+            elif isinstance(value, list):
+                result[key] = [
+                    self.expand_rule(item, _depth) if isinstance(item, dict) and 'type' in item
+                    else (self._expand_dict_values(item, _depth) if isinstance(item, dict) else item)
+                    for item in value
+                ]
+            else:
+                result[key] = value
+        return result
 
     def _resolve_option_access(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """
