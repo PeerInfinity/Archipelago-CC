@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-29T18:42:03.434371",
-    "last_updated": "2025-12-29T18:42:03.434376",
+    "last_updated": "2025-12-29T21:27:04.603330",
     "script_version": "1.0.0"
   },
   "results": {
@@ -485,27 +485,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "476fdbbd9ea96c663eb3fff3a77ea3dcc4cba8544e29286fb7bcee4089d5182c",
-          "new_sphere_log_hash": "b936877f390ee7e88ee8061112d9d2f884115f01590f7c33da925199c862a766",
-          "original_rules_hash": "476fdbbd9ea96c663eb3fff3a77ea3dcc4cba8544e29286fb7bcee4089d5182c",
-          "original_sphere_log_hash": "b936877f390ee7e88ee8061112d9d2f884115f01590f7c33da925199c862a766",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-29T18:39:04.217836"
-        }
-      },
       "game_name_from_filename": "cvcotm",
       "game_name_from_yaml": "Castlevania - Circle of the Moon",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.54,
+        "processing_time_seconds": 7.42,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/cvcotm/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -517,7 +505,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 8.78,
+        "processing_time_seconds": 8.82,
         "return_code": 0,
         "sphere_reached": 4.4,
         "success": true,
@@ -525,10 +513,10 @@
         "warning_count": 0
       },
       "template_filename": "Castlevania - Circle of the Moon.yaml",
-      "timestamp": "2025-12-29T18:37:00.991553",
+      "timestamp": "2025-12-29T21:26:47.949136",
       "world_info": {
         "exporter_path": "exporter/games/cvcotm.py",
-        "exporter_size": 7526,
+        "exporter_size": 6123,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "cvcotm",
