@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-29T18:42:03.434371",
-    "last_updated": "2025-12-29T18:42:03.434376",
+    "last_updated": "2025-12-29T22:08:31.424095",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1783,31 +1783,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "784dbdba4c77234a8277459402adec024cf0c20cbe9673b805a479945790ffe8",
-          "new_sphere_log_hash": "7ce6520d065272adc907bdf61cd27fcf154c1c108150eabb724173acbb479c62",
-          "original_rules_hash": "c460b843ad52fb69ce0f3f518bdda0207a113510b55d3105cca3da8507eb0b76",
-          "original_sphere_log_hash": "7ce6520d065272adc907bdf61cd27fcf154c1c108150eabb724173acbb479c62",
-          "rules_identical": false,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-29T18:39:53.606370"
-        }
-      },
       "game_name_from_filename": "landstalker",
       "game_name_from_yaml": "Landstalker - The Treasures of King Nole",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.24,
+        "processing_time_seconds": 7.76,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/landstalker/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 226390,
+        "size_bytes": 226382,
         "size_mb": 0.22
       },
       "seed": "1",
@@ -1815,7 +1803,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 8.68,
+        "processing_time_seconds": 12.67,
         "return_code": 0,
         "sphere_reached": 10.1,
         "success": true,
@@ -1823,10 +1811,10 @@
         "warning_count": 0
       },
       "template_filename": "Landstalker - The Treasures of King Nole.yaml",
-      "timestamp": "2025-12-29T18:38:05.763876",
+      "timestamp": "2025-12-29T22:08:10.573651",
       "world_info": {
         "exporter_path": "exporter/games/landstalker.py",
-        "exporter_size": 15658,
+        "exporter_size": 14597,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "landstalker",
