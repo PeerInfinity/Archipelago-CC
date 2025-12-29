@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-29 04:48:10
+**Generated:** 2025-12-29 06:46:14
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -26,8 +26,8 @@ Additional test results:
 ### Intermittent Failures
 
 - **Minimal Spoilers Test:** 0 game(s), 0 total failure(s)
-- **Full Spoilers Test:** 0 game(s), 0 total failure(s)
-- **Multiclient Test:** 1 game(s), 1 total failure(s)
+- **Full Spoilers Test:** 1 game(s), 1 total failure(s)
+- **Multiclient Test:** 0 game(s), 0 total failure(s)
 - **Multiworld Test:** 0 game(s), 0 total failure(s)
 
 ### Combined Test Results
@@ -48,9 +48,9 @@ Of the 72 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 448.6KB
-- **Total Game Logic Code:** 269.3KB
-- **Combined Total:** 717.9KB
+- **Total Exporter Code:** 426.2KB
+- **Total Game Logic Code:** 266.6KB
+- **Combined Total:** 692.8KB
 
 ## Test Results
 
@@ -77,16 +77,16 @@ Of the 72 templates passing all 4 tests:
 | DOOM II | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 350.3KB |
 | Dark Souls III | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.3KB | ✅ | 1065.4KB |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 124.6KB |
-| Factorio | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.5KB | ✅ | 487.4KB |
+| Factorio | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.3KB | ✅ | 487.4KB |
 | Faxanadu | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 68.4KB |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 1307.1KB |
 | Heretic | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 383.7KB |
 | Hylics 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 103.2KB |
-| Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.6KB | ✅ | 85.3KB |
-| Kingdom Hearts | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 17.4KB | ✅ | 794.9KB |
-| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 23.5KB | ✅ | 870.0KB |
-| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.7KB | ✅ | 751.1KB |
-| Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 18.5KB | ✅ | 221.1KB |
+| Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.3KB | ✅ | 85.3KB |
+| Kingdom Hearts | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.8KB | ✅ | 794.9KB |
+| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 21.6KB | ✅ | 870.0KB |
+| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.5KB | ✅ | 751.1KB |
+| Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 15.3KB | ✅ | 221.1KB |
 | Lingo | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 37.5KB | 10.7KB | 945.8KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.5KB | ✅ | 927.3KB |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ | 132.4KB |
@@ -108,7 +108,7 @@ Of the 72 templates passing all 4 tests:
 | Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 150.4KB |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 271.5KB |
 | Starcraft 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 33.1KB | 86.2KB | 1185.2KB |
-| Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 19.7KB | 10.7KB | 2503.5KB |
+| Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 19.7KB | 8.0KB | 2503.5KB |
 | Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.5KB | ✅ | 208.9KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.2KB | ✅ | 93.3KB |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 875.1KB |
@@ -154,11 +154,11 @@ Of the 72 templates passing all 4 tests:
 | 3 | Starcraft 2 | 33.1KB |
 | 4 | Overcooked! 2 | 29.1KB |
 | 5 | The Witness | 24.9KB |
-| 6 | Kingdom Hearts 2 | 23.5KB |
+| 6 | Kingdom Hearts 2 | 21.6KB |
 | 7 | Stardew Valley | 19.7KB |
 | 8 | Terraria | 19.2KB |
-| 9 | Landstalker - The Treasures of King Nole | 18.5KB |
-| 10 | Kingdom Hearts | 17.4KB |
+| 9 | Landstalker - The Treasures of King Nole | 15.3KB |
+| 10 | Links Awakening DX | 13.5KB |
 
 ### Largest GameLogic Files
 
@@ -167,8 +167,8 @@ Of the 72 templates passing all 4 tests:
 | 1 | Super Metroid | 114.5KB |
 | 2 | Starcraft 2 | 86.2KB |
 | 3 | Bomb Rush Cyberfunk | 40.3KB |
-| 4 | Stardew Valley | 10.7KB |
-| 5 | Lingo | 10.7KB |
+| 4 | Lingo | 10.7KB |
+| 5 | Stardew Valley | 8.0KB |
 | 6 | Secret of Evermore | 6.9KB |
 
 ## Multi-Template Test Results

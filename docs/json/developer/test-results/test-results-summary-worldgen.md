@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2025-12-29 04:48:10
+**Generated:** 2025-12-29 06:46:14
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -44,9 +44,9 @@ Of the 61 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 232.7KB
+- **Total Exporter Code:** 228.8KB
 - **Total Game Logic Code:** 86.2KB
-- **Combined Total:** 318.9KB
+- **Combined Total:** 315.0KB
 
 ## Test Results
 
@@ -72,14 +72,14 @@ Of the 61 templates passing all 4 tests:
 | DOOM II WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 357.8KB |
 | Dark Souls III WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.3KB | ✅ | 1071.4KB |
 | Donkey Kong Country 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 112.7KB |
-| Factorio WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.5KB | ✅ | 230.1KB |
+| Factorio WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.3KB | ✅ | 230.1KB |
 | Faxanadu WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 73.7KB |
 | Final Fantasy Mystic Quest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 548.4KB |
 | Heretic WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 403.4KB |
 | Hylics 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 103.5KB |
-| Inscryption WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.6KB | ✅ | 85.4KB |
-| Kirby's Dream Land 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.7KB | ✅ | N/A |
-| Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.5KB | ✅ | 210.6KB |
+| Inscryption WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.3KB | ✅ | 85.4KB |
+| Kirby's Dream Land 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.5KB | ✅ | N/A |
+| Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 15.3KB | ✅ | 210.6KB |
 | Links Awakening DX WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.5KB | ✅ | 714.9KB |
 | Lufia II Ancient Cave WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 132.6KB |
 | Mario & Luigi Superstar Saga WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.3KB | ✅ | 397.9KB |
@@ -138,10 +138,10 @@ Of the 61 templates passing all 4 tests:
 | 1 | Starcraft 2 WorldGen | 33.1KB |
 | 2 | Overcooked! 2 WorldGen | 29.1KB |
 | 3 | Terraria WorldGen | 19.2KB |
-| 4 | Landstalker - The Treasures of King Nole WorldGen | 18.5KB |
+| 4 | Landstalker - The Treasures of King Nole WorldGen | 15.3KB |
 | 5 | Links Awakening DX WorldGen | 13.5KB |
 | 6 | Super Mario 64 WorldGen | 13.2KB |
-| 7 | Kirby's Dream Land 3 WorldGen | 9.7KB |
+| 7 | Kirby's Dream Land 3 WorldGen | 9.5KB |
 | 8 | The Messenger WorldGen | 9.0KB |
 | 9 | A Hat in Time WorldGen | 7.7KB |
 | 10 | Subnautica WorldGen | 7.5KB |
