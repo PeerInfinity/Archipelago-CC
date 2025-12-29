@@ -1,4 +1,22 @@
-"""The Witness game-specific export handler."""
+"""The Witness game-specific export handler.
+
+This exporter handles unique patterns in The Witness's rule implementations:
+
+1. **Bound method references**: The Witness passes `region.can_reach` bound methods
+   directly in rule closures (e.g., `return region.can_reach` instead of
+   `return lambda state: region.can_reach(state)`). These need to be detected
+   and converted to proper can_reach rules.
+
+2. **Region reachability patterns**: The standard Archipelago region.can_reach
+   implementation pattern (`if state.stale: update; return self in reachable`)
+   appears in the AST and needs to be simplified.
+
+3. **Laser activation locations**: These event locations need explicit region
+   reachability requirements added to ensure the player can reach the laser panel.
+
+This complexity is necessary because no other game uses these patterns in the same way.
+The base class and analyzer cannot handle them generically.
+"""
 
 from typing import Dict, Any, Optional, List
 from .generic import GenericGameExportHandler
@@ -6,16 +24,20 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class WitnessGameExportHandler(GenericGameExportHandler):
     """Export handler for The Witness.
 
-    The Witness uses event locations that grant items when accessible.
-    Uses 'add_sphere_items_upfront' mode to match sphere log expectations.
+    Handles unique rule patterns including bound method references in closures,
+    region reachability pattern simplification, and laser activation locations.
     """
 
+    # Auto-discovery configuration (using defaults, explicit for clarity)
+    AUTO_DISCOVER_WORLD_ATTRIBUTES = True
+    AUTO_DISCOVER_REGION_ATTRIBUTES = True
+    AUTO_DISCOVER_LOCATION_ATTRIBUTES = True
+
     # Enable upfront item adding for sphere test compatibility
-    # This ensures the comparison happens with the exact items from the sphere log
-    # rather than relying on auto-collection of event items
     ADD_SPHERE_ITEMS_UPFRONT = True
 
     # Mapping of laser activation locations to the regions containing their panels
@@ -421,7 +443,6 @@ class WitnessGameExportHandler(GenericGameExportHandler):
                 self._simplify_region_reachability_pattern(cond)
                 for cond in conditions
             ]
-
 
             # Filter out constant True values from 'and' rules
             if rule_type == 'and':
