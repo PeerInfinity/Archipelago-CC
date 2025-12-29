@@ -54,6 +54,13 @@ from .prompt_generators import (
     generate_worldgen_crossval_failure_prompt,
 )
 
+from .execution import (
+    run_template_test,
+    run_prompt_for_game,
+    get_prompt_for_game,
+    run_all_promptfiles,
+)
+
 __all__ = [
     # data_loading
     'load_world_mapping',
@@ -93,4 +100,9 @@ __all__ = [
     'generate_worldgen_seed_failure_prompt',
     'generate_worldgen_spoiler_failure_prompt',
     'generate_worldgen_crossval_failure_prompt',
+    # execution
+    'run_template_test',
+    'run_prompt_for_game',
+    'get_prompt_for_game',
+    'run_all_promptfiles',
 ]
