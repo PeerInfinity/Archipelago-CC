@@ -1420,11 +1420,14 @@ class BaseGameExportHandler:
                 # Serialize dicts recursively
                 result = {}
                 for k, v in value.items():
-                    # Convert key to string (handle enum keys like EraType)
+                    # Convert key to string (handle various key types for JSON)
                     if isinstance(k, str):
                         key_str = k
                     elif isinstance(k, enum.Enum):
                         key_str = k.value if hasattr(k, 'value') else str(k)
+                    elif isinstance(k, (int, float)):
+                        # JSON requires string keys, so convert numeric keys
+                        key_str = str(k)
                     else:
                         continue  # Skip other non-string keys
                     converted = get_serializable_value(v, depth + 1)

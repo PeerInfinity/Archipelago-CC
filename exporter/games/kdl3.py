@@ -3,19 +3,20 @@
 from typing import Dict, Any, Optional
 from .generic import GenericGameExportHandler
 import logging
-import importlib
 
 logger = logging.getLogger(__name__)
 
 
 class KDL3GameExportHandler(GenericGameExportHandler):
-    """Handle KDL3-specific rule expansions and f-string conversions."""
+    """Handle KDL3-specific rule expansions and f-string conversions.
 
-    # Simple world attributes that can be automatically exported via base class
-    COMPUTED_SETTINGS = {
-        'copy_abilities': lambda w, m, p: getattr(w, 'copy_abilities', {}),
-        'player_levels': lambda w, m, p: getattr(w, 'player_levels', {}),
-    }
+    KDL3 requires custom helper expansion for:
+    - can_assemble_rob: Complex logic for R.O.B. assembly puzzle
+    - can_fix_angel_wings: Complex logic for angel wings puzzle
+
+    World attributes like copy_abilities and player_levels are auto-discovered
+    via AUTO_DISCOVER_WORLD_ATTRIBUTES (default True).
+    """
 
     # Level names inverse mapping (level number -> level name)
     # Used by can_reach_boss helper for f-string resolution
@@ -83,14 +84,10 @@ class KDL3GameExportHandler(GenericGameExportHandler):
     }
 
     def __init__(self):
-        """Initialize the KDL3 export handler and load location_name module."""
+        """Initialize the KDL3 export handler."""
         super().__init__()
-        try:
-            location_name_mod = importlib.import_module('worlds.kdl3.names.location_name')
-            self.level_names_inverse = getattr(location_name_mod, 'level_names_inverse', {})
-        except Exception as e:
-            logger.warning(f"Could not load location_name module: {e}")
-            self.level_names_inverse = {}
+        # Use the static mapping for f-string resolution
+        self.level_names_inverse = self.LEVEL_NAMES_INVERSE
 
     def get_world_data(self, world, multiworld, player):
         """Override to add KDL3-specific world data like ability_map and level_names_inverse."""
