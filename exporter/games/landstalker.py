@@ -66,32 +66,6 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
 
         return enhanced_closure
 
-    def _extract_required_regions(self, rule_func) -> Optional[List]:
-        """Extract required_regions list from a path requirement lambda's closure."""
-        if not hasattr(rule_func, '__closure__') or not rule_func.__closure__:
-            return None
-
-        if not hasattr(rule_func, '__code__'):
-            return None
-
-        freevars = rule_func.__code__.co_freevars
-
-        for i, var_name in enumerate(freevars):
-            if i >= len(rule_func.__closure__):
-                break
-
-            if var_name == 'required_regions':
-                try:
-                    cell_contents = rule_func.__closure__[i].cell_contents
-                    if isinstance(cell_contents, list):
-                        # Verify these are region objects with .code attribute
-                        if all(hasattr(r, 'code') for r in cell_contents):
-                            return cell_contents
-                except (ValueError, AttributeError) as e:
-                    logger.debug(f"Could not extract required_regions: {e}")
-
-        return None
-
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand rule functions with Landstalker-specific handling.
 
