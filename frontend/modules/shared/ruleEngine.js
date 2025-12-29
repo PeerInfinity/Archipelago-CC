@@ -1412,6 +1412,27 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           return undefined;
         }
 
+        // Special case: if baseObject is undefined and the object was "location_name",
+        // return the value from the world data (used by KDL3 for level_names_inverse lookup)
+        // This allows exported helpers to reference location_name.level_names_inverse
+        if (baseObject === undefined && rule.object && rule.object.type === 'name' &&
+            rule.object.name === 'location_name') {
+          if (context.getStaticData) {
+            const staticData = context.getStaticData();
+            const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+
+            // Get world data - location_name attributes are exported in world data
+            const worldData = staticData?.world;
+            if (worldData && worldData[playerId]) {
+              const attrValue = worldData[playerId][rule.attr];
+              if (attrValue !== undefined) {
+                return attrValue;
+              }
+            }
+          }
+          return undefined;
+        }
+
         if (baseObject && typeof baseObject === 'object') {
           // Special handling for region reference objects
           // When we access .can_reach on a region reference, return a special marker
@@ -2871,7 +2892,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             resultStr += part.value;
           } else if (part.type === 'formatted_value') {
             // Evaluate the value and convert to string
-            const value = evaluateRule(part.value, context, depth + 1);
+            // NOTE: Pass localScope to resolve helper parameters like 'level' in KDL3's can_reach_boss
+            const value = evaluateRule(part.value, context, depth + 1, localScope);
             if (value === undefined) {
               log('warn', '[evaluateRule] f_string formatted_value evaluated to undefined', { part });
               hasError = true;

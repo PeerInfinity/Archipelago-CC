@@ -14,6 +14,17 @@ class KDL3GameExportHandler(GenericGameExportHandler):
     # Simple world attributes that can be automatically exported via base class
     COMPUTED_SETTINGS = {
         'copy_abilities': lambda w, m, p: getattr(w, 'copy_abilities', {}),
+        'player_levels': lambda w, m, p: getattr(w, 'player_levels', {}),
+    }
+
+    # Level names inverse mapping (level number -> level name)
+    # Used by can_reach_boss helper for f-string resolution
+    LEVEL_NAMES_INVERSE = {
+        1: "Grass Land",
+        2: "Ripple Field",
+        3: "Sand Canyon",
+        4: "Cloudy Park",
+        5: "Iceberg",
     }
 
     # Module path for helper functions
@@ -82,8 +93,11 @@ class KDL3GameExportHandler(GenericGameExportHandler):
             self.level_names_inverse = {}
 
     def get_world_data(self, world, multiworld, player):
-        """Override to add KDL3-specific world data like ability_map."""
+        """Override to add KDL3-specific world data like ability_map and level_names_inverse."""
         world_data = super().get_world_data(world, multiworld, player)
+
+        # Export level_names_inverse for f-string resolution in can_reach_boss
+        world_data['level_names_inverse'] = self.LEVEL_NAMES_INVERSE
 
         # Export ability_map as a dictionary mapping ability names to helper function names
         try:
