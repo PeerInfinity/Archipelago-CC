@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-29T18:42:03.434371",
-    "last_updated": "2025-12-29T18:42:03.434376",
+    "last_updated": "2025-12-29T21:23:55.527566",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1252,27 +1252,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "0f1e3c5649ee5629d12f7769a246fa1f3507c01a4bf7e2d1a0e3b98e6f42d7b5",
-          "new_sphere_log_hash": "10d5005c8a554b43f9a2731a335a8ad78dd57944c3a17b3c3d41131128b0f0c9",
-          "original_rules_hash": "0f1e3c5649ee5629d12f7769a246fa1f3507c01a4bf7e2d1a0e3b98e6f42d7b5",
-          "original_sphere_log_hash": "10d5005c8a554b43f9a2731a335a8ad78dd57944c3a17b3c3d41131128b0f0c9",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-29T18:40:07.072046"
-        }
-      },
       "game_name_from_filename": "factorio",
       "game_name_from_yaml": "Factorio",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.0,
+        "processing_time_seconds": 8.35,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/factorio/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -1284,7 +1272,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.75,
+        "processing_time_seconds": 13.8,
         "return_code": 0,
         "sphere_reached": 12.1,
         "success": true,
@@ -1292,10 +1280,10 @@
         "warning_count": 0
       },
       "template_filename": "Factorio.yaml",
-      "timestamp": "2025-12-29T18:37:55.618820",
+      "timestamp": "2025-12-29T21:23:32.984561",
       "world_info": {
         "exporter_path": "exporter/games/factorio.py",
-        "exporter_size": 5405,
+        "exporter_size": 6169,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "factorio",
