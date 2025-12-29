@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-29T05:55:19.681051",
-    "last_updated": "2025-12-29T05:55:19.681057",
+    "last_updated": "2025-12-29T18:50:53.076774",
     "script_version": "1.0.0"
   },
   "results": {
@@ -4202,31 +4202,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "8795fc99a0f23488c41af8fe00ffbfbca7cbb6c805c1302a627a95f9b5fadc34",
-          "new_sphere_log_hash": "229a997b4adb3a670d99dc4aafded400d9c5e94792d0b036cc9ba850f656ade8",
-          "original_rules_hash": "8795fc99a0f23488c41af8fe00ffbfbca7cbb6c805c1302a627a95f9b5fadc34",
-          "original_sphere_log_hash": "229a997b4adb3a670d99dc4aafded400d9c5e94792d0b036cc9ba850f656ade8",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-29T05:52:51.499139"
-        }
-      },
       "game_name_from_filename": "yoshisisland",
       "game_name_from_yaml": "Yoshi's Island",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.58,
+        "processing_time_seconds": 8.45,
         "return_code": 0,
         "success": true,
-        "warning_count": 3
+        "warning_count": 2
       },
       "rules_file": {
         "path": "frontend/presets/yoshisisland/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 291903,
+        "size_bytes": 291667,
         "size_mb": 0.28
       },
       "seed": "1",
@@ -4234,7 +4222,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.7,
+        "processing_time_seconds": 12.72,
         "return_code": 0,
         "sphere_reached": 12.4,
         "success": true,
@@ -4242,10 +4230,10 @@
         "warning_count": 0
       },
       "template_filename": "Yoshi's Island.yaml",
-      "timestamp": "2025-12-29T05:51:45.328391",
+      "timestamp": "2025-12-29T18:50:31.478298",
       "world_info": {
         "exporter_path": "exporter/games/yoshisisland.py",
-        "exporter_size": 5574,
+        "exporter_size": 4783,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "yoshisisland",

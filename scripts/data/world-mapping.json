@@ -388,7 +388,7 @@
   },
   "Factorio": {
     "exporter_path": "exporter/games/factorio.py",
-    "exporter_size": 5678,
+    "exporter_size": 5405,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -496,7 +496,7 @@
   },
   "Inscryption": {
     "exporter_path": "exporter/games/inscryption.py",
-    "exporter_size": 5703,
+    "exporter_size": 5454,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -532,7 +532,7 @@
   },
   "Kingdom Hearts": {
     "exporter_path": "exporter/games/kh1.py",
-    "exporter_size": 17785,
+    "exporter_size": 821,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -541,7 +541,7 @@
   },
   "Kingdom Hearts 2": {
     "exporter_path": "exporter/games/kh2.py",
-    "exporter_size": 24088,
+    "exporter_size": 22088,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -559,7 +559,7 @@
   },
   "Kirby's Dream Land 3": {
     "exporter_path": "exporter/games/kdl3.py",
-    "exporter_size": 9929,
+    "exporter_size": 9711,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -568,7 +568,7 @@
   },
   "Landstalker - The Treasures of King Nole": {
     "exporter_path": "exporter/games/landstalker.py",
-    "exporter_size": 18920,
+    "exporter_size": 15658,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -586,7 +586,7 @@
   },
   "Lingo": {
     "exporter_path": "exporter/games/lingo.py",
-    "exporter_size": 38447,
+    "exporter_size": 37692,
     "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
     "game_logic_size": 10907,
     "has_custom_exporter": true,
@@ -595,7 +595,7 @@
   },
   "Links Awakening DX": {
     "exporter_path": "exporter/games/ladx.py",
-    "exporter_size": 13788,
+    "exporter_size": 12157,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -630,11 +630,11 @@
     "world_directory": "lufia2ac_worldgen"
   },
   "Mario & Luigi Superstar Saga": {
-    "exporter_path": "exporter/games/mlss.py",
-    "exporter_size": 277,
+    "exporter_path": null,
+    "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": true,
+    "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "mlss"
   },
@@ -784,7 +784,7 @@
   },
   "Old School Runescape": {
     "exporter_path": "exporter/games/osrs.py",
-    "exporter_size": 3728,
+    "exporter_size": 3648,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -802,7 +802,7 @@
   },
   "Overcooked! 2": {
     "exporter_path": "exporter/games/overcooked2.py",
-    "exporter_size": 29798,
+    "exporter_size": 28695,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -820,7 +820,7 @@
   },
   "Paint": {
     "exporter_path": "exporter/games/paint.py",
-    "exporter_size": 7110,
+    "exporter_size": 3798,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -874,7 +874,7 @@
   },
   "Raft": {
     "exporter_path": "exporter/games/raft.py",
-    "exporter_size": 11684,
+    "exporter_size": 10437,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -946,7 +946,7 @@
   },
   "Secret of Evermore": {
     "exporter_path": "exporter/games/soe.py",
-    "exporter_size": 13756,
+    "exporter_size": 11867,
     "game_logic_path": "frontend/modules/shared/gameLogic/soe/soeLogic.js",
     "game_logic_size": 7085,
     "has_custom_exporter": true,
@@ -1000,7 +1000,7 @@
   },
   "Starcraft 2": {
     "exporter_path": "exporter/games/sc2.py",
-    "exporter_size": 33917,
+    "exporter_size": 30882,
     "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
     "game_logic_size": 88306,
     "has_custom_exporter": true,
@@ -1018,9 +1018,9 @@
   },
   "Stardew Valley": {
     "exporter_path": "exporter/games/stardew_valley.py",
-    "exporter_size": 20218,
+    "exporter_size": 19348,
     "game_logic_path": "frontend/modules/shared/gameLogic/stardew_valley/stardew_valleyLogic.js",
-    "game_logic_size": 10915,
+    "game_logic_size": 8179,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "stardew_valley"
@@ -1171,7 +1171,7 @@
   },
   "TUNIC": {
     "exporter_path": "exporter/games/tunic.py",
-    "exporter_size": 2069,
+    "exporter_size": 3141,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1396,7 +1396,7 @@
   },
   "Yoshi's Island": {
     "exporter_path": "exporter/games/yoshisisland.py",
-    "exporter_size": 5574,
+    "exporter_size": 4783,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
