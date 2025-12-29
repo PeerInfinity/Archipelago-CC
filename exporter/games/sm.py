@@ -1,6 +1,6 @@
 """Super Metroid game-specific export handler."""
 
-from typing import Dict, Any, Optional, Set
+from typing import Dict, Any, Optional
 from .generic import GenericGameExportHandler
 import logging
 
@@ -17,16 +17,16 @@ class SMGameExportHandler(GenericGameExportHandler):
     helper calls that the frontend can execute.
     """
     GAME_NAME = 'Super Metroid'
-    # Note: AUTO_EXPORT_DISCOVERED_HELPERS has limited effect for SM because:
+
+    # Note: AUTO_EXPORT_DISCOVERED_HELPERS is inherited as True from GenericGameExportHandler
+    # but has limited effect for SM because:
     # 1. Helpers are methods on SMBoolManager class, not standalone functions
     # 2. Helper calls are created in expand_rule post-processing, not during analysis
     # 3. The VARIA logic system (SMBool with difficulty) requires JS implementations
     # The JavaScript helpers in smLogic.js remain necessary for rule evaluation.
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
 
     def __init__(self, world=None):
         super().__init__(world=world)
-        self._simple_accessfrom_locations: Optional[Set[str]] = None
         self._all_accessfrom_info: Optional[Dict[str, Dict[str, str]]] = None
         self._varia_item_types: Optional[Dict[str, str]] = None
         self._accesspoint_traverse_funcs: Optional[Dict[str, Any]] = None
@@ -140,22 +140,6 @@ class SMGameExportHandler(GenericGameExportHandler):
             game_info['doors'] = door_data
 
         return game_info
-
-    def _get_simple_accessfrom_locations(self) -> Set[str]:
-        """Get the set of location names with simple AccessFrom (all regions use SMBool(True)).
-
-        This is cached after first call for performance.
-        """
-        if self._simple_accessfrom_locations is None:
-            try:
-                from .sm_accessfrom_extractor import get_simple_accessfrom_locations
-                self._simple_accessfrom_locations = get_simple_accessfrom_locations(self.world)
-                logger.info(f"SM: Loaded {len(self._simple_accessfrom_locations)} locations with simple AccessFrom")
-            except Exception as e:
-                logger.error(f"SM: Failed to extract simple AccessFrom locations: {e}")
-                self._simple_accessfrom_locations = set()
-
-        return self._simple_accessfrom_locations
 
     def _get_all_accessfrom_info(self) -> Dict[str, Dict[str, str]]:
         """Get ALL AccessFrom information for all locations.
