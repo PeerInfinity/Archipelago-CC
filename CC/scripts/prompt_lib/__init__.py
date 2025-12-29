@@ -61,6 +61,13 @@ from .execution import (
     run_all_promptfiles,
 )
 
+from .cli import (
+    create_argument_parser,
+    validate_arguments,
+    apply_worldgen_filtering,
+    write_collected_prompts,
+)
+
 __all__ = [
     # data_loading
     'load_world_mapping',
@@ -105,4 +112,9 @@ __all__ = [
     'run_prompt_for_game',
     'get_prompt_for_game',
     'run_all_promptfiles',
+    # cli
+    'create_argument_parser',
+    'validate_arguments',
+    'apply_worldgen_filtering',
+    'write_collected_prompts',
 ]
