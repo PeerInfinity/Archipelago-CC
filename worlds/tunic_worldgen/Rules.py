@@ -59,7 +59,7 @@ def _tunicworldgen_can_get_past_bushes(state: "CollectionState", player: int) ->
 
 
 def _tunicworldgen_can_ladder_storage(state: "CollectionState", player: int) -> bool:
-    return (False if not (0) else ((True if False else None)) or ((_tunicworldgen_has_melee(state, player)) or (state.has_any(('Magic Orb', 'Shield'), player))))
+    return (False if not (0) else (True if False else (_tunicworldgen_has_melee(state, player)) or (state.has_any(('Magic Orb', 'Shield'), player))))
 
 
 def _tunicworldgen_can_shop(state: "CollectionState", player: int) -> bool:
@@ -1302,7 +1302,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Swamp Mid -> Swamp to Cathedral Main Entrance Region", player),
-        Or(And(False_(), HasAll('Swamp Fuse 1', 'Swamp Fuse 2', 'Swamp Fuse 3')), And(HelperCall(helper_func=_tunicworldgen_has_ability, helper_name="has_ability", args=('Pages 24-25 (Prayer)',)), HelperCall(helper_func=_tunicworldgen_has_sword, helper_name="has_sword"), Not(False_()), Or(And(Compare(0, ">=", 3), HelperCall(helper_func=_tunicworldgen_can_ladder_storage, helper_name="can_ladder_storage"), Or(And(CanReachRegion('Overworld Beach'), Has('Ladder to Ruined Atoll')), Not(False_()), HasAny('Ladder to Swamp', 'Ladders in Overworld Town', 'Ladders near Weathervane')), Has('Magic Wand')), Has("Hero's Laurels")), Or(Not(False_()), Has('Combat_Reqs'))), HelperCall(helper_func=_tunicworldgen_has_ice_grapple_logic, helper_name="has_ice_grapple_logic", args=(False, 2,)))
+        Or(And(False_(), HasAll('Swamp Fuse 1', 'Swamp Fuse 2', 'Swamp Fuse 3')), And(HelperCall(helper_func=_tunicworldgen_has_ability, helper_name="has_ability", args=('Pages 24-25 (Prayer)',)), HelperCall(helper_func=_tunicworldgen_has_sword, helper_name="has_sword"), Not(False_()), Or(And(Compare(0, ">=", 3), HelperCall(helper_func=_tunicworldgen_can_ladder_storage, helper_name="can_ladder_storage"), Or(And(CanReachRegion('Overworld Beach'), Has('Ladder to Ruined Atoll')), Not(False_()), HasAny('Ladder to Swamp', 'Ladders in Overworld Town', 'Ladders near Weathervane')), Has('Magic Wand')), Has("Hero's Laurels")), Or(HelperCall(helper_func=_tunicworldgen_has_combat_reqs, helper_name="has_combat_reqs", args=('Swamp',)), Not(False_()))), HelperCall(helper_func=_tunicworldgen_has_ice_grapple_logic, helper_name="has_ice_grapple_logic", args=(False, 2,)))
     )
 
     world.set_rule(

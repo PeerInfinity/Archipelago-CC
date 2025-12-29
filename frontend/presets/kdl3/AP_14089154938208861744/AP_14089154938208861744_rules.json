@@ -25384,6 +25384,14 @@
         "Boboo": "Burning Ability",
         "Haboki": "Clean Ability"
       },
+      "required_heart_stars": 15,
+      "boss_requirements": [
+        3,
+        6,
+        9,
+        12,
+        15
+      ],
       "player_levels": {
         "1": [
           7798784,
@@ -25431,14 +25439,6 @@
           7799300
         ]
       },
-      "required_heart_stars": 15,
-      "boss_requirements": [
-        3,
-        6,
-        9,
-        12,
-        15
-      ],
       "stage_shuffle_enabled": false,
       "boss_butch_bosses": [
         false,

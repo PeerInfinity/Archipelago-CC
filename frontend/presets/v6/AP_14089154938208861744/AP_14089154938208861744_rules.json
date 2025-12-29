@@ -835,6 +835,29 @@
           "display_name": "Progression Balancing"
         }
       },
+      "area_connections": {
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "0": 0
+      },
+      "area_cost_map": {
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "0": 0
+      },
+      "music_map": {
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "9": 9,
+        "11": 11,
+        "12": 12
+      },
       "world_description": "VVVVVV is a platform game all about exploring one simple mechanical idea - what if you reversed gravity instead of jumping?",
       "slot_data": {
         "MusicRando": {
@@ -878,14 +901,6 @@
             ]
           }
         ]
-      },
-      "door_cost": 3,
-      "area_cost_map": {
-        "1": 1,
-        "2": 2,
-        "3": 3,
-        "4": 4,
-        "0": 0
       },
       "world_directory": "v6"
     }

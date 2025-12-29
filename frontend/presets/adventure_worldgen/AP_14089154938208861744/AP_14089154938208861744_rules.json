@@ -1058,6 +1058,17 @@
       "difficulty_switch_a": 2,
       "difficulty_switch_b": 2,
       "start_castle": 0,
+      "dragon_speed_reducer_info": {
+        "118000259": [
+          1
+        ],
+        "118000260": [
+          1
+        ],
+        "118000261": [
+          2
+        ]
+      },
       "created_items": 24,
       "world_description": "Adventure WorldGen for Archipelago.\n\nAuto-generated world implementation.",
       "web": {

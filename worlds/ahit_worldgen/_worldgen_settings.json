@@ -136,6 +136,22 @@
       0,
       3
     ],
+    "hat_yarn_costs": {
+      "0": 8,
+      "1": 4,
+      "2": 8,
+      "3": 6,
+      "4": 5
+    },
+    "chapter_timepiece_costs": {
+      "1": 0,
+      "2": 17,
+      "3": 12,
+      "4": 8,
+      "5": 35,
+      "6": -1,
+      "7": -1
+    },
     "excluded_dws": [],
     "excluded_bonuses": [],
     "dw_shuffle": [],

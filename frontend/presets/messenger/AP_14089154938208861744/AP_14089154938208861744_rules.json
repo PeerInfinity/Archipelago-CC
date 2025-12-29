@@ -101,50 +101,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Key of Chaos"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Key of Courage"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Key of Hope"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Key of Love"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Key of Strength"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Key of Symbiosis"
-                      }
-                    }
-                  ]
-                },
-                {
                   "rule": "has_dart",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Key of Chaos",
+                      "Key of Courage",
+                      "Key of Hope",
+                      "Key of Love",
+                      "Key of Strength",
+                      "Key of Symbiosis"
+                    ]
+                  }
                 }
               ]
             }
@@ -1249,21 +1221,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Meditation"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Path of Resilience"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Meditation",
+                      "Path of Resilience"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -1559,33 +1523,15 @@
             "name": "Forlorn Temple - Outside Shop -> Forlorn Temple - Entrance Shop",
             "connected_region": "Forlorn Temple - Entrance Shop",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Acro"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Claustro"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Necro"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pyro"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Acro",
+                  "Claustro",
+                  "Necro",
+                  "Pyro"
+                ]
+              }
             }
           }
         ],
@@ -1599,33 +1545,15 @@
             "name": "Forlorn Temple - Entrance Shop -> Forlorn Temple - Outside Shop",
             "connected_region": "Forlorn Temple - Outside Shop",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Acro"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Claustro"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Necro"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pyro"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Acro",
+                  "Claustro",
+                  "Necro",
+                  "Pyro"
+                ]
+              }
             }
           },
           {
@@ -3803,21 +3731,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Meditation"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Path of Resilience"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Meditation",
+                      "Path of Resilience"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -5717,21 +5637,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Meditation"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Path of Resilience"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Meditation",
+                      "Path of Resilience"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -6332,21 +6244,13 @@
             "name": "Sunken Shrine - Key of Love",
             "id": 11390976,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Crest"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sun Crest"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Crest",
+                  "Sun Crest"
+                ]
+              }
             },
             "item": {
               "name": "Serendipitous Bodies",

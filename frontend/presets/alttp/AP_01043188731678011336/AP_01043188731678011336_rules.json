@@ -34,10 +34,19 @@
             "name": "Old Man S&Q",
             "connected_region": "Old Man House",
             "access_rule": {
-              "rule": "CanReachLocation",
+              "rule": "AST_function_call",
               "args": {
-                "location_name": "Old Man"
-              }
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "old_man"
+                  },
+                  "attr": "can_reach"
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -17441,25 +17450,17 @@
                   "rule": "False_"
                 },
                 "if_false": {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Conditional",
-                      "args": {
-                        "test": {
-                          "rule": "has_melee_weapon",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": null,
-                        "_original_ast_type": "conditional"
-                      },
+                  "rule": "Conditional",
+                  "args": {
+                    "test": {
+                      "rule": "has_melee_weapon",
+                      "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
-                    {
+                    "if_true": {
+                      "rule": "True_"
+                    },
+                    "if_false": {
                       "rule": "Or",
                       "children": [
                         {
@@ -17533,8 +17534,10 @@
                           ]
                         }
                       ]
-                    }
-                  ]
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "conditional"
               },

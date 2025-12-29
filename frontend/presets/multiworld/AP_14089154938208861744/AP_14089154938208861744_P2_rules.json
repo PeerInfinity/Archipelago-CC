@@ -41,10 +41,19 @@
             "name": "Old Man S&Q",
             "connected_region": "Old Man House",
             "access_rule": {
-              "rule": "CanReachLocation",
+              "rule": "AST_function_call",
               "args": {
-                "location_name": "Old Man"
-              }
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "old_man"
+                  },
+                  "attr": "can_reach"
+                },
+                "_original_ast_type": "function_call"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -17448,25 +17457,17 @@
                   "rule": "False_"
                 },
                 "if_false": {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Conditional",
-                      "args": {
-                        "test": {
-                          "rule": "has_melee_weapon",
-                          "_original_ast_type": "helper",
-                          "_converted_from_ast": true
-                        },
-                        "if_true": {
-                          "rule": "True_"
-                        },
-                        "if_false": null,
-                        "_original_ast_type": "conditional"
-                      },
+                  "rule": "Conditional",
+                  "args": {
+                    "test": {
+                      "rule": "has_melee_weapon",
+                      "_original_ast_type": "helper",
                       "_converted_from_ast": true
                     },
-                    {
+                    "if_true": {
+                      "rule": "True_"
+                    },
+                    "if_false": {
                       "rule": "Or",
                       "children": [
                         {
@@ -17540,8 +17541,10 @@
                           ]
                         }
                       ]
-                    }
-                  ]
+                    },
+                    "_original_ast_type": "conditional"
+                  },
+                  "_converted_from_ast": true
                 },
                 "_original_ast_type": "conditional"
               },
@@ -23051,54 +23054,48 @@
             }
           },
           "if_false": {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "conditional",
-                "test": {
-                  "type": "compare",
-                  "left": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "hat_yarn_costs"
-                    },
-                    "index": {
-                      "type": "name",
-                      "name": "hat"
-                    }
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "subscript",
+                "value": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "world"
                   },
-                  "op": "<=",
-                  "right": {
-                    "type": "constant",
-                    "value": 0
-                  }
+                  "attr": "hat_yarn_costs"
                 },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "if_false": null
-              },
-              {
-                "type": "item_check",
-                "item": "Yarn",
-                "count": {
-                  "type": "helper",
-                  "name": "get_hat_cost",
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "hat"
-                    }
-                  ]
+                "index": {
+                  "type": "name",
+                  "name": "hat"
                 }
+              },
+              "op": "<=",
+              "right": {
+                "type": "constant",
+                "value": 0
               }
-            ]
+            },
+            "if_true": {
+              "type": "constant",
+              "value": true
+            },
+            "if_false": {
+              "type": "item_check",
+              "item": "Yarn",
+              "count": {
+                "type": "helper",
+                "name": "get_hat_cost",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "hat"
+                  }
+                ]
+              }
+            }
           }
         }
       },
@@ -23214,57 +23211,51 @@
             "value": true
           },
           "if_false": {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "not",
-                      "condition": {
-                        "type": "setting_value",
-                        "setting": "NoPaintingSkips"
-                      }
-                    },
-                    {
-                      "type": "name",
-                      "name": "allow_skip"
-                    }
-                  ]
+            "type": "conditional",
+            "test": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "not",
+                  "condition": {
+                    "type": "setting_value",
+                    "setting": "NoPaintingSkips"
+                  }
                 },
-                "if_true": {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "helper",
-                      "name": "get_difficulty"
-                    },
-                    "op": ">=",
-                    "right": {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": true
-                  },
-                  "if_false": null
-                },
-                "if_false": null
-              },
-              {
-                "type": "item_check",
-                "item": "Progressive Painting Unlock",
-                "count": {
+                {
                   "type": "name",
-                  "name": "count"
+                  "name": "allow_skip"
                 }
+              ]
+            },
+            "if_true": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "helper",
+                  "name": "get_difficulty"
+                },
+                "op": ">=",
+                "right": {
+                  "type": "constant",
+                  "value": 0
+                }
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": null
+            },
+            "if_false": {
+              "type": "item_check",
+              "item": "Progressive Painting Unlock",
+              "count": {
+                "type": "name",
+                "name": "count"
               }
-            ]
+            }
           }
         },
         "defaults": {
