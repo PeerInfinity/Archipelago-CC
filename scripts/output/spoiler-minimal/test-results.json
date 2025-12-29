@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-28T23:32:01.750905",
-    "last_updated": "2025-12-28T23:32:01.750911",
+    "last_updated": "2025-12-29T04:11:54.213981",
     "script_version": "1.0.0"
   },
   "results": {
@@ -72,31 +72,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "a6a6f0da3f6767e5cd242d57960fb6117da38b433dac0451ad5338a33f5ea239",
-          "new_sphere_log_hash": "d36bc0bd35be1031e331f500e0dce8115d27796f983860130d3a4fc05f723225",
-          "original_rules_hash": "a6a6f0da3f6767e5cd242d57960fb6117da38b433dac0451ad5338a33f5ea239",
-          "original_sphere_log_hash": "d36bc0bd35be1031e331f500e0dce8115d27796f983860130d3a4fc05f723225",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-28T23:30:32.375305"
-        }
-      },
       "game_name_from_filename": "alttp",
       "game_name_from_yaml": "A Link to the Past",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 15.74,
+        "processing_time_seconds": 29.58,
         "return_code": 0,
         "success": true,
-        "warning_count": 3
+        "warning_count": 2
       },
       "rules_file": {
         "path": "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 711928,
+        "size_bytes": 711718,
         "size_mb": 0.68
       },
       "seed": "1",
@@ -104,7 +92,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 20.71,
+        "processing_time_seconds": 21.84,
         "return_code": 0,
         "sphere_reached": 22.1,
         "success": true,
@@ -112,7 +100,7 @@
         "warning_count": 0
       },
       "template_filename": "A Link to the Past.yaml",
-      "timestamp": "2025-12-28T23:27:42.335502",
+      "timestamp": "2025-12-29T04:10:32.305668",
       "world_info": {
         "exporter_path": "exporter/games/alttp.py",
         "exporter_size": 2547,
@@ -1606,39 +1594,27 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "5875d2cded60e34c54e5ec4b11992736b2274e97d87c4cc2d11023b980551c78",
-          "new_sphere_log_hash": "4ba4db21ed61cae7ef82dcb4ed4c1874c0f20c8928d325b73763951a0f70345a",
-          "original_rules_hash": "bb952b7db72fd9c83157aeb6bd863f2ebeb29b4c9f93e4b986afcf49f67a2b8b",
-          "original_sphere_log_hash": "4ba4db21ed61cae7ef82dcb4ed4c1874c0f20c8928d325b73763951a0f70345a",
-          "rules_identical": false,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-28T23:30:25.694528"
-        }
-      },
       "game_name_from_filename": "kh2",
       "game_name_from_yaml": "Kingdom Hearts 2",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 6.49,
+        "processing_time_seconds": 10.5,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/kh2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 890840,
-        "size_mb": 0.85
+        "size_bytes": 1668574,
+        "size_mb": 1.59
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 45.0,
+        "processing_time_seconds": 50.2,
         "return_code": 0,
         "sphere_reached": 15.1,
         "success": true,
@@ -1646,16 +1622,16 @@
         "warning_count": 0
       },
       "template_filename": "Kingdom Hearts 2.yaml",
-      "timestamp": "2025-12-28T23:28:17.521420",
+      "timestamp": "2025-12-29T04:08:57.151371",
       "world_info": {
         "exporter_path": "exporter/games/kh2.py",
-        "exporter_size": 23773,
-        "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
-        "game_logic_size": 107612,
+        "exporter_size": 22088,
+        "game_logic_path": null,
+        "game_logic_size": 0,
         "game_name_from_filename": "kh2",
         "game_name_from_yaml": "Kingdom Hearts 2",
         "has_custom_exporter": true,
-        "has_custom_game_logic": true,
+        "has_custom_game_logic": false,
         "world_directory": "kh2"
       }
     },
@@ -2137,27 +2113,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "8f7e5117b36335e8f2be149b3f92595abdd12ae47e844c20f0139a8cdc08683b",
-          "new_sphere_log_hash": "dd6f3ee47d2e13f69ef59747602b1f9306df7d93d84344cbb81a6897cb03a27a",
-          "original_rules_hash": "8f7e5117b36335e8f2be149b3f92595abdd12ae47e844c20f0139a8cdc08683b",
-          "original_sphere_log_hash": "dd6f3ee47d2e13f69ef59747602b1f9306df7d93d84344cbb81a6897cb03a27a",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-28T23:29:49.229608"
-        }
-      },
       "game_name_from_filename": "mm2",
       "game_name_from_yaml": "Mega Man 2",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.55,
+        "processing_time_seconds": 6.88,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/mm2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -2169,7 +2133,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.5,
+        "processing_time_seconds": 9.44,
         "return_code": 0,
         "sphere_reached": 9.1,
         "success": true,
@@ -2177,7 +2141,7 @@
         "warning_count": 0
       },
       "template_filename": "Mega Man 2.yaml",
-      "timestamp": "2025-12-28T23:28:38.807971",
+      "timestamp": "2025-12-29T04:11:37.492392",
       "world_info": {
         "exporter_path": "exporter/games/mm2.py",
         "exporter_size": 1049,
