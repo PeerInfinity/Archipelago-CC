@@ -12,7 +12,6 @@ from typing import Dict, Any, Optional
 from .generic import GenericGameExportHandler
 from worlds.ladx.Items import ladxr_item_to_la_item_name
 import logging
-import re
 
 logger = logging.getLogger(__name__)
 
@@ -136,46 +135,6 @@ class LADXGameExportHandler(GenericGameExportHandler):
         logger.warning(f"Unknown LADXR condition type: {class_name}")
         return None
 
-    def _parse_ladxr_condition_string(self, condition_str: str) -> Optional[Dict[str, Any]]:
-        """
-        Parse LADXR's special condition string format into rule structures.
-
-        Formats:
-        - "ITEM_NAME" -> simple item check
-        - "and['ITEM1', 'ITEM2', ...]" -> and condition
-        - "or['ITEM1', 'ITEM2', ...]" -> or condition
-        """
-        if not condition_str:
-            return None
-
-        # Check for and/or patterns
-        and_match = re.match(r"and\[(.*)\]", condition_str)
-        or_match = re.match(r"or\[(.*)\]", condition_str)
-
-        if and_match:
-            # Parse and condition
-            items_str = and_match.group(1)
-            items = [item.strip().strip("'\"") for item in items_str.split(',')]
-            return {
-                'type': 'and',
-                'conditions': [
-                    self._parse_ladxr_item(item) for item in items if item
-                ]
-            }
-        elif or_match:
-            # Parse or condition
-            items_str = or_match.group(1)
-            items = [item.strip().strip("'\"") for item in items_str.split(',')]
-            return {
-                'type': 'or',
-                'conditions': [
-                    self._parse_ladxr_item(item) for item in items if item
-                ]
-            }
-        else:
-            # Simple item name
-            return self._parse_ladxr_item(condition_str)
-
     def _map_ladxr_item_name(self, item_str: str) -> str:
         """Map LADXR internal item names to Archipelago item names.
 
@@ -227,17 +186,14 @@ class LADXGameExportHandler(GenericGameExportHandler):
 
                 # Case 2: isinstance(constant, str) - can evaluate at export time
                 elif first_arg.get('type') == 'constant':
-                    # The constant has been resolved, so isinstance check would be True
-                    # The constant value might be in LADXR format (e.g., "and['ITEM1', 'ITEM2']")
-                    # Parse it and return the resulting rule
+                    # The constant has been resolved - if it's a string, create an item check
                     constant_value = first_arg.get('value')
-                    if isinstance(constant_value, str):
-                        parsed_rule = self._parse_ladxr_condition_string(constant_value)
-                        if parsed_rule:
-                            logger.debug(f"LADX entrance '{entrance_name}' parsed LADXR condition: {constant_value}")
-                            return parsed_rule
+                    if isinstance(constant_value, str) and constant_value:
+                        parsed_rule = self._parse_ladxr_item(constant_value)
+                        logger.debug(f"LADX entrance '{entrance_name}' parsed item condition: {constant_value}")
+                        return parsed_rule
 
-                    # If parsing failed or not a string, fall back to the if_true branch
+                    # If not a string or empty, fall back to the if_true branch
                     if_true = rule.get('if_true')
                     logger.debug(f"LADX entrance '{entrance_name}' uses isinstance on constant, simplifying to if_true branch")
                     return self._postprocess_rule_recursive(if_true) if if_true else None
