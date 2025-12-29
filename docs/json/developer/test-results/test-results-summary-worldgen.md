@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2025-12-29 00:12:43
+**Generated:** 2025-12-29 04:04:57
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -38,39 +38,39 @@ This summary combines results from 4 types of tests:
 
 Of the 61 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 34/61 (55.7%)
-- **Passing with Generic Logic:** 59/61 (96.7%)
-- **Passing with Both Generic:** 34/61 (55.7%)
+- **Passing with Generic Exporter:** 35/61 (57.4%)
+- **Passing with Generic Logic:** 61/61 (100.0%)
+- **Passing with Both Generic:** 35/61 (57.4%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 299.2KB
-- **Total Game Logic Code:** 105.9KB
-- **Combined Total:** 405.1KB
+- **Total Exporter Code:** 232.7KB
+- **Total Game Logic Code:** 86.2KB
+- **Combined Total:** 318.9KB
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
-| A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.5KB | ✅ | 240.6KB |
+| A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.7KB | ✅ | 240.6KB |
 | A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.5KB | ✅ | 484.3KB |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 77.4KB |
 | APQuest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.2KB |
 | Adventure WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 26.4KB |
 | Aquaria WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.8KB | ✅ | 277.4KB |
 | Bumper Stickers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 54.8KB |
-| Castlevania - Circle of the Moon WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.7KB | ✅ | 99.2KB |
+| Castlevania - Circle of the Moon WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.3KB | ✅ | 99.2KB |
 | Castlevania 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 139.6KB |
 | Celeste (Open World) WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Celeste 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.4KB | ✅ | 56.1KB |
+| Celeste 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.8KB | ✅ | 56.1KB |
 | ChecksFinder WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 16.8KB |
 | ChocolateChipCookies WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 18.1KB |
 | Choo-Choo Charles WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 311.6KB |
-| Civilization VI WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.9KB | ✅ | 180.1KB |
-| DLCQuest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.5KB | ✅ | 50.1KB |
+| Civilization VI WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 180.1KB |
+| DLCQuest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.9KB | ✅ | 50.1KB |
 | DOOM 1993 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 304.1KB |
 | DOOM II WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 357.8KB |
-| Dark Souls III WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.3KB | ✅ | 1071.4KB |
+| Dark Souls III WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.3KB | ✅ | 1071.4KB |
 | Donkey Kong Country 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 112.7KB |
 | Factorio WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.5KB | ✅ | 230.1KB |
 | Faxanadu WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 73.7KB |
@@ -78,7 +78,7 @@ Of the 61 templates passing all 4 tests:
 | Heretic WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 403.4KB |
 | Hylics 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 103.5KB |
 | Inscryption WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.6KB | ✅ | 85.4KB |
-| Kirby's Dream Land 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.3KB | 13.0KB | N/A |
+| Kirby's Dream Land 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.7KB | ✅ | N/A |
 | Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.5KB | ✅ | 210.6KB |
 | Links Awakening DX WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.5KB | ✅ | 714.9KB |
 | Lufia II Ancient Cave WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 132.6KB |
@@ -91,13 +91,13 @@ Of the 61 templates passing all 4 tests:
 | Muse Dash WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 237.2KB |
 | Noita WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 80.1KB |
 | Old School Runescape WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.6KB | ✅ | 313.8KB |
-| Overcooked! 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 29.1KB | 6.7KB | 486.0KB |
+| Overcooked! 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 29.1KB | ✅ | 486.0KB |
 | Paint WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 6.9KB | ✅ | 112.9KB |
 | Risk of Rain 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 162.3KB |
 | Saving Princess WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 33.5KB |
 | Shivers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 151.2KB |
 | Sonic Adventure 2 Battle WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 274.4KB |
-| Starcraft 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 83.8KB | 86.2KB | 1665.4KB |
+| Starcraft 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 33.1KB | 86.2KB | 1665.4KB |
 | Subnautica WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 7.5KB | ✅ | 182.3KB |
 | Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.2KB | ✅ | 100.2KB |
 | Super Mario Land 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 894.6KB |
@@ -131,6 +131,27 @@ Of the 61 templates passing all 4 tests:
 | 9 | Heretic WorldGen | 403.4KB |
 | 10 | Mario & Luigi Superstar Saga WorldGen | 397.9KB |
 
+### Largest Exporter Files
+
+| Rank | Game Name | Exporter Size |
+|------|-----------|---------------|
+| 1 | Starcraft 2 WorldGen | 33.1KB |
+| 2 | Overcooked! 2 WorldGen | 29.1KB |
+| 3 | Terraria WorldGen | 19.2KB |
+| 4 | Landstalker - The Treasures of King Nole WorldGen | 18.5KB |
+| 5 | Links Awakening DX WorldGen | 13.5KB |
+| 6 | Super Mario 64 WorldGen | 13.2KB |
+| 7 | Kirby's Dream Land 3 WorldGen | 9.7KB |
+| 8 | The Messenger WorldGen | 9.0KB |
+| 9 | A Hat in Time WorldGen | 7.7KB |
+| 10 | Subnautica WorldGen | 7.5KB |
+
+### Largest GameLogic Files
+
+| Rank | Game Name | GameLogic Size |
+|------|-----------|----------------|
+| 1 | Starcraft 2 WorldGen | 86.2KB |
+
 ## Excluded Games
 
 The following games are excluded from automated testing:
@@ -159,6 +180,7 @@ The following games are excluded from automated testing:
 | Lingo | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Raft | Temporarily excluded. The WorldGen spoiler test times out at 300 seconds. |
 | Secret of Evermore | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Starcraft 2 | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Stardew Valley | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Super Metroid | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | The Witness | Temporarily excluded. The WorldGen spoiler test takes 261 seconds. |
