@@ -420,6 +420,8 @@ class ASTVisitorMixin:
                     if not should_preserve:
                         try:
                             # Helper function to check if a function contains for loops that can't be evaluated at export time
+                            # NOTE: The frontend now supports for_range/for_iter with state-dependent bodies,
+                            # so we only block truly unsupported patterns like dict.items() iteration.
                             def has_dynamic_for_loops_resolved(func):
                                 """Check if a function's body contains for loops that require runtime state."""
                                 try:
@@ -427,31 +429,22 @@ class ASTVisitorMixin:
                                     source = inspect.getsource(func)
                                     tree = ast.parse(source)
 
-                                    def contains_state_reference(node):
-                                        """Check if an AST node references 'state' anywhere."""
-                                        for child in ast.walk(node):
-                                            if isinstance(child, ast.Name) and child.id == 'state':
-                                                return True
-                                        return False
-
                                     for n in ast.walk(tree):
                                         if isinstance(n, ast.For):
-                                            # Check if the loop body contains state-dependent operations
-                                            # These loops can't be evaluated at export time
-                                            for body_node in n.body:
-                                                if contains_state_reference(body_node):
-                                                    logging.debug(f"Function has for loop with state-dependent body")
-                                                    return True
+                                            # NOTE: State-dependent loop bodies are now supported!
+                                            # The frontend's for_range/for_iter can evaluate state method calls.
+                                            # We only block patterns that truly can't be analyzed.
 
                                             # Check if iterator is a method call like .keys(), .values(), .items()
+                                            # These dict methods produce key-value tuples that need special handling
                                             if isinstance(n.iter, ast.Call):
                                                 if isinstance(n.iter.func, ast.Attribute):
                                                     method_name = n.iter.func.attr
                                                     if method_name in ('keys', 'values', 'items'):
+                                                        logging.debug(f"Function has for loop over .{method_name}() - not yet supported")
                                                         return True
-                                            # Check if iterator is a name (variable)
-                                            elif isinstance(n.iter, ast.Name):
-                                                return True
+                                            # NOTE: Iterating over a name (variable) like 'for x in WORLDS:' is now
+                                            # supported if the variable can be resolved to a constant by expression_resolver.
                                     return False
                                 except Exception:
                                     return False
@@ -544,6 +537,8 @@ class ASTVisitorMixin:
                  # --- Recursive analysis logic (enhanced for multiline lambdas) ---
                  try:
                      # Helper function to check if a function contains for loops that can't be evaluated at export time
+                     # NOTE: The frontend now supports for_range/for_iter with state-dependent bodies,
+                     # so we only block truly unsupported patterns like dict.items() iteration.
                      def has_dynamic_for_loops(func):
                          """Check if a function's body contains for loops that require runtime state."""
                          try:
@@ -551,34 +546,22 @@ class ASTVisitorMixin:
                              source = inspect.getsource(func)
                              tree = ast.parse(source)
 
-                             def contains_state_reference(node):
-                                 """Check if an AST node references 'state' anywhere."""
-                                 for child in ast.walk(node):
-                                     if isinstance(child, ast.Name) and child.id == 'state':
-                                         return True
-                                 return False
-
                              for node in ast.walk(tree):
                                  if isinstance(node, ast.For):
-                                     # Check if the loop body contains state-dependent operations
-                                     # These loops can't be evaluated at export time
-                                     for body_node in node.body:
-                                         if contains_state_reference(body_node):
-                                             logging.debug(f"Function has for loop with state-dependent body")
-                                             return True
+                                     # NOTE: State-dependent loop bodies are now supported!
+                                     # The frontend's for_range/for_iter can evaluate state method calls.
+                                     # We only block patterns that truly can't be analyzed.
 
                                      # Check if iterator is a method call like .keys(), .values(), .items()
+                                     # These dict methods produce key-value tuples that need special handling
                                      if isinstance(node.iter, ast.Call):
                                          if isinstance(node.iter.func, ast.Attribute):
                                              method_name = node.iter.func.attr
                                              if method_name in ('keys', 'values', 'items'):
-                                                 logging.debug(f"Function has for loop over .{method_name}()")
+                                                 logging.debug(f"Function has for loop over .{method_name}() - not yet supported")
                                                  return True
-                                     # Check if iterator is a name (variable) that's not a constant
-                                     elif isinstance(node.iter, ast.Name):
-                                         # Could be iterating over a variable - likely dynamic
-                                         logging.debug(f"Function has for loop over variable: {node.iter.id}")
-                                         return True
+                                     # NOTE: Iterating over a name (variable) like 'for x in WORLDS:' is now
+                                     # supported if the variable can be resolved to a constant by expression_resolver.
                              return False
                          except Exception:
                              return False
