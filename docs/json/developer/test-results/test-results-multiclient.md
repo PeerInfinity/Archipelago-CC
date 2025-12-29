@@ -6,27 +6,27 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-29 19:19:01
+**Generated:** 2025-12-29 22:17:24
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 71 (97.3%)
-- **Failed:** 2 (2.7%)
+- **Passed:** 72 (98.6%)
+- **Failed:** 1 (1.4%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 36/71 (50.7% of passed)
-- **Passing with Generic Logic:** 66/71 (93.0% of passed)
-- **Passing with Both Generic:** 36/71 (50.7% of passed)
+- **Passing with Generic Exporter:** 38/72 (52.8% of passed)
+- **Passing with Generic Logic:** 67/72 (93.1% of passed)
+- **Passing with Both Generic:** 38/72 (52.8% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |
 |-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|
-| A Hat in Time | ✅ Passed | 0 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | 7.7KB | ✅ |
+| A Hat in Time | ✅ Passed | 0 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | 6.6KB | ✅ |
 | A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 7/7 | ✅ | 268/268 | 2.5KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | ✅ | 131/131 | 131/131 | 0/0 | ✅ | 131/131 | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | ✅ | 8/8 | 6/6 | 2/2 | ✅ | 8/8 | ✅ | ✅ |
@@ -34,20 +34,20 @@
 | Aquaria | ✅ Passed | 0 | ✅ | 237/237 | 218/218 | 19/19 | ✅ | 237/237 | 2.8KB | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | 0 | ✅ | 252/252 | 247/247 | 5/5 | ✅ | 252/252 | 1.4KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | ✅ | ✅ |
-| Castlevania - Circle of the Moon | ✅ Passed | 0 | ✅ | 125/125 | 124/124 | 1/1 | ✅ | 125/125 | 7.3KB | ✅ |
+| Castlevania - Circle of the Moon | ✅ Passed | 0 | ✅ | 125/125 | 124/124 | 1/1 | ✅ | 125/125 | 6.0KB | ✅ |
 | Castlevania 64 | ✅ Passed | 0 | ✅ | 215/215 | 213/213 | 2/2 | ✅ | 215/215 | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed | 0 | ✅ | 237/237 | 233/233 | 4/4 | ✅ | 237/237 | ✅ | ✅ |
-| Celeste 64 | ✅ Passed | 0 | ✅ | 40/40 | 40/40 | 0/0 | ✅ | 40/40 | 5.8KB | ✅ |
+| Celeste 64 | ✅ Passed | 0 | ✅ | 40/40 | 40/40 | 0/0 | ✅ | 40/40 | 5.7KB | ✅ |
 | ChecksFinder | ✅ Passed | 0 | ✅ | 25/25 | 25/25 | 0/0 | ✅ | 25/25 | ✅ | ✅ |
 | ChocolateChipCookies | ✅ Passed | 0 | ✅ | 16/16 | 15/15 | 1/1 | ✅ | 16/16 | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | 0 | ✅ | 692/692 | 691/691 | 1/1 | ✅ | 692/692 | ✅ | ✅ |
 | Civilization VI | ✅ Passed | 0 | ✅ | 149/149 | 148/148 | 1/1 | ✅ | 149/149 | ✅ | ✅ |
-| DLCQuest | ✅ Passed | 0 | ✅ | 42/42 | 29/29 | 1/1 | ✅ | 42/42 | 2.9KB | ✅ |
+| DLCQuest | ✅ Passed | 0 | ✅ | 42/42 | 29/29 | 1/1 | ✅ | 42/42 | 2.5KB | ✅ |
 | DOOM 1993 | ✅ Passed | 0 | ✅ | 348/348 | 348/348 | 0/0 | ✅ | 348/348 | ✅ | ✅ |
 | DOOM II | ✅ Passed | 0 | ✅ | 453/453 | 453/453 | 0/0 | ✅ | 453/453 | ✅ | ✅ |
-| Dark Souls III | ✅ Passed | 0 | ✅ | 1194/1194 | 1190/1190 | 4/4 | ✅ | 1194/1194 | 2.3KB | ✅ |
+| Dark Souls III | ✅ Passed | 0 | ✅ | 1194/1194 | 1190/1190 | 4/4 | ✅ | 1194/1194 | 1.4KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | ✅ | 180/180 | 180/180 | 0/0 | ✅ | 180/180 | ✅ | ✅ |
-| Factorio | ✅ Passed | 0 | ✅ | 186/186 | 179/179 | 7/7 | ✅ | 186/186 | 5.3KB | ✅ |
+| Factorio | ✅ Passed | 0 | ✅ | 186/186 | 179/179 | 7/7 | ✅ | 186/186 | 6.0KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | ✅ | 114/114 | 110/110 | 4/4 | ✅ | 114/114 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | 0 | ✅ | 299/299 | 251/251 | 48/48 | ✅ | 299/299 | ✅ | ✅ |
 | Heretic | ✅ Passed | 0 | ✅ | 502/502 | 502/502 | 0/0 | ✅ | 502/502 | ✅ | ✅ |
@@ -68,7 +68,7 @@
 | Metamath | ✅ Passed | 0 | ✅ | 9/9 | 9/9 | 0/0 | ✅ | 9/9 | ✅ | ✅ |
 | Muse Dash | ✅ Passed | 0 | ✅ | 90/90 | 90/90 | 0/0 | ✅ | 90/90 | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | ✅ | 117/117 | 109/109 | 8/8 | ✅ | 117/117 | ✅ | ✅ |
-| Old School Runescape | ❌ Failed | 0 | ❌ | 33/76 | 33/54 | 0/22 | ❌ | 30/76 | 3.6KB | ✅ |
+| Old School Runescape | ✅ Passed | 0 | ✅ | 76/76 | 54/54 | 22/22 | ✅ | 76/76 | 3.6KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 28.0KB | ✅ |
 | Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 3.7KB | ✅ |
 | Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 10.2KB | ✅ |
@@ -79,25 +79,25 @@
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | ✅ | ✅ |
 | Starcraft 2 | ❌ Failed | 7 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 30.2KB | 86.2KB |
 | Stardew Valley | ✅ Passed | 0 | ✅ | 500/500 | 491/491 | 9/9 | ✅ | 500/500 | 18.9KB | 8.0KB |
-| Subnautica | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | 7.5KB | ✅ |
+| Subnautica | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | 7.4KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | 13.2KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60/60 | 53/53 | 7/7 | ✅ | 60/60 | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 0 | ✅ | 108/108 | 108/108 | 0/0 | ✅ | 108/108 | ✅ | ✅ |
-| Super Metroid | ✅ Passed | 0 | ✅ | 109/109 | 100/100 | 9/9 | ✅ | 109/109 | 64.6KB | 114.5KB |
+| Super Metroid | ✅ Passed | 0 | ✅ | 109/109 | 100/100 | 9/9 | ✅ | 109/109 | 63.8KB | 114.5KB |
 | TOEM original | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
 | TUNIC | ✅ Passed | 0 | ✅ | 317/317 | 302/302 | 15/15 | ✅ | 317/317 | 3.1KB | ✅ |
-| Terraria | ✅ Passed | 0 | ✅ | 244/244 | 63/63 | 181/181 | ✅ | 244/244 | 19.2KB | ✅ |
-| The Legend of Zelda | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | 2.2KB | ✅ |
-| The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 9.0KB | ✅ |
-| The Wind Waker | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | 4.4KB | ✅ |
-| The Witness | ✅ Passed | 0 | ✅ | 147/147 | 132/132 | 15/15 | ✅ | 147/147 | 24.9KB | ✅ |
-| Timespinner | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | 3.1KB | ✅ |
+| Terraria | ✅ Passed | 0 | ✅ | 244/244 | 63/63 | 181/181 | ✅ | 244/244 | 18.3KB | ✅ |
+| The Legend of Zelda | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | ✅ | ✅ |
+| The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 5.4KB | ✅ |
+| The Wind Waker | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | 2.1KB | ✅ |
+| The Witness | ✅ Passed | 0 | ✅ | 147/147 | 132/132 | 15/15 | ✅ | 147/147 | 25.8KB | ✅ |
+| Timespinner | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | 3.2KB | ✅ |
 | Undertale | ✅ Passed | 0 | ✅ | 51/51 | 48/48 | 3/3 | ✅ | 51/51 | ✅ | ✅ |
-| VVVVVV | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | 3.6KB | ✅ |
-| Wargroove | ✅ Passed | 0 | ✅ | 39/39 | 38/38 | 1/1 | ✅ | 39/39 | 6.8KB | ✅ |
+| VVVVVV | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | 2.1KB | ✅ |
+| Wargroove | ✅ Passed | 0 | ✅ | 39/39 | 38/38 | 1/1 | ✅ | 39/39 | ✅ | ✅ |
 | WebDevJourney | ✅ Passed | 0 | ✅ | 62/62 | 61/61 | 1/1 | ✅ | 62/62 | ✅ | ✅ |
-| Yoshi's Island | ✅ Passed | 0 | ✅ | 207/207 | 191/191 | 16/16 | ✅ | 207/207 | 5.4KB | ✅ |
+| Yoshi's Island | ✅ Passed | 0 | ✅ | 207/207 | 191/191 | 16/16 | ✅ | 207/207 | 4.7KB | ✅ |
 | shapez | ✅ Passed | 0 | ✅ | 140/140 | 139/139 | 1/1 | ✅ | 140/140 | ✅ | ✅ |
 
 ## Notes
