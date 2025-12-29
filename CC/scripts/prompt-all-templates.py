@@ -2165,10 +2165,10 @@ def main():
                 if not quiet_mode:
                     print(f"Game name: {game_name_from_yaml}")
 
-                # Skip games without custom code
-                if not has_custom_code(game_name_from_yaml, world_mapping):
+                # Skip games without JavaScript helpers
+                if not has_javascript_helpers(game_name_from_yaml, world_mapping):
                     if not quiet_mode:
-                        print(f"Skipping {game_name_from_yaml} - no custom exporter or helpers")
+                        print(f"Skipping {game_name_from_yaml} - no JavaScript helpers")
                     current_index = (current_index + 1) % len(template_files)
                     processed_count += 1
                     if processed_count % len(template_files) == 0:
@@ -2177,10 +2177,10 @@ def main():
                             break
                     continue
 
-                # Skip games whose exporters are fully simplified
-                if template_file in prompt_exclusions['exporter_fully_simplified']:
+                # Skip games that require JavaScript helpers (cannot be removed)
+                if template_file in prompt_exclusions['requires_javascript_helpers']:
                     if not quiet_mode:
-                        print(f"Skipping {game_name_from_yaml} - exporter is fully simplified")
+                        print(f"Skipping {game_name_from_yaml} - requires JavaScript helpers")
                     current_index = (current_index + 1) % len(template_files)
                     processed_count += 1
                     if processed_count % len(template_files) == 0:
