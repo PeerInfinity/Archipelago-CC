@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, False_, Has, HelperCall, Or, True_
+from rule_builder import True_, False_, And, CanReachLocation, False_, Has, HasAll, HasAny, HelperCall, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -65,7 +65,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Shrink Down", player),
-        And(And(Has('Key of Chaos'), Has('Key of Courage'), Has('Key of Hope'), Has('Key of Love'), Has('Key of Strength'), Has('Key of Symbiosis')), HelperCall(helper_func=_themessengerworldgen_has_dart, helper_name="has_dart"))
+        And(HelperCall(helper_func=_themessengerworldgen_has_dart, helper_name="has_dart"), HasAll('Key of Chaos', 'Key of Courage', 'Key of Hope', 'Key of Love', 'Key of Strength', 'Key of Symbiosis'))
     )
 
     world.set_rule(
@@ -110,7 +110,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Autumn Hills - Hope Latch Checkpoint -> Autumn Hills - Hope Path Shop", player),
-        And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind'))
+        And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind'))
     )
 
     world.set_rule(
@@ -120,12 +120,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Forlorn Temple - Outside Shop -> Forlorn Temple - Entrance Shop", player),
-        And(Has('Acro'), Has('Claustro'), Has('Necro'), Has('Pyro'))
+        HasAll('Acro', 'Claustro', 'Necro', 'Pyro')
     )
 
     world.set_rule(
         multiworld.get_entrance("Forlorn Temple - Entrance Shop -> Forlorn Temple - Outside Shop", player),
-        And(Has('Acro'), Has('Claustro'), Has('Necro'), Has('Pyro'))
+        HasAll('Acro', 'Claustro', 'Necro', 'Pyro')
     )
 
     world.set_rule(
@@ -615,7 +615,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Searing Crags Seal - Triple Ball Spinner", player),
-        And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind'))
+        And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind'))
     )
 
     world.set_rule(
@@ -665,7 +665,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Riviere Turquoise Seal - Bounces and Balls", player),
-        And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind'))
+        And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind'))
     )
 
     world.set_rule(
@@ -695,7 +695,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Sunken Shrine - Key of Love", player),
-        And(Has('Moon Crest'), Has('Sun Crest'))
+        HasAll('Moon Crest', 'Sun Crest')
     )
 
     world.set_rule(

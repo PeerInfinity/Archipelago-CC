@@ -190,9 +190,9 @@
           "label": "3eqtri",
           "expression": "|- A = D",
           "dependencies": [
-            7,
+            3,
             6,
-            3
+            7
           ],
           "full_text": "3eqtri: Register '=' as an equality for its type (class). $) $( $j equality 'wceq' from 'eqid' 'eqcomi' 'eqtri'; $) ${ 3eqtri.1 $e |- A = B $. 3eqtri.2 $e |- B = C $. 3eqtri.3 $e |- C = D $. $( An inference from three chained equalities.  (Contributed by NM, 29-Aug-1993.) (|- A = D)"
         },
@@ -208,8 +208,8 @@
           "label": "eqtr4i",
           "expression": "|- A = C",
           "dependencies": [
-            9,
-            8
+            8,
+            9
           ],
           "full_text": "eqtr4i: An equality transitivity inference.  (Contributed by NM, 26-May-1993.) (|- A = C)"
         }

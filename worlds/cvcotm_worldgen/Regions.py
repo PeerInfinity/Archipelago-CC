@@ -13,7 +13,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["Catacomb", "Abyss Stairway", "Audience Room", "Machine Tower Bottom", "Machine Tower Top", "Eternal Corridor Pit", "Chapel Tower Bottom", "Chapel Tower Top", "Battle Arena", "Underground Gallery Upper", "Underground Gallery Lower", "Underground Warehouse Start", "Underground Warehouse Main", "Underground Waterway Start", "Underground Waterway Main", "Underground Waterway End", "Observation Tower", "Ceremonial Room", "Menu"]
+    region_names = ["Catacomb", "Abyss Stairway", "Audience Room", "Machine Tower Bottom", "Machine Tower Top", "Eternal Corridor Pit", "Chapel Tower Bottom", "Chapel Tower Top", "Battle Arena", "Underground Gallery Upper", "Underground Gallery Lower", "Underground Warehouse Start", "Underground Warehouse Main", "Underground Waterway Start", "Underground Waterway Main", "Underground Waterway End", "Observation Tower", "Ceremonial Room"]
 
     regions = {}
     for region_name in region_names:
@@ -75,7 +75,6 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["Underground Warehouse Start"], regions["Underground Warehouse Main"], "Into Warehouse Main")
     _create_entrance(regions["Underground Waterway Start"], regions["Underground Waterway Main"], "Into Waterway Main")
     _create_entrance(regions["Underground Waterway Main"], regions["Underground Waterway End"], "Onward to Waterway End")
-    _create_entrance(regions["Menu"], regions["Catacomb"], "Start Game")
 
 
 def _create_entrance(source: Region, target: Region, name: str) -> Entrance:

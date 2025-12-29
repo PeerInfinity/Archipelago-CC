@@ -5565,8 +5565,8 @@
             "37": "egg_dragon",
             "38": "master",
             "39": "random-high",
-            "40": "random-low",
-            "41": "random-sinistral",
+            "40": "random-sinistral",
+            "41": "random-low",
             "42": "random-middle"
           },
           "default": 38,

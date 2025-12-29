@@ -2584,19 +2584,6 @@
             "event": true
           }
         ]
-      },
-      "Menu": {
-        "name": "Menu",
-        "exits": [
-          {
-            "name": "Start Game",
-            "connected_region": "Catacomb",
-            "access_rule": {
-              "rule": "True_"
-            }
-          }
-        ],
-        "locations": []
       }
     }
   },

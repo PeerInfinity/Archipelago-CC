@@ -34,10 +34,7 @@
             "name": "Old Man S&Q",
             "connected_region": "Old Man House",
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Old Man"
-              }
+              "rule": "True_"
             }
           }
         ],
@@ -15978,6 +15975,21 @@
         }
       ],
       "has_progressive_bows": true,
+      "dungeons": {
+        "Hyrule Castle": "Hyrule Castle",
+        "Eastern Palace": "Eastern Palace",
+        "Desert Palace": "Desert Palace",
+        "Tower of Hera": "Tower of Hera",
+        "Agahnims Tower": "Agahnims Tower",
+        "Palace of Darkness": "Palace of Darkness",
+        "Thieves Town": "Thieves Town",
+        "Skull Woods": "Skull Woods",
+        "Swamp Palace": "Swamp Palace",
+        "Ice Palace": "Ice Palace",
+        "Misery Mire": "Misery Mire",
+        "Turtle Rock": "Turtle Rock",
+        "Ganons Tower": "Ganons Tower"
+      },
       "waterfall_fairy_bottle_fill": "Bottle (Red Potion)",
       "pyramid_fairy_bottle_fill": "Bottle (Good Bee)",
       "fix_trock_doors": false,
@@ -16339,21 +16351,6 @@
       "save_and_quit_from_boss": true,
       "rupoor_cost": 10,
       "world_description": "A Link to the Past WorldGen for Archipelago.\n\nAuto-generated world implementation.",
-      "dungeons": {
-        "Hyrule Castle": "Hyrule Castle",
-        "Eastern Palace": "Eastern Palace",
-        "Desert Palace": "Desert Palace",
-        "Tower of Hera": "Tower of Hera",
-        "Agahnims Tower": "Agahnims Tower",
-        "Palace of Darkness": "Palace of Darkness",
-        "Thieves Town": "Thieves Town",
-        "Skull Woods": "Skull Woods",
-        "Swamp Palace": "Swamp Palace",
-        "Ice Palace": "Ice Palace",
-        "Misery Mire": "Misery Mire",
-        "Turtle Rock": "Turtle Rock",
-        "Ganons Tower": "Ganons Tower"
-      },
       "slot_data": {
         "crystals_needed_for_gt": 7,
         "crystals_needed_for_ganon": 7,

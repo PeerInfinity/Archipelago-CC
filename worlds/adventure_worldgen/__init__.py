@@ -131,6 +131,7 @@ class AdventureWorldGenWorld(RuleWorldMixin, World):
         self.difficulty_switch_a = 2
         self.difficulty_switch_b = 2
         self.start_castle = 0
+        self.dragon_speed_reducer_info = {'118000259': [1], '118000260': [1], '118000261': [2]}
         self.created_items = 24
         self.world_description = 'Adventure for the Atari 2600 is an early graphical adventure game.\nFind the enchanted chalice and return it to the yellow castle,\nusing magic items to enter hidden rooms, retrieve out of\nreach items, or defeat the three dragons.  Beware the bat\nwho likes to steal your equipment!'
         self.web = types.SimpleNamespace(theme='dirt', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up Adventure for MultiWorld.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['JusticePS']}, {'name': 'Guide de configuration Multimonde', 'description': 'Un guide pour configurer Adventure MultiWorld', 'language': 'Français', 'file_name': 'setup_fr.md', 'link': 'setup/fr', 'authors': ['TheLynk']}])
