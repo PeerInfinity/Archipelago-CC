@@ -863,8 +863,13 @@
         }
       },
       "shops": [],
-      "world_description": "VVVVVV WorldGen for Archipelago.\n\nAuto-generated world implementation.",
-      "door_cost": 3,
+      "area_connections": {
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "0": 0
+      },
       "area_cost_map": {
         "1": 1,
         "2": 2,
@@ -872,6 +877,16 @@
         "4": 4,
         "0": 0
       },
+      "music_map": {
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "9": 9,
+        "11": 11,
+        "12": 12
+      },
+      "world_description": "VVVVVV WorldGen for Archipelago.\n\nAuto-generated world implementation.",
       "slot_data": {
         "MusicRando": {
           "1": 1,

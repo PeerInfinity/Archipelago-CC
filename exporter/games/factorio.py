@@ -7,8 +7,21 @@ from .generic import GenericGameExportHandler
 class FactorioGameExportHandler(GenericGameExportHandler):
     """Export handler for Factorio.
 
-    Inherits item data extraction from GenericGameExportHandler.
-    Provides Factorio-specific rule simplification for technology names.
+    This exporter requires custom methods that cannot be replaced with declarative
+    class attributes:
+
+    - get_game_info: Exports required_technologies dict from the Technologies module.
+      This data is inlined into the rules and needed by the frontend to evaluate
+      which technologies are required for each ingredient.
+
+    - expand_rule: Transforms 'technology.name' attribute access to just 'technology'
+      when iterating over required_technologies in all_of rules. This is needed because
+      in Python, technologies are objects with a .name attribute, but in the exported
+      JSON, they're already strings (the tech names).
+
+    - get_progression_mapping: Builds the progressive technology mapping from
+      progressive_technology_table. Each progressive item (e.g., progressive-military)
+      maps to a sequence of technologies (military, military-2, military-3, military-4).
     """
 
     # Factorio rules use resolved technology names (e.g., "steel-processing", "military-2")

@@ -12,25 +12,16 @@ class DLCQuestGameExportHandler(GenericGameExportHandler):
     ADD_SPHERE_ITEMS_UPFRONT = True
     USE_RESOLVED_ITEMS = True
 
-    def get_game_info(self, world):
-        """Export DLCQuest game info including accumulator rules."""
-        game_info = super().get_game_info(world)
+    # Accumulator rules - pattern matches "4 coins", "46 coins", etc.
+    ACCUMULATOR_RULES = [{
+        'pattern': r'^(\d+) coins?$',
+        'extract_value': True,
+        'target': ' coins',
+        'discriminator': None
+    }]
 
-        # Define accumulator rules - pattern matches "4 coins", "46 coins", etc.
-        game_info['accumulator_rules'] = [{
-            'pattern': r'^(\d+) coins?$',
-            'extract_value': True,
-            'target': ' coins',
-            'discriminator': None
-        }]
-
-        # Initialize coin accumulators (start at 0, accumulate as items collected)
-        # Use world.prog_items_init if available (for test worlds with precollected coins)
-        game_info['prog_items_init'] = dict(getattr(world, 'prog_items_init', {}))
-        game_info['prog_items_init'].setdefault(' coins', 0)
-        game_info['prog_items_init'].setdefault(' coins freemium', 0)
-
-        return game_info
+    # Initialize coin accumulators (start at 0, accumulate as items collected)
+    PROG_ITEMS_INIT = {' coins': 0, ' coins freemium': 0}
 
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Add coin items with event=False (coins are real items, not events)."""

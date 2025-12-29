@@ -119,11 +119,12 @@ class VVVVVVWorldGenWorld(RuleWorldMixin, World):
         super().__init__(multiworld, player)
         # Game-specific world attributes
         self.shops = []
+        self.area_connections = {'1': 1, '2': 2, '3': 3, '4': 4, '0': 0}
+        self.area_cost_map = {'1': 1, '2': 2, '3': 3, '4': 4, '0': 0}
+        self.music_map = {'1': 1, '2': 2, '3': 3, '4': 4, '9': 9, '11': 11, '12': 12}
         self.world_description = 'VVVVVV is a platform game all about exploring one simple mechanical idea - what if you reversed gravity instead of jumping?'
         self.slot_data = {'MusicRando': {'1': 1, '2': 2, '3': 3, '4': 4, '9': 9, '11': 11, '12': 12}, 'AreaRando': {'1': 1, '2': 2, '3': 3, '4': 4, '0': 0}, 'DoorCost': 3, 'AreaCostRando': {'1': 1, '2': 2, '3': 3, '4': 4, '0': 0}, 'DeathLink': 0, 'DeathLink_Amnesty': 15}
         self.web = types.SimpleNamespace(theme='grass', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up VVVVVV for Multiworld.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['N00byKing']}])
-        self.door_cost = 3
-        self.area_cost_map = {'1': 1, '2': 2, '3': 3, '4': 4, '0': 0}
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""

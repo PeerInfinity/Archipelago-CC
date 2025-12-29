@@ -9,10 +9,8 @@ class TimespinnerGameExportHandler(GenericGameExportHandler):
 
     Exports helper function definitions from TimespinnerLogic class.
     All helpers are automatically exported and evaluated by the frontend.
+    Helper modules are auto-discovered from the game's world directory.
     """
-
-    # Module containing helper functions
-    HELPER_MODULES = ['worlds.timespinner.LogicExtensions']
 
     # Map 'flooded' local variable to 'precalculated_weights' world attribute
     # This is used in helper functions where 'flooded' references precalculated_weights
@@ -21,8 +19,8 @@ class TimespinnerGameExportHandler(GenericGameExportHandler):
     def _is_common_helper_pattern(self, helper_name: str) -> bool:
         """Override to prevent GenericGameExportHandler from expanding helpers.
 
-        Timespinner has exported helper definitions from HELPER_MODULES that should
-        be preserved as-is. The base class's pattern matching would incorrectly
+        Timespinner has exported helper definitions (auto-discovered from LogicExtensions)
+        that should be preserved as-is. The base class's pattern matching would incorrectly
         expand has_*, can_* patterns into simple item checks.
         """
         return False
@@ -47,6 +45,8 @@ class TimespinnerGameExportHandler(GenericGameExportHandler):
                 settings_dict['flag_unchained_keys'] = bool(getattr(options.unchained_keys, 'value', False))
             if hasattr(options, 'prism_break'):
                 settings_dict['flag_prism_break'] = bool(getattr(options.prism_break, 'value', False))
+            if hasattr(options, 'find_the_flame'):
+                settings_dict['flag_find_the_flame'] = bool(getattr(options.find_the_flame, 'value', False))
 
         # Export precalculated weights (warp gate unlocks)
         if hasattr(world, 'precalculated_weights'):

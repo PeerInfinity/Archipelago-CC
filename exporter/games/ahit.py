@@ -5,7 +5,7 @@ Handles:
 - Game-specific data: chapter_costs, hat_info, relic_groups for frontend
 """
 
-from typing import Dict, Any, Optional
+from typing import Any, Dict, List, Optional
 from .generic import GenericGameExportHandler
 import logging
 
@@ -21,8 +21,8 @@ class AHitGameExportHandler(GenericGameExportHandler):
     # Disable location attribute discovery (not needed for AHIT)
     AUTO_DISCOVER_LOCATION_ATTRIBUTES = False
 
-    # Module containing helper functions for definition export
-    HELPER_MODULES = ['worlds.ahit.Rules']
+    # Don't export can_clear_required_act as a helper definition since we expand it
+    HELPERS_TO_EXPORT_BLACKLIST = {'can_clear_required_act'}
 
     def _get_entrance_connected_region(self, entrance_name: str) -> Optional[str]:
         """Get the connected region name for an entrance (cached)."""
@@ -45,69 +45,46 @@ class AHitGameExportHandler(GenericGameExportHandler):
 
         return self._entrance_cache.get(entrance_name)
 
-    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
-        """Expand rules with special handling for can_clear_required_act.
+    def expand_helper(self, helper_name: str, args: List[Any] = None) -> Optional[Dict[str, Any]]:
+        """Expand helper functions with special handling for can_clear_required_act.
 
-        When we encounter a can_clear_required_act helper call with a constant
-        entrance argument, we resolve it at export time to:
-        - can_reach(connected_region) AND
-        - (region contains "Free Roam" ? true : location_rule_ref("Act Completion (region)"))
+        Resolves can_clear_required_act(entrance) at export time to:
+        - can_reach(connected_region) for Free Roam regions
+        - can_reach(connected_region) AND location_rule_ref("Act Completion (region)") otherwise
         """
-        if not rule or not isinstance(rule, dict):
-            return rule
+        if helper_name == 'can_clear_required_act' and args:
+            # Get the entrance argument
+            entrance_arg = args[0] if args else None
+            entrance_name = None
 
-        rule_type = rule.get('type')
+            # Extract constant value from argument
+            if isinstance(entrance_arg, dict) and entrance_arg.get('type') == 'constant':
+                entrance_name = entrance_arg.get('value')
+            elif isinstance(entrance_arg, str):
+                entrance_name = entrance_arg
 
-        # Handle can_clear_required_act helper calls
-        if rule_type == 'helper' and rule.get('name') == 'can_clear_required_act':
-            args = rule.get('args', [])
-            if args and len(args) >= 1:
-                # Get the entrance argument
-                entrance_arg = args[0]
-                entrance_name = None
+            if entrance_name:
+                connected_region = self._get_entrance_connected_region(entrance_name)
 
-                # Extract constant value
-                if isinstance(entrance_arg, dict) and entrance_arg.get('type') == 'constant':
-                    entrance_name = entrance_arg.get('value')
-                elif isinstance(entrance_arg, str):
-                    entrance_name = entrance_arg
+                if connected_region:
+                    logger.debug(f"Expanding can_clear_required_act({entrance_name}) -> {connected_region}")
 
-                if entrance_name:
-                    # Look up the connected region
-                    connected_region = self._get_entrance_connected_region(entrance_name)
+                    can_reach_rule = {'type': 'can_reach', 'region': connected_region}
 
-                    if connected_region:
-                        logger.debug(f"Resolving can_clear_required_act({entrance_name}) -> region: {connected_region}")
+                    # Free Roam regions just need to be reachable
+                    if "Free Roam" in connected_region:
+                        return can_reach_rule
 
-                        # Build the resolved rule:
-                        # can_reach(connected_region) AND act_completion_rule
-                        can_reach_rule = {
-                            'type': 'can_reach',
-                            'region': connected_region
-                        }
+                    # Non-Free-Roam regions also need the Act Completion location's rule
+                    return {
+                        'type': 'and',
+                        'conditions': [
+                            can_reach_rule,
+                            {'type': 'location_rule_ref', 'location': f"Act Completion ({connected_region})"}
+                        ]
+                    }
 
-                        # Check if it's a Free Roam region (always clearable if reachable)
-                        if "Free Roam" in connected_region:
-                            # Free Roam regions just need to be reachable
-                            return can_reach_rule
-
-                        # For non-Free-Roam regions, also check the Act Completion location's rule
-                        act_completion_name = f"Act Completion ({connected_region})"
-                        location_rule_ref = {
-                            'type': 'location_rule_ref',
-                            'location': act_completion_name
-                        }
-
-                        # Return: can_reach AND location_rule_ref
-                        return {
-                            'type': 'and',
-                            'conditions': [can_reach_rule, location_rule_ref]
-                        }
-                    else:
-                        logger.debug(f"Could not resolve entrance '{entrance_name}' for can_clear_required_act")
-
-        # Let the parent class handle recursive expansion and other processing
-        return super().expand_rule(rule, _depth)
+        return super().expand_helper(helper_name, args)
 
     def get_chapter_costs(self, world):
         """Extract A Hat in Time chapter costs for telescope access rules."""

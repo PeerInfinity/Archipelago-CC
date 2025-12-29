@@ -8724,6 +8724,22 @@
         1,
         0
       ],
+      "hat_yarn_costs": {
+        "0": 6,
+        "1": 4,
+        "2": 8,
+        "3": 6,
+        "4": 6
+      },
+      "chapter_timepiece_costs": {
+        "1": 0,
+        "2": 5,
+        "3": 17,
+        "4": 13,
+        "5": 35,
+        "6": -1,
+        "7": -1
+      },
       "excluded_dws": [],
       "excluded_bonuses": [],
       "dw_shuffle": [],
@@ -9264,54 +9280,48 @@
             }
           },
           "if_false": {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "conditional",
-                "test": {
-                  "type": "compare",
-                  "left": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "hat_yarn_costs"
-                    },
-                    "index": {
-                      "type": "name",
-                      "name": "hat"
-                    }
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "subscript",
+                "value": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "world"
                   },
-                  "op": "<=",
-                  "right": {
-                    "type": "constant",
-                    "value": 0
-                  }
+                  "attr": "hat_yarn_costs"
                 },
-                "if_true": {
-                  "type": "constant",
-                  "value": true
-                },
-                "if_false": null
-              },
-              {
-                "type": "item_check",
-                "item": "Yarn",
-                "count": {
-                  "type": "helper",
-                  "name": "get_hat_cost",
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "hat"
-                    }
-                  ]
+                "index": {
+                  "type": "name",
+                  "name": "hat"
                 }
+              },
+              "op": "<=",
+              "right": {
+                "type": "constant",
+                "value": 0
               }
-            ]
+            },
+            "if_true": {
+              "type": "constant",
+              "value": true
+            },
+            "if_false": {
+              "type": "item_check",
+              "item": "Yarn",
+              "count": {
+                "type": "helper",
+                "name": "get_hat_cost",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "hat"
+                  }
+                ]
+              }
+            }
           }
         }
       },
@@ -9427,57 +9437,51 @@
             "value": true
           },
           "if_false": {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "not",
-                      "condition": {
-                        "type": "setting_value",
-                        "setting": "NoPaintingSkips"
-                      }
-                    },
-                    {
-                      "type": "name",
-                      "name": "allow_skip"
-                    }
-                  ]
+            "type": "conditional",
+            "test": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "not",
+                  "condition": {
+                    "type": "setting_value",
+                    "setting": "NoPaintingSkips"
+                  }
                 },
-                "if_true": {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "helper",
-                      "name": "get_difficulty"
-                    },
-                    "op": ">=",
-                    "right": {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": true
-                  },
-                  "if_false": null
-                },
-                "if_false": null
-              },
-              {
-                "type": "item_check",
-                "item": "Progressive Painting Unlock",
-                "count": {
+                {
                   "type": "name",
-                  "name": "count"
+                  "name": "allow_skip"
                 }
+              ]
+            },
+            "if_true": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "helper",
+                  "name": "get_difficulty"
+                },
+                "op": ">=",
+                "right": {
+                  "type": "constant",
+                  "value": 0
+                }
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": null
+            },
+            "if_false": {
+              "type": "item_check",
+              "item": "Progressive Painting Unlock",
+              "count": {
+                "type": "name",
+                "name": "count"
               }
-            ]
+            }
           }
         },
         "defaults": {

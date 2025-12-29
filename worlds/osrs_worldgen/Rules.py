@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Compare, False_, Has, HelperCall, Or, True_
+from rule_builder import True_, False_, And, CanReachRegion, Compare, False_, Has, HelperCall, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -843,7 +843,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Cook's Assistant", player),
-        CanReachLocation("Quest: Cook's Assistant")
+        True_()
     )
 
     world.set_rule(
@@ -853,7 +853,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: The Restless Ghost", player),
-        CanReachLocation('Quest: The Restless Ghost')
+        True_()
     )
 
     world.set_rule(
@@ -863,7 +863,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Rune Mysteries", player),
-        CanReachLocation('Quest: Rune Mysteries')
+        True_()
     )
 
     world.set_rule(
@@ -873,7 +873,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: X Marks the Spot", player),
-        CanReachLocation('Quest: X Marks the Spot')
+        True_()
     )
 
     world.set_rule(
@@ -883,7 +883,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Misthalin Mystery", player),
-        CanReachLocation('Quest: Misthalin Mystery')
+        True_()
     )
 
     world.set_rule(
@@ -898,7 +898,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Sheep Shearer", player),
-        CanReachLocation('Quest: Sheep Shearer')
+        True_()
     )
 
     world.set_rule(
@@ -908,7 +908,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Demon Slayer", player),
-        CanReachLocation('Quest: Demon Slayer')
+        True_()
     )
 
     world.set_rule(
@@ -918,7 +918,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Romeo & Juliet", player),
-        CanReachLocation('Quest: Romeo & Juliet')
+        True_()
     )
 
     world.set_rule(
@@ -928,7 +928,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Shield of Arrav", player),
-        CanReachLocation('Quest: Shield of Arrav')
+        True_()
     )
 
     world.set_rule(
@@ -948,7 +948,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Ernest the Chicken", player),
-        CanReachLocation('Quest: Ernest the Chicken')
+        True_()
     )
 
     world.set_rule(
@@ -958,7 +958,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Doric's Quest", player),
-        CanReachLocation("Quest: Doric's Quest")
+        True_()
     )
 
     world.set_rule(
@@ -968,7 +968,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Black Knights' Fortress", player),
-        CanReachLocation("Quest: Black Knights' Fortress")
+        True_()
     )
 
     world.set_rule(
@@ -978,7 +978,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Below Ice Mountain", player),
-        CanReachLocation('Quest: Below Ice Mountain')
+        True_()
     )
 
     world.set_rule(
@@ -988,7 +988,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Goblin Diplomacy", player),
-        CanReachLocation('Quest: Goblin Diplomacy')
+        True_()
     )
 
     world.set_rule(
@@ -1003,7 +1003,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: The Knight's Sword", player),
-        CanReachLocation("Quest: The Knight's Sword")
+        True_()
     )
 
     world.set_rule(
@@ -1013,7 +1013,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Pirate's Treasure", player),
-        CanReachLocation("Quest: Pirate's Treasure")
+        True_()
     )
 
     world.set_rule(
@@ -1028,7 +1028,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Witch's Potion", player),
-        CanReachLocation("Quest: Witch's Potion")
+        True_()
     )
 
     world.set_rule(
@@ -1038,7 +1038,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: The Corsair Curse", player),
-        CanReachLocation('Quest: The Corsair Curse')
+        True_()
     )
 
     world.set_rule(
@@ -1048,7 +1048,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Vampyre Slayer", player),
-        CanReachLocation('Quest: Vampyre Slayer')
+        True_()
     )
 
     world.set_rule(
@@ -1063,7 +1063,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Imp Catcher", player),
-        CanReachLocation('Quest: Imp Catcher')
+        True_()
     )
 
     world.set_rule(
@@ -1073,7 +1073,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Points: Prince Ali Rescue", player),
-        CanReachLocation('Quest: Prince Ali Rescue')
+        True_()
     )
 
     world.set_rule(

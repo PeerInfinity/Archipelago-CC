@@ -14,9 +14,6 @@ logger = logging.getLogger(__name__)
 class Celeste64GameExportHandler(GenericGameExportHandler):
     """Celeste 64 expander that inlines rules from logic mappings."""
 
-    # Auto-discover world attributes like strawberries_required
-    AUTO_DISCOVER_WORLD_ATTRIBUTES = True
-
     def __init__(self, world=None):
         """Initialize with world instance to access options."""
         super().__init__(world=world)

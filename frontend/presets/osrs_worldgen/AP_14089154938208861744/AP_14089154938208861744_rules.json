@@ -525,10 +525,7 @@
             "name": "Points: Cook's Assistant",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Cook's Assistant"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "1 QP (Cook's Assistant)",
@@ -577,10 +574,7 @@
             "name": "Points: The Restless Ghost",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: The Restless Ghost"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "1 QP (The Restless Ghost)",
@@ -629,10 +623,7 @@
             "name": "Points: Rune Mysteries",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Rune Mysteries"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "1 QP (Rune Mysteries)",
@@ -681,10 +672,7 @@
             "name": "Points: X Marks the Spot",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: X Marks the Spot"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "1 QP (X Marks The Spot)",
@@ -801,10 +789,7 @@
             "name": "Points: Misthalin Mystery",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Misthalin Mystery"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "1 QP (Misthalin Mystery)",
@@ -1031,10 +1016,7 @@
             "name": "Points: Sheep Shearer",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Sheep Shearer"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "1 QP (Sheep Shearer)",
@@ -1663,10 +1645,7 @@
             "name": "Points: Demon Slayer",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Demon Slayer"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "3 QP (Demon Slayer)",
@@ -1721,10 +1700,7 @@
             "name": "Points: Romeo & Juliet",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Romeo & Juliet"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "5 QP (Romeo & Juliet)",
@@ -1779,10 +1755,7 @@
             "name": "Points: Shield of Arrav",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Shield of Arrav"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "1 QP (Shield of Arrav)",
@@ -2841,10 +2814,7 @@
             "name": "Points: Ernest the Chicken",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Ernest the Chicken"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "4 QP (Ernest the Chicken)",
@@ -3041,10 +3011,7 @@
             "name": "Points: Doric's Quest",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Doric's Quest"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "1 QP (Doric's Quest)",
@@ -3219,10 +3186,7 @@
             "name": "Points: Black Knights' Fortress",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Black Knights' Fortress"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "3 QP (Black Knights' Fortress)",
@@ -3306,10 +3270,7 @@
             "name": "Points: Below Ice Mountain",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Below Ice Mountain"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "1 QP (Below Ice Mountain)",
@@ -3406,10 +3367,7 @@
             "name": "Points: Goblin Diplomacy",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Goblin Diplomacy"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "5 QP (Goblin Diplomacy)",
@@ -3800,10 +3758,7 @@
             "name": "Points: The Knight's Sword",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: The Knight's Sword"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "1 QP (The Knight's Sword)",
@@ -4168,10 +4123,7 @@
             "name": "Points: Pirate's Treasure",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Pirate's Treasure"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "2 QP (Pirate's Treasure)",
@@ -4784,10 +4736,7 @@
             "name": "Points: Witch's Potion",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Witch's Potion"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "1 QP (Witch's Potion)",
@@ -4836,10 +4785,7 @@
             "name": "Points: The Corsair Curse",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: The Corsair Curse"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "2 QP (The Corsair Curse)",
@@ -5357,10 +5303,7 @@
             "name": "Points: Vampyre Slayer",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Vampyre Slayer"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "3 QP (Vampyre Slayer)",
@@ -5452,10 +5395,7 @@
             "name": "Points: Imp Catcher",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Imp Catcher"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "1 QP (Imp Catcher)",
@@ -5708,10 +5648,7 @@
             "name": "Points: Prince Ali Rescue",
             "id": null,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": "Quest: Prince Ali Rescue"
-              }
+              "rule": "True_"
             },
             "item": {
               "name": "3 QP (Prince Ali Rescue)",

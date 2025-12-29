@@ -64,8 +64,8 @@ class Boss(Choice):
     option_egg_dragon = 37
     option_master = 38
     option_random_high = 39
-    option_random_low = 40
-    option_random_sinistral = 41
+    option_random_sinistral = 40
+    option_random_low = 41
     option_random_middle = 42
     default = 38
 

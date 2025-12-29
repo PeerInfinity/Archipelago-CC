@@ -1377,8 +1377,38 @@ class ASTVisitorMixin:
                     # Count is now in position 1 after player is filtered
                     count = filtered_args[1] if len(filtered_args) >= 2 else {'type': 'constant', 'value': 1}
                     result = {'type': 'count_check', 'item': item_value, 'count': count}
-                # Add other state methods like can_reach if needed
-                # elif method == 'can_reach': ...
+                elif method == 'can_reach' and len(filtered_args) >= 1:
+                    # Handle can_reach state method with Location object resolution
+                    # Pattern: state.can_reach(loc_var, "Location", player) where loc_var is a Location object
+                    # in closure_vars (typically from lambda default parameter like: lambda state, b=boss: ...)
+                    first_arg = filtered_args[0]
+                    reach_type = 'Region'  # Default reach type
+
+                    # Get the reach type from the second argument if present
+                    if len(filtered_args) >= 2:
+                        type_arg = filtered_args[1]
+                        if isinstance(type_arg, dict) and type_arg.get('type') == 'constant':
+                            reach_type = type_arg.get('value', 'Region')
+                        elif isinstance(type_arg, str):
+                            reach_type = type_arg
+
+                    # Check if first argument is a name reference to a Location object in closure_vars
+                    if (isinstance(first_arg, dict) and first_arg.get('type') == 'name' and
+                        reach_type == 'Location'):
+                        var_name = first_arg.get('name')
+                        if var_name and var_name in self.closure_vars:
+                            loc_obj = self.closure_vars[var_name]
+                            # Check if it's a Location object (has 'name' and 'parent_region' but not 'entrances')
+                            if (hasattr(loc_obj, 'name') and
+                                hasattr(loc_obj, 'parent_region') and
+                                not hasattr(loc_obj, 'entrances') and
+                                isinstance(loc_obj.name, str)):
+                                logging.debug(f"Resolved Location object '{var_name}' to name: {loc_obj.name}")
+                                # Replace the name reference with the actual location name
+                                filtered_args[0] = {'type': 'constant', 'value': loc_obj.name}
+
+                    # Create the state_method result with potentially resolved arguments
+                    result = {'type': 'state_method', 'method': 'can_reach', 'args': filtered_args}
                 else:
                     # Default for unhandled state methods
                     result = {'type': 'state_method', 'method': method, 'args': filtered_args}
@@ -1476,28 +1506,31 @@ class ASTVisitorMixin:
 
             # Handle Module.function calls (e.g., StateLogic.canDig, Macros.can_sail)
             # This enables auto-discovery of helper modules without requiring HELPER_MODULES config
-            elif obj_name and obj_name in self.closure_vars:
+            # NOTE: The module check (has __name__ and __file__) MUST be in the elif condition itself,
+            # not as a nested if. Otherwise, non-module objects like Location will match the elif
+            # but fail the inner check, causing the can_reach handler below to be skipped.
+            elif (obj_name and obj_name in self.closure_vars and
+                  hasattr(self.closure_vars[obj_name], '__name__') and
+                  hasattr(self.closure_vars[obj_name], '__file__')):
                 module_obj = self.closure_vars[obj_name]
-                # Check if the object is a module (has __name__ and __file__ attributes)
-                if hasattr(module_obj, '__name__') and hasattr(module_obj, '__file__'):
-                    logging.debug(f"Processing module function call: {obj_name}.{method_name}")
+                logging.debug(f"Processing module function call: {obj_name}.{method_name}")
 
-                    # Get the actual function object from the module
-                    func_obj = getattr(module_obj, method_name, None)
-                    if func_obj is not None and callable(func_obj):
-                        # Filter out state/world/player arguments
-                        filtered_args = self._filter_special_args(args_with_nodes)
+                # Get the actual function object from the module
+                func_obj = getattr(module_obj, method_name, None)
+                if func_obj is not None and callable(func_obj):
+                    # Filter out state/world/player arguments
+                    filtered_args = self._filter_special_args(args_with_nodes)
 
-                        # Create helper result
-                        result = self._make_helper_rule(method_name, filtered_args)
-                        logging.debug(f"Created helper result for module function: {result}")
+                    # Create helper result
+                    result = self._make_helper_rule(method_name, filtered_args)
+                    logging.debug(f"Created helper result for module function: {result}")
 
-                        # Register for automatic discovery WITH the function object
-                        # This allows the base class to auto-detect the module path
-                        self._register_helper_usage(method_name, func_obj)
-                        return result
-                    else:
-                        logging.debug(f"Could not find callable '{method_name}' in module {obj_name}")
+                    # Register for automatic discovery WITH the function object
+                    # This allows the base class to auto-detect the module path
+                    self._register_helper_usage(method_name, func_obj)
+                    return result
+                else:
+                    logging.debug(f"Could not find callable '{method_name}' in module {obj_name}")
 
             # Handle Location and Region object method calls (e.g., loc.can_reach(state) or region.can_reach(state))
             elif obj_name and method_name == 'can_reach':

@@ -369,11 +369,12 @@ class AHatinTimeWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.hat_yarn_costs = {0: 8, 1: 4, 2: 8, 3: 6, 4: 5}
+        self.hat_yarn_costs = {'0': 8, '1': 4, '2': 8, '3': 6, '4': 5}
         self.hat_craft_order = [2, 4, 1, 0, 3]
         self.shops = []
         self.act_connections = types.SimpleNamespace(chapter1_tutorial='chapter1_barrelboss', TimeRift_Water_Subcon_Dwellers='TimeRift_Water_Subcon_Hookshot', Spaceship_WaterRift_MailRoom='TimeRift_Water_TWreck_Panels', TimeRift_Water_TWreck_Panels='TimeRift_Water_Subcon_Dwellers', TimeRift_Water_AlpineSkyline_Cats='Spaceship_WaterRift_Gallery', TimeRift_Cave_Mafia='TimeRift_Cave_Mafia', TimeRift_Water_TWreck_Parade='TimeRift_Water_AlpineSkyline_Cats', TimeRift_Water_Mafia_Hard='TimeRift_Water_Alp_Goats', TimeRift_Cave_BirdBasement='TimeRift_Cave_Alps', TimeRift_Cave_Alps='TimeRift_Cave_BirdBasement', TimeRift_Water_Mafia_Easy='TimeRift_Water_TWreck_Parade', TimeRift_Cave_Raccoon='TimeRift_Cave_Raccoon', TimeRift_Water_Alp_Goats='Spaceship_WaterRift_MailRoom', Spaceship_WaterRift_Gallery='TimeRift_Water_Mafia_Easy', TimeRift_Water_Subcon_Hookshot='TimeRift_Water_Mafia_Hard', snatcher_boss='chapter1_tutorial', AlpineSkyline_Finale='harbor_impossible_race', chapter3_secret_finale='subcon_cave', AlpineFreeRoam='chapter3_murder', subcon_village_icewall='snatcher_boss', subcon_cave='chapter3_secret_finale', mafiatown_lava='moon_camerasnap', moon_parade='mafiatown_lava', chapter1_boss='mafiatown_goldenvault', subcon_maildelivery='moon_parade', chapter1_cannon_repair='subcon_village_icewall', chapter2_toiletboss='vanessa_manor_attic', DeadBirdStudio='chapter2_toiletboss', vanessa_manor_attic='chapter1_boss', chapter1_barrelboss='chapter1_cannon_repair', moon_camerasnap='subcon_maildelivery', chapter3_murder='trainwreck_selfdestruct', mafiatown_goldenvault='DeadBirdStudio', trainwreck_selfdestruct='AlpineFreeRoam', harbor_impossible_race='AlpineSkyline_Finale', award_ceremony='award_ceremony')
         self.shop_locs = ['Mafia Boss Shop Item', 'Badge Seller - Item 1', 'Badge Seller - Item 2', 'Badge Seller - Item 3', 'Badge Seller - Item 4']
+        self.chapter_timepiece_costs = {'1': 0, '2': 17, '3': 12, '4': 8, '5': 35, '6': -1, '7': -1}
         self.excluded_dws = []
         self.excluded_bonuses = []
         self.dw_shuffle = []

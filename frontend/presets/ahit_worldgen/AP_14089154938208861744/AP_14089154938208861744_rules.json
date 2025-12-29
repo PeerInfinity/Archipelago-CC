@@ -7823,6 +7823,13 @@
           "display_name": "Randomize Items"
         }
       },
+      "hat_yarn_costs": {
+        "0": 8,
+        "1": 4,
+        "2": 8,
+        "3": 6,
+        "4": 5
+      },
       "hat_craft_order": [
         2,
         4,
@@ -7876,6 +7883,15 @@
         "Badge Seller - Item 3",
         "Badge Seller - Item 4"
       ],
+      "chapter_timepiece_costs": {
+        "1": 0,
+        "2": 17,
+        "3": 12,
+        "4": 8,
+        "5": 35,
+        "6": -1,
+        "7": -1
+      },
       "excluded_dws": [],
       "excluded_bonuses": [],
       "dw_shuffle": [],
@@ -8011,7 +8027,15 @@
       "prog_items_init": {
         "PONS": 0
       },
-      "chapter_costs": {},
+      "chapter_costs": {
+        "Mafia Town": 0,
+        "Battle of the Birds": 17,
+        "Subcon Forest": 12,
+        "Alpine Skyline": 8,
+        "Time's End": 35,
+        "Arctic Cruise": -1,
+        "Nyakuza Metro": -1
+      },
       "hat_info": {
         "hat_yarn_costs": {
           "0": 8,
@@ -8347,57 +8371,50 @@
           "hat"
         ],
         "body": {
-          "type": "or",
-          "conditions": [
-            {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "world"
-                    },
-                    "attr": "hat_yarn_costs"
-                  },
-                  "index": {
-                    "type": "name",
-                    "name": "hat"
-                  }
-                },
-                "op": "<=",
-                "right": {
-                  "type": "constant",
-                  "value": 0
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "subscript",
+              "value": {
+                "type": "constant",
+                "value": {
+                  "0": 8,
+                  "1": 4,
+                  "2": 8,
+                  "3": 6,
+                  "4": 5
                 }
               },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "constant",
-                "value": null
+              "index": {
+                "type": "name",
+                "name": "hat"
               }
             },
-            {
-              "type": "item_check",
-              "item": "Yarn",
-              "count": {
-                "type": "helper",
-                "name": "get_hat_cost",
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "hat"
-                  }
-                ]
-              }
+            "op": "<=",
+            "right": {
+              "type": "constant",
+              "value": 0
             }
-          ]
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "item_check",
+            "item": "Yarn",
+            "count": {
+              "type": "helper",
+              "name": "get_hat_cost",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "hat"
+                }
+              ]
+            }
+          }
         }
       },
       "can_use_hookshot": {
@@ -8464,12 +8481,14 @@
                   "value": {
                     "type": "subscript",
                     "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "hat_yarn_costs"
+                      "type": "constant",
+                      "value": {
+                        "0": 8,
+                        "1": 4,
+                        "2": 8,
+                        "3": 6,
+                        "4": 5
+                      }
                     },
                     "index": {
                       "type": "name",
@@ -8529,60 +8548,51 @@
             "value": true
           },
           "if_false": {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    },
-                    {
-                      "type": "name",
-                      "name": "allow_skip"
-                    }
-                  ]
-                },
-                "if_true": {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "helper",
-                      "name": "get_difficulty"
-                    },
-                    "op": ">=",
-                    "right": {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "constant",
-                    "value": null
-                  }
-                },
-                "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "and",
+              "conditions": [
+                {
                   "type": "constant",
-                  "value": null
+                  "value": true
+                },
+                {
+                  "type": "name",
+                  "name": "allow_skip"
+                }
+              ]
+            },
+            "if_true": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "helper",
+                  "name": "get_difficulty"
+                },
+                "op": ">=",
+                "right": {
+                  "type": "constant",
+                  "value": 0
                 }
               },
-              {
-                "type": "item_check",
-                "item": "Progressive Painting Unlock",
-                "count": {
-                  "type": "name",
-                  "name": "count"
-                }
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": {
+                "type": "constant",
+                "value": null
               }
-            ]
+            },
+            "if_false": {
+              "type": "item_check",
+              "item": "Progressive Painting Unlock",
+              "count": {
+                "type": "name",
+                "name": "count"
+              }
+            }
           }
         },
         "defaults": {
