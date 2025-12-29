@@ -9,22 +9,32 @@ The `base.py` file is 3,160 lines containing a single class `BaseGameExportHandl
 
 ## Proposed Module Structure
 
-Split `base.py` into focused modules under `exporter/games/`:
+Split `base.py` into focused modules under a new `exporter/games/base/` subdirectory,
+keeping game-specific handlers separate:
 
 ```
 exporter/games/
-├── __init__.py          # Re-export BaseGameExportHandler for backwards compatibility
-├── base.py              # Core BaseGameExportHandler class (streamlined)
-├── rule_expansion.py    # Rule expansion logic (RuleExpansionMixin)
-├── world_data.py        # World data extraction (WorldDataMixin)
-├── helper_discovery.py  # Helper function discovery and analysis (HelperDiscoveryMixin)
-├── option_normalization.py  # Option constant normalization (OptionNormalizationMixin)
-└── utilities.py         # Static utility methods
+├── __init__.py              # Registry, re-exports BaseGameExportHandler
+├── base/                    # NEW: Base infrastructure
+│   ├── __init__.py          # Exports BaseGameExportHandler
+│   ├── handler.py           # Core BaseGameExportHandler class
+│   ├── rule_expansion.py    # Rule expansion logic (RuleExpansionMixin)
+│   ├── world_data.py        # World data extraction (WorldDataMixin)
+│   ├── helper_discovery.py  # Helper function discovery and analysis (HelperDiscoveryMixin)
+│   ├── option_normalization.py  # Option constant normalization (OptionNormalizationMixin)
+│   └── utilities.py         # Static utility methods
+├── generic.py               # GenericGameExportHandler (intermediate class)
+├── ahit.py                  # Game-specific handlers
+├── alttp.py
+├── ...                      # ~40+ game-specific handlers
+└── yoshisisland.py
 ```
+
+The old `base.py` will be removed after migration.
 
 ## Module Breakdown
 
-### 1. `base.py` (Core - ~400 lines)
+### 1. `base/handler.py` (Core - ~400 lines)
 
 Keep only:
 - Class configuration attributes (lines 24-182)
@@ -66,7 +76,7 @@ Keep only:
 
 The class will inherit from all mixins via multiple inheritance.
 
-### 2. `rule_expansion.py` (RuleExpansionMixin - ~500 lines)
+### 2. `base/rule_expansion.py` (RuleExpansionMixin - ~500 lines)
 
 Contains all rule expansion logic:
 - `expand_rule` (lines 509-535)
@@ -78,7 +88,7 @@ Contains all rule expansion logic:
 - `_resolve_f_string_value` (lines 1080-1105)
 - `_evaluate_binary_op` (lines 1107-1164)
 
-### 3. `world_data.py` (WorldDataMixin - ~600 lines)
+### 3. `base/world_data.py` (WorldDataMixin - ~600 lines)
 
 Contains world data extraction:
 - `get_world_data` (lines 1262-1458)
@@ -90,7 +100,7 @@ Contains world data extraction:
 - `get_location_attributes` (lines 1864-1928)
 - `recalculate_collection_state_if_needed` (lines 1183-1197)
 
-### 4. `helper_discovery.py` (HelperDiscoveryMixin - ~700 lines)
+### 4. `base/helper_discovery.py` (HelperDiscoveryMixin - ~700 lines)
 
 Contains helper function discovery and analysis:
 - `_analyze_worldgen_helpers` (lines 2052-2142)
@@ -102,14 +112,14 @@ Contains helper function discovery and analysis:
 - `_simplify_has_all` (lines 3077-3138)
 - `_extract_items_from_constant` (lines 3140-3160)
 
-### 5. `option_normalization.py` (OptionNormalizationMixin - ~500 lines)
+### 5. `base/option_normalization.py` (OptionNormalizationMixin - ~500 lines)
 
 Contains option constant normalization:
 - `normalize_helper_option_constants` (lines 2172-2296)
 - `normalize_region_option_constants` (lines 2298-2464)
 - `normalize_to_string_constants` (lines 2466-2630)
 
-### 6. `utilities.py` (Static utilities - ~100 lines)
+### 6. `base/utilities.py` (Static utilities - ~100 lines)
 
 Contains static utility methods:
 - `prepare_closure_vars` (lines 375-409)
@@ -119,52 +129,70 @@ Contains static utility methods:
 
 ## Implementation Steps
 
-### Step 1: Create Mixin Classes
-Create each mixin file with its methods extracted from base.py. Mixins should not have `__init__` methods and should assume access to `self.world`, `self._discovered_helpers`, etc.
+### Step 1: Create base/ Directory
+Create `exporter/games/base/` directory with `__init__.py`.
 
-### Step 2: Update base.py
-- Add imports for all mixins
-- Make `BaseGameExportHandler` inherit from all mixins
-- Remove the methods that moved to mixins
-- Keep configuration attributes and core methods
+### Step 2: Create Mixin Classes
+Create each mixin file in `base/` with methods extracted from the old base.py.
+Mixins should not have `__init__` methods and should assume access to `self.world`, `self._discovered_helpers`, etc.
 
-### Step 3: Update __init__.py
-Ensure `BaseGameExportHandler` is properly exported for backwards compatibility:
+### Step 3: Create base/handler.py
+Create the core `BaseGameExportHandler` class that:
+- Defines all class configuration attributes
+- Inherits from all mixins
+- Contains `__init__` and core methods
+
+### Step 4: Create base/__init__.py
+Export `BaseGameExportHandler` for clean imports:
+```python
+from exporter.games.base.handler import BaseGameExportHandler
+```
+
+### Step 5: Update exporter/games/__init__.py
+Update to import from new location (backwards compatible):
 ```python
 from exporter.games.base import BaseGameExportHandler
 ```
 
-### Step 4: Update Imports in Subclasses
-Game-specific handlers (like `generic.py`) that override mixin methods will continue to work via normal inheritance.
+### Step 6: Remove Old base.py
+Delete `exporter/games/base.py` after verifying everything works.
+
+### Step 7: Verify Game-Specific Handlers
+Game-specific handlers (like `generic.py`) that override mixin methods will continue to work via normal inheritance since they inherit from `BaseGameExportHandler`.
 
 ## Benefits
 
-1. **Maintainability**: Each module has a focused purpose
-2. **Readability**: Easier to navigate ~400-700 line files vs 3,160 lines
-3. **Testing**: Individual mixins can be unit tested in isolation
-4. **Extensibility**: New functionality can be added to appropriate mixins
-5. **Backwards Compatible**: External code importing `BaseGameExportHandler` continues to work
+1. **Clear Separation**: Base infrastructure in `base/` vs game-specific handlers in parent directory
+2. **Maintainability**: Each module has a focused purpose
+3. **Readability**: Easier to navigate ~400-700 line files vs 3,160 lines
+4. **Testing**: Individual mixins can be unit tested in isolation
+5. **Extensibility**: New functionality can be added to appropriate mixins
+6. **Backwards Compatible**: External code importing `BaseGameExportHandler` continues to work
+7. **Discoverability**: Clear where to look for base functionality vs game overrides
 
 ## Dependency Order
 
 The mixins have some dependencies:
 ```
-utilities.py              <- No dependencies (all static)
-option_normalization.py   <- No internal dependencies
-rule_expansion.py         <- Uses utilities (count_rule_nodes)
-world_data.py            <- Uses utilities
-helper_discovery.py      <- Uses rule_expansion (expand_rule), option_normalization
-base.py                  <- Inherits from all mixins
+base/utilities.py              <- No dependencies (all static)
+base/option_normalization.py   <- No internal dependencies
+base/rule_expansion.py         <- Uses utilities (count_rule_nodes)
+base/world_data.py             <- Uses utilities
+base/helper_discovery.py       <- Uses rule_expansion (expand_rule), option_normalization
+base/handler.py                <- Inherits from all mixins
 ```
 
 ## Migration Strategy
 
-1. Start with `utilities.py` (static methods, lowest risk)
-2. Then `option_normalization.py` (self-contained normalization logic)
-3. Then `rule_expansion.py` (used by helper_discovery)
-4. Then `world_data.py` (used during export)
-5. Then `helper_discovery.py` (highest complexity)
-6. Finally update `base.py` to use the mixins
+1. Create `base/` directory structure
+2. Start with `base/utilities.py` (static methods, lowest risk)
+3. Then `base/option_normalization.py` (self-contained normalization logic)
+4. Then `base/rule_expansion.py` (used by helper_discovery)
+5. Then `base/world_data.py` (used during export)
+6. Then `base/helper_discovery.py` (highest complexity)
+7. Create `base/handler.py` with the core class inheriting from all mixins
+8. Update `base/__init__.py` and `exporter/games/__init__.py`
+9. Remove old `base.py`
 
 ## Testing
 
