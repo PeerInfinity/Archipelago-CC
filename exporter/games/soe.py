@@ -50,27 +50,18 @@ class SoEGameExportHandler(BaseGameExportHandler):
         """Get pyevermizer locations mapped by name."""
         import itertools
 
-        _id_base = 64000
-        _id_offset = {
-            self.pyevermizer.CHECK_ALCHEMY: _id_base + 0,
-            self.pyevermizer.CHECK_BOSS: _id_base + 50,
-            self.pyevermizer.CHECK_GOURD: _id_base + 100,
-            self.pyevermizer.CHECK_NPC: _id_base + 400,
-            self.pyevermizer.CHECK_EXTRA: _id_base + 800,
-            self.pyevermizer.CHECK_TRAP: _id_base + 900,
-            self.pyevermizer.CHECK_SNIFF: _id_base + 1000
-        }
-
         _locations = self.pyevermizer.get_locations()
         _sniff_locations = self.pyevermizer.get_sniff_locations()
 
         loc_map = {}
         for loc in itertools.chain(_locations, _sniff_locations):
-            ap_id = _id_offset[loc.type] + loc.index
             # Use the AP location name format (with # for gourds)
-            loc_name = f"{loc.name} #{loc.index}" if loc.type == self.pyevermizer.CHECK_GOURD else loc.name
-            if loc.type == self.pyevermizer.CHECK_SNIFF:
+            if loc.type == self.pyevermizer.CHECK_GOURD:
+                loc_name = f"{loc.name} #{loc.index}"
+            elif loc.type == self.pyevermizer.CHECK_SNIFF:
                 loc_name = f"{loc.name} Sniff #{loc.index}"
+            else:
+                loc_name = loc.name
             loc_map[loc_name] = loc
 
         return loc_map
@@ -106,13 +97,10 @@ class SoEGameExportHandler(BaseGameExportHandler):
 
         if len(conditions) == 1:
             return conditions[0]
-        elif len(conditions) > 1:
-            return {
-                'type': 'and',
-                'conditions': conditions
-            }
-
-        return None
+        return {
+            'type': 'and',
+            'conditions': conditions
+        }
 
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """
@@ -135,36 +123,29 @@ class SoEGameExportHandler(BaseGameExportHandler):
         # Build item data with provides information
         for item in all_items:
             if item.name not in item_data:
-                item_data[item.name] = {
-                    'name': item.name,
-                    'provides': []
-                }
-
-                # Add provides information (list of [count, progress_id])
-                # Only add provides once per unique item name
+                # Initialize item with standard fields
+                provides = []
                 if item.provides:
                     for count, progress_id in item.provides:
                         progress_name = self.progress_id_to_name.get(progress_id, f"P_{progress_id}")
-                        item_data[item.name]['provides'].append({
+                        provides.append({
                             'count': count,
                             'progress_id': progress_id,
                             'progress_name': progress_name
                         })
 
-                # Add standard item fields that all items need
-                # These ensure compatibility with the state manager
-                if 'event' not in item_data[item.name]:
-                    item_data[item.name]['event'] = False
-                if 'type' not in item_data[item.name]:
-                    item_data[item.name]['type'] = None
-                if 'max_count' not in item_data[item.name]:
-                    item_data[item.name]['max_count'] = 1
+                item_data[item.name] = {
+                    'name': item.name,
+                    'provides': provides,
+                    'event': False,
+                    'type': None,
+                    'max_count': 1
+                }
 
         # Also add logic rules that provide progress when requirements are met
         # These act like "virtual items" that the frontend can check
-        rules = self.pyevermizer.get_logic()
         logic_rules = []
-        for i, rule in enumerate(rules):
+        for rule in self.pyevermizer.get_logic():
             if rule.provides:
                 rule_data = {
                     'requires': [{'count': count, 'progress_id': pid} for count, pid in rule.requires],
@@ -184,27 +165,9 @@ class SoEGameExportHandler(BaseGameExportHandler):
         return item_data
 
     def _convert_logic_has_call(self, rule) -> Optional[Dict[str, Any]]:
-        """
-        Convert a self.logic.has(...) call to a helper call.
+        """Convert self.logic.has(progress_id, count) calls to helper format.
 
-        Expected input patterns:
-        1. With constant progress ID (already resolved):
-           {
-               'type': 'function_call',
-               'function': {
-                   'type': 'attribute',
-                   'object': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'logic'},
-                   'attr': 'has'
-               },
-               'args': [{'type': 'constant', 'value': 11}]  # progress_id
-           }
-
-        2. With pyevermizer.P_XXX reference (not yet resolved):
-           {
-               'type': 'function_call',
-               'function': {'type': 'attribute', 'object': {...'self.logic'...}, 'attr': 'has'},
-               'args': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'pyevermizer'}, 'attr': 'P_XXX'}]
-           }
+        Handles both resolved progress IDs (constants) and pyevermizer.P_XXX references.
         """
         if not isinstance(rule, dict) or rule.get('type') != 'function_call':
             return None
@@ -264,16 +227,12 @@ class SoEGameExportHandler(BaseGameExportHandler):
             return True
 
         # Recursively check nested structures
-        for key, value in rule.items():
-            if isinstance(value, dict):
-                if self._rule_has_unresolved_names(value):
-                    return True
-            elif isinstance(value, list):
-                for item in value:
-                    if isinstance(item, dict) and self._rule_has_unresolved_names(item):
-                        return True
-
-        return False
+        return any(
+            self._rule_has_unresolved_names(v) if isinstance(v, dict)
+            else any(self._rule_has_unresolved_names(item) for item in v if isinstance(item, dict))
+            if isinstance(v, list) else False
+            for v in rule.values()
+        )
 
     def postprocess_rule(self, rule) -> Dict[str, Any]:
         """
@@ -326,7 +285,5 @@ class SoEGameExportHandler(BaseGameExportHandler):
 
             return attrs
         except Exception as e:
-            logger.error(f"ERROR in get_location_attributes for {location_name}: {e}")
-            import traceback
-            traceback.print_exc()
+            logger.exception(f"Error in get_location_attributes for {location_name}")
             return {}
