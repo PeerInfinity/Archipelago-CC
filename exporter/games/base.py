@@ -180,6 +180,13 @@ class BaseGameExportHandler:
     # Example: {'open_world', 'ow_boss_requirement'}
     SETTINGS_TO_CONVERT: Set[str] = set()
 
+    # Mapping of state_method names to their replacement rule structures.
+    # This allows games to declaratively replace game-specific state methods with
+    # equivalent rule structures without overriding expand_rule.
+    # Example: {'_my_game_setting': {'type': 'setting_value', 'setting': 'my_setting'}}
+    # Replacements are applied recursively during rule expansion.
+    STATE_METHOD_REPLACEMENTS: Dict[str, Dict[str, Any]] = {}
+
     def __init__(self, world=None):
         """Initialize the handler with an empty set of discovered helpers.
 
@@ -708,8 +715,18 @@ class BaseGameExportHandler:
 
         # Handle state_method (expand args recursively)
         elif rule_type == 'state_method':
+            method_name = rule.get('method', '')
+
+            # Check for STATE_METHOD_REPLACEMENTS (declarative state method replacement)
+            if method_name in self.STATE_METHOD_REPLACEMENTS:
+                import copy
+                replacement = copy.deepcopy(self.STATE_METHOD_REPLACEMENTS[method_name])
+                logger.debug(f"Replacing state_method {method_name} with rule structure")
+                # Recursively expand the replacement in case it contains nested rules
+                return self.expand_rule(replacement, _depth + 1)
+
             # Check for has_all(set([items])) pattern and simplify to item checks
-            if rule.get('method') == 'has_all':
+            if method_name == 'has_all':
                 simplified = self._simplify_has_all(rule)
                 if simplified != rule:
                     return simplified
