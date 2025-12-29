@@ -564,11 +564,24 @@ class BaseGameExportHandler:
                 # Pattern 1: Convert configured object method calls to helper functions
                 if self.CONVERT_WORLD_METHODS_TO_HELPERS:
                     if obj.get('type') == 'name' and obj.get('name') in self.HELPER_OBJECT_NAMES:
-                        logger.debug(f"Converting {obj.get('name')}.{method_name}() to helper function")
+                        # Preserve original args and expand them recursively
+                        original_args = rule.get('args', [])
+                        expanded_args = [
+                            self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) else arg
+                            for arg in original_args
+                        ]
+                        logger.debug(f"Converting {obj.get('name')}.{method_name}() to helper function with {len(expanded_args)} args")
+
+                        # Try to expand the helper immediately
+                        expanded = self.expand_helper(method_name, expanded_args)
+                        if expanded:
+                            return self.expand_rule(expanded, _depth + 1)
+
+                        # Return helper node with preserved args
                         return {
                             'type': 'helper',
                             'name': method_name,
-                            'args': []
+                            'args': expanded_args
                         }
 
                 # Pattern 2: state.multiworld.get_location(loc, player).can_reach(state) -> location_check
