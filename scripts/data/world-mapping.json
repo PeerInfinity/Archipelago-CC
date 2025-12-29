@@ -388,7 +388,7 @@
   },
   "Factorio": {
     "exporter_path": "exporter/games/factorio.py",
-    "exporter_size": 5678,
+    "exporter_size": 5405,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -496,7 +496,7 @@
   },
   "Inscryption": {
     "exporter_path": "exporter/games/inscryption.py",
-    "exporter_size": 5703,
+    "exporter_size": 5454,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -532,7 +532,7 @@
   },
   "Kingdom Hearts": {
     "exporter_path": "exporter/games/kh1.py",
-    "exporter_size": 17785,
+    "exporter_size": 821,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -541,7 +541,7 @@
   },
   "Kingdom Hearts 2": {
     "exporter_path": "exporter/games/kh2.py",
-    "exporter_size": 24088,
+    "exporter_size": 22088,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -559,7 +559,7 @@
   },
   "Kirby's Dream Land 3": {
     "exporter_path": "exporter/games/kdl3.py",
-    "exporter_size": 9929,
+    "exporter_size": 9711,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -568,7 +568,7 @@
   },
   "Landstalker - The Treasures of King Nole": {
     "exporter_path": "exporter/games/landstalker.py",
-    "exporter_size": 18920,
+    "exporter_size": 15658,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -802,7 +802,7 @@
   },
   "Overcooked! 2": {
     "exporter_path": "exporter/games/overcooked2.py",
-    "exporter_size": 29798,
+    "exporter_size": 28695,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1020,7 +1020,7 @@
     "exporter_path": "exporter/games/stardew_valley.py",
     "exporter_size": 20218,
     "game_logic_path": "frontend/modules/shared/gameLogic/stardew_valley/stardew_valleyLogic.js",
-    "game_logic_size": 10915,
+    "game_logic_size": 8179,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "stardew_valley"

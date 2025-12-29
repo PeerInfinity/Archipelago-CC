@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-29T04:04:56.566588",
-    "last_updated": "2025-12-29T04:04:56.566593",
+    "last_updated": "2025-12-29T05:55:28.722230",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2550,31 +2550,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "70a66f9360469eb4ec18a2884b92fb7e0e8ee07f27179ae3b16f3d58c8ae4904",
-          "new_sphere_log_hash": "7ab3e3c7753072e66d568d8f0c9982b8fdf4e875366003f69eac46870d49094e",
-          "original_rules_hash": "70a66f9360469eb4ec18a2884b92fb7e0e8ee07f27179ae3b16f3d58c8ae4904",
-          "original_sphere_log_hash": "7ab3e3c7753072e66d568d8f0c9982b8fdf4e875366003f69eac46870d49094e",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-29T04:01:44.577291"
-        }
-      },
       "game_name_from_filename": "overcooked2",
       "game_name_from_yaml": "Overcooked! 2",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.97,
+        "processing_time_seconds": 7.54,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/overcooked2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 536953,
+        "size_bytes": 537770,
         "size_mb": 0.51
       },
       "seed": "1",
@@ -2582,7 +2570,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 19.86,
+        "processing_time_seconds": 24.01,
         "return_code": 0,
         "sphere_reached": 18.2,
         "success": true,
@@ -2590,10 +2578,10 @@
         "warning_count": 0
       },
       "template_filename": "Overcooked! 2.yaml",
-      "timestamp": "2025-12-29T03:59:55.015334",
+      "timestamp": "2025-12-29T05:54:56.792427",
       "world_info": {
         "exporter_path": "exporter/games/overcooked2.py",
-        "exporter_size": 29798,
+        "exporter_size": 28695,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "overcooked2",
