@@ -33,36 +33,6 @@ class CvCotMGameExportHandler(GenericGameExportHandler):
         'can_open_ceremonial_door',
     }
 
-    def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
-        """Return CvCotM item data with corrected classifications.
-
-        The original world has combined classification flags (e.g., useful|progression)
-        that aren't properly handled by the generic exporter. This method ensures
-        that items required for logic are marked as progression.
-        """
-        # Get base item data from parent
-        item_data = super().get_item_data(world)
-
-        # Items that must be progression for the logic to work:
-        # - Roc Wing: Required for has_jump_level_2 through has_jump_level_5
-        # - Double: Required for has_jump_level_1 (but locked, so less critical)
-        # - Serpent/Cockatrice + Mercury/Mars: Required for has_ice_or_stone
-        #   (at least one from each group must be progression)
-        progression_items = [
-            "Roc Wing",       # Required for jump levels 2-5
-            "Double",         # Required for jump level 1
-            "Serpent Card",   # Part of has_ice_or_stone
-            "Cockatrice Card", # Part of has_ice_or_stone
-            "Mercury Card",   # Part of has_ice_or_stone
-            "Mars Card",      # Part of has_ice_or_stone
-        ]
-
-        for item_name in progression_items:
-            if item_name in item_data:
-                item_data[item_name]['classification'] = 'progression'
-
-        return item_data
-
     def get_helper_definitions(self, world) -> Dict[str, Any]:
         """
         Export CvCotM helper definitions.
