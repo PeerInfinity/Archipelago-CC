@@ -228,8 +228,7 @@ import { pokemon_emeraldStateModule } from './pokemon_emerald/pokemon_emeraldLog
 // raftLogic removed - helpers now exported to rules.json (uses use_resolved_items=true)
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
-import * as overcooked2Logic from './overcooked2/overcooked2Logic.js';
-import { overcooked2StateModule } from './overcooked2/overcooked2Logic.js';
+// overcooked2Logic removed - helpers now exported to rules.json (weighted_sum handled by ruleEngine)
 // paintLogic removed - helpers now exported to rules.json
 import * as soeLogic from './soe/soeLogic.js';
 import * as smz3Logic from './smz3/smz3Logic.js';
@@ -362,8 +361,8 @@ const GAME_REGISTRY = {
     aliases: ['Super Mario Land 2', 'SML2', 'marioland2']
   },
   'Overcooked! 2': {
-    logicModule: overcooked2Logic.overcooked2StateModule,
-    helperFunctions: overcooked2Logic.helperFunctions,
+    logicModule: genericLogic.genericStateModule,
+    // All helpers now exported to rules.json - weighted_sum handled by ruleEngine
     worldClasses: ['Overcooked2World'],
     aliases: ['Overcooked! 2', 'overcooked2']
   },
