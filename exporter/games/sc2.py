@@ -46,6 +46,9 @@ class SC2GameExportHandler(GenericGameExportHandler):
     # Module containing helper functions
     HELPER_MODULES = ['worlds.sc2.rules']
 
+    # Include 'logic' for SC2Logic method calls (e.g., logic.terran_early_tech())
+    HELPER_OBJECT_NAMES = {'self', 'world', 'logic'}
+
     # Helpers too complex for automatic export (loops, closures, complex calculations)
     # NOTE: defense_rating helpers now work with game_info export for rating dictionaries
     # NOTE: weapon_armor_upgrade_count now works with upgrade_bundle_inverted_lookup export
@@ -68,21 +71,6 @@ class SC2GameExportHandler(GenericGameExportHandler):
         'terran_trouble_in_paradise_requirement', 'terran_media_blitz_requirement',
         'terran_gates_of_hell_requirement', 'terran_all_in_requirement',
     }
-
-    def _extract_closure_vars(self, rule_func: Callable) -> Dict[str, Any]:
-        """Extract closure variables from a function."""
-        closure_vars = {}
-        if hasattr(rule_func, '__closure__') and rule_func.__closure__:
-            if hasattr(rule_func, '__code__'):
-                freevars = rule_func.__code__.co_freevars
-                for i, var_name in enumerate(freevars):
-                    if i < len(rule_func.__closure__):
-                        cell = rule_func.__closure__[i]
-                        try:
-                            closure_vars[var_name] = cell.cell_contents
-                        except ValueError:
-                            pass
-        return closure_vars
 
     def override_rule_analysis(self, rule_func: Callable, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """
@@ -421,65 +409,8 @@ class SC2GameExportHandler(GenericGameExportHandler):
                         }
                         return super().expand_rule(converted_rule)
 
-        # Handle compare operations - recursively process left and right operands
-        if rule.get('type') == 'compare':
-            if 'left' in rule:
-                rule['left'] = self.expand_rule(rule['left'])
-            if 'right' in rule:
-                rule['right'] = self.expand_rule(rule['right'])
-
-        # Recursively expand nested structures that may contain self.attr patterns
-        # This ensures helper bodies with if_statement, block, etc. get fully expanded
-        rule_type = rule.get('type')
-
-        if rule_type == 'block':
-            if 'statements' in rule:
-                rule['statements'] = [self.expand_rule(stmt) for stmt in rule['statements']]
-
-        elif rule_type == 'if_statement':
-            if 'test' in rule:
-                rule['test'] = self.expand_rule(rule['test'])
-            if 'body' in rule:
-                rule['body'] = [self.expand_rule(stmt) for stmt in rule['body']]
-            if 'orelse' in rule:
-                rule['orelse'] = [self.expand_rule(stmt) for stmt in rule['orelse']]
-
-        elif rule_type == 'assign':
-            if 'value' in rule:
-                rule['value'] = self.expand_rule(rule['value'])
-
-        elif rule_type == 'return':
-            if 'value' in rule:
-                rule['value'] = self.expand_rule(rule['value'])
-
-        elif rule_type in ('and', 'or'):
-            if 'conditions' in rule:
-                rule['conditions'] = [self.expand_rule(cond) for cond in rule['conditions']]
-
-        elif rule_type == 'conditional':
-            if 'test' in rule:
-                rule['test'] = self.expand_rule(rule['test'])
-            if 'if_true' in rule:
-                rule['if_true'] = self.expand_rule(rule['if_true'])
-            if 'if_false' in rule:
-                rule['if_false'] = self.expand_rule(rule['if_false'])
-
-        elif rule_type == 'sum_of':
-            if 'element_rule' in rule:
-                rule['element_rule'] = self.expand_rule(rule['element_rule'])
-            if 'iterator_info' in rule:
-                iterator_info = rule['iterator_info']
-                if 'iterator' in iterator_info:
-                    iterator_info['iterator'] = self.expand_rule(iterator_info['iterator'])
-                if 'condition' in iterator_info:
-                    iterator_info['condition'] = self.expand_rule(iterator_info['condition'])
-
-        elif rule_type == 'helper':
-            if 'args' in rule:
-                rule['args'] = [self.expand_rule(arg) for arg in rule['args']]
-
-        # For all other rule types, use the parent class's expand_rule
-        return super().expand_rule(rule)
+        # Let the base class handle standard recursion (compare, block, if_statement, etc.)
+        return self._recursively_expand_rule_children(rule, _depth)
 
     def _resolve_logic_attribute(self, attr: str) -> Any:
         """
