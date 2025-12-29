@@ -39,6 +39,21 @@ from .worldgen_analysis import (
     categorize_seed_generation_error,
 )
 
+from .prompt_generators import (
+    # standard
+    generate_helper_export_prompt,
+    generate_exporter_simplify_prompt,
+    generate_new_rule_types_prompt,
+    generate_gen_errors_prompt,
+    generate_basic_spoiler_debug_prompt,
+    generate_multiworld_prompt,
+    # worldgen
+    generate_worldgen_world_failure_prompt,
+    generate_worldgen_seed_failure_prompt,
+    generate_worldgen_spoiler_failure_prompt,
+    generate_worldgen_crossval_failure_prompt,
+)
+
 __all__ = [
     # data_loading
     'load_world_mapping',
@@ -66,4 +81,16 @@ __all__ = [
     'get_worldgen_crossval_failures',
     'categorize_world_generation_error',
     'categorize_seed_generation_error',
+    # prompt_generators.standard
+    'generate_helper_export_prompt',
+    'generate_exporter_simplify_prompt',
+    'generate_new_rule_types_prompt',
+    'generate_gen_errors_prompt',
+    'generate_basic_spoiler_debug_prompt',
+    'generate_multiworld_prompt',
+    # prompt_generators.worldgen
+    'generate_worldgen_world_failure_prompt',
+    'generate_worldgen_seed_failure_prompt',
+    'generate_worldgen_spoiler_failure_prompt',
+    'generate_worldgen_crossval_failure_prompt',
 ]
