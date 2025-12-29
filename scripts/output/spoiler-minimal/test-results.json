@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-29T18:42:03.434371",
-    "last_updated": "2025-12-29T18:42:03.434376",
+    "last_updated": "2025-12-29T22:12:56.567542",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1606,27 +1606,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "cc08d64745d16b95af8a0c1003435c197a332b2df9f59cdc8eed3e450abef784",
-          "new_sphere_log_hash": "4ba4db21ed61cae7ef82dcb4ed4c1874c0f20c8928d325b73763951a0f70345a",
-          "original_rules_hash": "37d50f826a0b5720877a65595c2c5e052f9a5330e7c304206b7be8d68fe339ad",
-          "original_sphere_log_hash": "4ba4db21ed61cae7ef82dcb4ed4c1874c0f20c8928d325b73763951a0f70345a",
-          "rules_identical": false,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-29T18:39:43.738577"
-        }
-      },
       "game_name_from_filename": "kh2",
       "game_name_from_yaml": "Kingdom Hearts 2",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 7.01,
+        "processing_time_seconds": 10.42,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/kh2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -1638,7 +1626,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 44.07,
+        "processing_time_seconds": 50.66,
         "return_code": 0,
         "sphere_reached": 15.1,
         "success": true,
@@ -1646,10 +1634,10 @@
         "warning_count": 0
       },
       "template_filename": "Kingdom Hearts 2.yaml",
-      "timestamp": "2025-12-29T18:37:34.922599",
+      "timestamp": "2025-12-29T22:10:21.949671",
       "world_info": {
         "exporter_path": "exporter/games/kh2.py",
-        "exporter_size": 22088,
+        "exporter_size": 20284,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "kh2",
@@ -2137,27 +2125,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "e8b093c10db18828b851913cf5c28e9a17d600e401e1ee532ca98c5b570c68a1",
-          "new_sphere_log_hash": "dd6f3ee47d2e13f69ef59747602b1f9306df7d93d84344cbb81a6897cb03a27a",
-          "original_rules_hash": "e8b093c10db18828b851913cf5c28e9a17d600e401e1ee532ca98c5b570c68a1",
-          "original_sphere_log_hash": "dd6f3ee47d2e13f69ef59747602b1f9306df7d93d84344cbb81a6897cb03a27a",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-29T18:39:19.041099"
-        }
-      },
       "game_name_from_filename": "mm2",
       "game_name_from_yaml": "Mega Man 2",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.74,
+        "processing_time_seconds": 7.66,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/mm2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -2169,7 +2145,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.66,
+        "processing_time_seconds": 9.95,
         "return_code": 0,
         "sphere_reached": 9.1,
         "success": true,
@@ -2177,7 +2153,7 @@
         "warning_count": 0
       },
       "template_filename": "Mega Man 2.yaml",
-      "timestamp": "2025-12-29T18:38:04.542554",
+      "timestamp": "2025-12-29T22:11:36.992231",
       "world_info": {
         "exporter_path": "exporter/games/mm2.py",
         "exporter_size": 1049,
@@ -3786,31 +3762,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "e9c3675a5e8b32f3410f2ade9d48d84509ee97da6436b3233b93d2ac1c69db8e",
-          "new_sphere_log_hash": "17543bd414f95ddc5fcfac5878b81603b7f17f4f885bfc57e25ce0d3ca10771a",
-          "original_rules_hash": "e9c3675a5e8b32f3410f2ade9d48d84509ee97da6436b3233b93d2ac1c69db8e",
-          "original_sphere_log_hash": "17543bd414f95ddc5fcfac5878b81603b7f17f4f885bfc57e25ce0d3ca10771a",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-29T18:39:51.688386"
-        }
-      },
       "game_name_from_filename": "tww",
       "game_name_from_yaml": "The Wind Waker",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 17.89,
+        "processing_time_seconds": 47.11,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/tww/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 259971,
+        "size_bytes": 260041,
         "size_mb": 0.25
       },
       "seed": "1",
@@ -3818,7 +3782,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.71,
+        "processing_time_seconds": 13.88,
         "return_code": 0,
         "sphere_reached": 18.1,
         "success": true,
@@ -3826,10 +3790,10 @@
         "warning_count": 0
       },
       "template_filename": "The Wind Waker.yaml",
-      "timestamp": "2025-12-29T18:38:39.366611",
+      "timestamp": "2025-12-29T22:11:55.169420",
       "world_info": {
         "exporter_path": "exporter/games/tww.py",
-        "exporter_size": 4476,
+        "exporter_size": 2143,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "tww",
