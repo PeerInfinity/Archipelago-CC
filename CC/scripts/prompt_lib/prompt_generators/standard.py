@@ -98,39 +98,76 @@ def generate_exporter_simplify_prompt(template_file, game_name, custom_code_info
 
 ## Goal
 
-Simplify the custom exporter by leveraging base class auto-discovery features and removing redundant code. The goal is to reduce the exporter to only the code that is truly game-specific.
+Simplify the custom exporter by leveraging base class tools and removing redundant code. The goal is to reduce the exporter to only the code that is truly game-specific.
 
-## Reference: ALTTP Simplification
+## Base Class Tools Reference
 
-The ALTTP exporter (`exporter/games/alttp.py`) was recently simplified from ~500 lines to ~60 lines. Review the current state of that file as a reference for the target simplicity.
+First, examine the tools available in the base exporter. Read:
+- `exporter/games/base/handler.py` - Class attributes and hook methods
+- `exporter/games/base/rule_expansion.py` - Rule expansion with declarative replacements
 
-Key simplification patterns applied:
+### Declarative Configuration (Class Attributes)
 
-1. **Factor out commonly useful code into the base exporter** - If you find code that could benefit other games, move it to `exporter/games/base.py`:
-   - Generic function handlers (e.g., `location_item_name`, `item_name_in_location_names`)
-   - Common AST patterns (e.g., Location object detection in closures)
-   - Reusable data extraction logic (e.g., world attribute discovery)
-   - The goal is to leave only truly game-specific code in the custom exporter
+These class attributes let you configure behavior without writing custom methods:
 
-2. **Remove redundant method overrides** - Methods that just call `super()` or return minimal data can be removed:
-   - `get_world_data()` - base class handles options export
-   - `get_game_info()` - base class exports richer metadata
-   - `cleanup_settings()` - often dead code after other fixes
+| Attribute | Purpose | Example Game |
+|-----------|---------|--------------|
+| `STATE_METHOD_REPLACEMENTS` | Replace state methods with rule structures | TWW (`_tww_in_swordless_mode` → `setting_value`) |
+| `CLOSURE_VAR_IMPORTS` | Inject module-level variables for helper analysis | MM2 (robot_masters, weapons_to_name) |
+| `HELPER_OBJECT_NAMES` | Convert `obj.method()` calls to helper functions | Yoshi's Island (logic, bosses) |
+| `NAME_REMAPPING` | Map parameter names to setting names | - |
+| `SETTINGS_TO_CONVERT` | Convert name types to setting_value types | - |
+| `HELPER_PARAM_MAPPINGS` | Map helper params to slot_data keys | MM2 (can_defeat_enough_rbms) |
+| `AUTO_DISCOVER_*` | Auto-discover attributes without manual specification | ALTTP |
 
-3. **Enable auto-discovery flags** instead of manual WORLD_ATTRIBUTES:
-   - `AUTO_DISCOVER_WORLD_ATTRIBUTES = True` - auto-discovers world instance attributes
-   - `AUTO_DISCOVER_REGION_ATTRIBUTES = True` - auto-discovers region attributes
-   - `AUTO_DISCOVER_LOCATION_ATTRIBUTES = False` - often False, only enable if needed
+### Automatic Pattern Handling (Built-in)
 
-4. **Remove game-specific replace_name overrides** - Location objects in closures are now automatically detected and replaced with 'location' keyword by the base AST visitor
+These patterns are handled automatically by the base class:
 
-5. **Remove game-specific handle_special_function_call overrides** - Generic functions like `location_item_name` and `item_name_in_location_names` are now handled by the base class
+| Pattern | Description | Example Game |
+|---------|-------------|--------------|
+| LogicMixin methods | `_*_has_item`, `_*_has_region`, `_*_has_item_and_region` → simplified rules | Wargroove |
+| Location lambdas in exits | `lambda state: any(loc.access_rule(state) for loc in locs)` | Wargroove |
+| Location objects in closures | Lambda default parameters referencing Location objects | TLOZ |
+| Generic function calls | `location_item_name`, `item_name_in_location_names` | Base class |
 
-6. **Remove unused imports** - After removing code, clean up any imports that are no longer needed
+## Reference: Simplified Exporters
 
-7. **Remove redundant flag declarations** - If the base class default is appropriate, don't redeclare:
-   - `AUTO_EXPORT_DISCOVERED_HELPERS = True` (now default)
-   - `AUTO_PRESERVE_LARGE_HELPERS = True` (now default)
+Review these simplified exporters as examples:
+
+```bash
+cat exporter/games/alttp.py      # ~60 lines - auto-discovery flags only
+cat exporter/games/tww.py        # ~40 lines - STATE_METHOD_REPLACEMENTS only
+cat exporter/games/mm2.py        # ~30 lines - CLOSURE_VAR_IMPORTS + HELPER_PARAM_MAPPINGS
+```
+
+**Note:** If an exporter class does nothing but `pass`, it should be **deleted entirely**.
+The exporter registry auto-discovers handlers and falls back to `GenericGameExportHandler`
+when no custom handler exists. Empty exporters just add unnecessary files.
+
+## Simplification Patterns
+
+1. **Delete the exporter entirely if it just has `pass`**
+   - If the class body is just `pass` (with only a docstring), delete the file
+   - The generic handler will be used automatically
+
+2. **Replace custom `expand_rule` overrides with `STATE_METHOD_REPLACEMENTS`**
+   - If the exporter has custom state method handling, use the declarative dict instead
+   - Example: `'_game_setting': {{'type': 'setting_value', 'setting': 'logic_setting'}}`
+
+3. **Replace custom closure injection with `CLOSURE_VAR_IMPORTS`**
+   - If `prepare_closure_vars` is overridden to inject module variables, use the dict instead
+   - Example: `CLOSURE_VAR_IMPORTS = {{'worlds.game.rules': ['constants', 'mappings']}}`
+
+4. **Replace custom method-to-helper conversion with `HELPER_OBJECT_NAMES`**
+   - If the exporter converts `logic.method()` or similar to helpers, add to this set
+   - Example: `HELPER_OBJECT_NAMES = {{'self', 'world', 'logic', 'bosses'}}`
+
+5. **Remove redundant method overrides** - Methods that just call `super()` or return minimal data
+
+6. **Enable auto-discovery flags** instead of manual attribute specifications
+
+7. **Factor out commonly useful code** - Move generic patterns to base class for other games to use
 
 ## Investigation Commands
 
@@ -140,17 +177,23 @@ source .venv/bin/activate
 # View current exporter size
 wc -l {exporter_path}
 
-# View ALTTP exporter for reference
-cat exporter/games/alttp.py
+# Check if the exporter is just 'pass' (can be deleted entirely)
+grep -c "^\s*pass$" {exporter_path}
 
-# Check what flags the exporter sets
-grep -n "AUTO_" {exporter_path}
+# Check for expand_rule overrides that could use STATE_METHOD_REPLACEMENTS
+grep -n "def expand_rule" {exporter_path}
+
+# Check for prepare_closure_vars that could use CLOSURE_VAR_IMPORTS
+grep -n "def prepare_closure_vars" {exporter_path}
+
+# Check for state method patterns in the override
+grep -n "state_method\\|_has_item\\|_has_region" {exporter_path}
+
+# Check what flags/attributes the exporter sets
+grep -n "AUTO_\\|HELPER_\\|STATE_METHOD" {exporter_path}
 
 # Check for method overrides that might be removable
-grep -n "def get_world_data\\|def get_game_info\\|def cleanup_settings\\|def replace_name\\|def handle_special_function_call" {exporter_path}
-
-# Check for manual WORLD_ATTRIBUTES that could be auto-discovered
-grep -n "WORLD_ATTRIBUTES" {exporter_path}
+grep -n "def get_world_data\\|def get_game_info\\|def replace_name\\|def handle_special_function_call" {exporter_path}
 ```
 
 ## Test Commands
@@ -163,15 +206,13 @@ python scripts/test/test-all-templates.py --include-list "{template_file}" --min
 
 ## Steps
 
-1. **Review the current exporter** - Understand what custom logic exists
-2. **Compare to ALTTP exporter** - Identify patterns that could be applied
-3. **Identify commonly useful code** - Look for logic that could benefit other games
-4. **Factor out to base exporter** - Move generic handlers to `exporter/games/base.py`
-5. **Enable auto-discovery flags** - Replace manual WORLD_ATTRIBUTES with auto-discovery
-6. **Remove redundant methods** - Delete methods that just delegate to super()
-7. **Remove game-specific overrides** - Check if replace_name/handle_special_function_call are still needed
-8. **Clean up imports** - Remove imports for removed code
-9. **Test after each change** - Verify tests still pass
+1. **Examine the base class tools** - Read `exporter/games/base/handler.py` to understand available options
+2. **Review the current exporter** - Identify what custom logic exists
+3. **Compare to simplified exporters** - Identify patterns that could be applied
+4. **Replace method overrides with declarative attributes** - Use STATE_METHOD_REPLACEMENTS, etc.
+5. **Remove redundant methods** - Delete methods that duplicate base class behavior
+6. **Factor out commonly useful code** - Move generic patterns to base class if beneficial
+7. **Test after each change** - Verify tests still pass
 
 ## Important Notes
 
