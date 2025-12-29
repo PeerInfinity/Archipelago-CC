@@ -54,8 +54,8 @@ class SC2GameExportHandler(GenericGameExportHandler):
         'is_item_placement',
         # Kerrigan helpers - kerrigan_levels uses get_full_item_list(), two_kerrigan_actives has a bug
         'kerrigan_levels', 'two_kerrigan_actives',
-        # Helpers with multiple early-return patterns that produce broken export structures
-        # TODO: Fix analyzer to handle multiple if-return-early patterns correctly
+        # Helpers with multiple early-return patterns - analyzer now chains these correctly
+        # But these helpers depend on complex world settings that aren't fully exported
         'terran_competent_comp', 'protoss_competent_comp', 'zerg_competent_comp',
         'terran_competent_ground_to_air', 'protoss_competent_ground_to_air',
         'zerg_competent_ground_to_air', 'terran_beats_protoss_deathball',

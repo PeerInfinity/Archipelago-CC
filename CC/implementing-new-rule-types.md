@@ -544,57 +544,55 @@ The following capabilities were added to support `weapon_armor_upgrade_count`:
 2. ✅ **`upgrade_bundle_inverted_lookup` export** - Added to `sc2.py` game_info
 3. ✅ **`protoss_generic_upgrades` export** - Added to `sc2.py` game_info
 4. ✅ **`weapon_armor_upgrade_count` helper** - Now exported successfully
+5. ✅ **Early-return pattern fix** - Fixed in `ast_visitors.py` (see below)
 
-### Remaining Issue: Multiple Early-Return Pattern
+### Fixed: Multiple Early-Return Pattern
 
-**20 helpers remain blacklisted** due to a bug in the analyzer's handling of functions with multiple early-return statements. Example pattern:
+The analyzer now correctly chains early-return patterns. When `PROCESS_MULTISTATEMENT_IF_BODIES` is True, the analyzer prioritizes chaining "if without else followed by more statements" over multi-statement OR processing.
 
+**Example pattern:**
 ```python
-def terran_base_trasher(self, state: CollectionState) -> bool:
+def terran_base_trasher(self, state):
     if not self.terran_competent_comp(state):
-        return False  # Early return 1
+        return False
     if not self.terran_very_hard_mission_weapon_armor_level(state):
-        return False  # Early return 2
-    return (actual_condition)  # Final return
+        return False
+    return (actual_condition)
 ```
 
-The analyzer produces broken JSON where `if_false: null` instead of the actual return value:
-
+**Now produces correctly nested conditionals:**
 ```json
 {
   "type": "conditional",
-  "test": { ... },
+  "test": { "type": "not", "condition": { "type": "helper", "name": "terran_competent_comp" } },
   "if_true": false,
-  "if_false": null  // BUG: should contain the next conditional
+  "if_false": {
+    "type": "conditional",
+    "test": { "type": "not", "condition": { "type": "helper", "name": "terran_very_hard..." } },
+    "if_true": false,
+    "if_false": { "type": "or", "conditions": [...] }
+  }
 }
 ```
 
-### Next Steps
+### Remaining Issue: Missing World Settings
 
-To unblock the remaining 20 helpers, fix the analyzer to properly handle chained early returns:
+**20 helpers remain blacklisted** because they reference world settings (e.g., `self.advanced_tactics`, `self.generic_upgrade_missions`) that aren't fully exported to `game_info`. These settings need to be exported for the helpers to evaluate correctly at runtime.
 
-**Location:** `exporter/analyzer/ast_visitors.py`
+### Blacklisted Helpers (Missing World Settings)
 
-**Expected behavior:** Multiple `if not X: return False` statements should produce:
-
-```json
-{
-  "type": "and",
-  "conditions": [
-    { "type": "helper", "name": "terran_competent_comp" },
-    { "type": "helper", "name": "terran_very_hard_mission_weapon_armor_level" },
-    { "type": "or", "conditions": [...] }  // actual return condition
-  ]
-}
-```
-
-### Blacklisted Helpers (Multiple Early-Return Pattern)
-
-These helpers use the problematic pattern and are blacklisted until the analyzer is fixed:
+These helpers use the early-return pattern (which is now fixed) but depend on unexported world settings:
 - `terran_competent_comp`, `protoss_competent_comp`, `zerg_competent_comp`
 - `terran_competent_ground_to_air`, `protoss_competent_ground_to_air`, `zerg_competent_ground_to_air`
 - `terran_beats_protoss_deathball`, `terran_base_trasher`, `terran_respond_to_colony_infestations`
 - Various mission requirement helpers that depend on the above
+
+### Next Steps
+
+To unblock these helpers:
+1. Identify world settings used (e.g., `advanced_tactics`, `generic_upgrade_missions`)
+2. Export them to `game_info` in `sc2.py`
+3. Remove helpers from blacklist and test incrementally
 
 ## See Also
 
