@@ -5592,6 +5592,76 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
       });
     }
 
+    // weighted_sum: Check if weighted sum of owned items meets threshold (Overcooked! 2)
+    // Rule Builder: {"rule": "weighted_sum", "args": [threshold, [[item, weight], ...]]}
+    // The logic: sum (count_of_item * weight) for each item, return true if sum >= threshold
+    case 'weighted_sum': {
+      // Handle both array format and object format for args
+      let thresholdArg, itemsArg;
+      if (Array.isArray(rule.args)) {
+        // New format: rule.args is an array [threshold, items]
+        thresholdArg = rule.args[0];
+        itemsArg = rule.args[1];
+      } else {
+        // Fallback for object format
+        thresholdArg = args[0];
+        itemsArg = args[1];
+      }
+
+      // Evaluate threshold (usually a Constant with value 1.0)
+      const threshold = evaluateRule(thresholdArg, context, depth + 1, localScope);
+      if (threshold === undefined || typeof threshold !== 'number') {
+        log('warn', '[evaluateRuleBuilderRule] weighted_sum: invalid threshold', { threshold });
+        return undefined;
+      }
+
+      // Evaluate items array (array of [item_name, weight] pairs)
+      const items = evaluateRule(itemsArg, context, depth + 1, localScope);
+      if (!Array.isArray(items)) {
+        log('warn', '[evaluateRuleBuilderRule] weighted_sum: invalid items array', { items });
+        return undefined;
+      }
+
+      // Calculate weighted sum of owned items
+      let total = 0;
+      let hasUndefined = false;
+
+      for (const pair of items) {
+        if (!Array.isArray(pair) || pair.length < 2) continue;
+
+        const [itemName, weight] = pair;
+        if (typeof itemName !== 'string' || typeof weight !== 'number') continue;
+
+        // Get count of this item from context
+        let itemCount;
+        if (typeof context.countItem === 'function') {
+          itemCount = context.countItem(itemName);
+        } else if (typeof context.count === 'function') {
+          itemCount = context.count(itemName);
+        }
+
+        if (itemCount === undefined) {
+          hasUndefined = true;
+          continue;
+        }
+
+        // Add weight for each copy of the item owned
+        total += itemCount * weight;
+
+        // Early exit if we've already met the threshold (with small tolerance for floating point)
+        if (total >= threshold - 0.01) {
+          return true;
+        }
+      }
+
+      // If we had undefined counts, we can't be certain
+      if (hasUndefined && total < threshold) {
+        return undefined;
+      }
+
+      return total >= threshold - 0.01;
+    }
+
     // Unknown rule type - try to find as a custom helper or delegate to AST evaluator
     default: {
       log('debug', `[evaluateRuleBuilderRule] Unknown Rule Builder type '${ruleName}', checking options`);
