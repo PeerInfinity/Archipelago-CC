@@ -2,9 +2,6 @@
 
 from typing import Dict, Any
 from .generic import GenericGameExportHandler
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 class FactorioGameExportHandler(GenericGameExportHandler):
@@ -67,11 +64,7 @@ class FactorioGameExportHandler(GenericGameExportHandler):
                 element_rule = rule.get('element_rule', {})
                 simplified_element = self._simplify_technology_name_access(
                     element_rule, iterator_info.get('target', {}).get('name'))
-                if simplified_element:
-                    rule['element_rule'] = self.expand_rule(simplified_element, _depth + 1)
-                    logger.debug("Simplified technology.name access in all_of rule")
-                else:
-                    rule['element_rule'] = self.expand_rule(element_rule, _depth + 1)
+                rule['element_rule'] = self.expand_rule(simplified_element or element_rule, _depth + 1)
             else:
                 rule['element_rule'] = self.expand_rule(rule.get('element_rule', {}), _depth + 1)
             return rule
