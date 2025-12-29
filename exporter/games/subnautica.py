@@ -1,11 +1,8 @@
 """Subnautica game-specific export handler."""
 
 import copy
-from typing import Dict, Any, List, Set
+from typing import Dict, Any
 from .generic import GenericGameExportHandler
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 class SubnauticaGameExportHandler(GenericGameExportHandler):
@@ -21,11 +18,8 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
     equivalents so the frontend can evaluate them.
     """
 
-    # Module containing helper functions to export
-    HELPER_MODULES: List[str] = ['worlds.subnautica.rules']
-
     # Helpers that should always be exported (used in access rules)
-    HELPERS_TO_EXPORT_WHITELIST: Set[str] = {'is_radiated'}
+    HELPERS_TO_EXPORT_WHITELIST = {'is_radiated'}
 
     def _expand_helper_definition(self, helper_def: dict, helper_name: str) -> dict:
         """Expand SwimRule property accesses in helper definitions.
