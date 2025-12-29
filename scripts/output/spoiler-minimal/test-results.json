@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-29T18:42:03.434371",
-    "last_updated": "2025-12-29T18:42:03.434376",
+    "last_updated": "2025-12-29T22:05:23.576827",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1665,31 +1665,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "e0fa424e91ec0c05fe708d7c62391bcfc1cc1ff5ef74fc3e09775c4df18d4347",
-          "new_sphere_log_hash": "de7899804e4c52b1f868b59e2a028e25cad006a7a8bc4e11f4d833dd194f87ae",
-          "original_rules_hash": "e0fa424e91ec0c05fe708d7c62391bcfc1cc1ff5ef74fc3e09775c4df18d4347",
-          "original_sphere_log_hash": "de7899804e4c52b1f868b59e2a028e25cad006a7a8bc4e11f4d833dd194f87ae",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-29T18:39:17.796719"
-        }
-      },
       "game_name_from_filename": "kh1",
       "game_name_from_yaml": "Kingdom Hearts",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 9.9,
+        "processing_time_seconds": 13.68,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/kh1/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 840834,
+        "size_bytes": 840864,
         "size_mb": 0.8
       },
       "seed": "1",
@@ -1697,7 +1685,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 30.61,
+        "processing_time_seconds": 36.69,
         "return_code": 0,
         "sphere_reached": 10.3,
         "success": true,
@@ -1705,10 +1693,10 @@
         "warning_count": 0
       },
       "template_filename": "Kingdom Hearts.yaml",
-      "timestamp": "2025-12-29T18:37:33.544787",
+      "timestamp": "2025-12-29T22:04:32.777589",
       "world_info": {
         "exporter_path": "exporter/games/kh1.py",
-        "exporter_size": 821,
+        "exporter_size": 834,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "kh1",
