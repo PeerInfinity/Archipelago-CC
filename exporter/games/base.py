@@ -547,6 +547,12 @@ class BaseGameExportHandler:
 
         # Handle state_method (expand args recursively)
         elif rule_type == 'state_method':
+            # Check for has_all(set([items])) pattern and simplify to item checks
+            if rule.get('method') == 'has_all':
+                simplified = self._simplify_has_all(rule)
+                if simplified != rule:
+                    return simplified
+
             if 'args' in rule:
                 rule['args'] = [
                     self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) else arg
@@ -2928,3 +2934,89 @@ class BaseGameExportHandler:
                         items.append(value)
 
         return items if items else None
+
+    def _simplify_has_all(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Simplify state.has_all(set([items]), player) patterns to item checks.
+
+        Converts patterns like:
+          state.has_all(set(["Safety Pass"]), player)
+        To:
+          {"type": "item_check", "item": "Safety Pass"}
+
+        Or for multiple items:
+          state.has_all(set(["Item1", "Item2"]), player)
+        To:
+          {"type": "and", "conditions": [
+            {"type": "item_check", "item": "Item1"},
+            {"type": "item_check", "item": "Item2"}
+          ]}
+
+        This pattern appears in rules for games like Landstalker, KH2, and Messenger.
+
+        Args:
+            rule: The state_method rule with method='has_all'
+
+        Returns:
+            Simplified rule, or the original rule if simplification isn't possible
+        """
+        args = rule.get('args', [])
+
+        if not args:
+            logger.debug("has_all with no args, keeping as-is")
+            return rule
+
+        first_arg = args[0]
+
+        # Check if first arg is a set() helper call
+        if isinstance(first_arg, dict) and first_arg.get('type') == 'helper' and first_arg.get('name') == 'set':
+            # Extract the items from set(items)
+            set_args = first_arg.get('args', [])
+            if set_args:
+                items_arg = set_args[0]
+
+                # Extract the actual list of item names
+                items = self._extract_items_from_constant(items_arg)
+
+                if items is not None:
+                    # Convert to item checks
+                    if len(items) == 0:
+                        # Empty set, always true
+                        return {"type": "constant", "value": True}
+                    elif len(items) == 1:
+                        # Single item, simple item_check
+                        return {"type": "item_check", "item": items[0]}
+                    else:
+                        # Multiple items, AND them together
+                        return {
+                            "type": "and",
+                            "conditions": [
+                                {"type": "item_check", "item": item}
+                                for item in items
+                            ]
+                        }
+
+        # Couldn't simplify, return original
+        return rule
+
+    def _extract_items_from_constant(self, arg: Any) -> Optional[List[str]]:
+        """Extract list of item names from a constant value argument.
+
+        Handles patterns like:
+          {"type": "constant", "value": ["Safety Pass"]}
+          {"type": "constant", "value": ["Item1", "Item2"]}
+          {"type": "constant", "value": []}  (empty list)
+
+        Args:
+            arg: The argument node from the AST
+
+        Returns:
+            List of item name strings, or None if not extractable
+        """
+        if isinstance(arg, dict) and arg.get('type') == 'constant':
+            value = arg.get('value')
+            if isinstance(value, list):
+                # Filter to only string items (item names)
+                # Return empty list for empty value, not None
+                return [item for item in value if isinstance(item, str)]
+
+        return None
