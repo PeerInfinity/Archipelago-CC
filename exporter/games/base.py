@@ -376,6 +376,33 @@ class BaseGameExportHandler:
         return enhanced_closure
 
     @staticmethod
+    def _extract_closure_vars(rule_func: Callable) -> Dict[str, Any]:
+        """Extract closure variables from a function.
+
+        This utility method extracts the values of free variables (closure variables)
+        from a function. It's useful for analyzing rule functions that capture values
+        from their enclosing scope.
+
+        Args:
+            rule_func: The function to extract closure variables from
+
+        Returns:
+            A dictionary mapping variable names to their captured values
+        """
+        closure_vars = {}
+        if hasattr(rule_func, '__closure__') and rule_func.__closure__:
+            if hasattr(rule_func, '__code__'):
+                freevars = rule_func.__code__.co_freevars
+                for i, var_name in enumerate(freevars):
+                    if i < len(rule_func.__closure__):
+                        cell = rule_func.__closure__[i]
+                        try:
+                            closure_vars[var_name] = cell.cell_contents
+                        except ValueError:
+                            pass
+        return closure_vars
+
+    @staticmethod
     def count_rule_nodes(rule: Dict[str, Any]) -> int:
         """
         Count the number of nodes in a rule tree.
