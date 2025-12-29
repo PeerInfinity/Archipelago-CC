@@ -214,7 +214,7 @@
 import * as genericLogic from './generic/genericLogic.js';
 import { helperFunctions as bombRushCyberfunkHelperFunctions } from './bomb_rush_cyberfunk/bombRushCyberfunkLogic.js';
 import * as jakanddaxterLogic from './jakanddaxter/jakanddaxterLogic.js';
-import { kh1Logic } from './kh1/kh1Logic.js';
+// kh1Logic removed - all helpers now exported to rules.json
 import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
 import { helperFunctions as kdl3HelperFunctions } from './kdl3/kdl3Logic.js';
 // LADX now uses generic helpers - RUPEES is set in prog_items from sphere log
@@ -288,7 +288,7 @@ const GAME_REGISTRY = {
   },
   'Kingdom Hearts': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: kh1Logic,
+    // Helper functions now exported to rules.json - no JavaScript needed
     worldClasses: ['KH1World'],
     aliases: ['Kingdom Hearts', 'KH1', 'Kingdom Hearts 1']
   },
