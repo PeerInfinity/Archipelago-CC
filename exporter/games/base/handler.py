@@ -205,6 +205,17 @@ class BaseGameExportHandler(
     # Replacements are applied recursively during rule expansion.
     STATE_METHOD_REPLACEMENTS: Dict[str, Dict[str, Any]] = {}
 
+    # Accumulator rules for games that track progressive items (like coins).
+    # Each rule is a dict with keys: pattern (regex), extract_value (bool),
+    # target (accumulator name), discriminator (optional grouping key).
+    # Example: [{'pattern': r'^(\d+) coins?$', 'extract_value': True, 'target': ' coins'}]
+    ACCUMULATOR_RULES: List[Dict[str, Any]] = []
+
+    # Initial values for prog_items accumulators.
+    # These are used to initialize counters for games with accumulator-based rules.
+    # Example: {' coins': 0, ' coins freemium': 0}
+    PROG_ITEMS_INIT: Dict[str, Any] = {}
+
     def __init__(self, world=None):
         """Initialize the handler with an empty set of discovered helpers.
 
@@ -744,6 +755,14 @@ class BaseGameExportHandler(
         This method is for game-specific custom data and accumulator patterns.
         Game-specific expanders can override this to add custom data.
 
+        Accumulator rules can be set via:
+        1. Class attribute ACCUMULATOR_RULES (preferred for game-specific exporters)
+        2. World attribute accumulator_rules (for dynamically generated worlds)
+
+        Initial prog_items values can be set via:
+        1. Class attribute PROG_ITEMS_INIT (preferred for game-specific exporters)
+        2. World attribute prog_items_init (for dynamically generated worlds)
+
         Note: Base fields have been moved to other methods:
         - name (game) -> world[player].game in get_world_data()
         - slot_data, base_id, world_description, web -> get_world_data()
@@ -754,13 +773,16 @@ class BaseGameExportHandler(
         """
         game_info = {}
 
-        # Check if the world defines accumulator rules (for state counter patterns like coins)
-        # This allows generated worlds from AST format to export accumulator rules
-        if hasattr(world, 'accumulator_rules') and world.accumulator_rules:
+        # Use class-level ACCUMULATOR_RULES if defined, otherwise check world attribute
+        if self.ACCUMULATOR_RULES:
+            game_info['accumulator_rules'] = self.ACCUMULATOR_RULES
+        elif hasattr(world, 'accumulator_rules') and world.accumulator_rules:
             game_info['accumulator_rules'] = world.accumulator_rules
 
-        # Check if the world defines initial values for prog_items accumulators
-        if hasattr(world, 'prog_items_init') and world.prog_items_init:
+        # Use class-level PROG_ITEMS_INIT if defined, otherwise check world attribute
+        if self.PROG_ITEMS_INIT:
+            game_info['prog_items_init'] = dict(self.PROG_ITEMS_INIT)
+        elif hasattr(world, 'prog_items_init') and world.prog_items_init:
             game_info['prog_items_init'] = world.prog_items_init
 
         return game_info
