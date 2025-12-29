@@ -475,6 +475,68 @@ case 'player_id': {
 }
 ```
 
+### Example 8: `weighted_sum` for Additive Requirements (Overcooked! 2)
+
+**Problem:** Overcooked! 2 uses "additive requirements" where a weighted sum of owned items must meet a threshold. The Python logic multiplies each item's count by its weight and checks if the sum reaches 1.0.
+
+**Python pattern:**
+```python
+# From Logic.py - the meets_requirements function
+total: float = 0.0
+for (item_name, weight) in additive_reqs:
+    for _ in range(0, state.count(item_name, player)):
+        total += weight
+        if total >= 0.99:  # threshold with tolerance
+            return True
+return False
+```
+
+**Exporter generates** (from `exporter/games/overcooked2.py`):
+```python
+return {
+    'type': 'helper',
+    'name': 'weighted_sum',
+    'args': [
+        {'type': 'constant', 'value': 1.0},  # threshold
+        {'type': 'constant', 'value': [[item, weight] for item, weight in items]}
+    ]
+}
+```
+
+**Frontend change** (in `evaluateRuleBuilderRule()` since it uses Rule Builder format):
+```javascript
+case 'weighted_sum': {
+  // args[0] is threshold, args[1] is array of [item_name, weight] pairs
+  let thresholdArg, itemsArg;
+  if (Array.isArray(rule.args)) {
+    thresholdArg = rule.args[0];
+    itemsArg = rule.args[1];
+  } else {
+    thresholdArg = args[0];
+    itemsArg = args[1];
+  }
+
+  const threshold = evaluateRule(thresholdArg, context, depth + 1, localScope);
+  const items = evaluateRule(itemsArg, context, depth + 1, localScope);
+
+  if (!Array.isArray(items) || threshold === undefined) {
+    return undefined;
+  }
+
+  let total = 0;
+  for (const [itemName, weight] of items) {
+    const itemCount = context.countItem?.(itemName) || 0;
+    total += itemCount * weight;
+    if (total >= threshold - 0.01) {
+      return true;
+    }
+  }
+  return false;
+}
+```
+
+**Key insight:** This rule type uses the Rule Builder format (`rule` property instead of `type`), so it goes in `evaluateRuleBuilderRule()` rather than the main `evaluateRule()` switch statement.
+
 ## Debugging Tips
 
 ### Print Analyzer Output
