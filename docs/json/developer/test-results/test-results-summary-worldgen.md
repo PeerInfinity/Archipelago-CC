@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2025-12-29 06:46:14
+**Generated:** 2025-12-29 19:19:01
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -38,15 +38,15 @@ This summary combines results from 4 types of tests:
 
 Of the 61 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 35/61 (57.4%)
+- **Passing with Generic Exporter:** 36/61 (59.0%)
 - **Passing with Generic Logic:** 61/61 (100.0%)
-- **Passing with Both Generic:** 35/61 (57.4%)
+- **Passing with Both Generic:** 36/61 (59.0%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 228.8KB
+- **Total Exporter Code:** 219.5KB
 - **Total Game Logic Code:** 86.2KB
-- **Combined Total:** 315.0KB
+- **Combined Total:** 305.8KB
 
 ## Test Results
 
@@ -80,9 +80,9 @@ Of the 61 templates passing all 4 tests:
 | Inscryption WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.3KB | ✅ | 85.4KB |
 | Kirby's Dream Land 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.5KB | ✅ | N/A |
 | Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 15.3KB | ✅ | 210.6KB |
-| Links Awakening DX WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.5KB | ✅ | 714.9KB |
+| Links Awakening DX WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 11.9KB | ✅ | 714.9KB |
 | Lufia II Ancient Cave WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 132.6KB |
-| Mario & Luigi Superstar Saga WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.3KB | ✅ | 397.9KB |
+| Mario & Luigi Superstar Saga WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 397.9KB |
 | MathProof2p2e4 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 12.3KB |
 | Mega Man 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.0KB | ✅ | 49.1KB |
 | MegaMan Battle Network 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 218.1KB |
@@ -91,13 +91,13 @@ Of the 61 templates passing all 4 tests:
 | Muse Dash WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 237.2KB |
 | Noita WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 80.1KB |
 | Old School Runescape WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.6KB | ✅ | 313.8KB |
-| Overcooked! 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 29.1KB | ✅ | 486.0KB |
-| Paint WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 6.9KB | ✅ | 112.9KB |
+| Overcooked! 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 28.0KB | ✅ | 486.0KB |
+| Paint WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.7KB | ✅ | 112.9KB |
 | Risk of Rain 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 162.3KB |
 | Saving Princess WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 33.5KB |
 | Shivers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 151.2KB |
 | Sonic Adventure 2 Battle WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 274.4KB |
-| Starcraft 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 33.1KB | 86.2KB | 1665.4KB |
+| Starcraft 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 30.2KB | 86.2KB | 1665.4KB |
 | Subnautica WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 7.5KB | ✅ | 182.3KB |
 | Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.2KB | ✅ | 100.2KB |
 | Super Mario Land 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 894.6KB |
@@ -135,12 +135,12 @@ Of the 61 templates passing all 4 tests:
 
 | Rank | Game Name | Exporter Size |
 |------|-----------|---------------|
-| 1 | Starcraft 2 WorldGen | 33.1KB |
-| 2 | Overcooked! 2 WorldGen | 29.1KB |
+| 1 | Starcraft 2 WorldGen | 30.2KB |
+| 2 | Overcooked! 2 WorldGen | 28.0KB |
 | 3 | Terraria WorldGen | 19.2KB |
 | 4 | Landstalker - The Treasures of King Nole WorldGen | 15.3KB |
-| 5 | Links Awakening DX WorldGen | 13.5KB |
-| 6 | Super Mario 64 WorldGen | 13.2KB |
+| 5 | Super Mario 64 WorldGen | 13.2KB |
+| 6 | Links Awakening DX WorldGen | 11.9KB |
 | 7 | Kirby's Dream Land 3 WorldGen | 9.5KB |
 | 8 | The Messenger WorldGen | 9.0KB |
 | 9 | A Hat in Time WorldGen | 7.7KB |
