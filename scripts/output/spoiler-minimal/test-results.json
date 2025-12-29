@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-28T22:06:30.149842",
-    "last_updated": "2025-12-28T22:06:30.149847",
+    "last_updated": "2025-12-29T01:04:04.308025",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1606,27 +1606,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "9f075ad22109d3c24f575bb9ccf75232fffeb197515e58a529739c4f60c76543",
-          "new_sphere_log_hash": "4ba4db21ed61cae7ef82dcb4ed4c1874c0f20c8928d325b73763951a0f70345a",
-          "original_rules_hash": "5875d2cded60e34c54e5ec4b11992736b2274e97d87c4cc2d11023b980551c78",
-          "original_sphere_log_hash": "4ba4db21ed61cae7ef82dcb4ed4c1874c0f20c8928d325b73763951a0f70345a",
-          "rules_identical": false,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-28T22:05:07.567861"
-        }
-      },
       "game_name_from_filename": "kh2",
       "game_name_from_yaml": "Kingdom Hearts 2",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 6.32,
+        "processing_time_seconds": 9.28,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/kh2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -1638,7 +1626,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 45.07,
+        "processing_time_seconds": 51.45,
         "return_code": 0,
         "sphere_reached": 15.1,
         "success": true,
@@ -1646,10 +1634,10 @@
         "warning_count": 0
       },
       "template_filename": "Kingdom Hearts 2.yaml",
-      "timestamp": "2025-12-28T22:03:00.822988",
+      "timestamp": "2025-12-29T01:02:16.242314",
       "world_info": {
         "exporter_path": "exporter/games/kh2.py",
-        "exporter_size": 23733,
+        "exporter_size": 23773,
         "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
         "game_logic_size": 107612,
         "game_name_from_filename": "kh2",
@@ -1665,31 +1653,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "1644d6bf7a4a9d24adca80d122b2e46446452dc8bc09a62c99a2065f5bc3acdd",
-          "new_sphere_log_hash": "de7899804e4c52b1f868b59e2a028e25cad006a7a8bc4e11f4d833dd194f87ae",
-          "original_rules_hash": "1644d6bf7a4a9d24adca80d122b2e46446452dc8bc09a62c99a2065f5bc3acdd",
-          "original_sphere_log_hash": "de7899804e4c52b1f868b59e2a028e25cad006a7a8bc4e11f4d833dd194f87ae",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-28T22:05:09.676688"
-        }
-      },
       "game_name_from_filename": "kh1",
       "game_name_from_yaml": "Kingdom Hearts",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 11.6,
+        "processing_time_seconds": 12.56,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/kh1/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 813996,
+        "size_bytes": 818670,
         "size_mb": 0.78
       },
       "seed": "1",
@@ -1697,7 +1673,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 29.94,
+        "processing_time_seconds": 33.86,
         "return_code": 0,
         "sphere_reached": 10.3,
         "success": true,
@@ -1705,10 +1681,10 @@
         "warning_count": 0
       },
       "template_filename": "Kingdom Hearts.yaml",
-      "timestamp": "2025-12-28T22:03:14.409938",
+      "timestamp": "2025-12-29T01:03:17.462574",
       "world_info": {
         "exporter_path": "exporter/games/kh1.py",
-        "exporter_size": 17515,
+        "exporter_size": 17636,
         "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
         "game_logic_size": 12842,
         "game_name_from_filename": "kh1",
