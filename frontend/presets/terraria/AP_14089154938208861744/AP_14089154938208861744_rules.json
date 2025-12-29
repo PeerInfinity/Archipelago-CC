@@ -56,62 +56,48 @@
             "name": "Traveling Merchant",
             "id": null,
             "access_rule": {
-              "rule": "has_n_from_list",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": [
-                      "Guide",
-                      "Squire Slime",
-                      "Merchant",
-                      "Dye Trader",
-                      "Demolitionist",
-                      "Zoologist",
-                      "Cat",
-                      "Dog",
-                      "Painter",
-                      "Angler",
-                      "Clumsy Slime",
-                      "Nurse",
-                      "Stylist",
-                      "Golfer",
-                      "Party Girl",
-                      "Cool Slime",
-                      "Arms Dealer",
-                      "Nerdy Slime",
-                      "Surly Slime",
-                      "Dryad",
-                      "Mystic Slime",
-                      "Tavernkeep",
-                      "Goblin Tinkerer",
-                      "Witch Doctor",
-                      "Clothier",
-                      "Elder Slime",
-                      "Wizard",
-                      "Tax Collector",
-                      "Bunny",
-                      "Truffle",
-                      "Pirate",
-                      "Diva Slime",
-                      "Steampunker",
-                      "Cyborg",
-                      "Princess",
-                      "Santa Claus"
-                    ]
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 2
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasFromListUnique",
+              "args": {
+                "items": [
+                  "Guide",
+                  "Squire Slime",
+                  "Merchant",
+                  "Dye Trader",
+                  "Demolitionist",
+                  "Zoologist",
+                  "Cat",
+                  "Dog",
+                  "Painter",
+                  "Angler",
+                  "Clumsy Slime",
+                  "Nurse",
+                  "Stylist",
+                  "Golfer",
+                  "Party Girl",
+                  "Cool Slime",
+                  "Arms Dealer",
+                  "Nerdy Slime",
+                  "Surly Slime",
+                  "Dryad",
+                  "Mystic Slime",
+                  "Tavernkeep",
+                  "Goblin Tinkerer",
+                  "Witch Doctor",
+                  "Clothier",
+                  "Elder Slime",
+                  "Wizard",
+                  "Tax Collector",
+                  "Bunny",
+                  "Truffle",
+                  "Pirate",
+                  "Diva Slime",
+                  "Steampunker",
+                  "Cyborg",
+                  "Princess",
+                  "Santa Claus"
+                ],
+                "count": 2
+              }
             },
             "item": {
               "name": "Traveling Merchant",
@@ -338,62 +324,48 @@
             "name": "Dye Trader",
             "id": null,
             "access_rule": {
-              "rule": "has_n_from_list",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": [
-                      "Guide",
-                      "Squire Slime",
-                      "Merchant",
-                      "Dye Trader",
-                      "Demolitionist",
-                      "Zoologist",
-                      "Cat",
-                      "Dog",
-                      "Painter",
-                      "Angler",
-                      "Clumsy Slime",
-                      "Nurse",
-                      "Stylist",
-                      "Golfer",
-                      "Party Girl",
-                      "Cool Slime",
-                      "Arms Dealer",
-                      "Nerdy Slime",
-                      "Surly Slime",
-                      "Dryad",
-                      "Mystic Slime",
-                      "Tavernkeep",
-                      "Goblin Tinkerer",
-                      "Witch Doctor",
-                      "Clothier",
-                      "Elder Slime",
-                      "Wizard",
-                      "Tax Collector",
-                      "Bunny",
-                      "Truffle",
-                      "Pirate",
-                      "Diva Slime",
-                      "Steampunker",
-                      "Cyborg",
-                      "Princess",
-                      "Santa Claus"
-                    ]
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 4
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasFromListUnique",
+              "args": {
+                "items": [
+                  "Guide",
+                  "Squire Slime",
+                  "Merchant",
+                  "Dye Trader",
+                  "Demolitionist",
+                  "Zoologist",
+                  "Cat",
+                  "Dog",
+                  "Painter",
+                  "Angler",
+                  "Clumsy Slime",
+                  "Nurse",
+                  "Stylist",
+                  "Golfer",
+                  "Party Girl",
+                  "Cool Slime",
+                  "Arms Dealer",
+                  "Nerdy Slime",
+                  "Surly Slime",
+                  "Dryad",
+                  "Mystic Slime",
+                  "Tavernkeep",
+                  "Goblin Tinkerer",
+                  "Witch Doctor",
+                  "Clothier",
+                  "Elder Slime",
+                  "Wizard",
+                  "Tax Collector",
+                  "Bunny",
+                  "Truffle",
+                  "Pirate",
+                  "Diva Slime",
+                  "Steampunker",
+                  "Cyborg",
+                  "Princess",
+                  "Santa Claus"
+                ],
+                "count": 4
+              }
             },
             "item": {
               "name": "Dye Trader",
@@ -635,62 +607,48 @@
             "name": "Painter",
             "id": null,
             "access_rule": {
-              "rule": "has_n_from_list",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": [
-                      "Guide",
-                      "Squire Slime",
-                      "Merchant",
-                      "Dye Trader",
-                      "Demolitionist",
-                      "Zoologist",
-                      "Cat",
-                      "Dog",
-                      "Painter",
-                      "Angler",
-                      "Clumsy Slime",
-                      "Nurse",
-                      "Stylist",
-                      "Golfer",
-                      "Party Girl",
-                      "Cool Slime",
-                      "Arms Dealer",
-                      "Nerdy Slime",
-                      "Surly Slime",
-                      "Dryad",
-                      "Mystic Slime",
-                      "Tavernkeep",
-                      "Goblin Tinkerer",
-                      "Witch Doctor",
-                      "Clothier",
-                      "Elder Slime",
-                      "Wizard",
-                      "Tax Collector",
-                      "Bunny",
-                      "Truffle",
-                      "Pirate",
-                      "Diva Slime",
-                      "Steampunker",
-                      "Cyborg",
-                      "Princess",
-                      "Santa Claus"
-                    ]
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 8
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasFromListUnique",
+              "args": {
+                "items": [
+                  "Guide",
+                  "Squire Slime",
+                  "Merchant",
+                  "Dye Trader",
+                  "Demolitionist",
+                  "Zoologist",
+                  "Cat",
+                  "Dog",
+                  "Painter",
+                  "Angler",
+                  "Clumsy Slime",
+                  "Nurse",
+                  "Stylist",
+                  "Golfer",
+                  "Party Girl",
+                  "Cool Slime",
+                  "Arms Dealer",
+                  "Nerdy Slime",
+                  "Surly Slime",
+                  "Dryad",
+                  "Mystic Slime",
+                  "Tavernkeep",
+                  "Goblin Tinkerer",
+                  "Witch Doctor",
+                  "Clothier",
+                  "Elder Slime",
+                  "Wizard",
+                  "Tax Collector",
+                  "Bunny",
+                  "Truffle",
+                  "Pirate",
+                  "Diva Slime",
+                  "Steampunker",
+                  "Cyborg",
+                  "Princess",
+                  "Santa Claus"
+                ],
+                "count": 8
+              }
             },
             "item": {
               "name": "Painter",
@@ -1298,62 +1256,48 @@
             "name": "Party Girl",
             "id": null,
             "access_rule": {
-              "rule": "has_n_from_list",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": [
-                      "Guide",
-                      "Squire Slime",
-                      "Merchant",
-                      "Dye Trader",
-                      "Demolitionist",
-                      "Zoologist",
-                      "Cat",
-                      "Dog",
-                      "Painter",
-                      "Angler",
-                      "Clumsy Slime",
-                      "Nurse",
-                      "Stylist",
-                      "Golfer",
-                      "Party Girl",
-                      "Cool Slime",
-                      "Arms Dealer",
-                      "Nerdy Slime",
-                      "Surly Slime",
-                      "Dryad",
-                      "Mystic Slime",
-                      "Tavernkeep",
-                      "Goblin Tinkerer",
-                      "Witch Doctor",
-                      "Clothier",
-                      "Elder Slime",
-                      "Wizard",
-                      "Tax Collector",
-                      "Bunny",
-                      "Truffle",
-                      "Pirate",
-                      "Diva Slime",
-                      "Steampunker",
-                      "Cyborg",
-                      "Princess",
-                      "Santa Claus"
-                    ]
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": 14
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasFromListUnique",
+              "args": {
+                "items": [
+                  "Guide",
+                  "Squire Slime",
+                  "Merchant",
+                  "Dye Trader",
+                  "Demolitionist",
+                  "Zoologist",
+                  "Cat",
+                  "Dog",
+                  "Painter",
+                  "Angler",
+                  "Clumsy Slime",
+                  "Nurse",
+                  "Stylist",
+                  "Golfer",
+                  "Party Girl",
+                  "Cool Slime",
+                  "Arms Dealer",
+                  "Nerdy Slime",
+                  "Surly Slime",
+                  "Dryad",
+                  "Mystic Slime",
+                  "Tavernkeep",
+                  "Goblin Tinkerer",
+                  "Witch Doctor",
+                  "Clothier",
+                  "Elder Slime",
+                  "Wizard",
+                  "Tax Collector",
+                  "Bunny",
+                  "Truffle",
+                  "Pirate",
+                  "Diva Slime",
+                  "Steampunker",
+                  "Cyborg",
+                  "Princess",
+                  "Santa Claus"
+                ],
+                "count": 14
+              }
             },
             "item": {
               "name": "Party Girl",
@@ -5984,31 +5928,6 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "has_n_from_list",
-                                  "_original_ast_type": "helper",
-                                  "_converted_from_ast": true,
-                                  "args": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": [
-                                          "Post-The Twins",
-                                          "Post-The Destroyer",
-                                          "Post-Skeletron Prime"
-                                        ]
-                                      },
-                                      "_converted_from_ast": true
-                                    },
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 1
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ]
-                                },
-                                {
                                   "rule": "Or",
                                   "children": [
                                     {
@@ -6066,6 +5985,17 @@
                                       ]
                                     }
                                   ]
+                                },
+                                {
+                                  "rule": "HasFromListUnique",
+                                  "args": {
+                                    "items": [
+                                      "Post-The Twins",
+                                      "Post-The Destroyer",
+                                      "Post-Skeletron Prime"
+                                    ],
+                                    "count": 1
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -6711,44 +6641,6 @@
                           "rule": "And",
                           "children": [
                             {
-                              "rule": "has_n_from_list",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": [
-                                      "Post-The Twins",
-                                      "Post-The Destroyer",
-                                      "Post-Skeletron Prime"
-                                    ]
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 1
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "AST_setting_value",
-                              "args": {
-                                "setting": "calamity",
-                                "_original_ast_type": "setting_value"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
                               "rule": "Not",
                               "args": {
                                 "condition": {
@@ -6767,6 +6659,30 @@
                               "rule": "Has",
                               "args": {
                                 "item_name": "Altar"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "AST_setting_value",
+                              "args": {
+                                "setting": "calamity",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "HasFromListUnique",
+                              "args": {
+                                "items": [
+                                  "Post-The Twins",
+                                  "Post-The Destroyer",
+                                  "Post-Skeletron Prime"
+                                ],
+                                "count": 1
                               }
                             }
                           ]
@@ -7044,44 +6960,6 @@
                           "rule": "And",
                           "children": [
                             {
-                              "rule": "has_n_from_list",
-                              "_original_ast_type": "helper",
-                              "_converted_from_ast": true,
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": [
-                                      "Post-The Twins",
-                                      "Post-The Destroyer",
-                                      "Post-Skeletron Prime"
-                                    ]
-                                  },
-                                  "_converted_from_ast": true
-                                },
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 2
-                                  },
-                                  "_converted_from_ast": true
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "AST_setting_value",
-                              "args": {
-                                "setting": "calamity",
-                                "_original_ast_type": "setting_value"
-                              },
-                              "_converted_from_ast": true
-                            }
-                          ]
-                        },
-                        {
-                          "rule": "And",
-                          "children": [
-                            {
                               "rule": "Not",
                               "args": {
                                 "condition": {
@@ -7100,6 +6978,30 @@
                               "rule": "Has",
                               "args": {
                                 "item_name": "Altar"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "rule": "And",
+                          "children": [
+                            {
+                              "rule": "AST_setting_value",
+                              "args": {
+                                "setting": "calamity",
+                                "_original_ast_type": "setting_value"
+                              },
+                              "_converted_from_ast": true
+                            },
+                            {
+                              "rule": "HasFromListUnique",
+                              "args": {
+                                "items": [
+                                  "Post-The Twins",
+                                  "Post-The Destroyer",
+                                  "Post-Skeletron Prime"
+                                ],
+                                "count": 2
                               }
                             }
                           ]
@@ -12652,9 +12554,9 @@
         "Skeletron Prime"
       ],
       "ter_goals": {
-        "Post-Skeletron Prime": "Skeletron Prime",
+        "Post-The Twins": "The Twins",
         "Post-The Destroyer": "The Destroyer",
-        "Post-The Twins": "The Twins"
+        "Post-Skeletron Prime": "Skeletron Prime"
       },
       "world_description": "Terraria is a 2D multiplayer sandbox game featuring mining, building, exploration, and combat.\nFeatures 18 bosses and 4 classes.",
       "slot_data": {
@@ -12744,44 +12646,6 @@
   },
   "helpers": {
     "1": {
-      "has_n_from_list": {
-        "params": [
-          "items",
-          "required_count"
-        ],
-        "body": {
-          "type": "compare",
-          "op": ">=",
-          "left": {
-            "type": "sum_of",
-            "iterator_info": {
-              "target": {
-                "type": "name",
-                "name": "item"
-              },
-              "iterator": {
-                "type": "name",
-                "name": "items"
-              },
-              "condition": {
-                "type": "item_check",
-                "item": {
-                  "type": "name",
-                  "name": "item"
-                }
-              }
-            },
-            "element_rule": {
-              "type": "constant",
-              "value": 1
-            }
-          },
-          "right": {
-            "type": "name",
-            "name": "required_count"
-          }
-        }
-      },
       "has_minions": {
         "params": [
           "required_count"

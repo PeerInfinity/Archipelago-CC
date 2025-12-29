@@ -231,13 +231,13 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
 
     def _create_npc_check(self, required_count: int) -> Dict[str, Any]:
         """Create a rule to check if player has at least N NPCs."""
-        # Convert to: player has at least N items from the NPC list
+        # Use built-in has_from_list_unique state method
         return {
-            'type': 'helper',
-            'name': 'has_n_from_list',
+            'type': 'state_method',
+            'method': 'has_from_list_unique',
             'args': [
-                {'type': 'constant', 'value': list(self.npcs)},
-                {'type': 'constant', 'value': required_count}
+                list(self.npcs),
+                required_count
             ]
         }
 
@@ -296,12 +296,13 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
 
     def _create_mech_boss_check(self, required_count: int) -> Dict[str, Any]:
         """Create a rule to check if player has defeated at least N mechanical bosses."""
+        # Use built-in has_from_list_unique state method
         return {
-            'type': 'helper',
-            'name': 'has_n_from_list',
+            'type': 'state_method',
+            'method': 'has_from_list_unique',
             'args': [
-                {'type': 'constant', 'value': self.mech_bosses},
-                {'type': 'constant', 'value': required_count}
+                self.mech_bosses,
+                required_count
             ]
         }
 
@@ -337,33 +338,12 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
         """Define computed helpers for Terraria.
 
         Provides rule-based definitions for:
-        - has_n_from_list: Check if player has at least N items from a list
         - has_minions: Check if player has at least N minion slots
+
+        Note: NPC and mech boss counting now uses the built-in has_from_list_unique
+        state method instead of a custom helper.
         """
         helper_defs = super().get_helper_definitions(world)
-
-        # has_n_from_list(items, required_count)
-        # Logic: sum(1 for item in items if has(item)) >= required_count
-        helper_defs['has_n_from_list'] = {
-            'params': ['items', 'required_count'],
-            'body': {
-                'type': 'compare',
-                'op': '>=',
-                'left': {
-                    'type': 'sum_of',
-                    'iterator_info': {
-                        'target': {'type': 'name', 'name': 'item'},
-                        'iterator': {'type': 'name', 'name': 'items'},
-                        'condition': {
-                            'type': 'item_check',
-                            'item': {'type': 'name', 'name': 'item'}
-                        }
-                    },
-                    'element_rule': {'type': 'constant', 'value': 1}
-                },
-                'right': {'type': 'name', 'name': 'required_count'}
-            }
-        }
 
         # has_minions(required_count)
         # Logic: (1 + max(armor bonuses) + sum(accessory bonuses)) >= required_count
