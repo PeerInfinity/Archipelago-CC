@@ -14,6 +14,9 @@ import os
 logger = logging.getLogger(__name__)
 
 class SM64EXGameExportHandler(GenericGameExportHandler):
+    # SM64 uses simple locations without custom attributes
+    AUTO_DISCOVER_LOCATION_ATTRIBUTES = False
+
     # Movement abilities - affected by enable_move_rando
     MOVEMENT_TOKENS = {
         "TJ": "Triple Jump",
@@ -260,15 +263,15 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
         """Resolve a single token to an item name or boolean."""
         token = token.strip()
 
-        # Handle special tokens
+        # Handle special tokens - these resolve to True/False based on options
         if token == 'MOVELESS':
-            return True if self._options.get('moveless', False) else False
+            return self._options.get('moveless', False)
         if token == 'CAPLESS':
-            return True if self._options.get('capless', False) else False
+            return self._options.get('capless', False)
         if token == 'CANNLESS':
-            return True if self._options.get('cannonless', False) else False
+            return self._options.get('cannonless', False)
         if token == 'NAR':
-            return True if self._options.get('area_randomizer', False) else False
+            return self._options.get('area_randomizer', False)
         if token == 'CANN':
             # Cannon for specific area
             if cannon_area:
