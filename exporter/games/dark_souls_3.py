@@ -4,56 +4,36 @@ Transforms _can_get and _can_go_to helper calls into standard rule types
 (location_check and can_reach) that the frontend can evaluate natively.
 """
 
-from typing import Dict, Any
+from typing import Any, Dict, List
 from .generic import GenericGameExportHandler
 
 
 class DarkSouls3GameExportHandler(GenericGameExportHandler):
-    """Dark Souls III-specific export handler."""
+    """Dark Souls III-specific export handler.
 
-    def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Transform _can_get and _can_go_to helper calls into standard rule types.
+    Uses expand_helper to transform Dark Souls III wrapper methods:
+    - _can_get(location) -> location_check
+    - _can_go_to(region) -> can_reach
+    """
 
-        Dark Souls III uses wrapper methods that map to standard state methods:
-        - _can_get(location) -> can_reach_location -> location_check
-        - _can_go_to(region) -> can_reach_entrance -> can_reach
-        """
-        if not rule or not isinstance(rule, dict):
-            return rule
+    def expand_helper(self, helper_name: str, args: List[Any] = None) -> Dict[str, Any]:
+        """Expand Dark Souls III helper functions to standard rule types."""
+        if not args:
+            return None
 
-        # Transform helper type rules
-        if rule.get('type') == 'helper':
-            name = rule.get('name')
-            args = rule.get('args', [])
+        if helper_name == '_can_get':
+            location_arg = args[0]
+            location_value = location_arg.get('value') if isinstance(location_arg, dict) else location_arg
+            return {
+                'type': 'location_check',
+                'location': {'type': 'constant', 'value': location_value}
+            }
+        elif helper_name == '_can_go_to':
+            region_arg = args[0]
+            region_value = region_arg.get('value') if isinstance(region_arg, dict) else region_arg
+            return {
+                'type': 'can_reach',
+                'region': {'type': 'constant', 'value': region_value}
+            }
 
-            # _can_get(location) -> location_check
-            if name == '_can_get' and args:
-                location_arg = args[0]
-                if isinstance(location_arg, dict) and location_arg.get('type') == 'constant':
-                    return {
-                        'type': 'location_check',
-                        'location': {
-                            'type': 'constant',
-                            'value': location_arg.get('value')
-                        }
-                    }
-
-            # _can_go_to(region) -> can_reach
-            elif name == '_can_go_to' and args:
-                region_arg = args[0]
-                if isinstance(region_arg, dict) and region_arg.get('type') == 'constant':
-                    return {
-                        'type': 'can_reach',
-                        'region': {
-                            'type': 'constant',
-                            'value': region_arg.get('value')
-                        }
-                    }
-
-        # Recursively process nested rules
-        if rule.get('type') in ['and', 'or']:
-            rule['conditions'] = [self.postprocess_rule(cond) for cond in rule.get('conditions', [])]
-        elif rule.get('type') == 'not':
-            rule['condition'] = self.postprocess_rule(rule.get('condition'))
-
-        return rule
+        return None
