@@ -1,6 +1,6 @@
 """TUNIC game-specific export handler."""
 
-from typing import Dict, Any
+from typing import Dict, Any, Set, List
 from .generic import GenericGameExportHandler
 import logging
 import re
@@ -18,6 +18,34 @@ class TUNICGameExportHandler(GenericGameExportHandler):
 
     Note: ability_unlocks is auto-discovered via AUTO_DISCOVER_WORLD_ATTRIBUTES.
     """
+
+    # Explicitly discover helpers from the combat_logic module
+    HELPER_MODULES: List[str] = ['worlds.tunic.combat_logic']
+
+    # Preserve complex combat logic helpers as helper calls during rule analysis.
+    # These helpers have deep nesting, loops, and state calculations that consume
+    # too much analysis budget when inlined. Preserving them keeps them as helper
+    # calls in the rules, while still exporting their definitions for the frontend.
+    HELPERS_TO_PRESERVE: Set[str] = {
+        # Combat stat helpers (from combat_logic.py)
+        'has_combat_reqs',
+        'check_combat_reqs',
+        'has_required_stats',
+        'get_att_level',
+        'get_def_level',
+        'get_potion_level',
+        'get_hp_level',
+        'get_sp_level',
+        'get_mp_level',
+        'get_potion_count',
+        'get_money_count',
+        'calc_effective_hp',
+        'calc_hp_potion_cost',
+        'calc_def_sp_cost',
+        # Logic helpers with complex parameters (from logic_helpers.py and fuses.py)
+        'has_ladder',
+        'has_fuses',
+    }
 
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Post-process TUNIC export data.

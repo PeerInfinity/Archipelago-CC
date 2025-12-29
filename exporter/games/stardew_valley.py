@@ -293,7 +293,7 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
                     if item_name in self._has_rules_to_export:
                         return {
                             'type': 'helper',
-                            'name': f'has_{self._sanitize_helper_name(item_name)}'
+                            'name': f'has_{self.sanitize_helper_name(item_name)}'
                         }
                     # Otherwise return the cached serialized rule
                     return self._has_rule_cache[item_name]
@@ -306,8 +306,7 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
 
                     if serialized:
                         # Check if this rule is large enough to preserve as a helper
-                        from .base import BaseGameExportHandler
-                        node_count = BaseGameExportHandler.count_rule_nodes(serialized)
+                        node_count = self.count_rule_nodes(serialized)
 
                         if self.HAS_RULE_HELPER_THRESHOLD > 0 and node_count > self.HAS_RULE_HELPER_THRESHOLD:
                             # Large rule - cache it and mark for export as helper
@@ -316,7 +315,7 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
                             logger.debug(f"Has rule '{item_name}' has {node_count} nodes, preserving as helper")
                             return {
                                 'type': 'helper',
-                                'name': f'has_{self._sanitize_helper_name(item_name)}'
+                                'name': f'has_{self.sanitize_helper_name(item_name)}'
                             }
                         else:
                             # Small rule - cache and inline it
@@ -404,27 +403,6 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
             logger.error(f"Error serializing StardewRule {type(rule_obj).__name__}: {e}", exc_info=True)
             return None
 
-    def _sanitize_helper_name(self, item_name: str) -> str:
-        """Convert an item name to a valid helper function name.
-
-        Args:
-            item_name: The item name (e.g., "Sandfish", "Gold Bar (Logic event)")
-
-        Returns:
-            A sanitized name suitable for use as a helper name
-        """
-        import re
-        # Replace spaces and special characters with underscores
-        name = re.sub(r'[^a-zA-Z0-9]', '_', item_name)
-        # Remove consecutive underscores
-        name = re.sub(r'_+', '_', name)
-        # Remove leading/trailing underscores
-        name = name.strip('_')
-        # Ensure it starts with a letter (prepend 'item_' if needed)
-        if name and not name[0].isalpha():
-            name = 'item_' + name
-        return name.lower()
-
     def clear_discovered_helpers(self) -> None:
         """Clear all caches between player exports."""
         super().clear_discovered_helpers()
@@ -449,7 +427,7 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
 
         # Add Has rule helpers - sorted for deterministic output
         for item_name in sorted(self._has_rules_to_export):
-            helper_name = f'has_{self._sanitize_helper_name(item_name)}'
+            helper_name = f'has_{self.sanitize_helper_name(item_name)}'
             if item_name in self._has_rule_cache:
                 helpers[helper_name] = self._has_rule_cache[item_name]
                 logger.debug(f"Exported Has rule helper '{helper_name}' for item '{item_name}'")

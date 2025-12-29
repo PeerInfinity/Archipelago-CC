@@ -7,52 +7,27 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Overcooked2GameExportHandler(GenericGameExportHandler):
+    """
+    Overcooked! 2 exports complex level access rules based on:
+    - Overworld region traversal with ramp requirements
+    - Level star requirements with weighted sum calculations
+    - Ramp tricks logic for alternate paths
+    """
     # Preserve these helpers during rule analysis - they're expanded in expand_rule
     HELPERS_TO_PRESERVE = {'has_requirements_for_level_star', 'has_requirements_for_level_access'}
 
-    def __init__(self):
-        super().__init__()
-        self.level_logic = {}
-        self.ramp_tricks_enabled = False
-
     def get_game_info(self, world):
-        """Extract game info including level_logic."""
+        """Export level_logic to frontend for star requirement calculations."""
         game_info = super().get_game_info(world)
 
-        # Add level_logic to game info (keep shortname keys as-is)
         try:
             from worlds.overcooked2 import Logic
-
             if hasattr(Logic, 'level_logic'):
-                # Use the level_logic dictionary as-is (with shortname keys)
                 game_info['level_logic'] = Logic.level_logic
-                logger.info(f"Added level_logic with {len(Logic.level_logic)} entries to game_info")
         except Exception as e:
             logger.error(f"Error adding level_logic to game_info: {e}")
 
         return game_info
-
-    def initialize_game_data(self, world):
-        """Initialize game-specific data from the world object."""
-        super().initialize_game_data(world)
-
-        # Extract ramp_tricks setting
-        try:
-            if hasattr(world, 'options') and hasattr(world.options, 'ramp_tricks'):
-                self.ramp_tricks_enabled = bool(world.options.ramp_tricks.value)
-            else:
-                self.ramp_tricks_enabled = False
-        except Exception as e:
-            logger.error(f"Error extracting ramp_tricks option: {e}")
-            self.ramp_tricks_enabled = False
-
-        # Import the level logic from the game's Logic module
-        try:
-            from worlds.overcooked2 import Logic
-            self.level_logic = Logic.level_logic
-            logger.info(f"Initialized Overcooked! 2 game data with {len(self.level_logic)} level logic entries")
-        except Exception as e:
-            logger.error(f"Error initializing Overcooked! 2 game data: {e}")
 
     def override_rule_analysis(self, rule_func, rule_target_name: str = None):
         """Override rule analysis to properly handle Overcooked! 2 helper functions."""
@@ -94,7 +69,7 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
                 level_name_val = closure_vars.get('level_name', level_name)
                 previous_level = closure_vars.get('previous_level_completed_event_name')
                 required_stars = closure_vars.get('required_star_count', 0)
-                allow_tricks = closure_vars.get('allow_ramp_tricks', self.ramp_tricks_enabled)
+                allow_tricks = closure_vars.get('allow_ramp_tricks', False)
 
                 # Create a helper rule and EXPAND IT IMMEDIATELY
                 # (because override results bypass the normal expansion flow)
