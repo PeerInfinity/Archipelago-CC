@@ -484,6 +484,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       rbResult = rbResult.bool === true && rbResult.difficulty <= maxDiff;
     }
 
+    // If the result is itself a rule object (has 'type' property), evaluate it recursively
+    // This handles helpers that return rules (e.g., get_prison_keeper_rules returns a compare rule)
+    if (rbResult && typeof rbResult === 'object' && rbResult.type && !('__isReturn' in rbResult)) {
+      rbResult = evaluateRule(rbResult, context, depth + 1, localScope);
+    }
+
     return rbResult;
   }
 
@@ -538,6 +544,11 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             // Unwrap return marker if present (from block with return statement)
             if (result && typeof result === 'object' && result.__isReturn) {
               result = result.value;
+            }
+            // If the result is itself a rule object, evaluate it recursively
+            // This handles helpers that return rules (e.g., get_prison_keeper_rules returns a compare rule)
+            if (result && typeof result === 'object' && result.type) {
+              result = evaluateRule(result, context, depth + 1, helperLocalScope);
             }
             // If definition evaluation succeeded (not undefined), use that result
             // Otherwise, fall through to try JavaScript helpers as a fallback
