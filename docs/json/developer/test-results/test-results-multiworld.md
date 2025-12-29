@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-29 04:48:10
+**Generated:** 2025-12-29 06:46:14
 
 ## Summary
 
@@ -51,16 +51,16 @@
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | ✅ Passed | 2 | 2 | 2.3KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 5.5KB | ✅ |
+| Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 5.3KB | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Heretic | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 5.6KB | ✅ |
-| Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 17.4KB | ✅ |
-| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 23.5KB | ✅ |
-| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 3 | 3 | 9.7KB | ✅ |
-| Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 18.5KB | ✅ |
+| Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 5.3KB | ✅ |
+| Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 0.8KB | ✅ |
+| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 21.6KB | ✅ |
+| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 3 | 3 | 9.5KB | ✅ |
+| Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 15.3KB | ✅ |
 | Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 37.5KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | 4 | 4 | 13.5KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
@@ -82,7 +82,7 @@
 | Shivers | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 33.1KB | 86.2KB |
-| Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 19.7KB | 10.7KB |
+| Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 19.7KB | 8.0KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 7.5KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 13.2KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
@@ -783,7 +783,7 @@ When a multiworld test fails, bisection tests each pair of templates to find whi
 
 ### TUNIC (TUNIC.yaml)
 
-**Failing pairs found:** 5
+**Failing pairs found:** 6
 
 | Partner Template | Result | Generation | Player 1 | Player 2 |
 |------------------|--------|------------|----------|----------|
@@ -792,7 +792,7 @@ When a multiworld test fails, bisection tests each pair of templates to find whi
 | Donkey Kong Country 3.yaml | ❌ | ✅ | ✅ | ❌ |
 | Landstalker - The Treasures of King Nole.yaml | ❌ | ✅ | ✅ | ❌ |
 | Muse Dash.yaml | ❌ | ✅ | ✅ | ❌ |
-| Sonic Adventure 2 Battle.yaml | ✅ | ✅ | ✅ | ✅ |
+| Sonic Adventure 2 Battle.yaml | ❌ | ✅ | ✅ | ❌ |
 
 
 ## Second Pass Results
