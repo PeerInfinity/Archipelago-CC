@@ -119,6 +119,17 @@ export function executeHelper(manager, name, ...args) {
         return result;
       }
       // Fall through to JavaScript helpers if definition returned undefined
+    } else if (helperDefinition && helperDefinition.type) {
+      // Handle rule-type helpers (e.g., {type: 'block', statements: [...]})
+      // These helpers ARE rules themselves, not wrappers with {params, body}
+      // Resolve any parameters in scope before evaluating
+      const helperScope = resolveHelperScope(helperDefinition, args, staticData, playerIdStr);
+      const snapshotInterface = manager._createSelfSnapshotInterface();
+      const result = evaluateRule(helperDefinition, snapshotInterface, 0, helperScope);
+      if (result !== undefined) {
+        return result;
+      }
+      // Fall through to JavaScript helpers if evaluation returned undefined
     }
 
     // Fall back to JavaScript helper functions from game logic registry

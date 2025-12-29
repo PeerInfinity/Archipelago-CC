@@ -6,62 +6,62 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-28 19:39:37
+**Generated:** 2025-12-29 06:46:14
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 70 (95.9%)
-- **Failed:** 3 (4.1%)
+- **Passed:** 72 (98.6%)
+- **Failed:** 1 (1.4%)
 - **Skipped (Prerequisites):** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
-- **Second Pass Tested:** 73
-- **Second Pass Passed:** 70
-- **Second Pass Failed:** 3
+- **Second Pass Tested:** 72
+- **Second Pass Passed:** 72
+- **Second Pass Failed:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 33/70 (47.1% of passed)
-- **Passing with Generic Logic:** 63/70 (90.0% of passed)
-- **Passing with Both Generic:** 33/70 (47.1% of passed)
+- **Passing with Generic Exporter:** 35/72 (48.6% of passed)
+- **Passing with Generic Logic:** 66/72 (91.7% of passed)
+- **Passing with Both Generic:** 35/72 (48.6% of passed)
 
 ## Test Results
 
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
-| A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 8.5KB | ✅ |
+| A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 7.7KB | ✅ |
 | A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 2.5KB | ✅ |
 | A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Aquaria | ✅ Passed | ✅ Passed | 1 | 1 | 2.8KB | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | 1 | 1 | 1.5KB | 40.3KB |
+| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | 1 | 1 | 1.4KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 14.7KB | ✅ |
+| Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 7.3KB | ✅ |
 | Castlevania 64 | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Celeste 64 | ✅ Passed | ✅ Passed | 2 | 2 | 8.4KB | ✅ |
+| Celeste 64 | ✅ Passed | ✅ Passed | 2 | 2 | 5.8KB | ✅ |
 | ChecksFinder | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | ChocolateChipCookies | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Civilization VI | ✅ Passed | ✅ Passed | 2 | 2 | 1.9KB | ✅ |
-| DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 4.5KB | ✅ |
+| Civilization VI | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
+| DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 2.9KB | ✅ |
 | DOOM 1993 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Dark Souls III | ✅ Passed | ✅ Passed | 2 | 2 | 4.3KB | ✅ |
+| Dark Souls III | ✅ Passed | ✅ Passed | 2 | 2 | 2.3KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 5.5KB | ✅ |
+| Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 5.3KB | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Heretic | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 5.6KB | ✅ |
-| Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 17.1KB | 12.5KB |
-| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 23.2KB | 107.3KB |
-| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 3 | 3 | 9.3KB | 13.1KB |
-| Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 18.5KB | ✅ |
-| Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 37.5KB | 10.8KB |
+| Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 5.3KB | ✅ |
+| Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 0.8KB | ✅ |
+| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 21.6KB | ✅ |
+| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 3 | 3 | 9.5KB | ✅ |
+| Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 15.3KB | ✅ |
+| Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 37.5KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | 4 | 4 | 13.5KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | 4 | 4 | 0.3KB | ✅ |
@@ -73,7 +73,7 @@
 | Muse Dash | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Noita | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | ✅ Passed | 5 | 5 | 3.6KB | ✅ |
-| Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 29.0KB | 6.7KB |
+| Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 29.1KB | ✅ |
 | Paint | ✅ Passed | ✅ Passed | 5 | 5 | 6.9KB | ✅ |
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 11.4KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
@@ -81,27 +81,27 @@
 | Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 13.4KB | 6.9KB |
 | Shivers | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | ❌ Failed | 6 | 6 | 83.8KB | 87.2KB |
-| Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 19.7KB | 10.7KB |
+| Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 33.1KB | 86.2KB |
+| Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 19.7KB | 8.0KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 7.5KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 13.2KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 1.0KB | ✅ |
+| Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Mario World | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Metroid | ✅ Passed | ✅ Passed | 6 | 6 | 64.6KB | 114.5KB |
 | TOEM original | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| TUNIC | ✅ Passed | ✅ Passed | 7 | 7 | 2.0KB | ✅ |
-| Terraria | ✅ Passed | ❌ Failed | 7 | 7 | 19.2KB | ✅ |
-| The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | 5.8KB | ✅ |
-| The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 11.7KB | ✅ |
-| The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 5.3KB | ✅ |
-| The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 28.4KB | ✅ |
-| Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 4.5KB | ✅ |
+| TUNIC | ❌ Failed | — | 7 | 7 | 2.0KB | ✅ |
+| Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 19.2KB | ✅ |
+| The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | 2.2KB | ✅ |
+| The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 9.0KB | ✅ |
+| The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 4.4KB | ✅ |
+| The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 24.9KB | ✅ |
+| Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 3.1KB | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
-| VVVVVV | ✅ Passed | ✅ Passed | 7 | 7 | 5.4KB | ✅ |
-| Wargroove | ✅ Passed | ✅ Passed | 7 | 7 | 9.3KB | ✅ |
-| WebDevJourney | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
-| Yoshi's Island | ✅ Passed | ❌ Failed | 8 | 8 | 12.0KB | ✅ |
+| VVVVVV | ✅ Passed | ✅ Passed | 7 | 7 | 3.6KB | ✅ |
+| Wargroove | ✅ Passed | ✅ Passed | 7 | 7 | 6.8KB | ✅ |
+| WebDevJourney | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
+| Yoshi's Island | ✅ Passed | ✅ Passed | 8 | 8 | 5.4KB | ✅ |
 | shapez | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
 
 ## Templates in Multiworld
@@ -618,7 +618,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Shivers.yaml |
 | 6 | TOEM rule builder.yaml |
 
-### TUNIC ✅ (Split 1)
+### TUNIC ❌ (Split 1)
 
 | Player # | Template |
 |----------|----------|
@@ -748,8 +748,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Landstalker - The Treasures of King Nole.yaml |
 | 5 | Muse Dash.yaml |
 | 6 | Sonic Adventure 2 Battle.yaml |
-| 7 | TUNIC.yaml |
-| 8 | WebDevJourney.yaml |
+| 7 | WebDevJourney.yaml |
 
 ### Yoshi's Island ✅ (Split 2)
 
@@ -778,13 +777,31 @@ Shows which templates were in the multiworld when each game was tested:
 | 8 | shapez.yaml |
 
 
+## Bisection Results
+
+When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
+
+### TUNIC (TUNIC.yaml)
+
+**Failing pairs found:** 6
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| A Hat in Time.yaml | ❌ | ✅ | ✅ | ❌ |
+| Celeste (Open World).yaml | ❌ | ✅ | ✅ | ❌ |
+| Donkey Kong Country 3.yaml | ❌ | ✅ | ✅ | ❌ |
+| Landstalker - The Treasures of King Nole.yaml | ❌ | ✅ | ✅ | ❌ |
+| Muse Dash.yaml | ❌ | ✅ | ✅ | ❌ |
+| Sonic Adventure 2 Battle.yaml | ❌ | ✅ | ✅ | ❌ |
+
+
 ## Second Pass Results
 
 Templates tested in the first pass with fewer than the maximum number of players were retested (second pass) with the full multiworld.
 
 | Game Name | First Pass MW Size | Second Pass MW Size | Second Pass Player # | Second Pass Result |
 |-----------|-------------------|---------------------|---------------------|--------------------|
-| A Hat in Time | 1 | 8 | 1 | ✅ Passed |
+| A Hat in Time | 1 | 7 | 1 | ✅ Passed |
 | A Link to the Past | 1 | 8 | 1 | ✅ Passed |
 | A Short Hike | 1 | 8 | 1 | ✅ Passed |
 | APQuest | 1 | 7 | 1 | ✅ Passed |
@@ -794,7 +811,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Bumper Stickers | 1 | 7 | 1 | ✅ Passed |
 | Castlevania - Circle of the Moon | 1 | 7 | 1 | ✅ Passed |
 | Castlevania 64 | 1 | 7 | 1 | ✅ Passed |
-| Celeste (Open World) | 2 | 8 | 2 | ✅ Passed |
+| Celeste (Open World) | 2 | 7 | 2 | ✅ Passed |
 | Celeste 64 | 2 | 8 | 2 | ✅ Passed |
 | ChecksFinder | 2 | 8 | 2 | ✅ Passed |
 | ChocolateChipCookies | 2 | 7 | 2 | ✅ Passed |
@@ -804,7 +821,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | DOOM 1993 | 2 | 7 | 2 | ✅ Passed |
 | DOOM II | 2 | 7 | 2 | ✅ Passed |
 | Dark Souls III | 2 | 7 | 2 | ✅ Passed |
-| Donkey Kong Country 3 | 3 | 8 | 3 | ✅ Passed |
+| Donkey Kong Country 3 | 3 | 7 | 3 | ✅ Passed |
 | Factorio | 3 | 8 | 3 | ✅ Passed |
 | Faxanadu | 3 | 8 | 3 | ✅ Passed |
 | Final Fantasy Mystic Quest | 3 | 7 | 3 | ✅ Passed |
@@ -814,7 +831,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Kingdom Hearts | 3 | 7 | 3 | ✅ Passed |
 | Kingdom Hearts 2 | 3 | 7 | 3 | ✅ Passed |
 | Kirby's Dream Land 3 | 3 | 7 | 3 | ✅ Passed |
-| Landstalker - The Treasures of King Nole | 4 | 8 | 4 | ✅ Passed |
+| Landstalker - The Treasures of King Nole | 4 | 7 | 4 | ✅ Passed |
 | Lingo | 4 | 8 | 4 | ✅ Passed |
 | Links Awakening DX | 4 | 8 | 4 | ✅ Passed |
 | Lufia II Ancient Cave | 4 | 7 | 4 | ✅ Passed |
@@ -824,7 +841,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | MegaMan Battle Network 3 | 4 | 7 | 4 | ✅ Passed |
 | Meritous | 4 | 7 | 4 | ✅ Passed |
 | Metamath | 4 | 7 | 4 | ✅ Passed |
-| Muse Dash | 5 | 8 | 5 | ✅ Passed |
+| Muse Dash | 5 | 7 | 5 | ✅ Passed |
 | Noita | 5 | 8 | 5 | ✅ Passed |
 | Old School Runescape | 5 | 8 | 5 | ✅ Passed |
 | Overcooked! 2 | 5 | 7 | 5 | ✅ Passed |
@@ -834,8 +851,8 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Saving Princess | 5 | 7 | 5 | ✅ Passed |
 | Secret of Evermore | 5 | 7 | 5 | ✅ Passed |
 | Shivers | 5 | 7 | 5 | ✅ Passed |
-| Sonic Adventure 2 Battle | 6 | 8 | 6 | ✅ Passed |
-| Starcraft 2 | 6 | 8 | 6 | ❌ Failed |
+| Sonic Adventure 2 Battle | 6 | 7 | 6 | ✅ Passed |
+| Starcraft 2 | 6 | 8 | 6 | ✅ Passed |
 | Stardew Valley | 6 | 8 | 6 | ✅ Passed |
 | Subnautica | 6 | 7 | 6 | ✅ Passed |
 | Super Mario 64 | 6 | 7 | 6 | ✅ Passed |
@@ -844,8 +861,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Super Metroid | 6 | 7 | 6 | ✅ Passed |
 | TOEM original | 6 | 7 | 6 | ✅ Passed |
 | TOEM rule builder | 6 | 7 | 6 | ✅ Passed |
-| TUNIC | 7 | 8 | 7 | ✅ Passed |
-| Terraria | 7 | 7 | 6 | ❌ Failed |
+| Terraria | 7 | 8 | 7 | ✅ Passed |
 | The Legend of Zelda | 7 | 8 | 7 | ✅ Passed |
 | The Messenger | 7 | 7 | 7 | ✅ Passed |
 | The Wind Waker | 7 | 7 | 7 | ✅ Passed |
@@ -854,8 +870,8 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Undertale | 7 | 7 | 7 | ✅ Passed |
 | VVVVVV | 7 | 7 | 7 | ✅ Passed |
 | Wargroove | 7 | 7 | 7 | ✅ Passed |
-| WebDevJourney | 8 | 8 | 8 | ✅ Passed |
-| Yoshi's Island | 8 | 6 | 6 | ❌ Failed |
+| WebDevJourney | 7 | 7 | 7 | ✅ Passed |
+| Yoshi's Island | 8 | 8 | 8 | ✅ Passed |
 | shapez | 8 | 8 | 8 | ✅ Passed |
 
 ### Second Pass Templates in Multiworld
@@ -872,8 +888,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 4 | Landstalker - The Treasures of King Nole.yaml |
 | 5 | Muse Dash.yaml |
 | 6 | Sonic Adventure 2 Battle.yaml |
-| 7 | TUNIC.yaml |
-| 8 | WebDevJourney.yaml |
+| 7 | WebDevJourney.yaml |
 
 #### A Link to the Past ✅ (Split 2)
 
@@ -995,8 +1010,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 4 | Landstalker - The Treasures of King Nole.yaml |
 | 5 | Muse Dash.yaml |
 | 6 | Sonic Adventure 2 Battle.yaml |
-| 7 | TUNIC.yaml |
-| 8 | WebDevJourney.yaml |
+| 7 | WebDevJourney.yaml |
 
 #### Celeste 64 ✅ (Split 2)
 
@@ -1118,8 +1132,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 4 | Landstalker - The Treasures of King Nole.yaml |
 | 5 | Muse Dash.yaml |
 | 6 | Sonic Adventure 2 Battle.yaml |
-| 7 | TUNIC.yaml |
-| 8 | WebDevJourney.yaml |
+| 7 | WebDevJourney.yaml |
 
 #### Factorio ✅ (Split 2)
 
@@ -1241,8 +1254,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 4 | Landstalker - The Treasures of King Nole.yaml |
 | 5 | Muse Dash.yaml |
 | 6 | Sonic Adventure 2 Battle.yaml |
-| 7 | TUNIC.yaml |
-| 8 | WebDevJourney.yaml |
+| 7 | WebDevJourney.yaml |
 
 #### Lingo ✅ (Split 2)
 
@@ -1364,8 +1376,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 4 | Landstalker - The Treasures of King Nole.yaml |
 | 5 | Muse Dash.yaml |
 | 6 | Sonic Adventure 2 Battle.yaml |
-| 7 | TUNIC.yaml |
-| 8 | WebDevJourney.yaml |
+| 7 | WebDevJourney.yaml |
 
 #### Noita ✅ (Split 2)
 
@@ -1487,10 +1498,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 4 | Landstalker - The Treasures of King Nole.yaml |
 | 5 | Muse Dash.yaml |
 | 6 | Sonic Adventure 2 Battle.yaml |
-| 7 | TUNIC.yaml |
-| 8 | WebDevJourney.yaml |
+| 7 | WebDevJourney.yaml |
 
-#### Starcraft 2 ❌ (Split 2)
+#### Starcraft 2 ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -1600,20 +1610,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | TOEM rule builder.yaml |
 | 7 | Wargroove.yaml |
 
-#### TUNIC ✅ (Split 1)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Hat in Time.yaml |
-| 2 | Celeste (Open World).yaml |
-| 3 | Donkey Kong Country 3.yaml |
-| 4 | Landstalker - The Treasures of King Nole.yaml |
-| 5 | Muse Dash.yaml |
-| 6 | Sonic Adventure 2 Battle.yaml |
-| 7 | TUNIC.yaml |
-| 8 | WebDevJourney.yaml |
-
-#### Terraria ❌ (Split 2)
+#### Terraria ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -1622,8 +1619,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Factorio.yaml |
 | 4 | Lingo.yaml |
 | 5 | Noita.yaml |
-| 6 | Terraria.yaml |
-| 7 | Yoshi's Island.yaml |
+| 6 | Starcraft 2.yaml |
+| 7 | Terraria.yaml |
+| 8 | Yoshi's Island.yaml |
 
 #### The Legend of Zelda ✅ (Split 3)
 
@@ -1732,10 +1730,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 4 | Landstalker - The Treasures of King Nole.yaml |
 | 5 | Muse Dash.yaml |
 | 6 | Sonic Adventure 2 Battle.yaml |
-| 7 | TUNIC.yaml |
-| 8 | WebDevJourney.yaml |
+| 7 | WebDevJourney.yaml |
 
-#### Yoshi's Island ❌ (Split 2)
+#### Yoshi's Island ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -1744,7 +1741,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Factorio.yaml |
 | 4 | Lingo.yaml |
 | 5 | Noita.yaml |
-| 6 | Yoshi's Island.yaml |
+| 6 | Starcraft 2.yaml |
+| 7 | Terraria.yaml |
+| 8 | Yoshi's Island.yaml |
 
 #### shapez ✅ (Split 3)
 
@@ -1758,49 +1757,6 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Stardew Valley.yaml |
 | 7 | The Legend of Zelda.yaml |
 | 8 | shapez.yaml |
-
-### Second Pass Bisection Results
-
-When a second pass multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
-
-#### Starcraft 2 (Starcraft 2.yaml)
-
-**Failing pairs found:** 5
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Link to the Past.yaml | ❌ | ✅ | ✅ | ❌ |
-| Celeste 64.yaml | ❌ | ✅ | ✅ | ❌ |
-| Factorio.yaml | ✅ | ✅ | ✅ | ✅ |
-| Lingo.yaml | ✅ | ✅ | ✅ | ✅ |
-| Noita.yaml | ❌ | ✅ | ✅ | ❌ |
-| Terraria.yaml | ❌ | ✅ | ❌ | ✅ |
-| Yoshi's Island.yaml | ❌ | ✅ | ❌ | ✅ |
-
-#### Terraria (Terraria.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Link to the Past.yaml | ✅ | ✅ | ✅ | ✅ |
-| Celeste 64.yaml | ✅ | ✅ | ✅ | ✅ |
-| Factorio.yaml | ✅ | ✅ | ✅ | ✅ |
-| Lingo.yaml | ✅ | ✅ | ✅ | ✅ |
-| Noita.yaml | ✅ | ✅ | ✅ | ✅ |
-| Yoshi's Island.yaml | ✅ | ✅ | ✅ | ✅ |
-
-#### Yoshi's Island (Yoshi's Island.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| A Link to the Past.yaml | ✅ | ✅ | ✅ | ✅ |
-| Celeste 64.yaml | ✅ | ✅ | ✅ | ✅ |
-| Factorio.yaml | ✅ | ✅ | ✅ | ✅ |
-| Lingo.yaml | ✅ | ✅ | ✅ | ✅ |
-| Noita.yaml | ✅ | ✅ | ✅ | ✅ |
 
 
 ## Notes

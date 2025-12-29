@@ -18,10 +18,27 @@ class KH2GameExportHandler(GenericGameExportHandler):
     # Module paths containing item name constants and other resolvable variables
     ITEM_NAME_MODULES = ['worlds.kh2.Names', 'worlds.kh2.Logic', 'worlds.kh2.Items']
 
-    # Mapping of self.<attr> to setting names for the analyzer
+    # Module-level variables to inject into closure_vars for helper analysis
+    CLOSURE_VAR_IMPORTS = {
+        'worlds.kh2.Logic': [
+            'auto_form_dict', 'summons', 'form_list', 'form_list_without_final',
+            'gap_closer', 'defensive_tool', 'ground_finisher', 'party_limit',
+            'donald_limit', 'aerial_move', 'black_magic', 'magic', 'three_proofs',
+            'final_leveling_access', 'drive_form_list'
+        ],
+        'worlds.kh2.Items': ['visit_locking_dict'],
+        'worlds.kh2.Names': ['ItemName', 'RegionName', 'LocationName'],
+    }
+
+    # Mapping of self.<attr> to setting configuration for the analyzer
     # This enables conversion of patterns like self.fight_logic to setting_value rules
+    # Values can be:
+    #   - str: setting name (uses numeric value)
+    #   - dict: {'setting': name, 'use_current_key': True} (uses string key from name_lookup)
     SELF_ATTR_TO_SETTING = {
-        'fight_logic': 'FightLogic',  # self.fight_logic = world.options.FightLogic.current_key
+        # self.fight_logic = world.options.FightLogic.current_key
+        # The current_key returns the string key ("easy", "normal", "hard") not the numeric value
+        'fight_logic': {'setting': 'FightLogic', 'use_current_key': True},
     }
 
     # Helpers too complex for automatic export
@@ -67,60 +84,25 @@ class KH2GameExportHandler(GenericGameExportHandler):
     def prepare_closure_vars(self, rule_func, closure_vars: Dict[str, Any]) -> Dict[str, Any]:
         """Inject KH2 module-level data structures into closure_vars for helper analysis.
 
-        This ensures that constants from Logic.py and Items.py are available
-        during rule analysis, even when they're not in the function's direct closure.
+        Static imports are handled by CLOSURE_VAR_IMPORTS. This override only handles
+        the dynamic fight rule dicts that are discovered at runtime.
         """
-        enhanced_closure = closure_vars.copy()
+        # Let base class handle static imports from CLOSURE_VAR_IMPORTS
+        enhanced_closure = super().prepare_closure_vars(rule_func, closure_vars)
 
         try:
-            # Import KH2 Logic module data
-            from worlds.kh2.Logic import (
-                auto_form_dict, summons, form_list, form_list_without_final,
-                gap_closer, defensive_tool, ground_finisher, party_limit,
-                donald_limit, aerial_move, black_magic, magic, three_proofs,
-                final_leveling_access, drive_form_list
-            )
-            from worlds.kh2.Items import visit_locking_dict
-            from worlds.kh2.Names import ItemName, RegionName, LocationName
-
-            # Add all the data structures to closure vars
-            data_to_inject = {
-                'auto_form_dict': auto_form_dict,
-                'summons': summons,
-                'form_list': form_list,
-                'form_list_without_final': form_list_without_final,
-                'gap_closer': gap_closer,
-                'defensive_tool': defensive_tool,
-                'ground_finisher': ground_finisher,
-                'party_limit': party_limit,
-                'donald_limit': donald_limit,
-                'aerial_move': aerial_move,
-                'black_magic': black_magic,
-                'magic': magic,
-                'three_proofs': three_proofs,
-                'final_leveling_access': final_leveling_access,
-                'drive_form_list': drive_form_list,
-                'visit_locking_dict': visit_locking_dict,
-                'ItemName': ItemName,
-                'RegionName': RegionName,
-                'LocationName': LocationName,
-            }
-
-            # Also import all the fight rule dicts from Logic.py
+            # Dynamically import all fight rule dicts from Logic.py
+            # These have prefixes like easy_, normal_, hard_, not_hard_, transport_
             from worlds.kh2 import Logic
             for name in dir(Logic):
                 if name.startswith(('easy_', 'normal_', 'hard_', 'not_hard_', 'transport_')):
-                    value = getattr(Logic, name)
-                    if isinstance(value, dict):
-                        data_to_inject[name] = value
-
-            for name, value in data_to_inject.items():
-                if name not in enhanced_closure:
-                    enhanced_closure[name] = value
-                    logger.debug(f"Injected {name} into closure_vars for KH2 helper analysis")
-
+                    if name not in enhanced_closure:
+                        value = getattr(Logic, name)
+                        if isinstance(value, dict):
+                            enhanced_closure[name] = value
+                            logger.debug(f"Injected {name} into closure_vars for KH2 helper analysis")
         except ImportError as e:
-            logger.warning(f"Could not import KH2 modules for closure injection: {e}")
+            logger.warning(f"Could not import KH2 Logic module for closure injection: {e}")
 
         return enhanced_closure
 
@@ -436,8 +418,8 @@ class KH2GameExportHandler(GenericGameExportHandler):
         if helper_name == 'final_form_region_access':
             try:
                 from worlds.kh2.Logic import final_leveling_access
-                # final_leveling_access is a set of location names
-                locations = list(final_leveling_access)
+                # final_leveling_access is a set of location names - sort for deterministic output
+                locations = sorted(list(final_leveling_access))
                 conditions = [{'type': 'location_check', 'location': {'type': 'constant', 'value': loc}} for loc in locations]
                 if len(conditions) == 1:
                     return conditions[0]
@@ -449,27 +431,3 @@ class KH2GameExportHandler(GenericGameExportHandler):
         # For now, preserve helper nodes as-is until we identify specific helpers
         return None
         
-    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
-        """Recursively expand rule functions for KH2.
-
-        Handles KH2-specific patterns, then delegates to parent class.
-        """
-        if not rule:
-            return rule
-
-        # KH2-specific: Handle self.method_name() calls as helper invocations
-        if rule.get('type') == 'function_call':
-            func = rule.get('function', {})
-            if func.get('type') == 'attribute' and isinstance(func.get('object'), dict):
-                obj = func.get('object', {})
-                if obj.get('type') == 'name' and obj.get('name') == 'self':
-                    method_name = func.get('attr')
-                    args = rule.get('args', [])
-                    if method_name:
-                        expanded = self.expand_helper(method_name, args)
-                        if expanded:
-                            return self.expand_rule(expanded, _depth + 1)
-                        return {'type': 'helper', 'name': method_name, 'args': args}
-
-        # Delegate to parent class for standard rule expansion
-        return super().expand_rule(rule, _depth)

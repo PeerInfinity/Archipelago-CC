@@ -1,29 +1,24 @@
-"""Inscryption game-specific export handler."""
+"""Inscryption game-specific export handler.
+
+Inscryption's helper functions are class methods (not module-level functions),
+so they cannot be automatically exported. Instead, we expand the inferred pseudo-items
+(like Camera_And_Meat, All_Epitaph_Pieces) to their actual item checks.
+"""
 
 from typing import Dict, Any
 from .generic import GenericGameExportHandler
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 class InscryptionGameExportHandler(GenericGameExportHandler):
-    """Inscryption game handler.
+    """Inscryption game handler - expands pseudo-items to actual rule checks."""
 
-    Since Inscryption's helper functions are class methods (not module-level functions),
-    they cannot be automatically exported. Instead, we expand the inferred pseudo-items
-    (like Camera_And_Meat, All_Epitaph_Pieces) to their actual item checks.
-    """
     # Disable automatic helper export (class methods can't be auto-exported)
     AUTO_EXPORT_DISCOVERED_HELPERS = False
 
     def preprocess_world_data(self, world, export_data, player):
         """Store world data needed for rule expansion."""
         super().preprocess_world_data(world, export_data, player)
-        # Get the required epitaph pieces count from world (default: 9)
         self._required_epitaph_count = getattr(world, 'required_epitaph_pieces_count', 9)
-        if hasattr(world, 'required_epitaph_pieces_count'):
-            logger.debug(f"Required epitaph pieces count: {self._required_epitaph_count}")
 
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand Inscryption-specific rules.

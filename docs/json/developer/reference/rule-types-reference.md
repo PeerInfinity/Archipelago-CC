@@ -141,6 +141,13 @@ Both layers must support a rule type for it to work end-to-end.
 | `any_of` | Apply rule to any item (OR) | `element_rule`, `iterator_info` | At least one item must satisfy condition |
 | `sum_of` | Sum numeric results over items | `element_rule`, `iterator_info` | `sum([state.count(x) for x in items])` |
 | `generator_expression` | Python generator expression | `element`, `comprehension` | Complex iteration patterns |
+| `weighted_sum` | Check weighted sum meets threshold | `args: [threshold, items]` | `{"rule": "weighted_sum", "args": [1.0, [["Item", 0.5], ...]]}` |
+
+**`weighted_sum` details** (Rule Builder format, used by Overcooked! 2):
+- `args[0]`: Threshold value (typically 1.0)
+- `args[1]`: Array of `[item_name, weight]` pairs
+- Returns `true` if `sum(count(item) * weight for item, weight in items) >= threshold`
+- Example: With threshold 1.0 and items `[["Sword", 0.5], ["Shield", 0.5]]`, returns true if player has 2+ of either item or 1+ of each
 
 **Iterator info structure** (`iterator_info` field):
 - `target`: Variable binding - either `{type: "name", name: "x"}` for simple or `{type: "tuple", elements: [...]}` for unpacking

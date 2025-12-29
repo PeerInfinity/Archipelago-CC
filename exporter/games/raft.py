@@ -94,6 +94,27 @@ class RaftGameExportHandler(GenericGameExportHandler):
         "Zipline tool": {'type': 'helper', 'name': 'raft_can_craft_ziplineTool', 'args': []},
     }
 
+    # Region access rules - maps region names to their access rule structures
+    # Based on the regionChecks dictionary in worlds/raft/Rules.py
+    REGION_ACCESS_RULES = {
+        "Raft": {'type': 'constant', 'value': True},
+        "ResearchTable": {'type': 'constant', 'value': True},
+        "RadioTower": {'type': 'helper', 'name': 'raft_can_access_radio_tower', 'args': []},
+        "Vasagatan": {'type': 'helper', 'name': 'raft_can_access_vasagatan', 'args': []},
+        "BalboaIsland": {'type': 'helper', 'name': 'raft_can_access_balboa_island', 'args': []},
+        "CaravanIsland": {'type': 'helper', 'name': 'raft_can_access_caravan_island', 'args': []},
+        "Tangaroa": {'type': 'helper', 'name': 'raft_can_access_tangaroa', 'args': []},
+        "Varuna Point": {'type': 'helper', 'name': 'raft_can_access_varuna_point', 'args': []},
+        "Temperance": {'type': 'helper', 'name': 'raft_can_access_temperance', 'args': []},
+        "Utopia": {
+            'type': 'and',
+            'conditions': [
+                {'type': 'helper', 'name': 'raft_can_complete_temperance', 'args': []},
+                {'type': 'helper', 'name': 'raft_can_access_utopia', 'args': []}
+            ]
+        }
+    }
+
     def __init__(self):
         super().__init__()
         # Load the locations.json file to get region information
@@ -136,90 +157,41 @@ class RaftGameExportHandler(GenericGameExportHandler):
         """
         Override rule analysis for Raft locations that use the regionChecks pattern.
 
-        The Raft world uses this pattern:
-        set_rule(locFromWorld, regionChecks[location["region"]])
-
-        We need to resolve this to the actual access rule for the location's region.
+        Raft's Rules.py uses: set_rule(locFromWorld, regionChecks[location["region"]])
+        This dictionary lookup pattern can't be analyzed by the standard AST analyzer,
+        so we resolve it here using the location-to-region mapping from locations.json.
         """
         if not rule_target_name or rule_target_name not in self.location_to_region:
             return None  # Let default analysis handle it
 
-        # Get the region for this location
         region = self.location_to_region[rule_target_name]
+        region_rule = self.REGION_ACCESS_RULES.get(region, {'type': 'constant', 'value': True})
+        is_region_always_accessible = region_rule.get('value') is True
 
-        # Check if this location has specific item requirements
-        if rule_target_name in self.location_to_items:
-            # This location requires access to specific items
-            # The rule is: regionCheck AND all itemChecks
-            item_requirements = self.location_to_items[rule_target_name]
-            region_rule = self._get_region_access_rule(region)
-
-            # Build item check conditions using inline rules instead of helper calls
-            item_conditions = []
-            for item_name in item_requirements:
-                # Get the item check rule from our mapping
-                item_rule = self.ITEM_CHECK_RULES.get(item_name)
-                if item_rule:
-                    # Skip constant True rules - they don't add any constraints
-                    if item_rule.get('type') == 'constant' and item_rule.get('value') is True:
-                        continue
-                    # Register any helpers referenced in this rule
-                    self.register_helpers_from_rule(item_rule)
+        # Build item check conditions (skip constant True rules)
+        item_conditions = []
+        for item_name in self.location_to_items.get(rule_target_name, []):
+            item_rule = self.ITEM_CHECK_RULES.get(item_name)
+            if item_rule:
+                if not (item_rule.get('type') == 'constant' and item_rule.get('value') is True):
                     item_conditions.append(item_rule)
-                else:
-                    # Unknown item - log a warning
-                    logger.warning(f"Unknown item check for '{item_name}' in location '{rule_target_name}'")
-
-            # Register helpers in region rule
-            self.register_helpers_from_rule(region_rule)
-
-            # Combine region rule with item requirements
-            if region_rule.get('value') is True:
-                # Region is always accessible, just need items
-                if len(item_conditions) == 0:
-                    return {'type': 'constant', 'value': True}
-                elif len(item_conditions) == 1:
-                    return item_conditions[0]
-                else:
-                    return {'type': 'and', 'conditions': item_conditions}
             else:
-                # Need both region access and items
-                all_conditions = [region_rule] + item_conditions
-                if len(all_conditions) == 1:
-                    return all_conditions[0]
-                return {'type': 'and', 'conditions': all_conditions}
+                logger.warning(f"Unknown item check for '{item_name}' in location '{rule_target_name}'")
 
-        # Simple region check only
-        result = self._get_region_access_rule(region)
+        # Combine region rule with item conditions
+        conditions = item_conditions if is_region_always_accessible else [region_rule] + item_conditions
+
+        # Build final result based on number of conditions
+        if len(conditions) == 0:
+            result = {'type': 'constant', 'value': True}
+        elif len(conditions) == 1:
+            result = conditions[0]
+        else:
+            result = {'type': 'and', 'conditions': conditions}
+
+        # Register all helpers in the result (recursive, handles nested rules)
         self.register_helpers_from_rule(result)
         return result
-
-    def _get_region_access_rule(self, region: str) -> Dict[str, Any]:
-        """
-        Get the access rule for a given region based on the regionChecks mapping
-        in the Raft world's Rules.py.
-        """
-        # From worlds/raft/Rules.py, the regionChecks mapping is:
-        region_rules = {
-            "Raft": {'type': 'constant', 'value': True},
-            "ResearchTable": {'type': 'constant', 'value': True},
-            "RadioTower": {'type': 'helper', 'name': 'raft_can_access_radio_tower', 'args': []},
-            "Vasagatan": {'type': 'helper', 'name': 'raft_can_access_vasagatan', 'args': []},
-            "BalboaIsland": {'type': 'helper', 'name': 'raft_can_access_balboa_island', 'args': []},
-            "CaravanIsland": {'type': 'helper', 'name': 'raft_can_access_caravan_island', 'args': []},
-            "Tangaroa": {'type': 'helper', 'name': 'raft_can_access_tangaroa', 'args': []},
-            "Varuna Point": {'type': 'helper', 'name': 'raft_can_access_varuna_point', 'args': []},
-            "Temperance": {'type': 'helper', 'name': 'raft_can_access_temperance', 'args': []},
-            "Utopia": {
-                'type': 'and',
-                'conditions': [
-                    {'type': 'helper', 'name': 'raft_can_complete_temperance', 'args': []},
-                    {'type': 'helper', 'name': 'raft_can_access_utopia', 'args': []}
-                ]
-            }
-        }
-
-        return region_rules.get(region, {'type': 'constant', 'value': True})
 
     def get_progression_mapping(self, world) -> Dict[str, Any]:
         """Return Raft-specific progression item mapping data."""

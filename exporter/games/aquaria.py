@@ -14,7 +14,6 @@ class AquariaGameExportHandler(GenericGameExportHandler):
     item scanning. Only overrides region handling for Aquaria-specific needs.
     """
 
-
     def postprocess_regions(self, multiworld, player):
         """
         Fix missing regions that aren't added to multiworld.regions in Aquaria.

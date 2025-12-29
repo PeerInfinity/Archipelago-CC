@@ -1,6 +1,6 @@
 """VVVVVV game-specific export handler."""
 
-from typing import Dict, Any, List
+from typing import Dict, Any
 from .generic import GenericGameExportHandler
 import logging
 
@@ -16,51 +16,9 @@ class V6GameExportHandler(GenericGameExportHandler):
     This exporter is needed because the Python rules use lambdas with closures
     that capture loop variables. The post-processor replaces complex closure-based
     rules with simple inlined item_check rules.
+
+    Note: door_cost option and area_cost_map are auto-discovered by the base class.
     """
-
-    # Store world data for post-processing
-    _world_data: Dict[int, Dict[str, Any]] = {}
-
-    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extracts VVVVVV-specific settings including door_cost and area_cost_map."""
-        # Get base settings from parent class
-        settings_dict = super().get_world_data(world, multiworld, player)
-
-        # Add VVVVVV-specific settings
-        try:
-            # Export door_cost option value
-            if hasattr(world, 'options') and hasattr(world.options, 'door_cost'):
-                door_cost_value = world.options.door_cost.value
-                settings_dict['door_cost'] = door_cost_value
-                logger.debug(f"Exported door_cost = {door_cost_value}")
-
-                # Store for post-processing
-                if not hasattr(self, '_world_data') or self._world_data is None:
-                    self._world_data = {}
-                if player not in self._world_data:
-                    self._world_data[player] = {}
-                self._world_data[player]['door_cost'] = door_cost_value
-
-            # Export area_cost_map if it exists on the world
-            if hasattr(world, 'area_cost_map'):
-                # Convert to regular dict for JSON serialization
-                area_cost_map = dict(world.area_cost_map)
-                settings_dict['area_cost_map'] = area_cost_map
-                logger.debug(f"Exported area_cost_map = {area_cost_map}")
-
-                # Store for post-processing
-                if not hasattr(self, '_world_data') or self._world_data is None:
-                    self._world_data = {}
-                if player not in self._world_data:
-                    self._world_data[player] = {}
-                self._world_data[player]['area_cost_map'] = area_cost_map
-            else:
-                logger.warning("area_cost_map not found on world instance")
-
-        except Exception as e:
-            logger.error(f"Error exporting VVVVVV settings: {e}")
-
-        return settings_dict
 
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -74,15 +32,16 @@ class V6GameExportHandler(GenericGameExportHandler):
             return data
 
         for player_id_str, regions in data['regions'].items():
-            player_id = int(player_id_str)
-
-            # Get door_cost and area_cost_map for this player
-            player_data = getattr(self, '_world_data', {}).get(player_id, {})
-            door_cost = player_data.get('door_cost')
-            area_cost_map = player_data.get('area_cost_map')
+            # Get door_cost and area_cost_map from world data
+            # door_cost is in options, area_cost_map is in slot_data as AreaCostRando
+            world_data = data.get('world', {}).get(player_id_str, {})
+            options = world_data.get('options', {})
+            slot_data = world_data.get('slot_data', {})
+            door_cost = options.get('door_cost')
+            area_cost_map = slot_data.get('AreaCostRando')
 
             if door_cost is None or area_cost_map is None:
-                logger.warning(f"Missing door_cost or area_cost_map for player {player_id}, skipping region fix")
+                logger.warning(f"Missing door_cost or area_cost_map for player {player_id_str}, skipping region fix")
                 continue
 
             # Fix the Menu region exits

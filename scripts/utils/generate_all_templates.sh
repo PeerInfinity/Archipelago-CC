@@ -119,7 +119,7 @@ python Generate.py --weights_file_path "Templates/The Messenger.yaml" --multi 1 
 python Generate.py --weights_file_path "Templates/The Wind Waker.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/The Witness.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Timespinner.yaml" --multi 1 --seed 1
-# python Generate.py --weights_file_path "Templates/TUNIC.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
+python Generate.py --weights_file_path "Templates/TUNIC.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Undertale.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/VVVVVV.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Wargroove.yaml" --multi 1 --seed 1
@@ -241,7 +241,7 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python scripts/test/test-world-generator.py --include-list "The Wind Waker.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "The Witness.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Timespinner.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
-  # python scripts/test/test-world-generator.py --include-list "TUNIC.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG  # Excluded: Takes too long to process
+  python scripts/test/test-world-generator.py --include-list "TUNIC.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Undertale.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "VVVVVV.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Wargroove.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
@@ -334,7 +334,7 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python Generate.py --weights_file_path "Templates/The Wind Waker WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/The Witness WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Timespinner WorldGen.yaml" --multi 1 --seed 1
-  # python Generate.py --weights_file_path "Templates/TUNIC WorldGen.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
+  python Generate.py --weights_file_path "Templates/TUNIC WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Undertale WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/VVVVVV WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Wargroove WorldGen.yaml" --multi 1 --seed 1

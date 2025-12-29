@@ -1,16 +1,8 @@
 """A Hat in Time game-specific exporter handler.
 
-Helper Export Status:
-- can_use_hat: Exported to rules.json, JS fallback still needed
-- get_hat_cost: Exported to rules.json (uses for_iter rule type)
-- has_relic_combo: Exported to rules.json, JS fallback still needed
-- painting_logic: Exported to rules.json, JS fallback still needed
-- get_difficulty: Exported to rules.json, JS fallback still needed
+Handles:
 - can_clear_required_act: Resolved at export-time to can_reach + location_rule_ref
-
-Note: JavaScript helpers in ahitLogic.js are still required as fallback
-because some rule engine code paths use executeHelper() instead of
-evaluating the exported helper definitions directly.
+- Game-specific data: chapter_costs, hat_info, relic_groups for frontend
 """
 
 from typing import Dict, Any, Optional
@@ -21,38 +13,24 @@ logger = logging.getLogger(__name__)
 
 
 class AHitGameExportHandler(GenericGameExportHandler):
-    """A Hat in Time export handler with automatic helper export."""
+    """A Hat in Time export handler."""
 
-    # For now, treat all exits as bidirectional
-    # This setting is currently only used for region navigation in the frontend
+    # Treat exits as bidirectional for frontend navigation
     ASSUME_BIDIRECTIONAL_EXITS = True
 
-    # Auto-discover region attributes
-    AUTO_DISCOVER_REGION_ATTRIBUTES = True
-
-    # Auto-discover location attributes
+    # Disable location attribute discovery (not needed for AHIT)
     AUTO_DISCOVER_LOCATION_ATTRIBUTES = False
-
-    # Auto-discover world attributes
-    AUTO_DISCOVER_WORLD_ATTRIBUTES = True
 
     # Module containing helper functions for definition export
     HELPER_MODULES = ['worlds.ahit.Rules']
 
-    def __init__(self, world=None):
-        super().__init__(world=world)
-        self._entrance_cache: Optional[Dict[str, str]] = None
-
     def _get_entrance_connected_region(self, entrance_name: str) -> Optional[str]:
-        """Get the connected region name for an entrance.
-
-        Caches entrance -> connected_region mappings for efficiency.
-        """
+        """Get the connected region name for an entrance (cached)."""
         if self.world is None:
             return None
 
-        # Build cache on first access
-        if self._entrance_cache is None:
+        # Build cache on first access (lazy initialization)
+        if getattr(self, '_entrance_cache', None) is None:
             self._entrance_cache = {}
             try:
                 multiworld = self.world.multiworld

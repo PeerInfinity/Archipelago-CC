@@ -12,8 +12,7 @@
 import {
   initializeGameLogic,
   determineGameName,
-  getGameLogic,
-  detectGameFromWorldClass
+  getGameLogic
 } from '../shared/gameLogic/gameLogicRegistry.js';
 import { createStateSnapshotInterface } from '../shared/stateInterface.js';
 import { DEFAULT_PLAYER_ID, PlayerIdUtils } from '../shared/playerIdUtils.js';

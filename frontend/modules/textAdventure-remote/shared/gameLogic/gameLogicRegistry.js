@@ -165,15 +165,20 @@
  *     │
  *   Output: Detected game name or 'Generic'
  *
- * **SUPPORTED GAMES**:
- * - A Link to the Past (ALTTP)
- * - A Hat in Time (AHIT)
+ * **GAMES WITH CUSTOM LOGIC**:
  * - Bomb Rush Cyberfunk
- * - Castlevania - Circle of the Moon
- * - DLCQuest
- * - Kingdom Hearts
+ * - Jak and Daxter: The Precursor Legacy
+ * - Lingo
  * - Pokemon Red and Blue
- * - Generic (fallback)
+ * - Pokemon Emerald
+ * - Secret of Evermore
+ * - SMZ3
+ * - Starcraft 2
+ * - Stardew Valley
+ * - Super Metroid
+ * - Yacht Dice
+ * - Yu-Gi-Oh! 2006
+ * - Generic (fallback for all other games)
  *
  * **HELPER FUNCTION SIGNATURE**:
  * All helper functions follow the standardized signature:
@@ -205,104 +210,37 @@
  * @see ruleEngine.js - Calls helpers returned by this registry
  */
 
-// Import all game logic modules
-// alttpLogic removed - helpers now exported to rules.json
-// ahitLogic removed - helpers now exported to rules.json
-// blasphemousLogic removed - game unsupported
-// hkLogic removed - game unsupported
-// ootLogic removed - game unsupported
+// Game logic modules - only games with custom JavaScript helpers are imported
 import * as genericLogic from './generic/genericLogic.js';
-import { helperFunctions as bombRushCyberfunkHelperFunctions } from './bomb_rush_cyberfunk/bombRushCyberfunkLogic.js';
+import { helperFunctions as bombRushCyberfunkHelperFunctions } from './bomb_rush_cyberfunk/bomb_rush_cyberfunkLogic.js';
 import * as jakanddaxterLogic from './jakanddaxter/jakanddaxterLogic.js';
-import { kh1Logic } from './kh1/kh1Logic.js';
-import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
-import { helperFunctions as kdl3HelperFunctions } from './kdl3/kdl3Logic.js';
-// LADX now uses generic helpers - RUPEES is set in prog_items from sphere log
 import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
-// marioland2Logic removed - all helpers now exported to rules.json
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
-import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import * as pokemon_emeraldLogic from './pokemon_emerald/pokemon_emeraldLogic.js';
-import { pokemon_emeraldStateModule } from './pokemon_emerald/pokemon_emeraldLogic.js';
-// mm2Logic removed - helpers now exported to rules.json
-// raftLogic removed - helpers now exported to rules.json (uses use_resolved_items=true)
-import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
-import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
-import * as overcooked2Logic from './overcooked2/overcooked2Logic.js';
-import { overcooked2StateModule } from './overcooked2/overcooked2Logic.js';
-// paintLogic removed - helpers now exported to rules.json
 import * as soeLogic from './soe/soeLogic.js';
 import * as smz3Logic from './smz3/smz3Logic.js';
 import * as sc2Logic from './sc2/sc2Logic.js';
-// subnauticaLogic removed - helpers now exported to rules.json
 import { helperFunctions as smHelperFunctions, smStateModule } from './sm/smLogic.js';
-import * as stardewValleyLogic from './stardew_valley/stardewValleyLogic.js';
-import { stardewValleyStateModule } from './stardew_valley/stardewValleyLogic.js';
-// terrariaLogic removed - helpers now exported to rules.json
-// timespinnerLogic removed - helpers now exported to rules.json
-// twwLogic removed - state methods now converted to setting_value lookups in exporter
-// wargrooveLogic removed - state methods now expanded inline in rules.json export
-// yoshisisland helpers have been exported to rules.json - no JavaScript needed
+import * as stardewValleyLogic from './stardew_valley/stardew_valleyLogic.js';
+import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import * as yugioh06Logic from './yugioh06/yugioh06Logic.js';
-// osrs helpers have been exported to rules.json - no JavaScript needed
 
 /**
- * Registry of all supported games and their logic modules
+ * Registry of games with custom JavaScript logic modules.
+ * Games without custom helpers use the generic fallback automatically.
  */
 const GAME_REGISTRY = {
-  'A Link to the Past': {
-    logicModule: genericLogic.genericStateModule,
-    // Helper functions now exported to rules.json - no JavaScript needed
-    worldClasses: ['ALTTPWorld'],
-    aliases: ['A Link to the Past', 'ALTTP']
-  },
-  'A Hat in Time': {
-    logicModule: genericLogic.genericStateModule,
-    // Helper functions now exported to rules.json - no JavaScript needed
-    worldClasses: ['HatInTimeWorld'],
-    aliases: ['A Hat in Time', 'AHIT']
-  },
   'Bomb Rush Cyberfunk': {
     logicModule: genericLogic.genericStateModule,
     helperFunctions: bombRushCyberfunkHelperFunctions,
     worldClasses: ['BombRushCyberfunkWorld'],
     aliases: ['Bomb Rush Cyberfunk', 'BRC']
   },
-  'Castlevania - Circle of the Moon': {
-    logicModule: genericLogic.genericStateModule,
-    worldClasses: ['CVCotMWorld'],
-    aliases: ['Castlevania - Circle of the Moon', 'CvCotM', 'cvcotm']
-  },
-  'DLCQuest': {
-    logicModule: genericLogic.genericStateModule,
-    // Coin tracking now handled by prog_item_count rule type - no JavaScript needed
-    worldClasses: ['DLCqworld'],
-    aliases: ['DLCQuest', 'DLC Quest']
-  },
-  // Factorio removed - uses generic module with progression_mapping from exporter
   'Jak and Daxter: The Precursor Legacy': {
     logicModule: genericLogic.genericStateModule,
     helperFunctions: jakanddaxterLogic.helperFunctions,
     worldClasses: ['JakAndDaxterWorld'],
     aliases: ['Jak and Daxter: The Precursor Legacy', 'Jak and Daxter']
-  },
-  'Kingdom Hearts': {
-    logicModule: genericLogic.genericStateModule,
-    helperFunctions: kh1Logic,
-    worldClasses: ['KH1World'],
-    aliases: ['Kingdom Hearts', 'KH1', 'Kingdom Hearts 1']
-  },
-  'Kingdom Hearts 2': {
-    logicModule: genericLogic.genericStateModule,
-    helperFunctions: kh2HelperFunctions,
-    worldClasses: ['KH2World'],
-    aliases: ['Kingdom Hearts 2', 'KH2', 'Kingdom Hearts II']
-  },
-  "Kirby's Dream Land 3": {
-    logicModule: genericLogic.genericStateModule,
-    helperFunctions: kdl3HelperFunctions,  // Complex helpers (can_assemble_rob, can_fix_angel_wings) need JS
-    worldClasses: ['KDL3World'],
-    aliases: ["Kirby's Dream Land 3", 'KDL3']
   },
   'Pokemon Red and Blue': {
     logicModule: pokemon_rbLogic.pokemon_rbStateModule,
@@ -322,31 +260,6 @@ const GAME_REGISTRY = {
     worldClasses: ['LingoWorld'],
     aliases: ['Lingo']
   },
-  'Links Awakening DX': {
-    logicModule: genericLogic.genericStateModule,
-    helperFunctions: genericLogic.helperFunctions,  // Use generic helpers - RUPEES is set in prog_items from sphere log
-    worldClasses: ['LinksAwakeningWorld'],
-    aliases: ['Links Awakening DX', 'LADX', 'links_awakening_dx']
-  },
-  'Mega Man 2': {
-    logicModule: genericLogic.genericStateModule,
-    // Helper functions now exported to rules.json - no JavaScript needed
-    worldClasses: ['MM2World'],
-    aliases: ['Mega Man 2', 'MM2', 'Megaman 2']
-  },
-  'Old School Runescape': {
-    logicModule: genericLogic.genericStateModule,
-    // Helper functions now exported to rules.json - no JavaScript needed
-    worldClasses: ['OSRSWorld'],
-    aliases: ['Old School Runescape', 'OSRS', 'osrs']
-  },
-  'Paint': {
-    logicModule: genericLogic.genericStateModule,
-    // Helper functions now exported to rules.json - no JavaScript needed
-    worldClasses: ['PaintWorld'],
-    aliases: ['Paint']
-  },
-  // Raft removed - uses generic infrastructure with helpers exported to rules.json
   'Starcraft 2': {
     logicModule: genericLogic.genericStateModule,
     helperFunctions: sc2Logic.helperFunctions,
@@ -355,24 +268,6 @@ const GAME_REGISTRY = {
     worldClasses: ['SC2World'],
     aliases: ['Starcraft 2', 'SC2', 'StarCraft 2', 'StarCraft II']
   },
-  'Super Mario Land 2': {
-    logicModule: genericLogic.genericStateModule,
-    // All helpers now exported to rules.json - no JavaScript needed
-    worldClasses: ['MarioLand2World'],
-    aliases: ['Super Mario Land 2', 'SML2', 'marioland2']
-  },
-  'Overcooked! 2': {
-    logicModule: overcooked2Logic.overcooked2StateModule,
-    helperFunctions: overcooked2Logic.helperFunctions,
-    worldClasses: ['Overcooked2World'],
-    aliases: ['Overcooked! 2', 'overcooked2']
-  },
-  'Yacht Dice': {
-    logicModule: yachtdiceLogic.yachtdiceStateModule,
-    helperFunctions: yachtdiceLogic.helperFunctions,
-    worldClasses: ['YachtDiceWorld'],
-    aliases: ['Yacht Dice', 'yacht_dice']
-  },
   'Secret of Evermore': {
     logicModule: genericLogic.genericStateModule,
     helperFunctions: soeLogic.helperFunctions,
@@ -380,7 +275,7 @@ const GAME_REGISTRY = {
     aliases: ['Secret of Evermore', 'SOE', 'soe']
   },
   'Stardew Valley': {
-    logicModule: stardewValleyStateModule,
+    logicModule: stardewValleyLogic.stardewValleyStateModule,
     helperFunctions: stardewValleyLogic.helperFunctions,
     worldClasses: ['StardewValleyWorld'],
     aliases: ['Stardew Valley', 'SDV', 'stardew_valley']
@@ -391,47 +286,17 @@ const GAME_REGISTRY = {
     worldClasses: ['SMZ3World'],
     aliases: ['SMZ3', 'Super Metroid and A Link to the Past Combo Randomizer']
   },
-  'Subnautica': {
-    logicModule: genericLogic.genericStateModule,
-    // Helper functions now exported to rules.json - no JavaScript needed
-    worldClasses: ['SubnauticaWorld'],
-    aliases: ['Subnautica']
-  },
   'Super Metroid': {
     logicModule: smStateModule, // Using SM-specific state module with smbm support
     helperFunctions: smHelperFunctions,
     worldClasses: ['SMWorld'],
     aliases: ['Super Metroid', 'SM']
   },
-  'Terraria': {
-    logicModule: genericLogic.genericStateModule,
-    // Helper functions now exported to rules.json - no JavaScript needed
-    worldClasses: ['TerrariaWorld'],
-    aliases: ['Terraria']
-  },
-  'Timespinner': {
-    logicModule: genericLogic.genericStateModule,
-    // Helper functions and state management now handled generically with rules.json exports
-    worldClasses: ['TimespinnerWorld'],
-    aliases: ['Timespinner']
-  },
-  'The Wind Waker': {
-    logicModule: genericLogic.genericStateModule,
-    // Helper functions and state methods now exported to rules.json - no JavaScript needed
-    worldClasses: ['TWWWorld'],
-    aliases: ['The Wind Waker', 'TWW', 'Wind Waker']
-  },
-  'Wargroove': {
-    logicModule: genericLogic.genericStateModule,
-    // State methods now expanded inline during rules.json export - no JavaScript needed
-    worldClasses: ['WargrooveWorld'],
-    aliases: ['Wargroove', 'wargroove']
-  },
-  "Yoshi's Island": {
-    logicModule: genericLogic.genericStateModule,
-    helperFunctions: genericLogic.helperFunctions,
-    worldClasses: ['YoshisIslandWorld'],
-    aliases: ["Yoshi's Island"]
+  'Yacht Dice': {
+    logicModule: yachtdiceLogic.yachtdiceStateModule,
+    helperFunctions: yachtdiceLogic.helperFunctions,
+    worldClasses: ['YachtDiceWorld'],
+    aliases: ['Yacht Dice', 'yacht_dice']
   },
   'Yu-Gi-Oh! 2006': {
     logicModule: genericLogic.genericStateModule, // Using generic state module
