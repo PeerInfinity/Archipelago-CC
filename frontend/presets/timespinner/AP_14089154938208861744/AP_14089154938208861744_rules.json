@@ -137,7 +137,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -294,7 +299,28 @@
             "name": "Lake Desolation (Upper): Secret room",
             "id": 1337011,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Conditional",
+              "args": {
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "eye_spy",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Oculus Ring"
+                  }
+                },
+                "if_false": {
+                  "rule": "True_"
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Water Mask",
@@ -426,7 +452,28 @@
             "name": "Lake Desolation (Lower): Not so secret room",
             "id": 1337008,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Conditional",
+              "args": {
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "eye_spy",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Oculus Ring"
+                  }
+                },
+                "if_false": {
+                  "rule": "True_"
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Umbra Orb",
@@ -470,7 +517,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -567,15 +619,36 @@
             "name": "Library -> Varndagroth tower left",
             "connected_region": "Varndagroth tower left",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "Conditional",
               "args": {
-                "items": [
-                  "Security Keycard A",
-                  "Security Keycard B",
-                  "Security Keycard C",
-                  "Security Keycard D"
-                ]
-              }
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "specific_keycards",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Security Keycard D"
+                  }
+                },
+                "if_false": {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C",
+                      "Security Keycard D"
+                    ]
+                  }
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -585,7 +658,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -658,15 +736,36 @@
             "name": "Library: Storage room chest 1",
             "id": 1337023,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "Conditional",
               "args": {
-                "items": [
-                  "Security Keycard A",
-                  "Security Keycard B",
-                  "Security Keycard C",
-                  "Security Keycard D"
-                ]
-              }
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "specific_keycards",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Security Keycard D"
+                  }
+                },
+                "if_false": {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C",
+                      "Security Keycard D"
+                    ]
+                  }
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Potion",
@@ -680,15 +779,36 @@
             "name": "Library: Storage room chest 2",
             "id": 1337024,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "Conditional",
               "args": {
-                "items": [
-                  "Security Keycard A",
-                  "Security Keycard B",
-                  "Security Keycard C",
-                  "Security Keycard D"
-                ]
-              }
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "specific_keycards",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Security Keycard D"
+                  }
+                },
+                "if_false": {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C",
+                      "Security Keycard D"
+                    ]
+                  }
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Scythe Ring",
@@ -702,15 +822,36 @@
             "name": "Library: Storage room chest 3",
             "id": 1337025,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "Conditional",
               "args": {
-                "items": [
-                  "Security Keycard A",
-                  "Security Keycard B",
-                  "Security Keycard C",
-                  "Security Keycard D"
-                ]
-              }
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "specific_keycards",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Security Keycard D"
+                  }
+                },
+                "if_false": {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C",
+                      "Security Keycard D"
+                    ]
+                  }
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Jerky",
@@ -948,27 +1089,69 @@
             "name": "Varndagroth tower left -> Varndagroth tower right (upper)",
             "connected_region": "Varndagroth tower right (upper)",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "Conditional",
               "args": {
-                "items": [
-                  "Security Keycard A",
-                  "Security Keycard B",
-                  "Security Keycard C"
-                ]
-              }
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "specific_keycards",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Security Keycard C"
+                  }
+                },
+                "if_false": {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C"
+                    ]
+                  }
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Varndagroth tower left -> Varndagroth tower right (lower)",
             "connected_region": "Varndagroth tower right (lower)",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "Conditional",
               "args": {
-                "items": [
-                  "Security Keycard A",
-                  "Security Keycard B"
-                ]
-              }
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "specific_keycards",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Security Keycard B"
+                  }
+                },
+                "if_false": {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Security Keycard A",
+                      "Security Keycard B"
+                    ]
+                  }
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -1046,14 +1229,35 @@
             "name": "Varndagroth Towers (Left): Bottom floor",
             "id": 1337033,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "Conditional",
               "args": {
-                "items": [
-                  "Security Keycard A",
-                  "Security Keycard B",
-                  "Security Keycard C"
-                ]
-              }
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "specific_keycards",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Security Keycard C"
+                  }
+                },
+                "if_false": {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C"
+                    ]
+                  }
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Eternal Coat",
@@ -1067,7 +1271,28 @@
             "name": "Varndagroth Towers (Left): Air vents secret",
             "id": 1337034,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Conditional",
+              "args": {
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "eye_spy",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Oculus Ring"
+                  }
+                },
+                "if_false": {
+                  "rule": "True_"
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Alchemy Tools",
@@ -1222,13 +1447,34 @@
             "name": "Varndagroth tower right (lower) -> Varndagroth tower left",
             "connected_region": "Varndagroth tower left",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "Conditional",
               "args": {
-                "items": [
-                  "Security Keycard A",
-                  "Security Keycard B"
-                ]
-              }
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "specific_keycards",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Security Keycard B"
+                  }
+                },
+                "if_false": {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Security Keycard A",
+                      "Security Keycard B"
+                    ]
+                  }
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -1265,14 +1511,39 @@
             "name": "Varndagroth tower right (lower) -> Military Fortress",
             "connected_region": "Military Fortress",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Conditional",
               "args": {
-                "items": [
-                  "Killed Aelana",
-                  "Killed Maw",
-                  "Killed Twins"
-                ]
-              }
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "prism_break",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Laser Access A",
+                      "Laser Access I",
+                      "Laser Access M"
+                    ]
+                  }
+                },
+                "if_false": {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Killed Aelana",
+                      "Killed Maw",
+                      "Killed Twins"
+                    ]
+                  }
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -1282,7 +1553,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1348,14 +1624,35 @@
             "name": "Varndagroth Towers (Right): Varndagroth",
             "id": 1337042,
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "Conditional",
               "args": {
-                "items": [
-                  "Security Keycard A",
-                  "Security Keycard B",
-                  "Security Keycard C"
-                ]
-              }
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "specific_keycards",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Security Keycard C"
+                  }
+                },
+                "if_false": {
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Security Keycard A",
+                      "Security Keycard B",
+                      "Security Keycard C"
+                    ]
+                  }
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Sanguine Ring",
@@ -1441,7 +1738,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -1542,14 +1844,39 @@
             "name": "Military Fortress -> Varndagroth tower right (lower)",
             "connected_region": "Varndagroth tower right (lower)",
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Conditional",
               "args": {
-                "items": [
-                  "Killed Aelana",
-                  "Killed Maw",
-                  "Killed Twins"
-                ]
-              }
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "prism_break",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Laser Access A",
+                      "Laser Access I",
+                      "Laser Access M"
+                    ]
+                  }
+                },
+                "if_false": {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Killed Aelana",
+                      "Killed Maw",
+                      "Killed Twins"
+                    ]
+                  }
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -2310,7 +2637,28 @@
             "name": "Lab: Lab secret",
             "id": 1337075,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Conditional",
+              "args": {
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "eye_spy",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Oculus Ring"
+                  }
+                },
+                "if_false": {
+                  "rule": "True_"
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Viletian Crown",
@@ -2585,7 +2933,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2631,7 +2984,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -2735,7 +3093,28 @@
             "name": "Sealed Caves (Xarion): Secret room",
             "id": 1337049,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Conditional",
+              "args": {
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "eye_spy",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Oculus Ring"
+                  }
+                },
+                "if_false": {
+                  "rule": "True_"
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Gun Orb",
@@ -2868,7 +3247,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -3064,7 +3448,28 @@
             "name": "Forest: Green platform secret",
             "id": 1337092,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Conditional",
+              "args": {
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "eye_spy",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Oculus Ring"
+                  }
+                },
+                "if_false": {
+                  "rule": "True_"
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Tailwind Ring",
@@ -3213,7 +3618,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -3359,7 +3769,28 @@
             "name": "Lake Serene (Upper): Cave secret",
             "id": 1337102,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Conditional",
+              "args": {
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "eye_spy",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Oculus Ring"
+                  }
+                },
+                "if_false": {
+                  "rule": "True_"
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Traveler's Cloak",
@@ -3495,7 +3926,28 @@
             "name": "Lake Serene (Lower): Underwater secret",
             "id": 1337108,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Conditional",
+              "args": {
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "eye_spy",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Oculus Ring"
+                  }
+                },
+                "if_false": {
+                  "rule": "True_"
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Corruption",
@@ -3601,7 +4053,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -3885,7 +4342,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4120,7 +4582,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4304,7 +4771,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4433,7 +4905,28 @@
             "name": "Castle Basement: Secret pedestal",
             "id": 1337133,
             "access_rule": {
-              "rule": "True_"
+              "rule": "Conditional",
+              "args": {
+                "test": {
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "eye_spy",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
+                },
+                "if_true": {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Oculus Ring"
+                  }
+                },
+                "if_false": {
+                  "rule": "True_"
+                },
+                "_original_ast_type": "conditional"
+              },
+              "_converted_from_ast": true
             },
             "item": {
               "name": "Economizer Ring",
@@ -4538,7 +5031,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -4948,7 +5446,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -5011,7 +5514,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -5128,7 +5636,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "False_"
+                  "rule": "AST_setting_value",
+                  "args": {
+                    "setting": "unchained_keys",
+                    "_original_ast_type": "setting_value"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
                   "rule": "Has",
@@ -9325,6 +9838,10 @@
           "display_name": "Unchained Keys"
         }
       },
+      "pyramid_keys_unlock": "GateLakeSereneRight",
+      "present_keys_unlock": "GateSealedSirensCave",
+      "past_keys_unlock": "GateLakeSereneRight",
+      "time_keys_unlock": "GateRightPyramid",
       "precalculated_weights": {
         "flood_basement": false,
         "flood_basement_high": false,
@@ -9742,14 +10259,6 @@
           }
         ]
       },
-      "flag_specific_keycards": false,
-      "flag_eye_spy": false,
-      "flag_unchained_keys": false,
-      "flag_prism_break": false,
-      "pyramid_keys_unlock": "GateLakeSereneRight",
-      "present_keys_unlock": "GateSealedSirensCave",
-      "past_keys_unlock": "GateLakeSereneRight",
-      "time_keys_unlock": "GateRightPyramid",
       "world_directory": "timespinner"
     }
   },
@@ -9770,12 +10279,8 @@
       "can_break_walls": {
         "type": "conditional",
         "test": {
-          "type": "attribute",
-          "object": {
-            "type": "name",
-            "name": "self"
-          },
-          "attr": "flag_eye_spy"
+          "type": "setting_value",
+          "setting": "eye_spy"
         },
         "if_true": {
           "type": "item_check",
@@ -9789,12 +10294,8 @@
       "can_kill_all_3_bosses": {
         "type": "conditional",
         "test": {
-          "type": "attribute",
-          "object": {
-            "type": "name",
-            "name": "self"
-          },
-          "attr": "flag_prism_break"
+          "type": "setting_value",
+          "setting": "prism_break"
         },
         "if_true": {
           "type": "state_method",
@@ -9853,23 +10354,15 @@
           "test": {
             "type": "not",
             "condition": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "self"
-              },
-              "attr": "flag_unchained_keys"
+              "type": "setting_value",
+              "setting": "unchained_keys"
             }
           },
           "if_true": {
             "type": "compare",
             "left": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "self"
-              },
-              "attr": "pyramid_keys_unlock"
+              "type": "setting_value",
+              "setting": "pyramid_keys_unlock"
             },
             "op": "==",
             "right": {
@@ -9897,12 +10390,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "present_keys_unlock"
+                    "type": "setting_value",
+                    "setting": "present_keys_unlock"
                   },
                   "op": "==",
                   "right": {
@@ -9936,12 +10425,8 @@
                   {
                     "type": "compare",
                     "left": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "past_keys_unlock"
+                      "type": "setting_value",
+                      "setting": "past_keys_unlock"
                     },
                     "op": "==",
                     "right": {
@@ -9975,12 +10460,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "time_keys_unlock"
+                        "type": "setting_value",
+                        "setting": "time_keys_unlock"
                       },
                       "op": "==",
                       "right": {
@@ -10102,12 +10583,8 @@
       "has_keycard_B": {
         "type": "conditional",
         "test": {
-          "type": "attribute",
-          "object": {
-            "type": "name",
-            "name": "self"
-          },
-          "attr": "flag_specific_keycards"
+          "type": "setting_value",
+          "setting": "specific_keycards"
         },
         "if_true": {
           "type": "item_check",
