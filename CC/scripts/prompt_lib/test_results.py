@@ -125,3 +125,33 @@ def has_generation_errors_but_passes(template_file, test_results):
         return (True, error_count)
 
     return (False, 0)
+
+
+def get_generation_failure_info(template_file, test_results):
+    """Check if generation completely failed for a template.
+
+    Returns a dict with:
+    - failed: True if generation failed (success=False)
+    - return_code: The return code from generation (e.g., 102)
+    - error_count: Number of errors during generation
+    - error_type: Type of error if available
+    """
+    if template_file not in test_results:
+        return {'failed': False, 'return_code': None, 'error_count': 0, 'error_type': None}
+
+    result = test_results[template_file]
+    if not isinstance(result, dict):
+        return {'failed': False, 'return_code': None, 'error_count': 0, 'error_type': None}
+
+    generation = result.get('generation', {})
+
+    # Check if generation failed
+    if generation.get('success') is False:
+        return {
+            'failed': True,
+            'return_code': generation.get('return_code'),
+            'error_count': generation.get('error_count', 0),
+            'error_type': generation.get('error_type'),
+        }
+
+    return {'failed': False, 'return_code': None, 'error_count': 0, 'error_type': None}

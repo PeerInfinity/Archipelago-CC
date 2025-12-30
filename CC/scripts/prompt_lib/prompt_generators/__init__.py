@@ -9,6 +9,7 @@ from .standard import (
     generate_gen_errors_prompt,
     generate_basic_spoiler_debug_prompt,
     generate_multiworld_prompt,
+    generate_generation_failure_prompt,
 )
 
 from .worldgen import (
@@ -26,6 +27,7 @@ __all__ = [
     'generate_gen_errors_prompt',
     'generate_basic_spoiler_debug_prompt',
     'generate_multiworld_prompt',
+    'generate_generation_failure_prompt',
     # worldgen
     'generate_worldgen_world_failure_prompt',
     'generate_worldgen_seed_failure_prompt',

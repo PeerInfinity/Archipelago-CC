@@ -27,6 +27,7 @@ from .test_results import (
     get_multiworld_bisection_info,
     get_multiworld_failure_details,
     has_generation_errors_but_passes,
+    get_generation_failure_info,
 )
 
 from .worldgen_analysis import (
@@ -47,6 +48,7 @@ from .prompt_generators import (
     generate_gen_errors_prompt,
     generate_basic_spoiler_debug_prompt,
     generate_multiworld_prompt,
+    generate_generation_failure_prompt,
     # worldgen
     generate_worldgen_world_failure_prompt,
     generate_worldgen_seed_failure_prompt,
@@ -87,6 +89,7 @@ __all__ = [
     'get_multiworld_bisection_info',
     'get_multiworld_failure_details',
     'has_generation_errors_but_passes',
+    'get_generation_failure_info',
     # worldgen_analysis
     'load_worldgen_test_results',
     'get_worldgen_world_failures',
@@ -102,6 +105,7 @@ __all__ = [
     'generate_gen_errors_prompt',
     'generate_basic_spoiler_debug_prompt',
     'generate_multiworld_prompt',
+    'generate_generation_failure_prompt',
     # prompt_generators.worldgen
     'generate_worldgen_world_failure_prompt',
     'generate_worldgen_seed_failure_prompt',
