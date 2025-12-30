@@ -83,12 +83,6 @@ class KDL3GameExportHandler(GenericGameExportHandler):
         "Pitch": ("Pitch", "Pitch Spawn"),
     }
 
-    def __init__(self):
-        """Initialize the KDL3 export handler."""
-        super().__init__()
-        # Use the static mapping for f-string resolution
-        self.level_names_inverse = self.LEVEL_NAMES_INVERSE
-
     def get_world_data(self, world, multiworld, player):
         """Override to add KDL3-specific world data like ability_map and level_names_inverse."""
         world_data = super().get_world_data(world, multiworld, player)
@@ -141,8 +135,8 @@ class KDL3GameExportHandler(GenericGameExportHandler):
         if value_node.get('type') == 'attribute':
             attr_name = value_node.get('attr')
             if attr_name == 'level_names_inverse':
-                if index_value in self.level_names_inverse:
-                    return self.level_names_inverse[index_value]
+                if index_value in self.LEVEL_NAMES_INVERSE:
+                    return self.LEVEL_NAMES_INVERSE[index_value]
         return None
 
     def expand_helper(self, helper_name: str, args=None) -> Optional[Dict[str, Any]]:
