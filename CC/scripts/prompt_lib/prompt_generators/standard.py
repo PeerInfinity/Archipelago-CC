@@ -530,3 +530,73 @@ python scripts/test/test-all-templates.py --multiworld --multiworld-bisect-failu
 """)
 
     return ''.join(prompt_parts)
+
+
+def generate_generation_failure_prompt(template_file, game_name, gen_failure_info, custom_code_info=None, seed=1, use_cloud_docs=False):
+    """Generate a prompt for debugging generation failures.
+
+    This is used when generation completely fails (before spoiler tests can run).
+    The prompt guides the user to fix generation first.
+    """
+    doc_path = "CC/game-debugging.md" if not use_cloud_docs else "CC/game-debugging-CC.md"
+    setup_doc = "CC/cloud-setup.md"
+
+    return_code = gen_failure_info.get('return_code', 'unknown')
+    error_count = gen_failure_info.get('error_count', 0)
+
+    # Build custom code description if available
+    custom_code_desc = ""
+    if custom_code_info:
+        custom_parts = []
+        if custom_code_info.get('has_exporter'):
+            custom_parts.append(f"A custom exporter exists: `{custom_code_info.get('exporter_path')}`")
+        if custom_code_info.get('has_helpers'):
+            custom_parts.append(f"JavaScript helpers exist: `{custom_code_info.get('helpers_path')}`")
+        if custom_parts:
+            custom_code_desc = "\n" + "\n".join(custom_parts) + "\n"
+
+    return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
+
+Then, please read {doc_path}
+
+The next game we want to work on is **{game_name}**.
+
+## Priority: Fix Generation First
+
+**Generation is completely failing** for this game (return code: {return_code}, errors: {error_count}).
+
+The spoiler test cannot run until generation succeeds. Your first priority is to fix the generation step.
+{custom_code_desc}
+## Step 1: Run Generation and Examine Errors
+
+```bash
+source .venv/bin/activate
+python Generate.py --weights_file_path "Templates/{template_file}" --multi 1 --seed {seed} 2>&1 | tee generate_output.txt
+```
+
+Examine the output to identify the specific error. Common issues include:
+- Missing or invalid item/location definitions
+- Circular dependencies in rules
+- Invalid region connections
+- Python errors in the world code
+
+## Step 2: Once Generation Works
+
+After fixing generation, run the full test:
+
+```bash
+python scripts/test/test-all-templates.py --include-list "{template_file}" --minimal-spoilers
+```
+
+Or run just the spoiler test:
+
+```bash
+npm test --mode=test-spoilers --game={game_name.lower().replace(' ', '')} --seed={seed}
+```
+
+## Key Files to Investigate
+
+- Template: `Players/Templates/{template_file}`
+- World directory: `worlds/` (look for the game's world package)
+- Exporter (if custom): Check `exporter/games/` for game-specific export logic
+"""

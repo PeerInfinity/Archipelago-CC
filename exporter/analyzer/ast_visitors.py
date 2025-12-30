@@ -32,22 +32,55 @@ class ASTVisitorMixin:
         - binary_op_processor: BinaryOpProcessor instance
     """
 
-    def _register_helper_usage(self, helper_name: str, helper_func: Any = None) -> None:
+    def _register_helper_usage(self, helper_name: str, helper_func: Any = None,
+                                args_with_nodes: List[Any] = None) -> None:
         """
         Register that a helper function is used, for automatic discovery.
 
         This calls the game handler's register_helper_usage method if available,
         allowing the exporter to automatically discover and export helper definitions.
 
+        Also detects and registers param_mappings from call-site AST patterns when
+        args_with_nodes is provided.
+
         Args:
             helper_name: The name of the helper function being used
             helper_func: Optional - the actual function object (for auto-detecting module)
+            args_with_nodes: Optional - list of (arg_node, arg_result) tuples for param_mapping detection
         """
         if (hasattr(self, 'game_handler') and
             self.game_handler is not None and
             hasattr(self.game_handler, 'register_helper_usage')):
             self.game_handler.register_helper_usage(helper_name, helper_func)
             logging.debug(f"Registered helper usage: {helper_name}")
+
+            # Detect and register param_mappings from call-site patterns
+            if args_with_nodes and helper_func is not None:
+                self._detect_and_register_param_mappings(helper_name, helper_func, args_with_nodes)
+
+    def _detect_and_register_param_mappings(self, helper_name: str, helper_func: Any,
+                                             args_with_nodes: List[Any]) -> None:
+        """
+        Detect param_mappings from call-site AST patterns and register them.
+
+        This analyzes how a helper is called (e.g., with world.options.X.value or world.Y)
+        and automatically determines the mapping from helper parameter names to slot_data keys.
+
+        Args:
+            helper_name: The name of the helper function
+            helper_func: The actual function object
+            args_with_nodes: List of (arg_node, arg_result) tuples
+        """
+        if not (hasattr(self, 'game_handler') and
+                self.game_handler is not None and
+                hasattr(self.game_handler, 'register_discovered_param_mapping')):
+            return
+
+        # Use the detection method from rule_analyzer
+        param_mappings = self._detect_param_mappings_from_call_site(helper_name, helper_func, args_with_nodes)
+
+        if param_mappings:
+            self.game_handler.register_discovered_param_mapping(helper_name, param_mappings)
 
     def _make_helper_rule(self, name: str, args: List[Any]) -> Dict[str, Any]:
         """
@@ -453,8 +486,7 @@ class ASTVisitorMixin:
                             resolved_func_name = getattr(resolved_func, '__name__', func_name)
                             if has_dynamic_for_loops_resolved(resolved_func):
                                 logging.debug(f"Function {resolved_func_name} has dynamic for loops, preserving as helper")
-                                if hasattr(self.game_handler, 'register_helper_usage'):
-                                    self.game_handler.register_helper_usage(resolved_func_name, resolved_func)
+                                self._register_helper_usage(resolved_func_name, resolved_func, args_with_nodes)
                                 return self._make_helper_rule(resolved_func_name, filtered_args)
 
                             # Check if 'state' is passed as an argument using original AST nodes
@@ -492,9 +524,8 @@ class ASTVisitorMixin:
                                         size = BaseGameExportHandler.count_rule_nodes(recursive_result)
                                         if size > threshold:
                                             logging.debug(f"Helper {actual_func_name} has {size} nodes (threshold {threshold}), preserving as helper")
-                                            # Register the helper for export
-                                            if hasattr(self.game_handler, 'register_helper_usage'):
-                                                self.game_handler.register_helper_usage(actual_func_name, resolved_func)
+                                            # Register the helper for export with param_mappings detection
+                                            self._register_helper_usage(actual_func_name, resolved_func, args_with_nodes)
                                             if hasattr(self.game_handler, 'register_auto_preserved_helper'):
                                                 self.game_handler.register_auto_preserved_helper(actual_func_name)
                                             # Only cache the analyzed result if the function has no extra parameters
@@ -586,8 +617,7 @@ class ASTVisitorMixin:
                      # Check if function has dynamic for loops - if so, preserve as helper
                      if has_dynamic_for_loops(actual_func):
                          logging.debug(f"Function {closure_func_name} has dynamic for loops, preserving as helper")
-                         if hasattr(self.game_handler, 'register_helper_usage'):
-                             self.game_handler.register_helper_usage(closure_func_name, actual_func)
+                         self._register_helper_usage(closure_func_name, actual_func, args_with_nodes)
                          return self._make_helper_rule(closure_func_name, filtered_args)
 
                      # Check if 'state' is passed as an argument (directly or indirectly)
@@ -627,9 +657,8 @@ class ASTVisitorMixin:
                                   size = BaseGameExportHandler.count_rule_nodes(recursive_result)
                                   if size > threshold:
                                       logging.debug(f"Helper {closure_func_name} has {size} nodes (threshold {threshold}), preserving as helper")
-                                      # Register the helper for export
-                                      if hasattr(self.game_handler, 'register_helper_usage'):
-                                          self.game_handler.register_helper_usage(closure_func_name, actual_func)
+                                      # Register the helper for export with param_mappings detection
+                                      self._register_helper_usage(closure_func_name, actual_func, args_with_nodes)
                                       if hasattr(self.game_handler, 'register_auto_preserved_helper'):
                                           self.game_handler.register_auto_preserved_helper(closure_func_name)
                                       # Only cache the analyzed result if the function has no extra parameters

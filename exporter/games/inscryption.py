@@ -5,7 +5,7 @@ so they cannot be automatically exported. Instead, we expand the inferred pseudo
 (like Camera_And_Meat, All_Epitaph_Pieces) to their actual item checks.
 """
 
-from typing import Dict, Any
+from typing import Any, Dict, List
 from .generic import GenericGameExportHandler
 
 
@@ -21,16 +21,10 @@ class InscryptionGameExportHandler(GenericGameExportHandler):
         self._required_epitaph_count = getattr(world, 'required_epitaph_pieces_count', 9)
 
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
-        """Expand Inscryption-specific rules.
-
-        Handles:
-        - Inferred pseudo-items like Camera_And_Meat, All_Epitaph_Pieces
-        - Inferred pseudo-items like Act2_Bridge_Requirements, Tower_Requirements
-        """
+        """Expand Inscryption-specific rules."""
         if not rule:
             return rule
 
-        # First let parent handle standard expansion and recursion
         rule = super().expand_rule(rule, _depth)
 
         # Handle inferred item_checks with pseudo-items
@@ -43,90 +37,89 @@ class InscryptionGameExportHandler(GenericGameExportHandler):
 
         return rule
 
-    def _camera_and_meat_rule(self) -> Dict[str, Any]:
-        """Return the Camera Replica AND Pile Of Meat requirement."""
+    # ==========================================================================
+    # Rule construction helpers
+    # ==========================================================================
+
+    def _has_all_items(self, items: List[str]) -> Dict[str, Any]:
+        """Create a has_all rule for multiple items."""
         return {
             'type': 'state_method',
             'method': 'has_all',
-            'args': [{'type': 'constant', 'value': ['Camera Replica', 'Pile Of Meat']}]
+            'args': [{'type': 'constant', 'value': items}]
         }
+
+    def _item_check(self, item: str, count: int = None) -> Dict[str, Any]:
+        """Create an item_check rule."""
+        rule = {'type': 'item_check', 'item': item}
+        if count is not None:
+            rule['count'] = {'type': 'constant', 'value': count}
+        return rule
+
+    # ==========================================================================
+    # Composite requirement rules (reused across multiple patterns)
+    # ==========================================================================
+
+    def _camera_and_meat_rule(self) -> Dict[str, Any]:
+        """Camera Replica AND Pile Of Meat."""
+        return self._has_all_items(['Camera Replica', 'Pile Of Meat'])
 
     def _epitaph_pieces_rule(self) -> Dict[str, Any]:
-        """Return the Epitaph Piece count requirement."""
-        return {
-            'type': 'item_check',
-            'item': 'Epitaph Piece',
-            'count': {'type': 'constant', 'value': self._required_epitaph_count}
-        }
+        """Epitaph Piece with required count."""
+        return self._item_check('Epitaph Piece', self._required_epitaph_count)
 
     def _bridge_requirements_rule(self) -> Dict[str, Any]:
-        """Return Camera+Meat OR All Epitaph Pieces."""
+        """Camera+Meat OR All Epitaph Pieces."""
         return {
             'type': 'or',
             'conditions': [self._camera_and_meat_rule(), self._epitaph_pieces_rule()]
         }
 
+    # ==========================================================================
+    # Pseudo-item expansion
+    # ==========================================================================
+
     def _expand_pseudo_item(self, item: str) -> Dict[str, Any] | None:
         """Expand pseudo-items to their actual item checks."""
         item_lower = item.lower().replace('_', ' ').replace('-', ' ')
 
-        # Camera_And_Meat -> Camera Replica AND Pile Of Meat
+        # Simple item mappings (exact or near-exact)
+        if item_lower == 'monocle':
+            return self._item_check('Monocle')
+        if 'inspectometer' in item_lower and 'battery' in item_lower:
+            return self._item_check('Inspectometer Battery')
+
+        # Composite item requirements (has_all patterns)
         if 'camera' in item_lower and 'meat' in item_lower:
             return self._camera_and_meat_rule()
-
-        # All_Epitaph_Pieces -> Epitaph Piece (count)
         if 'epitaph' in item_lower and ('all' in item_lower or 'pieces' in item_lower):
             return self._epitaph_pieces_rule()
+        if 'gems' in item_lower and 'battery' in item_lower:
+            return self._has_all_items(['Gems Module', 'Inspectometer Battery'])
+        if 'transcendence' in item_lower and 'requirements' in item_lower:
+            return self._has_all_items(['Quill', 'Gems Module', 'Inspectometer Battery'])
 
-        # Act2_Bridge_Requirements -> Camera+Meat OR All Epitaph Pieces
+        # Complex requirements (using composite rules)
         if 'bridge' in item_lower and 'requirements' in item_lower:
             return self._bridge_requirements_rule()
-
-        # Tower_Requirements -> Monocle AND Bridge Requirements
         if 'tower' in item_lower and 'requirements' in item_lower:
             return {
                 'type': 'and',
-                'conditions': [{'type': 'item_check', 'item': 'Monocle'}, self._bridge_requirements_rule()]
+                'conditions': [self._item_check('Monocle'), self._bridge_requirements_rule()]
             }
 
-        # Transcendence_Requirements -> Quill AND Gems Module AND Inspectometer Battery
-        if 'transcendence' in item_lower and 'requirements' in item_lower:
-            return {
-                'type': 'state_method',
-                'method': 'has_all',
-                'args': [{'type': 'constant', 'value': ['Quill', 'Gems Module', 'Inspectometer Battery']}]
-            }
-
-        # Inspectometer_Battery -> Inspectometer Battery
-        if 'inspectometer' in item_lower and 'battery' in item_lower:
-            return {'type': 'item_check', 'item': 'Inspectometer Battery'}
-
-        # Gems_And_Battery -> Gems Module AND Inspectometer Battery
-        if 'gems' in item_lower and 'battery' in item_lower:
-            return {
-                'type': 'state_method',
-                'method': 'has_all',
-                'args': [{'type': 'constant', 'value': ['Gems Module', 'Inspectometer Battery']}]
-            }
-
-        # Act2_Requirements -> Film Roll
+        # Act progression requirements
         if 'act2' in item_lower and 'requirements' in item_lower and 'bridge' not in item_lower:
-            return {'type': 'item_check', 'item': 'Film Roll'}
-
-        # Act3_Requirements -> Film Roll + All Epitaph Pieces + Camera+Meat + Monocle
+            return self._item_check('Film Roll')
         if 'act3' in item_lower and 'requirements' in item_lower:
             return {
                 'type': 'and',
                 'conditions': [
-                    {'type': 'item_check', 'item': 'Film Roll'},
+                    self._item_check('Film Roll'),
                     self._epitaph_pieces_rule(),
                     self._camera_and_meat_rule(),
-                    {'type': 'item_check', 'item': 'Monocle'}
+                    self._item_check('Monocle')
                 ]
             }
-
-        # Monocle -> Simple item check (not inferred)
-        if item_lower == 'monocle':
-            return {'type': 'item_check', 'item': 'Monocle'}
 
         return None

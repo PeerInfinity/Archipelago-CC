@@ -316,9 +316,14 @@ class HelperDiscoveryMixin:
                         }
                         if defaults:
                             helper_def['defaults'] = defaults
-                        # Add param_mappings if defined for this helper
+                        # Add param_mappings: prefer manual definition, fallback to auto-discovered
                         if helper_name in self.HELPER_PARAM_MAPPINGS:
                             helper_def['param_mappings'] = self.HELPER_PARAM_MAPPINGS[helper_name]
+                        elif hasattr(self, 'get_discovered_param_mappings'):
+                            discovered = self.get_discovered_param_mappings(helper_name)
+                            if discovered:
+                                helper_def['param_mappings'] = discovered
+                                logger.debug(f"Using auto-discovered param_mappings for '{helper_name}': {discovered}")
                         helper_definitions[helper_name] = helper_def
                         logger.debug(f"Using cached definition for helper '{helper_name}' with params {params}, defaults {defaults}")
                     else:
@@ -413,9 +418,14 @@ class HelperDiscoveryMixin:
                             }
                             if defaults:
                                 helper_def['defaults'] = defaults
-                            # Add param_mappings if defined for this helper
+                            # Add param_mappings: prefer manual definition, fallback to auto-discovered
                             if helper_name in self.HELPER_PARAM_MAPPINGS:
                                 helper_def['param_mappings'] = self.HELPER_PARAM_MAPPINGS[helper_name]
+                            elif hasattr(self, 'get_discovered_param_mappings'):
+                                discovered = self.get_discovered_param_mappings(helper_name)
+                                if discovered:
+                                    helper_def['param_mappings'] = discovered
+                                    logger.debug(f"Using auto-discovered param_mappings for '{helper_name}': {discovered}")
                             helper_definitions[helper_name] = helper_def
                             logger.debug(f"Exported helper '{helper_name}' with params {params}, defaults {defaults}: {rule}")
                         else:
@@ -428,8 +438,63 @@ class HelperDiscoveryMixin:
         else:
             logger.warning(f"Helper discovery reached max iterations ({MAX_HELPER_DISCOVERY_ITERATIONS}), may have circular dependencies")
 
+        # Generate helpers from DICT_SUM_HELPERS configuration
+        # These are helpers that sum values from item->value mappings
+        if hasattr(self, 'DICT_SUM_HELPERS') and self.DICT_SUM_HELPERS:
+            for helper_name, mapping_name in self.DICT_SUM_HELPERS.items():
+                if helper_name in helper_definitions:
+                    logger.debug(f"Skipping DICT_SUM_HELPERS['{helper_name}'] - already defined")
+                    continue
+
+                helper_definitions[helper_name] = self._generate_dict_sum_helper(mapping_name)
+                logger.debug(f"Generated sum helper '{helper_name}' from DICT_SUM_HELPERS")
+
         # Sort alphabetically for consistent output
         return dict(sorted(helper_definitions.items()))
+
+    def _generate_dict_sum_helper(self, mapping_name: str) -> Dict[str, Any]:
+        """
+        Generate a sum_of helper that iterates over an item->value mapping.
+
+        The generated helper sums values for items the player has:
+        sum(value for item, value in mapping.items() if state.has(item))
+
+        Args:
+            mapping_name: The name of the setting containing the item->value dict
+
+        Returns:
+            A helper definition dict with params and body
+        """
+        return {
+            'params': [],
+            'body': {
+                'type': 'sum_of',
+                'iterator_info': {
+                    'target': {
+                        'type': 'tuple',
+                        'elements': [
+                            {'type': 'name', 'name': 'item_name'},
+                            {'type': 'name', 'name': 'value'}
+                        ]
+                    },
+                    'iterator': {
+                        'type': 'method_call',
+                        'object': {'type': 'setting_value', 'setting': mapping_name},
+                        'method': 'items',
+                        'args': []
+                    }
+                },
+                'element_rule': {
+                    'type': 'conditional',
+                    'test': {
+                        'type': 'item_check',
+                        'item': {'type': 'name', 'name': 'item_name'}
+                    },
+                    'if_true': {'type': 'name', 'name': 'value'},
+                    'if_false': {'type': 'constant', 'value': 0}
+                }
+            }
+        }
 
     def _clean_helper_rule(self, rule: Dict[str, Any], world) -> Dict[str, Any]:
         """

@@ -46,6 +46,10 @@ class GenericGameExportHandler(BaseGameExportHandler):
     AUTO_EXPORT_DISCOVERED_HELPERS = True
 
     def expand_helper(self, helper_name: str, args: List[Any] = None):
+        # Let base class handle CONSTANT_HELPER_EXPANSIONS first
+        base_result = super().expand_helper(helper_name, args)
+        if base_result is not None:
+            return base_result
         return None  # Preserve helper nodes as-is
         
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:

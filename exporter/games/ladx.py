@@ -20,6 +20,21 @@ class LADXGameExportHandler(GenericGameExportHandler):
 
     USE_RESOLVED_ITEMS = True
 
+    # Define accumulator rules for rupee items
+    # This allows the frontend to compute total RUPEES from collected rupee items
+    # matching the Python behavior in worlds/ladx/__init__.py collect() method
+    ACCUMULATOR_RULES = [
+        {
+            'pattern': r'^(\d+) Rupees$',    # Regex to match rupee items
+            'extract_value': True,           # Extract numeric value from group 1
+            'target': 'RUPEES',              # Target accumulator name
+            'discriminator': None            # No dynamic target selection
+        }
+    ]
+
+    # Default RUPEES accumulator init (may be overridden by world attribute for worldgen)
+    PROG_ITEMS_INIT = {'RUPEES': 0}
+
     def handle_complex_entrance_rule(self, entrance_name: str, access_rule_method):
         """
         Extract the actual condition from LADX entrance objects (for entrances).
@@ -236,30 +251,13 @@ class LADXGameExportHandler(GenericGameExportHandler):
         return rule
 
     def get_game_info(self, world):
-        """Export LADX game info including RUPEES accumulator rules."""
+        """Export LADX game info with worldgen-aware prog_items_init priority."""
         game_info = super().get_game_info(world)
 
-        # Define accumulator rules for rupee items
-        # This allows the frontend to compute total RUPEES from collected rupee items
-        # matching the Python behavior in worlds/ladx/__init__.py collect() method
-        # Pattern matches items like "20 Rupees", "50 Rupees", etc.
-        # and accumulates their numeric value into the "RUPEES" target
-        game_info['accumulator_rules'] = [
-            {
-                'pattern': r'^(\d+) Rupees$',    # Regex to match rupee items
-                'extract_value': True,           # Extract numeric value from group 1
-                'target': 'RUPEES',              # Target accumulator name
-                'discriminator': None            # No dynamic target selection
-            }
-        ]
-
-        # Initialize RUPEES accumulator - use world's value if set, otherwise 0
-        # WorldGen worlds may precollect RUPEES for rule evaluation
+        # Override prog_items_init priority for worldgen support:
+        # World attribute takes precedence over class attribute (opposite of base class)
+        # This allows worldgen worlds to precollect RUPEES for rule evaluation
         if hasattr(world, 'prog_items_init') and world.prog_items_init:
             game_info['prog_items_init'] = dict(world.prog_items_init)
-        else:
-            game_info['prog_items_init'] = {
-                'RUPEES': 0
-            }
 
         return game_info

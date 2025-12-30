@@ -35,6 +35,7 @@ from prompt_lib import (
     get_multiworld_bisection_info,
     get_multiworld_failure_details,
     has_generation_errors_but_passes,
+    get_generation_failure_info,
     # worldgen_analysis
     load_worldgen_test_results,
     get_worldgen_world_failures,
@@ -50,6 +51,7 @@ from prompt_lib import (
     generate_gen_errors_prompt,
     generate_basic_spoiler_debug_prompt,
     generate_multiworld_prompt,
+    generate_generation_failure_prompt,
     # prompt_generators.worldgen
     generate_worldgen_world_failure_prompt,
     generate_worldgen_seed_failure_prompt,
@@ -709,21 +711,31 @@ python scripts/test/test-all-templates.py --include-list "{template_file}" --mul
 """
                         collected_prompts.append(multiclient_prompt)
                     else:
-                        try:
-                            cmd = ['python', 'CC/scripts/prompt.py', game_name_from_yaml, '--seed', str(seed_to_use), '-p']
-                            if args.CC:
-                                cmd.append('--CC')
-                            if args.full_spoilers:
-                                cmd.append('--full-spoilers')
-                            result = subprocess.run(cmd, capture_output=True, text=True, check=False)
-                            if result.returncode == 0:
-                                collected_prompts.append(result.stdout)
-                            else:
+                        # Check if generation failed - if so, use special generation failure prompt
+                        gen_failure_info = get_generation_failure_info(template_file, test_results)
+                        if gen_failure_info['failed']:
+                            custom_code_info_for_gen = get_custom_code_info(game_name_from_yaml, world_mapping)
+                            gen_failure_prompt = generate_generation_failure_prompt(
+                                template_file, game_name_from_yaml, gen_failure_info,
+                                custom_code_info_for_gen, seed_to_use, args.CC
+                            )
+                            collected_prompts.append(gen_failure_prompt)
+                        else:
+                            try:
+                                cmd = ['python', 'CC/scripts/prompt.py', game_name_from_yaml, '--seed', str(seed_to_use), '-p']
+                                if args.CC:
+                                    cmd.append('--CC')
+                                if args.full_spoilers:
+                                    cmd.append('--full-spoilers')
+                                result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+                                if result.returncode == 0:
+                                    collected_prompts.append(result.stdout)
+                                else:
+                                    if not quiet_mode:
+                                        print(f"Error getting prompt for {game_name_from_yaml}: {result.stderr}", file=sys.stderr)
+                            except Exception as e:
                                 if not quiet_mode:
-                                    print(f"Error getting prompt for {game_name_from_yaml}: {result.stderr}", file=sys.stderr)
-                        except Exception as e:
-                            if not quiet_mode:
-                                print(f"Error getting prompt for {game_name_from_yaml}: {e}", file=sys.stderr)
+                                    print(f"Error getting prompt for {game_name_from_yaml}: {e}", file=sys.stderr)
                 else:
                     # Handle non-promptfile modes
                     if args.basic_spoiler_debug:
@@ -749,16 +761,30 @@ python scripts/test/test-all-templates.py --include-list "{template_file}" --mul
                         if args.text or args.prompt:
                             return 0
                     else:
-                        # Run prompt script for normal spoiler/multiclient modes
-                        run_prompt_for_game(game_name_from_yaml, args.text, args.prompt, seed_to_use, quiet_mode, args.CC, args.full_spoilers)
+                        # Check if generation failed - if so, use special generation failure prompt
+                        gen_failure_info = get_generation_failure_info(template_file, test_results)
+                        if gen_failure_info['failed']:
+                            custom_code_info_for_gen = get_custom_code_info(game_name_from_yaml, world_mapping)
+                            gen_failure_prompt = generate_generation_failure_prompt(
+                                template_file, game_name_from_yaml, gen_failure_info,
+                                custom_code_info_for_gen, seed_to_use, args.CC
+                            )
+                            print(gen_failure_prompt)
 
-                        # Exit immediately if -t or -p was specified (regardless of --loud)
-                        if args.text or args.prompt:
-                            return 0
+                            # Exit immediately if -t or -p was specified
+                            if args.text or args.prompt:
+                                return 0
+                        else:
+                            # Run prompt script for normal spoiler/multiclient modes
+                            run_prompt_for_game(game_name_from_yaml, args.text, args.prompt, seed_to_use, quiet_mode, args.CC, args.full_spoilers)
 
-                        # Run test again to check if it's now passing
-                        print("Re-running test to check if issues were resolved...")
-                        run_template_test(template_file, args.seed)
+                            # Exit immediately if -t or -p was specified (regardless of --loud)
+                            if args.text or args.prompt:
+                                return 0
+
+                            # Run test again to check if it's now passing
+                            print("Re-running test to check if issues were resolved...")
+                            run_template_test(template_file, args.seed)
 
                 # Increment files processed counter
                 files_processed += 1

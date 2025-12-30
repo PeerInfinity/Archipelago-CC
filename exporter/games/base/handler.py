@@ -216,6 +216,35 @@ class BaseGameExportHandler(
     # Example: {' coins': 0, ' coins freemium': 0}
     PROG_ITEMS_INIT: Dict[str, Any] = {}
 
+    # Mapping of self.<attr> patterns to setting configurations.
+    # Used by the analyzer to convert self.attr access to setting_value rules.
+    # This is useful for games where the world class stores option values in instance attributes.
+    # Values can be:
+    #   - str: setting name (uses numeric value)
+    #   - dict: {'setting': name, 'use_current_key': True} (uses string key from name_lookup)
+    # Example: {'fight_logic': {'setting': 'FightLogic', 'use_current_key': True}}
+    SELF_ATTR_TO_SETTING: Dict[str, Any] = {}
+
+    # Mapping of helper function names to their constant return values.
+    # Used for helpers that always return a constant (typically True or False).
+    # These are automatically expanded by expand_helper in the base class.
+    # Example: {'always_true_helper': True, 'disabled_feature': False}
+    CONSTANT_HELPER_EXPANSIONS: Dict[str, Any] = {}
+
+    # Mapping of export names to item value extraction configuration.
+    # Used to compute item->value mappings from world attributes at export time.
+    # Each entry defines: 'source' (world attribute name) and 'value_extractor' (callable).
+    # The value_extractor takes an item name and returns its numeric value.
+    # Example: {'qp_items': {'source': 'available_QP_locations', 'value_extractor': lambda x: int(x[0])}}
+    # The computed mapping is exported as world data and can be used by DICT_SUM_HELPERS.
+    ITEM_VALUE_MAPPINGS: Dict[str, Dict[str, Any]] = {}
+
+    # Mapping of helper names to the dict setting they sum over.
+    # Automatically generates sum_of helpers that iterate over item->value mappings.
+    # Example: {'quest_points': 'qp_items'} generates a helper that sums qp_items values
+    # for items the player has.
+    DICT_SUM_HELPERS: Dict[str, str] = {}
+
     def __init__(self, world=None):
         """Initialize the handler with an empty set of discovered helpers.
 
@@ -238,6 +267,9 @@ class BaseGameExportHandler(
         self._analyzed_helper_cache: Dict[str, Any] = {}
         # Cache for worldgen detection result
         self._is_worldgen_cache: Optional[bool] = None
+        # Dict of auto-discovered param_mappings from call-site analysis
+        # Maps helper_name -> {param_name: slot_data_key}
+        self._discovered_param_mappings: Dict[str, Dict[str, str]] = {}
 
     # ==========================================================================
     # Helper registration methods
@@ -322,6 +354,51 @@ class BaseGameExportHandler(
             self._discovered_helper_modules = {}
         return self._discovered_helper_modules
 
+    def register_discovered_param_mapping(self, helper_name: str, param_mappings: Dict[str, str]) -> None:
+        """
+        Register auto-discovered param_mappings from call-site analysis.
+
+        This is called by the analyzer when it detects that helper arguments
+        follow patterns like world.options.X.value or world.Y, allowing automatic
+        mapping of parameter names to slot_data keys.
+
+        Args:
+            helper_name: The name of the helper function
+            param_mappings: Dict mapping param_name -> slot_data_key
+        """
+        if not hasattr(self, '_discovered_param_mappings'):
+            self._discovered_param_mappings = {}
+
+        if not param_mappings:
+            return
+
+        # Merge with existing mappings (first discovery wins for each param)
+        if helper_name not in self._discovered_param_mappings:
+            self._discovered_param_mappings[helper_name] = {}
+
+        for param_name, slot_data_key in param_mappings.items():
+            if param_name not in self._discovered_param_mappings[helper_name]:
+                self._discovered_param_mappings[helper_name][param_name] = slot_data_key
+                logger.debug(f"Discovered param_mapping: {helper_name}.{param_name} -> '{slot_data_key}'")
+
+    def get_discovered_param_mappings(self, helper_name: str = None) -> Dict[str, Dict[str, str]]:
+        """
+        Return auto-discovered param_mappings.
+
+        Args:
+            helper_name: Optional - if provided, return mappings for this helper only
+
+        Returns:
+            Dict mapping helper_name -> {param_name: slot_data_key}
+            If helper_name is provided, returns just that helper's mappings dict
+        """
+        if not hasattr(self, '_discovered_param_mappings'):
+            self._discovered_param_mappings = {}
+
+        if helper_name:
+            return self._discovered_param_mappings.get(helper_name, {})
+        return self._discovered_param_mappings
+
     def register_auto_preserved_helper(self, helper_name: str) -> None:
         """
         Register that a helper was auto-preserved due to HELPER_INLINE_THRESHOLD.
@@ -356,6 +433,7 @@ class BaseGameExportHandler(
         self._discovered_helper_modules = {}
         self._auto_preserved_helpers = set()
         self._analyzed_helper_cache = {}
+        self._discovered_param_mappings = {}
 
     def is_worldgen_world(self, world=None) -> bool:
         """
@@ -479,7 +557,8 @@ class BaseGameExportHandler(
         """Expand a helper function into basic rule conditions.
 
         Override this method in game-specific handlers to provide
-        game-specific helper expansions.
+        game-specific helper expansions. When overriding, call
+        super().expand_helper() first to handle CONSTANT_HELPER_EXPANSIONS.
 
         Args:
             helper_name: The name of the helper to expand
@@ -488,6 +567,11 @@ class BaseGameExportHandler(
         Returns:
             A rule dictionary if the helper should be expanded, None otherwise
         """
+        # Check CONSTANT_HELPER_EXPANSIONS for helpers that return constant values
+        if helper_name in self.CONSTANT_HELPER_EXPANSIONS:
+            value = self.CONSTANT_HELPER_EXPANSIONS[helper_name]
+            return {'type': 'constant', 'value': value}
+
         return None
 
     def replace_name(self, name: str) -> str:
@@ -871,9 +955,17 @@ class BaseGameExportHandler(
                             world_dir = Path(world_pkg.__path__[0])
 
                             # Find all Python files in this directory
+                            # Skip GUI/client modules that have display dependencies
+                            skip_patterns = ('gui', 'client', 'kivy', 'kvui')
                             for py_file in world_dir.glob('*.py'):
                                 if py_file.name.startswith('_'):
                                     continue  # Skip __init__.py, __pycache__, etc.
+
+                                # Skip GUI/client modules to avoid importing display dependencies
+                                name_lower = py_file.name.lower()
+                                if any(pattern in name_lower for pattern in skip_patterns):
+                                    logger.debug(f"Skipping GUI/client module: {py_file.name}")
+                                    continue
 
                                 module_name = py_file.stem  # e.g., 'StateLogic'
 

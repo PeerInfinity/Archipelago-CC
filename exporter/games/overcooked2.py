@@ -16,6 +16,13 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
     # Preserve these helpers during rule analysis - they're expanded in expand_rule
     HELPERS_TO_PRESERVE = {'has_requirements_for_level_star', 'has_requirements_for_level_access'}
 
+    # Constant helper expansions - helpers that always return a constant value
+    # overworld_logic is a check that should always pass since region access is
+    # handled by the proper level access logic
+    CONSTANT_HELPER_EXPANSIONS = {
+        'overworld_logic': True,
+    }
+
     def get_game_info(self, world):
         """Export level_logic to frontend for star requirement calculations."""
         game_info = super().get_game_info(world)
@@ -119,106 +126,7 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
         """Post-process analyzed rules to expand Overcooked! 2-specific helpers."""
         if not rule:
             return rule
-
-        # First expand any helpers and resolve variables
-        rule = self._resolve_variables_in_rule(rule)
-
-        # Then call expand_rule to expand any Overcooked! 2-specific helpers
         return self.expand_rule(rule)
-
-    def _resolve_variables_in_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Resolve variable references in rules by removing them or replacing with actual checks."""
-        if not rule or not isinstance(rule, dict):
-            return rule
-
-        rule_type = rule.get('type')
-
-        # Handle name type - these are variable references that should be resolved
-        if rule_type == 'name':
-            var_name = rule.get('name')
-            # Variables like 'visited' should be ignored (they're internal tracking)
-            if var_name == 'visited':
-                # Return a constant true since visited is just for recursion prevention
-                return {'type': 'constant', 'value': []}
-            # These variables should have been resolved by lambda capture but weren't
-            # We'll return them as-is and let them cause errors if they're actually used
-            return rule
-
-        # Recursively process conditional rules
-        if rule_type == 'conditional':
-            return {
-                'type': 'conditional',
-                'test': self._resolve_variables_in_rule(rule.get('test')),
-                'if_true': self._resolve_variables_in_rule(rule.get('if_true')),
-                'if_false': self._resolve_variables_in_rule(rule.get('if_false'))
-            }
-
-        # Recursively process and/or rules
-        if rule_type in ['and', 'or']:
-            return {
-                'type': rule_type,
-                'conditions': [self._resolve_variables_in_rule(cond) for cond in rule.get('conditions', [])]
-            }
-
-        # Recursively process not rules
-        if rule_type == 'not':
-            return {
-                'type': 'not',
-                'condition': self._resolve_variables_in_rule(rule.get('condition'))
-            }
-
-        # Recursively process compare rules
-        if rule_type == 'compare':
-            return {
-                'type': 'compare',
-                'left': self._resolve_variables_in_rule(rule.get('left')),
-                'op': rule.get('op'),
-                'right': self._resolve_variables_in_rule(rule.get('right'))
-            }
-
-        # Recursively process helper rules
-        if rule_type == 'helper':
-            helper_name = rule.get('name', '')
-            # Expand overworld_logic helper
-            if helper_name == 'overworld_logic':
-                # The overworld_logic helper is actually a check that should always pass
-                # since we're checking if we can reach a region from Menu/Overworld
-                # For now, return constant true - the actual region checks will be
-                # handled by the proper level access logic
-                return {'type': 'constant', 'value': True}
-            # For has_requirements_for_level_star, if the first arg is a 'name' type (unresolved variable),
-            # we can't use it directly. Keep the rule as a helper but mark the variable for special handling
-            if helper_name == 'has_requirements_for_level_star':
-                args = rule.get('args', [])
-                if args and args[0].get('type') == 'name' and args[0].get('name') == 'level':
-                    # The JavaScript helper can't evaluate this without the actual level object
-                    # Since we don't have the level_id at this point, we need to leave it as-is
-                    # The frontend will need to handle this differently
-                    pass
-            # Process args
-            resolved_args = [self._resolve_variables_in_rule(arg) for arg in rule.get('args', [])]
-            rule = dict(rule)
-            rule['args'] = resolved_args
-            return rule
-
-        # Recursively process item_check with name-type items
-        if rule_type == 'item_check':
-            item = rule.get('item')
-            if isinstance(item, dict) and item.get('type') == 'name':
-                # Can't resolve the name, keep as-is
-                return rule
-            return rule
-
-        # Recursively process function_call
-        if rule_type == 'function_call':
-            return {
-                'type': 'function_call',
-                'function': self._resolve_variables_in_rule(rule.get('function')),
-                'args': [self._resolve_variables_in_rule(arg) for arg in rule.get('args', [])]
-            }
-
-        # Return rule as-is for other types
-        return rule
 
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand rule functions with Overcooked! 2-specific handling."""
