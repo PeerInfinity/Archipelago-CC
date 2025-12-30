@@ -17,6 +17,8 @@ logger = logging.getLogger(__name__)
 
 
 class OSRSGameExportHandler(GenericGameExportHandler):
+    # Register quest_points as a computed helper (defined in get_helper_definitions)
+    COMPUTED_HELPERS = {'quest_points'}
 
     def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Export OSRS-specific world data including QP location data."""
