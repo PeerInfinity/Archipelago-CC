@@ -25309,6 +25309,24 @@
           "display_name": "Virtual Console Changes"
         }
       },
+      "level_names_inverse": {
+        "1": "Grass Land",
+        "2": "Ripple Field",
+        "3": "Sand Canyon",
+        "4": "Cloudy Park",
+        "5": "Iceberg"
+      },
+      "ability_map": {
+        "No Ability": "<lambda>",
+        "Burning Ability": "can_reach_burning",
+        "Stone Ability": "can_reach_stone",
+        "Ice Ability": "can_reach_ice",
+        "Needle Ability": "can_reach_needle",
+        "Clean Ability": "can_reach_clean",
+        "Parasol Ability": "can_reach_parasol",
+        "Spark Ability": "can_reach_spark",
+        "Cutter Ability": "can_reach_cutter"
+      },
       "copy_abilities": {
         "Waddle Dee": "No Ability",
         "Bronto Burt": "No Ability",
@@ -25383,53 +25401,6 @@
         "Jumper Shoot": "Parasol Ability",
         "Boboo": "Burning Ability",
         "Haboki": "Clean Ability"
-      },
-      "player_levels": {
-        "1": [
-          7798784,
-          7798785,
-          7798786,
-          7798787,
-          7798788,
-          7798789,
-          7799296
-        ],
-        "2": [
-          7798790,
-          7798791,
-          7798792,
-          7798793,
-          7798794,
-          7798795,
-          7799297
-        ],
-        "3": [
-          7798796,
-          7798797,
-          7798798,
-          7798799,
-          7798800,
-          7798801,
-          7799298
-        ],
-        "4": [
-          7798802,
-          7798803,
-          7798804,
-          7798805,
-          7798806,
-          7798807,
-          7799299
-        ],
-        "5": [
-          7798808,
-          7798809,
-          7798810,
-          7798811,
-          7798812,
-          7798813,
-          7799300
-        ]
       },
       "required_heart_stars": 15,
       "boss_requirements": [
@@ -25955,24 +25926,6 @@
           }
         ]
       },
-      "level_names_inverse": {
-        "1": "Grass Land",
-        "2": "Ripple Field",
-        "3": "Sand Canyon",
-        "4": "Cloudy Park",
-        "5": "Iceberg"
-      },
-      "ability_map": {
-        "No Ability": "<lambda>",
-        "Burning Ability": "can_reach_burning",
-        "Stone Ability": "can_reach_stone",
-        "Ice Ability": "can_reach_ice",
-        "Needle Ability": "can_reach_needle",
-        "Clean Ability": "can_reach_clean",
-        "Parasol Ability": "can_reach_parasol",
-        "Spark Ability": "can_reach_spark",
-        "Cutter Ability": "can_reach_cutter"
-      },
       "world_directory": "kdl3"
     }
   },
@@ -25981,7 +25934,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": false
     }
   },
