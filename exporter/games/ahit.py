@@ -18,9 +18,6 @@ logger = logging.getLogger(__name__)
 class AHitGameExportHandler(GenericGameExportHandler):
     """A Hat in Time export handler."""
 
-    # Treat exits as bidirectional for frontend navigation
-    ASSUME_BIDIRECTIONAL_EXITS = True
-
     # Disable location attribute discovery (not needed for AHIT)
     AUTO_DISCOVER_LOCATION_ATTRIBUTES = False
 
