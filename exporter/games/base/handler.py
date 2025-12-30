@@ -239,6 +239,16 @@ class BaseGameExportHandler(
     # Example: {'always_true_helper': True, 'disabled_feature': False}
     CONSTANT_HELPER_EXPANSIONS: Dict[str, Any] = {}
 
+    # Mapping of helper function names to rule type configurations.
+    # Used for helpers that take a single argument and convert it to a rule type.
+    # Format: {'helper_name': {'type': 'rule_type', 'field': 'field_name', 'arg_index': 0}}
+    # - type: The rule type to create (location_check, can_reach, item_check, etc.)
+    # - field: The field name in the rule to set (location, region, item, etc.)
+    # - arg_index: Which argument to use (default 0)
+    # Example: {'_can_get': {'type': 'location_check', 'field': 'location'}}
+    # This expands _can_get("Location Name") to {'type': 'location_check', 'location': ...}
+    HELPER_TO_RULE_MAPPINGS: Dict[str, Dict[str, Any]] = {}
+
     # Mapping of export names to item value extraction configuration.
     # Used to compute item->value mappings from world attributes at export time.
     # Each entry defines: 'source' (world attribute name) and 'value_extractor' (callable).
@@ -609,7 +619,8 @@ class BaseGameExportHandler(
 
         Override this method in game-specific handlers to provide
         game-specific helper expansions. When overriding, call
-        super().expand_helper() first to handle CONSTANT_HELPER_EXPANSIONS.
+        super().expand_helper() first to handle CONSTANT_HELPER_EXPANSIONS
+        and HELPER_TO_RULE_MAPPINGS.
 
         Args:
             helper_name: The name of the helper to expand
@@ -622,6 +633,25 @@ class BaseGameExportHandler(
         if helper_name in self.CONSTANT_HELPER_EXPANSIONS:
             value = self.CONSTANT_HELPER_EXPANSIONS[helper_name]
             return {'type': 'constant', 'value': value}
+
+        # Check HELPER_TO_RULE_MAPPINGS for helpers that map to rule types
+        if helper_name in self.HELPER_TO_RULE_MAPPINGS:
+            mapping = self.HELPER_TO_RULE_MAPPINGS[helper_name]
+            arg_index = mapping.get('arg_index', 0)
+            if args and len(args) > arg_index:
+                arg = args[arg_index]
+                # Extract value if arg is a dict with 'value' key (constant node)
+                if isinstance(arg, dict) and arg.get('type') == 'constant':
+                    value = arg.get('value')
+                elif isinstance(arg, dict):
+                    # Other dict types - use as-is
+                    value = arg
+                else:
+                    value = arg
+                return {
+                    'type': mapping['type'],
+                    mapping['field']: {'type': 'constant', 'value': value}
+                }
 
         return None
 
