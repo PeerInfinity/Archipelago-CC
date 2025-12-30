@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-30T02:58:43.156433",
-    "last_updated": "2025-12-30T02:58:43.156439",
+    "last_updated": "2025-12-30T05:16:48.377579",
     "script_version": "1.0.0"
   },
   "results": {
@@ -72,27 +72,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "503ff0e94412e648ece101ee877d9812474d938de8b04a6613d2894b5bda36dd",
-          "new_sphere_log_hash": "d36bc0bd35be1031e331f500e0dce8115d27796f983860130d3a4fc05f723225",
-          "original_rules_hash": "503ff0e94412e648ece101ee877d9812474d938de8b04a6613d2894b5bda36dd",
-          "original_sphere_log_hash": "d36bc0bd35be1031e331f500e0dce8115d27796f983860130d3a4fc05f723225",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-30T02:57:43.405298"
-        }
-      },
       "game_name_from_filename": "alttp",
       "game_name_from_yaml": "A Link to the Past",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 16.63,
+        "processing_time_seconds": 35.15,
         "return_code": 0,
         "success": true,
-        "warning_count": 3
+        "warning_count": 2
       },
       "rules_file": {
         "path": "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -104,7 +92,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 19.69,
+        "processing_time_seconds": 21.64,
         "return_code": 0,
         "sphere_reached": 22.1,
         "success": true,
@@ -112,7 +100,7 @@
         "warning_count": 0
       },
       "template_filename": "A Link to the Past.yaml",
-      "timestamp": "2025-12-30T02:54:41.177987",
+      "timestamp": "2025-12-30T05:14:54.150323",
       "world_info": {
         "exporter_path": "exporter/games/alttp.py",
         "exporter_size": 2547,
@@ -1134,27 +1122,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "0ee39e2f7b67aeab6527aedde49ad3d26ccaeecbb5f0cc0a29709e6aaab82d10",
-          "new_sphere_log_hash": "3021116bd0a0766d86bc25b4ff80fb2c9988692d2248b36974037be6e2dd966a",
-          "original_rules_hash": "0ee39e2f7b67aeab6527aedde49ad3d26ccaeecbb5f0cc0a29709e6aaab82d10",
-          "original_sphere_log_hash": "3021116bd0a0766d86bc25b4ff80fb2c9988692d2248b36974037be6e2dd966a",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-30T02:57:23.411832"
-        }
-      },
       "game_name_from_filename": "dark_souls_3",
       "game_name_from_yaml": "Dark Souls III",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.88,
+        "processing_time_seconds": 27.64,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/dark_souls_3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -1166,7 +1142,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 23.77,
+        "processing_time_seconds": 28.79,
         "return_code": 0,
         "sphere_reached": 5.1,
         "success": true,
@@ -1174,10 +1150,10 @@
         "warning_count": 0
       },
       "template_filename": "Dark Souls III.yaml",
-      "timestamp": "2025-12-30T02:54:39.468982",
+      "timestamp": "2025-12-30T05:15:51.524711",
       "world_info": {
         "exporter_path": "exporter/games/dark_souls_3.py",
-        "exporter_size": 1423,
+        "exporter_size": 745,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "dark_souls_3",
@@ -2609,27 +2585,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "93b51d5f3cf900999ab5097fa9553fb51178e45f26f2fb3007c1ad0931a7e6cd",
-          "new_sphere_log_hash": "6faec4aaea3c90aff51366c1045b401aa93c8a5f7d12c69fdeaa466c98fb6580",
-          "original_rules_hash": "93b51d5f3cf900999ab5097fa9553fb51178e45f26f2fb3007c1ad0931a7e6cd",
-          "original_sphere_log_hash": "6faec4aaea3c90aff51366c1045b401aa93c8a5f7d12c69fdeaa466c98fb6580",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-30T02:56:32.918977"
-        }
-      },
       "game_name_from_filename": "paint",
       "game_name_from_yaml": "Paint",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.33,
+        "processing_time_seconds": 6.93,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/paint/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -2641,7 +2605,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.48,
+        "processing_time_seconds": 10.71,
         "return_code": 0,
         "sphere_reached": 12.1,
         "success": true,
@@ -2649,10 +2613,10 @@
         "warning_count": 0
       },
       "template_filename": "Paint.yaml",
-      "timestamp": "2025-12-30T02:55:20.204878",
+      "timestamp": "2025-12-30T05:14:23.491962",
       "world_info": {
         "exporter_path": "exporter/games/paint.py",
-        "exporter_size": 4037,
+        "exporter_size": 2736,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "paint",
