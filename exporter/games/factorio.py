@@ -47,7 +47,7 @@ class FactorioGameExportHandler(GenericGameExportHandler):
         return game_info
 
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
-        """Recursively expand rule functions with Factorio-specific logic.
+        """Expand rule functions with Factorio-specific logic.
 
         Handles all_of rules that iterate over required_technologies, simplifying
         'technology.name' to just 'technology' since exported JSON has tech names
@@ -61,29 +61,30 @@ class FactorioGameExportHandler(GenericGameExportHandler):
             iterator_info = rule.get('iterator_info', {})
             iterator = iterator_info.get('iterator', {})
 
-            # Check if this is iterating over required_technologies[something]
-            # Case 1: required_technologies is still a name reference
-            is_required_tech_name = (iterator.get('type') == 'subscript' and
-                iterator.get('value', {}).get('type') == 'name' and
-                iterator.get('value', {}).get('name') == 'required_technologies')
-
-            # Case 2: required_technologies has been inlined as a constant dictionary
-            is_required_tech_constant = (iterator.get('type') == 'subscript' and
-                iterator.get('value', {}).get('type') == 'constant' and
-                isinstance(iterator.get('value', {}).get('value'), dict))
-
-            if is_required_tech_name or is_required_tech_constant:
-                # Simplify the element_rule to remove .name attribute access
+            # Check if iterating over required_technologies[ingredient] (as name ref or inlined dict)
+            if self._is_required_tech_iterator(iterator):
                 element_rule = rule.get('element_rule', {})
-                simplified_element = self._simplify_technology_name_access(
-                    element_rule, iterator_info.get('target', {}).get('name'))
-                rule['element_rule'] = self.expand_rule(simplified_element or element_rule, _depth + 1)
+                target_name = iterator_info.get('target', {}).get('name')
+                simplified = self._simplify_technology_name_access(element_rule, target_name)
+                rule['element_rule'] = self.expand_rule(simplified or element_rule, _depth + 1)
             else:
                 rule['element_rule'] = self.expand_rule(rule.get('element_rule', {}), _depth + 1)
             return rule
 
-        # Let parent handle everything else (helper, and/or, etc.)
         return super().expand_rule(rule, _depth)
+
+    def _is_required_tech_iterator(self, iterator: Dict[str, Any]) -> bool:
+        """Check if iterator is accessing required_technologies[something]."""
+        if iterator.get('type') != 'subscript':
+            return False
+        value = iterator.get('value', {})
+        # Case 1: required_technologies as name reference
+        if value.get('type') == 'name' and value.get('name') == 'required_technologies':
+            return True
+        # Case 2: required_technologies inlined as constant dict
+        if value.get('type') == 'constant' and isinstance(value.get('value'), dict):
+            return True
+        return False
 
     def _simplify_technology_name_access(self, rule: Dict[str, Any], iterator_var: str) -> Dict[str, Any]:
         """Simplify technology.name attribute access to just technology.
