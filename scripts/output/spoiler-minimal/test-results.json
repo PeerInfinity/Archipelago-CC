@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-29T22:02:06.370218",
-    "last_updated": "2025-12-29T22:02:06.370226",
+    "last_updated": "2025-12-30T02:30:16.691911",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2609,31 +2609,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "acfac891ab7f37a3a3716e8b563deab7fb2519556065df5b9cac00e21fa28b9a",
-          "new_sphere_log_hash": "6faec4aaea3c90aff51366c1045b401aa93c8a5f7d12c69fdeaa466c98fb6580",
-          "original_rules_hash": "acfac891ab7f37a3a3716e8b563deab7fb2519556065df5b9cac00e21fa28b9a",
-          "original_sphere_log_hash": "6faec4aaea3c90aff51366c1045b401aa93c8a5f7d12c69fdeaa466c98fb6580",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-29T22:00:11.284140"
-        }
-      },
       "game_name_from_filename": "paint",
       "game_name_from_yaml": "Paint",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.51,
+        "processing_time_seconds": 7.11,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/paint/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 150319,
+        "size_bytes": 150256,
         "size_mb": 0.14
       },
       "seed": "1",
@@ -2641,7 +2629,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.64,
+        "processing_time_seconds": 10.54,
         "return_code": 0,
         "sphere_reached": 12.1,
         "success": true,
@@ -2649,10 +2637,10 @@
         "warning_count": 0
       },
       "template_filename": "Paint.yaml",
-      "timestamp": "2025-12-29T21:58:54.050621",
+      "timestamp": "2025-12-30T02:29:58.613994",
       "world_info": {
         "exporter_path": "exporter/games/paint.py",
-        "exporter_size": 3798,
+        "exporter_size": 4037,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "paint",
