@@ -1,168 +1,112 @@
-"""Castlevania - Circle of the Moon specific exporter."""
+"""Castlevania - Circle of the Moon specific exporter.
+
+This game has option-dependent helper logic (e.g., nerf_roc_wing affects
+jump level requirements). Helpers are pre-computed at export time based
+on the current world settings.
+"""
 
 from typing import Dict, Any
 from .generic import GenericGameExportHandler
 
+
+# Rule construction helpers (module-level for reuse)
+def _item(name: str) -> Dict[str, Any]:
+    """Create an item_check rule."""
+    return {'type': 'item_check', 'item': name}
+
+
+def _item_count(name: str, count: int) -> Dict[str, Any]:
+    """Create an item_check rule with count requirement."""
+    return {'type': 'item_check', 'item': name, 'count': count}
+
+
+def _any(*conditions) -> Dict[str, Any]:
+    """Create an 'or' rule from multiple conditions."""
+    return {'type': 'or', 'conditions': list(conditions)}
+
+
+def _all(*conditions) -> Dict[str, Any]:
+    """Create an 'and' rule from multiple conditions."""
+    return {'type': 'and', 'conditions': list(conditions)}
+
+
+def _const(value: Any) -> Dict[str, Any]:
+    """Create a constant rule."""
+    return {'type': 'constant', 'value': value}
+
+
 class CvCotMGameExportHandler(GenericGameExportHandler):
     """Expander for Castlevania - Circle of the Moon specific functions."""
-
-    # Options to export at top level of world data (simple value extractions)
-    # Note: required_last_keys is a computed world attribute, not an option,
-    # and is auto-discovered via AUTO_DISCOVER_WORLD_ATTRIBUTES (default True)
-    EXPORTED_OPTIONS = [
-        'nerf_roc_wing',
-        'ignore_cleansing',
-        'iron_maiden_behavior',
-        'completion_goal',
-    ]
 
     # Helpers computed in get_helper_definitions() - auto-preserved during analysis
     AUTO_PRESERVE_COMPUTED_HELPERS = True
     COMPUTED_HELPERS = {
-        'has_jump_level_1',
-        'has_jump_level_2',
-        'has_jump_level_3',
-        'has_jump_level_4',
-        'has_jump_level_5',
-        'has_kick',
-        'has_tackle',
-        'has_push',
-        'has_ice_or_stone',
-        'can_touch_water',
-        'broke_iron_maidens',
-        'can_open_ceremonial_door',
+        'has_jump_level_1', 'has_jump_level_2', 'has_jump_level_3',
+        'has_jump_level_4', 'has_jump_level_5', 'has_kick', 'has_tackle',
+        'has_push', 'has_ice_or_stone', 'can_touch_water',
+        'broke_iron_maidens', 'can_open_ceremonial_door',
     }
 
     def get_helper_definitions(self, world) -> Dict[str, Any]:
-        """
-        Export CvCotM helper definitions.
+        """Export pre-computed helper definitions based on world settings."""
+        # Read settings at export time
+        nerf = getattr(world.options, 'nerf_roc_wing', None)
+        nerf_roc_wing = nerf.value if nerf else 0
 
-        CvCotM helpers are defined as class methods in CVCotMRules, so we need to
-        manually export them as rule definitions.
-        """
-        # Get settings values from the world
-        nerf_roc_wing = world.options.nerf_roc_wing.value if hasattr(world.options, 'nerf_roc_wing') else 0
-        ignore_cleansing = world.options.ignore_cleansing.value if hasattr(world.options, 'ignore_cleansing') else 0
-        iron_maiden_behavior = world.options.iron_maiden_behavior.value if hasattr(world.options, 'iron_maiden_behavior') else 0
-        required_last_keys = world.required_last_keys if hasattr(world, 'required_last_keys') else 0
+        cleansing_opt = getattr(world.options, 'ignore_cleansing', None)
+        ignore_cleansing = cleansing_opt.value if cleansing_opt else 0
 
-        # Item names from worlds.cvcotm.data.iname
-        double = "Double"
-        roc_wing = "Roc Wing"
-        kick_boots = "Kick Boots"
-        tackle = "Tackle"
-        heavy_ring = "Heavy Ring"
-        serpent = "Serpent Card"
-        cockatrice = "Cockatrice Card"
-        mercury = "Mercury Card"
-        mars = "Mars Card"
-        cleansing = "Cleansing"
-        maiden_detonator = "Maiden Detonator"
-        last_key = "Last Key"
+        iron_opt = getattr(world.options, 'iron_maiden_behavior', None)
+        iron_maiden_behavior = iron_opt.value if iron_opt else 0
 
-        helpers = {}
+        required_last_keys = getattr(world, 'required_last_keys', 0)
 
-        # Helper function to create item_check rule
-        def has_item(item_name):
-            return {
-                'type': 'item_check',
-                'item': {'type': 'constant', 'value': item_name}
-            }
+        # Item names
+        ROC = "Roc Wing"
+        DOUBLE = "Double"
+        KICK = "Kick Boots"
 
-        # Helper function to create state_method has_any rule
-        def has_any_items(items):
-            return {
-                'type': 'state_method',
-                'method': 'has_any',
-                'args': [{'type': 'constant', 'value': items}]
-            }
+        # Build helpers dict
+        helpers = {
+            # Jump levels: progressively more items needed when Roc is nerfed
+            'has_jump_level_1': _any(_item(DOUBLE), _item(ROC)),
+            'has_jump_level_2': _item(ROC),
+            'has_jump_level_3': (
+                _all(_item(ROC), _any(_item(DOUBLE), _item(KICK)))
+                if nerf_roc_wing else _item(ROC)
+            ),
+            'has_jump_level_4': (
+                _all(_item(ROC), _item(KICK))
+                if nerf_roc_wing else _item(ROC)
+            ),
+            'has_jump_level_5': (
+                _all(_item(ROC), _item(DOUBLE), _item(KICK))
+                if nerf_roc_wing else _item(ROC)
+            ),
 
-        # Helper function to create state_method has_all rule
-        def has_all_items(items):
-            return {
-                'type': 'state_method',
-                'method': 'has_all',
-                'args': [{'type': 'constant', 'value': items}]
-            }
+            # Simple item requirements
+            'has_kick': _item(KICK),
+            'has_tackle': _item("Tackle"),
+            'has_push': _item("Heavy Ring"),
 
-        # has_jump_level_1: Double OR Roc Wing
-        helpers['has_jump_level_1'] = has_any_items([double, roc_wing])
+            # DSS combo for freezing/petrifying enemies
+            'has_ice_or_stone': _all(
+                _any(_item("Serpent Card"), _item("Cockatrice Card")),
+                _any(_item("Mercury Card"), _item("Mars Card"))
+            ),
 
-        # has_jump_level_2: Roc Wing
-        helpers['has_jump_level_2'] = has_item(roc_wing)
-
-        # has_jump_level_3: if nerf_roc_wing: Roc Wing AND (Double OR Kick Boots) else: Roc Wing
-        if nerf_roc_wing:
-            helpers['has_jump_level_3'] = {
-                'type': 'and',
-                'conditions': [
-                    has_item(roc_wing),
-                    has_any_items([double, kick_boots])
-                ]
-            }
-        else:
-            helpers['has_jump_level_3'] = has_item(roc_wing)
-
-        # has_jump_level_4: if nerf_roc_wing: Roc Wing AND Kick Boots else: Roc Wing
-        if nerf_roc_wing:
-            helpers['has_jump_level_4'] = has_all_items([roc_wing, kick_boots])
-        else:
-            helpers['has_jump_level_4'] = has_item(roc_wing)
-
-        # has_jump_level_5: if nerf_roc_wing: Roc Wing AND Double AND Kick Boots else: Roc Wing
-        if nerf_roc_wing:
-            helpers['has_jump_level_5'] = has_all_items([roc_wing, double, kick_boots])
-        else:
-            helpers['has_jump_level_5'] = has_item(roc_wing)
-
-        # has_kick: Kick Boots
-        helpers['has_kick'] = has_item(kick_boots)
-
-        # has_tackle: Tackle
-        helpers['has_tackle'] = has_item(tackle)
-
-        # has_push: Heavy Ring
-        helpers['has_push'] = has_item(heavy_ring)
-
-        # has_ice_or_stone: (Serpent OR Cockatrice) AND (Mercury OR Mars)
-        helpers['has_ice_or_stone'] = {
-            'type': 'and',
-            'conditions': [
-                has_any_items([serpent, cockatrice]),
-                has_any_items([mercury, mars])
-            ]
+            # Option-dependent helpers
+            'can_touch_water': (
+                _const(True) if ignore_cleansing else _item("Cleansing")
+            ),
+            'broke_iron_maidens': (
+                _const(True) if iron_maiden_behavior == 1
+                else _item("Maiden Detonator")
+            ),
+            'can_open_ceremonial_door': (
+                _const(True) if required_last_keys == 0
+                else _item_count("Last Key", required_last_keys)
+            ),
         }
-
-        # can_touch_water: if ignore_cleansing: True else: Cleansing
-        if ignore_cleansing:
-            helpers['can_touch_water'] = {
-                'type': 'constant',
-                'value': True
-            }
-        else:
-            helpers['can_touch_water'] = has_item(cleansing)
-
-        # broke_iron_maidens: if iron_maiden_behavior == 1 (start_broken): True else: Maiden Detonator
-        # From options.py: option_start_broken = 1
-        if iron_maiden_behavior == 1:
-            helpers['broke_iron_maidens'] = {
-                'type': 'constant',
-                'value': True
-            }
-        else:
-            helpers['broke_iron_maidens'] = has_item(maiden_detonator)
-
-        # can_open_ceremonial_door: Last Key count >= required_last_keys
-        if required_last_keys == 0:
-            helpers['can_open_ceremonial_door'] = {
-                'type': 'constant',
-                'value': True
-            }
-        else:
-            helpers['can_open_ceremonial_door'] = {
-                'type': 'item_check',
-                'item': {'type': 'constant', 'value': last_key},
-                'count': {'type': 'constant', 'value': required_last_keys}
-            }
 
         return helpers
