@@ -164,6 +164,7 @@ These features work out-of-the-box with `GenericGameExportHandler`:
 - World attributes (simple types) → auto-discovered (`AUTO_DISCOVER_WORLD_ATTRIBUTES=True`)
 - Region attributes (simple types) → auto-discovered (`AUTO_DISCOVER_REGION_ATTRIBUTES=True`)
 - Location attributes (simple types) → auto-discovered (`AUTO_DISCOVER_LOCATION_ATTRIBUTES=True`)
+- Progressive item mappings → auto-detected (see below)
 
 **Helper Discovery & Export:**
 - Helper modules → auto-discovered from world directory (`AUTO_DISCOVER_WORLD_HELPER_MODULES=True`)
@@ -200,6 +201,33 @@ These rule patterns are handled automatically by the base class:
 | Location lambdas in exits | `lambda state: any(loc.access_rule(state) for loc in locs)` | Wargroove |
 | Location objects in closures | Lambda default parameters referencing Location objects | TLOZ |
 | Generic function calls | `location_item_name`, `item_name_in_location_names` | Base class |
+
+### Progressive Item Auto-Detection
+
+Progressive item mappings are automatically detected without any configuration. The base handler
+uses two complementary approaches:
+
+**1. Runtime Probing** (`_probe_collect_item_for_progression`):
+- Creates a mock `CollectionState` and repeatedly calls `world.collect_item()`
+- Discovers which items are progressive by detecting when `collect_item` returns a different name
+- Builds the progression chain by collecting each item and tracking the returned concrete items
+- Works for all advancement items where `collect_item` processes them
+
+**2. Module-level Data Discovery** (`_find_module_progression_data`):
+- Catches non-advancement progressive items that `collect_item` skips
+- Detects three common patterns:
+
+| Pattern | Format | Example Game |
+|---------|--------|--------------|
+| ALttP pattern | `progression_mapping` dict in `Items.py`: `concrete → (progressive, level)` | ALttP |
+| Factorio pattern | `progressive_technology_table`: `progressive → Technology.progressive tuple` | Factorio |
+| Raft pattern | `progressive_item_list` dict: `progressive → [concrete_items]` | Raft |
+
+**Auto-grouping:** Items that share identical concrete progressions (e.g., "Progressive Bow" and
+"Progressive Bow (Alt)" both → Bow, Silver Bow) are automatically grouped with the same `base_item`.
+
+Games that previously needed manual `get_progression_mapping()` overrides (ALttP, Factorio, Raft)
+now work with auto-detection. No configuration needed.
 
 ## Reference: Simplified Exporters
 
