@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-29T22:02:06.370218",
-    "last_updated": "2025-12-29T22:02:06.370226",
+    "last_updated": "2025-12-30T02:28:19.872231",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3019,47 +3019,38 @@
     "Starcraft 2.yaml": {
       "analysis": {
         "error_count": 0,
-        "success": false,
+        "success": true,
         "warning_count": 0
-      },
-      "consistency_tests": {
-        "1": {
-          "error": "Re-generation failed with return code 102",
-          "rules_identical": null,
-          "seed": "1",
-          "spoilers_identical": null,
-          "timestamp": "2025-12-29T22:01:02.767161"
-        }
       },
       "game_name_from_filename": "sc2",
       "game_name_from_yaml": "Starcraft 2",
       "generation": {
-        "error_count": 7,
+        "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 6.2,
-        "return_code": 102,
-        "success": false,
-        "warning_count": 1
+        "processing_time_seconds": 12.05,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
       },
       "rules_file": {
-        "path": null,
-        "size_bytes": 0,
-        "size_mb": 0.0
+        "path": "frontend/presets/sc2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 1213613,
+        "size_mb": 1.16
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
         "error_count": 0,
-        "pass_fail": "unknown",
-        "processing_time_seconds": 0,
-        "return_code": null,
-        "sphere_reached": 0,
-        "success": false,
-        "total_spheres": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 33.7,
+        "return_code": 0,
+        "sphere_reached": 15.5,
+        "success": true,
+        "total_spheres": 15.5,
         "warning_count": 0
       },
       "template_filename": "Starcraft 2.yaml",
-      "timestamp": "2025-12-29T22:00:16.617661",
+      "timestamp": "2025-12-30T02:27:33.702965",
       "world_info": {
         "exporter_path": "exporter/games/sc2.py",
         "exporter_size": 30882,
