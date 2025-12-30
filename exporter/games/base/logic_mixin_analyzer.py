@@ -17,6 +17,15 @@ Supported patterns:
    def _game_option(self, player): return bool(self.multiworld.worlds[player].options.option_name.value)
    -> {'type': 'setting_value', 'setting': 'option_name'}
 
+4. All locations reachable pattern:
+   def _game_all_locs(self, player):
+       locs = self.multiworld.worlds[player].some_attr.locations
+       for loc in locs:
+           if not self.can_reach_location(loc, player):
+               return False
+       return True
+   -> {'type': 'all_of', 'iterable': ..., 'element_rule': {'type': 'location_check', ...}}
+
 Manual overrides via STATE_METHOD_REPLACEMENTS always take precedence over
 auto-detected patterns.
 """
@@ -88,37 +97,38 @@ def analyze_logic_mixin_method(method) -> Optional[Dict[str, Any]]:
     if not func_def:
         return None
 
-    # Look for simple return statements
+    # Look for return statements
     return_stmts = [node for node in ast.walk(func_def) if isinstance(node, ast.Return)]
 
-    if len(return_stmts) != 1:
-        # Multiple return statements or no return - too complex
-        logger.debug(f"{method.__name__}: Multiple or no return statements")
-        return None
+    if len(return_stmts) == 1:
+        # Single return - try simple patterns
+        return_value = return_stmts[0].value
+        if return_value is not None:
+            # Try to match simple patterns
+            result = _match_simple_attribute_pattern(return_value)
+            if result:
+                logger.debug(f"{method.__name__}: Matched simple attribute pattern -> {result}")
+                return result
 
-    return_value = return_stmts[0].value
-    if return_value is None:
-        return None
+            result = _match_negated_attribute_pattern(return_value)
+            if result:
+                logger.debug(f"{method.__name__}: Matched negated attribute pattern -> {result}")
+                return result
 
-    # Try to match patterns
-    result = _match_simple_attribute_pattern(return_value)
+            result = _match_bool_option_pattern(return_value)
+            if result:
+                logger.debug(f"{method.__name__}: Matched bool option pattern -> {result}")
+                return result
+
+            result = _match_option_in_pattern(return_value)
+            if result:
+                logger.debug(f"{method.__name__}: Matched option 'in' pattern -> {result}")
+                return result
+
+    # Try complex patterns that may have multiple returns
+    result = _match_all_locations_reachable_pattern(func_def)
     if result:
-        logger.debug(f"{method.__name__}: Matched simple attribute pattern -> {result}")
-        return result
-
-    result = _match_negated_attribute_pattern(return_value)
-    if result:
-        logger.debug(f"{method.__name__}: Matched negated attribute pattern -> {result}")
-        return result
-
-    result = _match_bool_option_pattern(return_value)
-    if result:
-        logger.debug(f"{method.__name__}: Matched bool option pattern -> {result}")
-        return result
-
-    result = _match_option_in_pattern(return_value)
-    if result:
-        logger.debug(f"{method.__name__}: Matched option 'in' pattern -> {result}")
+        logger.debug(f"{method.__name__}: Matched all_locations_reachable pattern -> {result}")
         return result
 
     logger.debug(f"{method.__name__}: No pattern matched")
@@ -245,6 +255,175 @@ def _match_option_in_pattern(node: ast.expr) -> Optional[Dict[str, Any]]:
         return {'type': 'setting_in', 'setting': option_name, 'values': values}
 
     return None
+
+
+def _match_all_locations_reachable_pattern(func_def: ast.FunctionDef) -> Optional[Dict[str, Any]]:
+    """Match the 'all locations reachable' pattern.
+
+    Pattern:
+        def _method(self, player):
+            var = self.multiworld.worlds[player].<attr_path>
+            for loop_var in var:
+                if not self.can_reach_location(loop_var, player):
+                    return False
+            return True
+
+    Returns an all_of rule with location_check element_rule.
+    """
+    # We need exactly:
+    # 1. An assignment from world attribute
+    # 2. A for loop over that variable
+    # 3. An if statement with "not self.can_reach_location(...)" that returns False
+    # 4. A final return True
+
+    body = func_def.body
+    if len(body) < 2:
+        return None
+
+    # Step 1: Find assignment from world attribute
+    # Can be first statement or after some other setup
+    assign_stmt = None
+    assign_var = None
+    attr_path = None
+
+    for i, stmt in enumerate(body):
+        if isinstance(stmt, ast.Assign) and len(stmt.targets) == 1:
+            target = stmt.targets[0]
+            if isinstance(target, ast.Name):
+                # Check if the value is from world attribute
+                extracted = _extract_world_attribute_path(stmt.value)
+                if extracted:
+                    assign_stmt = stmt
+                    assign_var = target.id
+                    attr_path = extracted
+                    break
+
+    if not assign_var or not attr_path:
+        return None
+
+    # Step 2: Find for loop over the assigned variable
+    for_stmt = None
+    loop_var = None
+
+    for stmt in body:
+        if isinstance(stmt, ast.For):
+            # Check if iterating over our variable
+            if isinstance(stmt.iter, ast.Name) and stmt.iter.id == assign_var:
+                if isinstance(stmt.target, ast.Name):
+                    for_stmt = stmt
+                    loop_var = stmt.target.id
+                    break
+
+    if not for_stmt or not loop_var:
+        return None
+
+    # Step 3: Check for loop body has if statement with can_reach_location check
+    if len(for_stmt.body) != 1:
+        return None
+
+    if_stmt = for_stmt.body[0]
+    if not isinstance(if_stmt, ast.If):
+        return None
+
+    # Check the condition: not self.can_reach_location(loop_var, player)
+    if not _is_not_can_reach_location(if_stmt.test, loop_var):
+        return None
+
+    # Check that if body is just "return False"
+    if len(if_stmt.body) != 1:
+        return None
+
+    return_false = if_stmt.body[0]
+    if not isinstance(return_false, ast.Return):
+        return None
+    if not isinstance(return_false.value, ast.Constant) or return_false.value.value is not False:
+        # Also check for ast.NameConstant for older Python
+        if not (isinstance(return_false.value, ast.NameConstant) and return_false.value.value is False):
+            return None
+
+    # Step 4: Check final statement is "return True"
+    final_stmt = body[-1]
+    if not isinstance(final_stmt, ast.Return):
+        return None
+    if not isinstance(final_stmt.value, ast.Constant) or final_stmt.value.value is not True:
+        # Also check for ast.NameConstant for older Python
+        if not (isinstance(final_stmt.value, ast.NameConstant) and final_stmt.value.value is not True):
+            return None
+
+    # Build the all_of rule
+    return {
+        'type': 'all_of',
+        'iterable': {'type': 'world_attribute', 'attribute': attr_path},
+        'iterator_info': {
+            'type': 'comprehension_details',
+            'target': {'type': 'name', 'name': loop_var},
+            'iterator': {'type': 'world_attribute', 'attribute': attr_path}
+        },
+        'element_rule': {
+            'type': 'location_check',
+            'location': {'type': 'name', 'name': loop_var}
+        }
+    }
+
+
+def _extract_world_attribute_path(node: ast.expr) -> Optional[str]:
+    """Extract the attribute path from a world attribute access.
+
+    Matches: self.multiworld.worlds[player].<attr1>.<attr2>...
+    Returns: "attr1.attr2..." (the path after worlds[player])
+    """
+    # Collect attribute chain
+    attrs = []
+    current = node
+
+    while isinstance(current, ast.Attribute):
+        attrs.append(current.attr)
+        current = current.value
+
+    # Now current should be self.multiworld.worlds[player]
+    if not _is_world_subscript(current):
+        return None
+
+    if not attrs:
+        return None
+
+    # Reverse to get correct order
+    attrs.reverse()
+    return '.'.join(attrs)
+
+
+def _is_not_can_reach_location(node: ast.expr, expected_var: str) -> bool:
+    """Check if node is: not self.can_reach_location(var, player)"""
+    if not isinstance(node, ast.UnaryOp):
+        return False
+
+    if not isinstance(node.op, ast.Not):
+        return False
+
+    call = node.operand
+    if not isinstance(call, ast.Call):
+        return False
+
+    # Check for self.can_reach_location
+    func = call.func
+    if not isinstance(func, ast.Attribute):
+        return False
+
+    if func.attr != 'can_reach_location':
+        return False
+
+    if not isinstance(func.value, ast.Name) or func.value.id != 'self':
+        return False
+
+    # Check first argument is our loop variable
+    if len(call.args) < 1:
+        return False
+
+    first_arg = call.args[0]
+    if not isinstance(first_arg, ast.Name) or first_arg.id != expected_var:
+        return False
+
+    return True
 
 
 def _is_world_subscript(node: ast.expr) -> bool:
