@@ -1776,17 +1776,16 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
                         rules_sizes.append((game, rules_size))
 
         if rules_sizes:
-            # Sort by size descending and take top 10
+            # Sort by size descending
             rules_sizes.sort(key=lambda x: x[1], reverse=True)
-            top_10 = rules_sizes[:10]
 
-            md_content += "\n### Largest Rules Files\n\n"
+            md_content += "\n### Rules Files by Size\n\n"
             md_content += "| Rank | Game Name | Rules Size |\n"
             md_content += "|------|-----------|------------|\n"
-            for rank, (game_name, size) in enumerate(top_10, 1):
+            for rank, (game_name, size) in enumerate(rules_sizes, 1):
                 md_content += f"| {rank} | {game_name} | {size / 1024:.1f}KB |\n"
 
-    # Add Largest Exporter Files section
+    # Add Exporter Files by Size section
     if world_mapping:
         exporter_sizes = []
         for game in all_games:
@@ -1799,17 +1798,16 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
                     exporter_sizes.append((game, exporter_size))
 
         if exporter_sizes:
-            # Sort by size descending and take top 10
+            # Sort by size descending
             exporter_sizes.sort(key=lambda x: x[1], reverse=True)
-            top_10_exporters = exporter_sizes[:10]
 
-            md_content += "\n### Largest Exporter Files\n\n"
+            md_content += "\n### Exporter Files by Size\n\n"
             md_content += "| Rank | Game Name | Exporter Size |\n"
             md_content += "|------|-----------|---------------|\n"
-            for rank, (game_name, size) in enumerate(top_10_exporters, 1):
+            for rank, (game_name, size) in enumerate(exporter_sizes, 1):
                 md_content += f"| {rank} | {game_name} | {size / 1024:.1f}KB |\n"
 
-    # Add Largest GameLogic Files section
+    # Add GameLogic Files by Size section
     if world_mapping:
         logic_sizes = []
         for game in all_games:
@@ -1822,14 +1820,13 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
                     logic_sizes.append((game, logic_size))
 
         if logic_sizes:
-            # Sort by size descending and take top 10
+            # Sort by size descending
             logic_sizes.sort(key=lambda x: x[1], reverse=True)
-            top_10_logic = logic_sizes[:10]
 
-            md_content += "\n### Largest GameLogic Files\n\n"
+            md_content += "\n### GameLogic Files by Size\n\n"
             md_content += "| Rank | Game Name | GameLogic Size |\n"
             md_content += "|------|-----------|----------------|\n"
-            for rank, (game_name, size) in enumerate(top_10_logic, 1):
+            for rank, (game_name, size) in enumerate(logic_sizes, 1):
                 md_content += f"| {rank} | {game_name} | {size / 1024:.1f}KB |\n"
 
     # Add Multi-Template Results section if data exists
