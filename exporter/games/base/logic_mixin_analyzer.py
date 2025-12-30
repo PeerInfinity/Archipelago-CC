@@ -17,14 +17,19 @@ Supported patterns:
    def _game_option(self, player): return bool(self.multiworld.worlds[player].options.option_name.value)
    -> {'type': 'setting_value', 'setting': 'option_name'}
 
-4. All locations reachable pattern:
-   def _game_all_locs(self, player):
-       locs = self.multiworld.worlds[player].some_attr.locations
-       for loc in locs:
-           if not self.can_reach_location(loc, player):
+4. All elements pass check pattern:
+   def _game_all_check(self, player):
+       items = self.multiworld.worlds[player].some_attr.items
+       for item in items:
+           if not self.can_reach_location(item, player):  # or state.has(), self.can_reach()
                return False
        return True
-   -> {'type': 'all_of', 'iterable': ..., 'element_rule': {'type': 'location_check', ...}}
+   -> {'type': 'all_of', 'iterable': ..., 'element_rule': {'type': 'location_check|item_check|can_reach', ...}}
+
+   Supported check types:
+   - self.can_reach_location(var, player) -> location_check
+   - state.has(var, player) / self.has(var, player) -> item_check
+   - state.can_reach(var, player) -> can_reach (region)
 
 Manual overrides via STATE_METHOD_REPLACEMENTS always take precedence over
 auto-detected patterns.
@@ -126,9 +131,9 @@ def analyze_logic_mixin_method(method) -> Optional[Dict[str, Any]]:
                 return result
 
     # Try complex patterns that may have multiple returns
-    result = _match_all_locations_reachable_pattern(func_def)
+    result = _match_all_check_pattern(func_def)
     if result:
-        logger.debug(f"{method.__name__}: Matched all_locations_reachable pattern -> {result}")
+        logger.debug(f"{method.__name__}: Matched all_check pattern -> {result}")
         return result
 
     logger.debug(f"{method.__name__}: No pattern matched")
@@ -257,23 +262,29 @@ def _match_option_in_pattern(node: ast.expr) -> Optional[Dict[str, Any]]:
     return None
 
 
-def _match_all_locations_reachable_pattern(func_def: ast.FunctionDef) -> Optional[Dict[str, Any]]:
-    """Match the 'all locations reachable' pattern.
+def _match_all_check_pattern(func_def: ast.FunctionDef) -> Optional[Dict[str, Any]]:
+    """Match the 'all elements pass check' pattern.
 
-    Pattern:
+    Detects patterns like:
         def _method(self, player):
             var = self.multiworld.worlds[player].<attr_path>
             for loop_var in var:
-                if not self.can_reach_location(loop_var, player):
+                if not <check>(loop_var, player):
                     return False
             return True
 
-    Returns an all_of rule with location_check element_rule.
+    Supported checks:
+    - self.can_reach_location(var, player) -> location_check
+    - state.has(var, player) -> item_check
+    - self.has(var, player) -> item_check
+    - state.can_reach(var, player) -> can_reach (region)
+
+    Returns an all_of rule with the appropriate element_rule.
     """
     # We need exactly:
     # 1. An assignment from world attribute
     # 2. A for loop over that variable
-    # 3. An if statement with "not self.can_reach_location(...)" that returns False
+    # 3. An if statement with "not <check>(...)" that returns False
     # 4. A final return True
 
     body = func_def.body
@@ -282,18 +293,16 @@ def _match_all_locations_reachable_pattern(func_def: ast.FunctionDef) -> Optiona
 
     # Step 1: Find assignment from world attribute
     # Can be first statement or after some other setup
-    assign_stmt = None
     assign_var = None
     attr_path = None
 
-    for i, stmt in enumerate(body):
+    for stmt in body:
         if isinstance(stmt, ast.Assign) and len(stmt.targets) == 1:
             target = stmt.targets[0]
             if isinstance(target, ast.Name):
                 # Check if the value is from world attribute
                 extracted = _extract_world_attribute_path(stmt.value)
                 if extracted:
-                    assign_stmt = stmt
                     assign_var = target.id
                     attr_path = extracted
                     break
@@ -317,7 +326,7 @@ def _match_all_locations_reachable_pattern(func_def: ast.FunctionDef) -> Optiona
     if not for_stmt or not loop_var:
         return None
 
-    # Step 3: Check for loop body has if statement with can_reach_location check
+    # Step 3: Check for loop body has if statement with negated check
     if len(for_stmt.body) != 1:
         return None
 
@@ -325,9 +334,12 @@ def _match_all_locations_reachable_pattern(func_def: ast.FunctionDef) -> Optiona
     if not isinstance(if_stmt, ast.If):
         return None
 
-    # Check the condition: not self.can_reach_location(loop_var, player)
-    if not _is_not_can_reach_location(if_stmt.test, loop_var):
+    # Detect what kind of check is being used
+    check_info = _detect_negated_check(if_stmt.test, loop_var)
+    if not check_info:
         return None
+
+    check_type, element_rule = check_info
 
     # Check that if body is just "return False"
     if len(if_stmt.body) != 1:
@@ -336,19 +348,15 @@ def _match_all_locations_reachable_pattern(func_def: ast.FunctionDef) -> Optiona
     return_false = if_stmt.body[0]
     if not isinstance(return_false, ast.Return):
         return None
-    if not isinstance(return_false.value, ast.Constant) or return_false.value.value is not False:
-        # Also check for ast.NameConstant for older Python
-        if not (isinstance(return_false.value, ast.NameConstant) and return_false.value.value is False):
-            return None
+    if not _is_constant_false(return_false.value):
+        return None
 
     # Step 4: Check final statement is "return True"
     final_stmt = body[-1]
     if not isinstance(final_stmt, ast.Return):
         return None
-    if not isinstance(final_stmt.value, ast.Constant) or final_stmt.value.value is not True:
-        # Also check for ast.NameConstant for older Python
-        if not (isinstance(final_stmt.value, ast.NameConstant) and final_stmt.value.value is not True):
-            return None
+    if not _is_constant_true(final_stmt.value):
+        return None
 
     # Build the all_of rule
     return {
@@ -359,11 +367,89 @@ def _match_all_locations_reachable_pattern(func_def: ast.FunctionDef) -> Optiona
             'target': {'type': 'name', 'name': loop_var},
             'iterator': {'type': 'world_attribute', 'attribute': attr_path}
         },
-        'element_rule': {
-            'type': 'location_check',
-            'location': {'type': 'name', 'name': loop_var}
-        }
+        'element_rule': element_rule
     }
+
+
+def _detect_negated_check(node: ast.expr, expected_var: str) -> Optional[Tuple[str, Dict[str, Any]]]:
+    """Detect a negated check pattern and return the check type and element rule.
+
+    Supported patterns:
+    - not self.can_reach_location(var, player) -> ('location_check', {...})
+    - not state.has(var, player) -> ('item_check', {...})
+    - not self.has(var, player) -> ('item_check', {...})
+    - not state.can_reach(var, player) -> ('can_reach', {...})
+
+    Returns:
+        Tuple of (check_type, element_rule) or None if no pattern matches
+    """
+    if not isinstance(node, ast.UnaryOp):
+        return None
+
+    if not isinstance(node.op, ast.Not):
+        return None
+
+    call = node.operand
+    if not isinstance(call, ast.Call):
+        return None
+
+    func = call.func
+    if not isinstance(func, ast.Attribute):
+        return None
+
+    method_name = func.attr
+    obj = func.value
+
+    # Check the object is 'self' or 'state'
+    if not isinstance(obj, ast.Name) or obj.id not in ('self', 'state'):
+        return None
+
+    # Check first argument is our loop variable
+    if len(call.args) < 1:
+        return None
+
+    first_arg = call.args[0]
+    if not isinstance(first_arg, ast.Name) or first_arg.id != expected_var:
+        return None
+
+    # Detect the check type based on method name
+    if method_name == 'can_reach_location':
+        return ('location_check', {
+            'type': 'location_check',
+            'location': {'type': 'name', 'name': expected_var}
+        })
+    elif method_name == 'has':
+        return ('item_check', {
+            'type': 'item_check',
+            'item': {'type': 'name', 'name': expected_var}
+        })
+    elif method_name == 'can_reach':
+        return ('can_reach', {
+            'type': 'can_reach',
+            'region': {'type': 'name', 'name': expected_var}
+        })
+
+    return None
+
+
+def _is_constant_false(node: ast.expr) -> bool:
+    """Check if node is the constant False."""
+    if isinstance(node, ast.Constant) and node.value is False:
+        return True
+    # Python 3.7 compatibility
+    if isinstance(node, ast.NameConstant) and node.value is False:
+        return True
+    return False
+
+
+def _is_constant_true(node: ast.expr) -> bool:
+    """Check if node is the constant True."""
+    if isinstance(node, ast.Constant) and node.value is True:
+        return True
+    # Python 3.7 compatibility
+    if isinstance(node, ast.NameConstant) and node.value is True:
+        return True
+    return False
 
 
 def _extract_world_attribute_path(node: ast.expr) -> Optional[str]:
@@ -390,40 +476,6 @@ def _extract_world_attribute_path(node: ast.expr) -> Optional[str]:
     # Reverse to get correct order
     attrs.reverse()
     return '.'.join(attrs)
-
-
-def _is_not_can_reach_location(node: ast.expr, expected_var: str) -> bool:
-    """Check if node is: not self.can_reach_location(var, player)"""
-    if not isinstance(node, ast.UnaryOp):
-        return False
-
-    if not isinstance(node.op, ast.Not):
-        return False
-
-    call = node.operand
-    if not isinstance(call, ast.Call):
-        return False
-
-    # Check for self.can_reach_location
-    func = call.func
-    if not isinstance(func, ast.Attribute):
-        return False
-
-    if func.attr != 'can_reach_location':
-        return False
-
-    if not isinstance(func.value, ast.Name) or func.value.id != 'self':
-        return False
-
-    # Check first argument is our loop variable
-    if len(call.args) < 1:
-        return False
-
-    first_arg = call.args[0]
-    if not isinstance(first_arg, ast.Name) or first_arg.id != expected_var:
-        return False
-
-    return True
 
 
 def _is_world_subscript(node: ast.expr) -> bool:
