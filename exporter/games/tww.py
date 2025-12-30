@@ -5,9 +5,6 @@ from .generic import GenericGameExportHandler
 
 
 class TWWGameExportHandler(GenericGameExportHandler):
-    # Define where to find helper functions
-    HELPER_MODULES = ['worlds.tww.Macros']
-
     # Mapping of _tww_* state methods to their rule replacements.
     # Most are simple setting lookups, some are negations, one is always true.
     # These are automatically applied by the base class during rule expansion.
