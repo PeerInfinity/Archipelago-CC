@@ -892,9 +892,17 @@ class BaseGameExportHandler(
                             world_dir = Path(world_pkg.__path__[0])
 
                             # Find all Python files in this directory
+                            # Skip GUI/client modules that have display dependencies
+                            skip_patterns = ('gui', 'client', 'kivy', 'kvui')
                             for py_file in world_dir.glob('*.py'):
                                 if py_file.name.startswith('_'):
                                     continue  # Skip __init__.py, __pycache__, etc.
+
+                                # Skip GUI/client modules to avoid importing display dependencies
+                                name_lower = py_file.name.lower()
+                                if any(pattern in name_lower for pattern in skip_patterns):
+                                    logger.debug(f"Skipping GUI/client module: {py_file.name}")
+                                    continue
 
                                 module_name = py_file.stem  # e.g., 'StateLogic'
 
