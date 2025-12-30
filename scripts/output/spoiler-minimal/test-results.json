@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-30T05:05:10.031771",
-    "last_updated": "2025-12-30T05:05:10.031776",
+    "last_updated": "2025-12-30T06:18:50.712826",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3730,31 +3730,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "1ca2b2b1711d8712dc4dc821880252ce1b04afb6d3f036fa9c16495cb10bc406",
-          "new_sphere_log_hash": "a793e2cd218a5ac7d1b8eda0ae94479df78eed849876c8f1b1b2e56bf81ef509",
-          "original_rules_hash": "1ca2b2b1711d8712dc4dc821880252ce1b04afb6d3f036fa9c16495cb10bc406",
-          "original_sphere_log_hash": "a793e2cd218a5ac7d1b8eda0ae94479df78eed849876c8f1b1b2e56bf81ef509",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-30T05:04:33.408708"
-        }
-      },
       "game_name_from_filename": "messenger",
       "game_name_from_yaml": "The Messenger",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.7,
+        "processing_time_seconds": 10.95,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/messenger/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 232937,
+        "size_bytes": 232913,
         "size_mb": 0.22
       },
       "seed": "1",
@@ -3762,7 +3750,7 @@
       "spoiler_test": {
         "error_count": 5,
         "pass_fail": "passed",
-        "processing_time_seconds": 14.02,
+        "processing_time_seconds": 17.96,
         "return_code": 0,
         "sphere_reached": 6.3,
         "success": true,
@@ -3770,10 +3758,10 @@
         "warning_count": 0
       },
       "template_filename": "The Messenger.yaml",
-      "timestamp": "2025-12-30T05:03:14.572129",
+      "timestamp": "2025-12-30T06:18:21.287360",
       "world_info": {
         "exporter_path": "exporter/games/messenger.py",
-        "exporter_size": 5557,
+        "exporter_size": 4847,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "messenger",

@@ -7887,9 +7887,10 @@
         "conditions": [
           {
             "type": "item_check",
-            "item": "Wingsuit",
-            "inferred": true,
-            "description": "Requires having Wingsuit"
+            "item": {
+              "type": "constant",
+              "value": "Wingsuit"
+            }
           },
           {
             "type": "helper",
@@ -7906,9 +7907,10 @@
         "conditions": [
           {
             "type": "item_check",
-            "item": "Wingsuit",
-            "inferred": true,
-            "description": "Requires having Wingsuit"
+            "item": {
+              "type": "constant",
+              "value": "Wingsuit"
+            }
           },
           {
             "type": "item_check",
