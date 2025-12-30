@@ -263,8 +263,7 @@ Cut a Ruby
 Enter the Cook's Guild
         Menu -> Start->Lumbridge
    =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Central Varrock
-   =>   Central Varrock -> Central Varrock->West Varrock
+   =>   South of Varrock -> South of Varrock->West Varrock
    =>   West Varrock -> West Varrock->Cook's Guild
    =>   Cook's Guild
 Find a Needle in a Haystack
@@ -296,8 +295,7 @@ Kill a Giant Frog
 Kill a Hill Giant
         Menu -> Start->Lumbridge
    =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Central Varrock
-   =>   Central Varrock -> Central Varrock->West Varrock
+   =>   South of Varrock -> South of Varrock->West Varrock
    =>   West Varrock -> West Varrock->Wilderness
    =>   Wilderness -> Wilderness->Hill Giant
    =>   Hill Giant
@@ -315,8 +313,7 @@ Mine Silver
 Points: Below Ice Mountain
         Menu -> Start->Lumbridge
    =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Central Varrock
-   =>   Central Varrock -> Central Varrock->West Varrock
+   =>   South of Varrock -> South of Varrock->West Varrock
    =>   West Varrock -> West Varrock->Wilderness
    =>   Wilderness -> Wilderness->Ice Mountain
    =>   Ice Mountain -> Ice Mountain->Dwarven Mines
@@ -324,8 +321,7 @@ Points: Below Ice Mountain
 Points: Black Knights' Fortress
         Menu -> Start->Lumbridge
    =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Central Varrock
-   =>   Central Varrock -> Central Varrock->West Varrock
+   =>   South of Varrock -> South of Varrock->West Varrock
    =>   West Varrock -> West Varrock->Wilderness
    =>   Wilderness -> Wilderness->Ice Mountain
    =>   Ice Mountain -> Ice Mountain->Dwarven Mines
@@ -341,8 +337,7 @@ Points: Demon Slayer
 Points: Doric's Quest
         Menu -> Start->Lumbridge
    =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Central Varrock
-   =>   Central Varrock -> Central Varrock->West Varrock
+   =>   South of Varrock -> South of Varrock->West Varrock
    =>   West Varrock -> West Varrock->Wilderness
    =>   Wilderness -> Wilderness->Goblin Village
    =>   Goblin Village -> Goblin Village->Dwarven Mountain Pass
@@ -356,8 +351,7 @@ Points: Ernest the Chicken
 Points: Goblin Diplomacy
         Menu -> Start->Lumbridge
    =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Central Varrock
-   =>   Central Varrock -> Central Varrock->West Varrock
+   =>   South of Varrock -> South of Varrock->West Varrock
    =>   West Varrock -> West Varrock->Wilderness
    =>   Wilderness -> Wilderness->Goblin Village
    =>   Goblin Village
@@ -432,8 +426,7 @@ Points: X Marks the Spot
 Quest: Below Ice Mountain
         Menu -> Start->Lumbridge
    =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Central Varrock
-   =>   Central Varrock -> Central Varrock->West Varrock
+   =>   South of Varrock -> South of Varrock->West Varrock
    =>   West Varrock -> West Varrock->Wilderness
    =>   Wilderness -> Wilderness->Ice Mountain
    =>   Ice Mountain -> Ice Mountain->Dwarven Mines
@@ -441,8 +434,7 @@ Quest: Below Ice Mountain
 Quest: Black Knights' Fortress
         Menu -> Start->Lumbridge
    =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Central Varrock
-   =>   Central Varrock -> Central Varrock->West Varrock
+   =>   South of Varrock -> South of Varrock->West Varrock
    =>   West Varrock -> West Varrock->Wilderness
    =>   Wilderness -> Wilderness->Ice Mountain
    =>   Ice Mountain -> Ice Mountain->Dwarven Mines
@@ -453,8 +445,7 @@ Quest: Cook's Assistant
 Quest: Doric's Quest
         Menu -> Start->Lumbridge
    =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Central Varrock
-   =>   Central Varrock -> Central Varrock->West Varrock
+   =>   South of Varrock -> South of Varrock->West Varrock
    =>   West Varrock -> West Varrock->Wilderness
    =>   Wilderness -> Wilderness->Goblin Village
    =>   Goblin Village -> Goblin Village->Dwarven Mountain Pass

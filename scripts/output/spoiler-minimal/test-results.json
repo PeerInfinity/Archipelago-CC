@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-29T18:42:03.434371",
-    "last_updated": "2025-12-29T22:10:56.330141",
+    "last_updated": "2025-12-30T01:59:56.382353",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2496,14 +2496,14 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 10.98,
+        "processing_time_seconds": 9.56,
         "return_code": 0,
         "success": true,
         "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/osrs/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 356370,
+        "size_bytes": 356364,
         "size_mb": 0.34
       },
       "seed": "1",
@@ -2511,7 +2511,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 13.06,
+        "processing_time_seconds": 19.67,
         "return_code": 0,
         "sphere_reached": 7.5,
         "success": true,
@@ -2519,10 +2519,10 @@
         "warning_count": 0
       },
       "template_filename": "Old School Runescape.yaml",
-      "timestamp": "2025-12-29T22:10:31.835556",
+      "timestamp": "2025-12-30T01:59:26.750387",
       "world_info": {
         "exporter_path": "exporter/games/osrs.py",
-        "exporter_size": 3773,
+        "exporter_size": 1157,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "osrs",
