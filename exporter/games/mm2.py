@@ -7,18 +7,13 @@ class MM2GameExportHandler(GenericGameExportHandler):
     """Export handler for Mega Man 2.
 
     Inherits all default behavior from GenericGameExportHandler.
-    Uses CLOSURE_VAR_IMPORTS to inject module-level variables needed for helper function analysis.
+    Uses HELPER_PARAM_MAPPINGS to map helper function parameters to slot_data keys.
     """
 
-    # Module-level variables to inject into closure_vars for helper analysis.
-    # These constants from rules.py are needed during analysis of can_defeat_enough_rbms.
-    CLOSURE_VAR_IMPORTS = {
-        'worlds.mm2.rules': ['robot_masters', 'weapons_to_name'],
-    }
-
     # Parameter name mappings for helpers whose parameter names don't match slot_data keys.
-    # Maps helper_name -> {param_name: slot_data_key}
-    # The frontend uses these mappings to resolve parameter values from slot_data/settings.
+    # The can_defeat_enough_rbms helper uses 'required' and 'boss_requirements' as params,
+    # but the frontend needs to know these map to 'wily_5_requirement' option and
+    # 'wily_5_weapons' world attribute in slot_data.
     HELPER_PARAM_MAPPINGS = {
         'can_defeat_enough_rbms': {
             'required': 'wily_5_requirement',
