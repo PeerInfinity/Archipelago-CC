@@ -168,27 +168,13 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
 
         # Handle region reachability: {region name} or {{location name}}
         if token_expr.startswith('{{') and token_expr.endswith('}}'):
-            # Location reachability - use state_method to match Python's state.can_reach()
+            # Location reachability
             location_name = token_expr[2:-2].strip()
-            return {
-                'type': 'state_method',
-                'method': 'can_reach',
-                'args': [
-                    {'type': 'constant', 'value': location_name},
-                    {'type': 'constant', 'value': 'Location'}
-                ]
-            }
+            return {'type': 'location_check', 'location': location_name}
         elif token_expr.startswith('{') and token_expr.endswith('}'):
-            # Region reachability - use state_method to match Python's state.can_reach()
+            # Region reachability
             region_name = token_expr[1:-1].strip()
-            return {
-                'type': 'state_method',
-                'method': 'can_reach',
-                'args': [
-                    {'type': 'constant', 'value': region_name},
-                    {'type': 'constant', 'value': 'Region'}
-                ]
-            }
+            return {'type': 'can_reach', 'region': region_name}
 
         # Handle + (has_all) - items required together
         if '+' in token_expr:
@@ -196,6 +182,9 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
             items = []
             for token in tokens:
                 item_name = self.resolve_token(token, cannon_area)
+                if item_name == False:
+                    # Short-circuit: AND with False = False
+                    return {'type': 'constant', 'value': False}
                 if item_name and item_name != True:
                     items.append(item_name)
 
@@ -215,11 +204,14 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
             items = []
             for token in tokens:
                 item_name = self.resolve_token(token, cannon_area)
-                if item_name and item_name != True:
+                if item_name == True:
+                    # Short-circuit: OR with True = True
+                    return {'type': 'constant', 'value': True}
+                if item_name and item_name != False:
                     items.append(item_name)
 
             if not items:
-                return {'type': 'constant', 'value': True}
+                return {'type': 'constant', 'value': False}
             if len(items) == 1:
                 return {'type': 'item_check', 'item': items[0]}
             return {

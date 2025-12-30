@@ -169,23 +169,28 @@ class ExtractedData:
     world_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific world instance attributes (e.g., hat_info)
 
 
-def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
-    """Extract game metadata from JSON."""
+def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> GameMetadata:
+    """Extract game metadata from JSON.
+
+    Args:
+        json_data: Parsed JSON rules file
+        player_id: Player ID to extract data for (default: '1')
+    """
     game_name = json_data.get('game_name', 'UnknownGame')
 
     # Get world class name from the data or derive from game name
     world_classes = json_data.get('world_classes', {})
     world_class_name = None
     if world_classes:
-        # Get first player's world class
-        world_class_name = list(world_classes.values())[0]
+        # Get the world class for the specified player, or fall back to first available
+        world_class_name = world_classes.get(player_id) or list(world_classes.values())[0]
 
     if not world_class_name:
         # Derive from game name: "My Game" -> "MyGameWorld"
         world_class_name = sanitize_identifier(game_name) + 'World'
 
-    # Extract game_info for player 1 (contains new metadata fields)
-    game_info = json_data.get('game_info', {}).get('1', {})
+    # Extract game_info for the specified player (contains new metadata fields)
+    game_info = json_data.get('game_info', {}).get(player_id, {})
 
     # Extract base_id
     base_id = game_info.get('base_id')
@@ -213,7 +218,7 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
     slot_data_fields = game_info.get('slot_data', {})
 
     # Extract game options (for generating dynamic fill_slot_data)
-    world_data = json_data.get('world', {}).get('1', {})
+    world_data = json_data.get('world', {}).get(player_id, {})
     game_options = world_data.get('options', {})
 
     # Extract resolved settings for evaluating setting_value nodes in helpers
@@ -243,7 +248,7 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
 
     # Also include world_attributes (new format) for resolving setting_value nodes
     # that reference world attributes like shop_items, difficulty_requirements, etc.
-    world_attrs = json_data.get('world_attributes', {}).get('1', {})
+    world_attrs = json_data.get('world_attributes', {}).get(player_id, {})
     for k, v in world_attrs.items():
         resolved_settings[k] = v
 
@@ -290,9 +295,13 @@ def _determine_classification(item_data: Dict[str, Any]) -> str:
     return 'filler'
 
 
-def extract_items(json_data: Dict[str, Any]) -> Tuple[Dict[str, ItemData], List[str], Dict[str, List[str]]]:
+def extract_items(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, ItemData], List[str], Dict[str, List[str]]]:
     """
     Extract items and item groups from JSON.
+
+    Args:
+        json_data: Parsed JSON rules file
+        player_id: Player ID to extract data for (default: '1')
 
     Returns:
         Tuple of (items dict, item_groups list, item_name_groups dict)
@@ -301,8 +310,8 @@ def extract_items(json_data: Dict[str, Any]) -> Tuple[Dict[str, ItemData], List[
     item_groups: List[str] = []
     item_name_groups: Dict[str, List[str]] = {}
 
-    # Get items for player 1
-    items_data = json_data.get('items', {}).get('1', {})
+    # Get items for the specified player
+    items_data = json_data.get('items', {}).get(player_id, {})
 
     for item_name, item_info in items_data.items():
         item_id = item_info.get('id')
@@ -330,15 +339,19 @@ def extract_items(json_data: Dict[str, Any]) -> Tuple[Dict[str, ItemData], List[
             item_name_groups[group].append(item_name)
 
     # Get item groups
-    groups_data = json_data.get('item_groups', {}).get('1', [])
+    groups_data = json_data.get('item_groups', {}).get(player_id, [])
     item_groups = list(groups_data) if groups_data else []
 
     return items, item_groups, item_name_groups
 
 
-def extract_locations(json_data: Dict[str, Any]) -> Tuple[Dict[str, LocationData], Dict[str, str], Dict[str, str]]:
+def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, LocationData], Dict[str, str], Dict[str, str]]:
     """
     Extract locations from JSON regions.
+
+    Args:
+        json_data: Parsed JSON rules file
+        player_id: Player ID to extract data for (default: '1')
 
     Returns:
         Tuple of (locations dict, original_placements dict, locked_placements dict)
@@ -347,7 +360,7 @@ def extract_locations(json_data: Dict[str, Any]) -> Tuple[Dict[str, LocationData
     original_placements: Dict[str, str] = {}
     locked_placements: Dict[str, str] = {}
 
-    regions_data = json_data.get('regions', {}).get('1', {})
+    regions_data = json_data.get('regions', {}).get(player_id, {})
 
     for region_name, region_info in regions_data.items():
         for loc_info in region_info.get('locations', []):
@@ -382,9 +395,13 @@ def extract_locations(json_data: Dict[str, Any]) -> Tuple[Dict[str, LocationData
     return locations, original_placements, locked_placements
 
 
-def extract_regions(json_data: Dict[str, Any]) -> Tuple[Dict[str, RegionData], Dict[str, ExitData]]:
+def extract_regions(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, RegionData], Dict[str, ExitData]]:
     """
     Extract regions and exits from JSON.
+
+    Args:
+        json_data: Parsed JSON rules file
+        player_id: Player ID to extract data for (default: '1')
 
     Returns:
         Tuple of (regions dict, exits dict)
@@ -392,7 +409,7 @@ def extract_regions(json_data: Dict[str, Any]) -> Tuple[Dict[str, RegionData], D
     regions: Dict[str, RegionData] = {}
     exits: Dict[str, ExitData] = {}
 
-    regions_data = json_data.get('regions', {}).get('1', {})
+    regions_data = json_data.get('regions', {}).get(player_id, {})
 
     for region_name, region_info in regions_data.items():
         location_names = [loc.get('name', '') for loc in region_info.get('locations', [])]
@@ -440,16 +457,21 @@ def extract_regions(json_data: Dict[str, Any]) -> Tuple[Dict[str, RegionData], D
     return regions, exits
 
 
-def extract_start_region(json_data: Dict[str, Any]) -> str:
-    """Extract the starting region name."""
-    start_regions = json_data.get('start_regions', {}).get('1', {})
+def extract_start_region(json_data: Dict[str, Any], player_id: str = '1') -> str:
+    """Extract the starting region name.
+
+    Args:
+        json_data: Parsed JSON rules file
+        player_id: Player ID to extract data for (default: '1')
+    """
+    start_regions = json_data.get('start_regions', {}).get(player_id, {})
     default_starts = start_regions.get('default', [])
 
     if default_starts:
         return str(default_starts[0])
 
     # Fallback to Menu if it exists
-    regions = json_data.get('regions', {}).get('1', {})
+    regions = json_data.get('regions', {}).get(player_id, {})
     if 'Menu' in regions:
         return 'Menu'
 
@@ -460,20 +482,24 @@ def extract_start_region(json_data: Dict[str, Any]) -> str:
     return 'Menu'
 
 
-def extract_itempool_counts(json_data: Dict[str, Any]) -> Dict[str, int]:
+def extract_itempool_counts(json_data: Dict[str, Any], player_id: str = '1') -> Dict[str, int]:
     """
     Extract item pool counts from JSON.
 
     The itempool_counts field contains the actual number of each item
     that should be created in the item pool.
 
+    Args:
+        json_data: Parsed JSON rules file
+        player_id: Player ID to extract data for (default: '1')
+
     Returns:
         Dict mapping item name to count
     """
     itempool_counts: Dict[str, int] = {}
 
-    # Get itempool_counts for player 1
-    counts_data = json_data.get('itempool_counts', {}).get('1', {})
+    # Get itempool_counts for the specified player
+    counts_data = json_data.get('itempool_counts', {}).get(player_id, {})
 
     for item_name, count in counts_data.items():
         if isinstance(count, int) and count > 0:
@@ -482,10 +508,15 @@ def extract_itempool_counts(json_data: Dict[str, Any]) -> Dict[str, int]:
     return itempool_counts
 
 
-def extract_starting_items(json_data: Dict[str, Any]) -> Dict[str, int]:
-    """Extract starting items from JSON (precollected items)."""
+def extract_starting_items(json_data: Dict[str, Any], player_id: str = '1') -> Dict[str, int]:
+    """Extract starting items from JSON (precollected items).
+
+    Args:
+        json_data: Parsed JSON rules file
+        player_id: Player ID to extract data for (default: '1')
+    """
     starting = {}
-    starting_data = json_data.get('starting_items', {}).get('1', [])
+    starting_data = json_data.get('starting_items', {}).get(player_id, [])
 
     for item in starting_data:
         if isinstance(item, str):
@@ -499,7 +530,7 @@ def extract_starting_items(json_data: Dict[str, Any]) -> Dict[str, int]:
     return starting
 
 
-def extract_canonical_placements(json_data: Dict[str, Any]) -> Dict[str, str]:
+def extract_canonical_placements(json_data: Dict[str, Any], player_id: str = '1') -> Dict[str, str]:
     """
     Extract canonical placements from JSON.
 
@@ -507,14 +538,18 @@ def extract_canonical_placements(json_data: Dict[str, Any]) -> Dict[str, str]:
     by the world class. These are used for seed=1 mode to place items in
     their original positions.
 
+    Args:
+        json_data: Parsed JSON rules file
+        player_id: Player ID to extract data for (default: '1')
+
     Returns:
         Dict mapping location name to item name
     """
-    canonical_data = json_data.get('canonical_placements', {}).get('1', {})
+    canonical_data = json_data.get('canonical_placements', {}).get(player_id, {})
     return dict(canonical_data)
 
 
-def extract_progression_mapping(json_data: Dict[str, Any]) -> Dict[str, List[str]]:
+def extract_progression_mapping(json_data: Dict[str, Any], player_id: str = '1') -> Dict[str, List[str]]:
     """
     Extract progression mapping from JSON.
 
@@ -522,10 +557,14 @@ def extract_progression_mapping(json_data: Dict[str, Any]) -> Dict[str, List[str
     For example, 'progressive-processing' might map to ['steel-processing', 'oil-processing', ...].
     When a progressive item is collected, it grants access to the next uncollected component.
 
+    Args:
+        json_data: Parsed JSON rules file
+        player_id: Player ID to extract data for (default: '1')
+
     Returns:
         Dict mapping progressive item name to ordered list of component item names
     """
-    progression_data = json_data.get('progression_mapping', {}).get('1', {})
+    progression_data = json_data.get('progression_mapping', {}).get(player_id, {})
     result: Dict[str, List[str]] = {}
 
     for prog_name, prog_info in progression_data.items():
@@ -806,7 +845,7 @@ def compute_state_counter_accumulator_rules(
     return accumulator_rules, prog_items_init
 
 
-def extract_helpers(json_data: Dict[str, Any]) -> Dict[str, HelperData]:
+def extract_helpers(json_data: Dict[str, Any], player_id: str = '1') -> Dict[str, HelperData]:
     """
     Extract helper function definitions from JSON.
 
@@ -817,11 +856,15 @@ def extract_helpers(json_data: Dict[str, Any]) -> Dict[str, HelperData]:
     2. Parameterized helpers: Have params, body, and optional defaults
        {"has_x_belt_multiplier": {"params": ["needed"], "body": {...}, "defaults": {...}}}
 
+    Args:
+        json_data: Parsed JSON rules file
+        player_id: Player ID to extract data for (default: '1')
+
     Returns:
         Dict mapping helper name to HelperData
     """
     helpers: Dict[str, HelperData] = {}
-    helpers_data = json_data.get('helpers', {}).get('1', {})
+    helpers_data = json_data.get('helpers', {}).get(player_id, {})
 
     for helper_name, helper_def in helpers_data.items():
         if not isinstance(helper_def, dict):
@@ -856,7 +899,7 @@ def extract_helpers(json_data: Dict[str, Any]) -> Dict[str, HelperData]:
     return helpers
 
 
-def extract_world_attributes(json_data: Dict[str, Any]) -> Dict[str, Any]:
+def extract_world_attributes(json_data: Dict[str, Any], player_id: str = '1') -> Dict[str, Any]:
     """
     Extract game-specific world instance attributes from JSON.
 
@@ -867,13 +910,17 @@ def extract_world_attributes(json_data: Dict[str, Any]) -> Dict[str, Any]:
     World attributes are stored in the 'world_attributes' section of the JSON
     (new format), or extracted from 'settings' for legacy compatibility.
 
+    Args:
+        json_data: Parsed JSON rules file
+        player_id: Player ID to extract data for (default: '1')
+
     Returns:
         Dict of attribute_name -> attribute_value
     """
     world_attributes: Dict[str, Any] = {}
 
-    # Extract game_info for player 1
-    game_info = json_data.get('game_info', {}).get('1', {})
+    # Extract game_info for the specified player
+    game_info = json_data.get('game_info', {}).get(player_id, {})
 
     # Extract hat_info for A Hat in Time
     hat_info = game_info.get('hat_info')
@@ -888,14 +935,14 @@ def extract_world_attributes(json_data: Dict[str, Any]) -> Dict[str, Any]:
         world_attributes['hat_craft_order'] = hat_craft_order
 
     # New format: world_attributes is a separate section
-    new_world_attrs = json_data.get('world_attributes', {}).get('1', {})
+    new_world_attrs = json_data.get('world_attributes', {}).get(player_id, {})
     if new_world_attrs:
         world_attributes.update(new_world_attrs)
 
-    # Extract shops data from world.1.shops for games with shop-related helpers
+    # Extract shops data from world.<player_id>.shops for games with shop-related helpers
     # This is needed for cross-validation where can_buy/can_buy_unlimited helpers
     # iterate over shops to check item availability
-    world_data = json_data.get('world', {}).get('1', {})
+    world_data = json_data.get('world', {}).get(player_id, {})
     if 'shops' in world_data and world_data['shops']:
         world_attributes['shops'] = world_data['shops']
     elif 'shops' not in world_attributes:
@@ -906,7 +953,7 @@ def extract_world_attributes(json_data: Dict[str, Any]) -> Dict[str, Any]:
         # Extract game-specific computed settings that need to be world attributes
         # These are settings that are accessed by helpers as world.X
         # (e.g., world.difficulty_requirements, world.shop_items)
-        world_data = json_data.get('world', {}).get('1', {})
+        world_data = json_data.get('world', {}).get(player_id, {})
 
         # Settings to skip (internal/structural settings, not world attributes)
         skip_settings = {
@@ -940,32 +987,33 @@ def extract_world_attributes(json_data: Dict[str, Any]) -> Dict[str, Any]:
     return world_attributes
 
 
-def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
+def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedData:
     """
     Extract all data from a JSON rules file.
 
     Args:
         json_data: Parsed JSON rules file
+        player_id: Player ID to extract data for (default: '1')
 
     Returns:
         ExtractedData containing all extracted information
     """
-    metadata = extract_game_metadata(json_data)
-    items, item_groups, item_name_groups = extract_items(json_data)
-    locations, original_placements, locked_placements = extract_locations(json_data)
-    regions, exits = extract_regions(json_data)
-    start_region = extract_start_region(json_data)
-    itempool_counts = extract_itempool_counts(json_data)
-    helpers = extract_helpers(json_data)
+    metadata = extract_game_metadata(json_data, player_id=player_id)
+    items, item_groups, item_name_groups = extract_items(json_data, player_id=player_id)
+    locations, original_placements, locked_placements = extract_locations(json_data, player_id=player_id)
+    regions, exits = extract_regions(json_data, player_id=player_id)
+    start_region = extract_start_region(json_data, player_id=player_id)
+    itempool_counts = extract_itempool_counts(json_data, player_id=player_id)
+    helpers = extract_helpers(json_data, player_id=player_id)
 
     # Get starting items from JSON
-    starting_items = extract_starting_items(json_data)
+    starting_items = extract_starting_items(json_data, player_id=player_id)
 
     # Get canonical placements from JSON (vanilla/original item locations)
-    canonical_placements = extract_canonical_placements(json_data)
+    canonical_placements = extract_canonical_placements(json_data, player_id=player_id)
 
     # Get progression mapping for progressive items (e.g., progressive-processing -> [steel-processing, oil-processing, ...])
-    progression_mapping = extract_progression_mapping(json_data)
+    progression_mapping = extract_progression_mapping(json_data, player_id=player_id)
 
     # Compute accumulator rules for state counter patterns (for frontend export)
     accumulator_rules, prog_items_init = compute_state_counter_accumulator_rules(
@@ -1013,7 +1061,7 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
         metadata.resolved_settings['qp_items'] = qp_items
 
     # Extract game-specific world attributes (e.g., hat_info for A Hat in Time)
-    world_attributes = extract_world_attributes(json_data)
+    world_attributes = extract_world_attributes(json_data, player_id=player_id)
 
     return ExtractedData(
         metadata=metadata,

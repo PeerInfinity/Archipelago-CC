@@ -11,11 +11,23 @@ Note: This exporter cannot be simplified using standard base class tools because
    unique game mechanics (NPCs, pickaxes, hammers, mech bosses, minions).
 """
 
-from typing import Dict, Any, List, Union
+from typing import Dict, Any, Callable, List, Union
 from .generic import GenericGameExportHandler
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+def _get_armor_minions(w, m, p) -> Dict[str, int]:
+    """Get armor minion data from Terraria Checks module."""
+    from worlds.terraria.Checks import armor_minions
+    return dict(armor_minions)
+
+
+def _get_accessory_minions(w, m, p) -> Dict[str, int]:
+    """Get accessory minion data from Terraria Checks module."""
+    from worlds.terraria.Checks import accessory_minions
+    return dict(accessory_minions)
 
 
 class TerrariaGameExportHandler(GenericGameExportHandler):
@@ -29,13 +41,19 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
     falls back to options.* so no COMPUTED_SETTINGS are needed.
     """
 
+    # Export armor and accessory minion data for the has_minions helper
+    WORLD_ATTRIBUTES: Dict[str, Callable] = {
+        'armor_minions': _get_armor_minions,
+        'accessory_minions': _get_accessory_minions,
+    }
+
     def __init__(self):
         super().__init__()
         # Import Terraria-specific constants and types
         from worlds.terraria.Checks import (
             COND_ITEM, COND_LOC, COND_FN, COND_GROUP,
             rules, rule_indices, npcs, pickaxes, hammers,
-            mech_bosses, armor_minions, accessory_minions
+            mech_bosses
         )
 
         self.COND_ITEM = COND_ITEM
@@ -48,8 +66,6 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
         self.pickaxes = pickaxes
         self.hammers = hammers
         self.mech_bosses = mech_bosses
-        self.armor_minions = armor_minions
-        self.accessory_minions = accessory_minions
 
     def override_rule_analysis(self, rule_func, rule_target_name: str = None) -> Dict[str, Any]:
         """Override rule analysis for Terraria locations.
@@ -308,18 +324,6 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
                 {'type': 'constant', 'value': required_count}
             ]
         }
-
-    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Export Terraria-specific world data including minion equipment data."""
-        world_data = super().get_world_data(world, multiworld, player)
-
-        # Export armor minion data for has_minions helper
-        world_data['armor_minions'] = dict(self.armor_minions)
-
-        # Export accessory minion data for has_minions helper
-        world_data['accessory_minions'] = dict(self.accessory_minions)
-
-        return world_data
 
     def get_helper_definitions(self, world) -> Dict[str, Any]:
         """Define computed helpers for Terraria.

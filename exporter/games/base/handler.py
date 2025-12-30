@@ -168,7 +168,9 @@ class BaseGameExportHandler(
 
     # Whether exits should be assumed bidirectional for frontend logic
     # Set to True for games where going through an entrance implies being able to return
-    ASSUME_BIDIRECTIONAL_EXITS: bool = False
+    # Set to False to explicitly disable bidirectional assumption
+    # Leave as None (default) to let the frontend auto-detect based on region structure
+    ASSUME_BIDIRECTIONAL_EXITS: Optional[bool] = None
 
     # Enable automatic helper preservation based on size
     # When enabled, helpers with more nodes than HELPER_INLINE_THRESHOLD will be
@@ -1261,7 +1263,9 @@ class BaseGameExportHandler(
         exporter_settings['rule_format'] = {"version": "1.0"}
 
         # assume_bidirectional_exits: Whether region connections are bidirectional by default
-        exporter_settings['assume_bidirectional_exits'] = self.ASSUME_BIDIRECTIONAL_EXITS
+        # Only include when explicitly set (True or False); omitting allows frontend auto-detection
+        if self.ASSUME_BIDIRECTIONAL_EXITS is not None:
+            exporter_settings['assume_bidirectional_exits'] = self.ASSUME_BIDIRECTIONAL_EXITS
 
         # use_resolved_items: When false (default), eventProcessor uses only base_items from sphere log
         # When true, eventProcessor uses resolved_items (e.g., for games with complex event items)

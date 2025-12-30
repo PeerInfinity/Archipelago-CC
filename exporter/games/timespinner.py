@@ -13,16 +13,14 @@ class TimespinnerGameExportHandler(GenericGameExportHandler):
     Settings are automatically exported by the base class:
     - Options (specific_keycards, eye_spy, etc.) -> options.<name>
     - World attributes (precalculated_weights) -> precalculated_weights.<attr>
-    """
 
-    # Map 'flooded' local variable to 'precalculated_weights' world attribute
-    # This is used in helper functions where 'flooded' references precalculated_weights
-    NAME_REMAPPING = {'flooded': 'precalculated_weights'}
+    Note: The 'flooded' local variable (aliasing precalculated_weights) is resolved
+    at export time since flood values are seed-specific constants.
+    """
 
     # Map self.<attr> patterns in TimespinnerLogic to their setting paths
     # The logic class stores option flags with flag_ prefix, but options are exported without prefix
     # getSetting() in the frontend checks both world.X and world.options.X, so no prefix needed
-    # The *_keys_unlock attributes use plural but world uses singular 'key_unlock'
     SELF_ATTR_TO_SETTING = {
         # Option flags: self.flag_X -> X (looked up via getSetting which checks world.options)
         'flag_specific_keycards': 'specific_keycards',

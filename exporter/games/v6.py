@@ -45,7 +45,7 @@ class V6GameExportHandler(GenericGameExportHandler):
                 end = door_cost * area_cost
 
                 # Generate "Trinket 01", "Trinket 02", etc. for the required range
-                trinket_names = [f"Trinket {str(i + 1).zfill(2)}" for i in range(start, end)]
+                trinket_names = [f"Trinket {i + 1:02d}" for i in range(start, end)]
                 exit_data['access_rule'] = {
                     'type': 'and',
                     'conditions': [{'type': 'item_check', 'item': name} for name in trinket_names]

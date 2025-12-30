@@ -97,6 +97,13 @@ Examples:
         help='Enable verbose output'
     )
 
+    parser.add_argument(
+        '--player-id',
+        type=str,
+        default='1',
+        help='Player ID to extract from multiworld rules file (default: 1)'
+    )
+
     args = parser.parse_args()
 
     setup_logging(args.verbose)
@@ -119,6 +126,7 @@ Examples:
             game_name=args.game_name,
             force=args.force,
             canonical_seed1=args.canonical_seed1,
+            player_id=args.player_id,
         )
 
         # Load and validate

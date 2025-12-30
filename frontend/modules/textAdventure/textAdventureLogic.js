@@ -307,6 +307,54 @@ export class TextAdventureLogic {
     }
 
     /**
+     * Get reverse exits - exits from other regions that connect TO the current region.
+     * These are shown as available exits when assume_bidirectional_exits is true.
+     * @returns {Array} Array of {name, sourceRegion, connected_region} for reverse exits
+     */
+    getReverseExits() {
+        const regionInfo = this.getCurrentRegionInfo();
+        if (!regionInfo) {
+            return [];
+        }
+
+        const currentRegion = regionInfo.name;
+        const staticData = stateManager.getStaticData();
+        if (!staticData || !staticData.regions) {
+            return [];
+        }
+
+        const reverseExits = [];
+
+        // Find all exits from other regions that connect to the current region
+        for (const [otherRegionName, otherRegionData] of staticData.regions.entries()) {
+            if (otherRegionName === currentRegion) continue;
+
+            const exits = otherRegionData.exits || [];
+            for (const exit of exits) {
+                if (exit.connected_region === currentRegion) {
+                    // Check if there's already an explicit exit back to this region
+                    const hasExplicitReturn = regionInfo.data.exits?.some(
+                        e => e.connected_region === otherRegionName
+                    );
+
+                    if (!hasExplicitReturn) {
+                        // Create a reverse exit name
+                        reverseExits.push({
+                            name: `Return to ${otherRegionName}`,
+                            sourceRegion: otherRegionName,
+                            connected_region: otherRegionName,
+                            originalExitName: exit.name,
+                            isReverseExit: true
+                        });
+                    }
+                }
+            }
+        }
+
+        return reverseExits;
+    }
+
+    /**
      * Get available exits in current region
      * @returns {Array} Array of exit names
      */
@@ -318,9 +366,16 @@ export class TextAdventureLogic {
 
         let exits = regionInfo.data.exits.map(exit => exit.name);
 
+        // Add reverse exits if bidirectional is enabled
+        const bidirectionalSetting = stateManager.getEffectiveBidirectionalSetting();
+        if (bidirectionalSetting.assumeBidirectional) {
+            const reverseExits = this.getReverseExits();
+            exits = exits.concat(reverseExits.map(re => re.name));
+        }
+
         // Filter by discovery mode if enabled
         if (this.discoveryMode && discoveryStateSingleton) {
-            exits = exits.filter(exitName => 
+            exits = exits.filter(exitName =>
                 discoveryStateSingleton.isExitDiscovered(regionInfo.name, exitName)
             );
         }
@@ -390,44 +445,61 @@ export class TextAdventureLogic {
         try {
             const snapshot = stateManager.getLatestStateSnapshot();
             const staticData = stateManager.getStaticData();
-            
+
             log('debug', `Got snapshot: ${!!snapshot}, staticData: ${!!staticData}`);
-            
+
             if (!snapshot || !staticData || !staticData.regions) {
                 log('warn', `Missing data - snapshot: ${!!snapshot}, staticData: ${!!staticData}, regions: ${!!(staticData && staticData.regions)}`);
                 return false;
             }
-            
+
             // Get current region info
             const regionInfo = this.getCurrentRegionInfo();
             log('debug', `isExitAccessible: regionInfo = ${regionInfo ? regionInfo.name : 'null'}`);
-            if (!regionInfo || !regionInfo.data.exits) {
-                log('debug', `isExitAccessible: No region info or exits for ${exitName}`);
+            if (!regionInfo) {
+                log('debug', `isExitAccessible: No region info for ${exitName}`);
                 return false;
             }
-            
-            // Find the exit definition
-            const exitDef = regionInfo.data.exits.find(exit => exit.name === exitName);
-            log('debug', `isExitAccessible: Found exit def for ${exitName}: ${!!exitDef}`);
-            if (!exitDef) {
-                log('debug', `isExitAccessible: Available exits: ${regionInfo.data.exits.map(e => e.name).join(', ')}`);
-                return false;
-            }
-            
+
             // Check if current region is reachable
             const currentRegion = regionInfo.name;
             const regionIsReachable = snapshot.regionReachability?.[currentRegion] === true ||
                                     snapshot.regionReachability?.[currentRegion] === 'reachable' ||
                                     snapshot.regionReachability?.[currentRegion] === 'checked' ||
                                     currentRegion === 'Menu'; // Menu is always reachable
-            
+
             if (!regionIsReachable) {
                 return false;
             }
-            
-            // Evaluate exit's access rule if it exists
+
+            // Find the exit definition (explicit exits first)
+            let exitDef = regionInfo.data.exits?.find(exit => exit.name === exitName);
+            let connectedRegionName = exitDef?.connected_region;
+
+            // If not found, check for reverse exits when bidirectional is enabled
+            if (!exitDef) {
+                const bidirectionalSetting = stateManager.getEffectiveBidirectionalSetting();
+                if (bidirectionalSetting.assumeBidirectional) {
+                    const reverseExits = this.getReverseExits();
+                    const reverseExit = reverseExits.find(re => re.name === exitName);
+                    if (reverseExit) {
+                        log('debug', `isExitAccessible: Found reverse exit for ${exitName} -> ${reverseExit.connected_region}`);
+                        // For reverse exits, we don't have an access rule - assume accessible
+                        connectedRegionName = reverseExit.connected_region;
+                        exitDef = reverseExit; // Use the reverse exit info
+                    }
+                }
+            }
+
+            log('debug', `isExitAccessible: Found exit def for ${exitName}: ${!!exitDef}`);
+            if (!exitDef) {
+                log('debug', `isExitAccessible: Available exits: ${regionInfo.data.exits?.map(e => e.name).join(', ') || 'none'}`);
+                return false;
+            }
+
+            // Evaluate exit's access rule if it exists (reverse exits don't have rules)
             let exitAccessible = true;
-            if (exitDef.access_rule) {
+            if (exitDef.access_rule && !exitDef.isReverseExit) {
                 log('debug', `Evaluating rule for ${exitName}:`, exitDef.access_rule);
                 try {
                     const snapshotInterface = createStateSnapshotInterface(snapshot, staticData);
@@ -441,14 +513,13 @@ export class TextAdventureLogic {
             } else {
                 log('debug', `No access rule for ${exitName}, defaulting to accessible`);
             }
-            
-            // Check if connected region is reachable  
-            const connectedRegionName = exitDef.connected_region;
+
+            // Check if connected region is reachable
             const connectedRegionReachable = snapshot.regionReachability?.[connectedRegionName] === true ||
                                            snapshot.regionReachability?.[connectedRegionName] === 'reachable' ||
                                            snapshot.regionReachability?.[connectedRegionName] === 'checked' ||
                                            connectedRegionName === 'Menu'; // Menu is always reachable
-            
+
             // Exit is accessible if all conditions are met
             const result = exitAccessible && connectedRegionReachable;
             log('debug', `Final accessibility result for ${exitName}: ${result} (exitAccessible: ${exitAccessible}, connectedRegionReachable: ${connectedRegionReachable})`);
@@ -769,9 +840,20 @@ export class TextAdventureLogic {
         try {
             const regionInfo = this.getCurrentRegionInfo();
             if (regionInfo && regionInfo.data.exits) {
+                // First check explicit exits
                 const exit = regionInfo.data.exits.find(ex => ex.name === exitName);
                 if (exit) {
                     return exit.connected_region;
+                }
+            }
+
+            // Check reverse exits if bidirectional is enabled
+            const bidirectionalSetting = stateManager.getEffectiveBidirectionalSetting();
+            if (bidirectionalSetting.assumeBidirectional) {
+                const reverseExits = this.getReverseExits();
+                const reverseExit = reverseExits.find(re => re.name === exitName);
+                if (reverseExit) {
+                    return reverseExit.connected_region;
                 }
             }
         } catch (error) {
