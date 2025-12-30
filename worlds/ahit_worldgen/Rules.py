@@ -24,16 +24,6 @@ def _ahatintimeworldgen_can_clear_alpine(state: "CollectionState", player: int) 
     return (state.has('Birdhouse Cleared', player)) and (state.has('Lava Cake Cleared', player)) and (state.has('Windmill Cleared', player)) and (state.has('Twilight Bell Cleared', player))
 
 
-def _ahatintimeworldgen_can_clear_required_act(state: "CollectionState", player: int, act_entrance = None) -> bool:
-    entrance = state.multiworld.worlds[player].multiworld.get_entrance(act_entrance)
-    if not (state.can_reach(entrance.connected_region, 'Region', player)):
-        return False
-    if ('Free Roam' in entrance.connected_region.name):
-        return True
-    name = f"Act Completion ({entrance.connected_region.name})"
-    return state.multiworld.worlds[player].multiworld.get_location(name).access_rule()
-
-
 def _ahatintimeworldgen_can_hit(state: "CollectionState", player: int, umbrella_only: bool = False) -> bool:
     return (True if not (False) else (state.has('Umbrella', player)) or ((not (umbrella_only)) and (_ahatintimeworldgen_can_use_hat(state, player, 1))))
 

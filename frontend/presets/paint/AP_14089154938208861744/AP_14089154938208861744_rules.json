@@ -4521,8 +4521,6 @@
           "display_name": "Trap Fill Percent"
         }
       },
-      "canvas_size_increment": 100,
-      "logic_percent": 80,
       "world_description": "The classic Microsoft app, reimagined as an Archipelago game! Find your tools, expand your canvas, and paint the\ngreatest image the world has ever seen.",
       "slot_data": {
         "logic_percent": 80,

@@ -18,9 +18,7 @@
           {
             "name": "New Game",
             "connected_region": "Ingame",
-            "access_rule": {
-              "rule": "True_"
-            }
+            "access_rule": null
           }
         ],
         "locations": []

@@ -345,7 +345,7 @@ def _thewindwakerworldgen_can_defeat_peahats(state: "CollectionState", player: i
 
 
 def _thewindwakerworldgen_can_defeat_phantom_ganon(state: "CollectionState", player: int) -> bool:
-    return ((not (False)) and (_thewindwakerworldgen_has_any_master_sword(state, player))) or ((False) and (state.has('Skull Hammer', player)))
+    return ((not (None)) and (_thewindwakerworldgen_has_any_master_sword(state, player))) or ((False) and (state.has('Skull Hammer', player)))
 
 
 def _thewindwakerworldgen_can_defeat_puppet_ganon(state: "CollectionState", player: int) -> bool:
@@ -533,7 +533,7 @@ def _thewindwakerworldgen_can_unlock_ganons_tower_four_boss_door(state: "Collect
 
 
 def _thewindwakerworldgen_can_unlock_puppet_ganon_door(state: "CollectionState", player: int) -> bool:
-    return (_thewindwakerworldgen_can_defeat_moblins(state, player)) and (_thewindwakerworldgen_can_defeat_mighty_darknuts(state, player)) and ((not (False)) or ((False) and (True)))
+    return (_thewindwakerworldgen_can_defeat_moblins(state, player)) and (_thewindwakerworldgen_can_defeat_mighty_darknuts(state, player)) and ((not (None)) or ((False) and (True)))
 
 
 def _thewindwakerworldgen_has_all_8_triforce_shards(state: "CollectionState", player: int) -> bool:

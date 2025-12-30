@@ -8642,6 +8642,7 @@
       "flag_eye_spy": false,
       "flag_unchained_keys": false,
       "flag_prism_break": false,
+      "flag_find_the_flame": false,
       "pyramid_keys_unlock": null,
       "present_keys_unlock": null,
       "past_keys_unlock": null,

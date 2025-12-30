@@ -421,6 +421,7 @@ class TimespinnerWorldGenWorld(RuleWorldMixin, World):
         self.flag_eye_spy = False
         self.flag_unchained_keys = False
         self.flag_prism_break = False
+        self.flag_find_the_flame = False
         self.pyramid_keys_unlock = 'GateLakeSereneRight'
         self.present_keys_unlock = 'GateSealedSirensCave'
         self.past_keys_unlock = 'GateLakeSereneRight'
