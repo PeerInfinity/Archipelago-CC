@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-30T06:03:54.427018",
-    "last_updated": "2025-12-30T06:03:54.427023",
+    "last_updated": "2025-12-30T20:21:10.513079",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1252,31 +1252,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "c4d76ab1f7233d614e4f0cd04d3d3852494829383b56fb8536fd0164d68b8145",
-          "new_sphere_log_hash": "10d5005c8a554b43f9a2731a335a8ad78dd57944c3a17b3c3d41131128b0f0c9",
-          "original_rules_hash": "c4d76ab1f7233d614e4f0cd04d3d3852494829383b56fb8536fd0164d68b8145",
-          "original_sphere_log_hash": "10d5005c8a554b43f9a2731a335a8ad78dd57944c3a17b3c3d41131128b0f0c9",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-30T06:02:02.931945"
-        }
-      },
       "game_name_from_filename": "factorio",
       "game_name_from_yaml": "Factorio",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 6.95,
+        "processing_time_seconds": 10.24,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/factorio/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 499084,
+        "size_bytes": 499041,
         "size_mb": 0.48
       },
       "seed": "1",
@@ -1284,7 +1272,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.71,
+        "processing_time_seconds": 12.82,
         "return_code": 0,
         "sphere_reached": 12.1,
         "success": true,
@@ -1292,10 +1280,10 @@
         "warning_count": 0
       },
       "template_filename": "Factorio.yaml",
-      "timestamp": "2025-12-30T05:59:17.094573",
+      "timestamp": "2025-12-30T20:20:47.014562",
       "world_info": {
         "exporter_path": "exporter/games/factorio.py",
-        "exporter_size": 5184,
+        "exporter_size": 4208,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "factorio",
