@@ -117,7 +117,6 @@ class RaftGameExportHandler(GenericGameExportHandler):
         # Load the locations.json file to get region information
         self.location_to_region = {}
         self.location_to_items = {}
-        self.progressive_mapping = {}
         try:
             # Find the raft world directory
             raft_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'worlds', 'raft')
@@ -133,22 +132,11 @@ class RaftGameExportHandler(GenericGameExportHandler):
                 logger.info(f"Loaded {len(self.location_to_region)} Raft locations from locations.json")
             else:
                 logger.warning(f"Could not find Raft locations.json at {locations_file}")
-
-            # Load the progressives.json file to get progressive item mapping
-            progressives_file = os.path.join(raft_dir, 'progressives.json')
-            if os.path.exists(progressives_file):
-                with open(progressives_file, 'r') as f:
-                    progressive_table = json.load(f)
-                    # Build the mapping from progressive item to its constituent items
-                    for item_name, progressive_name in progressive_table.items():
-                        if progressive_name not in self.progressive_mapping:
-                            self.progressive_mapping[progressive_name] = []
-                        self.progressive_mapping[progressive_name].append(item_name)
-                logger.info(f"Loaded {len(self.progressive_mapping)} Raft progressive items from progressives.json")
-            else:
-                logger.warning(f"Could not find Raft progressives.json at {progressives_file}")
         except Exception as e:
             logger.error(f"Error loading Raft data files: {e}")
+
+        # Progressive item mapping is auto-detected by the base handler from
+        # worlds.raft.Items.progressive_item_list
 
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None):
         """
@@ -190,18 +178,5 @@ class RaftGameExportHandler(GenericGameExportHandler):
         self.register_helpers_from_rule(result)
         return result
 
-    def get_progression_mapping(self, world) -> Dict[str, Any]:
-        """Return Raft-specific progression item mapping data."""
-        # Convert the simple list format to the proper schema format
-        mapping_data = {}
-        for progressive_name, item_list in self.progressive_mapping.items():
-            mapping_data[progressive_name] = {
-                'base_item': progressive_name,
-                'items': []
-            }
-            for level, item_name in enumerate(item_list, start=1):
-                mapping_data[progressive_name]['items'].append({
-                    'name': item_name,
-                    'level': level
-                })
-        return mapping_data
+    # Progressive item mapping is auto-detected by the base handler from
+    # worlds.raft.Items.progressive_item_list - no manual override needed

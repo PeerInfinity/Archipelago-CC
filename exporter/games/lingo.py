@@ -10,8 +10,36 @@ logger = logging.getLogger(__name__)
 
 class LingoGameExportHandler(GenericGameExportHandler):
     """Export handler for Lingo that handles AccessRequirements string sorting, door variable resolution,
-    and exporting door-related data structures for rule evaluation."""
+    and exporting door-related data structures for rule evaluation.
 
+    Lingo requires extensive custom export logic due to its unique game mechanics:
+
+    1. **AccessRequirements**: Lingo uses a custom data structure (AccessRequirements NamedTuple)
+       to track what's needed to access locations. This contains sets of rooms, doors, colors,
+       items, and progression requirements that must be serialized for the frontend.
+
+    2. **Door/Entrance System**: Lingo has complex door and entrance naming conventions:
+       - Exit names follow patterns like "Room A to Room B (through Room C - Door Name)"
+       - Door references use RoomAndDoor NamedTuples
+       - Entrance rules must be parsed and simplified based on door information
+
+    3. **player_logic Data**: Lingo stores game state in world.player_logic with structures like:
+       - item_by_door: Maps rooms to doors and their required items
+       - door_reqs: AccessRequirements for doors without items
+       - mastery_reqs: Requirements for mastery achievements
+       - counting_panel_reqs: Panel count requirements for LEVEL 2
+
+    4. **Worldgen Support**: Generated worlds (via world_generator) require special handling:
+       - Load settings from _worldgen_settings.json
+       - Generate proper exit rules from parsed exit names
+       - Read location access from location_table instead of player_logic
+
+    **Note**: The declarative patterns (STATE_METHOD_REPLACEMENTS, CLOSURE_VAR_IMPORTS,
+    HELPER_OBJECT_NAMES) don't apply to Lingo because:
+    - Lingo doesn't have LogicMixin state methods that map to settings
+    - Lingo doesn't need closure variable injection
+    - Lingo doesn't have logic objects with method calls to convert
+    """
 
     # Use auto sweep for indirect region dependencies since Lingo's custom Rules.py
     # sets access_rule directly without registering indirect_connections

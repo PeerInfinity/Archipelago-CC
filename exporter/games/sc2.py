@@ -43,9 +43,6 @@ except ImportError:
 class SC2GameExportHandler(GenericGameExportHandler):
     """Export handler for Starcraft 2 game-specific rules and items."""
 
-    # Module containing helper functions
-    HELPER_MODULES = ['worlds.sc2.rules']
-
     # Include 'logic' for SC2Logic method calls (e.g., logic.terran_early_tech())
     HELPER_OBJECT_NAMES = {'self', 'world', 'logic'}
 
@@ -70,6 +67,33 @@ class SC2GameExportHandler(GenericGameExportHandler):
         'terran_engine_of_destruction_requirement', 'engine_of_destruction_requirement',
         'terran_trouble_in_paradise_requirement', 'terran_media_blitz_requirement',
         'terran_gates_of_hell_requirement', 'terran_all_in_requirement',
+    }
+
+    # SC2Logic method names that may be accessed without parentheses (logic.attr instead of logic.attr())
+    # These should be converted to helper calls, not settings. Attribute access that's NOT in this
+    # set is assumed to be a settings attribute and resolved via _resolve_logic_attribute.
+    KNOWN_LOGIC_METHODS = {
+        # Terran helpers
+        'terran_common_unit', 'terran_early_tech', 'terran_air', 'terran_air_anti_air',
+        'terran_competent_ground_to_air', 'terran_competent_anti_air', 'terran_bio_heal',
+        'terran_basic_anti_air', 'terran_defense_rating', 'terran_competent_comp',
+        'terran_mobile_detector', 'terran_beats_protoss_deathball', 'terran_base_trasher',
+        'terran_can_rescue', 'terran_cliffjumper', 'terran_able_to_snipe_defiler',
+        'terran_respond_to_colony_infestations', 'terran_survives_rip_field',
+        'terran_sustainable_mech_heal', 'terran_mineral_dump',
+        # Protoss helpers
+        'protoss_common_unit', 'protoss_basic_anti_air', 'protoss_competent_anti_air',
+        'protoss_basic_splash', 'protoss_anti_armor_anti_air', 'protoss_anti_light_anti_air',
+        'protoss_can_attack_behind_chasm', 'protoss_has_blink', 'protoss_heal',
+        'protoss_stalker_upgrade', 'protoss_static_defense', 'protoss_fleet',
+        'protoss_competent_comp', 'protoss_hybrid_counter',
+        # Zerg helpers
+        'zerg_common_unit', 'zerg_competent_anti_air', 'zerg_basic_anti_air',
+        'zerg_competent_comp', 'zerg_competent_defense', 'zerg_pass_vents',
+        'spread_creep', 'morph_brood_lord', 'morph_impaler_or_lurker', 'morph_viper',
+        # Kerrigan and misc helpers
+        'basic_kerrigan', 'kerrigan_levels', 'two_kerrigan_actives',
+        'marine_medic_upgrade', 'can_nuke',
     }
 
     def override_rule_analysis(self, rule_func: Callable, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
@@ -284,52 +308,11 @@ class SC2GameExportHandler(GenericGameExportHandler):
 
         SC2 uses a logic object with helper methods (e.g., logic.terran_early_tech())
         and attributes (e.g., logic.take_over_ai_allies, logic.advanced_tactics).
-        These need to be converted to helper calls or settings access.
+        The base class handles logic.method() -> helper conversion via HELPER_OBJECT_NAMES.
+        This method handles logic.attribute patterns which may be settings (not helpers).
         """
         if not rule or not isinstance(rule, dict):
             return rule
-
-        # Check for the pattern: function_call with function being attribute access on "logic"
-        # This pattern looks like:
-        # {
-        #   "type": "function_call",
-        #   "function": {
-        #     "type": "attribute",
-        #     "object": {"type": "name", "name": "logic"},
-        #     "attr": "method_name"
-        #   },
-        #   "args": [...]
-        # }
-        if rule.get('type') == 'function_call':
-            function = rule.get('function', {})
-            if function.get('type') == 'attribute':
-                obj = function.get('object', {})
-                obj_name = obj.get('name') if obj.get('type') == 'name' else None
-                # Handle both 'logic' and 'self' as they're both used for SC2Logic methods
-                if obj_name in ('logic', 'self'):
-                    # This is a logic.method_name() or self.method_name() call - convert to helper
-                    method_name = function.get('attr')
-                    # Recursively process args first
-                    args = [self.expand_rule(arg, _depth + 1) for arg in rule.get('args', [])]
-
-                    logger.debug(f"[SC2] Converting {obj_name}.{method_name}() to helper call")
-
-                    # Register the helper usage for automatic discovery
-                    self.register_helper_usage(method_name)
-
-                    # Convert to helper format
-                    converted_rule = {
-                        'type': 'helper',
-                        'name': method_name,
-                        'args': args
-                    }
-
-                    # Continue expanding the converted rule
-                    return super().expand_rule(converted_rule, _depth)
-
-            # For other function_calls, recursively process args
-            if 'args' in rule:
-                rule['args'] = [self.expand_rule(arg, _depth + 1) for arg in rule['args']]
 
         # Check for the pattern: attribute access on "logic" (not a function call)
         # This pattern looks like:
@@ -351,29 +334,7 @@ class SC2GameExportHandler(GenericGameExportHandler):
             if obj_name in ('logic', 'self'):
                 attr_name = rule.get('attr')
 
-                # List of known helper method names that might be accessed without parentheses
-                # These should be converted to helper calls, not settings
-                known_helpers = {
-                    'terran_common_unit', 'terran_early_tech', 'terran_air', 'terran_air_anti_air',
-                    'terran_competent_ground_to_air', 'terran_competent_anti_air', 'terran_bio_heal',
-                    'terran_basic_anti_air', 'terran_defense_rating', 'terran_competent_comp',
-                    'terran_mobile_detector', 'terran_beats_protoss_deathball', 'terran_base_trasher',
-                    'terran_can_rescue', 'terran_cliffjumper', 'terran_able_to_snipe_defiler',
-                    'terran_respond_to_colony_infestations', 'terran_survives_rip_field',
-                    'terran_sustainable_mech_heal', 'terran_mineral_dump',
-                    'protoss_common_unit', 'protoss_basic_anti_air', 'protoss_competent_anti_air',
-                    'protoss_basic_splash', 'protoss_anti_armor_anti_air', 'protoss_anti_light_anti_air',
-                    'protoss_can_attack_behind_chasm', 'protoss_has_blink', 'protoss_heal',
-                    'protoss_stalker_upgrade', 'protoss_static_defense', 'protoss_fleet',
-                    'protoss_competent_comp', 'protoss_hybrid_counter',
-                    'zerg_common_unit', 'zerg_competent_anti_air', 'zerg_basic_anti_air',
-                    'zerg_competent_comp', 'zerg_competent_defense', 'zerg_pass_vents',
-                    'spread_creep', 'morph_brood_lord', 'morph_impaler_or_lurker', 'morph_viper',
-                    'basic_kerrigan', 'kerrigan_levels', 'two_kerrigan_actives',
-                    'marine_medic_upgrade', 'can_nuke'
-                }
-
-                if attr_name in known_helpers:
+                if attr_name in self.KNOWN_LOGIC_METHODS:
                     # This is a helper method accessed without parentheses
                     # Convert to a helper call
                     logger.debug(f"[SC2] Converting {obj_name}.{attr_name} to helper call (method accessed as attribute)")

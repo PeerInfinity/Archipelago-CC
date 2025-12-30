@@ -113,16 +113,19 @@ These class attributes let you configure behavior without writing custom methods
 | Attribute | Purpose | Example Game |
 |-----------|---------|--------------|
 | `STATE_METHOD_REPLACEMENTS` | Replace state methods with rule structures (often auto-detected) | ALTTP, OOT |
-| `CLOSURE_VAR_IMPORTS` | Inject module-level variables for helper analysis | MM2 (robot_masters, weapons_to_name) |
+| `CLOSURE_VAR_IMPORTS` | Inject module-level variables for helper analysis | KH2 (auto_form_dict, form_list, etc.) |
 | `HELPER_OBJECT_NAMES` | Convert `obj.method()` calls to helper functions | Yoshi's Island (logic, bosses) |
 | `NAME_REMAPPING` | Map parameter names to setting names | - |
 | `SETTINGS_TO_CONVERT` | Convert name types to setting_value types | - |
-| `HELPER_PARAM_MAPPINGS` | Map helper params to slot_data keys | MM2 (can_defeat_enough_rbms) |
+| `HELPER_PARAM_MAPPINGS` | Map helper params to slot_data keys (rarely needed - auto-detected) | - |
 | `AUTO_DISCOVER_*` | Auto-discover attributes without manual specification | ALTTP |
 | `SELF_ATTR_TO_SETTING` | Map `self.attr` patterns to setting_value rules | KH2 (fight_logic → FightLogic) |
 | `CONSTANT_HELPER_EXPANSIONS` | Map helpers to constant return values (True/False) | KH2, Overcooked 2 |
+| `HELPER_TO_RULE_MAPPINGS` | Map helper calls to rule types (location_check, can_reach, etc.) | Dark Souls 3 |
 | `ACCUMULATOR_RULES` | Configure item accumulation patterns (coins, etc.) | LADX, DLC Quest |
 | `PROG_ITEMS_INIT` | Initial values for accumulators | (used with ACCUMULATOR_RULES) |
+| `ACCUMULATOR_ITEM_GROUP` | Auto-generate accumulator items with this group name | DLC Quest |
+| `ACCUMULATOR_ITEM_TYPE` | Type for auto-generated accumulator items | DLC Quest |
 | `ITEM_VALUE_MAPPINGS` | Extract item→value mappings from world attributes | OSRS (qp_items) |
 | `DICT_SUM_HELPERS` | Auto-generate sum helpers over item→value dicts | OSRS (quest_points) |
 
@@ -161,6 +164,7 @@ These features work out-of-the-box with `GenericGameExportHandler`:
 - World attributes (simple types) → auto-discovered (`AUTO_DISCOVER_WORLD_ATTRIBUTES=True`)
 - Region attributes (simple types) → auto-discovered (`AUTO_DISCOVER_REGION_ATTRIBUTES=True`)
 - Location attributes (simple types) → auto-discovered (`AUTO_DISCOVER_LOCATION_ATTRIBUTES=True`)
+- Progressive item mappings → auto-detected (see below)
 
 **Helper Discovery & Export:**
 - Helper modules → auto-discovered from world directory (`AUTO_DISCOVER_WORLD_HELPER_MODULES=True`)
@@ -198,13 +202,40 @@ These rule patterns are handled automatically by the base class:
 | Location objects in closures | Lambda default parameters referencing Location objects | TLOZ |
 | Generic function calls | `location_item_name`, `item_name_in_location_names` | Base class |
 
+### Progressive Item Auto-Detection
+
+Progressive item mappings are automatically detected without any configuration. The base handler
+uses two complementary approaches:
+
+**1. Runtime Probing** (`_probe_collect_item_for_progression`):
+- Creates a mock `CollectionState` and repeatedly calls `world.collect_item()`
+- Discovers which items are progressive by detecting when `collect_item` returns a different name
+- Builds the progression chain by collecting each item and tracking the returned concrete items
+- Works for all advancement items where `collect_item` processes them
+
+**2. Module-level Data Discovery** (`_find_module_progression_data`):
+- Catches non-advancement progressive items that `collect_item` skips
+- Detects three common patterns:
+
+| Pattern | Format | Example Game |
+|---------|--------|--------------|
+| ALttP pattern | `progression_mapping` dict in `Items.py`: `concrete → (progressive, level)` | ALttP |
+| Factorio pattern | `progressive_technology_table`: `progressive → Technology.progressive tuple` | Factorio |
+| Raft pattern | `progressive_item_list` dict: `progressive → [concrete_items]` | Raft |
+
+**Auto-grouping:** Items that share identical concrete progressions (e.g., "Progressive Bow" and
+"Progressive Bow (Alt)" both → Bow, Silver Bow) are automatically grouped with the same `base_item`.
+
+Games that previously needed manual `get_progression_mapping()` overrides (ALttP, Factorio, Raft)
+now work with auto-detection. No configuration needed.
+
 ## Reference: Simplified Exporters
 
 Review these simplified exporters as examples:
 
 ```bash
 cat exporter/games/alttp.py      # ~60 lines - auto-discovery flags only
-cat exporter/games/mm2.py        # ~30 lines - CLOSURE_VAR_IMPORTS + HELPER_PARAM_MAPPINGS
+cat exporter/games/dark_souls_3.py  # ~20 lines - HELPER_TO_RULE_MAPPINGS only
 ```
 
 **Note:** If an exporter class does nothing but `pass`, it should be **deleted entirely**.

@@ -354,33 +354,11 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
 
             elif overworld_region == OverworldRegion.mars_shelf:
                 # Requires tip of the map access first
-                base_conditions = [
-                    # Can reach tip of the map via (5-1 Complete + Purple Ramp)
-                    {
-                        'type': 'and',
-                        'conditions': [
-                            {'type': 'item_check', 'item': '5-1 Level Complete'},
-                            {'type': 'item_check', 'item': 'Purple Ramp'}
-                        ]
-                    }
-                ]
-
-                if allow_tricks:
-                    # With tricks, just reaching tip of the map is enough
-                    return {'type': 'or', 'conditions': base_conditions}
-                else:
-                    # Without tricks, need 6-1 Complete + Red Ramp in addition to tip access
-                    return {
-                        'type': 'and',
-                        'conditions': base_conditions + [
-                            {'type': 'item_check', 'item': '6-1 Level Complete'},
-                            {'type': 'item_check', 'item': 'Red Ramp'}
-                        ]
-                    }
+                return self._build_mars_shelf_access_rule(allow_tricks)
 
             elif overworld_region == OverworldRegion.kevin_eight_island:
                 # Requires mars shelf access - same as mars shelf rules
-                return self._build_overworld_access_rule_for_mars_shelf(allow_tricks)
+                return self._build_mars_shelf_access_rule(allow_tricks)
 
             else:
                 logger.warning(f"Unhandled overworld region {overworld_region} for level {level_name}")
@@ -390,8 +368,8 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
             logger.error(f"Error building overworld access rule for {level_name}: {e}", exc_info=True)
             return None
 
-    def _build_overworld_access_rule_for_mars_shelf(self, allow_tricks: bool) -> Dict[str, Any]:
-        """Build access rule specifically for mars shelf / kevin eight island."""
+    def _build_mars_shelf_access_rule(self, allow_tricks: bool) -> Dict[str, Any]:
+        """Build access rule for mars shelf / kevin eight island regions."""
         base_conditions = [
             {
                 'type': 'and',

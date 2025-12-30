@@ -19,9 +19,8 @@ class FactorioGameExportHandler(GenericGameExportHandler):
       in Python, technologies are objects with a .name attribute, but in the exported
       JSON, they're already strings (the tech names).
 
-    - get_progression_mapping: Builds the progressive technology mapping from
-      progressive_technology_table. Each progressive item (e.g., progressive-military)
-      maps to a sequence of technologies (military, military-2, military-3, military-4).
+    Progressive item mapping is auto-detected by the base handler from the
+    progressive_technology_table module-level data structure.
     """
 
     # Factorio rules use resolved technology names (e.g., "steel-processing", "military-2")
@@ -113,25 +112,5 @@ class FactorioGameExportHandler(GenericGameExportHandler):
 
         return None
 
-    def get_progression_mapping(self, world) -> Dict[str, Any]:
-        """Return Factorio-specific progression item mapping."""
-        from worlds.factorio.Technologies import progressive_technology_table
-
-        mapping_data = {}
-
-        # Build progression mapping from progressive_technology_table
-        for prog_name, tech_data in progressive_technology_table.items():
-            if tech_data.progressive:
-                mapping_data[prog_name] = {
-                    'items': [],
-                    'base_item': prog_name
-                }
-
-                # Add each level of the progressive tech
-                for level, tech_name in enumerate(tech_data.progressive, start=1):
-                    mapping_data[prog_name]['items'].append({
-                        'name': tech_name,
-                        'level': level
-                    })
-
-        return mapping_data
+    # Progressive item mapping is auto-detected by the base handler from
+    # progressive_technology_table - no manual override needed

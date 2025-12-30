@@ -8,6 +8,7 @@ defaults for rule analysis, item data discovery, and common helper patterns.
 See exporter/games/generic.py for details on the enhanced functionality.
 """
 
+from collections import Counter
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Set
 import importlib
@@ -888,8 +889,362 @@ class BaseGameExportHandler(
         return {}
 
     def get_progression_mapping(self, world) -> Dict[str, Any]:
-        """Return game-specific progression item mapping data."""
-        return {}
+        """Return game-specific progression item mapping data.
+
+        This method auto-detects progressive items by probing the world's
+        collect_item method at runtime. This approach doesn't rely on naming
+        conventions - it uses the actual game behavior to discover which items
+        are progressive and what concrete items they map to.
+
+        Game-specific handlers can override this method if they need custom
+        logic (e.g., for additive progression like REP or Time Shards).
+
+        Returns:
+            Dict mapping progressive item names to their progression data:
+            {
+                "Progressive Sword": {
+                    "items": [
+                        {"name": "Fighter Sword", "level": 1},
+                        {"name": "Master Sword", "level": 2},
+                        ...
+                    ],
+                    "base_item": "Progressive Sword"
+                },
+                ...
+            }
+        """
+        # First, try runtime probing (works for advancement items)
+        mapping = self._probe_collect_item_for_progression(world)
+
+        # Then, try to find additional mappings from module-level data structures
+        # This catches non-advancement progressive items that collect_item skips
+        module_mapping = self._find_module_progression_data(world)
+
+        # Merge: module data fills in gaps from runtime probing
+        for prog_name, data in module_mapping.items():
+            if prog_name not in mapping:
+                mapping[prog_name] = data
+                logger.debug(f"Added {prog_name} from module data (not found via probing)")
+
+        return mapping
+
+    def _find_module_progression_data(self, world) -> Dict[str, Any]:
+        """Find progression mapping from module-level data structures.
+
+        Different games store progression data in different formats:
+        - ALttP: progression_mapping dict in Items.py (concrete -> (progressive, level))
+        - Factorio: progressive_technology_table (progressive -> Technology with .progressive tuple)
+        - Raft: progressive_item_list (progressive -> [concrete_items])
+
+        Returns:
+            Dict with progression mapping in the standard format
+        """
+        mapping_data: Dict[str, Any] = {}
+
+        # Get the world's module
+        world_module = type(world).__module__
+        base_module = '.'.join(world_module.split('.')[:2])  # e.g., "worlds.alttp"
+
+        # Try different known patterns
+        mapping_data.update(self._try_alttp_pattern(base_module))
+        mapping_data.update(self._try_factorio_pattern(base_module))
+        mapping_data.update(self._try_raft_pattern(base_module))
+
+        return mapping_data
+
+    def _try_alttp_pattern(self, base_module: str) -> Dict[str, Any]:
+        """Try ALttP pattern: progression_mapping dict in Items.py.
+
+        Format: concrete_item -> (progressive_item, level)
+        """
+        try:
+            items_module = importlib.import_module(f"{base_module}.Items")
+            if not hasattr(items_module, 'progression_mapping'):
+                return {}
+
+            progression_mapping = getattr(items_module, 'progression_mapping')
+            if not isinstance(progression_mapping, dict):
+                return {}
+
+            # Convert: {concrete: (progressive, level)} -> {progressive: {items: [...]}}
+            mapping_data: Dict[str, Any] = {}
+            for concrete_item, (progressive_item, level) in progression_mapping.items():
+                if progressive_item not in mapping_data:
+                    mapping_data[progressive_item] = {
+                        'items': [],
+                        'base_item': progressive_item
+                    }
+                mapping_data[progressive_item]['items'].append({
+                    'name': concrete_item,
+                    'level': level
+                })
+
+            # Sort items by level
+            for prog_data in mapping_data.values():
+                prog_data['items'].sort(key=lambda x: x['level'])
+
+            if mapping_data:
+                logger.debug(f"Found {len(mapping_data)} progressive items via ALttP pattern")
+
+            return mapping_data
+
+        except ImportError:
+            return {}
+        except Exception as e:
+            logger.debug(f"Error trying ALttP pattern: {e}")
+            return {}
+
+    def _try_factorio_pattern(self, base_module: str) -> Dict[str, Any]:
+        """Try Factorio pattern: progressive_technology_table.
+
+        Format: progressive_item -> Technology object with .progressive tuple
+        """
+        try:
+            # Try importing from Technologies submodule first
+            try:
+                tech_module = importlib.import_module(f"{base_module}.Technologies")
+                if hasattr(tech_module, 'progressive_technology_table'):
+                    prog_table = getattr(tech_module, 'progressive_technology_table')
+                else:
+                    return {}
+            except ImportError:
+                # Try main module
+                main_module = importlib.import_module(base_module)
+                if hasattr(main_module, 'progressive_technology_table'):
+                    prog_table = getattr(main_module, 'progressive_technology_table')
+                else:
+                    return {}
+
+            if not isinstance(prog_table, dict):
+                return {}
+
+            # Convert: {progressive: Technology(progressive=tuple)} -> standard format
+            mapping_data: Dict[str, Any] = {}
+            for prog_name, tech_data in prog_table.items():
+                # Check if it has a progressive attribute (tuple of concrete items)
+                progressive_tuple = getattr(tech_data, 'progressive', None)
+                if not progressive_tuple:
+                    continue
+
+                mapping_data[prog_name] = {
+                    'items': [
+                        {'name': name, 'level': level}
+                        for level, name in enumerate(progressive_tuple, 1)
+                    ],
+                    'base_item': prog_name
+                }
+
+            if mapping_data:
+                logger.debug(f"Found {len(mapping_data)} progressive items via Factorio pattern")
+
+            return mapping_data
+
+        except ImportError:
+            return {}
+        except Exception as e:
+            logger.debug(f"Error trying Factorio pattern: {e}")
+            return {}
+
+    def _try_raft_pattern(self, base_module: str) -> Dict[str, Any]:
+        """Try Raft pattern: progressive_item_list dict.
+
+        Format: progressive_item -> [concrete_items in order]
+        """
+        try:
+            # Try main module first
+            main_module = importlib.import_module(base_module)
+
+            # Look for progressive_item_list
+            if hasattr(main_module, 'progressive_item_list'):
+                prog_list = getattr(main_module, 'progressive_item_list')
+            else:
+                # Try Items submodule
+                try:
+                    items_module = importlib.import_module(f"{base_module}.Items")
+                    if hasattr(items_module, 'progressive_item_list'):
+                        prog_list = getattr(items_module, 'progressive_item_list')
+                    else:
+                        return {}
+                except ImportError:
+                    return {}
+
+            if not isinstance(prog_list, dict):
+                return {}
+
+            # Convert: {progressive: [concrete_items]} -> standard format
+            mapping_data: Dict[str, Any] = {}
+            for prog_name, concrete_items in prog_list.items():
+                if not isinstance(concrete_items, (list, tuple)):
+                    continue
+
+                mapping_data[prog_name] = {
+                    'items': [
+                        {'name': name, 'level': level}
+                        for level, name in enumerate(concrete_items, 1)
+                    ],
+                    'base_item': prog_name
+                }
+
+            if mapping_data:
+                logger.debug(f"Found {len(mapping_data)} progressive items via Raft pattern")
+
+            return mapping_data
+
+        except ImportError:
+            return {}
+        except Exception as e:
+            logger.debug(f"Error trying Raft pattern: {e}")
+            return {}
+
+    def _probe_collect_item_for_progression(self, world) -> Dict[str, Any]:
+        """Discover progressive items by probing collect_item behavior.
+
+        This method creates a mock collection state and repeatedly calls
+        collect_item to discover which items are progressive and what
+        concrete items they resolve to at each level.
+
+        Args:
+            world: The world instance to probe
+
+        Returns:
+            Dict with progression mapping in the standard format
+        """
+        # Check if the world has overridden collect_item
+        # If not, there are no progressive items to discover
+        try:
+            from worlds.AutoWorld import World as BaseWorld
+            if type(world).collect_item is BaseWorld.collect_item:
+                logger.debug(f"{world.game}: No custom collect_item, skipping progression probe")
+                return {}
+        except ImportError:
+            logger.warning("Could not import AutoWorld.World for collect_item check")
+            return {}
+
+        # Get the player ID
+        player = getattr(world, 'player', 1)
+
+        # Create a minimal mock state that satisfies collect_item requirements
+        class MockCollectionState:
+            """Minimal mock state for probing collect_item behavior."""
+
+            def __init__(self, player_id: int):
+                self.prog_items = {player_id: Counter()}
+                self._player = player_id
+
+            def has(self, item_name: str, player: int, count: int = 1) -> bool:
+                """Check if player has at least count of item_name."""
+                return self.prog_items.get(player, Counter())[item_name] >= count
+
+            def count(self, item_name: str, player: int) -> int:
+                """Count how many of item_name the player has."""
+                return self.prog_items.get(player, Counter())[item_name]
+
+            def has_group(self, group: str, player: int, count: int = 1) -> bool:
+                """Mock has_group - returns False for probing purposes."""
+                return False
+
+            def has_any(self, items: Set[str], player: int) -> bool:
+                """Check if player has any of the items."""
+                return any(self.has(item, player) for item in items)
+
+            def has_all(self, items: Set[str], player: int) -> bool:
+                """Check if player has all of the items."""
+                return all(self.has(item, player) for item in items)
+
+        # Track discovered progressions: progressive_item -> [concrete_items in order]
+        progressions: Dict[str, List[str]] = {}
+
+        # Get all item names the world can create
+        item_names = list(getattr(world, 'item_name_to_id', {}).keys())
+
+        for item_name in item_names:
+            try:
+                item = world.create_item(item_name)
+            except Exception as e:
+                logger.debug(f"Could not create item '{item_name}': {e}")
+                continue
+
+            # Skip items that can't possibly be progressive
+            # (We probe all items, not just advancement, because some games like
+            # Factorio have progressive items classified as filler/useful)
+
+            # Create fresh state for each item probe
+            mock_state = MockCollectionState(player)
+            chain: List[str] = []
+
+            # Collect the item repeatedly to build the progression chain
+            # Max 20 levels should be more than enough for any game
+            for _ in range(20):
+                try:
+                    result = world.collect_item(mock_state, item, remove=False)
+                except Exception as e:
+                    logger.debug(f"Error probing collect_item for '{item_name}': {e}")
+                    break
+
+                if result is None:
+                    # Item no longer grants anything (reached max level)
+                    break
+
+                if result == item_name:
+                    # Item returns its own name - not a progressive item
+                    break
+
+                if result in chain:
+                    # Already seen this result - we've reached max level
+                    # (collect_item returns the same item when at max)
+                    break
+
+                # This is a progressive item! Record the concrete item
+                chain.append(result)
+
+                # Add to mock state so next iteration gets the next level
+                mock_state.prog_items[player][result] += 1
+
+            if chain:
+                progressions[item_name] = chain
+                logger.debug(f"Discovered progression: {item_name} -> {chain}")
+
+        # Convert to the standard output format
+        mapping_data: Dict[str, Any] = {}
+
+        # First pass: create basic mapping
+        for progressive_name, concrete_items in progressions.items():
+            mapping_data[progressive_name] = {
+                'items': [
+                    {'name': name, 'level': level}
+                    for level, name in enumerate(concrete_items, 1)
+                ],
+                'base_item': progressive_name
+            }
+
+        # Second pass: detect progressive items that share the same concrete items
+        # and set their base_item to the "canonical" one (first alphabetically)
+        # This handles cases like Progressive Bow / Progressive Bow (Alt) which
+        # both resolve to Bow -> Silver Bow and should count together
+        concrete_to_progressives: Dict[tuple, List[str]] = {}
+        for progressive_name, concrete_items in progressions.items():
+            key = tuple(concrete_items)
+            if key not in concrete_to_progressives:
+                concrete_to_progressives[key] = []
+            concrete_to_progressives[key].append(progressive_name)
+
+        # For groups with multiple progressive items sharing same concrete items,
+        # set base_item to the canonical (first alphabetically) name
+        for concrete_key, progressive_names in concrete_to_progressives.items():
+            if len(progressive_names) > 1:
+                # Sort to get canonical name (first alphabetically)
+                canonical = sorted(progressive_names)[0]
+                for prog_name in progressive_names:
+                    mapping_data[prog_name]['base_item'] = canonical
+                logger.debug(
+                    f"Grouped progressive items with shared concrete items: "
+                    f"{progressive_names} -> base_item='{canonical}'"
+                )
+
+        if mapping_data:
+            logger.info(f"{world.game}: Auto-detected {len(mapping_data)} progressive item(s)")
+
+        return mapping_data
 
     # ==========================================================================
     # Exporter settings and game info methods
@@ -953,11 +1308,15 @@ class BaseGameExportHandler(
         elif hasattr(world, 'accumulator_rules') and world.accumulator_rules:
             game_info['accumulator_rules'] = world.accumulator_rules
 
-        # Use class-level PROG_ITEMS_INIT if defined, otherwise check world attribute
-        if self.PROG_ITEMS_INIT:
+        # For prog_items_init, worldgen worlds get priority for world attribute
+        # because worldgen worlds may pre-compute accumulator initial values.
+        # For non-worldgen worlds, class attribute takes priority.
+        if self.is_worldgen_world(world) and hasattr(world, 'prog_items_init') and world.prog_items_init:
+            game_info['prog_items_init'] = dict(world.prog_items_init)
+        elif self.PROG_ITEMS_INIT:
             game_info['prog_items_init'] = dict(self.PROG_ITEMS_INIT)
         elif hasattr(world, 'prog_items_init') and world.prog_items_init:
-            game_info['prog_items_init'] = world.prog_items_init
+            game_info['prog_items_init'] = dict(world.prog_items_init)
 
         return game_info
 

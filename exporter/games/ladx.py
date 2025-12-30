@@ -1,11 +1,13 @@
 """Links Awakening DX game-specific export handler.
 
-This exporter handles LADXR-specific data structures:
+This exporter handles LADXR (Links Awakening DX Randomizer) specific data structures:
 - LADXR condition objects (AND, OR, COUNT, FOUND, COUNTS)
 - LADXR item name mapping to Archipelago item names
 - LADXR entrance objects with condition attributes
+- Rupee accumulator for tracking total rupees collected
 
-Most of this code is truly game-specific and cannot be factored out to the base exporter.
+The LADXR condition handling is truly game-specific due to LADXR's custom
+condition class hierarchy with private attributes accessed via name mangling.
 """
 
 from typing import Dict, Any, Optional
@@ -101,7 +103,7 @@ class LADXGameExportHandler(GenericGameExportHandler):
             items = getattr(condition, f'_{class_name}__items', [])
             children = getattr(condition, f'_{class_name}__children', [])
 
-            conditions = [self._parse_ladxr_item(item) for item in items]
+            conditions = [{'type': 'item_check', 'item': self._map_ladxr_item_name(item)} for item in items]
             for child in children:
                 child_rule = self._convert_ladxr_condition_to_rule(child)
                 if child_rule:
@@ -164,14 +166,6 @@ class LADXGameExportHandler(GenericGameExportHandler):
         # Use the canonical mapping from the world
         return ladxr_item_to_la_item_name.get(item_str, item_str)
 
-    def _parse_ladxr_item(self, item_str: str) -> Dict[str, Any]:
-        """Parse a single LADXR item string into an item_check rule."""
-        mapped_name = self._map_ladxr_item_name(item_str)
-        return {
-            'type': 'item_check',
-            'item': mapped_name
-        }
-
     def postprocess_entrance_rule(self, rule: Dict[str, Any], entrance_name: str = None) -> Dict[str, Any]:
         """
         Post-process entrance rules to handle LADX's isinstance pattern.
@@ -204,9 +198,9 @@ class LADXGameExportHandler(GenericGameExportHandler):
                     # The constant has been resolved - if it's a string, create an item check
                     constant_value = first_arg.get('value')
                     if isinstance(constant_value, str) and constant_value:
-                        parsed_rule = self._parse_ladxr_item(constant_value)
-                        logger.debug(f"LADX entrance '{entrance_name}' parsed item condition: {constant_value}")
-                        return parsed_rule
+                        mapped_name = self._map_ladxr_item_name(constant_value)
+                        logger.debug(f"LADX entrance '{entrance_name}' parsed item condition: {constant_value} -> {mapped_name}")
+                        return {'type': 'item_check', 'item': mapped_name}
 
                     # If not a string or empty, fall back to the if_true branch
                     if_true = rule.get('if_true')
@@ -250,14 +244,3 @@ class LADXGameExportHandler(GenericGameExportHandler):
 
         return rule
 
-    def get_game_info(self, world):
-        """Export LADX game info with worldgen-aware prog_items_init priority."""
-        game_info = super().get_game_info(world)
-
-        # Override prog_items_init priority for worldgen support:
-        # World attribute takes precedence over class attribute (opposite of base class)
-        # This allows worldgen worlds to precollect RUPEES for rule evaluation
-        if hasattr(world, 'prog_items_init') and world.prog_items_init:
-            game_info['prog_items_init'] = dict(world.prog_items_init)
-
-        return game_info

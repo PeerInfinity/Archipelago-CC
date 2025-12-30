@@ -15,10 +15,10 @@ class InscryptionGameExportHandler(GenericGameExportHandler):
     # Disable automatic helper export (class methods can't be auto-exported)
     AUTO_EXPORT_DISCOVERED_HELPERS = False
 
-    def preprocess_world_data(self, world, export_data, player):
-        """Store world data needed for rule expansion."""
-        super().preprocess_world_data(world, export_data, player)
-        self._required_epitaph_count = getattr(world, 'required_epitaph_pieces_count', 9)
+    @property
+    def _required_epitaph_count(self) -> int:
+        """Get the required epitaph count from the world."""
+        return getattr(self.world, 'required_epitaph_pieces_count', 9)
 
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand Inscryption-specific rules."""
