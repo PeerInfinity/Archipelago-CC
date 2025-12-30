@@ -8,6 +8,7 @@ defaults for rule analysis, item data discovery, and common helper patterns.
 See exporter/games/generic.py for details on the enhanced functionality.
 """
 
+from collections import Counter
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Set
 import importlib
@@ -888,8 +889,181 @@ class BaseGameExportHandler(
         return {}
 
     def get_progression_mapping(self, world) -> Dict[str, Any]:
-        """Return game-specific progression item mapping data."""
-        return {}
+        """Return game-specific progression item mapping data.
+
+        This method auto-detects progressive items by probing the world's
+        collect_item method at runtime. This approach doesn't rely on naming
+        conventions - it uses the actual game behavior to discover which items
+        are progressive and what concrete items they map to.
+
+        Game-specific handlers can override this method if they need custom
+        logic (e.g., for additive progression like REP or Time Shards).
+
+        Returns:
+            Dict mapping progressive item names to their progression data:
+            {
+                "Progressive Sword": {
+                    "items": [
+                        {"name": "Fighter Sword", "level": 1},
+                        {"name": "Master Sword", "level": 2},
+                        ...
+                    ],
+                    "base_item": "Progressive Sword"
+                },
+                ...
+            }
+        """
+        return self._probe_collect_item_for_progression(world)
+
+    def _probe_collect_item_for_progression(self, world) -> Dict[str, Any]:
+        """Discover progressive items by probing collect_item behavior.
+
+        This method creates a mock collection state and repeatedly calls
+        collect_item to discover which items are progressive and what
+        concrete items they resolve to at each level.
+
+        Args:
+            world: The world instance to probe
+
+        Returns:
+            Dict with progression mapping in the standard format
+        """
+        # Check if the world has overridden collect_item
+        # If not, there are no progressive items to discover
+        try:
+            from worlds.AutoWorld import World as BaseWorld
+            if type(world).collect_item is BaseWorld.collect_item:
+                logger.debug(f"{world.game}: No custom collect_item, skipping progression probe")
+                return {}
+        except ImportError:
+            logger.warning("Could not import AutoWorld.World for collect_item check")
+            return {}
+
+        # Get the player ID
+        player = getattr(world, 'player', 1)
+
+        # Create a minimal mock state that satisfies collect_item requirements
+        class MockCollectionState:
+            """Minimal mock state for probing collect_item behavior."""
+
+            def __init__(self, player_id: int):
+                self.prog_items = {player_id: Counter()}
+                self._player = player_id
+
+            def has(self, item_name: str, player: int, count: int = 1) -> bool:
+                """Check if player has at least count of item_name."""
+                return self.prog_items.get(player, Counter())[item_name] >= count
+
+            def count(self, item_name: str, player: int) -> int:
+                """Count how many of item_name the player has."""
+                return self.prog_items.get(player, Counter())[item_name]
+
+            def has_group(self, group: str, player: int, count: int = 1) -> bool:
+                """Mock has_group - returns False for probing purposes."""
+                return False
+
+            def has_any(self, items: Set[str], player: int) -> bool:
+                """Check if player has any of the items."""
+                return any(self.has(item, player) for item in items)
+
+            def has_all(self, items: Set[str], player: int) -> bool:
+                """Check if player has all of the items."""
+                return all(self.has(item, player) for item in items)
+
+        # Track discovered progressions: progressive_item -> [concrete_items in order]
+        progressions: Dict[str, List[str]] = {}
+
+        # Get all item names the world can create
+        item_names = list(getattr(world, 'item_name_to_id', {}).keys())
+
+        for item_name in item_names:
+            try:
+                item = world.create_item(item_name)
+            except Exception as e:
+                logger.debug(f"Could not create item '{item_name}': {e}")
+                continue
+
+            # Only probe advancement items (progressive items must be advancement)
+            if not getattr(item, 'advancement', False):
+                continue
+
+            # Create fresh state for each item probe
+            mock_state = MockCollectionState(player)
+            chain: List[str] = []
+
+            # Collect the item repeatedly to build the progression chain
+            # Max 20 levels should be more than enough for any game
+            for _ in range(20):
+                try:
+                    result = world.collect_item(mock_state, item, remove=False)
+                except Exception as e:
+                    logger.debug(f"Error probing collect_item for '{item_name}': {e}")
+                    break
+
+                if result is None:
+                    # Item no longer grants anything (reached max level)
+                    break
+
+                if result == item_name:
+                    # Item returns its own name - not a progressive item
+                    break
+
+                if result in chain:
+                    # Already seen this result - we've reached max level
+                    # (collect_item returns the same item when at max)
+                    break
+
+                # This is a progressive item! Record the concrete item
+                chain.append(result)
+
+                # Add to mock state so next iteration gets the next level
+                mock_state.prog_items[player][result] += 1
+
+            if chain:
+                progressions[item_name] = chain
+                logger.debug(f"Discovered progression: {item_name} -> {chain}")
+
+        # Convert to the standard output format
+        mapping_data: Dict[str, Any] = {}
+
+        # First pass: create basic mapping
+        for progressive_name, concrete_items in progressions.items():
+            mapping_data[progressive_name] = {
+                'items': [
+                    {'name': name, 'level': level}
+                    for level, name in enumerate(concrete_items, 1)
+                ],
+                'base_item': progressive_name
+            }
+
+        # Second pass: detect progressive items that share the same concrete items
+        # and set their base_item to the "canonical" one (first alphabetically)
+        # This handles cases like Progressive Bow / Progressive Bow (Alt) which
+        # both resolve to Bow -> Silver Bow and should count together
+        concrete_to_progressives: Dict[tuple, List[str]] = {}
+        for progressive_name, concrete_items in progressions.items():
+            key = tuple(concrete_items)
+            if key not in concrete_to_progressives:
+                concrete_to_progressives[key] = []
+            concrete_to_progressives[key].append(progressive_name)
+
+        # For groups with multiple progressive items sharing same concrete items,
+        # set base_item to the canonical (first alphabetically) name
+        for concrete_key, progressive_names in concrete_to_progressives.items():
+            if len(progressive_names) > 1:
+                # Sort to get canonical name (first alphabetically)
+                canonical = sorted(progressive_names)[0]
+                for prog_name in progressive_names:
+                    mapping_data[prog_name]['base_item'] = canonical
+                logger.debug(
+                    f"Grouped progressive items with shared concrete items: "
+                    f"{progressive_names} -> base_item='{canonical}'"
+                )
+
+        if mapping_data:
+            logger.info(f"{world.game}: Auto-detected {len(mapping_data)} progressive item(s)")
+
+        return mapping_data
 
     # ==========================================================================
     # Exporter settings and game info methods

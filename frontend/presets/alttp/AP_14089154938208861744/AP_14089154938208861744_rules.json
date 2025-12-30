@@ -20678,6 +20678,32 @@
   },
   "progression_mapping": {
     "1": {
+      "Progressive Bow": {
+        "items": [
+          {
+            "name": "Bow",
+            "level": 1
+          },
+          {
+            "name": "Silver Bow",
+            "level": 2
+          }
+        ],
+        "base_item": "Progressive Bow"
+      },
+      "Progressive Bow (Alt)": {
+        "items": [
+          {
+            "name": "Bow",
+            "level": 1
+          },
+          {
+            "name": "Silver Bow",
+            "level": 2
+          }
+        ],
+        "base_item": "Progressive Bow"
+      },
       "Progressive Sword": {
         "items": [
           {
@@ -20728,32 +20754,6 @@
           }
         ],
         "base_item": "Progressive Shield"
-      },
-      "Progressive Bow": {
-        "items": [
-          {
-            "name": "Bow",
-            "level": 1
-          },
-          {
-            "name": "Silver Bow",
-            "level": 2
-          }
-        ],
-        "base_item": "Progressive Bow"
-      },
-      "Progressive Bow (Alt)": {
-        "items": [
-          {
-            "name": "Bow",
-            "level": 1
-          },
-          {
-            "name": "Silver Bow",
-            "level": 2
-          }
-        ],
-        "base_item": "Progressive Bow"
       }
     }
   },
