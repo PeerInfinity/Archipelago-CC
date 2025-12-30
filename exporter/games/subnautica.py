@@ -1,7 +1,6 @@
 """Subnautica game-specific export handler."""
 
 import copy
-from typing import Dict, Any
 from .generic import GenericGameExportHandler
 
 
@@ -21,29 +20,67 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
     # Helpers that should always be exported (used in access rules)
     HELPERS_TO_EXPORT_WHITELIST = {'is_radiated'}
 
-    def _expand_helper_definition(self, helper_def: dict, helper_name: str) -> dict:
-        """Expand SwimRule property accesses in helper definitions.
+    # Preserve is_radiated as a helper call (don't let GenericGameExportHandler
+    # expand it to a generic_helper based on naming patterns)
+    HELPERS_TO_PRESERVE = {'is_radiated'}
 
-        The SwimRule option class has computed properties:
-        - base_depth: returns [200, 400, 600][value % 3]
-        - consider_items: returns value > 2
+    def expand_rule(self, rule, _depth: int = 0):
+        """Handle special location dependency patterns and expand SwimRule attributes.
 
-        Since we only export the integer value, we need to expand these
-        property accesses to their computed equivalents.
+        The "Repair Aurora Drive" location depends on "Aurora Drive Room - Upgrade Console"
+        being reachable. This is implemented in Python as:
+            room = subnautica_world.get_location("Aurora Drive Room - Upgrade Console")
+            set_rule(location, lambda state: room.can_reach(state))
 
-        Note: This is different from expand_helper() which expands helper *calls*
-        in rules. This method transforms helper *definitions* before export.
+        We convert this to a can_access_location helper call with the location data.
+
+        Also expands swim_rule.base_depth and swim_rule.consider_items in all rules.
         """
-        if not helper_def:
-            return helper_def
+        if not rule:
+            return rule
 
-        # Deep copy to avoid modifying the original
-        helper_def = copy.deepcopy(helper_def)
+        # Only deep copy at top level to avoid redundant copies during recursion
+        if _depth == 0:
+            rule = copy.deepcopy(rule)
 
-        # Recursively expand SwimRule attribute accesses
-        self._expand_swim_rule_attrs(helper_def)
+        # Expand SwimRule attribute accesses first
+        self._expand_swim_rule_attrs(rule)
 
-        return helper_def
+        # Handle location.can_reach() pattern (e.g., room.can_reach())
+        # Check both AST format (type: 'function_call') and Rule Builder format (rule: 'AST_function_call')
+        rule_type = rule.get('type') or rule.get('rule')
+        if rule_type in ('function_call', 'AST_function_call'):
+            # Function info may be in rule directly (AST) or in rule['args'] (Rule Builder)
+            func = rule.get('function') or rule.get('args', {}).get('function', {})
+            if (func.get('type') == 'attribute' and
+                func.get('attr') == 'can_reach' and
+                func.get('object', {}).get('type') == 'name'):
+                var_name = func['object'].get('name')
+                # Handle both 'room' and 'location' variable names
+                # The analyzer may use 'location' for closure variables
+                if var_name in ('room', 'location'):
+                    # Replace with the same access rule as "Aurora Drive Room - Upgrade Console"
+                    return {
+                        'type': 'helper',
+                        'name': 'can_access_location',
+                        'args': [{
+                            'type': 'constant',
+                            'value': {
+                                'can_slip_through': False,
+                                'name': 'Aurora Drive Room - Upgrade Console',
+                                'need_laser_cutter': False,
+                                'need_propulsion_cannon': True,
+                                'position': {
+                                    'x': 872.5,
+                                    'y': 2.7,
+                                    'z': -0.7
+                                }
+                            }
+                        }]
+                    }
+
+        # Call base class for standard processing (handles recursion, helper expansion, etc.)
+        return super().expand_rule(rule, _depth)
 
     def _expand_swim_rule_attrs(self, node: dict) -> None:
         """Recursively expand swim_rule.base_depth and swim_rule.consider_items."""
@@ -107,79 +144,3 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
                 for item in value:
                     if isinstance(item, dict):
                         self._expand_swim_rule_attrs(item)
-
-    def expand_rule(self, rule, _depth: int = 0):
-        """Handle special location dependency patterns and expand SwimRule attributes.
-
-        The "Repair Aurora Drive" location depends on "Aurora Drive Room - Upgrade Console"
-        being reachable. This is implemented in Python as:
-            room = subnautica_world.get_location("Aurora Drive Room - Upgrade Console")
-            set_rule(location, lambda state: room.can_reach(state))
-
-        We convert this to a can_access_location helper call with the location data.
-
-        Also expands swim_rule.base_depth and swim_rule.consider_items in all rules.
-        """
-        if not rule:
-            return rule
-
-        # Deep copy to avoid modifying the original when expanding attributes
-        rule = copy.deepcopy(rule)
-
-        # Expand SwimRule attribute accesses in this rule
-        self._expand_swim_rule_attrs(rule)
-
-        # Handle location.can_reach() pattern (e.g., room.can_reach())
-        # Check both AST format (type: 'function_call') and Rule Builder format (rule: 'AST_function_call')
-        rule_type = rule.get('type') or rule.get('rule')
-        if rule_type in ('function_call', 'AST_function_call'):
-            # Function info may be in rule directly (AST) or in rule['args'] (Rule Builder)
-            func = rule.get('function') or rule.get('args', {}).get('function', {})
-            if (func.get('type') == 'attribute' and
-                func.get('attr') == 'can_reach' and
-                func.get('object', {}).get('type') == 'name'):
-                var_name = func['object'].get('name')
-                # Handle both 'room' and 'location' variable names
-                # The analyzer may use 'location' for closure variables
-                if var_name in ('room', 'location'):
-                    # Replace with the same access rule as "Aurora Drive Room - Upgrade Console"
-                    return {
-                        'type': 'helper',
-                        'name': 'can_access_location',
-                        'args': [{
-                            'type': 'constant',
-                            'value': {
-                                'can_slip_through': False,
-                                'name': 'Aurora Drive Room - Upgrade Console',
-                                'need_laser_cutter': False,
-                                'need_propulsion_cannon': True,
-                                'position': {
-                                    'x': 872.5,
-                                    'y': 2.7,
-                                    'z': -0.7
-                                }
-                            }
-                        }]
-                    }
-
-        # Recursively process nested rules
-        if rule.get('type') in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
-
-        return rule
-
-    def get_helper_definitions(self, world) -> Dict[str, Any]:
-        """Get helper definitions with SwimRule property expansion.
-
-        Overrides the base implementation to apply SwimRule property expansion
-        to all helper definitions before returning them.
-        """
-        # Get helper definitions from base class
-        helpers = super().get_helper_definitions(world)
-
-        # Apply SwimRule expansion to each helper definition
-        expanded_helpers = {}
-        for helper_name, helper_def in helpers.items():
-            expanded_helpers[helper_name] = self._expand_helper_definition(helper_def, helper_name)
-
-        return expanded_helpers
