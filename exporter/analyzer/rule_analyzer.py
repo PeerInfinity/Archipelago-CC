@@ -248,3 +248,117 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
 
         logging.debug(f"_build_parameter_mapping: Final mapping: {param_mapping}")
         return param_mapping
+
+    def _detect_param_mappings_from_call_site(self, helper_name, func, args_with_nodes):
+        """
+        Detect param_mappings from call-site AST patterns.
+
+        When a helper is called with arguments like:
+            can_defeat_enough_rbms(state, world.player,
+                                   world.options.wily_5_requirement.value,
+                                   world.wily_5_weapons)
+
+        This method detects that:
+            - Parameter 'required' maps to slot_data key 'wily_5_requirement'
+            - Parameter 'boss_requirements' maps to slot_data key 'wily_5_weapons'
+
+        Args:
+            helper_name: The name of the helper function being called
+            func: The callable function (to get parameter names)
+            args_with_nodes: List of (arg_node, arg_result) tuples
+
+        Returns:
+            Dictionary mapping parameter names to slot_data keys, or empty dict
+        """
+        param_mappings = {}
+
+        try:
+            if not callable(func) or not hasattr(func, '__code__'):
+                return param_mappings
+
+            # Get parameter names from the function (excluding state, player, world)
+            all_param_names = func.__code__.co_varnames[:func.__code__.co_argcount]
+            helper_params = [p for p in all_param_names if p not in ('state', 'player', 'world', 'self')]
+
+            if not helper_params:
+                return param_mappings
+
+            # Filter out state/player/world arguments to get actual helper args
+            filtered_args_with_nodes = []
+            for arg_node, arg_result in args_with_nodes:
+                is_state, is_player, is_world = self._is_state_or_player_or_world_arg(arg_node, arg_result)
+                # Include world attribute accesses (world.options.X) but not bare world
+                if is_state or is_player:
+                    continue
+                if is_world and isinstance(arg_node, ast.Name):
+                    continue  # Skip bare 'world' argument
+                filtered_args_with_nodes.append((arg_node, arg_result))
+
+            # Match filtered arguments to helper parameters
+            for i, (arg_node, arg_result) in enumerate(filtered_args_with_nodes):
+                if i >= len(helper_params):
+                    break
+
+                param_name = helper_params[i]
+                slot_data_key = self._extract_slot_data_key_from_ast(arg_node)
+
+                if slot_data_key and slot_data_key != param_name:
+                    # Only add mapping if the key differs from the parameter name
+                    param_mappings[param_name] = slot_data_key
+                    logging.debug(f"_detect_param_mappings: {helper_name}.{param_name} -> '{slot_data_key}'")
+
+        except Exception as e:
+            logging.debug(f"Error detecting param_mappings for {helper_name}: {e}")
+
+        return param_mappings
+
+    def _extract_slot_data_key_from_ast(self, arg_node):
+        """
+        Extract the slot_data key from an AST argument node.
+
+        Detects patterns:
+        - world.options.<setting_name>.value -> setting_name
+        - world.options.<setting_name> -> setting_name
+        - world.<attribute_name> -> attribute_name
+
+        Args:
+            arg_node: The AST node representing the argument
+
+        Returns:
+            The slot_data key string, or None if pattern not recognized
+        """
+        if not isinstance(arg_node, ast.Attribute):
+            return None
+
+        # Build the attribute chain from the AST
+        chain = []
+        current = arg_node
+        while isinstance(current, ast.Attribute):
+            chain.insert(0, current.attr)
+            current = current.value
+
+        # Check if the chain starts with 'world'
+        if not isinstance(current, ast.Name) or current.id != 'world':
+            return None
+
+        # Pattern: world.options.<setting>.value -> setting
+        # chain would be ['options', '<setting>', 'value']
+        if len(chain) >= 3 and chain[0] == 'options' and chain[-1] == 'value':
+            return chain[1]  # The setting name
+
+        # Pattern: world.options.<setting> -> setting
+        # chain would be ['options', '<setting>']
+        if len(chain) == 2 and chain[0] == 'options':
+            return chain[1]
+
+        # Pattern: world.<attribute> -> attribute
+        # chain would be ['<attribute>']
+        if len(chain) == 1:
+            return chain[0]
+
+        # Pattern: world.<something>.<attribute> (like world.wily_5_weapons which might be deeper)
+        # For now, return the last attribute in the chain
+        if len(chain) >= 1:
+            return chain[-1]
+
+        return None

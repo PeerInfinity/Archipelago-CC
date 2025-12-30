@@ -253,6 +253,9 @@ class BaseGameExportHandler(
         self._analyzed_helper_cache: Dict[str, Any] = {}
         # Cache for worldgen detection result
         self._is_worldgen_cache: Optional[bool] = None
+        # Dict of auto-discovered param_mappings from call-site analysis
+        # Maps helper_name -> {param_name: slot_data_key}
+        self._discovered_param_mappings: Dict[str, Dict[str, str]] = {}
 
     # ==========================================================================
     # Helper registration methods
@@ -337,6 +340,51 @@ class BaseGameExportHandler(
             self._discovered_helper_modules = {}
         return self._discovered_helper_modules
 
+    def register_discovered_param_mapping(self, helper_name: str, param_mappings: Dict[str, str]) -> None:
+        """
+        Register auto-discovered param_mappings from call-site analysis.
+
+        This is called by the analyzer when it detects that helper arguments
+        follow patterns like world.options.X.value or world.Y, allowing automatic
+        mapping of parameter names to slot_data keys.
+
+        Args:
+            helper_name: The name of the helper function
+            param_mappings: Dict mapping param_name -> slot_data_key
+        """
+        if not hasattr(self, '_discovered_param_mappings'):
+            self._discovered_param_mappings = {}
+
+        if not param_mappings:
+            return
+
+        # Merge with existing mappings (first discovery wins for each param)
+        if helper_name not in self._discovered_param_mappings:
+            self._discovered_param_mappings[helper_name] = {}
+
+        for param_name, slot_data_key in param_mappings.items():
+            if param_name not in self._discovered_param_mappings[helper_name]:
+                self._discovered_param_mappings[helper_name][param_name] = slot_data_key
+                logger.debug(f"Discovered param_mapping: {helper_name}.{param_name} -> '{slot_data_key}'")
+
+    def get_discovered_param_mappings(self, helper_name: str = None) -> Dict[str, Dict[str, str]]:
+        """
+        Return auto-discovered param_mappings.
+
+        Args:
+            helper_name: Optional - if provided, return mappings for this helper only
+
+        Returns:
+            Dict mapping helper_name -> {param_name: slot_data_key}
+            If helper_name is provided, returns just that helper's mappings dict
+        """
+        if not hasattr(self, '_discovered_param_mappings'):
+            self._discovered_param_mappings = {}
+
+        if helper_name:
+            return self._discovered_param_mappings.get(helper_name, {})
+        return self._discovered_param_mappings
+
     def register_auto_preserved_helper(self, helper_name: str) -> None:
         """
         Register that a helper was auto-preserved due to HELPER_INLINE_THRESHOLD.
@@ -371,6 +419,7 @@ class BaseGameExportHandler(
         self._discovered_helper_modules = {}
         self._auto_preserved_helpers = set()
         self._analyzed_helper_cache = {}
+        self._discovered_param_mappings = {}
 
     def is_worldgen_world(self, world=None) -> bool:
         """

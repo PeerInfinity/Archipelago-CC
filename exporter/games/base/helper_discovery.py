@@ -316,9 +316,14 @@ class HelperDiscoveryMixin:
                         }
                         if defaults:
                             helper_def['defaults'] = defaults
-                        # Add param_mappings if defined for this helper
+                        # Add param_mappings: prefer manual definition, fallback to auto-discovered
                         if helper_name in self.HELPER_PARAM_MAPPINGS:
                             helper_def['param_mappings'] = self.HELPER_PARAM_MAPPINGS[helper_name]
+                        elif hasattr(self, 'get_discovered_param_mappings'):
+                            discovered = self.get_discovered_param_mappings(helper_name)
+                            if discovered:
+                                helper_def['param_mappings'] = discovered
+                                logger.debug(f"Using auto-discovered param_mappings for '{helper_name}': {discovered}")
                         helper_definitions[helper_name] = helper_def
                         logger.debug(f"Using cached definition for helper '{helper_name}' with params {params}, defaults {defaults}")
                     else:
@@ -413,9 +418,14 @@ class HelperDiscoveryMixin:
                             }
                             if defaults:
                                 helper_def['defaults'] = defaults
-                            # Add param_mappings if defined for this helper
+                            # Add param_mappings: prefer manual definition, fallback to auto-discovered
                             if helper_name in self.HELPER_PARAM_MAPPINGS:
                                 helper_def['param_mappings'] = self.HELPER_PARAM_MAPPINGS[helper_name]
+                            elif hasattr(self, 'get_discovered_param_mappings'):
+                                discovered = self.get_discovered_param_mappings(helper_name)
+                                if discovered:
+                                    helper_def['param_mappings'] = discovered
+                                    logger.debug(f"Using auto-discovered param_mappings for '{helper_name}': {discovered}")
                             helper_definitions[helper_name] = helper_def
                             logger.debug(f"Exported helper '{helper_name}' with params {params}, defaults {defaults}: {rule}")
                         else:
