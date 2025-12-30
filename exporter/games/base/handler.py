@@ -245,6 +245,15 @@ class BaseGameExportHandler(
     # for items the player has.
     DICT_SUM_HELPERS: Dict[str, str] = {}
 
+    # Configuration for auto-generating accumulator items.
+    # When PROG_ITEMS_INIT is set and these are configured, the base class will:
+    # 1. Create accumulator target items (e.g., " coins") from PROG_ITEMS_INIT keys
+    # 2. Find items matching ACCUMULATOR_RULES patterns in locations
+    # 3. Configure all matching items with these properties
+    ACCUMULATOR_ITEM_GROUP: str = ''  # Group name for accumulator items (e.g., 'coins')
+    ACCUMULATOR_ITEM_TYPE: str = ''   # Type for accumulator items (e.g., 'coins')
+    ACCUMULATOR_TARGET_MAX_COUNT: int = 999999  # Max count for accumulator target items
+
     def __init__(self, world=None):
         """Initialize the handler with an empty set of discovered helpers.
 
@@ -1017,11 +1026,65 @@ class BaseGameExportHandler(
         Post-process the exported data after all standard processing is complete.
         This is called at the end of the export process to allow game-specific modifications.
 
+        When PROG_ITEMS_INIT and ACCUMULATOR_ITEM_GROUP are set, this method:
+        1. Creates accumulator target items (e.g., " coins") from PROG_ITEMS_INIT keys
+        2. Finds items matching ACCUMULATOR_RULES patterns in locations
+        3. Configures all matching items with the specified group and type
+
         Args:
             data: The complete export data dictionary
 
         Returns:
             The modified export data dictionary
         """
-        # Base implementation returns data unchanged
+        import re
+
+        # Auto-generate accumulator items if configured
+        if self.PROG_ITEMS_INIT and self.ACCUMULATOR_ITEM_GROUP:
+            group = self.ACCUMULATOR_ITEM_GROUP
+            item_type = self.ACCUMULATOR_ITEM_TYPE or group
+            max_count = self.ACCUMULATOR_TARGET_MAX_COUNT
+
+            def make_accumulator_item(name: str, is_target: bool = False) -> Dict[str, Any]:
+                return {
+                    'name': name, 'id': None, 'groups': [group],
+                    'advancement': True, 'useful': False, 'trap': False,
+                    'event': False, 'type': item_type,
+                    'max_count': max_count if is_target else 1
+                }
+
+            accumulator_items: Dict[str, Dict[str, Dict[str, Any]]] = {}
+
+            # Step 1: Create accumulator target items from PROG_ITEMS_INIT
+            for player_id in data.get('regions', {}).keys():
+                accumulator_items[player_id] = {}
+                for target_name in self.PROG_ITEMS_INIT.keys():
+                    accumulator_items[player_id][target_name] = make_accumulator_item(
+                        target_name, is_target=True
+                    )
+
+            # Step 2: Find items matching ACCUMULATOR_RULES patterns in locations
+            patterns = [rule.get('pattern') for rule in self.ACCUMULATOR_RULES if rule.get('pattern')]
+            if patterns:
+                for player_id, regions in data.get('regions', {}).items():
+                    for region_data in regions.values():
+                        for location in region_data.get('locations', []):
+                            item_name = location.get('item', {}).get('name', '')
+                            if not item_name:
+                                continue
+                            # Check if item matches any accumulator pattern
+                            for pattern in patterns:
+                                if re.match(pattern, item_name):
+                                    if item_name not in accumulator_items.get(player_id, {}):
+                                        accumulator_items.setdefault(player_id, {})[item_name] = (
+                                            make_accumulator_item(item_name)
+                                        )
+                                    break  # Only match first pattern
+
+            # Step 3: Merge accumulator items into data
+            if accumulator_items:
+                data.setdefault('items', {})
+                for player_id, player_items in accumulator_items.items():
+                    data['items'].setdefault(player_id, {}).update(player_items)
+
         return data
