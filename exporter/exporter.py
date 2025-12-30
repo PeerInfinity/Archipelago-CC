@@ -91,7 +91,10 @@ def classification_has_higher_priority(new_classification: str, current_classifi
 
 
 # Module-level cache for rule analysis results
-_rule_analysis_cache: Dict[Tuple[int, int, Optional[int]], Any] = {}
+# Key: (id(rule_func), id(game_handler), player, rule_target_name)
+# Including rule_target_name prevents cache collisions when the same function
+# is used for multiple targets with different results (e.g., Paint locations)
+_rule_analysis_cache: Dict[Tuple[int, int, Optional[int], Optional[str]], Any] = {}
 
 def clear_rule_cache():
     """Clear the rule analysis cache. Call between generations."""
@@ -1113,18 +1116,23 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
         """
         Analyzes rule using runtime analysis (analyze_rule).
 
-        Results are cached by (rule_func_id, game_handler_id, player) to avoid
-        repeated analysis of the same rule.
+        Results are cached by (rule_func_id, game_handler_id, player, rule_target_name)
+        to avoid repeated analysis of the same rule. Including rule_target_name prevents
+        cache collisions when the same function is used for multiple targets (e.g., Paint
+        locations share a class method that returns different thresholds per location).
         """
         try:
             if rule_func is None:
                 return None
 
             # Create cache key from function identity and context
+            # Including rule_target_name allows games with shared rule functions
+            # (like Paint's PaintLocation.access_rule method) to have unique cache entries
             cache_key = (
                 id(rule_func),
                 id(game_handler),
-                player
+                player,
+                rule_target_name
             )
 
             # Check cache first (before override to avoid recursive loops)
