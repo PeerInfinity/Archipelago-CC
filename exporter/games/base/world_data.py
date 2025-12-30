@@ -312,6 +312,38 @@ class WorldDataMixin:
                 except Exception as e:
                     logger.warning(f"Failed to compute world attribute '{attr_name}': {e}")
 
+        # Process ITEM_VALUE_MAPPINGS - compute item->value dicts from world attributes
+        # Skip for worldgen worlds since the mapping is already in _worldgen_settings.json
+        if hasattr(self, 'ITEM_VALUE_MAPPINGS') and self.ITEM_VALUE_MAPPINGS:
+            is_worldgen = self.is_worldgen_world(world) if hasattr(self, 'is_worldgen_world') else False
+            if not is_worldgen:
+                for mapping_name, config in self.ITEM_VALUE_MAPPINGS.items():
+                    source_attr = config.get('source')
+                    value_extractor = config.get('value_extractor')
+
+                    if not source_attr or not value_extractor:
+                        logger.warning(f"ITEM_VALUE_MAPPINGS['{mapping_name}'] missing 'source' or 'value_extractor'")
+                        continue
+
+                    # Get the source attribute from the world
+                    source_items = getattr(world, source_attr, None)
+                    if source_items is None:
+                        logger.debug(f"World attribute '{source_attr}' not found for ITEM_VALUE_MAPPINGS['{mapping_name}']")
+                        world_attributes[mapping_name] = {}
+                        continue
+
+                    # Compute the item->value mapping
+                    mapping = {}
+                    for item in source_items:
+                        try:
+                            value = value_extractor(item)
+                            mapping[item] = value
+                        except (ValueError, IndexError, TypeError) as e:
+                            logger.warning(f"Could not extract value from '{item}' for {mapping_name}: {e}")
+
+                    world_attributes[mapping_name] = mapping
+                    logger.debug(f"Computed {len(mapping)} entries for ITEM_VALUE_MAPPINGS['{mapping_name}']")
+
         # Auto-discover simple world attributes from the world instance
         # This extracts runtime-computed values without requiring explicit WORLD_ATTRIBUTES entries
         skip_attrs = {

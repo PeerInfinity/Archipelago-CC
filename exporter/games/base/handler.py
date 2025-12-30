@@ -216,6 +216,20 @@ class BaseGameExportHandler(
     # Example: {' coins': 0, ' coins freemium': 0}
     PROG_ITEMS_INIT: Dict[str, Any] = {}
 
+    # Mapping of export names to item value extraction configuration.
+    # Used to compute item->value mappings from world attributes at export time.
+    # Each entry defines: 'source' (world attribute name) and 'value_extractor' (callable).
+    # The value_extractor takes an item name and returns its numeric value.
+    # Example: {'qp_items': {'source': 'available_QP_locations', 'value_extractor': lambda x: int(x[0])}}
+    # The computed mapping is exported as world data and can be used by DICT_SUM_HELPERS.
+    ITEM_VALUE_MAPPINGS: Dict[str, Dict[str, Any]] = {}
+
+    # Mapping of helper names to the dict setting they sum over.
+    # Automatically generates sum_of helpers that iterate over item->value mappings.
+    # Example: {'quest_points': 'qp_items'} generates a helper that sums qp_items values
+    # for items the player has.
+    DICT_SUM_HELPERS: Dict[str, str] = {}
+
     def __init__(self, world=None):
         """Initialize the handler with an empty set of discovered helpers.
 
