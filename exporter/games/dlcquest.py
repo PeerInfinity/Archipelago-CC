@@ -16,7 +16,6 @@ class DLCQuestGameExportHandler(GenericGameExportHandler):
         'pattern': r'^(\d+) coins?$',
         'extract_value': True,
         'target': ' coins',
-        'discriminator': None
     }]
 
     # Initialize coin accumulators (start at 0, accumulate as items collected)
