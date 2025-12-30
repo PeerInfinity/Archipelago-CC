@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-29T22:02:06.370218",
-    "last_updated": "2025-12-29T22:02:06.370226",
+    "last_updated": "2025-12-30T02:35:32.614022",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3137,27 +3137,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "eb0d7cb63799df75aa64b7acf5e90d8f28e5cea0700fb8ee18ba9f27cf1e3bd6",
-          "new_sphere_log_hash": "cd749396655ba1ea1d69d9f59c0e286fb21e56b74083070def80b47cc7a29ef3",
-          "original_rules_hash": "eb0d7cb63799df75aa64b7acf5e90d8f28e5cea0700fb8ee18ba9f27cf1e3bd6",
-          "original_sphere_log_hash": "cd749396655ba1ea1d69d9f59c0e286fb21e56b74083070def80b47cc7a29ef3",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-29T22:01:05.514473"
-        }
-      },
       "game_name_from_filename": "subnautica",
       "game_name_from_yaml": "Subnautica",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 28.45,
+        "processing_time_seconds": 50.49,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/subnautica/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -3169,7 +3157,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 14.69,
+        "processing_time_seconds": 18.68,
         "return_code": 0,
         "sphere_reached": 6.1,
         "success": true,
@@ -3177,10 +3165,10 @@
         "warning_count": 0
       },
       "template_filename": "Subnautica.yaml",
-      "timestamp": "2025-12-29T21:59:12.098277",
+      "timestamp": "2025-12-30T02:34:23.007916",
       "world_info": {
         "exporter_path": "exporter/games/subnautica.py",
-        "exporter_size": 7544,
+        "exporter_size": 6073,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "subnautica",
