@@ -52,6 +52,7 @@
     "@playwright/test": "^1.57.0",
     "@vitest/coverage-v8": "^4.0.15",
     "jsdoc": "^4.0.5",
+    "jszip": "^3.10.1",
     "vitest": "^4.0.15"
   }
 }
