@@ -6,11 +6,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-30 03:25:51
+**Generated:** 2025-12-30 05:05:10
 
-**Source Data Created:** 2025-12-30T02:58:43.156433
+**Source Data Created:** 2025-12-30T05:05:10.031771
 
-**Source Data Last Updated:** 2025-12-30T02:58:43.156439
+**Source Data Last Updated:** 2025-12-30T05:05:10.031776
 
 ## Summary
 
@@ -22,36 +22,36 @@
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 40/73 (54.8% of passed)
+- **Passing with Generic Exporter:** 41/73 (56.2% of passed)
 - **Passing with Generic Logic:** 67/73 (91.8% of passed)
-- **Passing with Both Generic:** 40/73 (54.8% of passed)
+- **Passing with Both Generic:** 41/73 (56.2% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
-| A Hat in Time | ✅ Passed | 0 | 5.11 | 5.11 | 🟢 Complete | 6.6KB | ✅ |
+| A Hat in Time | ✅ Passed | 0 | 5.11 | 5.11 | 🟢 Complete | 6.2KB | ✅ |
 | A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 2.5KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
-| Aquaria | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 2.8KB | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.9 | 10.9 | 🟢 Complete | 1.4KB | 40.3KB |
+| Aquaria | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 1.9KB | ✅ |
+| Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.9 | 10.9 | 🟢 Complete | 1.8KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
-| Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.4 | 4.4 | 🟢 Complete | 6.0KB | ✅ |
+| Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.4 | 4.4 | 🟢 Complete | 5.9KB | ✅ |
 | Castlevania 64 | ✅ Passed | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed | 0 | 16.2 | 16.2 | 🟢 Complete | ✅ | ✅ |
-| Celeste 64 | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 5.7KB | ✅ |
+| Celeste 64 | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 5.5KB | ✅ |
 | ChecksFinder | ✅ Passed | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
 | ChocolateChipCookies | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
 | Civilization VI | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
-| DLCQuest | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 2.5KB | ✅ |
+| DLCQuest | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 1.0KB | ✅ |
 | DOOM 1993 | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ✅ |
 | DOOM II | ✅ Passed | 0 | 21.2 | 21.2 | 🟢 Complete | ✅ | ✅ |
-| Dark Souls III | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 1.4KB | ✅ |
+| Dark Souls III | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 0.7KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
-| Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 6.0KB | ✅ |
+| Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 5.9KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ✅ |
 | Heretic | ✅ Passed | 0 | 24.1 | 24.1 | 🟢 Complete | ✅ | ✅ |
@@ -91,17 +91,17 @@
 | TOEM original | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
 | TUNIC | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 3.1KB | ✅ |
-| Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 18.3KB | ✅ |
+| Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 18.1KB | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | The Messenger | ✅ Passed | 0 | 6.3 | 6.3 | 🟢 Complete | 5.4KB | ✅ |
-| The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | 2.1KB | ✅ |
-| The Witness | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 25.8KB | ✅ |
-| Timespinner | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 3.2KB | ✅ |
+| The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | ✅ | ✅ |
+| The Witness | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 25.6KB | ✅ |
+| Timespinner | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 2.9KB | ✅ |
 | Undertale | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
-| VVVVVV | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | 2.1KB | ✅ |
+| VVVVVV | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | 2.4KB | ✅ |
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | WebDevJourney | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
-| Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 4.7KB | ✅ |
+| Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 4.2KB | ✅ |
 | shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
 
 ## Notes
