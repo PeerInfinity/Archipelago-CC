@@ -216,6 +216,21 @@ class BaseGameExportHandler(
     # Example: {' coins': 0, ' coins freemium': 0}
     PROG_ITEMS_INIT: Dict[str, Any] = {}
 
+    # Mapping of self.<attr> patterns to setting configurations.
+    # Used by the analyzer to convert self.attr access to setting_value rules.
+    # This is useful for games where the world class stores option values in instance attributes.
+    # Values can be:
+    #   - str: setting name (uses numeric value)
+    #   - dict: {'setting': name, 'use_current_key': True} (uses string key from name_lookup)
+    # Example: {'fight_logic': {'setting': 'FightLogic', 'use_current_key': True}}
+    SELF_ATTR_TO_SETTING: Dict[str, Any] = {}
+
+    # Mapping of helper function names to their constant return values.
+    # Used for helpers that always return a constant (typically True or False).
+    # These are automatically expanded by expand_helper in the base class.
+    # Example: {'always_true_helper': True, 'disabled_feature': False}
+    CONSTANT_HELPER_EXPANSIONS: Dict[str, Any] = {}
+
     def __init__(self, world=None):
         """Initialize the handler with an empty set of discovered helpers.
 
@@ -479,7 +494,8 @@ class BaseGameExportHandler(
         """Expand a helper function into basic rule conditions.
 
         Override this method in game-specific handlers to provide
-        game-specific helper expansions.
+        game-specific helper expansions. When overriding, call
+        super().expand_helper() first to handle CONSTANT_HELPER_EXPANSIONS.
 
         Args:
             helper_name: The name of the helper to expand
@@ -488,6 +504,11 @@ class BaseGameExportHandler(
         Returns:
             A rule dictionary if the helper should be expanded, None otherwise
         """
+        # Check CONSTANT_HELPER_EXPANSIONS for helpers that return constant values
+        if helper_name in self.CONSTANT_HELPER_EXPANSIONS:
+            value = self.CONSTANT_HELPER_EXPANSIONS[helper_name]
+            return {'type': 'constant', 'value': value}
+
         return None
 
     def replace_name(self, name: str) -> str:
