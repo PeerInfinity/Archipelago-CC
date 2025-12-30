@@ -14,6 +14,18 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Chapter index to name mapping for timepiece costs
+CHAPTER_NAMES = {
+    0: 'Spaceship',
+    1: 'Mafia Town',
+    2: 'Battle of the Birds',
+    3: 'Subcon Forest',
+    4: 'Alpine Skyline',
+    5: "Time's End",
+    6: 'Arctic Cruise',
+    7: 'Nyakuza Metro'
+}
+
 
 class AHitGameExportHandler(GenericGameExportHandler):
     """A Hat in Time export handler."""
@@ -86,68 +98,26 @@ class AHitGameExportHandler(GenericGameExportHandler):
 
         return super().expand_helper(helper_name, args)
 
-    def get_chapter_costs(self, world):
-        """Extract A Hat in Time chapter costs for telescope access rules."""
-        try:
-            chapter_costs = {}
-            if hasattr(world, 'chapter_timepiece_costs'):
-                chapter_names = {
-                    0: 'Spaceship',
-                    1: 'Mafia Town',
-                    2: 'Battle of the Birds',
-                    3: 'Subcon Forest',
-                    4: 'Alpine Skyline',
-                    5: "Time's End",
-                    6: 'Arctic Cruise',
-                    7: 'Nyakuza Metro'
-                }
-
-                for chapter_index, cost in world.chapter_timepiece_costs.items():
-                    chapter_name = chapter_names.get(int(chapter_index), f'Chapter_{chapter_index}')
-                    chapter_costs[chapter_name] = cost
-
-                return chapter_costs
-            return {}
-        except Exception as e:
-            logger.error(f"Error extracting chapter costs: {e}")
-            return {}
-
-    def get_relic_groups(self, world):
-        """Extract A Hat in Time relic groups (item_name_groups)."""
-        try:
-            relic_groups = {}
-            if hasattr(world, 'item_name_groups'):
-                for group_name, items in world.item_name_groups.items():
-                    if isinstance(items, (set, frozenset)):
-                        relic_groups[group_name] = sorted(list(items))
-                    elif isinstance(items, list):
-                        relic_groups[group_name] = sorted(items)
-                    else:
-                        try:
-                            relic_groups[group_name] = sorted(list(items))
-                        except:
-                            relic_groups[group_name] = []
-            return relic_groups
-        except Exception as e:
-            logger.error(f"Error extracting relic groups: {e}")
-            return {}
-
     def get_game_info(self, world):
         """Get A Hat in Time specific game information.
 
         Note: hat_yarn_costs and hat_craft_order are auto-discovered and
         available in the world section, so they're not duplicated here.
         """
-        # Get base game info (includes name, accumulator_rules, prog_items_init)
         game_info = super().get_game_info(world)
 
-        try:
-            game_info["chapter_costs"] = self.get_chapter_costs(world)
-            game_info["relic_groups"] = self.get_relic_groups(world)
-        except Exception as e:
-            logger.error(f"Error getting A Hat in Time game info: {e}")
-            game_info["chapter_costs"] = {}
-            game_info["relic_groups"] = {}
+        # Add chapter timepiece costs (convert enum keys to chapter names)
+        if hasattr(world, 'chapter_timepiece_costs'):
+            game_info["chapter_costs"] = {
+                CHAPTER_NAMES.get(int(idx), f'Chapter_{idx}'): cost
+                for idx, cost in world.chapter_timepiece_costs.items()
+            }
+
+        # Add item name groups (relic groups for frontend)
+        if hasattr(world, 'item_name_groups'):
+            game_info["relic_groups"] = {
+                name: sorted(items) for name, items in world.item_name_groups.items()
+            }
 
         return game_info
 
