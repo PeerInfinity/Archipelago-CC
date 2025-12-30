@@ -32,22 +32,55 @@ class ASTVisitorMixin:
         - binary_op_processor: BinaryOpProcessor instance
     """
 
-    def _register_helper_usage(self, helper_name: str, helper_func: Any = None) -> None:
+    def _register_helper_usage(self, helper_name: str, helper_func: Any = None,
+                                args_with_nodes: List[Any] = None) -> None:
         """
         Register that a helper function is used, for automatic discovery.
 
         This calls the game handler's register_helper_usage method if available,
         allowing the exporter to automatically discover and export helper definitions.
 
+        Also detects and registers param_mappings from call-site AST patterns when
+        args_with_nodes is provided.
+
         Args:
             helper_name: The name of the helper function being used
             helper_func: Optional - the actual function object (for auto-detecting module)
+            args_with_nodes: Optional - list of (arg_node, arg_result) tuples for param_mapping detection
         """
         if (hasattr(self, 'game_handler') and
             self.game_handler is not None and
             hasattr(self.game_handler, 'register_helper_usage')):
             self.game_handler.register_helper_usage(helper_name, helper_func)
             logging.debug(f"Registered helper usage: {helper_name}")
+
+            # Detect and register param_mappings from call-site patterns
+            if args_with_nodes and helper_func is not None:
+                self._detect_and_register_param_mappings(helper_name, helper_func, args_with_nodes)
+
+    def _detect_and_register_param_mappings(self, helper_name: str, helper_func: Any,
+                                             args_with_nodes: List[Any]) -> None:
+        """
+        Detect param_mappings from call-site AST patterns and register them.
+
+        This analyzes how a helper is called (e.g., with world.options.X.value or world.Y)
+        and automatically determines the mapping from helper parameter names to slot_data keys.
+
+        Args:
+            helper_name: The name of the helper function
+            helper_func: The actual function object
+            args_with_nodes: List of (arg_node, arg_result) tuples
+        """
+        if not (hasattr(self, 'game_handler') and
+                self.game_handler is not None and
+                hasattr(self.game_handler, 'register_discovered_param_mapping')):
+            return
+
+        # Use the detection method from rule_analyzer
+        param_mappings = self._detect_param_mappings_from_call_site(helper_name, helper_func, args_with_nodes)
+
+        if param_mappings:
+            self.game_handler.register_discovered_param_mapping(helper_name, param_mappings)
 
     def _make_helper_rule(self, name: str, args: List[Any]) -> Dict[str, Any]:
         """
@@ -453,8 +486,7 @@ class ASTVisitorMixin:
                             resolved_func_name = getattr(resolved_func, '__name__', func_name)
                             if has_dynamic_for_loops_resolved(resolved_func):
                                 logging.debug(f"Function {resolved_func_name} has dynamic for loops, preserving as helper")
-                                if hasattr(self.game_handler, 'register_helper_usage'):
-                                    self.game_handler.register_helper_usage(resolved_func_name, resolved_func)
+                                self._register_helper_usage(resolved_func_name, resolved_func, args_with_nodes)
                                 return self._make_helper_rule(resolved_func_name, filtered_args)
 
                             # Check if 'state' is passed as an argument using original AST nodes
@@ -492,9 +524,8 @@ class ASTVisitorMixin:
                                         size = BaseGameExportHandler.count_rule_nodes(recursive_result)
                                         if size > threshold:
                                             logging.debug(f"Helper {actual_func_name} has {size} nodes (threshold {threshold}), preserving as helper")
-                                            # Register the helper for export
-                                            if hasattr(self.game_handler, 'register_helper_usage'):
-                                                self.game_handler.register_helper_usage(actual_func_name, resolved_func)
+                                            # Register the helper for export with param_mappings detection
+                                            self._register_helper_usage(actual_func_name, resolved_func, args_with_nodes)
                                             if hasattr(self.game_handler, 'register_auto_preserved_helper'):
                                                 self.game_handler.register_auto_preserved_helper(actual_func_name)
                                             # Only cache the analyzed result if the function has no extra parameters
@@ -586,8 +617,7 @@ class ASTVisitorMixin:
                      # Check if function has dynamic for loops - if so, preserve as helper
                      if has_dynamic_for_loops(actual_func):
                          logging.debug(f"Function {closure_func_name} has dynamic for loops, preserving as helper")
-                         if hasattr(self.game_handler, 'register_helper_usage'):
-                             self.game_handler.register_helper_usage(closure_func_name, actual_func)
+                         self._register_helper_usage(closure_func_name, actual_func, args_with_nodes)
                          return self._make_helper_rule(closure_func_name, filtered_args)
 
                      # Check if 'state' is passed as an argument (directly or indirectly)
@@ -627,9 +657,8 @@ class ASTVisitorMixin:
                                   size = BaseGameExportHandler.count_rule_nodes(recursive_result)
                                   if size > threshold:
                                       logging.debug(f"Helper {closure_func_name} has {size} nodes (threshold {threshold}), preserving as helper")
-                                      # Register the helper for export
-                                      if hasattr(self.game_handler, 'register_helper_usage'):
-                                          self.game_handler.register_helper_usage(closure_func_name, actual_func)
+                                      # Register the helper for export with param_mappings detection
+                                      self._register_helper_usage(closure_func_name, actual_func, args_with_nodes)
                                       if hasattr(self.game_handler, 'register_auto_preserved_helper'):
                                           self.game_handler.register_auto_preserved_helper(closure_func_name)
                                       # Only cache the analyzed result if the function has no extra parameters
@@ -1377,8 +1406,38 @@ class ASTVisitorMixin:
                     # Count is now in position 1 after player is filtered
                     count = filtered_args[1] if len(filtered_args) >= 2 else {'type': 'constant', 'value': 1}
                     result = {'type': 'count_check', 'item': item_value, 'count': count}
-                # Add other state methods like can_reach if needed
-                # elif method == 'can_reach': ...
+                elif method == 'can_reach' and len(filtered_args) >= 1:
+                    # Handle can_reach state method with Location object resolution
+                    # Pattern: state.can_reach(loc_var, "Location", player) where loc_var is a Location object
+                    # in closure_vars (typically from lambda default parameter like: lambda state, b=boss: ...)
+                    first_arg = filtered_args[0]
+                    reach_type = 'Region'  # Default reach type
+
+                    # Get the reach type from the second argument if present
+                    if len(filtered_args) >= 2:
+                        type_arg = filtered_args[1]
+                        if isinstance(type_arg, dict) and type_arg.get('type') == 'constant':
+                            reach_type = type_arg.get('value', 'Region')
+                        elif isinstance(type_arg, str):
+                            reach_type = type_arg
+
+                    # Check if first argument is a name reference to a Location object in closure_vars
+                    if (isinstance(first_arg, dict) and first_arg.get('type') == 'name' and
+                        reach_type == 'Location'):
+                        var_name = first_arg.get('name')
+                        if var_name and var_name in self.closure_vars:
+                            loc_obj = self.closure_vars[var_name]
+                            # Check if it's a Location object (has 'name' and 'parent_region' but not 'entrances')
+                            if (hasattr(loc_obj, 'name') and
+                                hasattr(loc_obj, 'parent_region') and
+                                not hasattr(loc_obj, 'entrances') and
+                                isinstance(loc_obj.name, str)):
+                                logging.debug(f"Resolved Location object '{var_name}' to name: {loc_obj.name}")
+                                # Replace the name reference with the actual location name
+                                filtered_args[0] = {'type': 'constant', 'value': loc_obj.name}
+
+                    # Create the state_method result with potentially resolved arguments
+                    result = {'type': 'state_method', 'method': 'can_reach', 'args': filtered_args}
                 else:
                     # Default for unhandled state methods
                     result = {'type': 'state_method', 'method': method, 'args': filtered_args}
@@ -1476,28 +1535,31 @@ class ASTVisitorMixin:
 
             # Handle Module.function calls (e.g., StateLogic.canDig, Macros.can_sail)
             # This enables auto-discovery of helper modules without requiring HELPER_MODULES config
-            elif obj_name and obj_name in self.closure_vars:
+            # NOTE: The module check (has __name__ and __file__) MUST be in the elif condition itself,
+            # not as a nested if. Otherwise, non-module objects like Location will match the elif
+            # but fail the inner check, causing the can_reach handler below to be skipped.
+            elif (obj_name and obj_name in self.closure_vars and
+                  hasattr(self.closure_vars[obj_name], '__name__') and
+                  hasattr(self.closure_vars[obj_name], '__file__')):
                 module_obj = self.closure_vars[obj_name]
-                # Check if the object is a module (has __name__ and __file__ attributes)
-                if hasattr(module_obj, '__name__') and hasattr(module_obj, '__file__'):
-                    logging.debug(f"Processing module function call: {obj_name}.{method_name}")
+                logging.debug(f"Processing module function call: {obj_name}.{method_name}")
 
-                    # Get the actual function object from the module
-                    func_obj = getattr(module_obj, method_name, None)
-                    if func_obj is not None and callable(func_obj):
-                        # Filter out state/world/player arguments
-                        filtered_args = self._filter_special_args(args_with_nodes)
+                # Get the actual function object from the module
+                func_obj = getattr(module_obj, method_name, None)
+                if func_obj is not None and callable(func_obj):
+                    # Filter out state/world/player arguments
+                    filtered_args = self._filter_special_args(args_with_nodes)
 
-                        # Create helper result
-                        result = self._make_helper_rule(method_name, filtered_args)
-                        logging.debug(f"Created helper result for module function: {result}")
+                    # Create helper result
+                    result = self._make_helper_rule(method_name, filtered_args)
+                    logging.debug(f"Created helper result for module function: {result}")
 
-                        # Register for automatic discovery WITH the function object
-                        # This allows the base class to auto-detect the module path
-                        self._register_helper_usage(method_name, func_obj)
-                        return result
-                    else:
-                        logging.debug(f"Could not find callable '{method_name}' in module {obj_name}")
+                    # Register for automatic discovery WITH the function object
+                    # This allows the base class to auto-detect the module path
+                    self._register_helper_usage(method_name, func_obj)
+                    return result
+                else:
+                    logging.debug(f"Could not find callable '{method_name}' in module {obj_name}")
 
             # Handle Location and Region object method calls (e.g., loc.can_reach(state) or region.can_reach(state))
             elif obj_name and method_name == 'can_reach':

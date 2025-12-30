@@ -13,38 +13,24 @@ import os
 
 logger = logging.getLogger(__name__)
 
-class SM64EXGameExportHandler(GenericGameExportHandler):
-    # Movement abilities - affected by enable_move_rando
-    MOVEMENT_TOKENS = {
-        "TJ": "Triple Jump",
-        "DJ": "Triple Jump",
-        "LJ": "Long Jump",
-        "BF": "Backflip",
-        "SF": "Side Flip",
-        "WK": "Wall Kick",
-        "DV": "Dive",
-        "GP": "Ground Pound",
-        "KK": "Kick",
-        "CL": "Climb",
-        "LG": "Ledge Grab"
-    }
 
-    # Cap items - always collectible items, not affected by enable_move_rando
-    CAP_TOKENS = {
-        "WC": "Wing Cap",
-        "MC": "Metal Cap",
-        "VC": "Vanish Cap"
-    }
+class SM64EXGameExportHandler(GenericGameExportHandler):
+    # SM64 uses simple locations without custom attributes
+    AUTO_DISCOVER_LOCATION_ATTRIBUTES = False
+
+    # Cap tokens are always collectible items, not affected by enable_move_rando
+    # All other tokens in the RuleFactory.token_table are movement abilities
+    CAP_TOKENS = {"WC", "MC", "VC"}
 
     def __init__(self, world=None):
         super().__init__(world=world)
         self._rule_expressions = {}  # Cache for parsed rules
-        self._options = {}  # Store world options
+        self._token_table = {}  # Token -> item name mapping from RuleFactory
 
-        # Parse rules file and extract options if world is available
+        # Parse rules file if world is available
         if world:
             self.parse_rules_file(world)
-            self.extract_world_options(world)
+            self._load_token_table()
 
     def parse_rules_file(self, world):
         """Parse the SM64 Rules.py file to extract rule expressions."""
@@ -79,29 +65,31 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
         except Exception as e:
             logger.error(f"Error parsing Rules.py: {e}", exc_info=True)
 
-    def extract_world_options(self, world):
-        """Extract and store world options for rule parsing."""
-        if hasattr(world, 'options'):
-            try:
-                if hasattr(world.options, 'enable_move_rando'):
-                    self._options['enable_move_rando'] = bool(world.options.enable_move_rando.value)
-                else:
-                    self._options['enable_move_rando'] = False
+    def _load_token_table(self):
+        """Load token table from the world's RuleFactory."""
+        try:
+            from worlds.sm64ex.Rules import RuleFactory
+            self._token_table = RuleFactory.token_table.copy()
+            logger.debug(f"Loaded {len(self._token_table)} tokens from RuleFactory")
+        except ImportError as e:
+            logger.warning(f"Could not import RuleFactory, using fallback token table: {e}")
+            # Fallback to hardcoded values if import fails
+            self._token_table = {
+                "TJ": "Triple Jump", "DJ": "Triple Jump", "LJ": "Long Jump",
+                "BF": "Backflip", "SF": "Side Flip", "WK": "Wall Kick",
+                "DV": "Dive", "GP": "Ground Pound", "KK": "Kick",
+                "CL": "Climb", "LG": "Ledge Grab",
+                "WC": "Wing Cap", "MC": "Metal Cap", "VC": "Vanish Cap"
+            }
 
-                if hasattr(world.options, 'strict_cap_requirements'):
-                    self._options['capless'] = not bool(world.options.strict_cap_requirements.value)
-
-                if hasattr(world.options, 'strict_cannon_requirements'):
-                    self._options['cannonless'] = not bool(world.options.strict_cannon_requirements.value)
-
-                if hasattr(world.options, 'strict_move_requirements'):
-                    self._options['moveless'] = not bool(world.options.strict_move_requirements.value)
-
-                if hasattr(world.options, 'area_rando'):
-                    self._options['area_randomizer'] = int(world.options.area_rando.value) > 0
-
-            except Exception as e:
-                logger.error(f"Error extracting SM64 options: {e}")
+    def _get_option(self, option_name: str, default=None):
+        """Get an option value from the world, with fallback to default."""
+        if not self.world or not hasattr(self.world, 'options'):
+            return default
+        option = getattr(self.world.options, option_name, None)
+        if option is None:
+            return default
+        return option.value
 
     def parse_rule_expression(self, rule_expr: str, cannon_area: Optional[str] = None) -> Dict[str, Any]:
         """Parse a SM64 rule expression string into JSON rule format.
@@ -260,31 +248,35 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
         """Resolve a single token to an item name or boolean."""
         token = token.strip()
 
-        # Handle special tokens
+        # Handle special tokens - these resolve to True/False based on options
         if token == 'MOVELESS':
-            return True if self._options.get('moveless', False) else False
+            return not bool(self._get_option('strict_move_requirements', True))
         if token == 'CAPLESS':
-            return True if self._options.get('capless', False) else False
+            return not bool(self._get_option('strict_cap_requirements', True))
         if token == 'CANNLESS':
-            return True if self._options.get('cannonless', False) else False
+            return not bool(self._get_option('strict_cannon_requirements', True))
         if token == 'NAR':
-            return True if self._options.get('area_randomizer', False) else False
+            # NAR = "No Area Randomization" - True when area rando is OFF
+            return int(self._get_option('area_rando', 0)) == 0
         if token == 'CANN':
             # Cannon for specific area
             if cannon_area:
                 return f"Cannon Unlock {cannon_area}"
             return "Cannon"  # Generic cannon item
 
-        # Check if it's a cap item (always collectible, never "always available")
-        if token in self.CAP_TOKENS:
-            return self.CAP_TOKENS[token]
+        # Check if it's a known token from the RuleFactory
+        if token in self._token_table:
+            item_name = self._token_table[token]
 
-        # Check if it's a movement ability token
-        if token in self.MOVEMENT_TOKENS:
+            # Cap tokens are always collectible items
+            if token in self.CAP_TOKENS:
+                return item_name
+
+            # Movement ability tokens depend on enable_move_rando
             # If move randomizer is disabled, all moves are available from the start
-            if not self._options.get('enable_move_rando', False):
+            if not bool(self._get_option('enable_move_rando', False)):
                 return True  # Move is always available
-            return self.MOVEMENT_TOKENS[token]
+            return item_name
 
         # Unknown token
         logger.warning(f"Unknown SM64 token: {token}")

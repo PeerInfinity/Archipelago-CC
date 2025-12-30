@@ -7,6 +7,9 @@ import re
 
 logger = logging.getLogger(__name__)
 
+# Compiled regex for extracting threshold from location names like "Similarity: 1.0%"
+_SIMILARITY_PATTERN = re.compile(r"Similarity: ([\d.]+)%")
+
 
 class PaintGameExportHandler(GenericGameExportHandler):
     """Export handler for Paint game.
@@ -17,9 +20,6 @@ class PaintGameExportHandler(GenericGameExportHandler):
 
     For WorldGen worlds, rule overrides are skipped since they have their own generated rules.
     """
-
-    # Export Paint-specific option values needed by calculate_paint_percent_available helper
-    EXPORTED_OPTIONS = ['canvas_size_increment', 'logic_percent']
 
     # Blacklist paint_percent_available - it has caching logic with state mutation
     # that doesn't translate to the pure function model
@@ -38,8 +38,7 @@ class PaintGameExportHandler(GenericGameExportHandler):
         if not (rule_target_name and rule_target_name.startswith("Similarity: ")):
             return None
 
-        # Extract the percentage from the location name (format: "Similarity: X.XX%")
-        match = re.match(r"Similarity: ([\d.]+)%", rule_target_name)
+        match = _SIMILARITY_PATTERN.match(rule_target_name)
         if not match:
             logger.warning(f"Paint: Could not extract threshold from location name: {rule_target_name}")
             return None
@@ -61,7 +60,13 @@ class PaintGameExportHandler(GenericGameExportHandler):
         }
 
     def postprocess_regions(self, multiworld, player):
-        """Set unique access_rule lambdas on each location to ensure proper cache keys."""
+        """Set unique access_rule lambdas on each location to ensure proper cache keys.
+
+        The rule analysis cache uses function identity (id(rule_func)) as part of the key.
+        Paint's original rules share the same lambda across all locations, causing cache
+        collisions. This method creates unique lambdas for each location to ensure each
+        gets its own cache entry and thus its own override_rule_analysis call.
+        """
         if self.is_worldgen_world():
             return
 
@@ -75,7 +80,7 @@ class PaintGameExportHandler(GenericGameExportHandler):
         for region in multiworld.get_regions(player):
             for location in region.locations:
                 if location.name and location.name.startswith("Similarity: "):
-                    match = re.match(r"Similarity: ([\d.]+)%", location.name)
+                    match = _SIMILARITY_PATTERN.match(location.name)
                     if match:
                         threshold = float(match.group(1))
                         # Capture player and threshold in lambda defaults for unique cache keys

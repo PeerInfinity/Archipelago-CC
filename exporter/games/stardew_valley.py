@@ -1,4 +1,11 @@
-"""Stardew Valley game-specific export handler."""
+"""Stardew Valley game-specific export handler.
+
+NOTE: This exporter cannot be simplified using base class declarative tools
+(STATE_METHOD_REPLACEMENTS, CLOSURE_VAR_IMPORTS, etc.) because Stardew Valley
+uses a completely custom StardewRule class system instead of lambda functions.
+Each StardewRule type (Received, Reach, And, Or, Count, Has, etc.) requires
+specific serialization logic that cannot be replaced with declarative configuration.
+"""
 
 from typing import Dict, Any, Optional, Set
 from .generic import GenericGameExportHandler
@@ -6,11 +13,23 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class StardewValleyGameExportHandler(GenericGameExportHandler):
     """Export handler for Stardew Valley.
 
-    Stardew Valley uses a custom StardewRule system instead of lambda functions.
-    This handler detects and serializes those rule objects to JSON format.
+    Stardew Valley uses a custom StardewRule class hierarchy instead of lambda
+    functions for access rules. This requires the override_rule_analysis() hook
+    to detect and serialize these custom rule objects to JSON format.
+
+    The StardewRule types handled:
+    - Received: Item requirement → item_check
+    - Reach: Region/location accessibility → region_check/location_check
+    - TotalReceived: Count across multiple items → item_check or helper
+    - And/Or: Logical combinations → and/or conditions
+    - True_/False_: Literal values → constants
+    - HasProgressionPercent: Progress tracking → item_check
+    - Has: Lazy evaluation wrapper → helper or cached rule
+    - Count: Weighted conditions → weighted_count_true
 
     To reduce rules.json file size, Has rules (which represent item acquisition
     logic) are exported as helper references instead of being fully inlined.

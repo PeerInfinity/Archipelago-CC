@@ -1,6 +1,6 @@
 """TUNIC game-specific export handler."""
 
-from typing import Dict, Any, Set, List
+from typing import Dict, Any, Set
 from .generic import GenericGameExportHandler
 import logging
 import re
@@ -17,10 +17,9 @@ class TUNICGameExportHandler(GenericGameExportHandler):
     we can simplify by having exits go directly to 'Shop'.
 
     Note: ability_unlocks is auto-discovered via AUTO_DISCOVER_WORLD_ATTRIBUTES.
+    Helper modules (including combat_logic) are auto-discovered via
+    AUTO_DISCOVER_WORLD_HELPER_MODULES (enabled by default).
     """
-
-    # Explicitly discover helpers from the combat_logic module
-    HELPER_MODULES: List[str] = ['worlds.tunic.combat_logic']
 
     # Preserve complex combat logic helpers as helper calls during rule analysis.
     # These helpers have deep nesting, loops, and state calculations that consume

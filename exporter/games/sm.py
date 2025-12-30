@@ -1,6 +1,6 @@
 """Super Metroid game-specific export handler."""
 
-from typing import Dict, Any, Optional, Set
+from typing import Dict, Any, Optional
 from .generic import GenericGameExportHandler
 import logging
 
@@ -17,16 +17,16 @@ class SMGameExportHandler(GenericGameExportHandler):
     helper calls that the frontend can execute.
     """
     GAME_NAME = 'Super Metroid'
-    # Note: AUTO_EXPORT_DISCOVERED_HELPERS has limited effect for SM because:
+
+    # Note: AUTO_EXPORT_DISCOVERED_HELPERS is inherited as True from GenericGameExportHandler
+    # but has limited effect for SM because:
     # 1. Helpers are methods on SMBoolManager class, not standalone functions
     # 2. Helper calls are created in expand_rule post-processing, not during analysis
     # 3. The VARIA logic system (SMBool with difficulty) requires JS implementations
     # The JavaScript helpers in smLogic.js remain necessary for rule evaluation.
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
 
     def __init__(self, world=None):
         super().__init__(world=world)
-        self._simple_accessfrom_locations: Optional[Set[str]] = None
         self._all_accessfrom_info: Optional[Dict[str, Dict[str, str]]] = None
         self._varia_item_types: Optional[Dict[str, str]] = None
         self._accesspoint_traverse_funcs: Optional[Dict[str, Any]] = None
@@ -140,22 +140,6 @@ class SMGameExportHandler(GenericGameExportHandler):
             game_info['doors'] = door_data
 
         return game_info
-
-    def _get_simple_accessfrom_locations(self) -> Set[str]:
-        """Get the set of location names with simple AccessFrom (all regions use SMBool(True)).
-
-        This is cached after first call for performance.
-        """
-        if self._simple_accessfrom_locations is None:
-            try:
-                from .sm_accessfrom_extractor import get_simple_accessfrom_locations
-                self._simple_accessfrom_locations = get_simple_accessfrom_locations(self.world)
-                logger.info(f"SM: Loaded {len(self._simple_accessfrom_locations)} locations with simple AccessFrom")
-            except Exception as e:
-                logger.error(f"SM: Failed to extract simple AccessFrom locations: {e}")
-                self._simple_accessfrom_locations = set()
-
-        return self._simple_accessfrom_locations
 
     def _get_all_accessfrom_info(self) -> Dict[str, Dict[str, str]]:
         """Get ALL AccessFrom information for all locations.
@@ -624,73 +608,6 @@ class SMGameExportHandler(GenericGameExportHandler):
         if self._is_always_true_smbool(second):
             logger.debug("SM: _is_simple_accessFrom: DETECTED SIMPLE PATTERN (rare!)")
             return True
-
-        return False
-
-    def _contains_complex_helpers(self, rule: Dict[str, Any]) -> bool:
-        """Recursively check if a rule contains complex helper calls.
-
-        Simple helpers: SMBool, evalSMBool
-        Complex helpers: any VARIA logic methods like canPassTerminatorBombWall, haveItem, etc.
-
-        Returns True if any complex helpers are found.
-        """
-        if not rule or not isinstance(rule, dict):
-            return False
-
-        rule_type = rule.get('type')
-
-        # Check if this is a complex helper call
-        if rule_type == 'helper':
-            helper_name = rule.get('name', '')
-            # These are simple helpers that don't indicate item requirements
-            # 'rule' is an artifact from analyzer recursion limits
-            simple_helpers = {'SMBool', 'evalSMBool', 'rule'}
-            if helper_name not in simple_helpers:
-                # Any other helper is complex (haveItem, canPass*, traverse, etc.)
-                return True
-
-        # Check if this is a state_method call (also indicates requirements)
-        if rule_type == 'state_method':
-            method_name = rule.get('method', '')
-            # can_reach is fine, but other state methods indicate requirements
-            if method_name not in {'can_reach'}:
-                return True
-
-        # Recursively check nested structures
-        if rule_type in ['and', 'or']:
-            for cond in rule.get('conditions', []):
-                if self._contains_complex_helpers(cond):
-                    return True
-
-        if rule_type == 'not':
-            return self._contains_complex_helpers(rule.get('condition'))
-
-        if rule_type == 'helper':
-            for arg in rule.get('args', []):
-                if self._contains_complex_helpers(arg):
-                    return True
-
-        if rule_type == 'function_call':
-            # Check if the function being called is a VARIA logic method (sm.method_name)
-            function = rule.get('function', {})
-            if function.get('type') == 'attribute':
-                obj = function.get('object', {})
-                attr = function.get('attr', '')
-                # If calling sm.method_name, this is complex VARIA logic
-                if obj.get('type') == 'name' and obj.get('name') == 'sm':
-                    # Any sm.method_name is complex (wor, wand, canPass*, haveItem, etc.)
-                    logger.debug(f"SM: Found complex function_call: sm.{attr}")
-                    return True
-
-            # Also check args recursively
-            for arg in rule.get('args', []):
-                if self._contains_complex_helpers(arg):
-                    return True
-
-        if rule_type == 'any_of' or rule_type == 'all_of':
-            if self._contains_complex_helpers(rule.get('element_rule')):
-                return True
 
         return False
 
