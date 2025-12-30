@@ -3488,8 +3488,6 @@
           "display_name": "Trap Fill Percent"
         }
       },
-      "canvas_size_increment": 100,
-      "logic_percent": 80,
       "shops": [],
       "world_description": "Paint WorldGen for Archipelago.\n\nAuto-generated world implementation.",
       "slot_data": {

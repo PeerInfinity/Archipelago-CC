@@ -112,17 +112,84 @@ These class attributes let you configure behavior without writing custom methods
 
 | Attribute | Purpose | Example Game |
 |-----------|---------|--------------|
-| `STATE_METHOD_REPLACEMENTS` | Replace state methods with rule structures | TWW (`_tww_in_swordless_mode` → `setting_value`) |
+| `STATE_METHOD_REPLACEMENTS` | Replace state methods with rule structures (often auto-detected) | ALTTP, OOT |
 | `CLOSURE_VAR_IMPORTS` | Inject module-level variables for helper analysis | MM2 (robot_masters, weapons_to_name) |
 | `HELPER_OBJECT_NAMES` | Convert `obj.method()` calls to helper functions | Yoshi's Island (logic, bosses) |
 | `NAME_REMAPPING` | Map parameter names to setting names | - |
 | `SETTINGS_TO_CONVERT` | Convert name types to setting_value types | - |
 | `HELPER_PARAM_MAPPINGS` | Map helper params to slot_data keys | MM2 (can_defeat_enough_rbms) |
 | `AUTO_DISCOVER_*` | Auto-discover attributes without manual specification | ALTTP |
+| `SELF_ATTR_TO_SETTING` | Map `self.attr` patterns to setting_value rules | KH2 (fight_logic → FightLogic) |
+| `CONSTANT_HELPER_EXPANSIONS` | Map helpers to constant return values (True/False) | KH2, Overcooked 2 |
+| `ACCUMULATOR_RULES` | Configure item accumulation patterns (coins, etc.) | LADX, DLC Quest |
+| `PROG_ITEMS_INIT` | Initial values for accumulators | (used with ACCUMULATOR_RULES) |
+| `ITEM_VALUE_MAPPINGS` | Extract item→value mappings from world attributes | OSRS (qp_items) |
+| `DICT_SUM_HELPERS` | Auto-generate sum helpers over item→value dicts | OSRS (quest_points) |
+
+### Behavior Flags
+
+These flags control export and frontend behavior:
+
+| Flag | Purpose | Example Game |
+|------|---------|--------------|
+| `ASSUME_BIDIRECTIONAL_EXITS` | Exits work in both directions by default | ALTTP, A Hat in Time |
+| `USE_RESOLVED_ITEMS` | Use resolved_items from sphere log instead of base_items | Raft, LADX, DLC Quest |
+| `ADD_SPHERE_ITEMS_UPFRONT` | Add items before accessibility checks | Raft, Witness, Jak & Daxter |
+| `USE_AUTO_INDIRECT_CONDITIONS` | Auto sweep for indirect region dependencies | Lingo |
+
+### Helper Control
+
+These control which helpers are inlined vs preserved as calls:
+
+| Attribute | Purpose | Example Game |
+|-----------|---------|--------------|
+| `HELPERS_TO_PRESERVE` | Don't inline these helpers during analysis | Lingo, TUNIC, Subnautica |
+| `HELPERS_TO_EXPORT_WHITELIST` | Only export these helpers as definitions | Yoshi's Island |
+| `HELPERS_TO_EXPORT_BLACKLIST` | Never export these helpers (too complex) | - |
+| `COMPUTED_HELPERS` | Helpers defined in get_helper_definitions() | OSRS |
+| `AUTO_PRESERVE_COMPUTED_HELPERS` | Auto-preserve computed helpers | - |
+
+### What's Automatically Handled (No Configuration Needed)
+
+These features work out-of-the-box with `GenericGameExportHandler`:
+
+**Data Discovery & Export:**
+- All world options (`world.options.*`) → exported to `options` dict
+- Option definitions (type, range, defaults) → exported for frontend use
+- Item data (names, IDs, classifications, groups) → auto-discovered
+- Event items from placed locations → auto-detected
+- World attributes (simple types) → auto-discovered (`AUTO_DISCOVER_WORLD_ATTRIBUTES=True`)
+- Region attributes (simple types) → auto-discovered (`AUTO_DISCOVER_REGION_ATTRIBUTES=True`)
+- Location attributes (simple types) → auto-discovered (`AUTO_DISCOVER_LOCATION_ATTRIBUTES=True`)
+
+**Helper Discovery & Export:**
+- Helper modules → auto-discovered from world directory (`AUTO_DISCOVER_WORLD_HELPER_MODULES=True`)
+- Discovered helpers → auto-exported as definitions (`AUTO_EXPORT_DISCOVERED_HELPERS=True`)
+- Helper param_mappings → auto-detected from call-site patterns (e.g., `world.options.X`)
+- Enum classes used as helpers → converted to identity functions
+
+**LogicMixin State Method Auto-Detection** (`AUTO_DISCOVER_LOGIC_MIXIN_REPLACEMENTS=True`):
+- `return self.multiworld.worlds[player].<attr>` → `setting_value` rule
+- `return not self.multiworld.worlds[player].<attr>` → negated `setting_value` rule
+- `return bool(world.options.<opt>.value)` → `setting_value` rule
+- "All elements pass check" patterns (for loop with early return False, final return True):
+  - `self.can_reach_location(var, player)` check → `all_of` with `location_check`
+  - `state.has(var, player)` check → `all_of` with `item_check`
+  - `state.can_reach(var, player)` check → `all_of` with `can_reach`
+- Example: TWW's `_tww_can_defeat_all_required_bosses` is auto-detected as `all_of(location_check)`
+
+**Rule Analysis & Expansion:**
+- `state.has(item)` → `item_check`
+- `state.has_any([items])` → `or(item_checks)`
+- `state.has_all([items])` → `and(item_checks)`
+- `state.has_all(set([items]))` → simplified to item checks
+- `self.options.X` / `world.options.X` → resolved to constant values
+- f-string items → resolved to constant strings
+- `get_location().can_reach()` → `location_check`
 
 ### Automatic Pattern Handling (Built-in)
 
-These patterns are handled automatically by the base class:
+These rule patterns are handled automatically by the base class:
 
 | Pattern | Description | Example Game |
 |---------|-------------|--------------|
@@ -137,13 +204,15 @@ Review these simplified exporters as examples:
 
 ```bash
 cat exporter/games/alttp.py      # ~60 lines - auto-discovery flags only
-cat exporter/games/tww.py        # ~40 lines - STATE_METHOD_REPLACEMENTS only
 cat exporter/games/mm2.py        # ~30 lines - CLOSURE_VAR_IMPORTS + HELPER_PARAM_MAPPINGS
 ```
 
 **Note:** If an exporter class does nothing but `pass`, it should be **deleted entirely**.
 The exporter registry auto-discovers handlers and falls back to `GenericGameExportHandler`
 when no custom handler exists. Empty exporters just add unnecessary files.
+
+**Example: TWW has no custom exporter** - All LogicMixin methods (like `_tww_can_defeat_all_required_bosses`)
+are auto-detected by the base class, so no `exporter/games/tww.py` file is needed.
 
 ## Simplification Patterns
 
@@ -178,7 +247,7 @@ source .venv/bin/activate
 wc -l {exporter_path}
 
 # Check if the exporter is just 'pass' (can be deleted entirely)
-grep -c "^\s*pass$" {exporter_path}
+grep -c "^\\s*pass$" {exporter_path}
 
 # Check for expand_rule overrides that could use STATE_METHOD_REPLACEMENTS
 grep -n "def expand_rule" {exporter_path}

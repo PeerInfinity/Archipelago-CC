@@ -1,6 +1,5 @@
 """Yoshi's Island game-specific export handler."""
 
-import re
 from typing import Dict, Any
 from .generic import GenericGameExportHandler
 
@@ -39,16 +38,6 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
 
     # Preserve these helpers as helper calls (don't try to auto-expand them)
     HELPERS_TO_PRESERVE = HELPERS_TO_EXPORT_WHITELIST
-
-    def _is_common_helper_pattern(self, helper_name):
-        """Override to prevent auto-expansion of level-specific helpers."""
-        # Don't auto-expand level-specific helpers (pattern: _[0-9][0-9][A-Za-z]+)
-        # Examples: _14Clear, _17Game, _27Game, _47Game, etc.
-        if re.match(r'^_\d{2}[A-Z][a-z]+$', helper_name):
-            return False
-
-        # Fall back to parent implementation for other patterns
-        return super()._is_common_helper_pattern(helper_name)
 
     def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract Yoshi's Island world data including computed settings for helpers."""

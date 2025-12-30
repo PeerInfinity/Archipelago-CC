@@ -2,6 +2,13 @@
 
 Terraria uses a custom DSV (Rules.dsv) rule system with special Condition objects.
 This exporter converts those conditions to the standard JSON rule format.
+
+Note: This exporter cannot be simplified using standard base class tools because:
+1. Terraria uses a completely custom rule system (DSV/Condition objects) that requires
+   specialized conversion, unlike standard worlds that use Python lambdas.
+2. The override_rule_analysis hook bypasses standard rule analysis entirely.
+3. The helper creation methods produce specific rule structures needed for Terraria's
+   unique game mechanics (NPCs, pickaxes, hammers, mech bosses, minions).
 """
 
 from typing import Dict, Any, List, Union
@@ -180,10 +187,10 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
                 rule = self._create_setting_check("getfixedboi")
             elif fn_name == "pickaxe":
                 # Check if player has a pickaxe with at least N power
-                rule = self._create_pickaxe_check(fn_arg)
+                rule = self._create_tool_check(self.pickaxes, fn_arg)
             elif fn_name == "hammer":
                 # Check if player has a hammer with at least N power
-                rule = self._create_hammer_check(fn_arg)
+                rule = self._create_tool_check(self.hammers, fn_arg)
             elif fn_name == "mech_boss":
                 # Check if player has defeated at least N mechanical bosses
                 rule = self._create_mech_boss_check(fn_arg)
@@ -250,47 +257,27 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
         """
         return {'type': 'setting_value', 'setting': setting_name}
 
-    def _create_pickaxe_check(self, required_power: int) -> Dict[str, Any]:
-        """Create a rule to check if player has a pickaxe with at least N power."""
-        # Create OR condition for all pickaxes with sufficient power
-        valid_pickaxes = [
-            name for name, power in self.pickaxes.items()
+    def _create_tool_check(self, tool_dict: Dict[str, int], required_power: int) -> Dict[str, Any]:
+        """Create a rule to check if player has a tool with at least N power.
+
+        Works for pickaxes, hammers, or any tool with a power value.
+        """
+        valid_tools = [
+            name for name, power in tool_dict.items()
             if power >= required_power
         ]
 
-        if not valid_pickaxes:
+        if not valid_tools:
             return {'type': 'constant', 'value': False}
 
-        if len(valid_pickaxes) == 1:
-            return {'type': 'item_check', 'item': valid_pickaxes[0]}
+        if len(valid_tools) == 1:
+            return {'type': 'item_check', 'item': valid_tools[0]}
 
         return {
             'type': 'or',
             'conditions': [
                 {'type': 'item_check', 'item': name}
-                for name in valid_pickaxes
-            ]
-        }
-
-    def _create_hammer_check(self, required_power: int) -> Dict[str, Any]:
-        """Create a rule to check if player has a hammer with at least N power."""
-        # Create OR condition for all hammers with sufficient power
-        valid_hammers = [
-            name for name, power in self.hammers.items()
-            if power >= required_power
-        ]
-
-        if not valid_hammers:
-            return {'type': 'constant', 'value': False}
-
-        if len(valid_hammers) == 1:
-            return {'type': 'item_check', 'item': valid_hammers[0]}
-
-        return {
-            'type': 'or',
-            'conditions': [
-                {'type': 'item_check', 'item': name}
-                for name in valid_hammers
+                for name in valid_tools
             ]
         }
 

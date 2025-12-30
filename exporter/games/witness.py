@@ -32,11 +32,6 @@ class WitnessGameExportHandler(GenericGameExportHandler):
     region reachability pattern simplification, and laser activation locations.
     """
 
-    # Auto-discovery configuration (using defaults, explicit for clarity)
-    AUTO_DISCOVER_WORLD_ATTRIBUTES = True
-    AUTO_DISCOVER_REGION_ATTRIBUTES = True
-    AUTO_DISCOVER_LOCATION_ATTRIBUTES = True
-
     # Enable upfront item adding for sphere test compatibility
     ADD_SPHERE_ITEMS_UPFRONT = True
 

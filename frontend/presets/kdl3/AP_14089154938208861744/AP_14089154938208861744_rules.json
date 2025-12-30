@@ -26951,6 +26951,9 @@
               }
             ]
           }
+        },
+        "param_mappings": {
+          "ow_boss_req": "ow_boss_requirement"
         }
       },
       "can_reach_burning": {

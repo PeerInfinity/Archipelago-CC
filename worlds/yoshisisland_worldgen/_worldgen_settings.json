@@ -1013,14 +1013,6 @@
         }
       ]
     },
-    "StageLogic": 0,
-    "HiddenObjectVisibility": 1,
-    "ShuffleMiddleRings": 0,
-    "ItemLogic": 0,
-    "BowserDoorMode": 0,
-    "LuigiPiecesRequired": 25,
-    "CastleClearCondition": 0,
-    "CastleOpenCondition": 5,
     "game_logic": "Easy",
     "midring_start": true,
     "clouds_always_visible": false,

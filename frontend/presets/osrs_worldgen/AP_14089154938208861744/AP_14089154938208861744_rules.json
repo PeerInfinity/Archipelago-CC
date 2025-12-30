@@ -525,7 +525,10 @@
             "name": "Points: Cook's Assistant",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Cook's Assistant"
+              }
             },
             "item": {
               "name": "1 QP (Cook's Assistant)",
@@ -574,7 +577,10 @@
             "name": "Points: The Restless Ghost",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: The Restless Ghost"
+              }
             },
             "item": {
               "name": "1 QP (The Restless Ghost)",
@@ -623,7 +629,10 @@
             "name": "Points: Rune Mysteries",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Rune Mysteries"
+              }
             },
             "item": {
               "name": "1 QP (Rune Mysteries)",
@@ -672,7 +681,10 @@
             "name": "Points: X Marks the Spot",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: X Marks the Spot"
+              }
             },
             "item": {
               "name": "1 QP (X Marks The Spot)",
@@ -789,7 +801,10 @@
             "name": "Points: Misthalin Mystery",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Misthalin Mystery"
+              }
             },
             "item": {
               "name": "1 QP (Misthalin Mystery)",
@@ -1016,7 +1031,10 @@
             "name": "Points: Sheep Shearer",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Sheep Shearer"
+              }
             },
             "item": {
               "name": "1 QP (Sheep Shearer)",
@@ -1645,7 +1663,10 @@
             "name": "Points: Demon Slayer",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Demon Slayer"
+              }
             },
             "item": {
               "name": "3 QP (Demon Slayer)",
@@ -1700,7 +1721,10 @@
             "name": "Points: Romeo & Juliet",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Romeo & Juliet"
+              }
             },
             "item": {
               "name": "5 QP (Romeo & Juliet)",
@@ -1755,7 +1779,10 @@
             "name": "Points: Shield of Arrav",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Shield of Arrav"
+              }
             },
             "item": {
               "name": "1 QP (Shield of Arrav)",
@@ -2814,7 +2841,10 @@
             "name": "Points: Ernest the Chicken",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Ernest the Chicken"
+              }
             },
             "item": {
               "name": "4 QP (Ernest the Chicken)",
@@ -3011,7 +3041,10 @@
             "name": "Points: Doric's Quest",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Doric's Quest"
+              }
             },
             "item": {
               "name": "1 QP (Doric's Quest)",
@@ -3186,7 +3219,10 @@
             "name": "Points: Black Knights' Fortress",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Black Knights' Fortress"
+              }
             },
             "item": {
               "name": "3 QP (Black Knights' Fortress)",
@@ -3270,7 +3306,10 @@
             "name": "Points: Below Ice Mountain",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Below Ice Mountain"
+              }
             },
             "item": {
               "name": "1 QP (Below Ice Mountain)",
@@ -3367,7 +3406,10 @@
             "name": "Points: Goblin Diplomacy",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Goblin Diplomacy"
+              }
             },
             "item": {
               "name": "5 QP (Goblin Diplomacy)",
@@ -3758,7 +3800,10 @@
             "name": "Points: The Knight's Sword",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: The Knight's Sword"
+              }
             },
             "item": {
               "name": "1 QP (The Knight's Sword)",
@@ -4123,7 +4168,10 @@
             "name": "Points: Pirate's Treasure",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Pirate's Treasure"
+              }
             },
             "item": {
               "name": "2 QP (Pirate's Treasure)",
@@ -4736,7 +4784,10 @@
             "name": "Points: Witch's Potion",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Witch's Potion"
+              }
             },
             "item": {
               "name": "1 QP (Witch's Potion)",
@@ -4785,7 +4836,10 @@
             "name": "Points: The Corsair Curse",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: The Corsair Curse"
+              }
             },
             "item": {
               "name": "2 QP (The Corsair Curse)",
@@ -5303,7 +5357,10 @@
             "name": "Points: Vampyre Slayer",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Vampyre Slayer"
+              }
             },
             "item": {
               "name": "3 QP (Vampyre Slayer)",
@@ -5395,7 +5452,10 @@
             "name": "Points: Imp Catcher",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Imp Catcher"
+              }
             },
             "item": {
               "name": "1 QP (Imp Catcher)",
@@ -5648,7 +5708,10 @@
             "name": "Points: Prince Ali Rescue",
             "id": null,
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Quest: Prince Ali Rescue"
+              }
             },
             "item": {
               "name": "3 QP (Prince Ali Rescue)",
@@ -9103,6 +9166,29 @@
         }
       },
       "shops": [],
+      "qp_items": {
+        "1 QP (Cook's Assistant)": 1,
+        "3 QP (Demon Slayer)": 3,
+        "1 QP (The Restless Ghost)": 1,
+        "5 QP (Romeo & Juliet)": 5,
+        "1 QP (Sheep Shearer)": 1,
+        "1 QP (Shield of Arrav)": 1,
+        "4 QP (Ernest the Chicken)": 4,
+        "3 QP (Vampyre Slayer)": 3,
+        "1 QP (Imp Catcher)": 1,
+        "3 QP (Prince Ali Rescue)": 3,
+        "1 QP (Doric's Quest)": 1,
+        "3 QP (Black Knights' Fortress)": 3,
+        "1 QP (Witch's Potion)": 1,
+        "1 QP (The Knight's Sword)": 1,
+        "5 QP (Goblin Diplomacy)": 5,
+        "2 QP (Pirate's Treasure)": 2,
+        "1 QP (Rune Mysteries)": 1,
+        "1 QP (Misthalin Mystery)": 1,
+        "2 QP (The Corsair Curse)": 2,
+        "1 QP (X Marks The Spot)": 1,
+        "1 QP (Below Ice Mountain)": 1
+      },
       "region_name_to_data": {
         "Menu": "Menu",
         "Lumbridge": "Lumbridge",
@@ -11474,29 +11560,6 @@
       ],
       "base_id": 458752,
       "world_description": "Old School Runescape WorldGen for Archipelago.\n\nAuto-generated world implementation.",
-      "qp_items": {
-        "1 QP (Cook's Assistant)": 1,
-        "3 QP (Demon Slayer)": 3,
-        "1 QP (The Restless Ghost)": 1,
-        "5 QP (Romeo & Juliet)": 5,
-        "1 QP (Sheep Shearer)": 1,
-        "1 QP (Shield of Arrav)": 1,
-        "4 QP (Ernest the Chicken)": 4,
-        "3 QP (Vampyre Slayer)": 3,
-        "1 QP (Imp Catcher)": 1,
-        "3 QP (Prince Ali Rescue)": 3,
-        "1 QP (Doric's Quest)": 1,
-        "3 QP (Black Knights' Fortress)": 3,
-        "1 QP (Witch's Potion)": 1,
-        "1 QP (The Knight's Sword)": 1,
-        "5 QP (Goblin Diplomacy)": 5,
-        "2 QP (Pirate's Treasure)": 2,
-        "1 QP (Rune Mysteries)": 1,
-        "1 QP (Misthalin Mystery)": 1,
-        "2 QP (The Corsair Curse)": 2,
-        "1 QP (X Marks The Spot)": 1,
-        "1 QP (Below Ice Mountain)": 1
-      },
       "slot_data": {
         "brutal_grinds": 0,
         "data_csv_tag": "v2.0.5",
@@ -11642,49 +11705,71 @@
         ]
       },
       "quest_points": {
-        "params": [],
-        "body": {
-          "type": "sum_of",
-          "iterator_info": {
-            "target": {
-              "type": "tuple",
-              "elements": [
-                {
-                  "type": "name",
-                  "name": "item_name"
-                },
-                {
-                  "type": "name",
-                  "name": "qp_value"
-                }
-              ]
-            },
-            "iterator": {
-              "type": "method_call",
-              "object": {
-                "type": "setting_value",
-                "setting": "qp_items"
-              },
-              "method": "items",
-              "args": []
+        "type": "sum_of",
+        "element_rule": {
+          "type": "conditional",
+          "test": {
+            "type": "item_check",
+            "item": {
+              "type": "name",
+              "name": "item_name"
             }
           },
-          "element_rule": {
-            "type": "conditional",
-            "test": {
-              "type": "item_check",
-              "item": {
+          "if_true": {
+            "type": "name",
+            "name": "value"
+          },
+          "if_false": {
+            "type": "constant",
+            "value": 0
+          }
+        },
+        "iterator_info": {
+          "type": "comprehension_details",
+          "target": {
+            "type": "list",
+            "value": [
+              {
                 "type": "name",
                 "name": "item_name"
+              },
+              {
+                "type": "name",
+                "name": "value"
               }
-            },
-            "if_true": {
-              "type": "name",
-              "name": "qp_value"
-            },
-            "if_false": {
-              "type": "constant",
-              "value": 0
+            ]
+          },
+          "iterator": {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "constant",
+                "value": {
+                  "1 QP (Cook's Assistant)": 1,
+                  "3 QP (Demon Slayer)": 3,
+                  "1 QP (The Restless Ghost)": 1,
+                  "5 QP (Romeo & Juliet)": 5,
+                  "1 QP (Sheep Shearer)": 1,
+                  "1 QP (Shield of Arrav)": 1,
+                  "4 QP (Ernest the Chicken)": 4,
+                  "3 QP (Vampyre Slayer)": 3,
+                  "1 QP (Imp Catcher)": 1,
+                  "3 QP (Prince Ali Rescue)": 3,
+                  "1 QP (Doric's Quest)": 1,
+                  "3 QP (Black Knights' Fortress)": 3,
+                  "1 QP (Witch's Potion)": 1,
+                  "1 QP (The Knight's Sword)": 1,
+                  "5 QP (Goblin Diplomacy)": 5,
+                  "2 QP (Pirate's Treasure)": 2,
+                  "1 QP (Rune Mysteries)": 1,
+                  "1 QP (Misthalin Mystery)": 1,
+                  "2 QP (The Corsair Curse)": 2,
+                  "1 QP (X Marks The Spot)": 1,
+                  "1 QP (Below Ice Mountain)": 1
+                }
+              },
+              "attr": "items"
             }
           }
         }

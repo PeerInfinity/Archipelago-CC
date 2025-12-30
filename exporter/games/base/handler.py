@@ -203,7 +203,15 @@ class BaseGameExportHandler(
     # equivalent rule structures without overriding expand_rule.
     # Example: {'_my_game_setting': {'type': 'setting_value', 'setting': 'my_setting'}}
     # Replacements are applied recursively during rule expansion.
+    # Manual entries here take precedence over auto-detected replacements.
     STATE_METHOD_REPLACEMENTS: Dict[str, Dict[str, Any]] = {}
+
+    # Whether to auto-detect LogicMixin state method replacements.
+    # When True, analyzes LogicMixin subclasses to detect common patterns like:
+    # - return self.multiworld.worlds[player].<attr> -> setting_value
+    # - return not self.multiworld.worlds[player].<attr> -> not(setting_value)
+    # Manual STATE_METHOD_REPLACEMENTS always take precedence over auto-detected ones.
+    AUTO_DISCOVER_LOGIC_MIXIN_REPLACEMENTS: bool = True
 
     # Accumulator rules for games that track progressive items (like coins).
     # Each rule is a dict with keys: pattern (regex), extract_value (bool),
@@ -231,6 +239,16 @@ class BaseGameExportHandler(
     # Example: {'always_true_helper': True, 'disabled_feature': False}
     CONSTANT_HELPER_EXPANSIONS: Dict[str, Any] = {}
 
+    # Mapping of helper function names to rule type configurations.
+    # Used for helpers that take a single argument and convert it to a rule type.
+    # Format: {'helper_name': {'type': 'rule_type', 'field': 'field_name', 'arg_index': 0}}
+    # - type: The rule type to create (location_check, can_reach, item_check, etc.)
+    # - field: The field name in the rule to set (location, region, item, etc.)
+    # - arg_index: Which argument to use (default 0)
+    # Example: {'_can_get': {'type': 'location_check', 'field': 'location'}}
+    # This expands _can_get("Location Name") to {'type': 'location_check', 'location': ...}
+    HELPER_TO_RULE_MAPPINGS: Dict[str, Dict[str, Any]] = {}
+
     # Mapping of export names to item value extraction configuration.
     # Used to compute item->value mappings from world attributes at export time.
     # Each entry defines: 'source' (world attribute name) and 'value_extractor' (callable).
@@ -244,6 +262,15 @@ class BaseGameExportHandler(
     # Example: {'quest_points': 'qp_items'} generates a helper that sums qp_items values
     # for items the player has.
     DICT_SUM_HELPERS: Dict[str, str] = {}
+
+    # Configuration for auto-generating accumulator items.
+    # When PROG_ITEMS_INIT is set and these are configured, the base class will:
+    # 1. Create accumulator target items (e.g., " coins") from PROG_ITEMS_INIT keys
+    # 2. Find items matching ACCUMULATOR_RULES patterns in locations
+    # 3. Configure all matching items with these properties
+    ACCUMULATOR_ITEM_GROUP: str = ''  # Group name for accumulator items (e.g., 'coins')
+    ACCUMULATOR_ITEM_TYPE: str = ''   # Type for accumulator items (e.g., 'coins')
+    ACCUMULATOR_TARGET_MAX_COUNT: int = 999999  # Max count for accumulator target items
 
     def __init__(self, world=None):
         """Initialize the handler with an empty set of discovered helpers.
@@ -270,6 +297,8 @@ class BaseGameExportHandler(
         # Dict of auto-discovered param_mappings from call-site analysis
         # Maps helper_name -> {param_name: slot_data_key}
         self._discovered_param_mappings: Dict[str, Dict[str, str]] = {}
+        # Cache for auto-detected LogicMixin state method replacements
+        self._auto_detected_replacements_cache: Optional[Dict[str, Dict[str, Any]]] = None
 
     # ==========================================================================
     # Helper registration methods
@@ -435,6 +464,47 @@ class BaseGameExportHandler(
         self._analyzed_helper_cache = {}
         self._discovered_param_mappings = {}
 
+    def get_effective_state_method_replacements(self) -> Dict[str, Dict[str, Any]]:
+        """Get the effective STATE_METHOD_REPLACEMENTS combining auto-detected and manual.
+
+        This method:
+        1. Auto-detects LogicMixin patterns if AUTO_DISCOVER_LOGIC_MIXIN_REPLACEMENTS is True
+        2. Merges with manual STATE_METHOD_REPLACEMENTS (manual takes precedence)
+        3. Caches the result for performance
+
+        Returns:
+            Dict mapping method names to their rule replacement structures
+        """
+        # Return cached result if available
+        if self._auto_detected_replacements_cache is not None:
+            return self._auto_detected_replacements_cache
+
+        # Start with manual replacements (these take precedence)
+        effective = dict(self.STATE_METHOD_REPLACEMENTS)
+
+        # Auto-detect if enabled
+        if self.AUTO_DISCOVER_LOGIC_MIXIN_REPLACEMENTS and self.world is not None:
+            try:
+                from exporter.games.base.logic_mixin_analyzer import discover_state_method_replacements
+                auto_detected = discover_state_method_replacements(self.world, None)
+
+                # Merge auto-detected (manual takes precedence, so add auto-detected first)
+                merged = dict(auto_detected)
+                merged.update(effective)
+                effective = merged
+
+                # Log what was auto-detected vs manual
+                auto_only = set(auto_detected.keys()) - set(self.STATE_METHOD_REPLACEMENTS.keys())
+                if auto_only:
+                    logger.info(f"Auto-detected {len(auto_only)} LogicMixin replacements: {sorted(auto_only)}")
+
+            except Exception as e:
+                logger.warning(f"Error auto-detecting LogicMixin replacements: {e}")
+
+        # Cache the result
+        self._auto_detected_replacements_cache = effective
+        return effective
+
     def is_worldgen_world(self, world=None) -> bool:
         """
         Check if this is a worldgen world (generated by world_generator).
@@ -558,7 +628,8 @@ class BaseGameExportHandler(
 
         Override this method in game-specific handlers to provide
         game-specific helper expansions. When overriding, call
-        super().expand_helper() first to handle CONSTANT_HELPER_EXPANSIONS.
+        super().expand_helper() first to handle CONSTANT_HELPER_EXPANSIONS
+        and HELPER_TO_RULE_MAPPINGS.
 
         Args:
             helper_name: The name of the helper to expand
@@ -571,6 +642,25 @@ class BaseGameExportHandler(
         if helper_name in self.CONSTANT_HELPER_EXPANSIONS:
             value = self.CONSTANT_HELPER_EXPANSIONS[helper_name]
             return {'type': 'constant', 'value': value}
+
+        # Check HELPER_TO_RULE_MAPPINGS for helpers that map to rule types
+        if helper_name in self.HELPER_TO_RULE_MAPPINGS:
+            mapping = self.HELPER_TO_RULE_MAPPINGS[helper_name]
+            arg_index = mapping.get('arg_index', 0)
+            if args and len(args) > arg_index:
+                arg = args[arg_index]
+                # Extract value if arg is a dict with 'value' key (constant node)
+                if isinstance(arg, dict) and arg.get('type') == 'constant':
+                    value = arg.get('value')
+                elif isinstance(arg, dict):
+                    # Other dict types - use as-is
+                    value = arg
+                else:
+                    value = arg
+                return {
+                    'type': mapping['type'],
+                    mapping['field']: {'type': 'constant', 'value': value}
+                }
 
         return None
 
@@ -1017,11 +1107,65 @@ class BaseGameExportHandler(
         Post-process the exported data after all standard processing is complete.
         This is called at the end of the export process to allow game-specific modifications.
 
+        When PROG_ITEMS_INIT and ACCUMULATOR_ITEM_GROUP are set, this method:
+        1. Creates accumulator target items (e.g., " coins") from PROG_ITEMS_INIT keys
+        2. Finds items matching ACCUMULATOR_RULES patterns in locations
+        3. Configures all matching items with the specified group and type
+
         Args:
             data: The complete export data dictionary
 
         Returns:
             The modified export data dictionary
         """
-        # Base implementation returns data unchanged
+        import re
+
+        # Auto-generate accumulator items if configured
+        if self.PROG_ITEMS_INIT and self.ACCUMULATOR_ITEM_GROUP:
+            group = self.ACCUMULATOR_ITEM_GROUP
+            item_type = self.ACCUMULATOR_ITEM_TYPE or group
+            max_count = self.ACCUMULATOR_TARGET_MAX_COUNT
+
+            def make_accumulator_item(name: str, is_target: bool = False) -> Dict[str, Any]:
+                return {
+                    'name': name, 'id': None, 'groups': [group],
+                    'advancement': True, 'useful': False, 'trap': False,
+                    'event': False, 'type': item_type,
+                    'max_count': max_count if is_target else 1
+                }
+
+            accumulator_items: Dict[str, Dict[str, Dict[str, Any]]] = {}
+
+            # Step 1: Create accumulator target items from PROG_ITEMS_INIT
+            for player_id in data.get('regions', {}).keys():
+                accumulator_items[player_id] = {}
+                for target_name in self.PROG_ITEMS_INIT.keys():
+                    accumulator_items[player_id][target_name] = make_accumulator_item(
+                        target_name, is_target=True
+                    )
+
+            # Step 2: Find items matching ACCUMULATOR_RULES patterns in locations
+            patterns = [rule.get('pattern') for rule in self.ACCUMULATOR_RULES if rule.get('pattern')]
+            if patterns:
+                for player_id, regions in data.get('regions', {}).items():
+                    for region_data in regions.values():
+                        for location in region_data.get('locations', []):
+                            item_name = location.get('item', {}).get('name', '')
+                            if not item_name:
+                                continue
+                            # Check if item matches any accumulator pattern
+                            for pattern in patterns:
+                                if re.match(pattern, item_name):
+                                    if item_name not in accumulator_items.get(player_id, {}):
+                                        accumulator_items.setdefault(player_id, {})[item_name] = (
+                                            make_accumulator_item(item_name)
+                                        )
+                                    break  # Only match first pattern
+
+            # Step 3: Merge accumulator items into data
+            if accumulator_items:
+                data.setdefault('items', {})
+                for player_id, player_items in accumulator_items.items():
+                    data['items'].setdefault(player_id, {}).update(player_items)
+
         return data

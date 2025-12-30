@@ -8081,7 +8081,8 @@
                 "operand": {
                   "type": "setting_value",
                   "setting": "logic_in_swordless_mode"
-                }
+                },
+                "condition": null
               },
               {
                 "type": "helper",
@@ -9214,7 +9215,8 @@
                 "operand": {
                   "type": "setting_value",
                   "setting": "logic_in_required_bosses_mode"
-                }
+                },
+                "condition": null
               },
               {
                 "type": "and",
@@ -9224,8 +9226,29 @@
                     "setting": "logic_in_required_bosses_mode"
                   },
                   {
-                    "type": "constant",
-                    "value": true
+                    "type": "all_of",
+                    "iterable": {
+                      "type": "world_attribute",
+                      "attribute": "boss_reqs.required_boss_item_locations"
+                    },
+                    "iterator_info": {
+                      "type": "comprehension_details",
+                      "target": {
+                        "type": "name",
+                        "name": "loc"
+                      },
+                      "iterator": {
+                        "type": "world_attribute",
+                        "attribute": "boss_reqs.required_boss_item_locations"
+                      }
+                    },
+                    "element_rule": {
+                      "type": "location_check",
+                      "location": {
+                        "type": "name",
+                        "name": "loc"
+                      }
+                    }
                   }
                 ]
               }

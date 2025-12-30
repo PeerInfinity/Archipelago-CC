@@ -443,14 +443,6 @@ class YoshisIslandWorldGenWorld(RuleWorldMixin, World):
         self.world_description = "Yoshi's Island is a 2D platforming game.\nDuring a delivery, Bowser's evil ward, Kamek, attacked the stork, kidnapping Luigi and dropping Mario onto Yoshi's Island.\nAs Yoshi, you must run, jump, and throw eggs to escort the baby Mario across the island to defeat Bowser and reunite the two brothers with their parents."
         self.slot_data = types.SimpleNamespace(world_1=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], world_2=[12, 13, 14, 15, 16, 17, 18, 19, 20, 21], world_3=[24, 25, 26, 27, 28, 29, 30, 31, 32, 33], world_4=[36, 37, 38, 39, 40, 41, 42, 43, 44, 45], world_5=[48, 49, 50, 51, 52, 53, 54, 55, 56, 57], world_6=[60, 61, 62, 63, 64, 65, 66, 67, 68, 69])
         self.web = types.SimpleNamespace(theme='ocean', tutorials=[{'name': 'Multiworld Setup Guide', 'description': "A guide to setting up the Yoshi's Island randomizer and connecting to an Archipelago server.", 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['Pink Switch']}])
-        self.StageLogic = 0
-        self.HiddenObjectVisibility = 1
-        self.ShuffleMiddleRings = 0
-        self.ItemLogic = 0
-        self.BowserDoorMode = 0
-        self.LuigiPiecesRequired = 25
-        self.CastleClearCondition = 0
-        self.CastleOpenCondition = 5
         self.game_logic = 'Easy'
         self.midring_start = True
         self.clouds_always_visible = False

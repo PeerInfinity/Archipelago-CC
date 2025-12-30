@@ -148,6 +148,3 @@ class Celeste64GameExportHandler(GenericGameExportHandler):
 
         return None
 
-    def preprocess_world_data(self, world, export_data: Dict[str, Any], player: int) -> None:
-        """Store world reference for lazy logic loading."""
-        self.world = world
