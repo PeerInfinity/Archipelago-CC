@@ -3672,21 +3672,10 @@
             "name": "Repair Aurora Drive",
             "id": null,
             "access_rule": {
-              "rule": "can_access_location",
-              "_original_ast_type": "helper",
-              "args": [
-                {
-                  "can_slip_through": false,
-                  "name": "Aurora Drive Room - Upgrade Console",
-                  "need_laser_cutter": false,
-                  "need_propulsion_cannon": true,
-                  "position": {
-                    "x": 872.5,
-                    "y": 2.7,
-                    "z": -0.7
-                  }
-                }
-              ]
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Aurora Drive Room - Upgrade Console"
+              }
             },
             "item": {
               "name": "Repair Aurora Drive",

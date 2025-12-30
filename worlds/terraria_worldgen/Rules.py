@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, False_, Has, HelperCall, Not, Or, True_
+from rule_builder import True_, False_, And, False_, Has, HasFromListUnique, Not, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -16,10 +16,6 @@ if TYPE_CHECKING:
 
 
 # Helper functions
-def _terrariaworldgen_has_n_from_list(state: "CollectionState", player: int, items = None, required_count = None) -> bool:
-    return (sum(1 for item in items if state.has(item, player)) >= required_count)
-
-
 def _terrariaworldgen_has_minions(state: "CollectionState", player: int, required_count = None) -> bool:
     return (((1 + (0 if any(state.has(armor, player) for armor in {'Wulfrum Armor': 1, 'Flinx Fur Coat': 1, 'Victide Armor': 1, 'Obsidian Armor': 1, 'Bee Armor': 2, 'Aerospec Armor': 1, 'Statigel Armor': 1, 'Spider Armor': 3, 'Forbidden Armor': 2, 'Daedalus Armor': 2, 'Hallowed Armor': 3, 'Fathom Swarmer Armor': 2, 'Tiki Armor': 4, 'Hydrothermic Armor': 2, 'Plaguebringer Armor': 3, 'Spooky Armor': 4, 'Astral Armor': 3, 'Stardust Armor': 5, 'Tarragon Armor': 3, 'Bloodflare Armor': 3, 'Omega Blue Armor': 2, 'Fearmonger Armor': 2, 'Silva Armor': 5, 'Auric Tesla Armor': 6, 'Demonshade Armor': 10}.keys()) else 0)) + sum((bonus for (acc, bonus) in {'Summoning Potion': 1, 'Voltaic Jelly': 1, 'Pygmy Necklace': 1, 'Bewitching Table': 1, 'The First Shadowflame': 1, 'Nuclear Fuel Rod': 1, 'Starbuster Core': 1, 'Necromantic Scroll': 1, 'Papyrus Scarab': 1, 'Eldritch Soul Artifact': 1, 'Profaned Soul Artifact': 1, 'Angelic Alliance': 2}.items()))) >= required_count)
 
@@ -32,7 +28,7 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Traveling Merchant", player),
-        HelperCall(helper_func=_terrariaworldgen_has_n_from_list, helper_name="has_n_from_list", args=(['Guide', 'Squire Slime', 'Merchant', 'Dye Trader', 'Demolitionist', 'Zoologist', 'Cat', 'Dog', 'Painter', 'Angler', 'Clumsy Slime', 'Nurse', 'Stylist', 'Golfer', 'Party Girl', 'Cool Slime', 'Arms Dealer', 'Nerdy Slime', 'Surly Slime', 'Dryad', 'Mystic Slime', 'Tavernkeep', 'Goblin Tinkerer', 'Witch Doctor', 'Clothier', 'Elder Slime', 'Wizard', 'Tax Collector', 'Bunny', 'Truffle', 'Pirate', 'Diva Slime', 'Steampunker', 'Cyborg', 'Princess', 'Santa Claus'], 2,))
+        HasFromListUnique('Guide', 'Squire Slime', 'Merchant', 'Dye Trader', 'Demolitionist', 'Zoologist', 'Cat', 'Dog', 'Painter', 'Angler', 'Clumsy Slime', 'Nurse', 'Stylist', 'Golfer', 'Party Girl', 'Cool Slime', 'Arms Dealer', 'Nerdy Slime', 'Surly Slime', 'Dryad', 'Mystic Slime', 'Tavernkeep', 'Goblin Tinkerer', 'Witch Doctor', 'Clothier', 'Elder Slime', 'Wizard', 'Tax Collector', 'Bunny', 'Truffle', 'Pirate', 'Diva Slime', 'Steampunker', 'Cyborg', 'Princess', 'Santa Claus', count=2)
     )
 
     world.set_rule(
@@ -57,7 +53,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dye Trader", player),
-        HelperCall(helper_func=_terrariaworldgen_has_n_from_list, helper_name="has_n_from_list", args=(['Guide', 'Squire Slime', 'Merchant', 'Dye Trader', 'Demolitionist', 'Zoologist', 'Cat', 'Dog', 'Painter', 'Angler', 'Clumsy Slime', 'Nurse', 'Stylist', 'Golfer', 'Party Girl', 'Cool Slime', 'Arms Dealer', 'Nerdy Slime', 'Surly Slime', 'Dryad', 'Mystic Slime', 'Tavernkeep', 'Goblin Tinkerer', 'Witch Doctor', 'Clothier', 'Elder Slime', 'Wizard', 'Tax Collector', 'Bunny', 'Truffle', 'Pirate', 'Diva Slime', 'Steampunker', 'Cyborg', 'Princess', 'Santa Claus'], 4,))
+        HasFromListUnique('Guide', 'Squire Slime', 'Merchant', 'Dye Trader', 'Demolitionist', 'Zoologist', 'Cat', 'Dog', 'Painter', 'Angler', 'Clumsy Slime', 'Nurse', 'Stylist', 'Golfer', 'Party Girl', 'Cool Slime', 'Arms Dealer', 'Nerdy Slime', 'Surly Slime', 'Dryad', 'Mystic Slime', 'Tavernkeep', 'Goblin Tinkerer', 'Witch Doctor', 'Clothier', 'Elder Slime', 'Wizard', 'Tax Collector', 'Bunny', 'Truffle', 'Pirate', 'Diva Slime', 'Steampunker', 'Cyborg', 'Princess', 'Santa Claus', count=4)
     )
 
     world.set_rule(
@@ -87,7 +83,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Painter", player),
-        HelperCall(helper_func=_terrariaworldgen_has_n_from_list, helper_name="has_n_from_list", args=(['Guide', 'Squire Slime', 'Merchant', 'Dye Trader', 'Demolitionist', 'Zoologist', 'Cat', 'Dog', 'Painter', 'Angler', 'Clumsy Slime', 'Nurse', 'Stylist', 'Golfer', 'Party Girl', 'Cool Slime', 'Arms Dealer', 'Nerdy Slime', 'Surly Slime', 'Dryad', 'Mystic Slime', 'Tavernkeep', 'Goblin Tinkerer', 'Witch Doctor', 'Clothier', 'Elder Slime', 'Wizard', 'Tax Collector', 'Bunny', 'Truffle', 'Pirate', 'Diva Slime', 'Steampunker', 'Cyborg', 'Princess', 'Santa Claus'], 8,))
+        HasFromListUnique('Guide', 'Squire Slime', 'Merchant', 'Dye Trader', 'Demolitionist', 'Zoologist', 'Cat', 'Dog', 'Painter', 'Angler', 'Clumsy Slime', 'Nurse', 'Stylist', 'Golfer', 'Party Girl', 'Cool Slime', 'Arms Dealer', 'Nerdy Slime', 'Surly Slime', 'Dryad', 'Mystic Slime', 'Tavernkeep', 'Goblin Tinkerer', 'Witch Doctor', 'Clothier', 'Elder Slime', 'Wizard', 'Tax Collector', 'Bunny', 'Truffle', 'Pirate', 'Diva Slime', 'Steampunker', 'Cyborg', 'Princess', 'Santa Claus', count=8)
     )
 
     world.set_rule(
@@ -137,7 +133,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Party Girl", player),
-        HelperCall(helper_func=_terrariaworldgen_has_n_from_list, helper_name="has_n_from_list", args=(['Guide', 'Squire Slime', 'Merchant', 'Dye Trader', 'Demolitionist', 'Zoologist', 'Cat', 'Dog', 'Painter', 'Angler', 'Clumsy Slime', 'Nurse', 'Stylist', 'Golfer', 'Party Girl', 'Cool Slime', 'Arms Dealer', 'Nerdy Slime', 'Surly Slime', 'Dryad', 'Mystic Slime', 'Tavernkeep', 'Goblin Tinkerer', 'Witch Doctor', 'Clothier', 'Elder Slime', 'Wizard', 'Tax Collector', 'Bunny', 'Truffle', 'Pirate', 'Diva Slime', 'Steampunker', 'Cyborg', 'Princess', 'Santa Claus'], 14,))
+        HasFromListUnique('Guide', 'Squire Slime', 'Merchant', 'Dye Trader', 'Demolitionist', 'Zoologist', 'Cat', 'Dog', 'Painter', 'Angler', 'Clumsy Slime', 'Nurse', 'Stylist', 'Golfer', 'Party Girl', 'Cool Slime', 'Arms Dealer', 'Nerdy Slime', 'Surly Slime', 'Dryad', 'Mystic Slime', 'Tavernkeep', 'Goblin Tinkerer', 'Witch Doctor', 'Clothier', 'Elder Slime', 'Wizard', 'Tax Collector', 'Bunny', 'Truffle', 'Pirate', 'Diva Slime', 'Steampunker', 'Cyborg', 'Princess', 'Santa Claus', count=14)
     )
 
     world.set_rule(
@@ -672,7 +668,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Head in the Clouds", player),
-        Or(And(Has('Ancient Manipulator'), Has('Fragment'), Has('Luminite Bar')), And(Has('Hardmode'), Has('Post-Golem'), Has('Tavernkeep')), And(Has('Hardmode'), Has('Post-Plantera'), Has('Witch Doctor')), And(Has('Post-Plantera'), Has('Solar Eclipse')), And(Or(And(Has('Autohammer'), Has('Shroomite Bar')), And(Or(HelperCall(helper_func=_terrariaworldgen_has_n_from_list, helper_name="has_n_from_list", args=(['Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime'], 1,)), Or(And(Has('Hardmode'), Has('Lihzahrd Temple'), Has('Post-Plantera')), And(False_(), Has('Essence of Sunlight'), Has('Hardmode Anvil'), Has('Lihzahrd Temple'))), Has('Hardmode'), Has('Pixie Dust'), Has('Post-Plantera'), Has('Solar Eclipse'), Has('Soul of Light'), Has('Soul of Night'), Has('Spectre Bar')), Has('Hardmode Anvil')), Has('Pumpkin Moon'), Has('Pumpkin Moon')), Has('Soul of Flight')), Or(And(And(Has('Auric Bar'), Has('Brimstone Slag'), Has('Core of Calamity'), Has('Cosmic Anvil'), Has("Fabsol's Vodka")), False_(), False_()), And(Or(False_(), Has('Post-Plantera')), Has('Hallow'), Has('Hardmode'))), Or(And(Has('Bug Net'), Has('Hardmode')), And(False_(), False_(), Has('Titan Heart'))), False_(), Has('Frost Moon'), Has('Steampunker'))
+        Or(And(Has('Ancient Manipulator'), Has('Fragment'), Has('Luminite Bar')), And(Has('Hardmode'), Has('Post-Golem'), Has('Tavernkeep')), And(Has('Hardmode'), Has('Post-Plantera'), Has('Witch Doctor')), And(Has('Post-Plantera'), Has('Solar Eclipse')), And(Or(And(Has('Autohammer'), Has('Shroomite Bar')), And(Or(Or(And(Has('Hardmode'), Has('Lihzahrd Temple'), Has('Post-Plantera')), And(False_(), Has('Essence of Sunlight'), Has('Hardmode Anvil'), Has('Lihzahrd Temple'))), HasFromListUnique('Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime', count=1), Has('Hardmode'), Has('Pixie Dust'), Has('Post-Plantera'), Has('Solar Eclipse'), Has('Soul of Light'), Has('Soul of Night'), Has('Spectre Bar')), Has('Hardmode Anvil')), Has('Pumpkin Moon'), Has('Pumpkin Moon')), Has('Soul of Flight')), Or(And(And(Has('Auric Bar'), Has('Brimstone Slag'), Has('Core of Calamity'), Has('Cosmic Anvil'), Has("Fabsol's Vodka")), False_(), False_()), And(Or(False_(), Has('Post-Plantera')), Has('Hallow'), Has('Hardmode'))), Or(And(Has('Bug Net'), Has('Hardmode')), And(False_(), False_(), Has('Titan Heart'))), False_(), Has('Frost Moon'), Has('Steampunker'))
     )
 
     world.set_rule(
@@ -732,7 +728,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mythril Ore", player),
-        Or(And(Or(And(HelperCall(helper_func=_terrariaworldgen_has_n_from_list, helper_name="has_n_from_list", args=(['Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime'], 1,)), False_()), And(Not(False_()), Has('Altar'))), Or(Has('Adamantite Pickaxe'), Has('Astral Pickaxe'), Has('Beastial Pickaxe'), Has('Blossom Pickaxe'), Has('Chlorophyte Pickaxe'), Has('Cobalt Pickaxe'), Has('Crystyl Crusher'), Has('Genesis Pickaxe'), Has('Laser Drill'), Has('Luminite Pickaxe'), Has('Mythril Pickaxe'), Has('Pickaxe Axe'), Has('Picksaw'), Has('Seismic Hampick'), Has('Shardlight Pickaxe'), Has('Shroomite Digging Claw'), Has('Spectre Pickaxe'))), Has('Adamantite Ore'), Has('Hardmode'), Has('Mythril Bar'))
+        Or(And(Or(And(Not(False_()), Has('Altar')), And(False_(), HasFromListUnique('Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime', count=1))), Or(Has('Adamantite Pickaxe'), Has('Astral Pickaxe'), Has('Beastial Pickaxe'), Has('Blossom Pickaxe'), Has('Chlorophyte Pickaxe'), Has('Cobalt Pickaxe'), Has('Crystyl Crusher'), Has('Genesis Pickaxe'), Has('Laser Drill'), Has('Luminite Pickaxe'), Has('Mythril Pickaxe'), Has('Pickaxe Axe'), Has('Picksaw'), Has('Seismic Hampick'), Has('Shardlight Pickaxe'), Has('Shroomite Digging Claw'), Has('Spectre Pickaxe'))), Has('Adamantite Ore'), Has('Hardmode'), Has('Mythril Bar'))
     )
 
     world.set_rule(
@@ -752,7 +748,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Adamantite Ore", player),
-        Or(And(Not(False_()), Has('Chlorophyte Ore')), And(Or(And(HelperCall(helper_func=_terrariaworldgen_has_n_from_list, helper_name="has_n_from_list", args=(['Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime'], 2,)), False_()), And(Not(False_()), Has('Altar'))), Or(Has('Adamantite Pickaxe'), Has('Astral Pickaxe'), Has('Beastial Pickaxe'), Has('Blossom Pickaxe'), Has('Chlorophyte Pickaxe'), Has('Crystyl Crusher'), Has('Genesis Pickaxe'), Has('Laser Drill'), Has('Luminite Pickaxe'), Has('Mythril Pickaxe'), Has('Pickaxe Axe'), Has('Picksaw'), Has('Seismic Hampick'), Has('Shardlight Pickaxe'), Has('Shroomite Digging Claw'), Has('Spectre Pickaxe'))), And(False_(), Has('Hallowed Ore')), Has('Adamantite Bar'), Has('Hardmode'))
+        Or(And(Not(False_()), Has('Chlorophyte Ore')), And(Or(And(Not(False_()), Has('Altar')), And(False_(), HasFromListUnique('Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime', count=2))), Or(Has('Adamantite Pickaxe'), Has('Astral Pickaxe'), Has('Beastial Pickaxe'), Has('Blossom Pickaxe'), Has('Chlorophyte Pickaxe'), Has('Crystyl Crusher'), Has('Genesis Pickaxe'), Has('Laser Drill'), Has('Luminite Pickaxe'), Has('Mythril Pickaxe'), Has('Pickaxe Axe'), Has('Picksaw'), Has('Seismic Hampick'), Has('Shardlight Pickaxe'), Has('Shroomite Digging Claw'), Has('Spectre Pickaxe'))), And(False_(), Has('Hallowed Ore')), Has('Adamantite Bar'), Has('Hardmode'))
     )
 
     world.set_rule(

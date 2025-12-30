@@ -9,7 +9,7 @@ import math
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Compare, Has, HelperCall
+from rule_builder import True_, False_, And, CanReachLocation, Compare, Has, HelperCall
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -864,5 +864,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Repair Aurora Drive", player),
-        HelperCall(helper_func=_subnauticaworldgen_can_access_location, helper_name="can_access_location", args=({'can_slip_through': False, 'name': 'Aurora Drive Room - Upgrade Console', 'need_laser_cutter': False, 'need_propulsion_cannon': True, 'position': {'x': 872.5, 'y': 2.7, 'z': -0.7}},))
+        CanReachLocation('Aurora Drive Room - Upgrade Console')
     )

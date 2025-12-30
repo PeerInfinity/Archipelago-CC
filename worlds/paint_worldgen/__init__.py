@@ -234,8 +234,6 @@ class PaintWorldGenWorld(RuleWorldMixin, World):
         super().__init__(multiworld, player)
         # Game-specific world attributes
         self.shops = []
-        self.canvas_size_increment = 100
-        self.logic_percent = 80
         self.world_description = 'The classic Microsoft app, reimagined as an Archipelago game! Find your tools, expand your canvas, and paint the\ngreatest image the world has ever seen.'
         self.slot_data = types.SimpleNamespace(logic_percent=80, goal_percent=80, goal_image=1, death_link=0, canvas_size_increment=100, version='0.5.2')
         self.web = types.SimpleNamespace(theme='partyTime', tutorials=[{'name': 'Start Guide', 'description': 'A guide to playing Paint in Archipelago.', 'language': 'English', 'file_name': 'guide_en.md', 'link': 'guide/en', 'authors': ['MarioManTAW']}])

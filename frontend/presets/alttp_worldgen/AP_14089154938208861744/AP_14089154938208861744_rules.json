@@ -34,7 +34,10 @@
             "name": "Old Man S&Q",
             "connected_region": "Old Man House",
             "access_rule": {
-              "rule": "True_"
+              "rule": "CanReachLocation",
+              "args": {
+                "location_name": "Old Man"
+              }
             }
           }
         ],

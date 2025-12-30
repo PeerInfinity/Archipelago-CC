@@ -8081,7 +8081,8 @@
                 "operand": {
                   "type": "setting_value",
                   "setting": "logic_in_swordless_mode"
-                }
+                },
+                "condition": null
               },
               {
                 "type": "helper",
@@ -9214,7 +9215,8 @@
                 "operand": {
                   "type": "setting_value",
                   "setting": "logic_in_required_bosses_mode"
-                }
+                },
+                "condition": null
               },
               {
                 "type": "and",
