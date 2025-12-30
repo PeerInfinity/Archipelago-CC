@@ -1,7 +1,7 @@
 {
   "A Hat in Time": {
     "exporter_path": "exporter/games/ahit.py",
-    "exporter_size": 6778,
+    "exporter_size": 6388,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -19,7 +19,7 @@
   },
   "A Link to the Past": {
     "exporter_path": "exporter/games/alttp.py",
-    "exporter_size": 2547,
+    "exporter_size": 1159,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -91,7 +91,7 @@
   },
   "Aquaria": {
     "exporter_path": "exporter/games/aquaria.py",
-    "exporter_size": 2893,
+    "exporter_size": 1897,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -127,7 +127,7 @@
   },
   "Bomb Rush Cyberfunk": {
     "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
-    "exporter_size": 1436,
+    "exporter_size": 1792,
     "game_logic_path": "frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bomb_rush_cyberfunkLogic.js",
     "game_logic_size": 41274,
     "has_custom_exporter": true,
@@ -163,7 +163,7 @@
   },
   "Castlevania - Circle of the Moon": {
     "exporter_path": "exporter/games/cvcotm.py",
-    "exporter_size": 6123,
+    "exporter_size": 6089,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -208,7 +208,7 @@
   },
   "Celeste 64": {
     "exporter_path": "exporter/games/celeste64.py",
-    "exporter_size": 5820,
+    "exporter_size": 5639,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -298,7 +298,7 @@
   },
   "DLCQuest": {
     "exporter_path": "exporter/games/dlcquest.py",
-    "exporter_size": 2540,
+    "exporter_size": 1034,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -352,7 +352,7 @@
   },
   "Dark Souls III": {
     "exporter_path": "exporter/games/dark_souls_3.py",
-    "exporter_size": 1423,
+    "exporter_size": 745,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -388,7 +388,7 @@
   },
   "Factorio": {
     "exporter_path": "exporter/games/factorio.py",
-    "exporter_size": 6169,
+    "exporter_size": 5184,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -496,7 +496,7 @@
   },
   "Inscryption": {
     "exporter_path": "exporter/games/inscryption.py",
-    "exporter_size": 5349,
+    "exporter_size": 5262,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -541,7 +541,7 @@
   },
   "Kingdom Hearts 2": {
     "exporter_path": "exporter/games/kh2.py",
-    "exporter_size": 20284,
+    "exporter_size": 20494,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -559,7 +559,7 @@
   },
   "Kirby's Dream Land 3": {
     "exporter_path": "exporter/games/kdl3.py",
-    "exporter_size": 9492,
+    "exporter_size": 8105,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -568,7 +568,7 @@
   },
   "Landstalker - The Treasures of King Nole": {
     "exporter_path": "exporter/games/landstalker.py",
-    "exporter_size": 14597,
+    "exporter_size": 6869,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -586,7 +586,7 @@
   },
   "Lingo": {
     "exporter_path": "exporter/games/lingo.py",
-    "exporter_size": 37737,
+    "exporter_size": 39389,
     "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
     "game_logic_size": 10907,
     "has_custom_exporter": true,
@@ -595,7 +595,7 @@
   },
   "Links Awakening DX": {
     "exporter_path": "exporter/games/ladx.py",
-    "exporter_size": 12083,
+    "exporter_size": 11459,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -784,7 +784,7 @@
   },
   "Old School Runescape": {
     "exporter_path": "exporter/games/osrs.py",
-    "exporter_size": 3773,
+    "exporter_size": 1030,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -802,7 +802,7 @@
   },
   "Overcooked! 2": {
     "exporter_path": "exporter/games/overcooked2.py",
-    "exporter_size": 28695,
+    "exporter_size": 23382,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -820,7 +820,7 @@
   },
   "Paint": {
     "exporter_path": "exporter/games/paint.py",
-    "exporter_size": 3798,
+    "exporter_size": 2736,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -874,7 +874,7 @@
   },
   "Raft": {
     "exporter_path": "exporter/games/raft.py",
-    "exporter_size": 10437,
+    "exporter_size": 8947,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -946,7 +946,7 @@
   },
   "Secret of Evermore": {
     "exporter_path": "exporter/games/soe.py",
-    "exporter_size": 11867,
+    "exporter_size": 6257,
     "game_logic_path": "frontend/modules/shared/gameLogic/soe/soeLogic.js",
     "game_logic_size": 7085,
     "has_custom_exporter": true,
@@ -1000,7 +1000,7 @@
   },
   "Starcraft 2": {
     "exporter_path": "exporter/games/sc2.py",
-    "exporter_size": 30882,
+    "exporter_size": 29042,
     "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
     "game_logic_size": 88306,
     "has_custom_exporter": true,
@@ -1018,7 +1018,7 @@
   },
   "Stardew Valley": {
     "exporter_path": "exporter/games/stardew_valley.py",
-    "exporter_size": 19348,
+    "exporter_size": 20337,
     "game_logic_path": "frontend/modules/shared/gameLogic/stardew_valley/stardew_valleyLogic.js",
     "game_logic_size": 8179,
     "has_custom_exporter": true,
@@ -1036,7 +1036,7 @@
   },
   "Subnautica": {
     "exporter_path": "exporter/games/subnautica.py",
-    "exporter_size": 7544,
+    "exporter_size": 6073,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1063,7 +1063,7 @@
   },
   "Super Mario 64": {
     "exporter_path": "exporter/games/sm64ex.py",
-    "exporter_size": 13561,
+    "exporter_size": 13476,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1117,7 +1117,7 @@
   },
   "Super Metroid": {
     "exporter_path": "exporter/games/sm.py",
-    "exporter_size": 65293,
+    "exporter_size": 62471,
     "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
     "game_logic_size": 117281,
     "has_custom_exporter": true,
@@ -1171,7 +1171,7 @@
   },
   "TUNIC": {
     "exporter_path": "exporter/games/tunic.py",
-    "exporter_size": 3141,
+    "exporter_size": 3138,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1189,7 +1189,7 @@
   },
   "Terraria": {
     "exporter_path": "exporter/games/terraria.py",
-    "exporter_size": 18724,
+    "exporter_size": 18504,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1225,7 +1225,7 @@
   },
   "The Messenger": {
     "exporter_path": "exporter/games/messenger.py",
-    "exporter_size": 5496,
+    "exporter_size": 5557,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1242,11 +1242,11 @@
     "world_directory": "messenger_worldgen"
   },
   "The Wind Waker": {
-    "exporter_path": "exporter/games/tww.py",
-    "exporter_size": 2143,
+    "exporter_path": null,
+    "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": true,
+    "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "tww"
   },
@@ -1261,7 +1261,7 @@
   },
   "The Witness": {
     "exporter_path": "exporter/games/witness.py",
-    "exporter_size": 26428,
+    "exporter_size": 26223,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1279,7 +1279,7 @@
   },
   "Timespinner": {
     "exporter_path": "exporter/games/timespinner.py",
-    "exporter_size": 3310,
+    "exporter_size": 2926,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1324,7 +1324,7 @@
   },
   "VVVVVV": {
     "exporter_path": "exporter/games/v6.py",
-    "exporter_size": 2119,
+    "exporter_size": 2458,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1396,7 +1396,7 @@
   },
   "Yoshi's Island": {
     "exporter_path": "exporter/games/yoshisisland.py",
-    "exporter_size": 4783,
+    "exporter_size": 4287,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
