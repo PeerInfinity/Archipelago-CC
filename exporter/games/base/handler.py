@@ -1308,11 +1308,15 @@ class BaseGameExportHandler(
         elif hasattr(world, 'accumulator_rules') and world.accumulator_rules:
             game_info['accumulator_rules'] = world.accumulator_rules
 
-        # Use class-level PROG_ITEMS_INIT if defined, otherwise check world attribute
-        if self.PROG_ITEMS_INIT:
+        # For prog_items_init, worldgen worlds get priority for world attribute
+        # because worldgen worlds may pre-compute accumulator initial values.
+        # For non-worldgen worlds, class attribute takes priority.
+        if self.is_worldgen_world(world) and hasattr(world, 'prog_items_init') and world.prog_items_init:
+            game_info['prog_items_init'] = dict(world.prog_items_init)
+        elif self.PROG_ITEMS_INIT:
             game_info['prog_items_init'] = dict(self.PROG_ITEMS_INIT)
         elif hasattr(world, 'prog_items_init') and world.prog_items_init:
-            game_info['prog_items_init'] = world.prog_items_init
+            game_info['prog_items_init'] = dict(world.prog_items_init)
 
         return game_info
 
