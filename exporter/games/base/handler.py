@@ -913,7 +913,188 @@ class BaseGameExportHandler(
                 ...
             }
         """
-        return self._probe_collect_item_for_progression(world)
+        # First, try runtime probing (works for advancement items)
+        mapping = self._probe_collect_item_for_progression(world)
+
+        # Then, try to find additional mappings from module-level data structures
+        # This catches non-advancement progressive items that collect_item skips
+        module_mapping = self._find_module_progression_data(world)
+
+        # Merge: module data fills in gaps from runtime probing
+        for prog_name, data in module_mapping.items():
+            if prog_name not in mapping:
+                mapping[prog_name] = data
+                logger.debug(f"Added {prog_name} from module data (not found via probing)")
+
+        return mapping
+
+    def _find_module_progression_data(self, world) -> Dict[str, Any]:
+        """Find progression mapping from module-level data structures.
+
+        Different games store progression data in different formats:
+        - ALttP: progression_mapping dict in Items.py (concrete -> (progressive, level))
+        - Factorio: progressive_technology_table (progressive -> Technology with .progressive tuple)
+        - Raft: progressive_item_list (progressive -> [concrete_items])
+
+        Returns:
+            Dict with progression mapping in the standard format
+        """
+        mapping_data: Dict[str, Any] = {}
+
+        # Get the world's module
+        world_module = type(world).__module__
+        base_module = '.'.join(world_module.split('.')[:2])  # e.g., "worlds.alttp"
+
+        # Try different known patterns
+        mapping_data.update(self._try_alttp_pattern(base_module))
+        mapping_data.update(self._try_factorio_pattern(base_module))
+        mapping_data.update(self._try_raft_pattern(base_module))
+
+        return mapping_data
+
+    def _try_alttp_pattern(self, base_module: str) -> Dict[str, Any]:
+        """Try ALttP pattern: progression_mapping dict in Items.py.
+
+        Format: concrete_item -> (progressive_item, level)
+        """
+        try:
+            items_module = importlib.import_module(f"{base_module}.Items")
+            if not hasattr(items_module, 'progression_mapping'):
+                return {}
+
+            progression_mapping = getattr(items_module, 'progression_mapping')
+            if not isinstance(progression_mapping, dict):
+                return {}
+
+            # Convert: {concrete: (progressive, level)} -> {progressive: {items: [...]}}
+            mapping_data: Dict[str, Any] = {}
+            for concrete_item, (progressive_item, level) in progression_mapping.items():
+                if progressive_item not in mapping_data:
+                    mapping_data[progressive_item] = {
+                        'items': [],
+                        'base_item': progressive_item
+                    }
+                mapping_data[progressive_item]['items'].append({
+                    'name': concrete_item,
+                    'level': level
+                })
+
+            # Sort items by level
+            for prog_data in mapping_data.values():
+                prog_data['items'].sort(key=lambda x: x['level'])
+
+            if mapping_data:
+                logger.debug(f"Found {len(mapping_data)} progressive items via ALttP pattern")
+
+            return mapping_data
+
+        except ImportError:
+            return {}
+        except Exception as e:
+            logger.debug(f"Error trying ALttP pattern: {e}")
+            return {}
+
+    def _try_factorio_pattern(self, base_module: str) -> Dict[str, Any]:
+        """Try Factorio pattern: progressive_technology_table.
+
+        Format: progressive_item -> Technology object with .progressive tuple
+        """
+        try:
+            # Try importing from Technologies submodule first
+            try:
+                tech_module = importlib.import_module(f"{base_module}.Technologies")
+                if hasattr(tech_module, 'progressive_technology_table'):
+                    prog_table = getattr(tech_module, 'progressive_technology_table')
+                else:
+                    return {}
+            except ImportError:
+                # Try main module
+                main_module = importlib.import_module(base_module)
+                if hasattr(main_module, 'progressive_technology_table'):
+                    prog_table = getattr(main_module, 'progressive_technology_table')
+                else:
+                    return {}
+
+            if not isinstance(prog_table, dict):
+                return {}
+
+            # Convert: {progressive: Technology(progressive=tuple)} -> standard format
+            mapping_data: Dict[str, Any] = {}
+            for prog_name, tech_data in prog_table.items():
+                # Check if it has a progressive attribute (tuple of concrete items)
+                progressive_tuple = getattr(tech_data, 'progressive', None)
+                if not progressive_tuple:
+                    continue
+
+                mapping_data[prog_name] = {
+                    'items': [
+                        {'name': name, 'level': level}
+                        for level, name in enumerate(progressive_tuple, 1)
+                    ],
+                    'base_item': prog_name
+                }
+
+            if mapping_data:
+                logger.debug(f"Found {len(mapping_data)} progressive items via Factorio pattern")
+
+            return mapping_data
+
+        except ImportError:
+            return {}
+        except Exception as e:
+            logger.debug(f"Error trying Factorio pattern: {e}")
+            return {}
+
+    def _try_raft_pattern(self, base_module: str) -> Dict[str, Any]:
+        """Try Raft pattern: progressive_item_list dict.
+
+        Format: progressive_item -> [concrete_items in order]
+        """
+        try:
+            # Try main module first
+            main_module = importlib.import_module(base_module)
+
+            # Look for progressive_item_list
+            if hasattr(main_module, 'progressive_item_list'):
+                prog_list = getattr(main_module, 'progressive_item_list')
+            else:
+                # Try Items submodule
+                try:
+                    items_module = importlib.import_module(f"{base_module}.Items")
+                    if hasattr(items_module, 'progressive_item_list'):
+                        prog_list = getattr(items_module, 'progressive_item_list')
+                    else:
+                        return {}
+                except ImportError:
+                    return {}
+
+            if not isinstance(prog_list, dict):
+                return {}
+
+            # Convert: {progressive: [concrete_items]} -> standard format
+            mapping_data: Dict[str, Any] = {}
+            for prog_name, concrete_items in prog_list.items():
+                if not isinstance(concrete_items, (list, tuple)):
+                    continue
+
+                mapping_data[prog_name] = {
+                    'items': [
+                        {'name': name, 'level': level}
+                        for level, name in enumerate(concrete_items, 1)
+                    ],
+                    'base_item': prog_name
+                }
+
+            if mapping_data:
+                logger.debug(f"Found {len(mapping_data)} progressive items via Raft pattern")
+
+            return mapping_data
+
+        except ImportError:
+            return {}
+        except Exception as e:
+            logger.debug(f"Error trying Raft pattern: {e}")
+            return {}
 
     def _probe_collect_item_for_progression(self, world) -> Dict[str, Any]:
         """Discover progressive items by probing collect_item behavior.
@@ -983,9 +1164,9 @@ class BaseGameExportHandler(
                 logger.debug(f"Could not create item '{item_name}': {e}")
                 continue
 
-            # Only probe advancement items (progressive items must be advancement)
-            if not getattr(item, 'advancement', False):
-                continue
+            # Skip items that can't possibly be progressive
+            # (We probe all items, not just advancement, because some games like
+            # Factorio have progressive items classified as filler/useful)
 
             # Create fresh state for each item probe
             mock_state = MockCollectionState(player)
