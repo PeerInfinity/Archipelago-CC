@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-30T02:58:43.156433",
-    "last_updated": "2025-12-30T02:58:43.156439",
+    "last_updated": "2025-12-30T05:19:47.857560",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1724,27 +1724,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "096e0195f5e2bf73ad6f14875f83ed9add5e7b36972b34baed1817a5af3760ea",
-          "new_sphere_log_hash": "ef43b5a9e462c7438f8a9d2367bbabcedcf7fe7d6d79c8cbf6e417c0b07208ee",
-          "original_rules_hash": "096e0195f5e2bf73ad6f14875f83ed9add5e7b36972b34baed1817a5af3760ea",
-          "original_sphere_log_hash": "ef43b5a9e462c7438f8a9d2367bbabcedcf7fe7d6d79c8cbf6e417c0b07208ee",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-30T02:57:29.380461"
-        }
-      },
       "game_name_from_filename": "kdl3",
       "game_name_from_yaml": "Kirby's Dream Land 3",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.92,
+        "processing_time_seconds": 9.48,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/kdl3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -1756,7 +1744,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 56.9,
+        "processing_time_seconds": 70.91,
         "return_code": 0,
         "sphere_reached": 11.1,
         "success": true,
@@ -1764,10 +1752,10 @@
         "warning_count": 0
       },
       "template_filename": "Kirby's Dream Land 3.yaml",
-      "timestamp": "2025-12-30T02:55:10.196443",
+      "timestamp": "2025-12-30T05:18:27.068070",
       "world_info": {
         "exporter_path": "exporter/games/kdl3.py",
-        "exporter_size": 9492,
+        "exporter_size": 8105,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "kdl3",
