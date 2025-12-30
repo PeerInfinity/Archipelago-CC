@@ -11,9 +11,6 @@ logger = logging.getLogger(__name__)
 class RaftGameExportHandler(GenericGameExportHandler):
     """Export handler for Raft."""
 
-    # Module paths for helper functions
-    HELPER_MODULES = ['worlds.raft.Rules']
-
     # Raft uses resolved_items instead of base_items for sphere inventory
     # This allows the generic has() function to find resolved progressive items
     # (e.g., "Smelter" instead of "progressive-metals") directly in inventory
