@@ -17,8 +17,8 @@ class LingoGameExportHandler(GenericGameExportHandler):
     # sets access_rule directly without registering indirect_connections
     USE_AUTO_INDIRECT_CONDITIONS = True
 
-    # Helper module paths - needed for auto-export to find helper functions
-    HELPER_MODULES = ['worlds.lingo.rules']
+    # Note: HELPER_MODULES is not specified - worlds.lingo.rules is auto-discovered
+    # by the base class from AUTO_DISCOVER_WORLD_HELPER_MODULES = True (default)
 
     # Note: Internal helpers (_lingo_can_open_door, _lingo_can_satisfy_requirements)
     # are auto-discovered during rule analysis when they're directly called.
