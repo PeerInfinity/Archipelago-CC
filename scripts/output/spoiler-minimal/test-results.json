@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-30T06:03:54.427018",
-    "last_updated": "2025-12-30T06:03:54.427023",
+    "last_updated": "2025-12-30T20:21:38.698441",
     "script_version": "1.0.0"
   },
   "results": {
@@ -485,31 +485,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "476fdbbd9ea96c663eb3fff3a77ea3dcc4cba8544e29286fb7bcee4089d5182c",
-          "new_sphere_log_hash": "b936877f390ee7e88ee8061112d9d2f884115f01590f7c33da925199c862a766",
-          "original_rules_hash": "476fdbbd9ea96c663eb3fff3a77ea3dcc4cba8544e29286fb7bcee4089d5182c",
-          "original_sphere_log_hash": "b936877f390ee7e88ee8061112d9d2f884115f01590f7c33da925199c862a766",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-30T06:00:51.220377"
-        }
-      },
       "game_name_from_filename": "cvcotm",
       "game_name_from_yaml": "Castlevania - Circle of the Moon",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 6.14,
+        "processing_time_seconds": 9.69,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/cvcotm/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 97966,
+        "size_bytes": 97142,
         "size_mb": 0.09
       },
       "seed": "1",
@@ -517,7 +505,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 7.71,
+        "processing_time_seconds": 8.74,
         "return_code": 0,
         "sphere_reached": 4.4,
         "success": true,
@@ -525,10 +513,10 @@
         "warning_count": 0
       },
       "template_filename": "Castlevania - Circle of the Moon.yaml",
-      "timestamp": "2025-12-30T05:58:12.313834",
+      "timestamp": "2025-12-30T20:21:19.852386",
       "world_info": {
         "exporter_path": "exporter/games/cvcotm.py",
-        "exporter_size": 6089,
+        "exporter_size": 4060,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "cvcotm",
