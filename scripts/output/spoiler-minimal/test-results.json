@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-29T22:02:06.370218",
-    "last_updated": "2025-12-29T22:02:06.370226",
+    "last_updated": "2025-12-30T02:21:34.047635",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2668,27 +2668,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "0e8f3364792a35f88c13cdf19270d56dc5f300cb37f0b4c06cf0873d08e46536",
-          "new_sphere_log_hash": "c9e763eaa78c1056bbafc8b06b7ce977c4d5b668314ab6af0bef85405f1d1686",
-          "original_rules_hash": "0e8f3364792a35f88c13cdf19270d56dc5f300cb37f0b4c06cf0873d08e46536",
-          "original_sphere_log_hash": "c9e763eaa78c1056bbafc8b06b7ce977c4d5b668314ab6af0bef85405f1d1686",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-29T21:59:50.463750"
-        }
-      },
       "game_name_from_filename": "raft",
       "game_name_from_yaml": "Raft",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.72,
+        "processing_time_seconds": 6.88,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/raft/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -2700,7 +2688,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.68,
+        "processing_time_seconds": 12.52,
         "return_code": 0,
         "sphere_reached": 11.1,
         "success": true,
@@ -2708,10 +2696,10 @@
         "warning_count": 0
       },
       "template_filename": "Raft.yaml",
-      "timestamp": "2025-12-29T21:58:41.544760",
+      "timestamp": "2025-12-30T02:21:14.236556",
       "world_info": {
         "exporter_path": "exporter/games/raft.py",
-        "exporter_size": 10437,
+        "exporter_size": 10353,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "raft",
