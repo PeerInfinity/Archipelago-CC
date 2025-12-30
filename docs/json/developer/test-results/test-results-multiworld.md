@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-30 03:25:51
+**Generated:** 2025-12-30 05:32:18
 
 ## Summary
 
@@ -22,36 +22,36 @@
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 40/73 (54.8% of passed)
+- **Passing with Generic Exporter:** 41/73 (56.2% of passed)
 - **Passing with Generic Logic:** 67/73 (91.8% of passed)
-- **Passing with Both Generic:** 40/73 (54.8% of passed)
+- **Passing with Both Generic:** 41/73 (56.2% of passed)
 
 ## Test Results
 
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
-| A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 6.6KB | ✅ |
+| A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 6.2KB | ✅ |
 | A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 2.5KB | ✅ |
 | A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| Aquaria | ✅ Passed | ✅ Passed | 1 | 1 | 2.8KB | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | 1 | 1 | 1.4KB | 40.3KB |
+| Aquaria | ✅ Passed | ✅ Passed | 1 | 1 | 1.9KB | ✅ |
+| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | 1 | 1 | 1.8KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 6.0KB | ✅ |
+| Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 5.9KB | ✅ |
 | Castlevania 64 | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Celeste 64 | ✅ Passed | ✅ Passed | 2 | 2 | 5.7KB | ✅ |
+| Celeste 64 | ✅ Passed | ✅ Passed | 2 | 2 | 5.5KB | ✅ |
 | ChecksFinder | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | ChocolateChipCookies | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Civilization VI | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 2.5KB | ✅ |
+| DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 1.0KB | ✅ |
 | DOOM 1993 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Dark Souls III | ✅ Passed | ✅ Passed | 2 | 2 | 1.4KB | ✅ |
+| Dark Souls III | ✅ Passed | ✅ Passed | 2 | 2 | 0.7KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 6.0KB | ✅ |
+| Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 5.9KB | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Heretic | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
@@ -91,17 +91,17 @@
 | TOEM original | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | TUNIC | ✅ Passed | ✅ Passed | 7 | 7 | 3.1KB | ✅ |
-| Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 18.3KB | ✅ |
+| Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 18.1KB | ✅ |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 5.4KB | ✅ |
-| The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 2.1KB | ✅ |
-| The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 25.8KB | ✅ |
-| Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 3.2KB | ✅ |
+| The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
+| The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 25.6KB | ✅ |
+| Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 2.9KB | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
-| VVVVVV | ✅ Passed | ✅ Passed | 7 | 7 | 2.1KB | ✅ |
+| VVVVVV | ✅ Passed | ✅ Passed | 7 | 7 | 2.4KB | ✅ |
 | Wargroove | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | WebDevJourney | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
-| Yoshi's Island | ✅ Passed | ✅ Passed | 8 | 8 | 4.7KB | ✅ |
+| Yoshi's Island | ✅ Passed | ✅ Passed | 8 | 8 | 4.2KB | ✅ |
 | shapez | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
 
 ## Templates in Multiworld
