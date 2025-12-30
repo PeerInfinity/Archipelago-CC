@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-30T06:03:54.427018",
-    "last_updated": "2025-12-30T06:03:54.427023",
+    "last_updated": "2025-12-30T20:21:14.638484",
     "script_version": "1.0.0"
   },
   "results": {
@@ -13,31 +13,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "048f7dc53bdd7416273653d9ec66917b0e198d30dacc726630921465b24f8267",
-          "new_sphere_log_hash": "1b423c75da4cbbd793f1a232a355e630c5d4d8f19afd2cee114b4f75eab6bf3c",
-          "original_rules_hash": "048f7dc53bdd7416273653d9ec66917b0e198d30dacc726630921465b24f8267",
-          "original_sphere_log_hash": "1b423c75da4cbbd793f1a232a355e630c5d4d8f19afd2cee114b4f75eab6bf3c",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-30T06:01:59.700413"
-        }
-      },
       "game_name_from_filename": "ahit",
       "game_name_from_yaml": "A Hat in Time",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 12.0,
+        "processing_time_seconds": 16.02,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/ahit/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 253017,
+        "size_bytes": 252975,
         "size_mb": 0.24
       },
       "seed": "1",
@@ -45,7 +33,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 16.78,
+        "processing_time_seconds": 17.52,
         "return_code": 0,
         "sphere_reached": 5.11,
         "success": true,
@@ -53,10 +41,10 @@
         "warning_count": 0
       },
       "template_filename": "A Hat in Time.yaml",
-      "timestamp": "2025-12-30T05:58:15.931851",
+      "timestamp": "2025-12-30T20:20:40.667933",
       "world_info": {
         "exporter_path": "exporter/games/ahit.py",
-        "exporter_size": 6388,
+        "exporter_size": 4804,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "ahit",
