@@ -1,207 +1,150 @@
 """Raft game-specific export handler."""
 
-from typing import Dict, Any, Optional
-from .generic import GenericGameExportHandler
-import logging
 import json
+import logging
 import os
+import re
+from typing import Any, Dict, Optional
+
+from .generic import GenericGameExportHandler
 
 logger = logging.getLogger(__name__)
 
+
+def _camel_to_snake(s: str) -> str:
+    """Convert CamelCase to snake_case and handle spaces."""
+    s = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', s)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s).lower().replace(' ', '_')
+
+
+def _helper(name: str) -> Dict[str, Any]:
+    """Create a helper rule node."""
+    return {'type': 'helper', 'name': name, 'args': []}
+
+
+def _and(*helpers: str) -> Dict[str, Any]:
+    """Create an AND rule combining multiple helpers."""
+    return {'type': 'and', 'conditions': [_helper(h) for h in helpers]}
+
+
+def _or(*helpers: str) -> Dict[str, Any]:
+    """Create an OR rule combining multiple helpers."""
+    return {'type': 'or', 'conditions': [_helper(h) for h in helpers]}
+
+
 class RaftGameExportHandler(GenericGameExportHandler):
-    """Export handler for Raft."""
+    """Export handler for Raft.
 
-    # Raft uses resolved_items instead of base_items for sphere inventory
-    # This allows the generic has() function to find resolved progressive items
-    # (e.g., "Smelter" instead of "progressive-metals") directly in inventory
+    Handles dictionary lookup patterns in Rules.py using locations.json data.
+    """
+
     USE_RESOLVED_ITEMS = True
-
-    # Add sphere items upfront so resolved items are added directly to inventory
-    # Without this, checking locations would add base items (progressive-metals)
-    # instead of resolved items (Smelter)
     ADD_SPHERE_ITEMS_UPFRONT = True
 
-    # Item check rules - maps item names to their access rule structures
-    # Based on the itemChecks dictionary in worlds/raft/Rules.py
-    ITEM_CHECK_RULES = {
-        # Basic materials - always available
-        "Plank": {'type': 'constant', 'value': True},
-        "Plastic": {'type': 'constant', 'value': True},
-        "Clay": {'type': 'constant', 'value': True},
-        "Stone": {'type': 'constant', 'value': True},
-        "Rope": {'type': 'constant', 'value': True},
-        "Nail": {'type': 'constant', 'value': True},
-        "Scrap": {'type': 'constant', 'value': True},
-        "SeaVine": {'type': 'constant', 'value': True},
-        "Brick_Dry": {'type': 'constant', 'value': True},
-        "Thatch": {'type': 'constant', 'value': True},  # Palm Leaf
-        "Placeable_GiantClam": {'type': 'constant', 'value': True},
-        # Materials from big islands
-        "Leather": {'type': 'helper', 'name': 'raft_big_islands_available', 'args': []},
-        "Feather": {
-            'type': 'or',
-            'conditions': [
-                {'type': 'helper', 'name': 'raft_big_islands_available', 'args': []},
-                {'type': 'helper', 'name': 'raft_can_craft_birdNest', 'args': []}
-            ]
-        },
+    # Item rules: None = always available, string = helper name, dict = complex rule
+    _ITEM_RULES = {
+        # Always available
+        "Plank": None, "Plastic": None, "Clay": None, "Stone": None, "Rope": None,
+        "Nail": None, "Scrap": None, "SeaVine": None, "Brick_Dry": None,
+        "Thatch": None, "Placeable_GiantClam": None,
         # Smelted items
-        "MetalIngot": {'type': 'helper', 'name': 'raft_can_smelt_items', 'args': []},
-        "CopperIngot": {'type': 'helper', 'name': 'raft_can_smelt_items', 'args': []},
-        "VineGoo": {'type': 'helper', 'name': 'raft_can_smelt_items', 'args': []},
-        "ExplosivePowder": {
-            'type': 'and',
-            'conditions': [
-                {'type': 'helper', 'name': 'raft_big_islands_available', 'args': []},
-                {'type': 'helper', 'name': 'raft_can_smelt_items', 'args': []}
-            ]
-        },
-        "Glass": {'type': 'helper', 'name': 'raft_can_smelt_items', 'args': []},
-        # Crafted items
-        "Bolt": {'type': 'helper', 'name': 'raft_can_craft_bolt', 'args': []},
-        "Hinge": {'type': 'helper', 'name': 'raft_can_craft_hinge', 'args': []},
-        "CircuitBoard": {'type': 'helper', 'name': 'raft_can_craft_circuitBoard', 'args': []},
-        "PlasticBottle_Empty": {'type': 'helper', 'name': 'raft_can_craft_plasticBottle', 'args': []},
-        "Wool": {
-            'type': 'and',
-            'conditions': [
-                {'type': 'helper', 'name': 'raft_can_capture_animals', 'args': []},
-                {'type': 'helper', 'name': 'raft_can_craft_shears', 'args': []}
-            ]
-        },
-        "HoneyComb": {'type': 'helper', 'name': 'raft_can_access_balboa_island', 'args': []},
-        "Jar_Bee": {
-            'type': 'and',
-            'conditions': [
-                {'type': 'helper', 'name': 'raft_can_access_balboa_island', 'args': []},
-                {'type': 'helper', 'name': 'raft_can_smelt_items', 'args': []}
-            ]
-        },
-        "Dirt": {'type': 'helper', 'name': 'raft_can_get_dirt', 'args': []},
-        "Egg": {'type': 'helper', 'name': 'raft_can_capture_animals', 'args': []},
-        "TitaniumIngot": {
-            'type': 'and',
-            'conditions': [
-                {'type': 'helper', 'name': 'raft_can_smelt_items', 'args': []},
-                {'type': 'helper', 'name': 'raft_can_find_titanium', 'args': []}
-            ]
-        },
-        # Specific items for story island location checks
-        "Machete": {'type': 'helper', 'name': 'raft_can_craft_machete', 'args': []},
-        "Zipline tool": {'type': 'helper', 'name': 'raft_can_craft_ziplineTool', 'args': []},
+        "MetalIngot": "raft_can_smelt_items", "CopperIngot": "raft_can_smelt_items",
+        "VineGoo": "raft_can_smelt_items", "Glass": "raft_can_smelt_items",
+        # Simple helper items
+        "Leather": "raft_big_islands_available", "Bolt": "raft_can_craft_bolt",
+        "Hinge": "raft_can_craft_hinge", "CircuitBoard": "raft_can_craft_circuitBoard",
+        "PlasticBottle_Empty": "raft_can_craft_plasticBottle",
+        "HoneyComb": "raft_can_access_balboa_island", "Dirt": "raft_can_get_dirt",
+        "Egg": "raft_can_capture_animals", "Machete": "raft_can_craft_machete",
+        "Zipline tool": "raft_can_craft_ziplineTool",
     }
 
-    # Region access rules - maps region names to their access rule structures
-    # Based on the regionChecks dictionary in worlds/raft/Rules.py
-    REGION_ACCESS_RULES = {
-        "Raft": {'type': 'constant', 'value': True},
-        "ResearchTable": {'type': 'constant', 'value': True},
-        "RadioTower": {'type': 'helper', 'name': 'raft_can_access_radio_tower', 'args': []},
-        "Vasagatan": {'type': 'helper', 'name': 'raft_can_access_vasagatan', 'args': []},
-        "BalboaIsland": {'type': 'helper', 'name': 'raft_can_access_balboa_island', 'args': []},
-        "CaravanIsland": {'type': 'helper', 'name': 'raft_can_access_caravan_island', 'args': []},
-        "Tangaroa": {'type': 'helper', 'name': 'raft_can_access_tangaroa', 'args': []},
-        "Varuna Point": {'type': 'helper', 'name': 'raft_can_access_varuna_point', 'args': []},
-        "Temperance": {'type': 'helper', 'name': 'raft_can_access_temperance', 'args': []},
-        "Utopia": {
-            'type': 'and',
-            'conditions': [
-                {'type': 'helper', 'name': 'raft_can_complete_temperance', 'args': []},
-                {'type': 'helper', 'name': 'raft_can_access_utopia', 'args': []}
-            ]
-        }
+    # Complex item rules (compound conditions)
+    _COMPLEX_ITEM_RULES = {
+        "Feather": lambda: _or('raft_big_islands_available', 'raft_can_craft_birdNest'),
+        "ExplosivePowder": lambda: _and('raft_big_islands_available', 'raft_can_smelt_items'),
+        "Wool": lambda: _and('raft_can_capture_animals', 'raft_can_craft_shears'),
+        "Jar_Bee": lambda: _and('raft_can_access_balboa_island', 'raft_can_smelt_items'),
+        "TitaniumIngot": lambda: _and('raft_can_smelt_items', 'raft_can_find_titanium'),
     }
 
     def __init__(self):
         super().__init__()
-        # Load the locations.json file to get region information
-        self.location_to_region = {}
-        self.location_to_items = {}
-        self.progressive_mapping = {}
+        self.location_to_region: Dict[str, str] = {}
+        self.location_to_items: Dict[str, list] = {}
+        self.progressive_mapping: Dict[str, list] = {}
+        self._load_data()
+
+    def _load_data(self) -> None:
+        """Load location and progression data from JSON files."""
+        raft_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'worlds', 'raft')
+
         try:
-            # Find the raft world directory
-            raft_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'worlds', 'raft')
-            locations_file = os.path.join(raft_dir, 'locations.json')
-
-            if os.path.exists(locations_file):
-                with open(locations_file, 'r') as f:
-                    location_table = json.load(f)
-                    for loc in location_table:
-                        self.location_to_region[loc['name']] = loc['region']
-                        if 'requiresAccessToItems' in loc:
-                            self.location_to_items[loc['name']] = loc['requiresAccessToItems']
-                logger.info(f"Loaded {len(self.location_to_region)} Raft locations from locations.json")
-            else:
-                logger.warning(f"Could not find Raft locations.json at {locations_file}")
-
-            # Load the progressives.json file to get progressive item mapping
-            progressives_file = os.path.join(raft_dir, 'progressives.json')
-            if os.path.exists(progressives_file):
-                with open(progressives_file, 'r') as f:
-                    progressive_table = json.load(f)
-                    # Build the mapping from progressive item to its constituent items
-                    for item_name, progressive_name in progressive_table.items():
-                        if progressive_name not in self.progressive_mapping:
-                            self.progressive_mapping[progressive_name] = []
-                        self.progressive_mapping[progressive_name].append(item_name)
-                logger.info(f"Loaded {len(self.progressive_mapping)} Raft progressive items from progressives.json")
-            else:
-                logger.warning(f"Could not find Raft progressives.json at {progressives_file}")
+            with open(os.path.join(raft_dir, 'locations.json'), 'r') as f:
+                for loc in json.load(f):
+                    self.location_to_region[loc['name']] = loc['region']
+                    if 'requiresAccessToItems' in loc:
+                        self.location_to_items[loc['name']] = loc['requiresAccessToItems']
         except Exception as e:
-            logger.error(f"Error loading Raft data files: {e}")
+            logger.error(f"Error loading Raft locations: {e}")
+
+        try:
+            with open(os.path.join(raft_dir, 'progressives.json'), 'r') as f:
+                for item_name, prog_name in json.load(f).items():
+                    self.progressive_mapping.setdefault(prog_name, []).append(item_name)
+        except Exception as e:
+            logger.error(f"Error loading Raft progressives: {e}")
+
+    def _get_region_rule(self, region: str) -> Dict[str, Any]:
+        """Get access rule for a region."""
+        if region in ("Raft", "ResearchTable"):
+            return {'type': 'constant', 'value': True}
+        if region == "Utopia":
+            return _and('raft_can_complete_temperance', 'raft_can_access_utopia')
+        return _helper(f"raft_can_access_{_camel_to_snake(region)}")
+
+    def _get_item_rule(self, item_name: str) -> Optional[Dict[str, Any]]:
+        """Get access rule for an item."""
+        if item_name in self._COMPLEX_ITEM_RULES:
+            return self._COMPLEX_ITEM_RULES[item_name]()
+        rule = self._ITEM_RULES.get(item_name)
+        if rule is None:
+            return None  # Always available
+        if isinstance(rule, str):
+            return _helper(rule)
+        return rule
 
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None):
-        """
-        Override rule analysis for Raft locations that use the regionChecks pattern.
-
-        Raft's Rules.py uses: set_rule(locFromWorld, regionChecks[location["region"]])
-        This dictionary lookup pattern can't be analyzed by the standard AST analyzer,
-        so we resolve it here using the location-to-region mapping from locations.json.
-        """
+        """Override rule analysis for Raft locations using regionChecks pattern."""
         if not rule_target_name or rule_target_name not in self.location_to_region:
-            return None  # Let default analysis handle it
+            return None
 
         region = self.location_to_region[rule_target_name]
-        region_rule = self.REGION_ACCESS_RULES.get(region, {'type': 'constant', 'value': True})
-        is_region_always_accessible = region_rule.get('value') is True
+        region_rule = self._get_region_rule(region)
+        is_always_accessible = region_rule.get('type') == 'constant'
 
-        # Build item check conditions (skip constant True rules)
-        item_conditions = []
-        for item_name in self.location_to_items.get(rule_target_name, []):
-            item_rule = self.ITEM_CHECK_RULES.get(item_name)
+        conditions = [] if is_always_accessible else [region_rule]
+        for item in self.location_to_items.get(rule_target_name, []):
+            item_rule = self._get_item_rule(item)
             if item_rule:
-                if not (item_rule.get('type') == 'constant' and item_rule.get('value') is True):
-                    item_conditions.append(item_rule)
-            else:
-                logger.warning(f"Unknown item check for '{item_name}' in location '{rule_target_name}'")
+                conditions.append(item_rule)
 
-        # Combine region rule with item conditions
-        conditions = item_conditions if is_region_always_accessible else [region_rule] + item_conditions
-
-        # Build final result based on number of conditions
-        if len(conditions) == 0:
+        if not conditions:
             result = {'type': 'constant', 'value': True}
         elif len(conditions) == 1:
             result = conditions[0]
         else:
             result = {'type': 'and', 'conditions': conditions}
 
-        # Register all helpers in the result (recursive, handles nested rules)
         self.register_helpers_from_rule(result)
         return result
 
     def get_progression_mapping(self, world) -> Dict[str, Any]:
         """Return Raft-specific progression item mapping data."""
-        # Convert the simple list format to the proper schema format
-        mapping_data = {}
-        for progressive_name, item_list in self.progressive_mapping.items():
-            mapping_data[progressive_name] = {
-                'base_item': progressive_name,
-                'items': []
+        return {
+            prog_name: {
+                'base_item': prog_name,
+                'items': [{'name': item, 'level': i} for i, item in enumerate(items, 1)]
             }
-            for level, item_name in enumerate(item_list, start=1):
-                mapping_data[progressive_name]['items'].append({
-                    'name': item_name,
-                    'level': level
-                })
-        return mapping_data
+            for prog_name, items in self.progressive_mapping.items()
+        }
