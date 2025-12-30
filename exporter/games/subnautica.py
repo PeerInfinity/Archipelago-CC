@@ -15,6 +15,10 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
     (EXPORT_CHOICE_OPTIONS_AS_NUMERIC = True), we need to expand
     these property accesses in helpers and rules to their computed
     equivalents so the frontend can evaluate them.
+
+    Note: The room.can_reach() pattern for "Repair Aurora Drive" is now
+    handled automatically by the analyzer's closure variable resolution
+    (see call_visitor.py lines 1289-1316).
     """
 
     # Helpers that should always be exported (used in access rules)
@@ -25,59 +29,22 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
     HELPERS_TO_PRESERVE = {'is_radiated'}
 
     def expand_rule(self, rule, _depth: int = 0):
-        """Handle special location dependency patterns and expand SwimRule attributes.
+        """Expand SwimRule computed property accesses in rules.
 
-        The "Repair Aurora Drive" location depends on "Aurora Drive Room - Upgrade Console"
-        being reachable. This is implemented in Python as:
-            room = subnautica_world.get_location("Aurora Drive Room - Upgrade Console")
-            set_rule(location, lambda state: room.can_reach(state))
-
-        We convert this to a can_access_location helper call with the location data.
-
-        Also expands swim_rule.base_depth and swim_rule.consider_items in all rules.
+        Expands swim_rule.base_depth and swim_rule.consider_items to their
+        computed equivalents so the frontend can evaluate them with just the
+        numeric swim_rule option value.
         """
         if not rule:
             return rule
 
         # Only deep copy at top level to avoid redundant copies during recursion
+        # (needed because _expand_swim_rule_attrs modifies nodes in-place)
         if _depth == 0:
             rule = copy.deepcopy(rule)
 
-        # Expand SwimRule attribute accesses first
+        # Expand SwimRule attribute accesses
         self._expand_swim_rule_attrs(rule)
-
-        # Handle location.can_reach() pattern (e.g., room.can_reach())
-        # Check both AST format (type: 'function_call') and Rule Builder format (rule: 'AST_function_call')
-        rule_type = rule.get('type') or rule.get('rule')
-        if rule_type in ('function_call', 'AST_function_call'):
-            # Function info may be in rule directly (AST) or in rule['args'] (Rule Builder)
-            func = rule.get('function') or rule.get('args', {}).get('function', {})
-            if (func.get('type') == 'attribute' and
-                func.get('attr') == 'can_reach' and
-                func.get('object', {}).get('type') == 'name'):
-                var_name = func['object'].get('name')
-                # Handle both 'room' and 'location' variable names
-                # The analyzer may use 'location' for closure variables
-                if var_name in ('room', 'location'):
-                    # Replace with the same access rule as "Aurora Drive Room - Upgrade Console"
-                    return {
-                        'type': 'helper',
-                        'name': 'can_access_location',
-                        'args': [{
-                            'type': 'constant',
-                            'value': {
-                                'can_slip_through': False,
-                                'name': 'Aurora Drive Room - Upgrade Console',
-                                'need_laser_cutter': False,
-                                'need_propulsion_cannon': True,
-                                'position': {
-                                    'x': 872.5,
-                                    'y': 2.7,
-                                    'z': -0.7
-                                }
-                            }
-                        }]
-                    }
 
         # Call base class for standard processing (handles recursion, helper expansion, etc.)
         return super().expand_rule(rule, _depth)
