@@ -5,42 +5,11 @@ from .generic import GenericGameExportHandler
 
 
 class MessengerGameExportHandler(GenericGameExportHandler):
-    """Export handler for The Messenger."""
+    """Export handler for The Messenger.
 
-    # Inferred item name corrections: inferred_name -> actual rule
-    INFERRED_ITEM_FIXES = {
-        'Vertical': {'type': 'or', 'conditions': [
-            {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Wingsuit'}},
-            {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Rope Dart'}}
-        ]},
-        'Dart': {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Rope Dart'}},
-        'Tabi': {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Lightfoot Tabi'}},
-    }
-
-    # Generic helper expansions: helper_name -> rule
-    HELPER_EXPANSIONS = {
-        'is_aerobatic': {'type': 'and', 'conditions': [
-            {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Wingsuit'}},
-            {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Aerobatics Warrior'}}
-        ]},
-    }
-
-    # Capability expansions: capability_name -> rule (None means requires runtime calculation)
-    CAPABILITY_EXPANSIONS = {
-        'destroy_projectiles': {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Strike of the Ninja'}},
-        'dboost': {'type': 'and', 'conditions': [
-            {'type': 'or', 'conditions': [
-                {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Path of Resilience'}},
-                {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Meditation'}}
-            ]},
-            {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Second Wind'}}
-        ]},
-        'double_dboost': {'type': 'and', 'conditions': [
-            {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Path of Resilience'}},
-            {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Meditation'}},
-            {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Second Wind'}}
-        ]},
-    }
+    Handles Messenger-specific helper patterns by overriding _expand_common_helper
+    to return correct rules directly, avoiding intermediate inferred/capability types.
+    """
 
     # Time Shard variants for progression mapping
     TIME_SHARD_VALUES = {
@@ -60,33 +29,53 @@ class MessengerGameExportHandler(GenericGameExportHandler):
         focused_power = self.world.multiworld.get_location("The Shop - Focused Power Sense", self.world.player)
         return min(demons_bane.cost + focused_power.cost, self.world.total_shards)
 
-    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
-        """Expand rules with game-specific fixes."""
-        if not rule:
-            return rule
+    def _expand_common_helper(self, helper_name, args):
+        """Expand Messenger-specific helper patterns directly to rules.
 
-        rule = super().expand_rule(rule, _depth)
+        Handles has_*, is_*, and can_* patterns that need game-specific expansions,
+        returning the correct rules directly instead of intermediate types.
+        """
+        # Handle has_* patterns with correct item mappings
+        if helper_name.startswith('has_'):
+            subject = '_'.join(helper_name.split('_')[1:])
+            item_mappings = {
+                'vertical': {'type': 'or', 'conditions': [
+                    {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Wingsuit'}},
+                    {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Rope Dart'}}
+                ]},
+                'dart': {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Rope Dart'}},
+                'tabi': {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Lightfoot Tabi'}},
+            }
+            if subject in item_mappings:
+                return item_mappings[subject]
 
-        # Fix inferred item names
-        if rule.get('type') == 'item_check' and rule.get('inferred'):
-            item = rule.get('item')
-            if item in self.INFERRED_ITEM_FIXES:
-                return self.INFERRED_ITEM_FIXES[item]
+        # Handle is_aerobatic helper
+        if helper_name == 'is_aerobatic':
+            return {'type': 'and', 'conditions': [
+                {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Wingsuit'}},
+                {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Aerobatics Warrior'}}
+            ]}
 
-        # Handle generic helper rules
-        if rule.get('type') == 'generic_helper':
-            helper_name = rule.get('name')
-            if helper_name in self.HELPER_EXPANSIONS:
-                return self.HELPER_EXPANSIONS[helper_name]
-
-        # Handle capability rules
-        if rule.get('type') == 'capability':
-            capability = rule.get('capability')
-
-            # Static capability expansions
-            if capability in self.CAPABILITY_EXPANSIONS:
-                return self.CAPABILITY_EXPANSIONS[capability]
-
+        # Handle can_* capability patterns
+        if helper_name.startswith('can_'):
+            capability = helper_name[4:]
+            capability_expansions = {
+                'destroy_projectiles': {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Strike of the Ninja'}},
+                'dboost': {'type': 'and', 'conditions': [
+                    {'type': 'or', 'conditions': [
+                        {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Path of Resilience'}},
+                        {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Meditation'}}
+                    ]},
+                    {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Second Wind'}}
+                ]},
+                'double_dboost': {'type': 'and', 'conditions': [
+                    {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Path of Resilience'}},
+                    {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Meditation'}},
+                    {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Second Wind'}}
+                ]},
+            }
+            if capability in capability_expansions:
+                return capability_expansions[capability]
             # can_shop requires runtime calculation
             if capability == 'shop' and self.world:
                 return {
@@ -95,7 +84,8 @@ class MessengerGameExportHandler(GenericGameExportHandler):
                     'count': {'type': 'constant', 'value': self._get_maximum_price()}
                 }
 
-        return rule
+        # Fall back to base class for other patterns
+        return super()._expand_common_helper(helper_name, args)
 
     def get_world_data(self, world, multiworld, player):
         """Extract Messenger-specific world data."""
