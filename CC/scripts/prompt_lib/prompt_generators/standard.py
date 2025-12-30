@@ -113,16 +113,19 @@ These class attributes let you configure behavior without writing custom methods
 | Attribute | Purpose | Example Game |
 |-----------|---------|--------------|
 | `STATE_METHOD_REPLACEMENTS` | Replace state methods with rule structures (often auto-detected) | ALTTP, OOT |
-| `CLOSURE_VAR_IMPORTS` | Inject module-level variables for helper analysis | MM2 (robot_masters, weapons_to_name) |
+| `CLOSURE_VAR_IMPORTS` | Inject module-level variables for helper analysis | KH2 (auto_form_dict, form_list, etc.) |
 | `HELPER_OBJECT_NAMES` | Convert `obj.method()` calls to helper functions | Yoshi's Island (logic, bosses) |
 | `NAME_REMAPPING` | Map parameter names to setting names | - |
 | `SETTINGS_TO_CONVERT` | Convert name types to setting_value types | - |
-| `HELPER_PARAM_MAPPINGS` | Map helper params to slot_data keys | MM2 (can_defeat_enough_rbms) |
+| `HELPER_PARAM_MAPPINGS` | Map helper params to slot_data keys (rarely needed - auto-detected) | - |
 | `AUTO_DISCOVER_*` | Auto-discover attributes without manual specification | ALTTP |
 | `SELF_ATTR_TO_SETTING` | Map `self.attr` patterns to setting_value rules | KH2 (fight_logic → FightLogic) |
 | `CONSTANT_HELPER_EXPANSIONS` | Map helpers to constant return values (True/False) | KH2, Overcooked 2 |
+| `HELPER_TO_RULE_MAPPINGS` | Map helper calls to rule types (location_check, can_reach, etc.) | Dark Souls 3 |
 | `ACCUMULATOR_RULES` | Configure item accumulation patterns (coins, etc.) | LADX, DLC Quest |
 | `PROG_ITEMS_INIT` | Initial values for accumulators | (used with ACCUMULATOR_RULES) |
+| `ACCUMULATOR_ITEM_GROUP` | Auto-generate accumulator items with this group name | DLC Quest |
+| `ACCUMULATOR_ITEM_TYPE` | Type for auto-generated accumulator items | DLC Quest |
 | `ITEM_VALUE_MAPPINGS` | Extract item→value mappings from world attributes | OSRS (qp_items) |
 | `DICT_SUM_HELPERS` | Auto-generate sum helpers over item→value dicts | OSRS (quest_points) |
 
@@ -204,7 +207,7 @@ Review these simplified exporters as examples:
 
 ```bash
 cat exporter/games/alttp.py      # ~60 lines - auto-discovery flags only
-cat exporter/games/mm2.py        # ~30 lines - CLOSURE_VAR_IMPORTS + HELPER_PARAM_MAPPINGS
+cat exporter/games/dark_souls_3.py  # ~20 lines - HELPER_TO_RULE_MAPPINGS only
 ```
 
 **Note:** If an exporter class does nothing but `pass`, it should be **deleted entirely**.
