@@ -1,17 +1,37 @@
-"""The Messenger game-specific export handler."""
+"""The Messenger game-specific export handler.
 
-from typing import Dict, Any
+Handles Messenger-specific helper patterns and accumulator-based Time Shard tracking.
+"""
+
+from typing import Any, Dict
 from .generic import GenericGameExportHandler
+
+
+def _item(name: str) -> Dict[str, Any]:
+    """Create an item_check rule for a single item."""
+    return {'type': 'item_check', 'item': {'type': 'constant', 'value': name}}
+
+
+def _and(*conditions) -> Dict[str, Any]:
+    """Create an AND rule combining multiple conditions."""
+    return {'type': 'and', 'conditions': list(conditions)}
+
+
+def _or(*conditions) -> Dict[str, Any]:
+    """Create an OR rule combining multiple conditions."""
+    return {'type': 'or', 'conditions': list(conditions)}
 
 
 class MessengerGameExportHandler(GenericGameExportHandler):
     """Export handler for The Messenger.
 
-    Handles Messenger-specific helper patterns by overriding _expand_common_helper
-    to return correct rules directly, avoiding intermediate inferred/capability types.
+    Handles:
+    - Time Shard accumulator (Pattern 4: parenthesized numbers like "Time Shard (100)")
+    - Helper expansions for has_*, is_*, and can_* patterns
+    - Shop location cost-based access rules
     """
 
-    # Time Shard variants for progression mapping
+    # Time Shard variants for the additive Shards accumulator
     TIME_SHARD_VALUES = {
         "Time Shard": 1,
         "Time Shard (10)": 10,
@@ -19,6 +39,29 @@ class MessengerGameExportHandler(GenericGameExportHandler):
         "Time Shard (100)": 100,
         "Time Shard (300)": 300,
         "Time Shard (500)": 500,
+    }
+
+    # Helper expansion mappings - maps helper names to their rule structures
+    # These override the generic pattern matching because item names don't match helper names
+    HELPER_EXPANSIONS = {
+        # has_* patterns: helper name -> item name (where they differ)
+        'has_wingsuit': _item('Wingsuit'),
+        'has_dart': _item('Rope Dart'),  # Not just "Dart"
+        'has_tabi': _item('Lightfoot Tabi'),  # Not just "Tabi"
+        'has_vertical': _or(_item('Wingsuit'), _item('Rope Dart')),
+        # is_* patterns
+        'is_aerobatic': _and(_item('Wingsuit'), _item('Aerobatics Warrior')),
+        # can_* patterns (simple ones, can_shop is computed separately)
+        'can_destroy_projectiles': _item('Strike of the Ninja'),
+        'can_dboost': _and(
+            _or(_item('Path of Resilience'), _item('Meditation')),
+            _item('Second Wind')
+        ),
+        'can_double_dboost': _and(
+            _item('Path of Resilience'),
+            _item('Meditation'),
+            _item('Second Wind')
+        ),
     }
 
     def _get_maximum_price(self) -> int:
@@ -30,59 +73,18 @@ class MessengerGameExportHandler(GenericGameExportHandler):
         return min(demons_bane.cost + focused_power.cost, self.world.total_shards)
 
     def _expand_common_helper(self, helper_name, args):
-        """Expand Messenger-specific helper patterns directly to rules.
+        """Expand Messenger-specific helper patterns to rule structures."""
+        # Check declarative mappings first
+        if helper_name in self.HELPER_EXPANSIONS:
+            return self.HELPER_EXPANSIONS[helper_name]
 
-        Handles has_*, is_*, and can_* patterns that need game-specific expansions,
-        returning the correct rules directly instead of intermediate types.
-        """
-        # Handle has_* patterns with correct item mappings
-        if helper_name.startswith('has_'):
-            subject = '_'.join(helper_name.split('_')[1:])
-            item_mappings = {
-                'vertical': {'type': 'or', 'conditions': [
-                    {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Wingsuit'}},
-                    {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Rope Dart'}}
-                ]},
-                'dart': {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Rope Dart'}},
-                'tabi': {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Lightfoot Tabi'}},
+        # can_shop requires runtime calculation of maximum shop cost
+        if helper_name == 'can_shop' and self.world:
+            return {
+                'type': 'item_check',
+                'item': {'type': 'constant', 'value': 'Shards'},
+                'count': {'type': 'constant', 'value': self._get_maximum_price()}
             }
-            if subject in item_mappings:
-                return item_mappings[subject]
-
-        # Handle is_aerobatic helper
-        if helper_name == 'is_aerobatic':
-            return {'type': 'and', 'conditions': [
-                {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Wingsuit'}},
-                {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Aerobatics Warrior'}}
-            ]}
-
-        # Handle can_* capability patterns
-        if helper_name.startswith('can_'):
-            capability = helper_name[4:]
-            capability_expansions = {
-                'destroy_projectiles': {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Strike of the Ninja'}},
-                'dboost': {'type': 'and', 'conditions': [
-                    {'type': 'or', 'conditions': [
-                        {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Path of Resilience'}},
-                        {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Meditation'}}
-                    ]},
-                    {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Second Wind'}}
-                ]},
-                'double_dboost': {'type': 'and', 'conditions': [
-                    {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Path of Resilience'}},
-                    {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Meditation'}},
-                    {'type': 'item_check', 'item': {'type': 'constant', 'value': 'Second Wind'}}
-                ]},
-            }
-            if capability in capability_expansions:
-                return capability_expansions[capability]
-            # can_shop requires runtime calculation
-            if capability == 'shop' and self.world:
-                return {
-                    'type': 'item_check',
-                    'item': {'type': 'constant', 'value': 'Shards'},
-                    'count': {'type': 'constant', 'value': self._get_maximum_price()}
-                }
 
         # Fall back to base class for other patterns
         return super()._expand_common_helper(helper_name, args)
