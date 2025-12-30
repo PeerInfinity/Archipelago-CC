@@ -652,17 +652,18 @@ class BaseGameExportHandler(
             arg_index = mapping.get('arg_index', 0)
             if args and len(args) > arg_index:
                 arg = args[arg_index]
-                # Extract value if arg is a dict with 'value' key (constant node)
-                if isinstance(arg, dict) and arg.get('type') == 'constant':
-                    value = arg.get('value')
-                elif isinstance(arg, dict):
-                    # Other dict types - use as-is
-                    value = arg
+                # Determine the field value based on arg type:
+                # - If arg is a dict (rule structure), use it as-is
+                # - If arg is a raw value, wrap it in a constant node
+                if isinstance(arg, dict):
+                    # Already a rule structure (constant, name, f_string, etc.) - use as-is
+                    field_value = arg
                 else:
-                    value = arg
+                    # Raw value - wrap in constant
+                    field_value = {'type': 'constant', 'value': arg}
                 return {
                     'type': mapping['type'],
-                    mapping['field']: {'type': 'constant', 'value': value}
+                    mapping['field']: field_value
                 }
 
         return None
