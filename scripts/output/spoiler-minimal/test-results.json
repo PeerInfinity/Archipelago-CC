@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-30T06:03:54.427018",
-    "last_updated": "2025-12-30T06:03:54.427023",
+    "last_updated": "2025-12-30T20:25:40.538482",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1547,39 +1547,27 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "a8b104011f342196572675d7478421e6772c90ecce86c1526df3803407e5a381",
-          "new_sphere_log_hash": "444a5b654c947beb45ba27fd6360178c43f22aa264dcca664e59d2f1fb6bd470",
-          "original_rules_hash": "a8b104011f342196572675d7478421e6772c90ecce86c1526df3803407e5a381",
-          "original_sphere_log_hash": "444a5b654c947beb45ba27fd6360178c43f22aa264dcca664e59d2f1fb6bd470",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-30T06:00:29.646848"
-        }
-      },
       "game_name_from_filename": "inscryption",
       "game_name_from_yaml": "Inscryption",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.79,
+        "processing_time_seconds": 8.99,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/inscryption/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 87341,
-        "size_mb": 0.08
+        "size_bytes": 90782,
+        "size_mb": 0.09
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.5,
+        "processing_time_seconds": 9.64,
         "return_code": 0,
         "sphere_reached": 9.2,
         "success": true,
@@ -1587,10 +1575,10 @@
         "warning_count": 0
       },
       "template_filename": "Inscryption.yaml",
-      "timestamp": "2025-12-30T05:58:55.175196",
+      "timestamp": "2025-12-30T20:25:21.498097",
       "world_info": {
         "exporter_path": "exporter/games/inscryption.py",
-        "exporter_size": 5262,
+        "exporter_size": 7674,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "inscryption",
