@@ -6,7 +6,7 @@ from .generic import GenericGameExportHandler
 class CvCotMGameExportHandler(GenericGameExportHandler):
     """Expander for Castlevania - Circle of the Moon specific functions."""
 
-    # Options to export at top level of settings (simple value extractions)
+    # Options to export at top level of world data (simple value extractions)
     # Note: required_last_keys is a computed world attribute, not an option,
     # and is auto-discovered via AUTO_DISCOVER_WORLD_ATTRIBUTES (default True)
     EXPORTED_OPTIONS = [
@@ -16,9 +16,9 @@ class CvCotMGameExportHandler(GenericGameExportHandler):
         'completion_goal',
     ]
 
-    # Helpers that should be preserved as helper calls (not expanded to item checks)
-    # These are defined in get_helper_definitions() and must be preserved
-    HELPERS_TO_PRESERVE = {
+    # Helpers computed in get_helper_definitions() - auto-preserved during analysis
+    AUTO_PRESERVE_COMPUTED_HELPERS = True
+    COMPUTED_HELPERS = {
         'has_jump_level_1',
         'has_jump_level_2',
         'has_jump_level_3',
