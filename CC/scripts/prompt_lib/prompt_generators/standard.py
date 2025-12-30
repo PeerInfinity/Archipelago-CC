@@ -112,7 +112,7 @@ These class attributes let you configure behavior without writing custom methods
 
 | Attribute | Purpose | Example Game |
 |-----------|---------|--------------|
-| `STATE_METHOD_REPLACEMENTS` | Replace state methods with rule structures | TWW (`_tww_in_swordless_mode` → `setting_value`) |
+| `STATE_METHOD_REPLACEMENTS` | Replace state methods with rule structures (often auto-detected) | ALTTP, OOT |
 | `CLOSURE_VAR_IMPORTS` | Inject module-level variables for helper analysis | MM2 (robot_masters, weapons_to_name) |
 | `HELPER_OBJECT_NAMES` | Convert `obj.method()` calls to helper functions | Yoshi's Island (logic, bosses) |
 | `NAME_REMAPPING` | Map parameter names to setting names | - |
@@ -168,6 +168,16 @@ These features work out-of-the-box with `GenericGameExportHandler`:
 - Helper param_mappings → auto-detected from call-site patterns (e.g., `world.options.X`)
 - Enum classes used as helpers → converted to identity functions
 
+**LogicMixin State Method Auto-Detection** (`AUTO_DISCOVER_LOGIC_MIXIN_REPLACEMENTS=True`):
+- `return self.multiworld.worlds[player].<attr>` → `setting_value` rule
+- `return not self.multiworld.worlds[player].<attr>` → negated `setting_value` rule
+- `return bool(world.options.<opt>.value)` → `setting_value` rule
+- "All elements pass check" patterns (for loop with early return False, final return True):
+  - `self.can_reach_location(var, player)` check → `all_of` with `location_check`
+  - `state.has(var, player)` check → `all_of` with `item_check`
+  - `state.can_reach(var, player)` check → `all_of` with `can_reach`
+- Example: TWW's `_tww_can_defeat_all_required_bosses` is auto-detected as `all_of(location_check)`
+
 **Rule Analysis & Expansion:**
 - `state.has(item)` → `item_check`
 - `state.has_any([items])` → `or(item_checks)`
@@ -194,13 +204,15 @@ Review these simplified exporters as examples:
 
 ```bash
 cat exporter/games/alttp.py      # ~60 lines - auto-discovery flags only
-cat exporter/games/tww.py        # ~40 lines - STATE_METHOD_REPLACEMENTS only
 cat exporter/games/mm2.py        # ~30 lines - CLOSURE_VAR_IMPORTS + HELPER_PARAM_MAPPINGS
 ```
 
 **Note:** If an exporter class does nothing but `pass`, it should be **deleted entirely**.
 The exporter registry auto-discovers handlers and falls back to `GenericGameExportHandler`
 when no custom handler exists. Empty exporters just add unnecessary files.
+
+**Example: TWW has no custom exporter** - All LogicMixin methods (like `_tww_can_defeat_all_required_bosses`)
+are auto-detected by the base class, so no `exporter/games/tww.py` file is needed.
 
 ## Simplification Patterns
 

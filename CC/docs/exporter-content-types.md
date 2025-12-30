@@ -4,7 +4,7 @@ This document categorizes the different types of content that appear in custom g
 
 ## Processing Status
 
-### Processed Exporters (60)
+### Processed Exporters (59)
 - ahit.py
 - alttp.py
 - aquaria.py
@@ -52,7 +52,6 @@ This document categorizes the different types of content that appear in custom g
 - timespinner.py
 - tloz.py
 - tunic.py
-- tww.py
 - v6.py
 - wargroove.py
 - witness.py
@@ -60,6 +59,9 @@ This document categorizes the different types of content that appear in custom g
 - yoshisisland.py
 - yugioh06.py
 - zillion.py
+
+### Games With No Custom Exporter (use GenericGameExportHandler)
+- tww (The Wind Waker) - All LogicMixin methods auto-detected
 
 ### Utility Files (not game exporters)
 - base.py (BaseGameExportHandler)
@@ -105,6 +107,22 @@ Controls automatic preservation of large helper functions.
   - pokemon_emerald.py
   - tloz.py
   - yugioh06.py
+
+#### AUTO_DISCOVER_LOGIC_MIXIN_REPLACEMENTS
+Controls automatic detection of LogicMixin state method patterns.
+- **Default**: True (in BaseGameExportHandler)
+- **Patterns detected**:
+  - `return self.multiworld.worlds[player].<attr>` → `setting_value` rule
+  - `return not self.multiworld.worlds[player].<attr>` → negated `setting_value` rule
+  - `return bool(world.options.<opt>.value)` → `setting_value` rule
+  - "All elements pass check" for loops:
+    - `self.can_reach_location(var, player)` → `all_of` with `location_check`
+    - `state.has(var, player)` → `all_of` with `item_check`
+    - `state.can_reach(var, player)` → `all_of` with `can_reach`
+- **Example**: TWW's `_tww_can_defeat_all_required_bosses` auto-generates `all_of(location_check)` rule
+- **Exporters relying on this**:
+  - tww (no custom exporter needed)
+  - Any game with LogicMixin subclasses using these patterns
 
 #### HELPER_MODULES
 List of module paths containing helper functions to search.
