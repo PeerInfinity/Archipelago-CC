@@ -2456,7 +2456,7 @@
             "name": "Varuna Point Grabber diary 1",
             "id": 48122,
             "access_rule": {
-              "rule": "raft_can_access_varuna_point",
+              "rule": "raft_can_access_varuna__point",
               "_original_ast_type": "helper",
               "_converted_from_ast": true
             },
@@ -2472,7 +2472,7 @@
             "name": "Varuna Point Grabber diary 2",
             "id": 48123,
             "access_rule": {
-              "rule": "raft_can_access_varuna_point",
+              "rule": "raft_can_access_varuna__point",
               "_original_ast_type": "helper",
               "_converted_from_ast": true
             },
@@ -2488,7 +2488,7 @@
             "name": "Varuna Point Grabber diary 3",
             "id": 48124,
             "access_rule": {
-              "rule": "raft_can_access_varuna_point",
+              "rule": "raft_can_access_varuna__point",
               "_original_ast_type": "helper",
               "_converted_from_ast": true
             },
@@ -2504,7 +2504,7 @@
             "name": "Varuna Point Grabber diary 4",
             "id": 48125,
             "access_rule": {
-              "rule": "raft_can_access_varuna_point",
+              "rule": "raft_can_access_varuna__point",
               "_original_ast_type": "helper",
               "_converted_from_ast": true
             },
@@ -2520,7 +2520,7 @@
             "name": "Varuna Point Grabber diary 5",
             "id": 48126,
             "access_rule": {
-              "rule": "raft_can_access_varuna_point",
+              "rule": "raft_can_access_varuna__point",
               "_original_ast_type": "helper",
               "_converted_from_ast": true
             },
@@ -2536,7 +2536,7 @@
             "name": "Varuna Point Grabber diary 6",
             "id": 48127,
             "access_rule": {
-              "rule": "raft_can_access_varuna_point",
+              "rule": "raft_can_access_varuna__point",
               "_original_ast_type": "helper",
               "_converted_from_ast": true
             },
@@ -2552,7 +2552,7 @@
             "name": "Varuna Point Frequency to Temperance",
             "id": 48128,
             "access_rule": {
-              "rule": "raft_can_access_varuna_point",
+              "rule": "raft_can_access_varuna__point",
               "_original_ast_type": "helper",
               "_converted_from_ast": true
             },
@@ -2568,7 +2568,7 @@
             "name": "Wind Turbine blueprint",
             "id": 48129,
             "access_rule": {
-              "rule": "raft_can_access_varuna_point",
+              "rule": "raft_can_access_varuna__point",
               "_original_ast_type": "helper",
               "_converted_from_ast": true
             },
@@ -2584,7 +2584,7 @@
             "name": "Advanced Battery blueprint",
             "id": 48130,
             "access_rule": {
-              "rule": "raft_can_access_varuna_point",
+              "rule": "raft_can_access_varuna__point",
               "_original_ast_type": "helper",
               "_converted_from_ast": true
             },
@@ -2600,7 +2600,7 @@
             "name": "Advanced Headlight blueprint",
             "id": 48131,
             "access_rule": {
-              "rule": "raft_can_access_varuna_point",
+              "rule": "raft_can_access_varuna__point",
               "_original_ast_type": "helper",
               "_converted_from_ast": true
             },
@@ -2616,7 +2616,7 @@
             "name": "Electric Grill blueprint",
             "id": 48132,
             "access_rule": {
-              "rule": "raft_can_access_varuna_point",
+              "rule": "raft_can_access_varuna__point",
               "_original_ast_type": "helper",
               "_converted_from_ast": true
             },
