@@ -400,9 +400,9 @@ export class RegionBlockBuilder {
     const entrancesList = document.createElement('ul');
     entrancesList.classList.add('region-entrances-list');
     
-    // Check if bidirectional exits are assumed from game settings
-    const playerSettings = staticData?.world ? Object.values(staticData.world)[0] : null;
-    const assumeBidirectional = playerSettings?.assume_bidirectional_exits === true;
+    // Check if bidirectional exits are assumed from game settings (with auto-detection)
+    const bidirectionalSetting = stateManagerProxySingleton.getEffectiveBidirectionalSetting();
+    const assumeBidirectional = bidirectionalSetting.assumeBidirectional;
     
     // Find all entrances to this region
     const entrances = [];

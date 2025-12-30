@@ -28,6 +28,7 @@ if (!isWorkerContext && window.logger) {
 
 // Legacy imports removed - now using agnostic helpers
 import { evaluateRule } from '../shared/ruleEngine.js';
+import { detectBidirectionalMode } from '../shared/bidirectionalDetector.js';
 // Legacy GameSnapshotHelpers import removed - using agnostic helpers directly
 import { STATE_MANAGER_COMMANDS } from './stateManagerCommands.js'; // Import shared commands
 // alttpLogic import removed - helpers now exported to rules.json
@@ -422,6 +423,8 @@ export class StateManagerProxy {
           }
 
           this.staticDataCache = newCache;
+          // Clear bidirectional detection cache when new rules are loaded
+          this._bidirectionalDetectionCache = null;
         } else {
           log(
             'error',
@@ -1496,6 +1499,70 @@ export class StateManagerProxy {
     return this.staticDataCache
       ? this.staticDataCache.originalRegionOrder
       : null;
+  }
+
+  /**
+   * Gets the effective bidirectional exits setting.
+   * If explicitly set in the game's world settings, returns that value.
+   * Otherwise, auto-detects based on region connection patterns.
+   *
+   * @returns {Object} Result with:
+   *   - assumeBidirectional: boolean - effective value to use
+   *   - source: 'explicit' | 'auto-detected' | 'default' - where the value came from
+   *   - detection: Object | null - full detection result if auto-detected
+   */
+  getEffectiveBidirectionalSetting() {
+    if (!this.staticDataCache) {
+      return { assumeBidirectional: false, source: 'default', detection: null };
+    }
+
+    // Check for explicit setting in world settings
+    const playerSettings = this.staticDataCache.world
+      ? Object.values(this.staticDataCache.world)[0]
+      : null;
+    const explicitSetting = playerSettings?.assume_bidirectional_exits;
+
+    if (explicitSetting !== undefined && explicitSetting !== null) {
+      return {
+        assumeBidirectional: explicitSetting === true,
+        source: 'explicit',
+        detection: null
+      };
+    }
+
+    // Auto-detect based on region connections
+    const regions = this.staticDataCache.regions;
+    if (!regions || regions.size === 0) {
+      return { assumeBidirectional: false, source: 'default', detection: null };
+    }
+
+    // Use cached detection result if available
+    if (this._bidirectionalDetectionCache) {
+      return this._bidirectionalDetectionCache;
+    }
+
+    // Run detection
+    const detection = detectBidirectionalMode(regions);
+    const result = {
+      assumeBidirectional: detection.assumeBidirectional,
+      source: 'auto-detected',
+      detection
+    };
+
+    // Cache the result
+    this._bidirectionalDetectionCache = result;
+
+    log('info', `[StateManagerProxy] Auto-detected bidirectional setting: ${result.assumeBidirectional} (mode: ${detection.mode})`);
+
+    return result;
+  }
+
+  /**
+   * Convenience method to just get the boolean value for assumeBidirectional.
+   * @returns {boolean}
+   */
+  shouldAssumeBidirectionalExits() {
+    return this.getEffectiveBidirectionalSetting().assumeBidirectional;
   }
   // --- End of specific static data getters ---
 
