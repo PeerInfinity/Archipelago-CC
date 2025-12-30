@@ -203,7 +203,15 @@ class BaseGameExportHandler(
     # equivalent rule structures without overriding expand_rule.
     # Example: {'_my_game_setting': {'type': 'setting_value', 'setting': 'my_setting'}}
     # Replacements are applied recursively during rule expansion.
+    # Manual entries here take precedence over auto-detected replacements.
     STATE_METHOD_REPLACEMENTS: Dict[str, Dict[str, Any]] = {}
+
+    # Whether to auto-detect LogicMixin state method replacements.
+    # When True, analyzes LogicMixin subclasses to detect common patterns like:
+    # - return self.multiworld.worlds[player].<attr> -> setting_value
+    # - return not self.multiworld.worlds[player].<attr> -> not(setting_value)
+    # Manual STATE_METHOD_REPLACEMENTS always take precedence over auto-detected ones.
+    AUTO_DISCOVER_LOGIC_MIXIN_REPLACEMENTS: bool = True
 
     # Accumulator rules for games that track progressive items (like coins).
     # Each rule is a dict with keys: pattern (regex), extract_value (bool),
@@ -270,6 +278,8 @@ class BaseGameExportHandler(
         # Dict of auto-discovered param_mappings from call-site analysis
         # Maps helper_name -> {param_name: slot_data_key}
         self._discovered_param_mappings: Dict[str, Dict[str, str]] = {}
+        # Cache for auto-detected LogicMixin state method replacements
+        self._auto_detected_replacements_cache: Optional[Dict[str, Dict[str, Any]]] = None
 
     # ==========================================================================
     # Helper registration methods
@@ -434,6 +444,47 @@ class BaseGameExportHandler(
         self._auto_preserved_helpers = set()
         self._analyzed_helper_cache = {}
         self._discovered_param_mappings = {}
+
+    def get_effective_state_method_replacements(self) -> Dict[str, Dict[str, Any]]:
+        """Get the effective STATE_METHOD_REPLACEMENTS combining auto-detected and manual.
+
+        This method:
+        1. Auto-detects LogicMixin patterns if AUTO_DISCOVER_LOGIC_MIXIN_REPLACEMENTS is True
+        2. Merges with manual STATE_METHOD_REPLACEMENTS (manual takes precedence)
+        3. Caches the result for performance
+
+        Returns:
+            Dict mapping method names to their rule replacement structures
+        """
+        # Return cached result if available
+        if self._auto_detected_replacements_cache is not None:
+            return self._auto_detected_replacements_cache
+
+        # Start with manual replacements (these take precedence)
+        effective = dict(self.STATE_METHOD_REPLACEMENTS)
+
+        # Auto-detect if enabled
+        if self.AUTO_DISCOVER_LOGIC_MIXIN_REPLACEMENTS and self.world is not None:
+            try:
+                from exporter.games.base.logic_mixin_analyzer import discover_state_method_replacements
+                auto_detected = discover_state_method_replacements(self.world, None)
+
+                # Merge auto-detected (manual takes precedence, so add auto-detected first)
+                merged = dict(auto_detected)
+                merged.update(effective)
+                effective = merged
+
+                # Log what was auto-detected vs manual
+                auto_only = set(auto_detected.keys()) - set(self.STATE_METHOD_REPLACEMENTS.keys())
+                if auto_only:
+                    logger.info(f"Auto-detected {len(auto_only)} LogicMixin replacements: {sorted(auto_only)}")
+
+            except Exception as e:
+                logger.warning(f"Error auto-detecting LogicMixin replacements: {e}")
+
+        # Cache the result
+        self._auto_detected_replacements_cache = effective
+        return effective
 
     def is_worldgen_world(self, world=None) -> bool:
         """

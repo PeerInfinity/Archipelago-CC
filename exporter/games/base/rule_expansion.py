@@ -156,8 +156,11 @@ class RuleExpansionMixin:
             method_name = rule.get('method', '')
 
             # Check for STATE_METHOD_REPLACEMENTS (declarative state method replacement)
-            if method_name in self.STATE_METHOD_REPLACEMENTS:
-                replacement = copy.deepcopy(self.STATE_METHOD_REPLACEMENTS[method_name])
+            # Uses get_effective_state_method_replacements() which combines auto-detected
+            # LogicMixin patterns with manual STATE_METHOD_REPLACEMENTS
+            effective_replacements = self.get_effective_state_method_replacements()
+            if method_name in effective_replacements:
+                replacement = copy.deepcopy(effective_replacements[method_name])
                 logger.debug(f"Replacing state_method {method_name} with rule structure")
                 # Recursively expand the replacement in case it contains nested rules
                 return self.expand_rule(replacement, _depth + 1)
@@ -682,3 +685,11 @@ class RuleExpansionMixin:
         This is a stub that should be overridden by the main handler class.
         """
         return None
+
+    def get_effective_state_method_replacements(self) -> Dict[str, Dict[str, Any]]:
+        """Get effective STATE_METHOD_REPLACEMENTS combining auto-detected and manual.
+
+        This is a stub that should be overridden by the main handler class.
+        Returns STATE_METHOD_REPLACEMENTS by default for backwards compatibility.
+        """
+        return getattr(self, 'STATE_METHOD_REPLACEMENTS', {})
