@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-31T01:21:29.297965",
-    "last_updated": "2025-12-31T01:21:29.297973",
+    "last_updated": "2025-12-31T03:40:20.335796",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3848,27 +3848,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "e0b67231aecd3b6e5f623f7004424f74ba638e29a2b3d9c9434c096fd1b4a3b4",
-          "new_sphere_log_hash": "ccc3d9d2a955411bb04b937b3b3aaf14d435c200db3f5c7fcb492bbcc4db7c6f",
-          "original_rules_hash": "e0b67231aecd3b6e5f623f7004424f74ba638e29a2b3d9c9434c096fd1b4a3b4",
-          "original_sphere_log_hash": "ccc3d9d2a955411bb04b937b3b3aaf14d435c200db3f5c7fcb492bbcc4db7c6f",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-31T01:18:45.068945"
-        }
-      },
       "game_name_from_filename": "witness",
       "game_name_from_yaml": "The Witness",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 11.82,
+        "processing_time_seconds": 14.45,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/witness/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -3880,7 +3868,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 5.71,
+        "processing_time_seconds": 8.52,
         "return_code": 0,
         "sphere_reached": 9.1,
         "success": true,
@@ -3888,10 +3876,10 @@
         "warning_count": 0
       },
       "template_filename": "The Witness.yaml",
-      "timestamp": "2025-12-31T01:17:28.843592",
+      "timestamp": "2025-12-31T03:39:56.982007",
       "world_info": {
         "exporter_path": "exporter/games/witness.py",
-        "exporter_size": 26084,
+        "exporter_size": 14458,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "witness",
