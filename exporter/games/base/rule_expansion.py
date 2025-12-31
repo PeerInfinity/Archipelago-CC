@@ -37,7 +37,16 @@ class RuleExpansionMixin:
 
         # Handle helper type in AST format: {'type': 'helper', 'name': 'helper_name', 'args': [...]}
         if rule.get('type') == 'helper':
-            expanded = self.expand_helper(rule['name'], rule.get('args', []))
+            helper_name = rule.get('name', '')
+            helper_args = rule.get('args', [])
+
+            # Hook: try pattern-based expansion first (for GenericGameExportHandler)
+            pattern_result = self._expand_helper_by_pattern(helper_name, helper_args)
+            if pattern_result is not None:
+                return self.expand_rule(pattern_result, _depth + 1)
+
+            # Standard helper expansion
+            expanded = self.expand_helper(helper_name, helper_args)
             if expanded:
                 return self.expand_rule(expanded, _depth + 1)
 
@@ -45,7 +54,15 @@ class RuleExpansionMixin:
         if rule.get('_original_ast_type') == 'helper':
             helper_name = rule.get('rule', '')
             if helper_name:
-                expanded = self.expand_helper(helper_name, rule.get('args', []))
+                helper_args = rule.get('args', [])
+
+                # Hook: try pattern-based expansion first (for GenericGameExportHandler)
+                pattern_result = self._expand_helper_by_pattern(helper_name, helper_args)
+                if pattern_result is not None:
+                    return self.expand_rule(pattern_result, _depth + 1)
+
+                # Standard helper expansion
+                expanded = self.expand_helper(helper_name, helper_args)
                 if expanded:
                     return self.expand_rule(expanded, _depth + 1)
 
@@ -155,6 +172,12 @@ class RuleExpansionMixin:
         elif rule_type == 'state_method':
             method_name = rule.get('method', '')
 
+            # Hook: handle __analyzed_func__ fallback (for GenericGameExportHandler)
+            if method_name == '__analyzed_func__':
+                analyzed_result = self._handle_analyzed_func(rule)
+                if analyzed_result is not None:
+                    return analyzed_result
+
             # Check for STATE_METHOD_REPLACEMENTS (declarative state method replacement)
             # Uses get_effective_state_method_replacements() which combines auto-detected
             # LogicMixin patterns with manual STATE_METHOD_REPLACEMENTS
@@ -171,39 +194,11 @@ class RuleExpansionMixin:
                 if simplified != rule:
                     return simplified
 
-            # Generic LogicMixin pattern handling
-            # Many games define wrapper methods like _game_has_item(player, item) that
-            # delegate to state.has(). We expand these inline to their underlying rule types.
+            # Try LogicMixin pattern expansion (hook for subclasses like GenericGameExportHandler)
             args = rule.get('args', [])
-
-            # Pattern: _*_has_item(player, item) -> item_check
-            if method_name.endswith('_has_item') and len(args) >= 1:
-                item = args[0]
-                item_name = item.get('value') if isinstance(item, dict) else item
-                logger.debug(f"Expanding LogicMixin {method_name} to item_check for '{item_name}'")
-                return {'type': 'item_check', 'item': item_name}
-
-            # Pattern: _*_has_region(player, region) -> can_reach
-            if method_name.endswith('_has_region') and len(args) >= 1:
-                region = args[0]
-                region_name = region.get('value') if isinstance(region, dict) else region
-                logger.debug(f"Expanding LogicMixin {method_name} to can_reach for '{region_name}'")
-                return {'type': 'can_reach', 'region': region_name}
-
-            # Pattern: _*_has_item_and_region(player, item, region) -> and(item_check, can_reach)
-            if method_name.endswith('_has_item_and_region') and len(args) >= 2:
-                item = args[0]
-                region = args[1]
-                item_name = item.get('value') if isinstance(item, dict) else item
-                region_name = region.get('value') if isinstance(region, dict) else region
-                logger.debug(f"Expanding LogicMixin {method_name} to and(item_check, can_reach)")
-                return {
-                    'type': 'and',
-                    'conditions': [
-                        {'type': 'item_check', 'item': item_name},
-                        {'type': 'can_reach', 'region': region_name}
-                    ]
-                }
+            pattern_result = self._expand_logic_mixin_patterns(method_name, args)
+            if pattern_result is not None:
+                return pattern_result
 
             if 'args' in rule:
                 rule['args'] = [
@@ -693,3 +688,54 @@ class RuleExpansionMixin:
         Returns STATE_METHOD_REPLACEMENTS by default for backwards compatibility.
         """
         return getattr(self, 'STATE_METHOD_REPLACEMENTS', {})
+
+    def _expand_logic_mixin_patterns(self, method_name: str, args: List[Any]) -> Optional[Dict[str, Any]]:
+        """Expand LogicMixin naming patterns to rule structures.
+
+        This is a hook for pattern-based expansion of state methods that follow
+        common naming conventions like `_game_has_item`, `_game_has_region`, etc.
+
+        Override in subclasses (like GenericGameExportHandler) to provide
+        intelligent pattern-based expansion.
+
+        Args:
+            method_name: The state method name (e.g., '_kh2_has_item')
+            args: The method arguments
+
+        Returns:
+            A rule dictionary if the pattern was matched, None otherwise
+        """
+        return None
+
+    def _handle_analyzed_func(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Handle __analyzed_func__ state methods.
+
+        This is a hook for handling rules that couldn't be fully analyzed
+        and fell back to __analyzed_func__. Override in subclasses to provide
+        intelligent fallback handling.
+
+        Args:
+            rule: The state_method rule with method='__analyzed_func__'
+
+        Returns:
+            A rule dictionary if handled, None to continue normal processing
+        """
+        return None
+
+    def _expand_helper_by_pattern(self, helper_name: str, args: List[Any]) -> Optional[Dict[str, Any]]:
+        """Expand helper functions by naming pattern.
+
+        This is a hook for pattern-based expansion of helpers that follow
+        common naming conventions like `has_*`, `can_*`, `defeat_*`, etc.
+
+        Override in subclasses (like GenericGameExportHandler) to provide
+        intelligent pattern-based expansion.
+
+        Args:
+            helper_name: The helper function name
+            args: The helper arguments
+
+        Returns:
+            A rule dictionary if the pattern was matched, None otherwise
+        """
+        return None
