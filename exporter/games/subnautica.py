@@ -22,11 +22,8 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
     """
 
     # Helpers that should always be exported (used in access rules)
+    # Note: Automatically preserved due to AUTO_PRESERVE_WHITELISTED_HELPERS = True
     HELPERS_TO_EXPORT_WHITELIST = {'is_radiated'}
-
-    # Preserve is_radiated as a helper call (don't let GenericGameExportHandler
-    # expand it to a generic_helper based on naming patterns)
-    HELPERS_TO_PRESERVE = {'is_radiated'}
 
     # Expand SwimRule computed property accesses to their rule equivalents
     OPTION_PROPERTY_EXPANSIONS: Dict[tuple, Dict[str, Any]] = {

@@ -43,6 +43,8 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
     HELPER_OBJECT_NAMES = {'self', 'world', 'logic', 'bosses'}
 
     # Helpers that should be exported as definitions
+    # Note: These are automatically preserved (not inlined) due to
+    # AUTO_PRESERVE_WHITELISTED_HELPERS = True (default in base class)
     HELPERS_TO_EXPORT_WHITELIST = {
         # BossReqs class helpers
         'castle_access',
@@ -61,9 +63,6 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
         'bowserdoor_3',
         'bowserdoor_4',
     }
-
-    # Preserve these helpers as helper calls (don't inline during analysis)
-    HELPERS_TO_PRESERVE = HELPERS_TO_EXPORT_WHITELIST
 
     # Computed world attributes needed by helpers
     # These replace the get_world_data override with declarative lambdas
