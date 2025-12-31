@@ -7,9 +7,10 @@ converted to lambdas, then converts them to JSON format.
 
 from typing import Dict, Any, Optional
 from .generic import GenericGameExportHandler
+import inspect
 import logging
-import re
 import os
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +37,6 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
         """Parse the SM64 Rules.py file to extract rule expressions."""
         try:
             # Get path to worlds/sm64ex/Rules.py
-            import inspect
             world_module = inspect.getmodule(world.__class__)
             if not world_module:
                 logger.error("Could not get world module")
@@ -67,20 +67,9 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
 
     def _load_token_table(self):
         """Load token table from the world's RuleFactory."""
-        try:
-            from worlds.sm64ex.Rules import RuleFactory
-            self._token_table = RuleFactory.token_table.copy()
-            logger.debug(f"Loaded {len(self._token_table)} tokens from RuleFactory")
-        except ImportError as e:
-            logger.warning(f"Could not import RuleFactory, using fallback token table: {e}")
-            # Fallback to hardcoded values if import fails
-            self._token_table = {
-                "TJ": "Triple Jump", "DJ": "Triple Jump", "LJ": "Long Jump",
-                "BF": "Backflip", "SF": "Side Flip", "WK": "Wall Kick",
-                "DV": "Dive", "GP": "Ground Pound", "KK": "Kick",
-                "CL": "Climb", "LG": "Ledge Grab",
-                "WC": "Wing Cap", "MC": "Metal Cap", "VC": "Vanish Cap"
-            }
+        from worlds.sm64ex.Rules import RuleFactory
+        self._token_table = RuleFactory.token_table.copy()
+        logger.debug(f"Loaded {len(self._token_table)} tokens from RuleFactory")
 
     def _get_option(self, option_name: str, default=None):
         """Get an option value from the world, with fallback to default."""
