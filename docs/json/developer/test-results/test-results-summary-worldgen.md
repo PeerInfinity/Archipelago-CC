@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2025-12-31 04:18:57
+**Generated:** 2025-12-31 05:27:36
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -44,9 +44,9 @@ Of the 61 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 146.9KB
+- **Total Exporter Code:** 144.0KB
 - **Total Game Logic Code:** 86.2KB
-- **Combined Total:** 233.2KB
+- **Combined Total:** 230.3KB
 
 ## Test Results
 
@@ -98,19 +98,19 @@ Of the 61 templates passing all 4 tests:
 | Shivers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 151.2KB |
 | Sonic Adventure 2 Battle WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 276.5KB |
 | Starcraft 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 27.1KB | 86.2KB | 1644.8KB |
-| Subnautica WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 2.3KB | ✅ | 182.3KB |
-| Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.9KB | ✅ | 100.7KB |
+| Subnautica WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 2.2KB | ✅ | 182.3KB |
+| Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.4KB | ✅ | 100.7KB |
 | Super Mario Land 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 894.6KB |
 | Super Mario World WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 185.0KB |
 | TOEM original WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 110.3KB |
 | TOEM rule builder WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 110.4KB |
-| Terraria WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.1KB | ✅ | 257.5KB |
+| Terraria WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.8KB | ✅ | 257.5KB |
 | The Legend of Zelda WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 512.3KB |
 | The Messenger WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.7KB | ✅ | 217.2KB |
 | The Wind Waker WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 231.1KB |
-| Timespinner WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.7KB | ✅ | 241.1KB |
+| Timespinner WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.8KB | ✅ | 241.1KB |
 | Undertale WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 59.7KB |
-| VVVVVV WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.4KB | ✅ | 24.9KB |
+| VVVVVV WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.3KB | ✅ | 24.9KB |
 | Wargroove WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 47.1KB |
 | WebDevJourney WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 56.2KB |
 | Yoshi's Island WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.8KB | ✅ | 217.8KB |
@@ -137,8 +137,8 @@ Of the 61 templates passing all 4 tests:
 |------|-----------|---------------|
 | 1 | Starcraft 2 WorldGen | 27.1KB |
 | 2 | Overcooked! 2 WorldGen | 23.1KB |
-| 3 | Terraria WorldGen | 18.1KB |
-| 4 | Super Mario 64 WorldGen | 12.9KB |
+| 3 | Terraria WorldGen | 16.8KB |
+| 4 | Super Mario 64 WorldGen | 12.4KB |
 | 5 | Inscryption WorldGen | 7.5KB |
 | 6 | Kirby's Dream Land 3 WorldGen | 7.4KB |
 | 7 | Links Awakening DX WorldGen | 7.4KB |
@@ -149,10 +149,10 @@ Of the 61 templates passing all 4 tests:
 | 12 | Castlevania - Circle of the Moon WorldGen | 4.0KB |
 | 13 | Yoshi's Island WorldGen | 3.8KB |
 | 14 | Landstalker - The Treasures of King Nole WorldGen | 3.6KB |
-| 15 | Timespinner WorldGen | 2.7KB |
-| 16 | Paint WorldGen | 2.7KB |
-| 17 | VVVVVV WorldGen | 2.4KB |
-| 18 | Subnautica WorldGen | 2.3KB |
+| 15 | Paint WorldGen | 2.7KB |
+| 16 | VVVVVV WorldGen | 2.3KB |
+| 17 | Subnautica WorldGen | 2.2KB |
+| 18 | Timespinner WorldGen | 1.8KB |
 | 19 | Aquaria WorldGen | 1.8KB |
 | 20 | Old School Runescape WorldGen | 1.0KB |
 | 21 | DLCQuest WorldGen | 1.0KB |
