@@ -2582,7 +2582,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       case 'location_check': {
         // Check if a location is accessible (can be reached)
         // This matches the Python behavior where _can_get checks if a location CAN be reached
-        const locationName = evaluateRule(rule.location, context, depth + 1);
+        const locationName = evaluateRule(rule.location, context, depth + 1, localScope);
         if (locationName === undefined) {
           result = undefined;
         } else if (typeof context.isLocationAccessible === 'function') {
@@ -3658,7 +3658,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
       case 'can_reach': {
         // Check if a region is reachable
-        const regionName = evaluateRule(rule.region, context, depth + 1);
+        const regionName = evaluateRule(rule.region, context, depth + 1, localScope);
         if (regionName === undefined) {
           result = undefined;
         } else if (typeof context.isRegionReachable === 'function') {
@@ -3676,7 +3676,10 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       case 'can_reach_entrance': {
         // Check if an entrance is reachable
         // An entrance is reachable if we can reach its source region AND satisfy its access rule
-        const entranceName = rule.entrance;
+        // Evaluate entrance name in case it's an f_string or parameter reference
+        const entranceName = typeof rule.entrance === 'string'
+          ? rule.entrance
+          : evaluateRule(rule.entrance, context, depth + 1, localScope);
         if (!entranceName) {
           log('warn', '[evaluateRule] can_reach_entrance rule missing entrance name');
           result = undefined;
