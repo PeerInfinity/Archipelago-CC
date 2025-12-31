@@ -1,21 +1,9 @@
 """The Witness game-specific export handler.
 
-This exporter handles unique patterns in The Witness's rule implementations:
-
-1. **Bound method references**: The Witness passes `region.can_reach` bound methods
-   directly in rule closures (e.g., `return region.can_reach` instead of
-   `return lambda state: region.can_reach(state)`). These need to be detected
-   and converted to proper can_reach rules.
-
-2. **Region reachability patterns**: The standard Archipelago region.can_reach
-   implementation pattern (`if state.stale: update; return self in reachable`)
-   appears in the AST and needs to be simplified.
-
-3. **Laser activation locations**: These event locations need explicit region
-   reachability requirements added to ensure the player can reach the laser panel.
-
-This complexity is necessary because no other game uses these patterns in the same way.
-The base class and analyzer cannot handle them generically.
+Handles unique patterns in The Witness's rule implementations:
+1. Bound method references: region.can_reach passed directly in closures
+2. Region reachability patterns: standard Archipelago region.can_reach AST pattern
+3. Laser activation locations: event locations needing explicit region reachability
 """
 
 from typing import Dict, Any, Optional, List
@@ -26,11 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class WitnessGameExportHandler(GenericGameExportHandler):
-    """Export handler for The Witness.
-
-    Handles unique rule patterns including bound method references in closures,
-    region reachability pattern simplification, and laser activation locations.
-    """
+    """Export handler for The Witness."""
 
     # Enable upfront item adding for sphere test compatibility
     ADD_SPHERE_ITEMS_UPFRONT = True
@@ -47,29 +31,32 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         'Monastery Laser Activated': 'Outside Monastery',
         'Shadows Laser Activated': 'Shadows Laser Room',
         'Desert Laser Activated': 'Desert Outside',
-        # Keep has two panels (Hedges or Pressure Plates), both in Keep Tower
-        'Keep Laser Activated': 'Keep Tower',
+        'Keep Laser Activated': 'Keep Tower',  # Has two panels, both in Keep Tower
     }
 
     def set_context(self, location_name: str):
         """Store the current location name for context-aware processing."""
         self._current_location_name = location_name
 
-    @staticmethod
-    def _is_bound_method(v) -> bool:
-        """Check if a value is a bound method (either actual or string representation)."""
-        return (isinstance(v, str) and '<bound method' in v) or \
-               (hasattr(v, '__self__') and hasattr(v, '__name__'))
+    # =========================================================================
+    # Bound method detection and extraction
+    # =========================================================================
 
     @staticmethod
-    def _extract_region_name_from_bound_method(item) -> Optional[str]:
+    def _is_bound_method(v) -> bool:
+        """Check if value is a bound method (object or string representation)."""
+        if isinstance(v, str) and '<bound method' in v:
+            return True
+        return hasattr(v, '__self__') and hasattr(v, '__name__')
+
+    @staticmethod
+    def _extract_region_name(item) -> Optional[str]:
         """Extract region name from a bound method or its string representation."""
-        # Case 1: Actual bound method object
+        # Actual bound method object
         if hasattr(item, '__self__') and hasattr(item.__self__, 'name'):
-            # Verify it's a Region by checking for 'entrances' attribute
-            if hasattr(item.__self__, 'entrances'):
+            if hasattr(item.__self__, 'entrances'):  # Verify it's a Region
                 return item.__self__.name
-        # Case 2: String representation from serialization
+        # String representation from serialization
         if isinstance(item, str) and '<bound method Region.can_reach of ' in item:
             try:
                 return item.split(' of ')[1].rstrip('>')
@@ -77,529 +64,275 @@ class WitnessGameExportHandler(GenericGameExportHandler):
                 pass
         return None
 
-    def _is_all_of_comprehension_with_only_bound_methods(self, rule: Optional[Dict[str, Any]]) -> bool:
-        """
-        Check if a rule is an "all_of" comprehension pattern where ALL iterator values are bound methods.
+    # =========================================================================
+    # Comprehension pattern handlers
+    # =========================================================================
 
-        This pattern is safe to simplify to True because it ONLY checks region reachability,
-        with no other conditions (like item checks).
-
-        This pattern looks like:
-        {
-          "type": "all_of",
-          "element_rule": {"type": "helper", "name": "condition", "args": []},
-          "iterator_info": {
-            "type": "comprehension_details",
-            "target": {"type": "name", "name": "condition"},
-            "iterator": {
-              "type": "constant",
-              "value": ["<bound method Region.can_reach of Keep Tower>", ...]
-            }
-          }
-        }
-        """
-        if not rule or not isinstance(rule, dict):
-            return False
-
+    def _handle_all_of_only_bound_methods(self, rule: Dict[str, Any]) -> bool:
+        """Check if rule is all_of where ALL iterator values are bound methods."""
         if rule.get('type') != 'all_of':
             return False
-
         iterator_info = rule.get('iterator_info', {})
         if iterator_info.get('type') != 'comprehension_details':
             return False
-
         iterator = iterator_info.get('iterator', {})
         if iterator.get('type') != 'constant':
             return False
-
         values = iterator.get('value', [])
         if not isinstance(values, list) or not values:
             return False
-
-        # Check if ALL values are bound methods (not just at least one)
-        # This is safe to simplify to True only when the ENTIRE iterator is region reachability checks
         return all(self._is_bound_method(v) for v in values)
 
-    def _simplify_any_of_with_nested_bound_methods(self, rule: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-        """
-        Handle any_of comprehension patterns that contain nested lists with bound methods.
-
-        This pattern appears when the AST analyzer encounters nested callables. The values
-        can be either actual callable objects (during analysis) or their string representations
-        (after serialization).
-
-        The pattern looks like:
-        {
-          "type": "any_of",
-          "element_rule": { "type": "all_of", ... },
-          "iterator_info": {
-            "iterator": {
-              "type": "constant",
-              "value": [
-                [region1.can_reach, lambda_func],
-                [region2.can_reach, lambda_func]
-              ]
-            }
-          }
-        }
-
-        We convert this to an OR of can_reach rules for the regions.
-        The lambda functions (item checks) are skipped since they can't be easily analyzed
-        and the item requirements should be handled elsewhere in the region/location rules.
-        """
-        if not rule or not isinstance(rule, dict):
-            return None
-
+    def _handle_any_of_nested_bound_methods(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Handle any_of with nested lists containing bound methods."""
         if rule.get('type') != 'any_of':
             return None
-
         iterator_info = rule.get('iterator_info', {})
         if iterator_info.get('type') != 'comprehension_details':
             return None
-
         iterator = iterator_info.get('iterator', {})
         if iterator.get('type') != 'constant':
             return None
-
         values = iterator.get('value', [])
         if not isinstance(values, list) or not values:
             return None
-
-        # Check if ALL items are lists (nested structure)
         if not all(isinstance(item, (list, tuple)) for item in values):
             return None
-
-        def is_skippable_lambda(item):
-            """Check if item is a lambda function we should skip."""
-            # Actual lambda function
-            if callable(item) and not hasattr(item, '__self__'):
-                return True
-            # String representation of lambda
-            if isinstance(item, str) and '<function' in item:
-                return True
-            return False
 
         # Extract region names from bound methods in each inner list
         outer_conditions = []
         for inner_list in values:
             inner_can_reach = []
             for item in inner_list:
-                region_name = self._extract_region_name_from_bound_method(item)
+                region_name = self._extract_region_name(item)
                 if region_name:
-                    inner_can_reach.append({
-                        'type': 'can_reach',
-                        'region': region_name
-                    })
-                    logger.debug(f"Extracted region '{region_name}' from bound method")
-                elif is_skippable_lambda(item):
-                    logger.debug(f"Skipping lambda function in nested any_of pattern")
-                    continue
-
+                    inner_can_reach.append({'type': 'can_reach', 'region': region_name})
+                # Skip lambda functions
             if inner_can_reach:
-                # Each inner list becomes an AND of can_reach conditions
                 if len(inner_can_reach) == 1:
                     outer_conditions.append(inner_can_reach[0])
                 else:
-                    outer_conditions.append({
-                        'type': 'and',
-                        'conditions': inner_can_reach
-                    })
+                    outer_conditions.append({'type': 'and', 'conditions': inner_can_reach})
 
         if not outer_conditions:
-            # No regions extracted - can't simplify
             return None
-
-        # Combine outer conditions with OR
         if len(outer_conditions) == 1:
-            result = outer_conditions[0]
-        else:
-            result = {
-                'type': 'or',
-                'conditions': outer_conditions
-            }
+            return outer_conditions[0]
+        return {'type': 'or', 'conditions': outer_conditions}
 
-        logger.info(f"Simplified any_of with nested bound methods to {len(outer_conditions)} can_reach conditions")
-        return result
-
-    def _simplify_all_of_with_mixed_conditions(self, rule: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-        """
-        Handle all_of comprehension patterns that contain BOTH bound methods (region reachability)
-        AND other conditions (like item checks). Convert bound methods to can_reach_region helpers
-        and analyze the remaining lambdas.
-
-        Returns None if this rule is not a mixed all_of pattern.
-        """
+    def _handle_all_of_mixed_conditions(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Handle all_of with both bound methods and other conditions."""
         from ..analyzer import analyze_rule
-
-        if not rule or not isinstance(rule, dict):
-            return None
 
         if rule.get('type') != 'all_of':
             return None
-
         iterator_info = rule.get('iterator_info', {})
         if iterator_info.get('type') != 'comprehension_details':
             return None
-
         iterator = iterator_info.get('iterator', {})
         if iterator.get('type') != 'constant':
             return None
-
         values = iterator.get('value', [])
         if not isinstance(values, list) or not values:
             return None
 
-        # Check if there are both bound methods and non-bound methods
         bound_methods = [v for v in values if self._is_bound_method(v)]
         other_conditions = [v for v in values if not self._is_bound_method(v)]
-
         if not bound_methods or not other_conditions:
-            # Either all bound methods (handled elsewhere) or no bound methods (not our pattern)
             return None
 
-        logger.debug(f"Simplifying all_of with {len(bound_methods)} bound methods and {len(other_conditions)} other conditions")
-
-        analyzed_conditions = []
-
-        # Convert bound methods to can_reach rule types
+        analyzed = []
+        # Convert bound methods to can_reach rules
         for bm in bound_methods:
-            region_name = self._extract_region_name_from_bound_method(bm)
-            if region_name:
-                logger.debug(f"Converting bound method to can_reach rule for '{region_name}'")
-                analyzed_conditions.append({
-                    'type': 'can_reach',
-                    'region': region_name
-                })
-            else:
-                logger.warning(f"Could not extract region name from bound method: {bm}")
+            region_name = self._extract_region_name(bm)
+            if not region_name:
                 return None
+            analyzed.append({'type': 'can_reach', 'region': region_name})
 
-        # Analyze each non-bound-method condition
-        for condition in other_conditions:
-            if callable(condition):
-                # Analyze the lambda function
-                analyzed = analyze_rule(rule_func=condition, game_handler=self)
-                if analyzed and analyzed.get('type') != 'error':
-                    analyzed_conditions.append(analyzed)
+        # Analyze other conditions
+        for cond in other_conditions:
+            if callable(cond):
+                result = analyze_rule(rule_func=cond, game_handler=self)
+                if result and result.get('type') != 'error':
+                    analyzed.append(result)
                 else:
-                    # If we can't analyze a condition, we can't simplify
-                    logger.warning(f"Could not analyze condition in all_of: {condition}")
                     return None
             else:
-                # Non-callable, non-bound-method - we don't know how to handle this
-                logger.warning(f"Unknown condition type in all_of: {type(condition)}")
                 return None
 
-        if not analyzed_conditions:
-            # All conditions were filtered out (shouldn't happen)
+        if not analyzed:
             return {'type': 'constant', 'value': True}
+        if len(analyzed) == 1:
+            return analyzed[0]
+        return {'type': 'and', 'conditions': analyzed}
 
-        if len(analyzed_conditions) == 1:
-            # Single condition remaining - return it directly
-            return analyzed_conditions[0]
+    # =========================================================================
+    # Region reachability pattern handling
+    # =========================================================================
 
-        # Multiple conditions - combine with AND
-        return {'type': 'and', 'conditions': analyzed_conditions}
-
-    def _is_region_reachability_pattern(self, rule: Optional[Dict[str, Any]]) -> bool:
-        """
-        Check if a rule matches the region.can_reach pattern:
-        if state.stale[player]:
-            state.update_reachable_regions(player)
-        return self in state.reachable_regions[player]
-
-        This pattern is exported as:
-        {
-          "type": "conditional",
-          "test": {
-            "type": "subscript",
-            "value": {"type": "attribute", "object": {"type": "name", "name": "state"}, "attr": "stale"},
-            "index": {"type": "constant", "value": player_id}
-          },
-          "if_true": {
-            "type": "state_method",
-            "method": "update_reachable_regions",
-            "args": []
-          },
-          "if_false": {
-            "type": "compare",
-            "left": {"type": "name", "name": "self"},
-            "op": "in",
-            "right": {
-              "type": "subscript",
-              "value": {"type": "attribute", "object": {"type": "name", "name": "state"}, "attr": "reachable_regions"},
-              "index": {"type": "constant", "value": player_id}
-            }
-          }
-        }
-        """
-        if not rule or not isinstance(rule, dict):
+    def _is_region_reachability_pattern(self, rule: Dict[str, Any]) -> bool:
+        """Check if rule matches the standard region.can_reach AST pattern."""
+        if not rule or rule.get('type') != 'conditional':
             return False
 
-        # Check if it's a conditional
-        if rule.get('type') != 'conditional':
-            return False
-
-        # Check if test is checking state.stale[player]
+        # Test: state.stale[player]
         test = rule.get('test', {})
         if test.get('type') != 'subscript':
             return False
         test_value = test.get('value', {})
         if (test_value.get('type') != 'attribute' or
             test_value.get('attr') != 'stale' or
-            test_value.get('object', {}).get('type') != 'name' or
             test_value.get('object', {}).get('name') != 'state'):
             return False
 
-        # Check if if_true calls update_reachable_regions
+        # if_true: state.update_reachable_regions
         if_true = rule.get('if_true', {})
         if (if_true.get('type') != 'state_method' or
             if_true.get('method') != 'update_reachable_regions'):
             return False
 
-        # Check if if_false checks self in state.reachable_regions[player]
+        # if_false: self in state.reachable_regions[player]
         if_false = rule.get('if_false', {})
         if if_false.get('type') != 'compare' or if_false.get('op') != 'in':
             return False
-        left = if_false.get('left', {})
-        if left.get('type') != 'name' or left.get('name') != 'self':
+        if if_false.get('left', {}).get('name') != 'self':
             return False
         right = if_false.get('right', {})
         if right.get('type') != 'subscript':
             return False
         right_value = right.get('value', {})
         if (right_value.get('type') != 'attribute' or
-            right_value.get('attr') != 'reachable_regions' or
-            right_value.get('object', {}).get('type') != 'name' or
-            right_value.get('object', {}).get('name') != 'state'):
+            right_value.get('attr') != 'reachable_regions'):
             return False
 
         return True
 
-    def _simplify_region_reachability_pattern(self, rule: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-        """
-        Recursively simplify the region reachability pattern.
-
-        For location rules, the pattern is simplified to True (locations are only
-        checked when their region is reachable).
-
-        For exit rules, if we have extracted region names, we convert the pattern
-        to reach_region rules to properly track region dependencies.
-
-        This method recursively processes compound rules (and, or) to simplify
-        nested region reachability patterns.
-        """
+    def _simplify_region_reachability(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Recursively simplify region reachability patterns."""
         if not rule or not isinstance(rule, dict):
             return rule
 
-        # Check if this is the pattern itself
+        # Handle the pattern itself
         if self._is_region_reachability_pattern(rule):
-            # For exit rules, try to use extracted region names
             if hasattr(self, '_exit_region_names') and self._exit_region_names:
-                # Pop the first region name from the list
                 region_name = self._exit_region_names.pop(0)
-                logger.debug(f"Converting region reachability pattern to can_reach('{region_name}')")
                 return {'type': 'can_reach', 'region': region_name}
-            # Otherwise, simplify to True (for location rules or if no region names available)
-            logger.debug(f"Simplifying region reachability pattern to constant true")
             return {'type': 'constant', 'value': True}
 
-        # Check if this is an all_of comprehension where ALL values are bound methods
-        # For laser activation locations, this represents checking if any of multiple
-        # regions can be reached (e.g., Keep Tower via hedges or pressure plates)
-        # Only simplify to True if ALL conditions are region reachability checks
-        if self._is_all_of_comprehension_with_only_bound_methods(rule):
-            logger.debug(f"Simplifying all_of comprehension with only bound methods to constant true")
+        # Handle all_of with only bound methods
+        if self._handle_all_of_only_bound_methods(rule):
             return {'type': 'constant', 'value': True}
 
-        # Check if this is an all_of comprehension with mixed bound methods and other lambdas
-        # In this case, filter out the bound methods and analyze the remaining lambdas
-        simplified_all_of = self._simplify_all_of_with_mixed_conditions(rule)
-        if simplified_all_of is not None:
-            return simplified_all_of
+        # Handle all_of with mixed conditions
+        result = self._handle_all_of_mixed_conditions(rule)
+        if result is not None:
+            return result
 
-        # Check if this is an any_of comprehension with nested lists containing bound methods
-        # This handles both actual callable objects and their string representations
-        simplified_any_of = self._simplify_any_of_with_nested_bound_methods(rule)
-        if simplified_any_of is not None:
-            return simplified_any_of
+        # Handle any_of with nested bound methods
+        result = self._handle_any_of_nested_bound_methods(rule)
+        if result is not None:
+            return result
 
         # Recursively process compound rules
         rule_type = rule.get('type')
 
         if rule_type in ('and', 'or'):
-            # Recursively simplify all conditions
-            conditions = rule.get('conditions', [])
-            simplified_conditions = [
-                self._simplify_region_reachability_pattern(cond)
-                for cond in conditions
-            ]
-
-            # Filter out constant True values from 'and' rules
+            simplified = [self._simplify_region_reachability(c) for c in rule.get('conditions', [])]
             if rule_type == 'and':
-                simplified_conditions = [
-                    cond for cond in simplified_conditions
-                    if cond.get('type') != 'constant' or cond.get('value') is not True
-                ]
-                # If all conditions were True, return True
-                if not simplified_conditions:
+                # Filter out True values
+                simplified = [c for c in simplified
+                              if c.get('type') != 'constant' or c.get('value') is not True]
+                if not simplified:
                     return {'type': 'constant', 'value': True}
-                # If only one condition remains, return it directly
-                if len(simplified_conditions) == 1:
-                    return simplified_conditions[0]
-
-            # Filter out constant False values from 'or' rules
-            elif rule_type == 'or':
-                simplified_conditions = [
-                    cond for cond in simplified_conditions
-                    if cond.get('type') != 'constant' or cond.get('value') is not False
-                ]
-                # Check if any condition is True (entire OR is True)
-                if any(cond.get('type') == 'constant' and cond.get('value') is True
-                       for cond in simplified_conditions):
+            else:  # or
+                # Filter out False values
+                simplified = [c for c in simplified
+                              if c.get('type') != 'constant' or c.get('value') is not False]
+                if any(c.get('type') == 'constant' and c.get('value') is True for c in simplified):
                     return {'type': 'constant', 'value': True}
-                # If all conditions were False, return False
-                if not simplified_conditions:
+                if not simplified:
                     return {'type': 'constant', 'value': False}
-                # If only one condition remains, return it directly
-                if len(simplified_conditions) == 1:
-                    return simplified_conditions[0]
+            if len(simplified) == 1:
+                return simplified[0]
+            return {**rule, 'conditions': simplified}
 
-            return {**rule, 'conditions': simplified_conditions}
-
-        elif rule_type == 'not':
-            # Recursively simplify the condition
-            condition = rule.get('condition')
-            simplified = self._simplify_region_reachability_pattern(condition)
-            # If the simplified condition is a constant, negate it
+        if rule_type == 'not':
+            simplified = self._simplify_region_reachability(rule.get('condition'))
             if simplified and simplified.get('type') == 'constant':
                 return {'type': 'constant', 'value': not simplified.get('value')}
             return {**rule, 'condition': simplified}
 
-        elif rule_type in ('any_of', 'all_of'):
-            # Recursively simplify element_rule
+        if rule_type in ('any_of', 'all_of'):
             element_rule = rule.get('element_rule')
             if element_rule:
-                simplified_element = self._simplify_region_reachability_pattern(element_rule)
-                if simplified_element != element_rule:
-                    rule = {**rule, 'element_rule': simplified_element}
-            return rule
+                simplified = self._simplify_region_reachability(element_rule)
+                if simplified != element_rule:
+                    rule = {**rule, 'element_rule': simplified}
 
-        # For other rule types, return as-is
         return rule
 
+    # =========================================================================
+    # Public API
+    # =========================================================================
+
     def postprocess_rule(self, rule: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-        """
-        Post-process location access rules to handle region reachability patterns.
+        """Post-process rules to handle region reachability and laser activations."""
+        simplified = self._simplify_region_reachability(rule)
 
-        For laser activation locations, ensure the rule includes region reachability.
-        The laser can only be activated if the player can REACH the region containing
-        the laser panel AND has any required symbols/items.
-        """
-        # First, recursively simplify any region reachability patterns
-        simplified_rule = self._simplify_region_reachability_pattern(rule)
-
-        # Check if this is a laser activation location
+        # Handle laser activation locations
         current_loc = getattr(self, '_current_location_name', None)
         if current_loc and current_loc in self.LASER_ACTIVATION_TO_REGION:
             region_name = self.LASER_ACTIVATION_TO_REGION[current_loc]
-            # Use native can_reach rule type instead of helper call
-            can_reach_rule = {
-                'type': 'can_reach',
-                'region': region_name
-            }
+            can_reach = {'type': 'can_reach', 'region': region_name}
 
-            # Check if the simplified rule is a region reachability pattern or constant True
-            if self._is_region_reachability_pattern(simplified_rule):
-                # Already a region reachability pattern - just convert to can_reach
-                logger.info(f"Converting {current_loc} to can_reach('{region_name}')")
-                return can_reach_rule
-            elif simplified_rule and simplified_rule.get('type') == 'constant' and simplified_rule.get('value') is True:
-                # Constant True - use can_reach
-                logger.info(f"Converting {current_loc} (simplified to True) to can_reach('{region_name}')")
-                return can_reach_rule
-            elif simplified_rule and simplified_rule.get('type') == 'can_reach':
-                # Already a can_reach rule - keep it
-                logger.info(f"Keeping existing can_reach for {current_loc}")
-                return simplified_rule
-            elif simplified_rule and simplified_rule.get('type') != 'constant':
-                # Has item requirements but no region check - combine with AND
-                # The item requirements capture what symbols are needed, but we also need
-                # to be able to reach the region containing the laser panel
-                logger.info(f"Combining {current_loc} item requirements with can_reach('{region_name}')")
-                return {
-                    'type': 'and',
-                    'conditions': [can_reach_rule, simplified_rule]
-                }
+            if (self._is_region_reachability_pattern(simplified) or
+                (simplified and simplified.get('type') == 'constant' and simplified.get('value') is True)):
+                return can_reach
+            if simplified and simplified.get('type') == 'can_reach':
+                return simplified
+            if simplified and simplified.get('type') != 'constant':
+                return {'type': 'and', 'conditions': [can_reach, simplified]}
 
-        return simplified_rule
+        return simplified
 
-    def _extract_region_names_from_lambda(self, rule_func) -> List[str]:
-        """
-        Extract region names from bound methods in a lambda function's closure.
-
-        This is used to preserve region names before analysis, since the analyzer
-        may lose this information when expanding bound methods to conditionals.
-        """
+    def _extract_region_names_from_closure(self, rule_func) -> List[str]:
+        """Extract region names from bound methods in a lambda's closure."""
         region_names = []
-
-        # Check if the lambda has free variables that are closures
-        if not hasattr(rule_func, '__code__'):
-            return region_names
-
-        # Get the closure values
-        closure = rule_func.__closure__
-        if not closure:
+        if not hasattr(rule_func, '__closure__') or not rule_func.__closure__:
             return region_names
 
         def extract_from_list(lst, depth=0):
-            """Recursively extract region names from lists."""
-            if depth > 3:  # Prevent infinite recursion
+            if depth > 3:
                 return
             for item in lst:
                 if isinstance(item, (list, tuple)):
                     extract_from_list(item, depth + 1)
                 else:
-                    region_name = self._extract_region_name_from_bound_method(item)
+                    region_name = self._extract_region_name(item)
                     if region_name:
                         region_names.append(region_name)
 
-        for cell in closure:
+        for cell in rule_func.__closure__:
             try:
                 value = cell.cell_contents
                 if isinstance(value, (list, tuple)):
                     extract_from_list(value)
             except ValueError:
-                # Empty cell
                 pass
 
         return region_names
 
     def handle_complex_exit_rule(self, exit_name: str, rule_func) -> Optional[Dict[str, Any]]:
-        """
-        Handle complex exit rules by analyzing them and then post-processing.
-        This allows us to simplify region reachability patterns in exit access rules.
-        """
+        """Handle complex exit rules with bound method patterns."""
         from ..analyzer import analyze_rule
 
-        # Extract region names from the lambda before analysis
-        # This preserves the region information that might be lost during analysis
-        region_names = self._extract_region_names_from_lambda(rule_func)
+        # Extract region names before analysis
+        self._exit_region_names = self._extract_region_names_from_closure(rule_func)
 
-        # Store region names for use during post-processing
-        self._exit_region_names = list(region_names)  # Make a copy
+        # Analyze and post-process
+        result = analyze_rule(rule_func=rule_func, game_handler=self)
+        if result and result.get('type') != 'error':
+            result = self._simplify_region_reachability(result)
 
-        # Analyze the rule
-        analysis_result = analyze_rule(rule_func=rule_func, game_handler=self)
-
-        # Post-process to simplify region reachability patterns
-        result = None
-        if analysis_result and analysis_result.get('type') != 'error':
-            result = self._simplify_region_reachability_pattern(analysis_result)
-        else:
-            result = analysis_result
-
-        # Clear the region names after processing
         self._exit_region_names = []
-
         return result

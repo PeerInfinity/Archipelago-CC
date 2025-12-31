@@ -7,19 +7,9 @@ from typing import Any, Dict
 from .generic import GenericGameExportHandler
 
 
+# Helper to create item_check rules more concisely
 def _item(name: str) -> Dict[str, Any]:
-    """Create an item_check rule for a single item."""
     return {'type': 'item_check', 'item': {'type': 'constant', 'value': name}}
-
-
-def _and(*conditions) -> Dict[str, Any]:
-    """Create an AND rule combining multiple conditions."""
-    return {'type': 'and', 'conditions': list(conditions)}
-
-
-def _or(*conditions) -> Dict[str, Any]:
-    """Create an OR rule combining multiple conditions."""
-    return {'type': 'or', 'conditions': list(conditions)}
 
 
 class MessengerGameExportHandler(GenericGameExportHandler):
@@ -48,21 +38,24 @@ class MessengerGameExportHandler(GenericGameExportHandler):
         'has_wingsuit': _item('Wingsuit'),
         'has_dart': _item('Rope Dart'),  # Not just "Dart"
         'has_tabi': _item('Lightfoot Tabi'),  # Not just "Tabi"
-        'has_vertical': _or(_item('Wingsuit'), _item('Rope Dart')),
+        'has_vertical': {'type': 'or', 'conditions': [_item('Wingsuit'), _item('Rope Dart')]},
         # is_* patterns
-        'is_aerobatic': _and(_item('Wingsuit'), _item('Aerobatics Warrior')),
+        'is_aerobatic': {'type': 'and', 'conditions': [_item('Wingsuit'), _item('Aerobatics Warrior')]},
         # can_* patterns (simple ones, can_shop is computed separately)
         'can_destroy_projectiles': _item('Strike of the Ninja'),
-        'can_dboost': _and(
-            _or(_item('Path of Resilience'), _item('Meditation')),
+        'can_dboost': {'type': 'and', 'conditions': [
+            {'type': 'or', 'conditions': [_item('Path of Resilience'), _item('Meditation')]},
             _item('Second Wind')
-        ),
-        'can_double_dboost': _and(
+        ]},
+        'can_double_dboost': {'type': 'and', 'conditions': [
             _item('Path of Resilience'),
             _item('Meditation'),
             _item('Second Wind')
-        ),
+        ]},
     }
+
+    # Preserve these helpers to skip generic pattern inference - they're expanded via expand_helper
+    HELPERS_TO_PRESERVE = set(HELPER_EXPANSIONS.keys()) | {'can_shop'}
 
     def _get_maximum_price(self) -> int:
         """Calculate maximum shop price for can_shop capability."""
@@ -72,7 +65,7 @@ class MessengerGameExportHandler(GenericGameExportHandler):
         focused_power = self.world.multiworld.get_location("The Shop - Focused Power Sense", self.world.player)
         return min(demons_bane.cost + focused_power.cost, self.world.total_shards)
 
-    def _expand_common_helper(self, helper_name, args):
+    def expand_helper(self, helper_name: str, args=None) -> Dict[str, Any]:
         """Expand Messenger-specific helper patterns to rule structures."""
         # Check declarative mappings first
         if helper_name in self.HELPER_EXPANSIONS:
@@ -86,8 +79,8 @@ class MessengerGameExportHandler(GenericGameExportHandler):
                 'count': {'type': 'constant', 'value': self._get_maximum_price()}
             }
 
-        # Fall back to base class for other patterns
-        return super()._expand_common_helper(helper_name, args)
+        # Fall back to base class
+        return super().expand_helper(helper_name, args)
 
     def get_world_data(self, world, multiworld, player):
         """Extract Messenger-specific world data."""
