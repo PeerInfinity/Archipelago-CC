@@ -4,10 +4,10 @@ This is the recommended base class for new game export handlers.
 
 GenericGameExportHandler extends BaseGameExportHandler with:
 - Intelligent rule analysis that attempts to infer meaning from patterns
-- Automatic item data discovery from world.item_name_to_id
 - Recognition of common helper naming patterns (has_*, can_*, defeat_*, etc.)
 - Special handling for __analyzed_func__ and other edge cases
-- Working default implementations that reduce boilerplate code
+- LogicMixin pattern expansion (_*_has_item, _*_has_region, etc.)
+- AUTO_EXPORT_DISCOVERED_HELPERS enabled by default
 
 To create a new game handler, simply inherit from GenericGameExportHandler
 and add a GAME_NAME class attribute:
@@ -90,6 +90,14 @@ class GenericGameExportHandler(BaseGameExportHandler):
                 # Recursively expand the result in case it contains nested helper calls
                 return self.expand_rule(expanded, _depth + 1)
             return rule
+
+        # Handle helper type in RB format: {'rule': 'helper_name', '_original_ast_type': 'helper', 'args': [...]}
+        if rule.get('_original_ast_type') == 'helper':
+            helper_name = rule.get('rule', '')
+            if helper_name:
+                expanded = self.expand_helper(helper_name, rule.get('args', []))
+                if expanded:
+                    return self.expand_rule(expanded, _depth + 1)
 
         # Use base class for compound rules and other transformations
         # (f-string resolution, name remapping, settings conversion, etc.)
@@ -230,122 +238,47 @@ class GenericGameExportHandler(BaseGameExportHandler):
             'args': args,
             'description': f"Requires {helper_name.replace('_', ' ')}"
         }
-    
-    def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
+
+    def _expand_logic_mixin_patterns(self, method_name: str, args: List[Any]) -> Dict[str, Any]:
+        """Expand LogicMixin naming patterns to rule structures.
+
+        Many games define wrapper methods like _game_has_item(player, item) that
+        delegate to state.has(). We expand these inline to their underlying rule types.
+
+        Args:
+            method_name: The state method name (e.g., '_kh2_has_item')
+            args: The method arguments
+
+        Returns:
+            A rule dictionary if the pattern was matched, None otherwise
         """
-        Return generic item data with classification flags.
-        Provides a fallback implementation for games without specific handlers.
-        """
-        from BaseClasses import ItemClassification
-        
-        item_data = {}
-        
-        # Get items from world.item_name_to_id if available
-        if hasattr(world, 'item_name_to_id'):
-            for item_name, item_id in world.item_name_to_id.items():
-                # Try to get classification from item class
-                is_advancement = False
-                is_useful = False
-                is_trap = False
-                
-                try:
-                    item_class = getattr(world, 'item_name_to_item', {}).get(item_name)
-                    if item_class and hasattr(item_class, 'classification'):
-                        classification = item_class.classification
-                        # Use 'in' operator to handle combined flags like progression|useful
-                        is_advancement = ItemClassification.progression in classification
-                        is_useful = ItemClassification.useful in classification
-                        is_trap = ItemClassification.trap in classification
-                except Exception as e:
-                    logger.debug(f"Could not determine classification for {item_name}: {e}")
-                    # Fallback: check item pool if available
-                    if hasattr(world, 'multiworld'):
-                        for item in world.multiworld.itempool:
-                            if item.player == world.player and item.name == item_name:
-                                # Use 'in' operator to handle combined flags like progression|useful
-                                is_advancement = ItemClassification.progression in item.classification
-                                is_useful = ItemClassification.useful in item.classification
-                                is_trap = ItemClassification.trap in item.classification
-                                break
-                        
-                        # Additional fallback: check placed items in locations
-                        if not (is_advancement or is_useful or is_trap):
-                            for location in world.multiworld.get_locations(world.player):
-                                if (location.item and location.item.player == world.player and
-                                    location.item.name == item_name and location.item.code is not None):
-                                    # Use 'in' operator to handle combined flags like progression|useful
-                                    is_advancement = ItemClassification.progression in location.item.classification
-                                    is_useful = ItemClassification.useful in location.item.classification
-                                    is_trap = ItemClassification.trap in location.item.classification
-                                    break
-                
-                # Get groups if available
-                groups = []
-                if hasattr(world, 'item_name_groups'):
-                    groups = [
-                        group_name for group_name, items in world.item_name_groups.items()
-                        if item_name in items
-                    ]
+        # Pattern: _*_has_item(player, item) -> item_check
+        if method_name.endswith('_has_item') and len(args) >= 1:
+            item = args[0]
+            item_name = item.get('value') if isinstance(item, dict) else item
+            logger.debug(f"Expanding LogicMixin {method_name} to item_check for '{item_name}'")
+            return {'type': 'item_check', 'item': item_name}
 
-                # Get custom item type from game handler if available
-                item_type = None
-                if hasattr(self, 'get_item_type_for_name'):
-                    try:
-                        item_type = self.get_item_type_for_name(item_name, world)
-                    except Exception as e:
-                        logger.debug(f"Error getting custom type for {item_name}: {e}")
+        # Pattern: _*_has_region(player, region) -> can_reach
+        if method_name.endswith('_has_region') and len(args) >= 1:
+            region = args[0]
+            region_name = region.get('value') if isinstance(region, dict) else region
+            logger.debug(f"Expanding LogicMixin {method_name} to can_reach for '{region_name}'")
+            return {'type': 'can_reach', 'region': region_name}
 
-                item_data[item_name] = {
-                    'name': item_name,
-                    'id': item_id,
-                    'groups': sorted(groups),
-                    'advancement': is_advancement,
-                    'useful': is_useful,
-                    'trap': is_trap,
-                    'event': False,  # Regular items are not events
-                    'type': item_type,
-                    'max_count': 1
-                }
-        
-        # Handle dynamically created event items by scanning locations
-        # Some games (like Mario Land 2) place items with item.code = None, converting
-        # them to events at runtime. We need to detect these and update the item data.
-        if hasattr(world, 'multiworld'):
-            for location in world.multiworld.get_locations(world.player):
-                if location.item and location.item.player == world.player:
-                    item_name = location.item.name
-                    item_classification = location.item.classification
+        # Pattern: _*_has_item_and_region(player, item, region) -> and(item_check, can_reach)
+        if method_name.endswith('_has_item_and_region') and len(args) >= 2:
+            item = args[0]
+            region = args[1]
+            item_name = item.get('value') if isinstance(item, dict) else item
+            region_name = region.get('value') if isinstance(region, dict) else region
+            logger.debug(f"Expanding LogicMixin {method_name} to and(item_check, can_reach)")
+            return {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'item_check', 'item': item_name},
+                    {'type': 'can_reach', 'region': region_name}
+                ]
+            }
 
-                    # Check if this is an event item (no code/ID)
-                    if location.item.code is None and hasattr(location.item, 'classification'):
-                        if item_name not in item_data:
-                            # New event item not in item_name_to_id
-                            item_data[item_name] = {
-                                'name': item_name,
-                                'id': None,
-                                'groups': ['Event'],
-                                # Use 'in' operator to handle combined flags like progression|useful
-                                'advancement': ItemClassification.progression in item_classification,
-                                'useful': ItemClassification.useful in item_classification,
-                                'trap': ItemClassification.trap in item_classification,
-                                'event': True,
-                                'type': 'Event',
-                                'max_count': 1
-                            }
-                        else:
-                            # Item exists but was placed as an event - update it
-                            if not item_data[item_name]['event']:
-                                logger.debug(f"Correcting {item_name} to event based on runtime placement (item.code=None)")
-                                item_data[item_name]['event'] = True
-                                item_data[item_name]['type'] = 'Event'
-                                item_data[item_name]['id'] = None
-                                item_data[item_name]['advancement'] = ItemClassification.progression in item_classification
-                                item_data[item_name]['useful'] = ItemClassification.useful in item_classification
-                                item_data[item_name]['trap'] = ItemClassification.trap in item_classification
-                                if 'Event' not in item_data[item_name]['groups']:
-                                    item_data[item_name]['groups'].append('Event')
-                                    item_data[item_name]['groups'].sort()
-
-        # Return sorted by item ID to ensure consistent ordering
-        # Items with None ID (events) will be placed at the end
-        return dict(sorted(item_data.items(), key=lambda x: (x[1].get('id') is None, x[1].get('id'))))
+        return None

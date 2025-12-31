@@ -880,10 +880,125 @@ class BaseGameExportHandler(
 
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """
-        Return game-specific item definitions beyond the base item_id_to_name.
-        Keyed by item name. Should include classification flags.
+        Return item data with classification flags.
+
+        This method auto-discovers items from world.item_name_to_id and determines
+        their classification by checking the item pool and placed items.
+        Game-specific handlers can override this for custom item data.
         """
-        return {}
+        from BaseClasses import ItemClassification
+
+        item_data = {}
+
+        # Get items from world.item_name_to_id if available
+        if hasattr(world, 'item_name_to_id'):
+            for item_name, item_id in world.item_name_to_id.items():
+                # Try to get classification from item class
+                is_advancement = False
+                is_useful = False
+                is_trap = False
+
+                try:
+                    item_class = getattr(world, 'item_name_to_item', {}).get(item_name)
+                    if item_class and hasattr(item_class, 'classification'):
+                        classification = item_class.classification
+                        # Use 'in' operator to handle combined flags like progression|useful
+                        is_advancement = ItemClassification.progression in classification
+                        is_useful = ItemClassification.useful in classification
+                        is_trap = ItemClassification.trap in classification
+                except Exception as e:
+                    logger.debug(f"Could not determine classification for {item_name}: {e}")
+                    # Fallback: check item pool if available
+                    if hasattr(world, 'multiworld'):
+                        for item in world.multiworld.itempool:
+                            if item.player == world.player and item.name == item_name:
+                                # Use 'in' operator to handle combined flags like progression|useful
+                                is_advancement = ItemClassification.progression in item.classification
+                                is_useful = ItemClassification.useful in item.classification
+                                is_trap = ItemClassification.trap in item.classification
+                                break
+
+                        # Additional fallback: check placed items in locations
+                        if not (is_advancement or is_useful or is_trap):
+                            for location in world.multiworld.get_locations(world.player):
+                                if (location.item and location.item.player == world.player and
+                                    location.item.name == item_name and location.item.code is not None):
+                                    # Use 'in' operator to handle combined flags like progression|useful
+                                    is_advancement = ItemClassification.progression in location.item.classification
+                                    is_useful = ItemClassification.useful in location.item.classification
+                                    is_trap = ItemClassification.trap in location.item.classification
+                                    break
+
+                # Get groups if available
+                groups = []
+                if hasattr(world, 'item_name_groups'):
+                    groups = [
+                        group_name for group_name, items in world.item_name_groups.items()
+                        if item_name in items
+                    ]
+
+                # Get custom item type from game handler if available
+                item_type = None
+                if hasattr(self, 'get_item_type_for_name'):
+                    try:
+                        item_type = self.get_item_type_for_name(item_name, world)
+                    except Exception as e:
+                        logger.debug(f"Error getting custom type for {item_name}: {e}")
+
+                item_data[item_name] = {
+                    'name': item_name,
+                    'id': item_id,
+                    'groups': sorted(groups),
+                    'advancement': is_advancement,
+                    'useful': is_useful,
+                    'trap': is_trap,
+                    'event': False,  # Regular items are not events
+                    'type': item_type,
+                    'max_count': 1
+                }
+
+        # Handle dynamically created event items by scanning locations
+        # Some games (like Mario Land 2) place items with item.code = None, converting
+        # them to events at runtime. We need to detect these and update the item data.
+        if hasattr(world, 'multiworld'):
+            for location in world.multiworld.get_locations(world.player):
+                if location.item and location.item.player == world.player:
+                    item_name = location.item.name
+                    item_classification = location.item.classification
+
+                    # Check if this is an event item (no code/ID)
+                    if location.item.code is None and hasattr(location.item, 'classification'):
+                        if item_name not in item_data:
+                            # New event item not in item_name_to_id
+                            item_data[item_name] = {
+                                'name': item_name,
+                                'id': None,
+                                'groups': ['Event'],
+                                # Use 'in' operator to handle combined flags like progression|useful
+                                'advancement': ItemClassification.progression in item_classification,
+                                'useful': ItemClassification.useful in item_classification,
+                                'trap': ItemClassification.trap in item_classification,
+                                'event': True,
+                                'type': 'Event',
+                                'max_count': 1
+                            }
+                        else:
+                            # Item exists but was placed as an event - update it
+                            if not item_data[item_name]['event']:
+                                logger.debug(f"Correcting {item_name} to event based on runtime placement (item.code=None)")
+                                item_data[item_name]['event'] = True
+                                item_data[item_name]['type'] = 'Event'
+                                item_data[item_name]['id'] = None
+                                item_data[item_name]['advancement'] = ItemClassification.progression in item_classification
+                                item_data[item_name]['useful'] = ItemClassification.useful in item_classification
+                                item_data[item_name]['trap'] = ItemClassification.trap in item_classification
+                                if 'Event' not in item_data[item_name]['groups']:
+                                    item_data[item_name]['groups'].append('Event')
+                                    item_data[item_name]['groups'].sort()
+
+        # Return sorted by item ID to ensure consistent ordering
+        # Items with None ID (events) will be placed at the end
+        return dict(sorted(item_data.items(), key=lambda x: (x[1].get('id') is None, x[1].get('id'))))
 
     def get_item_max_counts(self, world) -> Dict[str, int]:
         """
