@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-31T01:21:29.297965",
-    "last_updated": "2025-12-31T01:21:29.297973",
+    "last_updated": "2025-12-31T03:40:49.907018",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3376,31 +3376,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "91b59c23258d615005e6f419c792038a94bdc2a93cb7ab2b57de54f6a3bf71b3",
-          "new_sphere_log_hash": "e13cfab6ebeac61356904eae49c5c8d897c676cd8090690f8dbcb8805f00c6a8",
-          "original_rules_hash": "91b59c23258d615005e6f419c792038a94bdc2a93cb7ab2b57de54f6a3bf71b3",
-          "original_sphere_log_hash": "e13cfab6ebeac61356904eae49c5c8d897c676cd8090690f8dbcb8805f00c6a8",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-31T01:20:25.515478"
-        }
-      },
       "game_name_from_filename": "sm",
       "game_name_from_yaml": "Super Metroid",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 16.56,
+        "processing_time_seconds": 25.08,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/sm/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 662414,
+        "size_bytes": 663471,
         "size_mb": 0.63
       },
       "seed": "1",
@@ -3408,7 +3396,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 10.84,
+        "processing_time_seconds": 13.72,
         "return_code": 0,
         "sphere_reached": 8.3,
         "success": true,
@@ -3416,10 +3404,10 @@
         "warning_count": 0
       },
       "template_filename": "Super Metroid.yaml",
-      "timestamp": "2025-12-31T01:18:30.011180",
+      "timestamp": "2025-12-31T03:40:10.719532",
       "world_info": {
         "exporter_path": "exporter/games/sm.py",
-        "exporter_size": 62471,
+        "exporter_size": 62347,
         "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
         "game_logic_size": 117281,
         "game_name_from_filename": "sm",
