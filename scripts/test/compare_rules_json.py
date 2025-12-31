@@ -7,10 +7,17 @@ from a WorldGen export to verify that the world_generator preserves all data.
 
 Usage:
     python scripts/test/compare_rules_json.py <original_rules.json> <worldgen_rules.json>
+    python scripts/test/compare_rules_json.py --ignore-canonical <original> <worldgen>
+
+Options:
+    --ignore-canonical  Ignore differences caused by --canonical-seed1 flag:
+                        - canonical_placements section
+                        - locked flags on locations
+                        - item placements (item.name, item.advancement)
 
 Example:
-    python scripts/test/compare_rules_json.py \
-        frontend/presets/bakingadventure/AP_14089154938208861744/AP_14089154938208861744_rules.json \
+    python scripts/test/compare_rules_json.py \\
+        frontend/presets/bakingadventure/AP_14089154938208861744/AP_14089154938208861744_rules.json \\
         frontend/presets/bakingadventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json
 """
 
@@ -89,13 +96,57 @@ def truncate_value(value: Any, max_length: int = 100) -> str:
     return s
 
 
+def is_canonical_difference(path: str) -> bool:
+    """Check if a difference path is caused by --canonical-seed1.
+
+    These differences are expected when comparing an original export
+    with a WorldGen export that uses --canonical-seed1:
+    - canonical_placements section (only in WorldGen)
+    - locked flags on locations (set by canonical placements)
+    - item placements at locations (item.name, item.advancement, item.player)
+    - item_groups (item group assignments)
+    """
+    # canonical_placements section
+    if 'canonical_placements' in path:
+        return True
+
+    # locked flag on locations
+    if path.endswith('.locked'):
+        return True
+
+    # Item placement at locations (locations[n].item.*)
+    if '.item.name' in path or '.item.advancement' in path or '.item.player' in path:
+        return True
+
+    # Item groups
+    if 'item_groups' in path:
+        return True
+
+    return False
+
+
+def filter_canonical_differences(
+    differences: List[Tuple[str, Any, Any]]
+) -> List[Tuple[str, Any, Any]]:
+    """Filter out differences caused by --canonical-seed1."""
+    return [diff for diff in differences if not is_canonical_difference(diff[0])]
+
+
 def main():
-    if len(sys.argv) < 3:
+    # Parse arguments
+    args = sys.argv[1:]
+    ignore_canonical = False
+
+    if '--ignore-canonical' in args:
+        ignore_canonical = True
+        args.remove('--ignore-canonical')
+
+    if len(args) < 2:
         print(__doc__)
         sys.exit(1)
 
-    original_path = Path(sys.argv[1])
-    worldgen_path = Path(sys.argv[2])
+    original_path = Path(args[0])
+    worldgen_path = Path(args[1])
 
     if not original_path.exists():
         print(f"Error: Original file not found: {original_path}")
@@ -108,6 +159,8 @@ def main():
     print(f"Comparing:")
     print(f"  Original: {original_path}")
     print(f"  WorldGen: {worldgen_path}")
+    if ignore_canonical:
+        print(f"  (ignoring canonical-seed1 differences)")
     print()
 
     # Load both files
@@ -124,11 +177,23 @@ def main():
     # Find differences
     differences = find_differences(original_normalized, worldgen_normalized)
 
+    # Filter canonical differences if requested
+    total_differences = len(differences)
+    if ignore_canonical:
+        differences = filter_canonical_differences(differences)
+        filtered_count = total_differences - len(differences)
+
     if not differences:
-        print("✓ Files are identical (after normalizing WorldGen names)")
+        if ignore_canonical and filtered_count > 0:
+            print(f"✓ Files are identical (after normalizing WorldGen names)")
+            print(f"  ({filtered_count} canonical-seed1 differences ignored)")
+        else:
+            print("✓ Files are identical (after normalizing WorldGen names)")
         return 0
 
     print(f"✗ Found {len(differences)} difference(s):")
+    if ignore_canonical and filtered_count > 0:
+        print(f"  ({filtered_count} canonical-seed1 differences ignored)")
     print()
 
     for path, val1, val2 in differences[:50]:  # Limit to first 50 differences
