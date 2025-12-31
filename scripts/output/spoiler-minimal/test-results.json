@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-30T06:03:54.427018",
-    "last_updated": "2025-12-30T06:03:54.427023",
+    "last_updated": "2025-12-31T01:22:17.022272",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2845,31 +2845,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "99cd80df50743d17c821db07b8456974e4620d5ed397b09ded3cf7b998339390",
-          "new_sphere_log_hash": "5ade0da84eedb4f5444fca74fbd44a10daa211060e451be177e7284e84c86013",
-          "original_rules_hash": "99cd80df50743d17c821db07b8456974e4620d5ed397b09ded3cf7b998339390",
-          "original_sphere_log_hash": "5ade0da84eedb4f5444fca74fbd44a10daa211060e451be177e7284e84c86013",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-30T06:01:37.815958"
-        }
-      },
       "game_name_from_filename": "soe",
       "game_name_from_yaml": "Secret of Evermore",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 8.86,
+        "processing_time_seconds": 12.21,
         "return_code": 0,
         "success": true,
-        "warning_count": 3
+        "warning_count": 2
       },
       "rules_file": {
         "path": "frontend/presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 428798,
+        "size_bytes": 428796,
         "size_mb": 0.41
       },
       "seed": "1",
@@ -2877,7 +2865,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 7.66,
+        "processing_time_seconds": 12.16,
         "return_code": 0,
         "sphere_reached": 5.2,
         "success": true,
@@ -2885,10 +2873,10 @@
         "warning_count": 0
       },
       "template_filename": "Secret of Evermore.yaml",
-      "timestamp": "2025-12-30T05:59:59.122051",
+      "timestamp": "2025-12-31T01:21:52.254029",
       "world_info": {
         "exporter_path": "exporter/games/soe.py",
-        "exporter_size": 6257,
+        "exporter_size": 5443,
         "game_logic_path": "frontend/modules/shared/gameLogic/soe/soeLogic.js",
         "game_logic_size": 7085,
         "game_name_from_filename": "soe",
