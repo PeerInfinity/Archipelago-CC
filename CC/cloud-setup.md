@@ -97,10 +97,12 @@ This installs Playwright and other testing dependencies defined in `package.json
 Install the Chromium browser for automated testing:
 
 ```bash
-npx playwright install chromium
+PLAYWRIGHT_SKIP_BROWSER_GC=1 npx playwright install chromium
 ```
 
 **Note:** The browser binaries are large (~150MB) but only need to be installed once.
+
+**Known Issue:** You may see DNS errors like `EAI_AGAIN storage.googleapis.com` at the end of the installation. These are for optional ffmpeg binaries used for video recording, which are not required for testing. The core Chromium browser will still install successfully and tests will work correctly.
 
 ## Verification
 
@@ -230,7 +232,7 @@ python scripts/setup/update_host_settings.py minimal-spoilers
 
 # Install Node.js dependencies
 npm install
-npx playwright install chromium
+PLAYWRIGHT_SKIP_BROWSER_GC=1 npx playwright install chromium
 
 echo "Setup complete! Virtual environment is activated."
 echo "Run 'source .venv/bin/activate' in new terminal sessions."
