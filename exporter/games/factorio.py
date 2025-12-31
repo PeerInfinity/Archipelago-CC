@@ -1,46 +1,32 @@
-"""Factorio game-specific export handler."""
+"""Factorio game-specific export handler.
+
+Exports required_technologies dict and simplifies technology.name attribute access
+in all_of rules. Progressive item mapping is auto-detected from progressive_technology_table.
+"""
 
 from typing import Dict, Any
 from .generic import GenericGameExportHandler
 
 
 class FactorioGameExportHandler(GenericGameExportHandler):
-    """Export handler for Factorio.
-
-    This exporter requires custom methods that cannot be replaced with declarative
-    class attributes:
-
-    - get_game_info: Exports required_technologies dict from the Technologies module.
-      This data is inlined into the rules and needed by the frontend to evaluate
-      which technologies are required for each ingredient.
-
-    - expand_rule: Transforms 'technology.name' attribute access to just 'technology'
-      when iterating over required_technologies in all_of rules. This is needed because
-      in Python, technologies are objects with a .name attribute, but in the exported
-      JSON, they're already strings (the tech names).
-
-    Progressive item mapping is auto-detected by the base handler from the
-    progressive_technology_table module-level data structure.
-    """
+    """Export handler for Factorio."""
 
     # Factorio rules use resolved technology names (e.g., "steel-processing", "military-2")
     # which come from progressive items (e.g., "progressive-processing", "progressive-military").
     USE_RESOLVED_ITEMS = True
 
     def get_game_info(self, world) -> Dict[str, Any]:
-        """Get Factorio game information including required variables."""
+        """Get Factorio game information including required_technologies."""
         from worlds.factorio.Technologies import required_technologies
 
-        # Get base game info first
         game_info = super().get_game_info(world)
 
         # Convert required_technologies to a serializable format
-        required_tech_dict = {}
-        for ingredient, techs in required_technologies.items():
-            required_tech_dict[ingredient] = [tech.name for tech in techs]
-
         game_info["variables"] = {
-            "required_technologies": required_tech_dict
+            "required_technologies": {
+                ingredient: [tech.name for tech in techs]
+                for ingredient, techs in required_technologies.items()
+            }
         }
 
         return game_info
@@ -48,9 +34,8 @@ class FactorioGameExportHandler(GenericGameExportHandler):
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand rule functions with Factorio-specific logic.
 
-        Handles all_of rules that iterate over required_technologies, simplifying
-        'technology.name' to just 'technology' since exported JSON has tech names
-        as strings, not Technology objects.
+        Simplifies 'technology.name' to just 'technology' when iterating over
+        required_technologies, since exported JSON has tech names as strings.
         """
         if not rule:
             return rule
@@ -60,16 +45,15 @@ class FactorioGameExportHandler(GenericGameExportHandler):
             iterator_info = rule.get('iterator_info', {})
             iterator = iterator_info.get('iterator', {})
 
-            # Check if iterating over required_technologies[ingredient] (as name ref or inlined dict)
+            # Simplify technology.name to just technology when iterating over required_technologies
             if self._is_required_tech_iterator(iterator):
                 element_rule = rule.get('element_rule', {})
                 target_name = iterator_info.get('target', {}).get('name')
                 simplified = self._simplify_technology_name_access(element_rule, target_name)
-                rule['element_rule'] = self.expand_rule(simplified or element_rule, _depth + 1)
-            else:
-                rule['element_rule'] = self.expand_rule(rule.get('element_rule', {}), _depth + 1)
-            return rule
+                if simplified:
+                    rule['element_rule'] = simplified
 
+        # Let base class handle all standard processing
         return super().expand_rule(rule, _depth)
 
     def _is_required_tech_iterator(self, iterator: Dict[str, Any]) -> bool:
@@ -111,6 +95,3 @@ class FactorioGameExportHandler(GenericGameExportHandler):
                 }
 
         return None
-
-    # Progressive item mapping is auto-detected by the base handler from
-    # progressive_technology_table - no manual override needed
