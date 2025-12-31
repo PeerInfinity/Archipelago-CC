@@ -31,7 +31,7 @@ class MathProof2p2e4World(World):
     necessary components to complete your proof.
     """
     
-    game: ClassVar[str] = "MathProof2p2e4"
+    game: ClassVar[str] = "Math Adventure"
     web: ClassVar[WebWorld] = MathProof2p2e4Web()
     
     options_dataclass = MathProof2p2e4Options

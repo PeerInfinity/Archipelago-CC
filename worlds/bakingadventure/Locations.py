@@ -11,7 +11,7 @@ base_location_id = 300000000
 
 
 class ChocolateChipCookiesLocation(Location):
-    game = "ChocolateChipCookies"
+    game = "Baking Adventure"
     
 
 # All locations from the JSON file with their regions

@@ -18,7 +18,7 @@ class WebDevJourneyWorld(World):
     production-ready full-stack applications.
     """
     
-    game: ClassVar[str] = "WebDevJourney"
+    game: ClassVar[str] = "Coding Adventure"
     web: ClassVar[WebWorld] = WebDevJourneyWeb()
     
     options_dataclass = WebDevJourneyOptions
