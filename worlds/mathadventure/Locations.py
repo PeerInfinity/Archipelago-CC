@@ -4,7 +4,7 @@ from typing import Dict
 base_location_id = 200000000
 
 
-class MathProofLocation(Location):
+class MathAdventureLocation(Location):
     game: str = "Math Adventure"
 
 

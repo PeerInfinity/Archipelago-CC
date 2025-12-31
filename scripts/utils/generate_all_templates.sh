@@ -127,22 +127,22 @@ python Generate.py --weights_file_path "Templates/Yacht Dice.yaml" --multi 1 --s
 python Generate.py --weights_file_path "Templates/Yoshi's Island.yaml" --multi 1 --seed 1
 # python Generate.py --weights_file_path "Templates/Yu-Gi-Oh! 2006.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
 
-python Generate.py --weights_file_path "Templates/MathProof2p2e4.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Math Adventure.yaml" --multi 1 --seed 1
 if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
-  python Generate.py --weights_file_path "Templates/MathProof2p2e4.yaml" --multi 1 --seed 2
-  python Generate.py --weights_file_path "Templates/MathProof2p2e4.yaml" --multi 1 --seed 3
+  python Generate.py --weights_file_path "Templates/Math Adventure.yaml" --multi 1 --seed 2
+  python Generate.py --weights_file_path "Templates/Math Adventure.yaml" --multi 1 --seed 3
 fi
 
-python Generate.py --weights_file_path "Templates/ChocolateChipCookies.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Baking Adventure.yaml" --multi 1 --seed 1
 if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
-  python Generate.py --weights_file_path "Templates/ChocolateChipCookies.yaml" --multi 1 --seed 2
-  python Generate.py --weights_file_path "Templates/ChocolateChipCookies.yaml" --multi 1 --seed 3
+  python Generate.py --weights_file_path "Templates/Baking Adventure.yaml" --multi 1 --seed 2
+  python Generate.py --weights_file_path "Templates/Baking Adventure.yaml" --multi 1 --seed 3
 fi
 
-python Generate.py --weights_file_path "Templates/WebDevJourney.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Coding Adventure.yaml" --multi 1 --seed 1
 if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
-  python Generate.py --weights_file_path "Templates/WebDevJourney.yaml" --multi 1 --seed 2
-  python Generate.py --weights_file_path "Templates/WebDevJourney.yaml" --multi 1 --seed 3
+  python Generate.py --weights_file_path "Templates/Coding Adventure.yaml" --multi 1 --seed 2
+  python Generate.py --weights_file_path "Templates/Coding Adventure.yaml" --multi 1 --seed 3
 fi
 
 python Generate.py --weights_file_path "Templates/Metamath.yaml" --multi 1 --seed 1
@@ -253,10 +253,10 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python scripts/test/test-world-generator.py --include-list "TOEM original.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "TOEM rule builder.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
 
-  python scripts/test/test-world-generator.py --include-list "ChocolateChipCookies.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
-  python scripts/test/test-world-generator.py --include-list "MathProof2p2e4.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
+  python scripts/test/test-world-generator.py --include-list "Baking Adventure.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
+  python scripts/test/test-world-generator.py --include-list "Math Adventure.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Metamath.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
-  python scripts/test/test-world-generator.py --include-list "WebDevJourney.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
+  python scripts/test/test-world-generator.py --include-list "Coding Adventure.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
 
   # Regenerate templates to include the worldgen worlds
   echo ""
@@ -346,10 +346,10 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python Generate.py --weights_file_path "Templates/TOEM original WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/TOEM rule builder WorldGen.yaml" --multi 1 --seed 1
 
-  python Generate.py --weights_file_path "Templates/ChocolateChipCookies WorldGen.yaml" --multi 1 --seed 1
-  python Generate.py --weights_file_path "Templates/MathProof2p2e4 WorldGen.yaml" --multi 1 --seed 1
+  python Generate.py --weights_file_path "Templates/Baking Adventure WorldGen.yaml" --multi 1 --seed 1
+  python Generate.py --weights_file_path "Templates/Math Adventure WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Metamath WorldGen.yaml" --multi 1 --seed 1
-  python Generate.py --weights_file_path "Templates/WebDevJourney WorldGen.yaml" --multi 1 --seed 1
+  python Generate.py --weights_file_path "Templates/Coding Adventure WorldGen.yaml" --multi 1 --seed 1
 fi
 
 #remove empty preset directories

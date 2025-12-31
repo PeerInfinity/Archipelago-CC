@@ -161,6 +161,45 @@ def get_worldgen_crossval_failures(project_root, test_mode='canonical'):
     return failures
 
 
+def get_worldgen_rules_comp_failures(project_root, test_mode='canonical'):
+    """Get list of games that failed at Stage 5: Rules Comparison.
+
+    Rules comparison failures occur when the _worldgen world generates rules.json
+    that differ from the original world's rules.json export (after normalizing
+    WorldGen name differences and ignoring canonical placements).
+
+    These differences indicate the world generator is not perfectly preserving
+    all rule data during the round-trip conversion.
+
+    Returns list of dicts with game_name, template, differences_count, and other details.
+    """
+    data = load_worldgen_test_results(project_root, test_mode)
+    results = data.get('results', {})
+    failures = []
+
+    for game_name, result in results.items():
+        test_world = result.get('test_world', {})
+        seed_gen = test_world.get('seed_generation', {})
+        rules_comparison = test_world.get('rules_comparison', {})
+
+        # Check if seed generation succeeded but rules comparison failed
+        seed_gen_success = seed_gen.get('success', False)
+        rules_comp_fail = rules_comparison.get('pass_fail') == 'fail'
+
+        if seed_gen_success and rules_comp_fail:
+            failures.append({
+                'game_name': game_name,
+                'template': result.get('template', f'{game_name}.yaml'),
+                'differences_count': rules_comparison.get('differences_count', 0),
+                'ignored_count': rules_comparison.get('ignored_count', 0),
+                'error': rules_comparison.get('error'),
+                'test_template_name': test_world.get('test_template_name'),
+                'world_dir': test_world.get('world_dir'),
+            })
+
+    return failures
+
+
 def categorize_world_generation_error(error_msg):
     """Categorize a Stage 1 (world generation) error message.
 

@@ -1,4 +1,4 @@
-# ChocolateChipCookies WorldGen Setup Guide
+# Baking Adventure WorldGen Setup Guide
 
 ## Required Software
 
@@ -8,7 +8,7 @@
 
 1. Download the game's .apworld file
 2. Place it in your Archipelago/lib/worlds folder
-3. Generate a multiworld with ChocolateChipCookies WorldGen
+3. Generate a multiworld with Baking Adventure WorldGen
 
 ## Joining a Game
 

@@ -1,11 +1,12 @@
 """
 WorldGen prompt generators for debugging world generator failures.
 
-These prompts guide debugging of the four stages of world generator testing:
+These prompts guide debugging of the five stages of world generator testing:
 - Stage 1: World Generation (creating _worldgen Python files)
 - Stage 2: Seed Generation (running Generate.py with _worldgen world)
 - Stage 3: Spoiler Test (validating against own sphere log)
 - Stage 4: Cross-Validation (validating against original sphere log)
+- Stage 5: Rules Comparison (comparing original and worldgen rules.json)
 """
 
 from ..worldgen_analysis import (
@@ -543,4 +544,138 @@ Fix the world generator so that cross-validation passes - the worldgen rules mus
 source .venv/bin/activate
 python scripts/test/test-world-generator.py --include-list "{template_file}" --canonical-seed1
 ```
+"""
+
+
+def generate_worldgen_rules_comp_failure_prompt(game_name, template_file, differences_count, world_mapping, seed=1):
+    """Generate a prompt for debugging a Stage 5: Rules Comparison failure.
+
+    Rules comparison failures occur when the _worldgen world generates rules.json
+    that differ from the original world's rules.json export. These differences
+    indicate the world generator is not perfectly round-tripping the rule data.
+    """
+    setup_doc = "CC/cloud-setup.md"
+    debug_doc = "CC/debugging-worldgen-failures.md"
+
+    # Get world directory from mapping
+    world_dir = None
+    if game_name in world_mapping:
+        world_dir = world_mapping[game_name].get('world_directory', game_name.lower().replace(' ', ''))
+    else:
+        world_dir = game_name.lower().replace(' ', '')
+
+    return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
+
+Then, please read {debug_doc} - specifically **Stage 5: Rules Comparison Failures**.
+
+## Game Information
+
+- **Game**: {game_name}
+- **Template**: `{template_file}`
+- **World directory**: `worlds/{world_dir}/`
+- **WorldGen directory**: `worlds/{world_dir}_worldgen/`
+
+## The Problem
+
+The `{game_name} WorldGen` world:
+- Generated world files successfully
+- Generated a seed successfully
+- **Rules comparison failed** with {differences_count} difference(s)
+
+This means the rules.json exported from the worldgen world differs from the original world's rules.json export (after normalizing WorldGen name differences and ignoring canonical placements).
+
+## Debugging Steps
+
+### 1. Run the rules comparison to see exact differences
+
+```bash
+source .venv/bin/activate
+
+# Compare the rules.json files (with ignore-canonical to filter expected differences)
+python scripts/test/compare_rules_json.py --ignore-canonical \\
+    frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_rules.json \\
+    frontend/presets/{world_dir}_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json
+```
+
+### 2. Analyze the difference
+
+The comparison output will show:
+- The JSON path where the difference occurs (e.g., `world.1.options.some_option`)
+- The original value
+- The worldgen value
+
+Common difference patterns:
+- **Option definitions**: Options exported differently
+- **Item properties**: Items have different classifications
+- **Rule structure**: Rules encoded differently
+- **Metadata**: Game metadata fields differ
+
+### 3. Trace the difference to the source
+
+Once you identify the differing field, find where it's exported:
+
+```bash
+# Find where the field is exported in the original world
+grep -rn "FIELD_NAME" exporter/exporter.py
+
+# Find where the field is generated in worldgen
+grep -rn "FIELD_NAME" world_generator/
+```
+
+### 4. Check if the difference is expected
+
+Some differences are acceptable and should be added to the ignore list in `scripts/test/compare_rules_json.py`:
+- Fields that are WorldGen-specific (like `randomize_items`)
+- Fields that use generated values (like `world_classes`)
+- Metadata that varies between exports
+
+If the difference is expected, update `is_canonical_difference()` in `compare_rules_json.py`.
+
+## Common Causes of Rules Comparison Failures
+
+1. **World class names**: The original world has a different class name than what WorldGen generates
+   - Original: `ChocolateChipCookiesWorld`
+   - WorldGen: `BakingAdventureWorld` (derived from display name)
+   - **Fix**: Add `world_classes` to the ignored differences
+
+2. **Option definitions**: WorldGen adds options (like `randomize_items`) not in original
+   - **Fix**: Add to ignored differences or don't export in worldgen
+
+3. **Item group definitions**: Item groups serialized differently
+   - **Fix**: Ensure consistent serialization
+
+4. **Helper function exports**: Helper definitions differ
+   - **Fix**: Ensure world generator exports helpers identically
+
+## Files to Investigate
+
+- `exporter/exporter.py` - Original rules.json export logic
+- `world_generator/extractors.py` - How data is read from rules.json
+- `world_generator/templates.py` - How worldgen world code is generated
+- `scripts/test/compare_rules_json.py` - Comparison logic and ignore list
+
+## Test Commands
+
+```bash
+source .venv/bin/activate
+
+# Full test including rules comparison
+python scripts/test/test-world-generator.py --include-list "{template_file}" --canonical-seed1 --skip-cleanup
+
+# Just regenerate and compare rules
+python scripts/test/test-world-generator.py --include-list "{template_file}" --phase generate-test-worlds --canonical-seed1
+python scripts/test/test-world-generator.py --phase regenerate-templates
+python Generate.py --weights_file_path "Templates/{game_name} WorldGen.yaml" --multi 1 --seed {seed}
+
+# Then compare
+python scripts/test/compare_rules_json.py --ignore-canonical \\
+    frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_rules.json \\
+    frontend/presets/{world_dir}_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json
+```
+
+## Goal
+
+Either:
+1. Fix the world generator to produce identical rules.json output, OR
+2. Add the difference to the ignore list if it's expected/acceptable
 """

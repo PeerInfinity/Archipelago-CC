@@ -1,6 +1,6 @@
 {
   "settings": {
-    "game": "ChocolateChipCookies",
+    "game": "Baking Adventure",
     "options": {
       "accessibility": 0,
       "exclude_locations": [],
@@ -20,7 +20,7 @@
   },
   "world_attributes": {
     "base_id": 300000000,
-    "world_description": "Chocolate Chip Cookies is a game about baking the perfect chocolate chip cookies.\nNavigate through the kitchen regions, gather ingredients and tools, and follow the\nbaking process step by step to create delicious cookies!",
+    "world_description": "Baking Adventure is a game about baking the perfect chocolate chip cookies.\nNavigate through the kitchen regions, gather ingredients and tools, and follow the\nbaking process step by step to create delicious cookies!",
     "slot_data": {
       "randomize_items": false
     },
@@ -29,7 +29,7 @@
       "tutorials": [
         {
           "name": "Multiworld Setup Guide",
-          "description": "A guide to setting up the Archipelago ChocolateChipCookies randomizer on your computer.",
+          "description": "A guide to setting up the Archipelago Baking Adventure randomizer on your computer.",
           "language": "English",
           "file_name": "setup_en.md",
           "link": "setup/en",

@@ -11,7 +11,7 @@ class ItemData(NamedTuple):
 base_item_id = 300100000
 
 
-class ChocolateChipCookiesItem(Item):
+class BakingAdventureItem(Item):
     game = "Baking Adventure"
     
 

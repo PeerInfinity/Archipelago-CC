@@ -36,6 +36,7 @@ from .worldgen_analysis import (
     get_worldgen_seed_failures,
     get_worldgen_spoiler_failures,
     get_worldgen_crossval_failures,
+    get_worldgen_rules_comp_failures,
     categorize_world_generation_error,
     categorize_seed_generation_error,
 )
@@ -54,6 +55,7 @@ from .prompt_generators import (
     generate_worldgen_seed_failure_prompt,
     generate_worldgen_spoiler_failure_prompt,
     generate_worldgen_crossval_failure_prompt,
+    generate_worldgen_rules_comp_failure_prompt,
 )
 
 from .execution import (
@@ -96,6 +98,7 @@ __all__ = [
     'get_worldgen_seed_failures',
     'get_worldgen_spoiler_failures',
     'get_worldgen_crossval_failures',
+    'get_worldgen_rules_comp_failures',
     'categorize_world_generation_error',
     'categorize_seed_generation_error',
     # prompt_generators.standard
@@ -111,6 +114,7 @@ __all__ = [
     'generate_worldgen_seed_failure_prompt',
     'generate_worldgen_spoiler_failure_prompt',
     'generate_worldgen_crossval_failure_prompt',
+    'generate_worldgen_rules_comp_failure_prompt',
     # execution
     'run_template_test',
     'run_prompt_for_game',

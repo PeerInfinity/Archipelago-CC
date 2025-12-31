@@ -1,5 +1,5 @@
 from BaseClasses import MultiWorld, Region, Entrance
-from .Locations import location_table, MathProofLocation
+from .Locations import location_table, MathAdventureLocation
 
 
 def create_regions(multiworld: MultiWorld, player: int) -> None:
@@ -32,8 +32,8 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     # Add locations to regions
     for name, location_data in location_table.items():
         r = multiworld.get_region(location_data.region, player)
-        math_proof_loc = MathProofLocation(player, location_data.name, location_data.location_id, r)
-        r.locations.append(math_proof_loc)
+        math_adventure_loc = MathAdventureLocation(player, location_data.name, location_data.location_id, r)
+        r.locations.append(math_adventure_loc)
     
     # Connect regions
     multiworld.get_entrance("StartProof", player).connect(multiworld.get_region("Definitions", player))

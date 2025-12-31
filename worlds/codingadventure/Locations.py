@@ -3,7 +3,7 @@ from typing import Dict
 
 base_location_id = 400000000
 
-class WebDevJourneyLocation(Location):
+class CodingAdventureLocation(Location):
     game: str = "Coding Adventure"
 
 class LocationData:

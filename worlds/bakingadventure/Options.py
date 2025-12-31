@@ -12,5 +12,5 @@ class RandomizeItems(Toggle):
 
 
 @dataclass
-class ChocolateChipCookiesOptions(PerGameCommonOptions):
+class BakingAdventureOptions(PerGameCommonOptions):
     randomize_items: RandomizeItems
