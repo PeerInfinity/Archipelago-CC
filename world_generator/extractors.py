@@ -937,11 +937,9 @@ def extract_world_attributes(json_data: Dict[str, Any], player_id: str = '1') ->
     # Extract shops data from world.<player_id>.shops for games with shop-related helpers
     # This is needed for cross-validation where can_buy/can_buy_unlimited helpers
     # iterate over shops to check item availability
+    # Only include shops if they exist and are non-empty
     if 'shops' in world_data and world_data['shops']:
         world_attributes['shops'] = world_data['shops']
-    elif 'shops' not in world_attributes:
-        # Ensure 'shops' exists as an empty list to prevent AttributeError
-        world_attributes['shops'] = []
 
     if not new_world_attrs:
         # Extract game-specific computed settings that need to be world attributes
@@ -957,6 +955,7 @@ def extract_world_attributes(json_data: Dict[str, Any], player_id: str = '1') ->
             'use_resolved_items',
             'use_auto_indirect_conditions',
             'player_name',  # Read-only property on base World class
+            'web',  # Handled by WebWorld class (theme, tutorials)
         }
 
         for key, value in world_data.items():

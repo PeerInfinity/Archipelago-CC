@@ -172,21 +172,13 @@
             "name": "ToCombining",
             "connected_region": "Combining",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Creamed Mixture"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Flour Mixture"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Creamed Mixture",
+                  "Flour Mixture"
+                ]
+              }
             }
           }
         ],
@@ -195,27 +187,14 @@
             "name": "Cream Butter and Sugars",
             "id": 300000007,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Electric Mixer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mixing Bowls"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Softened Butter"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Electric Mixer",
+                  "Mixing Bowls",
+                  "Softened Butter"
+                ]
+              }
             },
             "item": {
               "name": "Butter Sugar Base",
@@ -390,21 +369,13 @@
             "name": "Scoop Dough onto Sheets",
             "id": 300000014,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cookie Dough"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Prepared Sheets"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Cookie Dough",
+                  "Prepared Sheets"
+                ]
+              }
             },
             "item": {
               "name": "Shaped Cookies",
@@ -432,21 +403,13 @@
             "name": "Bake for 9-11 Minutes",
             "id": 300000015,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Preheated Oven"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shaped Cookies"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Preheated Oven",
+                  "Shaped Cookies"
+                ]
+              }
             },
             "item": {
               "name": "Baked Cookies",
@@ -785,7 +748,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": false
     }
   },

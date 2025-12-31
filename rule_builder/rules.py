@@ -1117,7 +1117,11 @@ class Has(Rule[TWorld], game="Archipelago"):
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:
-            return {"item_name": self.item_name, "count": self.count}
+            # Only include count if it's not the default (1)
+            args = {"item_name": self.item_name}
+            if self.count != 1:
+                args["count"] = self.count
+            return args
 
 
 @dataclasses.dataclass(init=False)

@@ -52,15 +52,24 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class ChocolateChipCookiesWorldGenWeb(WebWorld):
     """Web interface for ChocolateChipCookies WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "partyTime"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Archipelago ChocolateChipCookies randomizer on your computer.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["Archipelago Team"]
+        )
+    ]
 
 
 class ChocolateChipCookiesWorldGenWorld(RuleWorldMixin, World):
     """
-    ChocolateChipCookies WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Chocolate Chip Cookies is a game about baking the perfect chocolate chip cookies.
+    Navigate through the kitchen regions, gather ingredients and tools, and follow the
+    baking process step by step to create delicious cookies!
     """
 
     game: ClassVar[str] = "ChocolateChipCookies WorldGen"
@@ -69,6 +78,7 @@ class ChocolateChipCookiesWorldGenWorld(RuleWorldMixin, World):
     options_dataclass = ChocolateChipCookiesWorldGenOptions
     options: ChocolateChipCookiesWorldGenOptions
 
+    base_id: ClassVar[int] = 300000000
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
@@ -109,11 +119,9 @@ class ChocolateChipCookiesWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.base_id = 300000000
         self.world_description = 'Chocolate Chip Cookies is a game about baking the perfect chocolate chip cookies.\nNavigate through the kitchen regions, gather ingredients and tools, and follow the\nbaking process step by step to create delicious cookies!'
         self.slot_data = types.SimpleNamespace(randomize_items=False)
-        self.web = types.SimpleNamespace(theme='partyTime', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Archipelago ChocolateChipCookies randomizer on your computer.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['Archipelago Team']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -225,4 +233,6 @@ class ChocolateChipCookiesWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "randomize_items": self.options.randomize_items.value,
+        }

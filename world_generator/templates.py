@@ -872,10 +872,12 @@ def generate_options_py(data: ExtractedData) -> str:
     option_fields = []
 
     # Skip options that are part of PerGameCommonOptions (already inherited)
+    # Also skip 'randomize_items' since it's defined in the hardcoded template below
     skip_options = {
         'accessibility', 'progression_balancing', 'local_items', 'non_local_items',
         'start_inventory', 'start_hints', 'start_location_hints', 'exclude_locations',
-        'priority_locations', 'item_links', 'plando_items'
+        'priority_locations', 'item_links', 'plando_items',
+        'randomize_items',  # Defined in hardcoded template with default=True
     }
 
     # Generate option classes from definitions

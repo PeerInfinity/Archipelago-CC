@@ -15,7 +15,8 @@
       "start_inventory": {},
       "start_location_hints": []
     },
-    "world_directory": "bakingadventure"
+    "world_directory": "bakingadventure",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "base_id": 300000000,
