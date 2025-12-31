@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-31T01:21:29.297965",
-    "last_updated": "2025-12-31T01:21:29.297973",
+    "last_updated": "2025-12-31T03:34:07.075888",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3553,27 +3553,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "1b9be4e8cfae904d7819113546addeaa4c2ee8f8186f4a6d9cec026262fb2fa3",
-          "new_sphere_log_hash": "ecfa4479bac210da7e5c3c5983788c11cb83eb43c94338afdded0c7523eb3b92",
-          "original_rules_hash": "1b9be4e8cfae904d7819113546addeaa4c2ee8f8186f4a6d9cec026262fb2fa3",
-          "original_sphere_log_hash": "ecfa4479bac210da7e5c3c5983788c11cb83eb43c94338afdded0c7523eb3b92",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-31T01:21:01.174108"
-        }
-      },
       "game_name_from_filename": "tunic",
       "game_name_from_yaml": "TUNIC",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 15.68,
+        "processing_time_seconds": 17.41,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/tunic/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -3585,7 +3573,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 12.72,
+        "processing_time_seconds": 16.15,
         "return_code": 0,
         "sphere_reached": 5.1,
         "success": true,
@@ -3593,7 +3581,7 @@
         "warning_count": 0
       },
       "template_filename": "TUNIC.yaml",
-      "timestamp": "2025-12-31T01:18:35.342688",
+      "timestamp": "2025-12-31T03:33:33.088805",
       "world_info": {
         "exporter_path": "exporter/games/tunic.py",
         "exporter_size": 3138,
