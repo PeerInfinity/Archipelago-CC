@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-31T03:37:24.141156",
-    "last_updated": "2025-12-31T03:37:24.141162",
+    "last_updated": "2025-12-31T05:14:35.918806",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2491,47 +2491,35 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "f339ac67be1cfa34c2cec51a62fcff99117c1d8ebe5701e15060cc33bacec8e4",
-          "new_sphere_log_hash": "560332e2a8092888885beea975d14a385e148b2fe61b1bd37c805dd89f574669",
-          "original_rules_hash": "f339ac67be1cfa34c2cec51a62fcff99117c1d8ebe5701e15060cc33bacec8e4",
-          "original_sphere_log_hash": "560332e2a8092888885beea975d14a385e148b2fe61b1bd37c805dd89f574669",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-31T03:36:33.491171"
-        }
-      },
       "game_name_from_filename": "osrs",
       "game_name_from_yaml": "Old School Runescape",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 9.31,
+        "processing_time_seconds": 12.4,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/osrs/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 356961,
+        "size_bytes": 356321,
         "size_mb": 0.34
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 17.56,
-        "return_code": 1,
-        "sphere_reached": 2.7,
-        "success": false,
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 12.43,
+        "return_code": 0,
+        "sphere_reached": 7.5,
+        "success": true,
         "total_spheres": 7.5,
         "warning_count": 0
       },
       "template_filename": "Old School Runescape.yaml",
-      "timestamp": "2025-12-31T03:35:29.470380",
+      "timestamp": "2025-12-31T05:14:10.647789",
       "world_info": {
         "exporter_path": "exporter/games/osrs.py",
         "exporter_size": 1030,
