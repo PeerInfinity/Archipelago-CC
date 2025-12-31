@@ -34,8 +34,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Yellow Key",
-                "count": 1
+                "item_name": "Yellow Key"
               }
             }
           },
@@ -45,8 +44,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "White Key",
-                "count": 1
+                "item_name": "White Key"
               }
             }
           },
@@ -56,8 +54,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Black Key",
-                "count": 1
+                "item_name": "Black Key"
               }
             }
           },
@@ -83,12 +80,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Left Difficulty Switch",
+              "name": "Freeincarnate",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Blue Labyrinth 1",
@@ -97,12 +94,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Slow Yorgle",
+              "name": "Chalice",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Catacombs",
@@ -116,11 +113,25 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Adjacent to Catacombs",
             "id": 118000012,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Southwest of Catacombs",
+            "id": 118000014,
             "access_rule": {
               "rule": "True_"
             },
@@ -130,21 +141,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
-          },
-          {
-            "name": "Southwest of Catacombs",
-            "id": 118000014,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Freeincarnate",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
+            "locked": false
           },
           {
             "name": "White Castle Gate",
@@ -153,16 +150,30 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Freeincarnate",
+              "name": "Magnet",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Black Castle Gate",
             "id": 118000016,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Left Difficulty Switch",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Yellow Castle Gate",
+            "id": 118000017,
             "access_rule": {
               "rule": "True_"
             },
@@ -172,21 +183,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
-          },
-          {
-            "name": "Yellow Castle Gate",
-            "id": 118000017,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Freeincarnate",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Northeast of Catacombs",
@@ -200,7 +197,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Southeast of Catacombs",
@@ -214,7 +211,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Slay Yorgle",
@@ -229,12 +226,12 @@
               }
             },
             "item": {
-              "name": "Freeincarnate",
+              "name": "Slow Yorgle",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -258,12 +255,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Magnet",
+              "name": "White Key",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Chalice Home",
@@ -305,8 +302,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bridge",
-                "count": 1
+                "item_name": "Bridge"
               }
             }
           },
@@ -337,7 +333,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "RedMaze1",
@@ -346,12 +342,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Freeincarnate",
+              "name": "Slow Rhindle",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -380,7 +376,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -409,7 +405,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Slay Grundle",
@@ -424,12 +420,12 @@
               }
             },
             "item": {
-              "name": "Yellow Key",
+              "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -471,7 +467,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Dungeon1",
@@ -485,7 +481,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Black Castle Foyer",
@@ -499,7 +495,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Slay Rhindle",
@@ -514,12 +510,12 @@
               }
             },
             "item": {
-              "name": "Slow Rhindle",
+              "name": "Yellow Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -543,12 +539,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "White Key",
+              "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -569,8 +565,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magnet",
-                "count": 1
+                "item_name": "Magnet"
               }
             }
           }
@@ -588,7 +583,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       },
@@ -612,12 +607,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Chalice",
+              "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           }
         ]
       }
@@ -836,33 +831,7 @@
     }
   },
   "canonical_placements": {
-    "1": {
-      "Blue Labyrinth 0": "Left Difficulty Switch",
-      "Blue Labyrinth 1": "Slow Yorgle",
-      "Catacombs": "Sword",
-      "Adjacent to Catacombs": "Slow Grundle",
-      "Southwest of Catacombs": "Freeincarnate",
-      "White Castle Gate": "Freeincarnate",
-      "Black Castle Gate": "Black Key",
-      "Yellow Castle Gate": "Freeincarnate",
-      "Northeast of Catacombs": "Freeincarnate",
-      "Southeast of Catacombs": "Freeincarnate",
-      "Slay Yorgle": "Freeincarnate",
-      "Inside Yellow Castle": "Magnet",
-      "Chalice Home": "Victory",
-      "RedMaze0": "Freeincarnate",
-      "RedMaze1": "Freeincarnate",
-      "Red Maze Vault Entrance": "Freeincarnate",
-      "Red Maze Vault": "Freeincarnate",
-      "Slay Grundle": "Yellow Key",
-      "Dungeon0": "Freeincarnate",
-      "Dungeon1": "Right Difficulty Switch",
-      "Black Castle Foyer": "Bridge",
-      "Slay Rhindle": "Slow Rhindle",
-      "Dungeon Vault": "White Key",
-      "Credits Left Side": "Freeincarnate",
-      "Credits Right Side": "Chalice"
-    }
+    "1": {}
   },
   "progression_mapping": {
     "1": {}
@@ -892,7 +861,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": false,
+        "randomize_items": true,
         "rhindle_min_speed": 2,
         "rhindle_speed": 3,
         "start_castle": 0,
@@ -1040,7 +1009,6 @@
           "display_name": "Yorgle MaxSpeed"
         }
       },
-      "shops": [],
       "dragon_rooms": [
         4,
         25,
@@ -1070,9 +1038,31 @@
         ]
       },
       "created_items": 24,
-      "world_description": "Adventure WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Adventure for the Atari 2600 is an early graphical adventure game.\nFind the enchanted chalice and return it to the yellow castle,\nusing magic items to enter hidden rooms, retrieve out of\nreach items, or defeat the three dragons.  Beware the bat\nwho likes to steal your equipment!",
       "web": {
-        "theme": "dirt"
+        "theme": "dirt",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up Adventure for MultiWorld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "JusticePS"
+            ]
+          },
+          {
+            "name": "Guide de configuration Multimonde",
+            "description": "Un guide pour configurer Adventure MultiWorld",
+            "language": "Fran\u00e7ais",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "TheLynk"
+            ]
+          }
+        ]
       },
       "world_directory": "adventure_worldgen"
     }
@@ -1082,7 +1072,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": false
     }
   },
