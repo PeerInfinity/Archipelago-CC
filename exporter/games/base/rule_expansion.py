@@ -268,13 +268,22 @@ class RuleExpansionMixin:
                     logger.debug(f"Remapped attribute object name '{original_name}' to '{new_name}'")
                     obj['name'] = new_name
 
+            # Check for OPTION_PROPERTY_EXPANSIONS (e.g., swim_rule.base_depth -> computed rule)
+            # This handles computed properties on option classes
+            obj_name = obj.get('name') if obj.get('type') == 'name' else None
+            attr_name = rule.get('attr')
+            if obj_name and attr_name and hasattr(self, 'OPTION_PROPERTY_EXPANSIONS'):
+                expansion_key = (obj_name, attr_name)
+                if expansion_key in self.OPTION_PROPERTY_EXPANSIONS:
+                    expansion = copy.deepcopy(self.OPTION_PROPERTY_EXPANSIONS[expansion_key])
+                    logger.debug(f"Expanding {obj_name}.{attr_name} via OPTION_PROPERTY_EXPANSIONS")
+                    return self.expand_rule(expansion, _depth + 1)
+
             # Check for helper object attribute access (e.g., logic.method_name without parentheses)
             # This handles cases where Python code accessed a method without calling it
             # NOTE: Excludes 'self' and 'world' since their attribute access is usually settings,
             # not helper methods. Only convert attribute access for game-specific logic objects.
-            obj_name = obj.get('name') if obj.get('type') == 'name' else None
             if obj_name and obj_name in self.HELPER_OBJECT_NAMES and obj_name not in {'self', 'world'}:
-                attr_name = rule.get('attr')
                 logger.debug(f"Converting {obj_name}.{attr_name} attribute access to helper function")
                 return {
                     'type': 'helper',

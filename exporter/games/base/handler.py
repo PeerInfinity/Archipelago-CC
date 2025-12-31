@@ -275,6 +275,19 @@ class BaseGameExportHandler(
     ACCUMULATOR_ITEM_TYPE: str = ''   # Type for accumulator items (e.g., 'coins')
     ACCUMULATOR_TARGET_MAX_COUNT: int = 999999  # Max count for accumulator target items
 
+    # Mapping of (option_name, property_name) to rule structures for expanding
+    # computed option properties to their equivalent rule structures.
+    # Used when an option class has computed properties (e.g., SwimRule.base_depth)
+    # that need to be expanded to their underlying computation for the frontend.
+    # Format: {('option_name', 'property_name'): rule_structure}
+    # Example (Subnautica SwimRule):
+    #   {('swim_rule', 'base_depth'): {
+    #       'type': 'subscript',
+    #       'value': {'type': 'constant', 'value': [200, 400, 600]},
+    #       'index': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'swim_rule'}, ...}
+    #   }}
+    OPTION_PROPERTY_EXPANSIONS: Dict[tuple, Dict[str, Any]] = {}
+
     def __init__(self, world=None):
         """Initialize the handler with an empty set of discovered helpers.
 
