@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2025-12-30 06:38:20
+**Generated:** 2025-12-31 01:21:30
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -44,25 +44,25 @@ Of the 61 templates passing all 4 tests:
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 165.3KB
+- **Total Exporter Code:** 154.3KB
 - **Total Game Logic Code:** 86.2KB
-- **Combined Total:** 251.6KB
+- **Combined Total:** 240.5KB
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|
-| A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 6.2KB | ✅ | 235.7KB |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.1KB | ✅ | 484.3KB |
+| A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.7KB | ✅ | 235.7KB |
+| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.6KB | ✅ | 484.3KB |
 | A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 77.4KB |
 | APQuest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 11.2KB |
 | Adventure WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 26.6KB |
-| Aquaria WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.9KB | ✅ | 277.4KB |
+| Aquaria WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.8KB | ✅ | 277.4KB |
 | Bumper Stickers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 54.8KB |
-| Castlevania - Circle of the Moon WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.9KB | ✅ | 98.9KB |
+| Castlevania - Circle of the Moon WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.0KB | ✅ | 98.9KB |
 | Castlevania 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 139.6KB |
 | Celeste (Open World) WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | N/A |
-| Celeste 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.5KB | ✅ | 56.1KB |
+| Celeste 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.1KB | ✅ | 56.1KB |
 | ChecksFinder WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 16.8KB |
 | ChocolateChipCookies WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 18.1KB |
 | Choo-Choo Charles WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 311.6KB |
@@ -72,14 +72,14 @@ Of the 61 templates passing all 4 tests:
 | DOOM II WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 357.8KB |
 | Dark Souls III WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.7KB | ✅ | 1071.4KB |
 | Donkey Kong Country 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 112.7KB |
-| Factorio WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.1KB | ✅ | 230.1KB |
+| Factorio WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.1KB | ✅ | 230.1KB |
 | Faxanadu WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 73.7KB |
 | Final Fantasy Mystic Quest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 548.4KB |
 | Heretic WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 403.4KB |
 | Hylics 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 103.5KB |
-| Inscryption WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.1KB | ✅ | 85.4KB |
-| Kirby's Dream Land 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.9KB | ✅ | N/A |
-| Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 6.7KB | ✅ | 210.5KB |
+| Inscryption WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.5KB | ✅ | 85.4KB |
+| Kirby's Dream Land 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.4KB | ✅ | N/A |
+| Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.6KB | ✅ | 210.5KB |
 | Links Awakening DX WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 11.2KB | ✅ | 714.9KB |
 | Lufia II Ancient Cave WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 132.6KB |
 | Mario & Luigi Superstar Saga WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 397.9KB |
@@ -98,22 +98,22 @@ Of the 61 templates passing all 4 tests:
 | Shivers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 151.2KB |
 | Sonic Adventure 2 Battle WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 276.5KB |
 | Starcraft 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 28.4KB | 86.2KB | 1644.8KB |
-| Subnautica WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 5.9KB | ✅ | 182.3KB |
-| Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.2KB | ✅ | 100.7KB |
+| Subnautica WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 4.1KB | ✅ | 182.3KB |
+| Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.9KB | ✅ | 100.7KB |
 | Super Mario Land 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 894.6KB |
 | Super Mario World WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 185.0KB |
 | TOEM original WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 110.3KB |
 | TOEM rule builder WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 110.4KB |
 | Terraria WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 18.1KB | ✅ | 257.5KB |
 | The Legend of Zelda WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 512.3KB |
-| The Messenger WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.4KB | ✅ | 217.2KB |
+| The Messenger WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.7KB | ✅ | 217.2KB |
 | The Wind Waker WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 231.1KB |
-| Timespinner WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.9KB | ✅ | 241.1KB |
+| Timespinner WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.7KB | ✅ | 241.1KB |
 | Undertale WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 59.7KB |
 | VVVVVV WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.4KB | ✅ | 24.9KB |
 | Wargroove WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 47.1KB |
 | WebDevJourney WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 56.2KB |
-| Yoshi's Island WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.2KB | ✅ | 217.8KB |
+| Yoshi's Island WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.8KB | ✅ | 217.8KB |
 | shapez WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 153.7KB |
 
 ### Largest Rules Files
@@ -131,68 +131,104 @@ Of the 61 templates passing all 4 tests:
 | 9 | Heretic WorldGen | 403.4KB |
 | 10 | Mario & Luigi Superstar Saga WorldGen | 397.9KB |
 
-### Largest Exporter Files
+### Exporter Files by Size
 
 | Rank | Game Name | Exporter Size |
 |------|-----------|---------------|
 | 1 | Starcraft 2 WorldGen | 28.4KB |
 | 2 | Overcooked! 2 WorldGen | 22.8KB |
 | 3 | Terraria WorldGen | 18.1KB |
-| 4 | Super Mario 64 WorldGen | 13.2KB |
+| 4 | Super Mario 64 WorldGen | 12.9KB |
 | 5 | Links Awakening DX WorldGen | 11.2KB |
-| 6 | Kirby's Dream Land 3 WorldGen | 7.9KB |
-| 7 | Landstalker - The Treasures of King Nole WorldGen | 6.7KB |
-| 8 | A Hat in Time WorldGen | 6.2KB |
-| 9 | Castlevania - Circle of the Moon WorldGen | 5.9KB |
-| 10 | Subnautica WorldGen | 5.9KB |
+| 6 | Inscryption WorldGen | 7.5KB |
+| 7 | Kirby's Dream Land 3 WorldGen | 7.4KB |
+| 8 | The Messenger WorldGen | 4.7KB |
+| 9 | A Hat in Time WorldGen | 4.7KB |
+| 10 | Subnautica WorldGen | 4.1KB |
+| 11 | Factorio WorldGen | 4.1KB |
+| 12 | Celeste 64 WorldGen | 4.1KB |
+| 13 | Castlevania - Circle of the Moon WorldGen | 4.0KB |
+| 14 | Yoshi's Island WorldGen | 3.8KB |
+| 15 | Landstalker - The Treasures of King Nole WorldGen | 3.6KB |
+| 16 | Timespinner WorldGen | 2.7KB |
+| 17 | Paint WorldGen | 2.7KB |
+| 18 | VVVVVV WorldGen | 2.4KB |
+| 19 | Aquaria WorldGen | 1.8KB |
+| 20 | Old School Runescape WorldGen | 1.0KB |
+| 21 | DLCQuest WorldGen | 1.0KB |
+| 22 | Dark Souls III WorldGen | 0.7KB |
+| 23 | A Link to the Past WorldGen | 0.6KB |
 
-### Largest GameLogic Files
+### GameLogic Files by Size
 
 | Rank | Game Name | GameLogic Size |
 |------|-----------|----------------|
 | 1 | Starcraft 2 WorldGen | 86.2KB |
 
-## Excluded Games
+## Excluded Templates
 
-The following games are excluded from automated testing:
+These templates are excluded from testing:
 
-| Game | Reason |
-|------|--------|
-| Archipelago | Not a game. |
-| Blasphemous | The spoiler test currently freezes. |
-| Final Fantasy | Requires manual configuration and is not compatible with automated testing. |
-| Hollow Knight | The spoiler test currently freezes. |
-| Ocarina of Time | The default yaml file fails to generate. |
-| Sudoku | Cannot be used for generating worlds. |
-| Universal Tracker | Not a game. |
-| Zillion | Uses the external zilliandomizer tool for its logic, which is not compatible with this system. |
-| Jak and Daxter The Precursor Legacy | Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test. |
-| Pokemon Emerald | Temporarily excluded. It takes too long to process. 120 seconds for the spoiler test. |
-| Pokemon Red and Blue | Temporarily excluded. It takes too long to process. 408 seconds for the multiclient test. |
-| SMZ3 | Temporarily excluded. It takes too long to process. 186 seconds for the multiclient test, which also fails because of self-locking items. |
-| Yacht Dice | Temporarily excluded. It currently times out the multiworld test. |
-| Yu-Gi-Oh! 2006 | Temporarily excluded. It takes too long to process. 161 seconds for the spoiler test. |
-| Bomb Rush Cyberfunk | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Celeste (Open World) | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Kingdom Hearts 2 | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Kingdom Hearts | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Kirby's Dream Land 3 | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Lingo | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Raft | Temporarily excluded. The WorldGen spoiler test times out at 300 seconds. |
-| Secret of Evermore | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Starcraft 2 | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Stardew Valley | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| Super Metroid | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
-| The Witness | Temporarily excluded. The WorldGen spoiler test takes 261 seconds. |
-| Yacht Dice | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Template | Reason |
+|----------|--------|
+| Archipelago WorldGen.yaml | Not a game. |
+| Archipelago.yaml | Not a game. |
+| Blasphemous WorldGen.yaml | The spoiler test currently freezes. |
+| Blasphemous.yaml | The spoiler test currently freezes. |
+| Bomb Rush Cyberfunk WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Bomb Rush Cyberfunk.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Celeste (Open World) WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Celeste (Open World).yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Final Fantasy WorldGen.yaml | Requires manual configuration and is not compatible with automated testing. |
+| Final Fantasy.yaml | Requires manual configuration and is not compatible with automated testing. |
+| Hollow Knight WorldGen.yaml | The spoiler test currently freezes. |
+| Hollow Knight.yaml | The spoiler test currently freezes. |
+| Jak and Daxter The Precursor Legacy WorldGen.yaml | Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test. |
+| Jak and Daxter The Precursor Legacy.yaml | Temporarily excluded. It takes too long to process. 200 seconds for the spoiler test. |
+| Kingdom Hearts 2 WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Kingdom Hearts 2.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Kingdom Hearts WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Kingdom Hearts.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Kirby's Dream Land 3 WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Kirby's Dream Land 3.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Lingo WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Lingo.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Ocarina of Time WorldGen.yaml | The default yaml file fails to generate. |
+| Ocarina of Time.yaml | The default yaml file fails to generate. |
+| Pokemon Emerald WorldGen.yaml | Temporarily excluded. It takes too long to process. 120 seconds for the spoiler test. |
+| Pokemon Emerald.yaml | Temporarily excluded. It takes too long to process. 120 seconds for the spoiler test. |
+| Pokemon Red and Blue WorldGen.yaml | Temporarily excluded. It takes too long to process. 408 seconds for the multiclient test. |
+| Pokemon Red and Blue.yaml | Temporarily excluded. It takes too long to process. 408 seconds for the multiclient test. |
+| Raft WorldGen.yaml | Temporarily excluded. The WorldGen spoiler test times out at 300 seconds. |
+| Raft.yaml | Temporarily excluded. The WorldGen spoiler test times out at 300 seconds. |
+| SMZ3 WorldGen.yaml | Temporarily excluded. It takes too long to process. 186 seconds for the multiclient test, which also fails because of self-locking items. |
+| SMZ3.yaml | Temporarily excluded. It takes too long to process. 186 seconds for the multiclient test, which also fails because of self-locking items. |
+| Secret of Evermore WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Secret of Evermore.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Starcraft 2 WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Starcraft 2.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Stardew Valley WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Stardew Valley.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Sudoku WorldGen.yaml | Cannot be used for generating worlds. |
+| Sudoku.yaml | Cannot be used for generating worlds. |
+| Super Metroid WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Super Metroid.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| The Witness WorldGen.yaml | Temporarily excluded. The WorldGen spoiler test takes 261 seconds. |
+| The Witness.yaml | Temporarily excluded. The WorldGen spoiler test takes 261 seconds. |
+| Universal Tracker WorldGen.yaml | Not a game. |
+| Universal Tracker.yaml | Not a game. |
+| Yacht Dice WorldGen.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Yacht Dice.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Yu-Gi-Oh! 2006 WorldGen.yaml | Temporarily excluded. It takes too long to process. 161 seconds for the spoiler test. |
+| Yu-Gi-Oh! 2006.yaml | Temporarily excluded. It takes too long to process. 161 seconds for the spoiler test. |
+| Zillion WorldGen.yaml | Uses the external zilliandomizer tool for its logic, which is not compatible with this system. |
+| Zillion.yaml | Uses the external zilliandomizer tool for its logic, which is not compatible with this system. |
 
 ## Notes
 
-### Column Descriptions
-
-- **[Minimal Test](./test-results-spoilers-minimal.md):** Spoiler test using advancement items only
-- **[Full Test](./test-results-spoilers-full.md):** Spoiler test using all locations
-- **[Multiclient Test](./test-results-multiclient.md):** Tests sending and receiving location checks between two clients
+- **[Minimal Test](./test-results-spoilers-minimal.md):** Tests the game using only advancement items
+- **[Full Test](./test-results-spoilers-full.md):** Tests the game using all locations
+- **[Multiclient Test](./test-results-multiclient.md):** Tests the game in multiclient mode (send/receive)
 - **[Multiworld Test](./test-results-multiworld.md):** Tests the game in a multiworld with multiple other games
 - **Consistent Rules:** ✅ if rules.json files are identical across all tested seeds, ⚫ if they differ, ❓ if not tested
 - **Consistent Spoilers:** ✅ if spoiler files are identical across all tested seeds, ⚫ if they differ, ❓ if not tested
