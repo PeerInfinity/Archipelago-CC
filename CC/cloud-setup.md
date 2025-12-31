@@ -92,15 +92,53 @@ npm install
 
 This installs Playwright and other testing dependencies defined in `package.json`.
 
-### Step 7: Install Playwright Browsers
+### Step 7: Playwright Browser Setup
 
-Install the Chromium browser for automated testing:
+The cloud environment typically has cached Playwright browsers from previous sessions. The project uses Playwright 1.56.0 which requires browser build 1194.
+
+**Check for cached browsers first:**
 
 ```bash
-npx playwright install chromium
+ls ~/.cache/ms-playwright/
 ```
 
-**Note:** The browser binaries are large (~150MB) but only need to be installed once.
+If you see `chromium-1194` in the output, the browser is already cached and you can skip the download step.
+
+**If cached browsers exist but tests fail:**
+
+If tests fail with "Executable doesn't exist" errors, the Playwright version may not match the cached browser. Check the required browser build:
+
+```bash
+npx playwright install --dry-run chromium 2>&1 | head -3
+```
+
+This shows the browser build number Playwright expects (e.g., `chromium-1194`). If it doesn't match the cached version, you have two options:
+
+1. **Match Playwright to cached browser** (recommended for cloud environments):
+   ```bash
+   # Find your cached browser version
+   ls ~/.cache/ms-playwright/ | grep chromium
+
+   # If you have chromium-1194, ensure Playwright 1.56.0 is installed
+   npm install @playwright/test@1.56.0 --save-dev
+   ```
+
+2. **Download new browser** (may be blocked in cloud environments):
+   ```bash
+   PLAYWRIGHT_SKIP_BROWSER_GC=1 npx playwright install chromium
+   ```
+
+**Common Playwright version to browser build mappings:**
+
+| Playwright Version | Browser Build |
+|-------------------|---------------|
+| 1.56.0            | 1194          |
+| 1.55.0            | 1187          |
+| 1.53.0            | 1178          |
+| 1.52.0            | 1169          |
+| 1.49.0            | 1148          |
+
+**Note:** Browser downloads may be blocked in cloud environments with 403 "Host not allowed" errors. Using cached browsers with matching Playwright version is the recommended approach.
 
 ## Verification
 
@@ -153,6 +191,40 @@ python ModuleUpdate.py --yes
 ### Issue: Template Generation Warnings
 
 You may see compiler warnings about `_speedups.c` during template generation. These are normal and can be safely ignored - the templates will still generate correctly.
+
+### Issue: Playwright Browser Download Blocked
+
+In cloud environments, browser downloads may fail with 403 "Host not allowed" errors:
+
+```
+Error: Download failed: server returned code 403 body 'Host not allowed'
+```
+
+**Solution:** Use cached browsers instead. Check what's available:
+
+```bash
+ls ~/.cache/ms-playwright/ | grep chromium
+```
+
+Then install a matching Playwright version. For example, if you have `chromium-1194`:
+
+```bash
+npm install @playwright/test@1.56.0 --save-dev
+```
+
+### Issue: Playwright "Executable doesn't exist" Error
+
+If tests fail with errors like:
+
+```
+Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium-1200/...
+```
+
+This means the installed Playwright version expects a different browser build than what's cached.
+
+**Solution:** Either:
+1. Install a Playwright version matching your cached browser (see version mapping table in Step 7)
+2. Or try downloading the required browser: `PLAYWRIGHT_SKIP_BROWSER_GC=1 npx playwright install chromium`
 
 ### Issue: Playwright Installation Hangs
 
@@ -230,7 +302,15 @@ python scripts/setup/update_host_settings.py minimal-spoilers
 
 # Install Node.js dependencies
 npm install
-npx playwright install chromium
+
+# Check for cached Playwright browser
+if [ -d ~/.cache/ms-playwright/chromium-1194 ]; then
+    echo "Found cached Playwright browser (chromium-1194)"
+else
+    echo "No cached browser found, attempting download..."
+    PLAYWRIGHT_SKIP_BROWSER_GC=1 npx playwright install chromium || \
+        echo "Browser download may have failed - check for cached versions"
+fi
 
 echo "Setup complete! Virtual environment is activated."
 echo "Run 'source .venv/bin/activate' in new terminal sessions."
