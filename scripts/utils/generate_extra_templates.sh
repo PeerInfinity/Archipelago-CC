@@ -13,15 +13,15 @@ python Generate.py --weights_file_path "Templates/A Short Hike.yaml" --multi 1 -
 python Generate.py --weights_file_path "Templates/A Hat in Time.yaml" --multi 1 --seed 2
 python Generate.py --weights_file_path "Templates/A Hat in Time.yaml" --multi 1 --seed 3
 
-#python Generate.py --weights_file_path "Templates/MathProof2p2e4.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/MathProof2p2e4.yaml" --multi 1 --seed 2
-python Generate.py --weights_file_path "Templates/MathProof2p2e4.yaml" --multi 1 --seed 3
-#python Generate.py --weights_file_path "Templates/ChocolateChipCookies.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/ChocolateChipCookies.yaml" --multi 1 --seed 2
-python Generate.py --weights_file_path "Templates/ChocolateChipCookies.yaml" --multi 1 --seed 3
-#python Generate.py --weights_file_path "Templates/WebDevJourney.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/WebDevJourney.yaml" --multi 1 --seed 2
-python Generate.py --weights_file_path "Templates/WebDevJourney.yaml" --multi 1 --seed 3
+#python Generate.py --weights_file_path "Templates/Math Adventure.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Math Adventure.yaml" --multi 1 --seed 2
+python Generate.py --weights_file_path "Templates/Math Adventure.yaml" --multi 1 --seed 3
+#python Generate.py --weights_file_path "Templates/Baking Adventure.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Baking Adventure.yaml" --multi 1 --seed 2
+python Generate.py --weights_file_path "Templates/Baking Adventure.yaml" --multi 1 --seed 3
+#python Generate.py --weights_file_path "Templates/Coding Adventure.yaml" --multi 1 --seed 1
+python Generate.py --weights_file_path "Templates/Coding Adventure.yaml" --multi 1 --seed 2
+python Generate.py --weights_file_path "Templates/Coding Adventure.yaml" --multi 1 --seed 3
 
 #python Generate.py --weights_file_path "Templates/Metamath.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Metamath.yaml" --multi 1 --seed 2

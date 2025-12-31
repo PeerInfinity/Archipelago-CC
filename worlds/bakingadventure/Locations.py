@@ -10,7 +10,7 @@ class LocationData(NamedTuple):
 base_location_id = 300000000
 
 
-class ChocolateChipCookiesLocation(Location):
+class BakingAdventureLocation(Location):
     game = "Baking Adventure"
     
 

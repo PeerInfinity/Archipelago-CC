@@ -11,5 +11,5 @@ class RandomizeItems(Toggle):
 
 
 @dataclass
-class MathProof2p2e4Options(PerGameCommonOptions):
+class MathAdventureOptions(PerGameCommonOptions):
     randomize_items: RandomizeItems

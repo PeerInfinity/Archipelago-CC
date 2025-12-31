@@ -7,5 +7,5 @@ class RandomizeItems(Toggle):
     default = True
 
 @dataclass
-class WebDevJourneyOptions(PerGameCommonOptions):
+class CodingAdventureOptions(PerGameCommonOptions):
     randomize_items: RandomizeItems

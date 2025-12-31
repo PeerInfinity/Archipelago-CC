@@ -1,4 +1,4 @@
-# MathProof2p2e4 WorldGen Setup Guide
+# Math Adventure WorldGen Setup Guide
 
 ## Required Software
 
@@ -8,7 +8,7 @@
 
 1. Download the game's .apworld file
 2. Place it in your Archipelago/lib/worlds folder
-3. Generate a multiworld with MathProof2p2e4 WorldGen
+3. Generate a multiworld with Math Adventure WorldGen
 
 ## Joining a Game
 

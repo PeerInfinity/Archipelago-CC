@@ -1,6 +1,6 @@
 {
   "settings": {
-    "game": "WebDevJourney",
+    "game": "Coding Adventure",
     "options": {
       "accessibility": 0,
       "exclude_locations": [],
@@ -15,10 +15,11 @@
       "start_inventory": {},
       "start_location_hints": []
     },
-    "world_directory": "codingadventure"
+    "world_directory": "codingadventure",
+    "use_resolved_items": false
   },
   "world_attributes": {
-    "world_description": "WebDevJourney is an educational game that takes you through the complete journey\nof becoming a web developer, from learning HTML/CSS basics to deploying\nproduction-ready full-stack applications.",
+    "world_description": "Coding Adventure is an educational game that takes you through the complete journey\nof becoming a web developer, from learning HTML/CSS basics to deploying\nproduction-ready full-stack applications.",
     "web": {
       "theme": "ocean"
     }
