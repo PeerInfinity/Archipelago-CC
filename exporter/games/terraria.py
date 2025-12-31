@@ -190,29 +190,19 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
             fn_arg = condition.argument
 
             if fn_name == "npc":
-                # Check if player has at least N NPCs
-                rule = self._create_npc_check(fn_arg)
-            elif fn_name == "calamity":
-                # Check for calamity setting
-                rule = self._create_setting_check("calamity")
-            elif fn_name == "grindy":
-                # Check for grindy achievements setting
-                rule = self._create_setting_check("grindy_achievements")
-            elif fn_name == "getfixedboi":
-                # Check for getfixedboi setting
-                rule = self._create_setting_check("getfixedboi")
+                rule = self._create_list_unique_check(self.npcs, fn_arg)
+            elif fn_name == "mech_boss":
+                rule = self._create_list_unique_check(self.mech_bosses, fn_arg)
             elif fn_name == "pickaxe":
-                # Check if player has a pickaxe with at least N power
                 rule = self._create_tool_check(self.pickaxes, fn_arg)
             elif fn_name == "hammer":
-                # Check if player has a hammer with at least N power
                 rule = self._create_tool_check(self.hammers, fn_arg)
-            elif fn_name == "mech_boss":
-                # Check if player has defeated at least N mechanical bosses
-                rule = self._create_mech_boss_check(fn_arg)
             elif fn_name == "minions":
-                # Check if player has at least N minion slots
                 rule = self._create_minion_check(fn_arg)
+            elif fn_name in ("calamity", "grindy", "getfixedboi"):
+                # Map function names to their corresponding setting names
+                setting_map = {"grindy": "grindy_achievements"}
+                rule = {'type': 'setting_value', 'setting': setting_map.get(fn_name, fn_name)}
             else:
                 logger.error(f"Unknown function: {fn_name}")
                 rule = {'type': 'constant', 'value': False}
@@ -252,26 +242,16 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
                 return rule.flags.get("Item") or f"Post-{condition_name}"
         return condition_name
 
-    def _create_npc_check(self, required_count: int) -> Dict[str, Any]:
-        """Create a rule to check if player has at least N NPCs."""
-        # Use built-in has_from_list_unique state method
+    def _create_list_unique_check(self, item_list: List[str], required_count: int) -> Dict[str, Any]:
+        """Create a rule to check if player has at least N unique items from a list.
+
+        Uses the built-in has_from_list_unique state method.
+        """
         return {
             'type': 'state_method',
             'method': 'has_from_list_unique',
-            'args': [
-                list(self.npcs),
-                required_count
-            ]
+            'args': [list(item_list), required_count]
         }
-
-    def _create_setting_check(self, setting_name: str) -> Dict[str, Any]:
-        """Create a rule to check a game setting.
-
-        Uses 'setting_value' type rule which retrieves the setting from the
-        exported options. The setting must be exported via the standard options
-        system or COMPUTED_SETTINGS.
-        """
-        return {'type': 'setting_value', 'setting': setting_name}
 
     def _create_tool_check(self, tool_dict: Dict[str, int], required_power: int) -> Dict[str, Any]:
         """Create a rule to check if player has a tool with at least N power.
@@ -294,18 +274,6 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
             'conditions': [
                 {'type': 'item_check', 'item': name}
                 for name in valid_tools
-            ]
-        }
-
-    def _create_mech_boss_check(self, required_count: int) -> Dict[str, Any]:
-        """Create a rule to check if player has defeated at least N mechanical bosses."""
-        # Use built-in has_from_list_unique state method
-        return {
-            'type': 'state_method',
-            'method': 'has_from_list_unique',
-            'args': [
-                self.mech_bosses,
-                required_count
             ]
         }
 
