@@ -451,11 +451,14 @@ class HelperDiscoveryMixin:
 
         # Generate helpers from DICT_SUM_HELPERS configuration
         # These are helpers that sum values from item->value mappings
+        # DICT_SUM_HELPERS overrides existing definitions because:
+        # 1. The original helper may be too complex for frontend evaluation (loops, closures, etc.)
+        # 2. DICT_SUM_HELPERS specifically provides simplified, evaluable versions
+        # 3. The game exporter explicitly configures this to replace the complex version
         if hasattr(self, 'DICT_SUM_HELPERS') and self.DICT_SUM_HELPERS:
             for helper_name, mapping_name in self.DICT_SUM_HELPERS.items():
                 if helper_name in helper_definitions:
-                    logger.debug(f"Skipping DICT_SUM_HELPERS['{helper_name}'] - already defined")
-                    continue
+                    logger.debug(f"DICT_SUM_HELPERS['{helper_name}'] overriding existing definition")
 
                 helper_definitions[helper_name] = self._generate_dict_sum_helper(mapping_name)
                 logger.debug(f"Generated sum helper '{helper_name}' from DICT_SUM_HELPERS")
