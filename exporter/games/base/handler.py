@@ -8,6 +8,7 @@ defaults for rule analysis, item data discovery, and common helper patterns.
 See exporter/games/generic.py for details on the enhanced functionality.
 """
 
+from collections import Counter
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Set
 import importlib
@@ -167,7 +168,9 @@ class BaseGameExportHandler(
 
     # Whether exits should be assumed bidirectional for frontend logic
     # Set to True for games where going through an entrance implies being able to return
-    ASSUME_BIDIRECTIONAL_EXITS: bool = False
+    # Set to False to explicitly disable bidirectional assumption
+    # Leave as None (default) to let the frontend auto-detect based on region structure
+    ASSUME_BIDIRECTIONAL_EXITS: Optional[bool] = None
 
     # Enable automatic helper preservation based on size
     # When enabled, helpers with more nodes than HELPER_INLINE_THRESHOLD will be
@@ -188,6 +191,13 @@ class BaseGameExportHandler(
     # listing computed helpers in HELPERS_TO_PRESERVE.
     AUTO_PRESERVE_COMPUTED_HELPERS: bool = False
 
+    # When True, helpers listed in HELPERS_TO_EXPORT_WHITELIST are automatically
+    # preserved (not inlined during rule analysis). This is a common pattern since
+    # helpers that need to be exported as definitions also shouldn't be inlined.
+    # Default is True - set to False only if you want whitelisted helpers to be
+    # inlined despite being exported.
+    AUTO_PRESERVE_WHITELISTED_HELPERS: bool = True
+
     # Mapping of parameter/variable names used in inlined functions to their
     # corresponding setting names. Applied during expand_rule for 'name' type rules.
     # Example: {'ow_boss_req': 'ow_boss_requirement'}
@@ -203,7 +213,15 @@ class BaseGameExportHandler(
     # equivalent rule structures without overriding expand_rule.
     # Example: {'_my_game_setting': {'type': 'setting_value', 'setting': 'my_setting'}}
     # Replacements are applied recursively during rule expansion.
+    # Manual entries here take precedence over auto-detected replacements.
     STATE_METHOD_REPLACEMENTS: Dict[str, Dict[str, Any]] = {}
+
+    # Whether to auto-detect LogicMixin state method replacements.
+    # When True, analyzes LogicMixin subclasses to detect common patterns like:
+    # - return self.multiworld.worlds[player].<attr> -> setting_value
+    # - return not self.multiworld.worlds[player].<attr> -> not(setting_value)
+    # Manual STATE_METHOD_REPLACEMENTS always take precedence over auto-detected ones.
+    AUTO_DISCOVER_LOGIC_MIXIN_REPLACEMENTS: bool = True
 
     # Accumulator rules for games that track progressive items (like coins).
     # Each rule is a dict with keys: pattern (regex), extract_value (bool),
@@ -231,6 +249,16 @@ class BaseGameExportHandler(
     # Example: {'always_true_helper': True, 'disabled_feature': False}
     CONSTANT_HELPER_EXPANSIONS: Dict[str, Any] = {}
 
+    # Mapping of helper function names to rule type configurations.
+    # Used for helpers that take a single argument and convert it to a rule type.
+    # Format: {'helper_name': {'type': 'rule_type', 'field': 'field_name', 'arg_index': 0}}
+    # - type: The rule type to create (location_check, can_reach, item_check, etc.)
+    # - field: The field name in the rule to set (location, region, item, etc.)
+    # - arg_index: Which argument to use (default 0)
+    # Example: {'_can_get': {'type': 'location_check', 'field': 'location'}}
+    # This expands _can_get("Location Name") to {'type': 'location_check', 'location': ...}
+    HELPER_TO_RULE_MAPPINGS: Dict[str, Dict[str, Any]] = {}
+
     # Mapping of export names to item value extraction configuration.
     # Used to compute item->value mappings from world attributes at export time.
     # Each entry defines: 'source' (world attribute name) and 'value_extractor' (callable).
@@ -244,6 +272,28 @@ class BaseGameExportHandler(
     # Example: {'quest_points': 'qp_items'} generates a helper that sums qp_items values
     # for items the player has.
     DICT_SUM_HELPERS: Dict[str, str] = {}
+
+    # Configuration for auto-generating accumulator items.
+    # When PROG_ITEMS_INIT is set and these are configured, the base class will:
+    # 1. Create accumulator target items (e.g., " coins") from PROG_ITEMS_INIT keys
+    # 2. Find items matching ACCUMULATOR_RULES patterns in locations
+    # 3. Configure all matching items with these properties
+    ACCUMULATOR_ITEM_GROUP: str = ''  # Group name for accumulator items (e.g., 'coins')
+    ACCUMULATOR_ITEM_TYPE: str = ''   # Type for accumulator items (e.g., 'coins')
+    ACCUMULATOR_TARGET_MAX_COUNT: int = 999999  # Max count for accumulator target items
+
+    # Mapping of (option_name, property_name) to rule structures for expanding
+    # computed option properties to their equivalent rule structures.
+    # Used when an option class has computed properties (e.g., SwimRule.base_depth)
+    # that need to be expanded to their underlying computation for the frontend.
+    # Format: {('option_name', 'property_name'): rule_structure}
+    # Example (Subnautica SwimRule):
+    #   {('swim_rule', 'base_depth'): {
+    #       'type': 'subscript',
+    #       'value': {'type': 'constant', 'value': [200, 400, 600]},
+    #       'index': {'type': 'binary_op', 'left': {'type': 'name', 'name': 'swim_rule'}, ...}
+    #   }}
+    OPTION_PROPERTY_EXPANSIONS: Dict[tuple, Dict[str, Any]] = {}
 
     def __init__(self, world=None):
         """Initialize the handler with an empty set of discovered helpers.
@@ -270,6 +320,8 @@ class BaseGameExportHandler(
         # Dict of auto-discovered param_mappings from call-site analysis
         # Maps helper_name -> {param_name: slot_data_key}
         self._discovered_param_mappings: Dict[str, Dict[str, str]] = {}
+        # Cache for auto-detected LogicMixin state method replacements
+        self._auto_detected_replacements_cache: Optional[Dict[str, Dict[str, Any]]] = None
 
     # ==========================================================================
     # Helper registration methods
@@ -435,6 +487,47 @@ class BaseGameExportHandler(
         self._analyzed_helper_cache = {}
         self._discovered_param_mappings = {}
 
+    def get_effective_state_method_replacements(self) -> Dict[str, Dict[str, Any]]:
+        """Get the effective STATE_METHOD_REPLACEMENTS combining auto-detected and manual.
+
+        This method:
+        1. Auto-detects LogicMixin patterns if AUTO_DISCOVER_LOGIC_MIXIN_REPLACEMENTS is True
+        2. Merges with manual STATE_METHOD_REPLACEMENTS (manual takes precedence)
+        3. Caches the result for performance
+
+        Returns:
+            Dict mapping method names to their rule replacement structures
+        """
+        # Return cached result if available
+        if self._auto_detected_replacements_cache is not None:
+            return self._auto_detected_replacements_cache
+
+        # Start with manual replacements (these take precedence)
+        effective = dict(self.STATE_METHOD_REPLACEMENTS)
+
+        # Auto-detect if enabled
+        if self.AUTO_DISCOVER_LOGIC_MIXIN_REPLACEMENTS and self.world is not None:
+            try:
+                from exporter.games.base.logic_mixin_analyzer import discover_state_method_replacements
+                auto_detected = discover_state_method_replacements(self.world, None)
+
+                # Merge auto-detected (manual takes precedence, so add auto-detected first)
+                merged = dict(auto_detected)
+                merged.update(effective)
+                effective = merged
+
+                # Log what was auto-detected vs manual
+                auto_only = set(auto_detected.keys()) - set(self.STATE_METHOD_REPLACEMENTS.keys())
+                if auto_only:
+                    logger.info(f"Auto-detected {len(auto_only)} LogicMixin replacements: {sorted(auto_only)}")
+
+            except Exception as e:
+                logger.warning(f"Error auto-detecting LogicMixin replacements: {e}")
+
+        # Cache the result
+        self._auto_detected_replacements_cache = effective
+        return effective
+
     def is_worldgen_world(self, world=None) -> bool:
         """
         Check if this is a worldgen world (generated by world_generator).
@@ -558,7 +651,8 @@ class BaseGameExportHandler(
 
         Override this method in game-specific handlers to provide
         game-specific helper expansions. When overriding, call
-        super().expand_helper() first to handle CONSTANT_HELPER_EXPANSIONS.
+        super().expand_helper() first to handle CONSTANT_HELPER_EXPANSIONS
+        and HELPER_TO_RULE_MAPPINGS.
 
         Args:
             helper_name: The name of the helper to expand
@@ -571,6 +665,26 @@ class BaseGameExportHandler(
         if helper_name in self.CONSTANT_HELPER_EXPANSIONS:
             value = self.CONSTANT_HELPER_EXPANSIONS[helper_name]
             return {'type': 'constant', 'value': value}
+
+        # Check HELPER_TO_RULE_MAPPINGS for helpers that map to rule types
+        if helper_name in self.HELPER_TO_RULE_MAPPINGS:
+            mapping = self.HELPER_TO_RULE_MAPPINGS[helper_name]
+            arg_index = mapping.get('arg_index', 0)
+            if args and len(args) > arg_index:
+                arg = args[arg_index]
+                # Determine the field value based on arg type:
+                # - If arg is a dict (rule structure), use it as-is
+                # - If arg is a raw value, wrap it in a constant node
+                if isinstance(arg, dict):
+                    # Already a rule structure (constant, name, f_string, etc.) - use as-is
+                    field_value = arg
+                else:
+                    # Raw value - wrap in constant
+                    field_value = {'type': 'constant', 'value': arg}
+                return {
+                    'type': mapping['type'],
+                    mapping['field']: field_value
+                }
 
         return None
 
@@ -710,7 +824,9 @@ class BaseGameExportHandler(
         Games can either:
         1. Set the HELPERS_TO_PRESERVE class attribute with a set of helper names
         2. Set AUTO_PRESERVE_COMPUTED_HELPERS = True and list helpers in COMPUTED_HELPERS
-        3. Override this method for custom logic
+        3. Set AUTO_PRESERVE_WHITELISTED_HELPERS = True (default) to auto-preserve
+           helpers in HELPERS_TO_EXPORT_WHITELIST
+        4. Override this method for custom logic
 
         Note: Helpers listed in HELPERS_TO_EXPORT_BLACKLIST are automatically preserved,
         since complex helpers that can't be exported also shouldn't be inlined.
@@ -732,6 +848,11 @@ class BaseGameExportHandler(
 
         # Check computed helpers if auto-preservation is enabled
         if self.AUTO_PRESERVE_COMPUTED_HELPERS and func_name in self.COMPUTED_HELPERS:
+            return True
+
+        # Auto-preserve whitelisted helpers - if a helper is exported as a definition,
+        # it typically shouldn't be inlined during analysis either
+        if self.AUTO_PRESERVE_WHITELISTED_HELPERS and func_name in self.HELPERS_TO_EXPORT_WHITELIST:
             return True
 
         return False
@@ -786,10 +907,125 @@ class BaseGameExportHandler(
 
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """
-        Return game-specific item definitions beyond the base item_id_to_name.
-        Keyed by item name. Should include classification flags.
+        Return item data with classification flags.
+
+        This method auto-discovers items from world.item_name_to_id and determines
+        their classification by checking the item pool and placed items.
+        Game-specific handlers can override this for custom item data.
         """
-        return {}
+        from BaseClasses import ItemClassification
+
+        item_data = {}
+
+        # Get items from world.item_name_to_id if available
+        if hasattr(world, 'item_name_to_id'):
+            for item_name, item_id in world.item_name_to_id.items():
+                # Try to get classification from item class
+                is_advancement = False
+                is_useful = False
+                is_trap = False
+
+                try:
+                    item_class = getattr(world, 'item_name_to_item', {}).get(item_name)
+                    if item_class and hasattr(item_class, 'classification'):
+                        classification = item_class.classification
+                        # Use 'in' operator to handle combined flags like progression|useful
+                        is_advancement = ItemClassification.progression in classification
+                        is_useful = ItemClassification.useful in classification
+                        is_trap = ItemClassification.trap in classification
+                except Exception as e:
+                    logger.debug(f"Could not determine classification for {item_name}: {e}")
+                    # Fallback: check item pool if available
+                    if hasattr(world, 'multiworld'):
+                        for item in world.multiworld.itempool:
+                            if item.player == world.player and item.name == item_name:
+                                # Use 'in' operator to handle combined flags like progression|useful
+                                is_advancement = ItemClassification.progression in item.classification
+                                is_useful = ItemClassification.useful in item.classification
+                                is_trap = ItemClassification.trap in item.classification
+                                break
+
+                        # Additional fallback: check placed items in locations
+                        if not (is_advancement or is_useful or is_trap):
+                            for location in world.multiworld.get_locations(world.player):
+                                if (location.item and location.item.player == world.player and
+                                    location.item.name == item_name and location.item.code is not None):
+                                    # Use 'in' operator to handle combined flags like progression|useful
+                                    is_advancement = ItemClassification.progression in location.item.classification
+                                    is_useful = ItemClassification.useful in location.item.classification
+                                    is_trap = ItemClassification.trap in location.item.classification
+                                    break
+
+                # Get groups if available
+                groups = []
+                if hasattr(world, 'item_name_groups'):
+                    groups = [
+                        group_name for group_name, items in world.item_name_groups.items()
+                        if item_name in items
+                    ]
+
+                # Get custom item type from game handler if available
+                item_type = None
+                if hasattr(self, 'get_item_type_for_name'):
+                    try:
+                        item_type = self.get_item_type_for_name(item_name, world)
+                    except Exception as e:
+                        logger.debug(f"Error getting custom type for {item_name}: {e}")
+
+                item_data[item_name] = {
+                    'name': item_name,
+                    'id': item_id,
+                    'groups': sorted(groups),
+                    'advancement': is_advancement,
+                    'useful': is_useful,
+                    'trap': is_trap,
+                    'event': False,  # Regular items are not events
+                    'type': item_type,
+                    'max_count': 1
+                }
+
+        # Handle dynamically created event items by scanning locations
+        # Some games (like Mario Land 2) place items with item.code = None, converting
+        # them to events at runtime. We need to detect these and update the item data.
+        if hasattr(world, 'multiworld'):
+            for location in world.multiworld.get_locations(world.player):
+                if location.item and location.item.player == world.player:
+                    item_name = location.item.name
+                    item_classification = location.item.classification
+
+                    # Check if this is an event item (no code/ID)
+                    if location.item.code is None and hasattr(location.item, 'classification'):
+                        if item_name not in item_data:
+                            # New event item not in item_name_to_id
+                            item_data[item_name] = {
+                                'name': item_name,
+                                'id': None,
+                                'groups': ['Event'],
+                                # Use 'in' operator to handle combined flags like progression|useful
+                                'advancement': ItemClassification.progression in item_classification,
+                                'useful': ItemClassification.useful in item_classification,
+                                'trap': ItemClassification.trap in item_classification,
+                                'event': True,
+                                'type': 'Event',
+                                'max_count': 1
+                            }
+                        else:
+                            # Item exists but was placed as an event - update it
+                            if not item_data[item_name]['event']:
+                                logger.debug(f"Correcting {item_name} to event based on runtime placement (item.code=None)")
+                                item_data[item_name]['event'] = True
+                                item_data[item_name]['type'] = 'Event'
+                                item_data[item_name]['id'] = None
+                                item_data[item_name]['advancement'] = ItemClassification.progression in item_classification
+                                item_data[item_name]['useful'] = ItemClassification.useful in item_classification
+                                item_data[item_name]['trap'] = ItemClassification.trap in item_classification
+                                if 'Event' not in item_data[item_name]['groups']:
+                                    item_data[item_name]['groups'].append('Event')
+                                    item_data[item_name]['groups'].sort()
+
+        # Return sorted by item ID to ensure consistent ordering
+        # Items with None ID (events) will be placed at the end
+        return dict(sorted(item_data.items(), key=lambda x: (x[1].get('id') is None, x[1].get('id'))))
 
     def get_item_max_counts(self, world) -> Dict[str, int]:
         """
@@ -798,8 +1034,362 @@ class BaseGameExportHandler(
         return {}
 
     def get_progression_mapping(self, world) -> Dict[str, Any]:
-        """Return game-specific progression item mapping data."""
-        return {}
+        """Return game-specific progression item mapping data.
+
+        This method auto-detects progressive items by probing the world's
+        collect_item method at runtime. This approach doesn't rely on naming
+        conventions - it uses the actual game behavior to discover which items
+        are progressive and what concrete items they map to.
+
+        Game-specific handlers can override this method if they need custom
+        logic (e.g., for additive progression like REP or Time Shards).
+
+        Returns:
+            Dict mapping progressive item names to their progression data:
+            {
+                "Progressive Sword": {
+                    "items": [
+                        {"name": "Fighter Sword", "level": 1},
+                        {"name": "Master Sword", "level": 2},
+                        ...
+                    ],
+                    "base_item": "Progressive Sword"
+                },
+                ...
+            }
+        """
+        # First, try runtime probing (works for advancement items)
+        mapping = self._probe_collect_item_for_progression(world)
+
+        # Then, try to find additional mappings from module-level data structures
+        # This catches non-advancement progressive items that collect_item skips
+        module_mapping = self._find_module_progression_data(world)
+
+        # Merge: module data fills in gaps from runtime probing
+        for prog_name, data in module_mapping.items():
+            if prog_name not in mapping:
+                mapping[prog_name] = data
+                logger.debug(f"Added {prog_name} from module data (not found via probing)")
+
+        return mapping
+
+    def _find_module_progression_data(self, world) -> Dict[str, Any]:
+        """Find progression mapping from module-level data structures.
+
+        Different games store progression data in different formats:
+        - ALttP: progression_mapping dict in Items.py (concrete -> (progressive, level))
+        - Factorio: progressive_technology_table (progressive -> Technology with .progressive tuple)
+        - Raft: progressive_item_list (progressive -> [concrete_items])
+
+        Returns:
+            Dict with progression mapping in the standard format
+        """
+        mapping_data: Dict[str, Any] = {}
+
+        # Get the world's module
+        world_module = type(world).__module__
+        base_module = '.'.join(world_module.split('.')[:2])  # e.g., "worlds.alttp"
+
+        # Try different known patterns
+        mapping_data.update(self._try_alttp_pattern(base_module))
+        mapping_data.update(self._try_factorio_pattern(base_module))
+        mapping_data.update(self._try_raft_pattern(base_module))
+
+        return mapping_data
+
+    def _try_alttp_pattern(self, base_module: str) -> Dict[str, Any]:
+        """Try ALttP pattern: progression_mapping dict in Items.py.
+
+        Format: concrete_item -> (progressive_item, level)
+        """
+        try:
+            items_module = importlib.import_module(f"{base_module}.Items")
+            if not hasattr(items_module, 'progression_mapping'):
+                return {}
+
+            progression_mapping = getattr(items_module, 'progression_mapping')
+            if not isinstance(progression_mapping, dict):
+                return {}
+
+            # Convert: {concrete: (progressive, level)} -> {progressive: {items: [...]}}
+            mapping_data: Dict[str, Any] = {}
+            for concrete_item, (progressive_item, level) in progression_mapping.items():
+                if progressive_item not in mapping_data:
+                    mapping_data[progressive_item] = {
+                        'items': [],
+                        'base_item': progressive_item
+                    }
+                mapping_data[progressive_item]['items'].append({
+                    'name': concrete_item,
+                    'level': level
+                })
+
+            # Sort items by level
+            for prog_data in mapping_data.values():
+                prog_data['items'].sort(key=lambda x: x['level'])
+
+            if mapping_data:
+                logger.debug(f"Found {len(mapping_data)} progressive items via ALttP pattern")
+
+            return mapping_data
+
+        except ImportError:
+            return {}
+        except Exception as e:
+            logger.debug(f"Error trying ALttP pattern: {e}")
+            return {}
+
+    def _try_factorio_pattern(self, base_module: str) -> Dict[str, Any]:
+        """Try Factorio pattern: progressive_technology_table.
+
+        Format: progressive_item -> Technology object with .progressive tuple
+        """
+        try:
+            # Try importing from Technologies submodule first
+            try:
+                tech_module = importlib.import_module(f"{base_module}.Technologies")
+                if hasattr(tech_module, 'progressive_technology_table'):
+                    prog_table = getattr(tech_module, 'progressive_technology_table')
+                else:
+                    return {}
+            except ImportError:
+                # Try main module
+                main_module = importlib.import_module(base_module)
+                if hasattr(main_module, 'progressive_technology_table'):
+                    prog_table = getattr(main_module, 'progressive_technology_table')
+                else:
+                    return {}
+
+            if not isinstance(prog_table, dict):
+                return {}
+
+            # Convert: {progressive: Technology(progressive=tuple)} -> standard format
+            mapping_data: Dict[str, Any] = {}
+            for prog_name, tech_data in prog_table.items():
+                # Check if it has a progressive attribute (tuple of concrete items)
+                progressive_tuple = getattr(tech_data, 'progressive', None)
+                if not progressive_tuple:
+                    continue
+
+                mapping_data[prog_name] = {
+                    'items': [
+                        {'name': name, 'level': level}
+                        for level, name in enumerate(progressive_tuple, 1)
+                    ],
+                    'base_item': prog_name
+                }
+
+            if mapping_data:
+                logger.debug(f"Found {len(mapping_data)} progressive items via Factorio pattern")
+
+            return mapping_data
+
+        except ImportError:
+            return {}
+        except Exception as e:
+            logger.debug(f"Error trying Factorio pattern: {e}")
+            return {}
+
+    def _try_raft_pattern(self, base_module: str) -> Dict[str, Any]:
+        """Try Raft pattern: progressive_item_list dict.
+
+        Format: progressive_item -> [concrete_items in order]
+        """
+        try:
+            # Try main module first
+            main_module = importlib.import_module(base_module)
+
+            # Look for progressive_item_list
+            if hasattr(main_module, 'progressive_item_list'):
+                prog_list = getattr(main_module, 'progressive_item_list')
+            else:
+                # Try Items submodule
+                try:
+                    items_module = importlib.import_module(f"{base_module}.Items")
+                    if hasattr(items_module, 'progressive_item_list'):
+                        prog_list = getattr(items_module, 'progressive_item_list')
+                    else:
+                        return {}
+                except ImportError:
+                    return {}
+
+            if not isinstance(prog_list, dict):
+                return {}
+
+            # Convert: {progressive: [concrete_items]} -> standard format
+            mapping_data: Dict[str, Any] = {}
+            for prog_name, concrete_items in prog_list.items():
+                if not isinstance(concrete_items, (list, tuple)):
+                    continue
+
+                mapping_data[prog_name] = {
+                    'items': [
+                        {'name': name, 'level': level}
+                        for level, name in enumerate(concrete_items, 1)
+                    ],
+                    'base_item': prog_name
+                }
+
+            if mapping_data:
+                logger.debug(f"Found {len(mapping_data)} progressive items via Raft pattern")
+
+            return mapping_data
+
+        except ImportError:
+            return {}
+        except Exception as e:
+            logger.debug(f"Error trying Raft pattern: {e}")
+            return {}
+
+    def _probe_collect_item_for_progression(self, world) -> Dict[str, Any]:
+        """Discover progressive items by probing collect_item behavior.
+
+        This method creates a mock collection state and repeatedly calls
+        collect_item to discover which items are progressive and what
+        concrete items they resolve to at each level.
+
+        Args:
+            world: The world instance to probe
+
+        Returns:
+            Dict with progression mapping in the standard format
+        """
+        # Check if the world has overridden collect_item
+        # If not, there are no progressive items to discover
+        try:
+            from worlds.AutoWorld import World as BaseWorld
+            if type(world).collect_item is BaseWorld.collect_item:
+                logger.debug(f"{world.game}: No custom collect_item, skipping progression probe")
+                return {}
+        except ImportError:
+            logger.warning("Could not import AutoWorld.World for collect_item check")
+            return {}
+
+        # Get the player ID
+        player = getattr(world, 'player', 1)
+
+        # Create a minimal mock state that satisfies collect_item requirements
+        class MockCollectionState:
+            """Minimal mock state for probing collect_item behavior."""
+
+            def __init__(self, player_id: int):
+                self.prog_items = {player_id: Counter()}
+                self._player = player_id
+
+            def has(self, item_name: str, player: int, count: int = 1) -> bool:
+                """Check if player has at least count of item_name."""
+                return self.prog_items.get(player, Counter())[item_name] >= count
+
+            def count(self, item_name: str, player: int) -> int:
+                """Count how many of item_name the player has."""
+                return self.prog_items.get(player, Counter())[item_name]
+
+            def has_group(self, group: str, player: int, count: int = 1) -> bool:
+                """Mock has_group - returns False for probing purposes."""
+                return False
+
+            def has_any(self, items: Set[str], player: int) -> bool:
+                """Check if player has any of the items."""
+                return any(self.has(item, player) for item in items)
+
+            def has_all(self, items: Set[str], player: int) -> bool:
+                """Check if player has all of the items."""
+                return all(self.has(item, player) for item in items)
+
+        # Track discovered progressions: progressive_item -> [concrete_items in order]
+        progressions: Dict[str, List[str]] = {}
+
+        # Get all item names the world can create
+        item_names = list(getattr(world, 'item_name_to_id', {}).keys())
+
+        for item_name in item_names:
+            try:
+                item = world.create_item(item_name)
+            except Exception as e:
+                logger.debug(f"Could not create item '{item_name}': {e}")
+                continue
+
+            # Skip items that can't possibly be progressive
+            # (We probe all items, not just advancement, because some games like
+            # Factorio have progressive items classified as filler/useful)
+
+            # Create fresh state for each item probe
+            mock_state = MockCollectionState(player)
+            chain: List[str] = []
+
+            # Collect the item repeatedly to build the progression chain
+            # Max 20 levels should be more than enough for any game
+            for _ in range(20):
+                try:
+                    result = world.collect_item(mock_state, item, remove=False)
+                except Exception as e:
+                    logger.debug(f"Error probing collect_item for '{item_name}': {e}")
+                    break
+
+                if result is None:
+                    # Item no longer grants anything (reached max level)
+                    break
+
+                if result == item_name:
+                    # Item returns its own name - not a progressive item
+                    break
+
+                if result in chain:
+                    # Already seen this result - we've reached max level
+                    # (collect_item returns the same item when at max)
+                    break
+
+                # This is a progressive item! Record the concrete item
+                chain.append(result)
+
+                # Add to mock state so next iteration gets the next level
+                mock_state.prog_items[player][result] += 1
+
+            if chain:
+                progressions[item_name] = chain
+                logger.debug(f"Discovered progression: {item_name} -> {chain}")
+
+        # Convert to the standard output format
+        mapping_data: Dict[str, Any] = {}
+
+        # First pass: create basic mapping
+        for progressive_name, concrete_items in progressions.items():
+            mapping_data[progressive_name] = {
+                'items': [
+                    {'name': name, 'level': level}
+                    for level, name in enumerate(concrete_items, 1)
+                ],
+                'base_item': progressive_name
+            }
+
+        # Second pass: detect progressive items that share the same concrete items
+        # and set their base_item to the "canonical" one (first alphabetically)
+        # This handles cases like Progressive Bow / Progressive Bow (Alt) which
+        # both resolve to Bow -> Silver Bow and should count together
+        concrete_to_progressives: Dict[tuple, List[str]] = {}
+        for progressive_name, concrete_items in progressions.items():
+            key = tuple(concrete_items)
+            if key not in concrete_to_progressives:
+                concrete_to_progressives[key] = []
+            concrete_to_progressives[key].append(progressive_name)
+
+        # For groups with multiple progressive items sharing same concrete items,
+        # set base_item to the canonical (first alphabetically) name
+        for concrete_key, progressive_names in concrete_to_progressives.items():
+            if len(progressive_names) > 1:
+                # Sort to get canonical name (first alphabetically)
+                canonical = sorted(progressive_names)[0]
+                for prog_name in progressive_names:
+                    mapping_data[prog_name]['base_item'] = canonical
+                logger.debug(
+                    f"Grouped progressive items with shared concrete items: "
+                    f"{progressive_names} -> base_item='{canonical}'"
+                )
+
+        if mapping_data:
+            logger.info(f"{world.game}: Auto-detected {len(mapping_data)} progressive item(s)")
+
+        return mapping_data
 
     # ==========================================================================
     # Exporter settings and game info methods
@@ -816,7 +1406,9 @@ class BaseGameExportHandler(
         exporter_settings['rule_format'] = {"version": "1.0"}
 
         # assume_bidirectional_exits: Whether region connections are bidirectional by default
-        exporter_settings['assume_bidirectional_exits'] = self.ASSUME_BIDIRECTIONAL_EXITS
+        # Only include when explicitly set (True or False); omitting allows frontend auto-detection
+        if self.ASSUME_BIDIRECTIONAL_EXITS is not None:
+            exporter_settings['assume_bidirectional_exits'] = self.ASSUME_BIDIRECTIONAL_EXITS
 
         # use_resolved_items: When false (default), eventProcessor uses only base_items from sphere log
         # When true, eventProcessor uses resolved_items (e.g., for games with complex event items)
@@ -863,11 +1455,15 @@ class BaseGameExportHandler(
         elif hasattr(world, 'accumulator_rules') and world.accumulator_rules:
             game_info['accumulator_rules'] = world.accumulator_rules
 
-        # Use class-level PROG_ITEMS_INIT if defined, otherwise check world attribute
-        if self.PROG_ITEMS_INIT:
+        # For prog_items_init, worldgen worlds get priority for world attribute
+        # because worldgen worlds may pre-compute accumulator initial values.
+        # For non-worldgen worlds, class attribute takes priority.
+        if self.is_worldgen_world(world) and hasattr(world, 'prog_items_init') and world.prog_items_init:
+            game_info['prog_items_init'] = dict(world.prog_items_init)
+        elif self.PROG_ITEMS_INIT:
             game_info['prog_items_init'] = dict(self.PROG_ITEMS_INIT)
         elif hasattr(world, 'prog_items_init') and world.prog_items_init:
-            game_info['prog_items_init'] = world.prog_items_init
+            game_info['prog_items_init'] = dict(world.prog_items_init)
 
         return game_info
 
@@ -1017,11 +1613,65 @@ class BaseGameExportHandler(
         Post-process the exported data after all standard processing is complete.
         This is called at the end of the export process to allow game-specific modifications.
 
+        When PROG_ITEMS_INIT and ACCUMULATOR_ITEM_GROUP are set, this method:
+        1. Creates accumulator target items (e.g., " coins") from PROG_ITEMS_INIT keys
+        2. Finds items matching ACCUMULATOR_RULES patterns in locations
+        3. Configures all matching items with the specified group and type
+
         Args:
             data: The complete export data dictionary
 
         Returns:
             The modified export data dictionary
         """
-        # Base implementation returns data unchanged
+        import re
+
+        # Auto-generate accumulator items if configured
+        if self.PROG_ITEMS_INIT and self.ACCUMULATOR_ITEM_GROUP:
+            group = self.ACCUMULATOR_ITEM_GROUP
+            item_type = self.ACCUMULATOR_ITEM_TYPE or group
+            max_count = self.ACCUMULATOR_TARGET_MAX_COUNT
+
+            def make_accumulator_item(name: str, is_target: bool = False) -> Dict[str, Any]:
+                return {
+                    'name': name, 'id': None, 'groups': [group],
+                    'advancement': True, 'useful': False, 'trap': False,
+                    'event': False, 'type': item_type,
+                    'max_count': max_count if is_target else 1
+                }
+
+            accumulator_items: Dict[str, Dict[str, Dict[str, Any]]] = {}
+
+            # Step 1: Create accumulator target items from PROG_ITEMS_INIT
+            for player_id in data.get('regions', {}).keys():
+                accumulator_items[player_id] = {}
+                for target_name in self.PROG_ITEMS_INIT.keys():
+                    accumulator_items[player_id][target_name] = make_accumulator_item(
+                        target_name, is_target=True
+                    )
+
+            # Step 2: Find items matching ACCUMULATOR_RULES patterns in locations
+            patterns = [rule.get('pattern') for rule in self.ACCUMULATOR_RULES if rule.get('pattern')]
+            if patterns:
+                for player_id, regions in data.get('regions', {}).items():
+                    for region_data in regions.values():
+                        for location in region_data.get('locations', []):
+                            item_name = location.get('item', {}).get('name', '')
+                            if not item_name:
+                                continue
+                            # Check if item matches any accumulator pattern
+                            for pattern in patterns:
+                                if re.match(pattern, item_name):
+                                    if item_name not in accumulator_items.get(player_id, {}):
+                                        accumulator_items.setdefault(player_id, {})[item_name] = (
+                                            make_accumulator_item(item_name)
+                                        )
+                                    break  # Only match first pattern
+
+            # Step 3: Merge accumulator items into data
+            if accumulator_items:
+                data.setdefault('items', {})
+                for player_id, player_items in accumulator_items.items():
+                    data['items'].setdefault(player_id, {}).update(player_items)
+
         return data

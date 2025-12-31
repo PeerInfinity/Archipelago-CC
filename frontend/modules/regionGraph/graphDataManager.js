@@ -178,11 +178,14 @@ export class GraphDataManager {
       edges: []
     };
 
-    // Check if bidirectional exits are assumed from game settings
-    const staticData = stateManager.getStaticData();
-    const playerSettings = staticData?.world ? Object.values(staticData.world)[0] : null;
-    const assumeBidirectional = playerSettings?.assume_bidirectional_exits === true;
-    logger.debug('Exit configuration', { assumeBidirectional });
+    // Check if bidirectional exits are assumed from game settings (with auto-detection)
+    const bidirectionalSetting = stateManager.getEffectiveBidirectionalSetting();
+    const assumeBidirectional = bidirectionalSetting.assumeBidirectional;
+    logger.debug('Exit configuration', {
+      assumeBidirectional,
+      source: bidirectionalSetting.source,
+      mode: bidirectionalSetting.detection?.mode
+    });
 
     // Get discovery mode state and settings
     const isDiscoveryModeActive = this.ui.isDiscoveryModeActive || false;

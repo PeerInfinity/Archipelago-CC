@@ -10,20 +10,19 @@ logger = logging.getLogger(__name__)
 class SMGameExportHandler(GenericGameExportHandler):
     """Export handler for Super Metroid.
 
-    Super Metroid uses a custom SMBoolManager system for its logic.
-    The rules are wrapped in self.evalSMBool() calls with helper functions.
+    Super Metroid uses VARIA's custom SMBoolManager system for its logic.
+    The rules are wrapped in self.evalSMBool() calls with helper functions
+    that check item requirements and return SMBool (boolean with difficulty).
 
-    This exporter transforms the Python-specific patterns into JavaScript-friendly
-    helper calls that the frontend can execute.
+    This exporter handles several VARIA-specific patterns:
+    - AccessFrom/Available location access patterns
+    - Cache.ldeco decorated traverse/transition lambdas
+    - SMBool(True/False) patterns and difficulty evaluation
+    - ROM patches, door colors, and hellrun settings
+
+    The JavaScript helpers in frontend/modules/shared/gameLogic/sm/smLogic.js
+    implement the VARIA logic system for frontend rule evaluation.
     """
-    GAME_NAME = 'Super Metroid'
-
-    # Note: AUTO_EXPORT_DISCOVERED_HELPERS is inherited as True from GenericGameExportHandler
-    # but has limited effect for SM because:
-    # 1. Helpers are methods on SMBoolManager class, not standalone functions
-    # 2. Helper calls are created in expand_rule post-processing, not during analysis
-    # 3. The VARIA logic system (SMBool with difficulty) requires JS implementations
-    # The JavaScript helpers in smLogic.js remain necessary for rule evaluation.
 
     def __init__(self, world=None):
         super().__init__(world=world)

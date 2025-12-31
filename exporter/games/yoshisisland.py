@@ -1,28 +1,55 @@
 """Yoshi's Island game-specific export handler."""
 
-import re
-from typing import Dict, Any
+from typing import Any, Callable, Dict
 from .generic import GenericGameExportHandler
+
+
+# Default boss order when world.boss_order is not set
+DEFAULT_BOSS_ORDER = [
+    "Burt The Bashful's Boss Room",
+    "Salvo The Slime's Boss Room",
+    "Bigger Boo's Boss Room",
+    "Roger The Ghost's Boss Room",
+    "Prince Froggy's Boss Room",
+    "Naval Piranha's Boss Room",
+    "Marching Milde's Boss Room",
+    "Hookbill The Koopa's Boss Room",
+    "Sluggy The Unshaven's Boss Room",
+    "Raphael The Raven's Boss Room",
+    "Tap-Tap The Red Nose's Boss Room"
+]
+
+
+def _get_option(world, option_name: str, default: Any = None) -> Any:
+    """Helper to safely extract option value from world."""
+    if not hasattr(world, 'options'):
+        return default
+    option = getattr(world.options, option_name, None)
+    if option is None:
+        return default
+    return getattr(option, 'value', option)
 
 
 class YoshisIslandGameExportHandler(GenericGameExportHandler):
     """Export handler for Yoshi's Island.
 
-    Inherits from GenericGameExportHandler for default behavior.
-    Uses HELPER_OBJECT_NAMES to convert logic.method and bosses.method to helpers.
+    Uses declarative class attributes for configuration:
+    - HELPER_OBJECT_NAMES: Converts logic.method() and bosses.method() to helpers
+    - HELPERS_TO_EXPORT_WHITELIST: Exports these helpers as definitions
+    - WORLD_ATTRIBUTES: Computes settings needed by helpers from world options
     """
 
-    # Include 'logic' and 'bosses' for helper conversion
-    # The base class handles converting logic.method() and bosses.method() to helper calls
+    # Convert logic.method() and bosses.method() calls to helper functions
     HELPER_OBJECT_NAMES = {'self', 'world', 'logic', 'bosses'}
 
-    # Whitelist helpers that should always be exported
-    # (helper modules are auto-discovered from world directory)
+    # Helpers that should be exported as definitions
+    # Note: These are automatically preserved (not inlined) due to
+    # AUTO_PRESERVE_WHITELISTED_HELPERS = True (default in base class)
     HELPERS_TO_EXPORT_WHITELIST = {
         # BossReqs class helpers
         'castle_access',
         'castle_clear',
-        # YoshiLogic class helpers - needed for location access rules
+        # YoshiLogic class helpers
         'has_midring',
         'reconstitute_luigi',
         'bandit_bonus',
@@ -37,83 +64,35 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
         'bowserdoor_4',
     }
 
-    # Preserve these helpers as helper calls (don't try to auto-expand them)
-    HELPERS_TO_PRESERVE = HELPERS_TO_EXPORT_WHITELIST
-
-    def _is_common_helper_pattern(self, helper_name):
-        """Override to prevent auto-expansion of level-specific helpers."""
-        # Don't auto-expand level-specific helpers (pattern: _[0-9][0-9][A-Za-z]+)
-        # Examples: _14Clear, _17Game, _27Game, _47Game, etc.
-        if re.match(r'^_\d{2}[A-Z][a-z]+$', helper_name):
-            return False
-
-        # Fall back to parent implementation for other patterns
-        return super()._is_common_helper_pattern(helper_name)
-
-    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extract Yoshi's Island world data including computed settings for helpers."""
-        world_data = super().get_world_data(world, multiworld, player)
-
-        # Default values for Yoshi's Island options
-        OPTION_DEFAULTS = {
-            'stage_logic': 0,
-            'hidden_object_visibility': 1,
-            'shuffle_midrings': 0,
-            'item_logic': 0,
-            'bowser_door_mode': 0,
-            'luigi_pieces_required': 25,
-            'castle_clear_condition': 0,
-            'castle_open_condition': 5,
-        }
-
-        def extract_option(option_name):
-            option = getattr(world.options, option_name, None)
-            value = getattr(option, 'value', option)
-            if value is None:
-                return OPTION_DEFAULTS.get(option_name)
-            return value
-
-        if hasattr(world, 'options'):
-            # Computed values for YoshiLogic helpers
-            # (raw options are auto-exported by base class under 'options')
-            stage_logic = extract_option('stage_logic')
-            if stage_logic == 0:
-                world_data['game_logic'] = "Easy"
-            elif stage_logic == 1:
-                world_data['game_logic'] = "Normal"
-            else:
-                world_data['game_logic'] = "Hard"
-
-            world_data['midring_start'] = not extract_option('shuffle_midrings')
-            world_data['clouds_always_visible'] = extract_option('hidden_object_visibility') >= 2
-            world_data['consumable_logic'] = not extract_option('item_logic')
-
-            bowser_door = extract_option('bowser_door_mode')
-            if bowser_door == 4:
-                bowser_door = 3
-            world_data['bowser_door'] = bowser_door
-            world_data['luigi_pieces'] = extract_option('luigi_pieces_required')
-
-            # Export boss_order for _xxCanFightBoss helpers
-            if hasattr(world, 'boss_order') and world.boss_order:
-                world_data['boss_order'] = list(world.boss_order)
-            else:
-                world_data['boss_order'] = [
-                    "Burt The Bashful's Boss Room",
-                    "Salvo The Slime's Boss Room",
-                    "Bigger Boo's Boss Room",
-                    "Roger The Ghost's Boss Room",
-                    "Prince Froggy's Boss Room",
-                    "Naval Piranha's Boss Room",
-                    "Marching Milde's Boss Room",
-                    "Hookbill The Koopa's Boss Room",
-                    "Sluggy The Unshaven's Boss Room",
-                    "Raphael The Raven's Boss Room",
-                    "Tap-Tap The Red Nose's Boss Room"
-                ]
-
-            # Settings for BossReqs class helpers
-            world_data['castle_unlock'] = extract_option('castle_open_condition')
-            world_data['boss_unlock'] = extract_option('castle_clear_condition')
-
-        return world_data
+    # Computed world attributes needed by helpers
+    # These replace the get_world_data override with declarative lambdas
+    WORLD_ATTRIBUTES: Dict[str, Callable] = {
+        # game_logic: "Easy"/"Normal"/"Hard" based on stage_logic option
+        'game_logic': lambda w, m, p: (
+            "Easy" if _get_option(w, 'stage_logic', 0) == 0
+            else "Normal" if _get_option(w, 'stage_logic', 0) == 1
+            else "Hard"
+        ),
+        # midring_start: True if midrings are not shuffled
+        'midring_start': lambda w, m, p: not _get_option(w, 'shuffle_midrings', False),
+        # clouds_always_visible: True if hidden_object_visibility >= 2
+        'clouds_always_visible': lambda w, m, p: _get_option(w, 'hidden_object_visibility', 1) >= 2,
+        # consumable_logic: True if item_logic is disabled
+        'consumable_logic': lambda w, m, p: not _get_option(w, 'item_logic', False),
+        # bowser_door: bowser_door_mode with door_4 mapped to door_3
+        'bowser_door': lambda w, m, p: (
+            3 if _get_option(w, 'bowser_door_mode', 0) == 4
+            else _get_option(w, 'bowser_door_mode', 0)
+        ),
+        # luigi_pieces: luigi_pieces_required option value
+        'luigi_pieces': lambda w, m, p: _get_option(w, 'luigi_pieces_required', 25),
+        # boss_order: world.boss_order or default
+        'boss_order': lambda w, m, p: (
+            list(w.boss_order) if hasattr(w, 'boss_order') and w.boss_order
+            else DEFAULT_BOSS_ORDER
+        ),
+        # castle_unlock: castle_open_condition option value
+        'castle_unlock': lambda w, m, p: _get_option(w, 'castle_open_condition', 5),
+        # boss_unlock: castle_clear_condition option value
+        'boss_unlock': lambda w, m, p: _get_option(w, 'castle_clear_condition', 0),
+    }

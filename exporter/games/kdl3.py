@@ -1,10 +1,24 @@
 """Kirby's Dream Land 3 game-specific export handler."""
 
-from typing import Dict, Any, Optional
+from typing import Any, Callable, Dict, Optional
 from .generic import GenericGameExportHandler
-import logging
 
-logger = logging.getLogger(__name__)
+
+def _compute_level_names_inverse(world, multiworld, player) -> Dict[str, Any]:
+    """Compute level_names_inverse for f-string resolution in can_reach_boss."""
+    from worlds.kdl3.names import location_name
+    return location_name.level_names_inverse
+
+
+def _compute_ability_map(world, multiworld, player) -> Dict[str, str]:
+    """Compute ability_map mapping ability names to helper function names."""
+    from worlds.kdl3 import rules as kdl3_rules
+    if not hasattr(kdl3_rules, 'ability_map'):
+        return {}
+    return {
+        name: (func.__name__ if callable(func) else str(func))
+        for name, func in kdl3_rules.ability_map.items()
+    }
 
 
 class KDL3GameExportHandler(GenericGameExportHandler):
@@ -18,18 +32,11 @@ class KDL3GameExportHandler(GenericGameExportHandler):
     via AUTO_DISCOVER_WORLD_ATTRIBUTES (default True).
     """
 
-    # Level names inverse mapping (level number -> level name)
-    # Used by can_reach_boss helper for f-string resolution
-    LEVEL_NAMES_INVERSE = {
-        1: "Grass Land",
-        2: "Ripple Field",
-        3: "Sand Canyon",
-        4: "Cloudy Park",
-        5: "Iceberg",
+    # Export additional world data for frontend use
+    WORLD_ATTRIBUTES: Dict[str, Callable] = {
+        'level_names_inverse': _compute_level_names_inverse,
+        'ability_map': _compute_ability_map,
     }
-
-    # Module path for helper functions
-    HELPER_MODULES = ['worlds.kdl3.rules']
 
     # Blacklist helpers that have loops or complex logic (don't export as definitions)
     # Blacklisted helpers are automatically preserved as helper calls
@@ -82,62 +89,6 @@ class KDL3GameExportHandler(GenericGameExportHandler):
         "ChuChu": ("ChuChu", "ChuChu Spawn"),
         "Pitch": ("Pitch", "Pitch Spawn"),
     }
-
-    def get_world_data(self, world, multiworld, player):
-        """Override to add KDL3-specific world data like ability_map and level_names_inverse."""
-        world_data = super().get_world_data(world, multiworld, player)
-
-        # Export level_names_inverse for f-string resolution in can_reach_boss
-        world_data['level_names_inverse'] = self.LEVEL_NAMES_INVERSE
-
-        # Export ability_map as a dictionary mapping ability names to helper function names
-        try:
-            from worlds.kdl3 import rules as kdl3_rules
-            if hasattr(kdl3_rules, 'ability_map'):
-                ability_map = {}
-                for ability_name, func in kdl3_rules.ability_map.items():
-                    if callable(func):
-                        func_name = getattr(func, '__name__', None)
-                        ability_map[ability_name] = func_name if func_name else str(func)
-                    else:
-                        ability_map[ability_name] = str(func)
-                world_data['ability_map'] = ability_map
-        except Exception as e:
-            logger.warning(f"Could not export ability_map: {e}")
-
-        return world_data
-
-    def _resolve_f_string_value(self, value_node: Dict[str, Any]) -> Optional[Any]:
-        """Handle KDL3-specific subscript expressions in f-strings."""
-        result = super()._resolve_f_string_value(value_node)
-        if result is not None:
-            return result
-
-        # Handle subscript expressions like location_name.level_names_inverse[level]
-        if value_node.get('type') == 'subscript':
-            return self._evaluate_subscript(value_node)
-
-        return None
-
-    def _evaluate_subscript(self, node: Dict[str, Any]) -> Any:
-        """Evaluate a subscript expression node."""
-        if node.get('type') != 'subscript':
-            return None
-
-        value_node = node.get('value', {})
-        index_node = node.get('index', {})
-
-        if index_node.get('type') == 'constant':
-            index_value = index_node.get('value')
-        else:
-            return None
-
-        if value_node.get('type') == 'attribute':
-            attr_name = value_node.get('attr')
-            if attr_name == 'level_names_inverse':
-                if index_value in self.LEVEL_NAMES_INVERSE:
-                    return self.LEVEL_NAMES_INVERSE[index_value]
-        return None
 
     def expand_helper(self, helper_name: str, args=None) -> Optional[Dict[str, Any]]:
         """Expand complex KDL3 helpers with constant arguments into simplified rules."""

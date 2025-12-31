@@ -1,11 +1,18 @@
 """Bomb Rush Cyberfunk helper expander."""
 
-from typing import Dict, Any, Set
+from typing import Set
 from .generic import GenericGameExportHandler
 
 
 class BombRushCyberfunkGameExportHandler(GenericGameExportHandler):
-    """Export handler for Bomb Rush Cyberfunk."""
+    """Export handler for Bomb Rush Cyberfunk.
+
+    Simplifications:
+    - HELPERS_TO_EXPORT_BLACKLIST: Complex helpers that use loops/globals()
+      and require JavaScript implementations in the frontend.
+    - ACCUMULATOR_RULES + PROG_ITEMS_INIT: Declarative REP accumulation using
+      pattern matching (extracts numeric value from "N REP" item names).
+    """
 
     # Complex helpers that use loops/globals() and need JavaScript implementations
     # These are excluded from auto-export and automatically preserved as helper calls
@@ -23,21 +30,12 @@ class BombRushCyberfunkGameExportHandler(GenericGameExportHandler):
         'spots_xl_glitched',
     }
 
-    def get_progression_mapping(self, world) -> Dict[str, Any]:
-        """Return progression mapping for REP items.
+    # REP accumulator configuration: extracts numeric value from item names like "8 REP"
+    # and adds to the "rep" counter in prog_items (checked by the rep() helper)
+    ACCUMULATOR_RULES = [{
+        'pattern': r'^(\d+) REP$',
+        'extract_value': True,
+        'target': 'rep',
+    }]
 
-        In Bomb Rush Cyberfunk, REP items like "8 REP", "16 REP", etc. contribute
-        their numeric value to a virtual "rep" counter in state.prog_items.
-        """
-        return {
-            "rep": {
-                "type": "additive",
-                "items": {
-                    "8 REP": 8,
-                    "16 REP": 16,
-                    "24 REP": 24,
-                    "32 REP": 32,
-                    "48 REP": 48
-                }
-            }
-        }
+    PROG_ITEMS_INIT = {'rep': 0}

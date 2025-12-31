@@ -196,7 +196,10 @@ Some exporters may have methods that are never called due to inheritance. A syst
 
 | Purpose | Path |
 |---------|------|
-| Base exporter | `exporter/games/base.py` |
+| Base exporter | `exporter/games/base/handler.py` |
+| Helper discovery | `exporter/games/base/helper_discovery.py` |
+| World data export | `exporter/games/base/world_data.py` |
+| Rule expansion | `exporter/games/base/rule_expansion.py` |
 | Generic exporter | `exporter/games/generic.py` |
 | Game exporters | `exporter/games/*.py` |
 | Test script | `scripts/test/test-all-templates.py` |

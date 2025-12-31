@@ -40,6 +40,7 @@ class WorldGenerator:
         game_name: Optional[str] = None,
         force: bool = False,
         canonical_seed1: bool = False,
+        player_id: str = '1',
     ):
         """
         Initialize the generator.
@@ -50,11 +51,13 @@ class WorldGenerator:
             game_name: Override the game name (useful to avoid conflicts with existing worlds)
             force: If True, overwrite existing files
             canonical_seed1: If True, generated world will place items in original locations when seed=1
+            player_id: Player ID to extract from multiworld rules file (default: '1')
         """
         self.json_path = Path(json_path)
         self.game_name_override = game_name
         self.force = force
         self.canonical_seed1 = canonical_seed1
+        self.player_id = player_id
         self.data: Optional[ExtractedData] = None
         self._output_dir: Optional[Path] = Path(output_dir) if output_dir else None
 
@@ -80,7 +83,7 @@ class WorldGenerator:
         with open(self.json_path, 'r') as f:
             json_data = json.load(f)
 
-        self.data = extract_all(json_data)
+        self.data = extract_all(json_data, player_id=self.player_id)
 
         # Apply game name override if specified
         if self.game_name_override:
@@ -153,7 +156,7 @@ class WorldGenerator:
         worldgen_data = {}
 
         # Extract settings (options and internal flags only)
-        source_settings = source_json.get('world', {}).get('1', {})
+        source_settings = source_json.get('world', {}).get(self.player_id, {})
         if source_settings:
             # Keep only actual settings, not world attributes
             # Remove option_definitions - it's redundant since the exporter extracts
@@ -168,7 +171,7 @@ class WorldGenerator:
                 worldgen_data['settings'] = filtered_settings
 
         # Extract world_attributes (new format) or from legacy settings
-        source_world_attrs = source_json.get('world_attributes', {}).get('1', {})
+        source_world_attrs = source_json.get('world_attributes', {}).get(self.player_id, {})
         if source_world_attrs:
             worldgen_data['world_attributes'] = source_world_attrs
         elif source_settings:

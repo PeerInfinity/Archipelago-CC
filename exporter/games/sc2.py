@@ -1,6 +1,6 @@
 """Starcraft 2 game-specific export handler."""
 
-from typing import Dict, Any, Optional, Callable
+from typing import Dict, Any, Optional, Callable, List
 from .generic import GenericGameExportHandler
 import logging
 
@@ -43,9 +43,6 @@ except ImportError:
 class SC2GameExportHandler(GenericGameExportHandler):
     """Export handler for Starcraft 2 game-specific rules and items."""
 
-    # Module containing helper functions
-    HELPER_MODULES = ['worlds.sc2.rules']
-
     # Include 'logic' for SC2Logic method calls (e.g., logic.terran_early_tech())
     HELPER_OBJECT_NAMES = {'self', 'world', 'logic'}
 
@@ -70,6 +67,33 @@ class SC2GameExportHandler(GenericGameExportHandler):
         'terran_engine_of_destruction_requirement', 'engine_of_destruction_requirement',
         'terran_trouble_in_paradise_requirement', 'terran_media_blitz_requirement',
         'terran_gates_of_hell_requirement', 'terran_all_in_requirement',
+    }
+
+    # SC2Logic method names that may be accessed without parentheses (logic.attr instead of logic.attr())
+    # These should be converted to helper calls, not settings. Attribute access that's NOT in this
+    # set is assumed to be a settings attribute and resolved via _resolve_logic_attribute.
+    KNOWN_LOGIC_METHODS = {
+        # Terran helpers
+        'terran_common_unit', 'terran_early_tech', 'terran_air', 'terran_air_anti_air',
+        'terran_competent_ground_to_air', 'terran_competent_anti_air', 'terran_bio_heal',
+        'terran_basic_anti_air', 'terran_defense_rating', 'terran_competent_comp',
+        'terran_mobile_detector', 'terran_beats_protoss_deathball', 'terran_base_trasher',
+        'terran_can_rescue', 'terran_cliffjumper', 'terran_able_to_snipe_defiler',
+        'terran_respond_to_colony_infestations', 'terran_survives_rip_field',
+        'terran_sustainable_mech_heal', 'terran_mineral_dump',
+        # Protoss helpers
+        'protoss_common_unit', 'protoss_basic_anti_air', 'protoss_competent_anti_air',
+        'protoss_basic_splash', 'protoss_anti_armor_anti_air', 'protoss_anti_light_anti_air',
+        'protoss_can_attack_behind_chasm', 'protoss_has_blink', 'protoss_heal',
+        'protoss_stalker_upgrade', 'protoss_static_defense', 'protoss_fleet',
+        'protoss_competent_comp', 'protoss_hybrid_counter',
+        # Zerg helpers
+        'zerg_common_unit', 'zerg_competent_anti_air', 'zerg_basic_anti_air',
+        'zerg_competent_comp', 'zerg_competent_defense', 'zerg_pass_vents',
+        'spread_creep', 'morph_brood_lord', 'morph_impaler_or_lurker', 'morph_viper',
+        # Kerrigan and misc helpers
+        'basic_kerrigan', 'kerrigan_levels', 'two_kerrigan_actives',
+        'marine_medic_upgrade', 'can_nuke',
     }
 
     def override_rule_analysis(self, rule_func: Callable, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
@@ -282,135 +306,51 @@ class SC2GameExportHandler(GenericGameExportHandler):
         """
         Recursively expand rule functions with SC2-specific logic pattern recognition.
 
-        SC2 uses a logic object with helper methods (e.g., logic.terran_early_tech())
-        and attributes (e.g., logic.take_over_ai_allies, logic.advanced_tactics).
-        These need to be converted to helper calls or settings access.
+        SC2Logic uses both methods and computed properties. The base class already
+        handles logic.attr -> helper conversion (since 'logic' is in HELPER_OBJECT_NAMES).
+        This method handles self.attr patterns that appear in helper method bodies.
         """
         if not rule or not isinstance(rule, dict):
             return rule
 
-        # Check for the pattern: function_call with function being attribute access on "logic"
-        # This pattern looks like:
-        # {
-        #   "type": "function_call",
-        #   "function": {
-        #     "type": "attribute",
-        #     "object": {"type": "name", "name": "logic"},
-        #     "attr": "method_name"
-        #   },
-        #   "args": [...]
-        # }
-        if rule.get('type') == 'function_call':
-            function = rule.get('function', {})
-            if function.get('type') == 'attribute':
-                obj = function.get('object', {})
-                obj_name = obj.get('name') if obj.get('type') == 'name' else None
-                # Handle both 'logic' and 'self' as they're both used for SC2Logic methods
-                if obj_name in ('logic', 'self'):
-                    # This is a logic.method_name() or self.method_name() call - convert to helper
-                    method_name = function.get('attr')
-                    # Recursively process args first
-                    args = [self.expand_rule(arg, _depth + 1) for arg in rule.get('args', [])]
-
-                    logger.debug(f"[SC2] Converting {obj_name}.{method_name}() to helper call")
-
-                    # Register the helper usage for automatic discovery
-                    self.register_helper_usage(method_name)
-
-                    # Convert to helper format
-                    converted_rule = {
-                        'type': 'helper',
-                        'name': method_name,
-                        'args': args
-                    }
-
-                    # Continue expanding the converted rule
-                    return super().expand_rule(converted_rule, _depth)
-
-            # For other function_calls, recursively process args
-            if 'args' in rule:
-                rule['args'] = [self.expand_rule(arg, _depth + 1) for arg in rule['args']]
-
-        # Check for the pattern: attribute access on "logic" (not a function call)
-        # This pattern looks like:
-        # {
-        #   "type": "attribute",
-        #   "object": {"type": "name", "name": "logic"},
-        #   "attr": "attribute_name"
-        # }
-        # These could be either:
-        # 1. SC2Logic helper methods accessed without parentheses (should become helper calls)
-        # 2. SC2Logic instance attributes that map to world settings (should become self.attribute)
+        # Handle self.attr patterns in helper method bodies
+        # The base class excludes 'self' from helper conversion, so we handle it here
         if rule.get('type') == 'attribute':
             obj = rule.get('object', {})
-            obj_name = obj.get('name') if obj.get('type') == 'name' else None
-
-            # Handle both "logic.attr" and "self.attr" patterns
-            # - "logic" appears when accessing the logic object passed to rules
-            # - "self" appears in helper method bodies (methods on SC2Logic class)
-            if obj_name in ('logic', 'self'):
+            if obj.get('type') == 'name' and obj.get('name') == 'self':
                 attr_name = rule.get('attr')
+                # Convert to helper call - expand_helper will resolve settings to constants
+                converted_rule = {'type': 'helper', 'name': attr_name, 'args': []}
+                return super().expand_rule(converted_rule, _depth)
 
-                # List of known helper method names that might be accessed without parentheses
-                # These should be converted to helper calls, not settings
-                known_helpers = {
-                    'terran_common_unit', 'terran_early_tech', 'terran_air', 'terran_air_anti_air',
-                    'terran_competent_ground_to_air', 'terran_competent_anti_air', 'terran_bio_heal',
-                    'terran_basic_anti_air', 'terran_defense_rating', 'terran_competent_comp',
-                    'terran_mobile_detector', 'terran_beats_protoss_deathball', 'terran_base_trasher',
-                    'terran_can_rescue', 'terran_cliffjumper', 'terran_able_to_snipe_defiler',
-                    'terran_respond_to_colony_infestations', 'terran_survives_rip_field',
-                    'terran_sustainable_mech_heal', 'terran_mineral_dump',
-                    'protoss_common_unit', 'protoss_basic_anti_air', 'protoss_competent_anti_air',
-                    'protoss_basic_splash', 'protoss_anti_armor_anti_air', 'protoss_anti_light_anti_air',
-                    'protoss_can_attack_behind_chasm', 'protoss_has_blink', 'protoss_heal',
-                    'protoss_stalker_upgrade', 'protoss_static_defense', 'protoss_fleet',
-                    'protoss_competent_comp', 'protoss_hybrid_counter',
-                    'zerg_common_unit', 'zerg_competent_anti_air', 'zerg_basic_anti_air',
-                    'zerg_competent_comp', 'zerg_competent_defense', 'zerg_pass_vents',
-                    'spread_creep', 'morph_brood_lord', 'morph_impaler_or_lurker', 'morph_viper',
-                    'basic_kerrigan', 'kerrigan_levels', 'two_kerrigan_actives',
-                    'marine_medic_upgrade', 'can_nuke'
-                }
-
-                if attr_name in known_helpers:
-                    # This is a helper method accessed without parentheses
-                    # Convert to a helper call
-                    logger.debug(f"[SC2] Converting {obj_name}.{attr_name} to helper call (method accessed as attribute)")
-
-                    # Register the helper usage for automatic discovery
-                    self.register_helper_usage(attr_name)
-
-                    converted_rule = {
-                        'type': 'helper',
-                        'name': attr_name,
-                        'args': []
-                    }
-
-                    # Continue expanding the converted rule
-                    return super().expand_rule(converted_rule)
-                else:
-                    # This is a settings attribute - resolve to a constant value
-                    # This allows the world generator to use the value without game-specific code
-                    resolved_value = self._resolve_logic_attribute(attr_name)
-                    if resolved_value is not None:
-                        logger.debug(f"[SC2] Resolving {obj_name}.{attr_name} to constant: {resolved_value}")
-                        # Convert sets to lists for JSON serialization
-                        if isinstance(resolved_value, (set, frozenset)):
-                            resolved_value = sorted(list(resolved_value))
-                        return {'type': 'constant', 'value': resolved_value}
-                    else:
-                        # Fallback: keep as self.attribute_name if we can't resolve
-                        logger.debug(f"[SC2] Could not resolve {obj_name}.{attr_name}, keeping as self.{attr_name}")
-                        converted_rule = {
-                            'type': 'attribute',
-                            'object': {'type': 'name', 'name': 'self'},
-                            'attr': attr_name
-                        }
-                        return super().expand_rule(converted_rule)
-
-        # Let the base class handle standard recursion (compare, block, if_statement, etc.)
+        # Let the base class handle standard recursion
         return self._recursively_expand_rule_children(rule, _depth)
+
+    def expand_helper(self, helper_name: str, args: List[Any] = None) -> Optional[Dict[str, Any]]:
+        """
+        Expand helper functions, resolving SC2Logic properties to constants.
+
+        SC2Logic has both methods (like terran_common_unit) and computed properties
+        (like advanced_tactics). Methods stay as helper calls; properties are
+        resolved to constant values at export time.
+        """
+        # First check base class handling (CONSTANT_HELPER_EXPANSIONS, HELPER_TO_RULE_MAPPINGS)
+        base_result = super().expand_helper(helper_name, args)
+        if base_result:
+            return base_result
+
+        # If this is NOT a known logic method, try to resolve as a computed property
+        if helper_name not in self.KNOWN_LOGIC_METHODS:
+            resolved = self._resolve_logic_attribute(helper_name)
+            if resolved is not None:
+                logger.debug(f"[SC2] Resolving {helper_name} to constant: {resolved}")
+                # Convert sets to lists for JSON serialization
+                if isinstance(resolved, (set, frozenset)):
+                    resolved = sorted(list(resolved))
+                return {'type': 'constant', 'value': resolved}
+
+        # Otherwise, keep as helper call
+        return None
 
     def _resolve_logic_attribute(self, attr: str) -> Any:
         """

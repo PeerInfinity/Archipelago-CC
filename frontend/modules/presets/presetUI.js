@@ -145,8 +145,8 @@ export class PresetUI {
     let html = `
       <div class="preset-header">
         <h3>Select a Game Preset</h3>
-        <input type="file" id="json-file-input" accept=".json" style="display: none;" />
-        <button id="load-json-button" class="button" style="margin-left: 10px;">Load JSON File</button>
+        <input type="file" id="json-file-input" accept=".json,.archipelago" style="display: none;" />
+        <button id="load-json-button" class="button" style="margin-left: 10px;">Load File</button>
       </div>
       <div class="presets-container">
         <div class="game-row game-row-header">
@@ -465,27 +465,33 @@ export class PresetUI {
       jsonFileInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
         if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            try {
-              const jsonData = JSON.parse(e.target.result);
-              this.displayLoadedJsonFileDetails(jsonData, file.name);
-            } catch (err) {
-              log('error', 'Error parsing JSON file:', err);
+          // Check if file is an .archipelago file (zip format)
+          if (file.name.endsWith('.archipelago')) {
+            this.loadArchipelagoFile(file);
+          } else {
+            // Regular JSON file handling
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              try {
+                const jsonData = JSON.parse(e.target.result);
+                this.displayLoadedJsonFileDetails(jsonData, file.name);
+              } catch (err) {
+                log('error', 'Error parsing JSON file:', err);
+                eventBus.publish('ui:notification', {
+                  type: 'error',
+                  message: `Error parsing ${file.name}: ${err.message}`,
+                }, 'presets');
+              }
+            };
+            reader.onerror = (err) => {
+              log('error', 'Error reading file:', err);
               eventBus.publish('ui:notification', {
                 type: 'error',
-                message: `Error parsing ${file.name}: ${err.message}`,
+                message: `Error reading ${file.name}.`,
               }, 'presets');
-            }
-          };
-          reader.onerror = (err) => {
-            log('error', 'Error reading file:', err);
-            eventBus.publish('ui:notification', {
-              type: 'error',
-              message: `Error reading ${file.name}.`,
-            }, 'presets');
-          };
-          reader.readAsText(file);
+            };
+            reader.readAsText(file);
+          }
         }
       });
     }
@@ -625,6 +631,90 @@ export class PresetUI {
           </div>
         `;
       }
+    }
+  }
+
+  /**
+   * Loads JSZip library dynamically if not already loaded
+   * @returns {Promise<JSZip>} The JSZip constructor
+   */
+  async loadJSZip() {
+    if (window.JSZip) {
+      return window.JSZip;
+    }
+
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = './libs/jszip/jszip.min.js';
+      script.onload = () => {
+        if (window.JSZip) {
+          log('info', 'JSZip library loaded successfully');
+          resolve(window.JSZip);
+        } else {
+          reject(new Error('JSZip failed to initialize'));
+        }
+      };
+      script.onerror = () => {
+        reject(new Error('Failed to load JSZip library'));
+      };
+      document.head.appendChild(script);
+    });
+  }
+
+  /**
+   * Load and extract rules.json from an .archipelago file (zip format)
+   * @param {File} file - The .archipelago file to process
+   */
+  async loadArchipelagoFile(file) {
+    log('info', `Loading .archipelago file: ${file.name}`);
+
+    try {
+      // Load JSZip library
+      const JSZip = await this.loadJSZip();
+
+      // Read the file as ArrayBuffer
+      const arrayBuffer = await file.arrayBuffer();
+
+      // Load the zip content
+      const zip = await JSZip.loadAsync(arrayBuffer);
+
+      // Find the rules.json file in the archive
+      // It could be at the root or in a subdirectory, and may have different naming patterns
+      let rulesFile = null;
+      let rulesFileName = null;
+
+      // Search for files ending with _rules.json or rules.json
+      for (const [filename, zipEntry] of Object.entries(zip.files)) {
+        if (!zipEntry.dir && (filename.endsWith('_rules.json') || filename === 'rules.json')) {
+          rulesFile = zipEntry;
+          rulesFileName = filename;
+          log('info', `Found rules file in archive: ${filename}`);
+          break;
+        }
+      }
+
+      if (!rulesFile) {
+        // If no rules file found, list the contents for debugging
+        const fileList = Object.keys(zip.files).filter(f => !zip.files[f].dir);
+        log('warn', 'No rules.json file found in archive. Contents:', fileList);
+        throw new Error(`No rules.json file found in ${file.name}. Archive contains: ${fileList.join(', ')}`);
+      }
+
+      // Extract the rules.json content
+      const rulesContent = await rulesFile.async('string');
+      const jsonData = JSON.parse(rulesContent);
+
+      log('info', `Successfully extracted ${rulesFileName} from ${file.name}`);
+
+      // Process the extracted rules.json using existing method
+      this.displayLoadedJsonFileDetails(jsonData, `${file.name} → ${rulesFileName}`);
+
+    } catch (err) {
+      log('error', 'Error loading .archipelago file:', err);
+      eventBus.publish('ui:notification', {
+        type: 'error',
+        message: `Error loading ${file.name}: ${err.message}`,
+      }, 'presets');
     }
   }
 

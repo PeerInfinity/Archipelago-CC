@@ -283,6 +283,17 @@ class HelperDiscoveryMixin:
                     if helper_func is not None:
                         break
 
+                # Fallback: check if this is a method on the World class itself
+                # This handles games like Dark Souls 3 where helper methods like _can_get
+                # are defined on the World class in __init__.py (which is skipped by module discovery)
+                if helper_func is None and self.world is not None:
+                    if hasattr(self.world, helper_name):
+                        method = getattr(self.world, helper_name)
+                        if callable(method):
+                            # Get the underlying function from the bound method
+                            helper_func = method.__func__ if hasattr(method, '__func__') else method
+                            logger.debug(f"Found helper '{helper_name}' as method on World class")
+
                 # Check if we have a cached definition (from auto-preservation due to size)
                 cached_def = self.get_cached_helper(helper_name)
                 if cached_def is not None:
@@ -440,11 +451,14 @@ class HelperDiscoveryMixin:
 
         # Generate helpers from DICT_SUM_HELPERS configuration
         # These are helpers that sum values from item->value mappings
+        # DICT_SUM_HELPERS overrides existing definitions because:
+        # 1. The original helper may be too complex for frontend evaluation (loops, closures, etc.)
+        # 2. DICT_SUM_HELPERS specifically provides simplified, evaluable versions
+        # 3. The game exporter explicitly configures this to replace the complex version
         if hasattr(self, 'DICT_SUM_HELPERS') and self.DICT_SUM_HELPERS:
             for helper_name, mapping_name in self.DICT_SUM_HELPERS.items():
                 if helper_name in helper_definitions:
-                    logger.debug(f"Skipping DICT_SUM_HELPERS['{helper_name}'] - already defined")
-                    continue
+                    logger.debug(f"DICT_SUM_HELPERS['{helper_name}'] overriding existing definition")
 
                 helper_definitions[helper_name] = self._generate_dict_sum_helper(mapping_name)
                 logger.debug(f"Generated sum helper '{helper_name}' from DICT_SUM_HELPERS")
@@ -563,6 +577,38 @@ class HelperDiscoveryMixin:
                         'type': 'and',
                         'conditions': [{'type': 'item_check', 'item': item} for item in items]
                     }
+            return rule
+
+        # Handle state.can_reach_location(location, player) -> location_check
+        if rule_type == 'state_method' and rule.get('method') == 'can_reach_location':
+            args = rule.get('args', [])
+            if len(args) >= 1:
+                location_arg = args[0]
+                # Handle both constant and name (parameter reference) types
+                if isinstance(location_arg, dict):
+                    if location_arg.get('type') == 'constant':
+                        return {'type': 'location_check', 'location': location_arg.get('value')}
+                    elif location_arg.get('type') == 'name':
+                        # Parameter reference - keep as location_check with the name node
+                        return {'type': 'location_check', 'location': location_arg}
+                elif isinstance(location_arg, str):
+                    return {'type': 'location_check', 'location': location_arg}
+            return rule
+
+        # Handle state.can_reach_entrance(entrance, player) -> can_reach_entrance
+        if rule_type == 'state_method' and rule.get('method') == 'can_reach_entrance':
+            args = rule.get('args', [])
+            if len(args) >= 1:
+                entrance_arg = args[0]
+                # Handle both constant and complex types (like f_string)
+                if isinstance(entrance_arg, dict):
+                    if entrance_arg.get('type') == 'constant':
+                        return {'type': 'can_reach_entrance', 'entrance': entrance_arg.get('value')}
+                    elif entrance_arg.get('type') in ('name', 'f_string'):
+                        # Parameter reference or f-string - keep the node
+                        return {'type': 'can_reach_entrance', 'entrance': entrance_arg}
+                elif isinstance(entrance_arg, str):
+                    return {'type': 'can_reach_entrance', 'entrance': entrance_arg}
             return rule
 
         # Recursively clean conditions

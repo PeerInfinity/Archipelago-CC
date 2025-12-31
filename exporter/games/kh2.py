@@ -11,9 +11,7 @@ class KH2GameExportHandler(GenericGameExportHandler):
     """KH2-specific expander that handles Kingdom Hearts 2 rules."""
 
     # GenericGameExportHandler already has AUTO_EXPORT_DISCOVERED_HELPERS = True
-
-    # Module paths containing helper functions
-    HELPER_MODULES = ['worlds.kh2.Rules']
+    # HELPER_MODULES is auto-discovered by AUTO_DISCOVER_WORLD_HELPER_MODULES = True
 
     # Module paths containing item name constants and other resolvable variables
     ITEM_NAME_MODULES = ['worlds.kh2.Names', 'worlds.kh2.Logic', 'worlds.kh2.Items']
@@ -68,6 +66,14 @@ class KH2GameExportHandler(GenericGameExportHandler):
         'get_old_pete_rules': True,
         'get_oogie_rules': True,
     }
+
+    # Helper to rule type mappings - helpers that map directly to standard rule types
+    # kh2_can_reach(loc) checks if a location is reachable (region + access rule)
+    # location_check uses isLocationAccessible which checks both region reachability AND access rule
+    HELPER_TO_RULE_MAPPINGS = {
+        'kh2_can_reach': {'type': 'location_check', 'field': 'location'},
+    }
+
 
     def prepare_closure_vars(self, rule_func, closure_vars: Dict[str, Any]) -> Dict[str, Any]:
         """Inject KH2 module-level data structures into closure_vars for helper analysis.
@@ -350,16 +356,7 @@ class KH2GameExportHandler(GenericGameExportHandler):
                 'if_false': no_ld_check
             }
 
-        # Handle kh2_can_reach - convert to location_check
-        # kh2_can_reach(loc, state) checks if a location is reachable (region + access rule)
-        # location_check uses isLocationAccessible which checks both region reachability AND access rule
-        if helper_name == 'kh2_can_reach' and args and len(args) >= 1:
-            loc_arg = args[0]
-            # If loc_arg is a constant string, use it directly
-            if isinstance(loc_arg, dict) and loc_arg.get('type') == 'constant':
-                return {'type': 'location_check', 'location': {'type': 'constant', 'value': loc_arg.get('value')}}
-            # Otherwise, keep it as a dynamic reference
-            return {'type': 'location_check', 'location': loc_arg}
+        # kh2_can_reach is now handled by HELPER_TO_RULE_MAPPINGS (base class)
 
         # Handle kh2_can_reach_any - convert to OR of location_checks
         if helper_name == 'kh2_can_reach_any' and args and len(args) >= 1:

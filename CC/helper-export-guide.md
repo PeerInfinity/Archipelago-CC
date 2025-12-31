@@ -37,16 +37,14 @@ Replace `shapez.yaml` with the template file for your game. The generated `rules
 
 ## Configuring a Game Exporter
 
-### Step 1: Enable Automatic Export
+### Step 1: Verify Automatic Export Is Enabled
 
-Set `AUTO_EXPORT_DISCOVERED_HELPERS = True` to export discovered helpers:
+`GenericGameExportHandler` enables automatic helper export by default. You only need to explicitly set this if inheriting from `BaseGameExportHandler`:
 
 ```python
 class MyGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'mygame'
-
-    # Enable automatic helper export (defaults to False)
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS = True  # Already the default!
 ```
 
 Module paths (`HELPER_MODULES` and `ITEM_NAME_MODULES`) are automatically detected during rule analysis. When the analyzer encounters a helper function call, it extracts the module path from the function object. You only need to specify these manually if helpers are defined in modules not referenced during normal rule analysis.
@@ -311,26 +309,36 @@ Note: `HELPER_MODULES` and `ITEM_NAME_MODULES` are omitted because they are auto
 
 ## Default Settings
 
-The base class (`BaseGameExportHandler`) defines these defaults:
+`GenericGameExportHandler` (the recommended base class) enables most auto-discovery by default:
 
 ```python
+# Auto-export is ENABLED by default in GenericGameExportHandler
+AUTO_EXPORT_DISCOVERED_HELPERS: bool = True   # Helpers exported automatically
+
+# Auto-discovery is ENABLED by default
+AUTO_DISCOVER_WORLD_HELPER_MODULES: bool = True  # Find helpers in world/*.py
+AUTO_DISCOVER_WORLD_ATTRIBUTES: bool = True      # Export world attributes
+AUTO_DISCOVER_REGION_ATTRIBUTES: bool = True     # Export region attributes
+AUTO_DISCOVER_LOCATION_ATTRIBUTES: bool = True   # Export location attributes
+
 # Module paths - empty by default (auto-detected during analysis)
-HELPER_MODULES: List[str] = []
-ITEM_NAME_MODULES: List[str] = []
+HELPER_MODULES: List[str] = []     # Auto-discovered from world directory
+ITEM_NAME_MODULES: List[str] = []  # Only needed for ITEMS.sword style constants
 
-# Auto-export configuration
-AUTO_EXPORT_DISCOVERED_HELPERS: bool = False  # Must enable explicitly
-HELPERS_TO_EXPORT_WHITELIST: Set[str] = set()  # Manual whitelist (always exported)
-HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()  # Manual blacklist (never exported)
+# Manual control (for edge cases)
+HELPERS_TO_EXPORT_WHITELIST: Set[str] = set()  # Always export these
+HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()  # Never export these (too complex)
+HELPERS_TO_PRESERVE: Set[str] = set()          # Don't inline during analysis
 
-# Helper preservation
-HELPERS_TO_PRESERVE: Set[str] = set()        # Preserve as helper calls
-AUTO_PRESERVE_LARGE_HELPERS: bool = True     # Auto-preserve large helpers (default: True)
-HELPER_INLINE_THRESHOLD: int = 0             # Node count threshold
-
-# Computed settings - game-specific option mappings
-COMPUTED_SETTINGS: Dict[str, Callable] = {}
+# World attribute export (alternative to overriding get_world_data)
+WORLD_ATTRIBUTES: Dict[str, Callable] = {}     # {name: lambda world, mw, player: value}
 ```
+
+**Note:** Most games don't need to configure anything - auto-discovery handles:
+- All world options (`world.options.*`) → exported automatically
+- Item data (names, IDs, classifications) → discovered automatically
+- Helper functions → discovered and exported automatically
+- World/region/location attributes → discovered automatically
 
 ## Success Stories
 
@@ -380,7 +388,11 @@ Add the module containing item constants to `ITEM_NAME_MODULES`.
 
 ## File Locations
 
-- **Base handler**: `exporter/games/base.py` - Core helper export infrastructure
+- **Base handler**: `exporter/games/base/handler.py` - Core export infrastructure
+- **Helper discovery**: `exporter/games/base/helper_discovery.py` - Auto-discovery logic
+- **World data**: `exporter/games/base/world_data.py` - World/option export
+- **Rule expansion**: `exporter/games/base/rule_expansion.py` - Rule transformation
+- **Generic handler**: `exporter/games/generic.py` - Recommended base class
 - **Game exporter**: `exporter/games/<game>.py` - Game-specific configuration
 - **Frontend helpers**: `frontend/modules/shared/gameLogic/<game>/helpers.js`
 - **Rule engine**: `frontend/modules/shared/ruleEngine.js` - Helper definition lookup

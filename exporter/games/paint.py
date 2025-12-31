@@ -18,6 +18,10 @@ class PaintGameExportHandler(GenericGameExportHandler):
     Each location has an access rule that compares paint percentage to a threshold derived
     from the location name (e.g., "Similarity: 1.0%").
 
+    The base exporter's cache now includes rule_target_name, so Paint's shared class method
+    (PaintLocation.access_rule) gets unique cache entries per location name. This allows
+    override_rule_analysis to work correctly without needing postprocess_regions.
+
     For WorldGen worlds, rule overrides are skipped since they have their own generated rules.
     """
 
@@ -58,34 +62,3 @@ class PaintGameExportHandler(GenericGameExportHandler):
             'op': '>=',
             'right': {'type': 'constant', 'value': threshold_percent}
         }
-
-    def postprocess_regions(self, multiworld, player):
-        """Set unique access_rule lambdas on each location to ensure proper cache keys.
-
-        The rule analysis cache uses function identity (id(rule_func)) as part of the key.
-        Paint's original rules share the same lambda across all locations, causing cache
-        collisions. This method creates unique lambdas for each location to ensure each
-        gets its own cache entry and thus its own override_rule_analysis call.
-        """
-        if self.is_worldgen_world():
-            return
-
-        try:
-            from worlds.paint.rules import calculate_paint_percent_available
-        except ImportError:
-            logger.error("Paint: Could not import calculate_paint_percent_available")
-            return
-
-        location_count = 0
-        for region in multiworld.get_regions(player):
-            for location in region.locations:
-                if location.name and location.name.startswith("Similarity: "):
-                    match = _SIMILARITY_PATTERN.match(location.name)
-                    if match:
-                        threshold = float(match.group(1))
-                        # Capture player and threshold in lambda defaults for unique cache keys
-                        location.access_rule = lambda state, p=player, t=threshold: \
-                            calculate_paint_percent_available(state, state.multiworld.worlds[p], p) >= t
-                        location_count += 1
-
-        logger.info(f"Paint: Set unique access rules on {location_count} locations")

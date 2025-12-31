@@ -1,11 +1,13 @@
 """Links Awakening DX game-specific export handler.
 
-This exporter handles LADXR-specific data structures:
+This exporter handles LADXR (Links Awakening DX Randomizer) specific data structures:
 - LADXR condition objects (AND, OR, COUNT, FOUND, COUNTS)
 - LADXR item name mapping to Archipelago item names
 - LADXR entrance objects with condition attributes
+- Rupee accumulator for tracking total rupees collected
 
-Most of this code is truly game-specific and cannot be factored out to the base exporter.
+The LADXR condition handling is truly game-specific due to LADXR's custom
+condition class hierarchy with private attributes accessed via name mangling.
 """
 
 from typing import Dict, Any, Optional
@@ -69,10 +71,11 @@ class LADXGameExportHandler(GenericGameExportHandler):
 
                 # Case 2: String = item or event name
                 elif isinstance(condition, str):
-                    logger.debug(f"LADX exit '{exit_name}' requires item/event: {condition}")
+                    mapped_item = self._map_ladxr_item_name(condition)
+                    logger.debug(f"LADX exit '{exit_name}' requires item/event: {condition} -> {mapped_item}")
                     return {
                         'type': 'item_check',
-                        'item': condition
+                        'item': mapped_item
                     }
 
                 # Case 3: LADXR condition object (AND/OR) - convert to rules
@@ -101,7 +104,7 @@ class LADXGameExportHandler(GenericGameExportHandler):
             items = getattr(condition, f'_{class_name}__items', [])
             children = getattr(condition, f'_{class_name}__children', [])
 
-            conditions = [self._parse_ladxr_item(item) for item in items]
+            conditions = [{'type': 'item_check', 'item': self._map_ladxr_item_name(item)} for item in items]
             for child in children:
                 child_rule = self._convert_ladxr_condition_to_rule(child)
                 if child_rule:
@@ -164,100 +167,3 @@ class LADXGameExportHandler(GenericGameExportHandler):
         # Use the canonical mapping from the world
         return ladxr_item_to_la_item_name.get(item_str, item_str)
 
-    def _parse_ladxr_item(self, item_str: str) -> Dict[str, Any]:
-        """Parse a single LADXR item string into an item_check rule."""
-        mapped_name = self._map_ladxr_item_name(item_str)
-        return {
-            'type': 'item_check',
-            'item': mapped_name
-        }
-
-    def postprocess_entrance_rule(self, rule: Dict[str, Any], entrance_name: str = None) -> Dict[str, Any]:
-        """
-        Post-process entrance rules to handle LADX's isinstance pattern.
-
-        LADX entrances use isinstance(self.condition, str) to check if the condition
-        is a simple string vs a complex condition object. We need to simplify this
-        for JavaScript by removing the isinstance check.
-        """
-        if not rule:
-            return rule
-
-        # Detect the isinstance pattern used in LADX entrance access_rule methods
-        if (rule.get('type') == 'conditional' and
-            rule.get('test', {}).get('type') == 'helper' and
-            rule.get('test', {}).get('name') == 'isinstance'):
-
-            args = rule.get('test', {}).get('args', [])
-            if len(args) >= 2 and args[1].get('type') == 'name' and args[1].get('name') == 'str':
-                # This is checking isinstance(something, str)
-                first_arg = args[0]
-
-                # Case 1: isinstance(self.condition, str) - can't resolve at export time
-                if (first_arg.get('type') == 'attribute' and
-                    first_arg.get('attr') == 'condition'):
-                    logger.debug(f"LADX entrance '{entrance_name}' uses isinstance(self.condition, str), treating as always accessible")
-                    return None
-
-                # Case 2: isinstance(constant, str) - can evaluate at export time
-                elif first_arg.get('type') == 'constant':
-                    # The constant has been resolved - if it's a string, create an item check
-                    constant_value = first_arg.get('value')
-                    if isinstance(constant_value, str) and constant_value:
-                        parsed_rule = self._parse_ladxr_item(constant_value)
-                        logger.debug(f"LADX entrance '{entrance_name}' parsed item condition: {constant_value}")
-                        return parsed_rule
-
-                    # If not a string or empty, fall back to the if_true branch
-                    if_true = rule.get('if_true')
-                    logger.debug(f"LADX entrance '{entrance_name}' uses isinstance on constant, simplifying to if_true branch")
-                    return self._postprocess_rule_recursive(if_true) if if_true else None
-
-        # For other rule types, continue with standard recursive postprocessing
-        return self._postprocess_rule_recursive(rule)
-
-    def _postprocess_rule_recursive(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Recursively postprocess nested rule structures."""
-        if not rule or not isinstance(rule, dict):
-            return rule
-
-        rule_type = rule.get('type')
-
-        # Map LADXR item names to Archipelago names in item_check rules
-        if rule_type == 'item_check' and 'item' in rule:
-            item_name = rule['item']
-            if isinstance(item_name, str):
-                mapped_name = self._map_ladxr_item_name(item_name)
-                if mapped_name != item_name:
-                    logger.debug(f"Mapped item name: {item_name} -> {mapped_name}")
-                    rule['item'] = mapped_name
-
-        # Process nested conditions
-        if rule_type in ['and', 'or'] and 'conditions' in rule:
-            rule['conditions'] = [
-                self._postprocess_rule_recursive(cond)
-                for cond in rule['conditions']
-            ]
-        elif rule_type == 'not' and 'condition' in rule:
-            rule['condition'] = self._postprocess_rule_recursive(rule['condition'])
-        elif rule_type == 'conditional':
-            if 'test' in rule:
-                rule['test'] = self._postprocess_rule_recursive(rule['test'])
-            if 'if_true' in rule:
-                rule['if_true'] = self._postprocess_rule_recursive(rule['if_true'])
-            if 'if_false' in rule:
-                rule['if_false'] = self._postprocess_rule_recursive(rule['if_false'])
-
-        return rule
-
-    def get_game_info(self, world):
-        """Export LADX game info with worldgen-aware prog_items_init priority."""
-        game_info = super().get_game_info(world)
-
-        # Override prog_items_init priority for worldgen support:
-        # World attribute takes precedence over class attribute (opposite of base class)
-        # This allows worldgen worlds to precollect RUPEES for rule evaluation
-        if hasattr(world, 'prog_items_init') and world.prog_items_init:
-            game_info['prog_items_init'] = dict(world.prog_items_init)
-
-        return game_info

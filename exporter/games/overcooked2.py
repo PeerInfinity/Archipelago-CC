@@ -13,7 +13,7 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
     - Level star requirements with weighted sum calculations
     - Ramp tricks logic for alternate paths
     """
-    # Preserve these helpers during rule analysis - they're expanded in expand_rule
+    # Preserve these helpers during rule analysis - they're expanded in expand_helper
     HELPERS_TO_PRESERVE = {'has_requirements_for_level_star', 'has_requirements_for_level_access'}
 
     # Constant helper expansions - helpers that always return a constant value
@@ -123,32 +123,37 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
         return None
 
     def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Post-process analyzed rules to expand Overcooked! 2-specific helpers."""
+        """Post-process analyzed rules to expand helpers.
+
+        This is needed because override_rule_analysis results are passed through
+        postprocess_rule for expansion. The base class expand_rule will call
+        our expand_helper to handle game-specific helpers.
+        """
         if not rule:
             return rule
         return self.expand_rule(rule)
 
-    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
-        """Recursively expand rule functions with Overcooked! 2-specific handling."""
-        if not rule:
-            return rule
+    def expand_helper(self, helper_name: str, args: List[Any] = None) -> Dict[str, Any]:
+        """Expand Overcooked! 2-specific helpers.
 
-        rule_type = rule.get('type')
+        The base class expand_rule calls expand_helper for helper nodes and recursively
+        expands the result, so we don't need a custom expand_rule override.
+        """
+        # Check base class expansions first (CONSTANT_HELPER_EXPANSIONS)
+        result = super().expand_helper(helper_name, args)
+        if result:
+            return result
 
-        # Handle helper functions
-        if rule_type == 'helper':
-            helper_name = rule.get('name', '')
+        # Game-specific helper expansions
+        if helper_name == 'has_requirements_for_level_star':
+            rule = {'type': 'helper', 'name': helper_name, 'args': args or []}
+            return self._expand_level_star_rule(rule)
 
-            # Expand has_requirements_for_level_star into explicit rules
-            if helper_name == 'has_requirements_for_level_star':
-                return self._expand_level_star_rule(rule)
+        if helper_name == 'has_requirements_for_level_access':
+            rule = {'type': 'helper', 'name': helper_name, 'args': args or []}
+            return self._expand_level_access_rule(rule)
 
-            # Expand has_requirements_for_level_access into explicit rules
-            if helper_name == 'has_requirements_for_level_access':
-                return self._expand_level_access_rule(rule)
-
-        # Standard recursive processing
-        return super().expand_rule(rule, _depth)
+        return None
 
     def _expand_level_access_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Expand has_requirements_for_level_access helper into explicit rules.
@@ -354,33 +359,11 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
 
             elif overworld_region == OverworldRegion.mars_shelf:
                 # Requires tip of the map access first
-                base_conditions = [
-                    # Can reach tip of the map via (5-1 Complete + Purple Ramp)
-                    {
-                        'type': 'and',
-                        'conditions': [
-                            {'type': 'item_check', 'item': '5-1 Level Complete'},
-                            {'type': 'item_check', 'item': 'Purple Ramp'}
-                        ]
-                    }
-                ]
-
-                if allow_tricks:
-                    # With tricks, just reaching tip of the map is enough
-                    return {'type': 'or', 'conditions': base_conditions}
-                else:
-                    # Without tricks, need 6-1 Complete + Red Ramp in addition to tip access
-                    return {
-                        'type': 'and',
-                        'conditions': base_conditions + [
-                            {'type': 'item_check', 'item': '6-1 Level Complete'},
-                            {'type': 'item_check', 'item': 'Red Ramp'}
-                        ]
-                    }
+                return self._build_mars_shelf_access_rule(allow_tricks)
 
             elif overworld_region == OverworldRegion.kevin_eight_island:
                 # Requires mars shelf access - same as mars shelf rules
-                return self._build_overworld_access_rule_for_mars_shelf(allow_tricks)
+                return self._build_mars_shelf_access_rule(allow_tricks)
 
             else:
                 logger.warning(f"Unhandled overworld region {overworld_region} for level {level_name}")
@@ -390,8 +373,8 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
             logger.error(f"Error building overworld access rule for {level_name}: {e}", exc_info=True)
             return None
 
-    def _build_overworld_access_rule_for_mars_shelf(self, allow_tricks: bool) -> Dict[str, Any]:
-        """Build access rule specifically for mars shelf / kevin eight island."""
+    def _build_mars_shelf_access_rule(self, allow_tricks: bool) -> Dict[str, Any]:
+        """Build access rule for mars shelf / kevin eight island regions."""
         base_conditions = [
             {
                 'type': 'and',

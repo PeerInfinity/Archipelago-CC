@@ -2,13 +2,32 @@
 
 Terraria uses a custom DSV (Rules.dsv) rule system with special Condition objects.
 This exporter converts those conditions to the standard JSON rule format.
+
+Note: This exporter cannot be simplified using standard base class tools because:
+1. Terraria uses a completely custom rule system (DSV/Condition objects) that requires
+   specialized conversion, unlike standard worlds that use Python lambdas.
+2. The override_rule_analysis hook bypasses standard rule analysis entirely.
+3. The helper creation methods produce specific rule structures needed for Terraria's
+   unique game mechanics (NPCs, pickaxes, hammers, mech bosses, minions).
 """
 
-from typing import Dict, Any, List, Union
+from typing import Dict, Any, Callable, List, Union
 from .generic import GenericGameExportHandler
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+def _get_armor_minions(w, m, p) -> Dict[str, int]:
+    """Get armor minion data from Terraria Checks module."""
+    from worlds.terraria.Checks import armor_minions
+    return dict(armor_minions)
+
+
+def _get_accessory_minions(w, m, p) -> Dict[str, int]:
+    """Get accessory minion data from Terraria Checks module."""
+    from worlds.terraria.Checks import accessory_minions
+    return dict(accessory_minions)
 
 
 class TerrariaGameExportHandler(GenericGameExportHandler):
@@ -22,13 +41,19 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
     falls back to options.* so no COMPUTED_SETTINGS are needed.
     """
 
+    # Export armor and accessory minion data for the has_minions helper
+    WORLD_ATTRIBUTES: Dict[str, Callable] = {
+        'armor_minions': _get_armor_minions,
+        'accessory_minions': _get_accessory_minions,
+    }
+
     def __init__(self):
         super().__init__()
         # Import Terraria-specific constants and types
         from worlds.terraria.Checks import (
             COND_ITEM, COND_LOC, COND_FN, COND_GROUP,
             rules, rule_indices, npcs, pickaxes, hammers,
-            mech_bosses, armor_minions, accessory_minions
+            mech_bosses
         )
 
         self.COND_ITEM = COND_ITEM
@@ -41,8 +66,6 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
         self.pickaxes = pickaxes
         self.hammers = hammers
         self.mech_bosses = mech_bosses
-        self.armor_minions = armor_minions
-        self.accessory_minions = accessory_minions
 
     def override_rule_analysis(self, rule_func, rule_target_name: str = None) -> Dict[str, Any]:
         """Override rule analysis for Terraria locations.
@@ -167,29 +190,19 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
             fn_arg = condition.argument
 
             if fn_name == "npc":
-                # Check if player has at least N NPCs
-                rule = self._create_npc_check(fn_arg)
-            elif fn_name == "calamity":
-                # Check for calamity setting
-                rule = self._create_setting_check("calamity")
-            elif fn_name == "grindy":
-                # Check for grindy achievements setting
-                rule = self._create_setting_check("grindy_achievements")
-            elif fn_name == "getfixedboi":
-                # Check for getfixedboi setting
-                rule = self._create_setting_check("getfixedboi")
-            elif fn_name == "pickaxe":
-                # Check if player has a pickaxe with at least N power
-                rule = self._create_pickaxe_check(fn_arg)
-            elif fn_name == "hammer":
-                # Check if player has a hammer with at least N power
-                rule = self._create_hammer_check(fn_arg)
+                rule = self._create_list_unique_check(self.npcs, fn_arg)
             elif fn_name == "mech_boss":
-                # Check if player has defeated at least N mechanical bosses
-                rule = self._create_mech_boss_check(fn_arg)
+                rule = self._create_list_unique_check(self.mech_bosses, fn_arg)
+            elif fn_name == "pickaxe":
+                rule = self._create_tool_check(self.pickaxes, fn_arg)
+            elif fn_name == "hammer":
+                rule = self._create_tool_check(self.hammers, fn_arg)
             elif fn_name == "minions":
-                # Check if player has at least N minion slots
                 rule = self._create_minion_check(fn_arg)
+            elif fn_name in ("calamity", "grindy", "getfixedboi"):
+                # Map function names to their corresponding setting names
+                setting_map = {"grindy": "grindy_achievements"}
+                rule = {'type': 'setting_value', 'setting': setting_map.get(fn_name, fn_name)}
             else:
                 logger.error(f"Unknown function: {fn_name}")
                 rule = {'type': 'constant', 'value': False}
@@ -229,80 +242,38 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
                 return rule.flags.get("Item") or f"Post-{condition_name}"
         return condition_name
 
-    def _create_npc_check(self, required_count: int) -> Dict[str, Any]:
-        """Create a rule to check if player has at least N NPCs."""
-        # Use built-in has_from_list_unique state method
-        return {
-            'type': 'state_method',
-            'method': 'has_from_list_unique',
-            'args': [
-                list(self.npcs),
-                required_count
-            ]
-        }
+    def _create_list_unique_check(self, item_list: List[str], required_count: int) -> Dict[str, Any]:
+        """Create a rule to check if player has at least N unique items from a list.
 
-    def _create_setting_check(self, setting_name: str) -> Dict[str, Any]:
-        """Create a rule to check a game setting.
-
-        Uses 'setting_value' type rule which retrieves the setting from the
-        exported options. The setting must be exported via the standard options
-        system or COMPUTED_SETTINGS.
+        Uses the built-in has_from_list_unique state method.
         """
-        return {'type': 'setting_value', 'setting': setting_name}
-
-    def _create_pickaxe_check(self, required_power: int) -> Dict[str, Any]:
-        """Create a rule to check if player has a pickaxe with at least N power."""
-        # Create OR condition for all pickaxes with sufficient power
-        valid_pickaxes = [
-            name for name, power in self.pickaxes.items()
-            if power >= required_power
-        ]
-
-        if not valid_pickaxes:
-            return {'type': 'constant', 'value': False}
-
-        if len(valid_pickaxes) == 1:
-            return {'type': 'item_check', 'item': valid_pickaxes[0]}
-
-        return {
-            'type': 'or',
-            'conditions': [
-                {'type': 'item_check', 'item': name}
-                for name in valid_pickaxes
-            ]
-        }
-
-    def _create_hammer_check(self, required_power: int) -> Dict[str, Any]:
-        """Create a rule to check if player has a hammer with at least N power."""
-        # Create OR condition for all hammers with sufficient power
-        valid_hammers = [
-            name for name, power in self.hammers.items()
-            if power >= required_power
-        ]
-
-        if not valid_hammers:
-            return {'type': 'constant', 'value': False}
-
-        if len(valid_hammers) == 1:
-            return {'type': 'item_check', 'item': valid_hammers[0]}
-
-        return {
-            'type': 'or',
-            'conditions': [
-                {'type': 'item_check', 'item': name}
-                for name in valid_hammers
-            ]
-        }
-
-    def _create_mech_boss_check(self, required_count: int) -> Dict[str, Any]:
-        """Create a rule to check if player has defeated at least N mechanical bosses."""
-        # Use built-in has_from_list_unique state method
         return {
             'type': 'state_method',
             'method': 'has_from_list_unique',
-            'args': [
-                self.mech_bosses,
-                required_count
+            'args': [list(item_list), required_count]
+        }
+
+    def _create_tool_check(self, tool_dict: Dict[str, int], required_power: int) -> Dict[str, Any]:
+        """Create a rule to check if player has a tool with at least N power.
+
+        Works for pickaxes, hammers, or any tool with a power value.
+        """
+        valid_tools = [
+            name for name, power in tool_dict.items()
+            if power >= required_power
+        ]
+
+        if not valid_tools:
+            return {'type': 'constant', 'value': False}
+
+        if len(valid_tools) == 1:
+            return {'type': 'item_check', 'item': valid_tools[0]}
+
+        return {
+            'type': 'or',
+            'conditions': [
+                {'type': 'item_check', 'item': name}
+                for name in valid_tools
             ]
         }
 
@@ -321,18 +292,6 @@ class TerrariaGameExportHandler(GenericGameExportHandler):
                 {'type': 'constant', 'value': required_count}
             ]
         }
-
-    def get_world_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Export Terraria-specific world data including minion equipment data."""
-        world_data = super().get_world_data(world, multiworld, player)
-
-        # Export armor minion data for has_minions helper
-        world_data['armor_minions'] = dict(self.armor_minions)
-
-        # Export accessory minion data for has_minions helper
-        world_data['accessory_minions'] = dict(self.accessory_minions)
-
-        return world_data
 
     def get_helper_definitions(self, world) -> Dict[str, Any]:
         """Define computed helpers for Terraria.
