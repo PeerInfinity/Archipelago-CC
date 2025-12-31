@@ -14,6 +14,7 @@ Options:
                         - canonical_placements section
                         - locked flags on locations
                         - item placements (item.name, item.advancement)
+                        - randomize_items option (WorldGen-specific)
 
 Example:
     python scripts/test/compare_rules_json.py \\
@@ -105,6 +106,7 @@ def is_canonical_difference(path: str) -> bool:
     - locked flags on locations (set by canonical placements)
     - item placements at locations (item.name, item.advancement, item.player)
     - item_groups (item group assignments)
+    - randomize_items option (WorldGen-specific, controls canonical placement)
     """
     # canonical_placements section
     if 'canonical_placements' in path:
@@ -120,6 +122,11 @@ def is_canonical_difference(path: str) -> bool:
 
     # Item groups
     if 'item_groups' in path:
+        return True
+
+    # randomize_items option (WorldGen-specific for canonical placement support)
+    # Matches: world.1.options.randomize_items, world.1.option_definitions.randomize_items
+    if 'randomize_items' in path:
         return True
 
     return False

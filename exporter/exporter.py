@@ -1626,6 +1626,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             raw_address = getattr(location, 'address', None)
                             location_id = raw_address if isinstance(raw_address, int) else None
 
+                            # Determine if this is an event location
+                            # Event locations have event=True or address=None
+                            is_event = getattr(location, 'event', False) or location_id is None
+
                             location_data = {
                                 'name': location_name,
                                 'id': location_id,  # Use actual location address (None for events or non-int addresses)
@@ -1634,6 +1638,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                 'item': None,
                                 'locked': getattr(location, 'locked', False)  # True if item was placed via place_locked_item
                             }
+
+                            # Only include event flag if True (to reduce JSON size)
+                            if is_event:
+                                location_data['event'] = True
 
                             # Only include progress_type if not DEFAULT
                             if progress_type_str:
