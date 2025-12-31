@@ -7,14 +7,21 @@ import sys
 from pathlib import Path
 
 
-def run_template_test(template_file, seed=1):
+def run_template_test(template_file, seed=1, stream_output=True):
     """Run the template test for a specific template file."""
-    print(f"Running template test for: {template_file}")
+    print(f"Running template test for: {template_file} (seed {seed})")
     try:
-        result = subprocess.run(
-            ['python', 'scripts/test/test-all-templates.py', '--include-list', template_file, '--seed', str(seed)],
-            capture_output=True, text=True, check=False
-        )
+        if stream_output:
+            # Stream output so user can see progress
+            result = subprocess.run(
+                ['python', 'scripts/test/test-all-templates.py', '--include-list', template_file, '--seed', str(seed)],
+                stdout=None, stderr=None, check=False
+            )
+        else:
+            result = subprocess.run(
+                ['python', 'scripts/test/test-all-templates.py', '--include-list', template_file, '--seed', str(seed)],
+                capture_output=True, text=True, check=False
+            )
         return result.returncode == 0
     except Exception as e:
         print(f"Error running template test: {e}", file=sys.stderr)
@@ -100,11 +107,14 @@ def run_all_promptfiles(project_root, script_path=None):
 
     for mode_args, output_filename in modes:
         output_file = prompts_dir / output_filename
-        print(f"Running mode: {' '.join(mode_args)}...")
+        print(f"\n{'='*60}")
+        print(f"Running mode: {' '.join(mode_args)}")
+        print(f"{'='*60}")
 
-        # Run the script with --promptfile and capture the output
-        cmd = ['python', str(script_path), '--promptfile'] + mode_args
-        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        # Run the script with --promptfile and --loud to show progress
+        # Stream stdout to show progress, capture stderr for error checking
+        cmd = ['python', str(script_path), '--promptfile', '--loud'] + mode_args
+        result = subprocess.run(cmd, stdout=None, stderr=subprocess.PIPE, text=True, check=False)
 
         if result.returncode != 0:
             print(f"  Warning: Mode {mode_args} returned non-zero exit code")
