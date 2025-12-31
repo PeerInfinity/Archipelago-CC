@@ -5612,10 +5612,10 @@
             "36": "daos",
             "37": "egg_dragon",
             "38": "master",
-            "39": "random_sinistral",
-            "40": "random_low",
+            "39": "random_low",
+            "40": "random_middle",
             "41": "random_high",
-            "42": "random_middle"
+            "42": "random_sinistral"
           },
           "default": 38,
           "display_name": "Boss"
@@ -5848,7 +5848,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": false
     }
   },

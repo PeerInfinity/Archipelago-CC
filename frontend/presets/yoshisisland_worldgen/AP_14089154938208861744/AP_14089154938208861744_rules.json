@@ -7084,6 +7084,27 @@
           "display_name": "Singularity Yoshi Color"
         }
       },
+      "game_logic": "Easy",
+      "midring_start": true,
+      "clouds_always_visible": false,
+      "consumable_logic": true,
+      "bowser_door": 0,
+      "luigi_pieces": 25,
+      "boss_order": [
+        "Burt The Bashful's Boss Room",
+        "Salvo The Slime's Boss Room",
+        "Bigger Boo's Boss Room",
+        "Roger The Ghost's Boss Room",
+        "Prince Froggy's Boss Room",
+        "Naval Piranha's Boss Room",
+        "Marching Milde's Boss Room",
+        "Hookbill The Koopa's Boss Room",
+        "Sluggy The Unshaven's Boss Room",
+        "Raphael The Raven's Boss Room",
+        "Tap-Tap The Red Nose's Boss Room"
+      ],
+      "castle_unlock": 5,
+      "boss_unlock": 0,
       "shops": [],
       "locked_locations": [],
       "level_colors": [
@@ -7176,19 +7197,6 @@
         2
       ],
       "baby_mario_sfx": 68,
-      "boss_order": [
-        "Burt The Bashful's Boss Room",
-        "Salvo The Slime's Boss Room",
-        "Bigger Boo's Boss Room",
-        "Roger The Ghost's Boss Room",
-        "Prince Froggy's Boss Room",
-        "Naval Piranha's Boss Room",
-        "Marching Milde's Boss Room",
-        "Hookbill The Koopa's Boss Room",
-        "Sluggy The Unshaven's Boss Room",
-        "Raphael The Raven's Boss Room",
-        "Tap-Tap The Red Nose's Boss Room"
-      ],
       "boss_room_id": [
         0,
         1,
@@ -7965,14 +7973,6 @@
       "luigi_count": 0,
       "rom_name": "YOSHI_ROM_NOT_GENERATED",
       "world_description": "Yoshi's Island WorldGen for Archipelago.\n\nAuto-generated world implementation.",
-      "game_logic": "Easy",
-      "midring_start": true,
-      "clouds_always_visible": false,
-      "consumable_logic": true,
-      "bowser_door": 0,
-      "luigi_pieces": 25,
-      "castle_unlock": 5,
-      "boss_unlock": 0,
       "slot_data": {
         "world_1": [
           0,
@@ -8058,7 +8058,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": false
     }
   },

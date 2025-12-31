@@ -357,12 +357,20 @@ class YoshisIslandWorldGenWorld(RuleWorldMixin, World):
         super().__init__(multiworld, player)
         # Game-specific world attributes
         self.shops = []
+        self.game_logic = 'Easy'
+        self.midring_start = True
+        self.clouds_always_visible = False
+        self.consumable_logic = True
+        self.bowser_door = 0
+        self.luigi_pieces = 25
+        self.boss_order = ["Burt The Bashful's Boss Room", "Salvo The Slime's Boss Room", "Bigger Boo's Boss Room", "Roger The Ghost's Boss Room", "Prince Froggy's Boss Room", "Naval Piranha's Boss Room", "Marching Milde's Boss Room", "Hookbill The Koopa's Boss Room", "Sluggy The Unshaven's Boss Room", "Raphael The Raven's Boss Room", "Tap-Tap The Red Nose's Boss Room"]
+        self.castle_unlock = 5
+        self.boss_unlock = 0
         self.locked_locations = []
         self.level_colors = [0, 1, 4, 2, 7, 1, 6, 2, 4, 2, 1, 2, 3, 5, 3, 4, 0, 5, 7, 5, 2, 3, 0, 5, 5, 0, 0, 4, 1, 4, 4, 7, 7, 4, 1, 1, 3, 3, 2, 5, 2, 4, 6, 4, 5, 3, 1, 3, 0, 7, 1, 0, 4, 1, 5, 4, 7, 7, 3, 3, 7, 1, 7, 5, 0, 5, 0, 0, 2, 1, 3, 2]
         self.color_order = []
         self.world_bonus = [6, 4, 8, 4, 4, 2, 6, 8, 0, 6, 0, 2]
         self.baby_mario_sfx = 68
-        self.boss_order = ["Burt The Bashful's Boss Room", "Salvo The Slime's Boss Room", "Bigger Boo's Boss Room", "Roger The Ghost's Boss Room", "Prince Froggy's Boss Room", "Naval Piranha's Boss Room", "Marching Milde's Boss Room", "Hookbill The Koopa's Boss Room", "Sluggy The Unshaven's Boss Room", "Raphael The Raven's Boss Room", "Tap-Tap The Red Nose's Boss Room"]
         self.boss_room_id = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         self.tap_tap_room = 63
         self.boss_ap_loc = ['Burt The Bashful Defeated', 'Salvo The Slime Defeated', 'Bigger Boo Defeated', 'Roger The Ghost Defeated', 'Prince Froggy Defeated', 'Naval Piranha Defeated', 'Marching Milde Defeated', 'Hookbill The Koopa Defeated', 'Sluggy The Unshaven Defeated', 'Raphael The Raven Defeated', 'Tap-Tap The Red Nose Defeated']
@@ -443,14 +451,6 @@ class YoshisIslandWorldGenWorld(RuleWorldMixin, World):
         self.world_description = "Yoshi's Island is a 2D platforming game.\nDuring a delivery, Bowser's evil ward, Kamek, attacked the stork, kidnapping Luigi and dropping Mario onto Yoshi's Island.\nAs Yoshi, you must run, jump, and throw eggs to escort the baby Mario across the island to defeat Bowser and reunite the two brothers with their parents."
         self.slot_data = types.SimpleNamespace(world_1=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], world_2=[12, 13, 14, 15, 16, 17, 18, 19, 20, 21], world_3=[24, 25, 26, 27, 28, 29, 30, 31, 32, 33], world_4=[36, 37, 38, 39, 40, 41, 42, 43, 44, 45], world_5=[48, 49, 50, 51, 52, 53, 54, 55, 56, 57], world_6=[60, 61, 62, 63, 64, 65, 66, 67, 68, 69])
         self.web = types.SimpleNamespace(theme='ocean', tutorials=[{'name': 'Multiworld Setup Guide', 'description': "A guide to setting up the Yoshi's Island randomizer and connecting to an Archipelago server.", 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['Pink Switch']}])
-        self.game_logic = 'Easy'
-        self.midring_start = True
-        self.clouds_always_visible = False
-        self.consumable_logic = True
-        self.bowser_door = 0
-        self.luigi_pieces = 25
-        self.castle_unlock = 5
-        self.boss_unlock = 0
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""

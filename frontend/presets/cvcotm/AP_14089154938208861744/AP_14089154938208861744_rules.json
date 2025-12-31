@@ -3436,10 +3436,6 @@
           "display_name": "Sub-weapon Shuffle"
         }
       },
-      "nerf_roc_wing": 0,
-      "ignore_cleansing": 0,
-      "iron_maiden_behavior": 0,
-      "completion_goal": 0,
       "total_last_keys": 1,
       "required_last_keys": 1,
       "world_description": "Castlevania: Circle of the Moon is a launch title for the Game Boy Advance and the first of three Castlevania games\nreleased for the handheld in the \"Metroidvania\" format. As Nathan Graves, wielding the Hunter Whip and utilizing the\nDual Set-Up System for new possibilities, you must battle your way through Camilla's castle and rescue your master\nfrom a demonic ritual to restore the Count's power...",
@@ -3475,7 +3471,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": false
     }
   },
@@ -3485,93 +3480,72 @@
   "helpers": {
     "1": {
       "has_jump_level_1": {
-        "type": "state_method",
-        "method": "has_any",
-        "args": [
+        "type": "or",
+        "conditions": [
           {
-            "type": "constant",
-            "value": [
-              "Double",
-              "Roc Wing"
-            ]
+            "type": "item_check",
+            "item": "Double"
+          },
+          {
+            "type": "item_check",
+            "item": "Roc Wing"
           }
         ]
       },
       "has_jump_level_2": {
         "type": "item_check",
-        "item": {
-          "type": "constant",
-          "value": "Roc Wing"
-        }
+        "item": "Roc Wing"
       },
       "has_jump_level_3": {
         "type": "item_check",
-        "item": {
-          "type": "constant",
-          "value": "Roc Wing"
-        }
+        "item": "Roc Wing"
       },
       "has_jump_level_4": {
         "type": "item_check",
-        "item": {
-          "type": "constant",
-          "value": "Roc Wing"
-        }
+        "item": "Roc Wing"
       },
       "has_jump_level_5": {
         "type": "item_check",
-        "item": {
-          "type": "constant",
-          "value": "Roc Wing"
-        }
+        "item": "Roc Wing"
       },
       "has_kick": {
         "type": "item_check",
-        "item": {
-          "type": "constant",
-          "value": "Kick Boots"
-        }
+        "item": "Kick Boots"
       },
       "has_tackle": {
         "type": "item_check",
-        "item": {
-          "type": "constant",
-          "value": "Tackle"
-        }
+        "item": "Tackle"
       },
       "has_push": {
         "type": "item_check",
-        "item": {
-          "type": "constant",
-          "value": "Heavy Ring"
-        }
+        "item": "Heavy Ring"
       },
       "has_ice_or_stone": {
         "type": "and",
         "conditions": [
           {
-            "type": "state_method",
-            "method": "has_any",
-            "args": [
+            "type": "or",
+            "conditions": [
               {
-                "type": "constant",
-                "value": [
-                  "Serpent Card",
-                  "Cockatrice Card"
-                ]
+                "type": "item_check",
+                "item": "Serpent Card"
+              },
+              {
+                "type": "item_check",
+                "item": "Cockatrice Card"
               }
             ]
           },
           {
-            "type": "state_method",
-            "method": "has_any",
-            "args": [
+            "type": "or",
+            "conditions": [
               {
-                "type": "constant",
-                "value": [
-                  "Mercury Card",
-                  "Mars Card"
-                ]
+                "type": "item_check",
+                "item": "Mercury Card"
+              },
+              {
+                "type": "item_check",
+                "item": "Mars Card"
               }
             ]
           }
@@ -3579,28 +3553,16 @@
       },
       "can_touch_water": {
         "type": "item_check",
-        "item": {
-          "type": "constant",
-          "value": "Cleansing"
-        }
+        "item": "Cleansing"
       },
       "broke_iron_maidens": {
         "type": "item_check",
-        "item": {
-          "type": "constant",
-          "value": "Maiden Detonator"
-        }
+        "item": "Maiden Detonator"
       },
       "can_open_ceremonial_door": {
         "type": "item_check",
-        "item": {
-          "type": "constant",
-          "value": "Last Key"
-        },
-        "count": {
-          "type": "constant",
-          "value": 1
-        }
+        "item": "Last Key",
+        "count": 1
       }
     }
   }

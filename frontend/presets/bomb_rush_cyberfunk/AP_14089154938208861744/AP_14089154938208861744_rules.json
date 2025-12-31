@@ -9817,18 +9817,7 @@
     "1": {}
   },
   "progression_mapping": {
-    "1": {
-      "rep": {
-        "type": "additive",
-        "items": {
-          "8 REP": 8,
-          "16 REP": 16,
-          "24 REP": 24,
-          "32 REP": 32,
-          "48 REP": 48
-        }
-      }
-    }
+    "1": {}
   },
   "starting_items": {
     "1": []
@@ -10277,12 +10266,22 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": false
     }
   },
   "game_info": {
-    "1": {}
+    "1": {
+      "accumulator_rules": [
+        {
+          "pattern": "^(\\d+) REP$",
+          "extract_value": true,
+          "target": "rep"
+        }
+      ],
+      "prog_items_init": {
+        "rep": 0
+      }
+    }
   },
   "helpers": {
     "1": {
