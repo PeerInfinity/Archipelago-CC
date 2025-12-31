@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-30T06:03:54.427018",
-    "last_updated": "2025-12-30T06:03:54.427023",
+    "last_updated": "2025-12-31T01:18:30.530442",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2491,31 +2491,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "21c4b219143d8e01e1566814a93b022caed86de7960cb73b9601ce91f0a47f35",
-          "new_sphere_log_hash": "560332e2a8092888885beea975d14a385e148b2fe61b1bd37c805dd89f574669",
-          "original_rules_hash": "21c4b219143d8e01e1566814a93b022caed86de7960cb73b9601ce91f0a47f35",
-          "original_sphere_log_hash": "560332e2a8092888885beea975d14a385e148b2fe61b1bd37c805dd89f574669",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-30T06:01:59.824410"
-        }
-      },
       "game_name_from_filename": "osrs",
       "game_name_from_yaml": "Old School Runescape",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 9.5,
+        "processing_time_seconds": 13.13,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/osrs/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 356364,
+        "size_bytes": 356321,
         "size_mb": 0.34
       },
       "seed": "1",
@@ -2523,7 +2511,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 8.77,
+        "processing_time_seconds": 13.01,
         "return_code": 0,
         "sphere_reached": 7.5,
         "success": true,
@@ -2531,7 +2519,7 @@
         "warning_count": 0
       },
       "template_filename": "Old School Runescape.yaml",
-      "timestamp": "2025-12-30T05:59:18.806172",
+      "timestamp": "2025-12-31T01:18:04.008414",
       "world_info": {
         "exporter_path": "exporter/games/osrs.py",
         "exporter_size": 1030,
