@@ -191,6 +191,13 @@ class BaseGameExportHandler(
     # listing computed helpers in HELPERS_TO_PRESERVE.
     AUTO_PRESERVE_COMPUTED_HELPERS: bool = False
 
+    # When True, helpers listed in HELPERS_TO_EXPORT_WHITELIST are automatically
+    # preserved (not inlined during rule analysis). This is a common pattern since
+    # helpers that need to be exported as definitions also shouldn't be inlined.
+    # Default is True - set to False only if you want whitelisted helpers to be
+    # inlined despite being exported.
+    AUTO_PRESERVE_WHITELISTED_HELPERS: bool = True
+
     # Mapping of parameter/variable names used in inlined functions to their
     # corresponding setting names. Applied during expand_rule for 'name' type rules.
     # Example: {'ow_boss_req': 'ow_boss_requirement'}
@@ -817,7 +824,9 @@ class BaseGameExportHandler(
         Games can either:
         1. Set the HELPERS_TO_PRESERVE class attribute with a set of helper names
         2. Set AUTO_PRESERVE_COMPUTED_HELPERS = True and list helpers in COMPUTED_HELPERS
-        3. Override this method for custom logic
+        3. Set AUTO_PRESERVE_WHITELISTED_HELPERS = True (default) to auto-preserve
+           helpers in HELPERS_TO_EXPORT_WHITELIST
+        4. Override this method for custom logic
 
         Note: Helpers listed in HELPERS_TO_EXPORT_BLACKLIST are automatically preserved,
         since complex helpers that can't be exported also shouldn't be inlined.
@@ -839,6 +848,11 @@ class BaseGameExportHandler(
 
         # Check computed helpers if auto-preservation is enabled
         if self.AUTO_PRESERVE_COMPUTED_HELPERS and func_name in self.COMPUTED_HELPERS:
+            return True
+
+        # Auto-preserve whitelisted helpers - if a helper is exported as a definition,
+        # it typically shouldn't be inlined during analysis either
+        if self.AUTO_PRESERVE_WHITELISTED_HELPERS and func_name in self.HELPERS_TO_EXPORT_WHITELIST:
             return True
 
         return False
