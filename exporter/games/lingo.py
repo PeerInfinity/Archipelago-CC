@@ -9,36 +9,27 @@ logger = logging.getLogger(__name__)
 
 
 class LingoGameExportHandler(GenericGameExportHandler):
-    """Export handler for Lingo that handles AccessRequirements string sorting, door variable resolution,
-    and exporting door-related data structures for rule evaluation.
+    """Export handler for Lingo with door variable resolution and door-related data export.
 
-    Lingo requires extensive custom export logic due to its unique game mechanics:
+    Lingo requires custom export logic due to its unique game mechanics:
 
-    1. **AccessRequirements**: Lingo uses a custom data structure (AccessRequirements NamedTuple)
-       to track what's needed to access locations. This contains sets of rooms, doors, colors,
-       items, and progression requirements that must be serialized for the frontend.
+    1. **AccessRequirements**: Lingo uses AccessRequirements NamedTuples to track what's needed
+       to access locations (rooms, doors, colors, items, progression requirements).
 
     2. **Door/Entrance System**: Lingo has complex door and entrance naming conventions:
        - Exit names follow patterns like "Room A to Room B (through Room C - Door Name)"
-       - Door references use RoomAndDoor NamedTuples
-       - Entrance rules must be parsed and simplified based on door information
+       - Entrance rules are parsed and simplified based on door information
 
-    3. **player_logic Data**: Lingo stores game state in world.player_logic with structures like:
+    3. **player_logic Data**: Exports game state from world.player_logic:
        - item_by_door: Maps rooms to doors and their required items
        - door_reqs: AccessRequirements for doors without items
        - mastery_reqs: Requirements for mastery achievements
        - counting_panel_reqs: Panel count requirements for LEVEL 2
 
-    4. **Worldgen Support**: Generated worlds (via world_generator) require special handling:
+    4. **Worldgen Support**: Generated worlds require special handling:
        - Load settings from _worldgen_settings.json
-       - Generate proper exit rules from parsed exit names
+       - Generate exit rules from parsed exit names
        - Read location access from location_table instead of player_logic
-
-    **Note**: The declarative patterns (STATE_METHOD_REPLACEMENTS, CLOSURE_VAR_IMPORTS,
-    HELPER_OBJECT_NAMES) don't apply to Lingo because:
-    - Lingo doesn't have LogicMixin state methods that map to settings
-    - Lingo doesn't need closure variable injection
-    - Lingo doesn't have logic objects with method calls to convert
     """
 
     # Use auto sweep for indirect region dependencies since Lingo's custom Rules.py
@@ -103,17 +94,11 @@ class LingoGameExportHandler(GenericGameExportHandler):
         }
 
     def expand_rule(self, analyzed_rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
-        """
-        Expand analyzed rule, with special handling for AccessRequirements string representations,
-        door variable resolution, and world.player_logic to settings conversion.
+        """Expand analyzed rule with Lingo-specific transformations.
 
-        Lingo's AccessRequirements objects contain sets that have unpredictable string ordering.
-        This method sorts the set contents when they appear in constant values.
-
-        Additionally, it:
-        - Resolves the 'door' variable in lingo_can_use_entrance calls to actual values
+        - Resolves the 'door' variable in lingo_can_use_entrance calls
         - Converts world.player_logic.X references to settings.X
-        - Converts bare PROGRESSIVE_ITEMS/PROGRESSIVE_DOORS_BY_ROOM to settings references
+        - Converts PROGRESSIVE_ITEMS/PROGRESSIVE_DOORS_BY_ROOM to settings references
         """
         rule = super().expand_rule(analyzed_rule, _depth)
 
@@ -124,8 +109,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
         # Resolve door variables in helper calls
         rule = self._resolve_door_variables(rule)
 
-        # Recursively fix AccessRequirements in the rule
-        return self._fix_access_requirements(rule)
+        return rule
 
     def _resolve_door_variables(self, obj: Any) -> Any:
         """
@@ -158,41 +142,6 @@ class LingoGameExportHandler(GenericGameExportHandler):
             return [self._resolve_door_variables(item) for item in obj]
         else:
             return obj
-
-    def _fix_access_requirements(self, obj: Any) -> Any:
-        """Recursively sort sets within AccessRequirements string representations."""
-        if isinstance(obj, dict):
-            # Recursively process dict values
-            return {k: self._fix_access_requirements(v) for k, v in obj.items()}
-        elif isinstance(obj, list):
-            # Process list items, with special handling for constant values containing AccessRequirements
-            result = []
-            for item in obj:
-                if isinstance(item, str) and 'AccessRequirements(' in item:
-                    # Parse and sort the sets in the AccessRequirements string
-                    result.append(self._sort_access_requirements_string(item))
-                else:
-                    result.append(self._fix_access_requirements(item))
-            return result
-        else:
-            return obj
-
-    def _sort_access_requirements_string(self, s: str) -> str:
-        """Sort sets within an AccessRequirements string representation."""
-        # Pattern to match set literals like {'item1', 'item2', 'item3'}
-        def sort_set(match):
-            # Extract the set contents
-            set_contents = match.group(1)
-            if not set_contents.strip():
-                return "{}"
-            # Split by comma, strip whitespace and quotes, sort, then rebuild
-            items = [item.strip().strip("'\"") for item in set_contents.split(',')]
-            sorted_items = sorted(items)
-            return "{" + ", ".join(f"'{item}'" for item in sorted_items) + "}"
-
-        # Replace all set literals with sorted versions
-        result = re.sub(r'\{([^{}]*)\}', sort_set, s)
-        return result
 
     def get_custom_location_access_rule(self, location, world) -> Dict[str, Any]:
         """
