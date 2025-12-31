@@ -2,11 +2,10 @@
 
 This handler extends GenericGameExportHandler to handle:
 - Region object conversion in closure variables (LandstalkerRegion -> string codes)
-- all_of iterator expansion for event_visited_ patterns
-- _landstalker_has_visited_regions helper expansion
+- _landstalker_has_visited_regions helper expansion to item_check conditions
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 from .generic import GenericGameExportHandler
 import logging
 
@@ -40,54 +39,11 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
         if not rule or not isinstance(rule, dict):
             return rule
 
-        # Handle all_of pattern with iterator for region visit checks
-        if rule.get('type') == 'all_of':
-            expanded = self._expand_all_of_event_visited(rule)
-            if expanded:
-                return expanded
-
-        # Handle item_check with binary_op for event_visited_ + region.code
-        if rule.get('type') == 'item_check':
-            item = rule.get('item', {})
-            if isinstance(item, dict) and item.get('type') == 'binary_op':
-                simplified = self._simplify_event_visited_binary_op(item)
-                if simplified:
-                    return {"type": "item_check", "item": simplified}
-
         # Handle _landstalker_has_visited_regions helper call
         if rule.get('type') == 'helper' and rule.get('name') == '_landstalker_has_visited_regions':
             return self._expand_has_visited_regions_helper(rule)
 
         return super().expand_rule(rule, _depth)
-
-    def _expand_all_of_event_visited(self, rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """Expand all_of patterns for event_visited_ checks.
-
-        Converts:
-          {type: all_of, iterator_info: {iterator: {type: constant, value: ["region1", ...]}}, ...}
-        To:
-          {type: and, conditions: [{type: item_check, item: "event_visited_region1"}, ...]}
-        """
-        iterator_info = rule.get('iterator_info', {})
-        iterator = iterator_info.get('iterator', {})
-        element_rule = rule.get('element_rule', {})
-
-        # Only handle if it's an event_visited_ pattern
-        if not self._is_event_visited_pattern(element_rule):
-            return None
-
-        # Get region codes from iterator
-        region_codes = None
-        if isinstance(iterator, dict):
-            if iterator.get('type') == 'constant':
-                value = iterator.get('value', [])
-                if isinstance(value, list):
-                    region_codes = [self._to_region_code(v) for v in value]
-
-        if region_codes is not None:
-            return self._build_event_visited_conditions(region_codes)
-
-        return None
 
     def _expand_has_visited_regions_helper(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Expand _landstalker_has_visited_regions helper to item_check conditions."""
@@ -110,39 +66,6 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
 
         region_codes = [self._to_region_code(r) for r in region_names]
         return self._build_event_visited_conditions(region_codes)
-
-    def _is_event_visited_pattern(self, element_rule: Dict[str, Any]) -> bool:
-        """Check if element_rule matches event_visited_ + region.code pattern."""
-        if element_rule.get('type') != 'item_check':
-            return False
-        item = element_rule.get('item', {})
-        if not isinstance(item, dict) or item.get('type') != 'binary_op':
-            return False
-        if item.get('op') != '+':
-            return False
-        left = item.get('left', {})
-        return left.get('type') == 'constant' and left.get('value') == 'event_visited_'
-
-    def _simplify_event_visited_binary_op(self, binary_op: Dict[str, Any]) -> Optional[str]:
-        """Simplify event_visited_ + region.code binary_op to string."""
-        if binary_op.get('op') != '+':
-            return None
-
-        left = binary_op.get('left', {})
-        right = binary_op.get('right', {})
-
-        if left.get('type') != 'constant' or left.get('value') != 'event_visited_':
-            return None
-
-        # Handle attribute access (.code) on a constant value
-        if right.get('type') == 'attribute' and right.get('attr') == 'code':
-            obj = right.get('object', {})
-            if obj.get('type') == 'constant':
-                region_value = obj.get('value')
-                code = self._to_region_code(region_value)
-                return f"event_visited_{code}"
-
-        return None
 
     def _to_region_code(self, value) -> str:
         """Convert a region value (object or string) to a code string."""

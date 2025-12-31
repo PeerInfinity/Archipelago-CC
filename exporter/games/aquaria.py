@@ -16,10 +16,9 @@ class AquariaGameExportHandler(GenericGameExportHandler):
 
     # Regions stored as world.regions.X that aren't added to multiworld.regions
     MISSING_REGION_ATTRS = [
-        'first_secret', 'energy_temple_idol', 'energy_temple_after_boss',
-        'energy_temple_4', 'frozen_feil', 'sunken_city_l_crates',
-        'sunken_city_r_crates', 'home_water_behind_rocks', 'openwater_tr_urns',
-        'mithalas_city_urns', 'mithalas_castle_urns'
+        'first_secret', 'energy_temple_idol', 'energy_temple_4', 'frozen_feil',
+        'sunken_city_l_crates', 'sunken_city_r_crates', 'home_water_behind_rocks',
+        'openwater_tr_urns', 'mithalas_city_urns', 'mithalas_castle_urns'
     ]
 
     def postprocess_regions(self, multiworld, player):
