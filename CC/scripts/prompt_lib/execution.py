@@ -97,6 +97,7 @@ def run_all_promptfiles(project_root, script_path=None):
         (['--worldgen-seed-failures', '--worldgen-test-mode', 'canonical'], 'worldgen-seed-failures.txt'),
         (['--worldgen-spoiler-failures', '--worldgen-test-mode', 'canonical'], 'worldgen-spoiler-failures.txt'),
         (['--worldgen-crossval-failures', '--worldgen-test-mode', 'canonical'], 'worldgen-crossval-failures.txt'),
+        (['--worldgen-rules-comp-failures', '--worldgen-test-mode', 'canonical'], 'worldgen-rules-comp-failures.txt'),
     ]
 
     # Use provided script path or infer it
