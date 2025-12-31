@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-31T01:21:29.297965",
-    "last_updated": "2025-12-31T01:21:29.297973",
+    "last_updated": "2025-12-31T03:38:33.009790",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3140,27 +3140,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "e0c6168cdcdf05034694ef56a2f448eb00e39e46175d1c196862eb5d44c281be",
-          "new_sphere_log_hash": "cd749396655ba1ea1d69d9f59c0e286fb21e56b74083070def80b47cc7a29ef3",
-          "original_rules_hash": "e0c6168cdcdf05034694ef56a2f448eb00e39e46175d1c196862eb5d44c281be",
-          "original_sphere_log_hash": "cd749396655ba1ea1d69d9f59c0e286fb21e56b74083070def80b47cc7a29ef3",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-31T01:19:28.176888"
-        }
-      },
       "game_name_from_filename": "subnautica",
       "game_name_from_yaml": "Subnautica",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 30.43,
+        "processing_time_seconds": 52.58,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/subnautica/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -3172,7 +3160,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 14.67,
+        "processing_time_seconds": 17.5,
         "return_code": 0,
         "sphere_reached": 6.1,
         "success": true,
@@ -3180,10 +3168,10 @@
         "warning_count": 0
       },
       "template_filename": "Subnautica.yaml",
-      "timestamp": "2025-12-31T01:17:14.003208",
+      "timestamp": "2025-12-31T03:36:59.792681",
       "world_info": {
         "exporter_path": "exporter/games/subnautica.py",
-        "exporter_size": 4224,
+        "exporter_size": 2207,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "subnautica",
@@ -4202,27 +4190,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "d1d6c836fd1d23933453abd81e660f273318be53220d43066454354547578fd5",
-          "new_sphere_log_hash": "229a997b4adb3a670d99dc4aafded400d9c5e94792d0b036cc9ba850f656ade8",
-          "original_rules_hash": "d1d6c836fd1d23933453abd81e660f273318be53220d43066454354547578fd5",
-          "original_sphere_log_hash": "229a997b4adb3a670d99dc4aafded400d9c5e94792d0b036cc9ba850f656ade8",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-31T01:20:11.898838"
-        }
-      },
       "game_name_from_filename": "yoshisisland",
       "game_name_from_yaml": "Yoshi's Island",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 7.3,
+        "processing_time_seconds": 9.72,
         "return_code": 0,
         "success": true,
-        "warning_count": 3
+        "warning_count": 2
       },
       "rules_file": {
         "path": "frontend/presets/yoshisisland/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -4234,7 +4210,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.6,
+        "processing_time_seconds": 12.47,
         "return_code": 0,
         "sphere_reached": 12.4,
         "success": true,
@@ -4242,10 +4218,10 @@
         "warning_count": 0
       },
       "template_filename": "Yoshi's Island.yaml",
-      "timestamp": "2025-12-31T01:18:45.318542",
+      "timestamp": "2025-12-31T03:38:10.422916",
       "world_info": {
         "exporter_path": "exporter/games/yoshisisland.py",
-        "exporter_size": 3917,
+        "exporter_size": 3924,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "yoshisisland",
