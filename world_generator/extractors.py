@@ -189,18 +189,25 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
         # Derive from game name: "My Game" -> "MyGameWorld"
         world_class_name = sanitize_identifier(game_name) + 'World'
 
-    # Extract game_info for the specified player (contains new metadata fields)
+    # Extract world data for the specified player (contains main world attributes)
+    world_data = json_data.get('world', {}).get(player_id, {})
+
+    # Extract game_info for the specified player (contains game-specific custom data)
     game_info = json_data.get('game_info', {}).get(player_id, {})
 
-    # Extract base_id
-    base_id = game_info.get('base_id')
+    # Extract exporter settings (exporter-specific flags like bidirectional exits)
+    exporter_data = json_data.get('exporter', {}).get(player_id, {})
 
-    # Extract web theme
-    web_theme = game_info.get('web_theme')
+    # Extract base_id (now in world[player], fallback to game_info for legacy)
+    base_id = world_data.get('base_id') or game_info.get('base_id')
 
-    # Extract tutorials
+    # Extract web theme (now in world[player].web, fallback to game_info for legacy)
+    web_data = world_data.get('web', {})
+    web_theme = web_data.get('theme') or game_info.get('web_theme')
+
+    # Extract tutorials (now in world[player].web.tutorials, fallback to game_info for legacy)
     web_tutorials = []
-    tutorials_data = game_info.get('web_tutorials', [])
+    tutorials_data = web_data.get('tutorials', []) or game_info.get('web_tutorials', [])
     for t in tutorials_data:
         web_tutorials.append(TutorialData(
             name=t.get('name', ''),
@@ -211,14 +218,13 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
             authors=t.get('authors', []),
         ))
 
-    # Extract world description (docstring)
-    world_description = game_info.get('world_description')
+    # Extract world description (now in world[player], fallback to game_info for legacy)
+    world_description = world_data.get('world_description') or game_info.get('world_description')
 
-    # Extract slot_data fields
-    slot_data_fields = game_info.get('slot_data', {})
+    # Extract slot_data fields (now in world[player], fallback to game_info for legacy)
+    slot_data_fields = world_data.get('slot_data', {}) or game_info.get('slot_data', {})
 
     # Extract game options (for generating dynamic fill_slot_data)
-    world_data = json_data.get('world', {}).get(player_id, {})
     game_options = world_data.get('options', {})
 
     # Extract resolved settings for evaluating setting_value nodes in helpers
@@ -269,7 +275,8 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
         game_options=game_options,
         resolved_settings=resolved_settings,
         option_definitions=option_definitions,
-        use_auto_indirect_conditions=world_data.get('use_auto_indirect_conditions', False),
+        # use_auto_indirect_conditions is now in exporter[player_id], fallback to world_data for legacy
+        use_auto_indirect_conditions=exporter_data.get('use_auto_indirect_conditions', False) or world_data.get('use_auto_indirect_conditions', False),
     )
 
 
@@ -919,19 +926,23 @@ def extract_world_attributes(json_data: Dict[str, Any], player_id: str = '1') ->
     """
     world_attributes: Dict[str, Any] = {}
 
+    # Extract world data for the specified player
+    world_data = json_data.get('world', {}).get(player_id, {})
+
     # Extract game_info for the specified player
     game_info = json_data.get('game_info', {}).get(player_id, {})
 
-    # Extract hat_info for A Hat in Time
-    hat_info = game_info.get('hat_info')
-    if hat_info:
+    # Extract hat_yarn_costs/hat_craft_order for A Hat in Time
+    # New format: directly in world[player], legacy format: in game_info[player].hat_info
+    hat_yarn_costs_raw = world_data.get('hat_yarn_costs') or (game_info.get('hat_info') or {}).get('hat_yarn_costs')
+    if hat_yarn_costs_raw:
         # Convert hat_yarn_costs keys from strings to integers
-        hat_yarn_costs_raw = hat_info.get('hat_yarn_costs', {})
         hat_yarn_costs = {int(k): v for k, v in hat_yarn_costs_raw.items()}
         world_attributes['hat_yarn_costs'] = hat_yarn_costs
 
+    hat_craft_order = world_data.get('hat_craft_order') or (game_info.get('hat_info') or {}).get('hat_craft_order')
+    if hat_craft_order:
         # hat_craft_order is already a list of integers
-        hat_craft_order = hat_info.get('hat_craft_order', [])
         world_attributes['hat_craft_order'] = hat_craft_order
 
     # New format: world_attributes is a separate section
@@ -942,7 +953,6 @@ def extract_world_attributes(json_data: Dict[str, Any], player_id: str = '1') ->
     # Extract shops data from world.<player_id>.shops for games with shop-related helpers
     # This is needed for cross-validation where can_buy/can_buy_unlimited helpers
     # iterate over shops to check item availability
-    world_data = json_data.get('world', {}).get(player_id, {})
     if 'shops' in world_data and world_data['shops']:
         world_attributes['shops'] = world_data['shops']
     elif 'shops' not in world_attributes:
@@ -953,8 +963,6 @@ def extract_world_attributes(json_data: Dict[str, Any], player_id: str = '1') ->
         # Extract game-specific computed settings that need to be world attributes
         # These are settings that are accessed by helpers as world.X
         # (e.g., world.difficulty_requirements, world.shop_items)
-        world_data = json_data.get('world', {}).get(player_id, {})
-
         # Settings to skip (internal/structural settings, not world attributes)
         skip_settings = {
             'game',

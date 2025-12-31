@@ -155,18 +155,25 @@ class WorldGenerator:
         # Build the worldgen settings file with separate sections
         worldgen_data = {}
 
-        # Extract settings (options and internal flags only)
+        # Extract settings from world (options and game name) and exporter (behavior flags)
         source_settings = source_json.get('world', {}).get(self.player_id, {})
-        if source_settings:
-            # Keep only actual settings, not world attributes
-            # Remove option_definitions - it's redundant since the exporter extracts
-            # option definitions from the worldgen world's Options.py at export time
-            settings_keys = {
-                'game', 'options', 'world_directory',
-                'assume_bidirectional_exits', 'use_resolved_items',
-                'use_auto_indirect_conditions', 'add_sphere_items_upfront',
-            }
-            filtered_settings = {k: v for k, v in source_settings.items() if k in settings_keys}
+        source_exporter = source_json.get('exporter', {}).get(self.player_id, {})
+
+        if source_settings or source_exporter:
+            # Start with world settings
+            world_settings_keys = {'game', 'options', 'world_directory'}
+            filtered_settings = {k: v for k, v in source_settings.items() if k in world_settings_keys}
+
+            # Add exporter settings (new location) or fall back to world settings (legacy)
+            exporter_keys = {'assume_bidirectional_exits', 'use_resolved_items',
+                           'use_auto_indirect_conditions', 'add_sphere_items_upfront'}
+            for key in exporter_keys:
+                # Prefer exporter section, fall back to world section for legacy
+                if key in source_exporter:
+                    filtered_settings[key] = source_exporter[key]
+                elif key in source_settings:
+                    filtered_settings[key] = source_settings[key]
+
             if filtered_settings:
                 worldgen_data['settings'] = filtered_settings
 
