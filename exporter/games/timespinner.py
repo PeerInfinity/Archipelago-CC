@@ -6,37 +6,27 @@ from .generic import GenericGameExportHandler
 class TimespinnerGameExportHandler(GenericGameExportHandler):
     """Export handler for Timespinner.
 
-    Exports helper function definitions from TimespinnerLogic class.
-    All helpers are automatically exported and evaluated by the frontend.
-    Helper modules are auto-discovered from the game's world directory.
-
-    Settings are automatically exported by the base class:
-    - Options (specific_keycards, eye_spy, etc.) -> options.<name>
-    - World attributes (precalculated_weights) -> precalculated_weights.<attr>
-
-    Note: The 'flooded' local variable (aliasing precalculated_weights) is resolved
-    at export time since flood values are seed-specific constants.
+    Game-specific handling:
+    - Maps self.flag_* Logic class attributes to options (without flag_ prefix)
+    - Exports precalculated_weights warp unlock values (handles keys/key naming difference)
+    - Preserves helper definitions (prevents generic has_*/can_* pattern expansion)
     """
 
-    # Map self.<attr> patterns in TimespinnerLogic to their setting paths
-    # The logic class stores option flags with flag_ prefix, but options are exported without prefix
-    # getSetting() in the frontend checks both world.X and world.options.X, so no prefix needed
+    # Map self.<attr> in TimespinnerLogic to setting names
+    # flag_* prefix is stripped; warp unlocks are identity-mapped for WORLD_ATTRIBUTES
     SELF_ATTR_TO_SETTING = {
-        # Option flags: self.flag_X -> X (looked up via getSetting which checks world.options)
         'flag_specific_keycards': 'specific_keycards',
         'flag_eye_spy': 'eye_spy',
         'flag_unchained_keys': 'unchained_keys',
         'flag_prism_break': 'prism_break',
         'flag_find_the_flame': 'find_the_flame',
-        # Warp unlocks: exported to top level via WORLD_ATTRIBUTES
         'pyramid_keys_unlock': 'pyramid_keys_unlock',
         'present_keys_unlock': 'present_keys_unlock',
         'past_keys_unlock': 'past_keys_unlock',
         'time_keys_unlock': 'time_keys_unlock',
     }
 
-    # Export warp unlock values at the top level of world data
-    # Note: logic uses plural 'keys' but world uses singular 'key'
+    # Export warp unlocks at top level (logic uses 'keys', world uses 'key')
     WORLD_ATTRIBUTES = {
         'pyramid_keys_unlock': lambda w, m, p: getattr(getattr(w, 'precalculated_weights', None), 'pyramid_keys_unlock', None),
         'present_keys_unlock': lambda w, m, p: getattr(getattr(w, 'precalculated_weights', None), 'present_key_unlock', None),
@@ -45,10 +35,5 @@ class TimespinnerGameExportHandler(GenericGameExportHandler):
     }
 
     def _is_common_helper_pattern(self, helper_name: str) -> bool:
-        """Override to prevent GenericGameExportHandler from expanding helpers.
-
-        Timespinner has exported helper definitions (auto-discovered from LogicExtensions)
-        that should be preserved as-is. The base class's pattern matching would incorrectly
-        expand has_*, can_* patterns into simple item checks.
-        """
+        """Disable generic pattern expansion - helpers are exported as-is."""
         return False
