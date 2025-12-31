@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "game_name": "ChocolateChipCookies",
+  "game_name": "Baking Adventure",
   "game_directory": "bakingadventure",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
@@ -682,7 +682,7 @@
   },
   "world": {
     "1": {
-      "game": "ChocolateChipCookies",
+      "game": "Baking Adventure",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],

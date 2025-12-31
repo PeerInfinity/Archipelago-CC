@@ -4,7 +4,7 @@ from typing import Dict
 base_location_id = 400000000
 
 class WebDevJourneyLocation(Location):
-    game: str = "WebDevJourney"
+    game: str = "Coding Adventure"
 
 class LocationData:
     def __init__(self, region: str, name: str, location_id: int = None, event: bool = False):
