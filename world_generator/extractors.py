@@ -166,7 +166,7 @@ class ExtractedData:
     prog_items_init: Dict[str, int] = field(default_factory=dict)  # Initial values for prog_items counters
     canonical_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (vanilla/original locations from world class)
     progression_mapping: Dict[str, List[str]] = field(default_factory=dict)  # progressive_item -> [component_items] in order
-    world_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific world instance attributes (e.g., hat_info)
+    world_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific world instance attributes
 
 
 def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> GameMetadata:
@@ -911,11 +911,11 @@ def extract_world_attributes(json_data: Dict[str, Any], player_id: str = '1') ->
     Extract game-specific world instance attributes from JSON.
 
     These are attributes that need to be added to the generated world class
-    as instance attributes. For example, A Hat in Time has hat_info containing
-    hat_yarn_costs and hat_craft_order.
+    as instance attributes (runtime-computed values like difficulty settings,
+    shop data, etc.).
 
     World attributes are stored in the 'world_attributes' section of the JSON
-    (new format), or extracted from 'settings' for legacy compatibility.
+    (new format), or extracted from 'world' section for legacy compatibility.
 
     Args:
         json_data: Parsed JSON rules file
@@ -928,22 +928,6 @@ def extract_world_attributes(json_data: Dict[str, Any], player_id: str = '1') ->
 
     # Extract world data for the specified player
     world_data = json_data.get('world', {}).get(player_id, {})
-
-    # Extract game_info for the specified player
-    game_info = json_data.get('game_info', {}).get(player_id, {})
-
-    # Extract hat_yarn_costs/hat_craft_order for A Hat in Time
-    # New format: directly in world[player], legacy format: in game_info[player].hat_info
-    hat_yarn_costs_raw = world_data.get('hat_yarn_costs') or (game_info.get('hat_info') or {}).get('hat_yarn_costs')
-    if hat_yarn_costs_raw:
-        # Convert hat_yarn_costs keys from strings to integers
-        hat_yarn_costs = {int(k): v for k, v in hat_yarn_costs_raw.items()}
-        world_attributes['hat_yarn_costs'] = hat_yarn_costs
-
-    hat_craft_order = world_data.get('hat_craft_order') or (game_info.get('hat_info') or {}).get('hat_craft_order')
-    if hat_craft_order:
-        # hat_craft_order is already a list of integers
-        world_attributes['hat_craft_order'] = hat_craft_order
 
     # New format: world_attributes is a separate section
     new_world_attrs = json_data.get('world_attributes', {}).get(player_id, {})
@@ -1055,20 +1039,7 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
                 # compute_state_counter_accumulator_rules. We don't want to initialize
                 # the counter to the total - we want it to accumulate from 0.
 
-    # Extract QP items for OSRS-like games that have quest points
-    # Pattern: "N QP (Quest Name)" where N is the quest point value
-    import re
-    qp_pattern = re.compile(r'^(\d+)\s*QP\s*\((.+)\)$')
-    qp_items = {}
-    for item_name in items.keys():
-        match = qp_pattern.match(item_name)
-        if match:
-            qp_value = int(match.group(1))
-            qp_items[item_name] = qp_value
-    if qp_items:
-        metadata.resolved_settings['qp_items'] = qp_items
-
-    # Extract game-specific world attributes (e.g., hat_info for A Hat in Time)
+    # Extract game-specific world attributes
     world_attributes = extract_world_attributes(json_data, player_id=player_id)
 
     return ExtractedData(

@@ -1452,7 +1452,6 @@ class RuleCodeGenerator:
 
         location_rule_ref checks if a location's access rule is satisfied,
         which is equivalent to CanReachLocation (checking if the location is accessible).
-        This is used by AHIT's can_clear_required_act helper expansion.
         """
         self.required_imports.add('CanReachLocation')
 
@@ -4327,7 +4326,7 @@ class HelperCodeGenerator:
             if count_raw.get('type') == 'constant':
                 count_expr = str(count_raw.get('value', 1))
             else:
-                # Complex expression (e.g., get_hat_cost(hat))
+                # Complex expression (e.g., helper call or attribute lookup)
                 count_expr = self._generate_expression(count_raw)
         elif isinstance(count_raw, (int, float)):
             count_expr = str(int(count_raw))

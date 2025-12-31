@@ -1212,8 +1212,7 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
             # Format the value appropriately
             if isinstance(attr_value, dict):
                 # Check if this dict has string keys that suggest attribute access
-                # (e.g., difficulty_requirements with progressive_bottle_limit)
-                # vs integer keys that suggest dict access (e.g., hat_yarn_costs)
+                # (e.g., difficulty_requirements) vs integer keys that suggest dict access
                 has_string_keys = all(isinstance(k, str) for k in attr_value.keys())
                 has_nested_values = not any(isinstance(v, dict) for v in attr_value.values())
 
