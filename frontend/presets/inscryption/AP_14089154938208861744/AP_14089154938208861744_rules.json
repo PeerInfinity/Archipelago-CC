@@ -3379,12 +3379,161 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": false
     }
   },
   "game_info": {
     "1": {}
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "has_act2_bridge_requirements": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Camera Replica",
+                  "Pile Of Meat"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "item_check",
+            "item": "Epitaph Piece",
+            "count": {
+              "type": "constant",
+              "value": 9
+            }
+          }
+        ]
+      },
+      "has_act2_requirements": {
+        "type": "item_check",
+        "item": "Film Roll"
+      },
+      "has_act3_requirements": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Film Roll"
+          },
+          {
+            "type": "item_check",
+            "item": "Epitaph Piece",
+            "count": {
+              "type": "constant",
+              "value": 9
+            }
+          },
+          {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Camera Replica",
+                  "Pile Of Meat"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "item_check",
+            "item": "Monocle"
+          }
+        ]
+      },
+      "has_all_epitaph_pieces": {
+        "type": "item_check",
+        "item": {
+          "type": "attribute",
+          "object": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "world"
+          },
+          "attr": "required_epitaph_pieces_name"
+        },
+        "count": {
+          "type": "attribute",
+          "object": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "world"
+          },
+          "attr": "required_epitaph_pieces_count"
+        }
+      },
+      "has_camera_and_meat": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Camera Replica"
+          },
+          {
+            "type": "item_check",
+            "item": "Pile Of Meat"
+          }
+        ]
+      },
+      "has_gems_and_battery": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Gems Module"
+          },
+          {
+            "type": "item_check",
+            "item": "Inspectometer Battery"
+          }
+        ]
+      },
+      "has_inspectometer_battery": {
+        "type": "item_check",
+        "item": "Inspectometer Battery"
+      },
+      "has_monocle": {
+        "type": "item_check",
+        "item": "Monocle"
+      },
+      "has_transcendence_requirements": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Quill"
+          },
+          {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Gems Module",
+                  "Inspectometer Battery"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
 }

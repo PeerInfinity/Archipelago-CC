@@ -8600,6 +8600,10 @@
           "display_name": "Unchained Keys"
         }
       },
+      "pyramid_keys_unlock": null,
+      "present_keys_unlock": null,
+      "past_keys_unlock": null,
+      "time_keys_unlock": null,
       "shops": [],
       "precalculated_weights": {
         "flood_basement": false,
@@ -8638,15 +8642,6 @@
         "time_key_unlock": "GateRightPyramid"
       },
       "world_description": "Timespinner WorldGen for Archipelago.\n\nAuto-generated world implementation.",
-      "flag_specific_keycards": false,
-      "flag_eye_spy": false,
-      "flag_unchained_keys": false,
-      "flag_prism_break": false,
-      "flag_find_the_flame": false,
-      "pyramid_keys_unlock": null,
-      "present_keys_unlock": null,
-      "past_keys_unlock": null,
-      "time_keys_unlock": null,
       "slot_data": {
         "StartWithJewelryBox": 0,
         "DownloadableItems": 1,
@@ -9011,7 +9006,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": false
     }
   },

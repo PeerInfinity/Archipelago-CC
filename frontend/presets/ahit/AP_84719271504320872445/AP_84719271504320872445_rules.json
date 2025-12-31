@@ -8500,7 +8500,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": true,
       "use_resolved_items": false
     }
   },
@@ -8514,22 +8513,6 @@
         "Time's End": 32,
         "Arctic Cruise": -1,
         "Nyakuza Metro": -1
-      },
-      "hat_info": {
-        "hat_yarn_costs": {
-          "0": 6,
-          "1": 5,
-          "2": 6,
-          "3": 6,
-          "4": 8
-        },
-        "hat_craft_order": [
-          1,
-          4,
-          3,
-          2,
-          0
-        ]
       },
       "relic_groups": {
         "Burger": [

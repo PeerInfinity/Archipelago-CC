@@ -7823,20 +7823,6 @@
           "display_name": "Randomize Items"
         }
       },
-      "hat_yarn_costs": {
-        "0": 8,
-        "1": 4,
-        "2": 8,
-        "3": 6,
-        "4": 5
-      },
-      "hat_craft_order": [
-        2,
-        4,
-        1,
-        0,
-        3
-      ],
       "shops": [],
       "act_connections": {
         "chapter1_tutorial": "chapter1_barrelboss",
@@ -7883,6 +7869,20 @@
         "Badge Seller - Item 3",
         "Badge Seller - Item 4"
       ],
+      "hat_craft_order": [
+        2,
+        4,
+        1,
+        0,
+        3
+      ],
+      "hat_yarn_costs": {
+        "0": 8,
+        "1": 4,
+        "2": 8,
+        "3": 6,
+        "4": 5
+      },
       "chapter_timepiece_costs": {
         "1": 0,
         "2": 17,
@@ -8010,7 +8010,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": true,
       "use_resolved_items": false
     }
   },
@@ -8035,22 +8034,6 @@
         "Time's End": 35,
         "Arctic Cruise": -1,
         "Nyakuza Metro": -1
-      },
-      "hat_info": {
-        "hat_yarn_costs": {
-          "0": 8,
-          "1": 4,
-          "2": 8,
-          "3": 6,
-          "4": 5
-        },
-        "hat_craft_order": [
-          2,
-          4,
-          1,
-          0,
-          3
-        ]
       },
       "relic_groups": {
         "Everything": [

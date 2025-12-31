@@ -13492,6 +13492,240 @@
         ],
         "base_item": "progressive-advanced-material-processing"
       },
+      "progressive-automation": {
+        "items": [
+          {
+            "name": "automation",
+            "level": 1
+          },
+          {
+            "name": "automation-2",
+            "level": 2
+          },
+          {
+            "name": "automation-3",
+            "level": 3
+          }
+        ],
+        "base_item": "progressive-automation"
+      },
+      "progressive-electric-energy-distribution": {
+        "items": [
+          {
+            "name": "electric-energy-distribution-1",
+            "level": 1
+          },
+          {
+            "name": "electric-energy-distribution-2",
+            "level": 2
+          }
+        ],
+        "base_item": "progressive-electric-energy-distribution"
+      },
+      "progressive-engine": {
+        "items": [
+          {
+            "name": "engine",
+            "level": 1
+          },
+          {
+            "name": "electric-engine",
+            "level": 2
+          }
+        ],
+        "base_item": "progressive-engine"
+      },
+      "progressive-flamethrower": {
+        "items": [
+          {
+            "name": "flamethrower",
+            "level": 1
+          },
+          {
+            "name": "refined-flammables-1",
+            "level": 2
+          },
+          {
+            "name": "refined-flammables-2",
+            "level": 3
+          },
+          {
+            "name": "refined-flammables-3",
+            "level": 4
+          },
+          {
+            "name": "refined-flammables-4",
+            "level": 5
+          },
+          {
+            "name": "refined-flammables-5",
+            "level": 6
+          },
+          {
+            "name": "refined-flammables-6",
+            "level": 7
+          }
+        ],
+        "base_item": "progressive-flamethrower"
+      },
+      "progressive-military": {
+        "items": [
+          {
+            "name": "military",
+            "level": 1
+          },
+          {
+            "name": "military-2",
+            "level": 2
+          },
+          {
+            "name": "military-3",
+            "level": 3
+          },
+          {
+            "name": "military-4",
+            "level": 4
+          }
+        ],
+        "base_item": "progressive-military"
+      },
+      "progressive-processing": {
+        "items": [
+          {
+            "name": "steel-processing",
+            "level": 1
+          },
+          {
+            "name": "oil-processing",
+            "level": 2
+          },
+          {
+            "name": "sulfur-processing",
+            "level": 3
+          },
+          {
+            "name": "advanced-oil-processing",
+            "level": 4
+          },
+          {
+            "name": "coal-liquefaction",
+            "level": 5
+          },
+          {
+            "name": "uranium-processing",
+            "level": 6
+          },
+          {
+            "name": "kovarex-enrichment-process",
+            "level": 7
+          },
+          {
+            "name": "nuclear-fuel-reprocessing",
+            "level": 8
+          }
+        ],
+        "base_item": "progressive-processing"
+      },
+      "progressive-productivity-module": {
+        "items": [
+          {
+            "name": "productivity-module",
+            "level": 1
+          },
+          {
+            "name": "productivity-module-2",
+            "level": 2
+          },
+          {
+            "name": "productivity-module-3",
+            "level": 3
+          }
+        ],
+        "base_item": "progressive-productivity-module"
+      },
+      "progressive-science-pack": {
+        "items": [
+          {
+            "name": "logistic-science-pack",
+            "level": 1
+          },
+          {
+            "name": "military-science-pack",
+            "level": 2
+          },
+          {
+            "name": "chemical-science-pack",
+            "level": 3
+          },
+          {
+            "name": "production-science-pack",
+            "level": 4
+          },
+          {
+            "name": "utility-science-pack",
+            "level": 5
+          },
+          {
+            "name": "space-science-pack",
+            "level": 6
+          }
+        ],
+        "base_item": "progressive-science-pack"
+      },
+      "progressive-train-network": {
+        "items": [
+          {
+            "name": "railway",
+            "level": 1
+          },
+          {
+            "name": "automated-rail-transportation",
+            "level": 2
+          },
+          {
+            "name": "braking-force-1",
+            "level": 3
+          },
+          {
+            "name": "braking-force-2",
+            "level": 4
+          },
+          {
+            "name": "braking-force-3",
+            "level": 5
+          },
+          {
+            "name": "braking-force-4",
+            "level": 6
+          },
+          {
+            "name": "braking-force-5",
+            "level": 7
+          },
+          {
+            "name": "braking-force-6",
+            "level": 8
+          },
+          {
+            "name": "braking-force-7",
+            "level": 9
+          }
+        ],
+        "base_item": "progressive-train-network"
+      },
+      "progressive-wall": {
+        "items": [
+          {
+            "name": "stone-wall",
+            "level": 1
+          },
+          {
+            "name": "gate",
+            "level": 2
+          }
+        ],
+        "base_item": "progressive-wall"
+      },
       "progressive-armor": {
         "items": [
           {
@@ -13512,23 +13746,6 @@
           }
         ],
         "base_item": "progressive-armor"
-      },
-      "progressive-automation": {
-        "items": [
-          {
-            "name": "automation",
-            "level": 1
-          },
-          {
-            "name": "automation-2",
-            "level": 2
-          },
-          {
-            "name": "automation-3",
-            "level": 3
-          }
-        ],
-        "base_item": "progressive-automation"
       },
       "progressive-braking-force": {
         "items": [
@@ -13580,19 +13797,6 @@
         ],
         "base_item": "progressive-efficiency-module"
       },
-      "progressive-electric-energy-distribution": {
-        "items": [
-          {
-            "name": "electric-energy-distribution-1",
-            "level": 1
-          },
-          {
-            "name": "electric-energy-distribution-2",
-            "level": 2
-          }
-        ],
-        "base_item": "progressive-electric-energy-distribution"
-      },
       "progressive-energy-shield": {
         "items": [
           {
@@ -13605,52 +13809,6 @@
           }
         ],
         "base_item": "progressive-energy-shield"
-      },
-      "progressive-engine": {
-        "items": [
-          {
-            "name": "engine",
-            "level": 1
-          },
-          {
-            "name": "electric-engine",
-            "level": 2
-          }
-        ],
-        "base_item": "progressive-engine"
-      },
-      "progressive-flamethrower": {
-        "items": [
-          {
-            "name": "flamethrower",
-            "level": 1
-          },
-          {
-            "name": "refined-flammables-1",
-            "level": 2
-          },
-          {
-            "name": "refined-flammables-2",
-            "level": 3
-          },
-          {
-            "name": "refined-flammables-3",
-            "level": 4
-          },
-          {
-            "name": "refined-flammables-4",
-            "level": 5
-          },
-          {
-            "name": "refined-flammables-5",
-            "level": 6
-          },
-          {
-            "name": "refined-flammables-6",
-            "level": 7
-          }
-        ],
-        "base_item": "progressive-flamethrower"
       },
       "progressive-fluid-handling": {
         "items": [
@@ -13856,27 +14014,6 @@
         ],
         "base_item": "progressive-logistics"
       },
-      "progressive-military": {
-        "items": [
-          {
-            "name": "military",
-            "level": 1
-          },
-          {
-            "name": "military-2",
-            "level": 2
-          },
-          {
-            "name": "military-3",
-            "level": 3
-          },
-          {
-            "name": "military-4",
-            "level": 4
-          }
-        ],
-        "base_item": "progressive-military"
-      },
       "progressive-mining-productivity": {
         "items": [
           {
@@ -13948,60 +14085,6 @@
           }
         ],
         "base_item": "progressive-physical-projectile-damage"
-      },
-      "progressive-processing": {
-        "items": [
-          {
-            "name": "steel-processing",
-            "level": 1
-          },
-          {
-            "name": "oil-processing",
-            "level": 2
-          },
-          {
-            "name": "sulfur-processing",
-            "level": 3
-          },
-          {
-            "name": "advanced-oil-processing",
-            "level": 4
-          },
-          {
-            "name": "coal-liquefaction",
-            "level": 5
-          },
-          {
-            "name": "uranium-processing",
-            "level": 6
-          },
-          {
-            "name": "kovarex-enrichment-process",
-            "level": 7
-          },
-          {
-            "name": "nuclear-fuel-reprocessing",
-            "level": 8
-          }
-        ],
-        "base_item": "progressive-processing"
-      },
-      "progressive-productivity-module": {
-        "items": [
-          {
-            "name": "productivity-module",
-            "level": 1
-          },
-          {
-            "name": "productivity-module-2",
-            "level": 2
-          },
-          {
-            "name": "productivity-module-3",
-            "level": 3
-          }
-        ],
-        "base_item": "progressive-productivity-module"
       },
       "progressive-refined-flammables": {
         "items": [
@@ -14078,35 +14161,6 @@
         ],
         "base_item": "progressive-rocketry"
       },
-      "progressive-science-pack": {
-        "items": [
-          {
-            "name": "logistic-science-pack",
-            "level": 1
-          },
-          {
-            "name": "military-science-pack",
-            "level": 2
-          },
-          {
-            "name": "chemical-science-pack",
-            "level": 3
-          },
-          {
-            "name": "production-science-pack",
-            "level": 4
-          },
-          {
-            "name": "utility-science-pack",
-            "level": 5
-          },
-          {
-            "name": "space-science-pack",
-            "level": 6
-          }
-        ],
-        "base_item": "progressive-science-pack"
-      },
       "progressive-speed-module": {
         "items": [
           {
@@ -14153,47 +14207,6 @@
         ],
         "base_item": "progressive-stronger-explosives"
       },
-      "progressive-train-network": {
-        "items": [
-          {
-            "name": "railway",
-            "level": 1
-          },
-          {
-            "name": "automated-rail-transportation",
-            "level": 2
-          },
-          {
-            "name": "braking-force-1",
-            "level": 3
-          },
-          {
-            "name": "braking-force-2",
-            "level": 4
-          },
-          {
-            "name": "braking-force-3",
-            "level": 5
-          },
-          {
-            "name": "braking-force-4",
-            "level": 6
-          },
-          {
-            "name": "braking-force-5",
-            "level": 7
-          },
-          {
-            "name": "braking-force-6",
-            "level": 8
-          },
-          {
-            "name": "braking-force-7",
-            "level": 9
-          }
-        ],
-        "base_item": "progressive-train-network"
-      },
       "progressive-turret": {
         "items": [
           {
@@ -14223,19 +14236,6 @@
           }
         ],
         "base_item": "progressive-vehicle"
-      },
-      "progressive-wall": {
-        "items": [
-          {
-            "name": "stone-wall",
-            "level": 1
-          },
-          {
-            "name": "gate",
-            "level": 2
-          }
-        ],
-        "base_item": "progressive-wall"
       },
       "progressive-weapon-shooting-speed": {
         "items": [
@@ -15398,7 +15398,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": true
     }
   },

@@ -20141,7 +20141,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": false
     }
   },
@@ -20209,5 +20208,51 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "evalSMBool": {
+        "params": [
+          "smbool",
+          "maxDiff"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "compare",
+              "left": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "smbool"
+                },
+                "attr": "bool"
+              },
+              "op": "==",
+              "right": {
+                "type": "constant",
+                "value": true
+              }
+            },
+            {
+              "type": "compare",
+              "left": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "smbool"
+                },
+                "attr": "difficulty"
+              },
+              "op": "<=",
+              "right": {
+                "type": "name",
+                "name": "maxDiff"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
 }
