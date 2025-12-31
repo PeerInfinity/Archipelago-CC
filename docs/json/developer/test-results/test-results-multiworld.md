@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-31 01:55:33
+**Generated:** 2025-12-31 04:18:57
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 73 (100.0%)
-- **Failed:** 0 (0.0%)
+- **Passed:** 72 (98.6%)
+- **Failed:** 1 (1.4%)
 - **Skipped (Prerequisites):** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
-- **Second Pass Tested:** 73
-- **Second Pass Passed:** 73
+- **Second Pass Tested:** 72
+- **Second Pass Passed:** 72
 - **Second Pass Failed:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 41/73 (56.2% of passed)
-- **Passing with Generic Logic:** 67/73 (91.8% of passed)
-- **Passing with Both Generic:** 41/73 (56.2% of passed)
+- **Passing with Generic Exporter:** 42/72 (58.3% of passed)
+- **Passing with Generic Logic:** 66/72 (91.7% of passed)
+- **Passing with Both Generic:** 42/72 (58.3% of passed)
 
 ## Test Results
 
@@ -49,7 +49,7 @@
 | DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 1.0KB | ✅ |
 | DOOM 1993 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Dark Souls III | ✅ Passed | ✅ Passed | 2 | 2 | 0.7KB | ✅ |
+| Dark Souls III | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 4.1KB | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
@@ -61,8 +61,8 @@
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 19.5KB | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 3 | 3 | 7.4KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 3.6KB | ✅ |
-| Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 38.5KB | 10.7KB |
-| Links Awakening DX | ✅ Passed | ✅ Passed | 4 | 4 | 11.2KB | ✅ |
+| Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 35.8KB | 10.7KB |
+| Links Awakening DX | ✅ Passed | ✅ Passed | 4 | 4 | 7.4KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
@@ -72,18 +72,18 @@
 | Metamath | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Muse Dash | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Noita | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Old School Runescape | ✅ Passed | ✅ Passed | 5 | 5 | 1.0KB | ✅ |
-| Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 22.8KB | ✅ |
+| Old School Runescape | ❌ Failed | — | 5 | 5 | 1.0KB | ✅ |
+| Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 23.1KB | ✅ |
 | Paint | ✅ Passed | ✅ Passed | 5 | 5 | 2.7KB | ✅ |
-| Raft | ✅ Passed | ✅ Passed | 5 | 5 | 8.7KB | ✅ |
+| Raft | ✅ Passed | ✅ Passed | 5 | 5 | 5.4KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 6.1KB | 6.9KB |
+| Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 5.3KB | 6.9KB |
 | Shivers | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 28.4KB | 86.2KB |
-| Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 19.9KB | 8.0KB |
-| Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 4.1KB | ✅ |
+| Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 27.1KB | 86.2KB |
+| Stardew Valley | ✅ Passed | ✅ Passed | 5 | 5 | 18.8KB | 8.0KB |
+| Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 2.3KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 12.9KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Mario World | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
@@ -92,7 +92,7 @@
 | TOEM rule builder | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | TUNIC | ✅ Passed | ✅ Passed | 7 | 7 | 3.1KB | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 18.1KB | ✅ |
-| The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
+| The Legend of Zelda | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 4.7KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 25.5KB | ✅ |
@@ -102,7 +102,7 @@
 | Wargroove | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | WebDevJourney | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | ✅ Passed | 8 | 8 | 3.8KB | ✅ |
-| shapez | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
+| shapez | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 
 ## Templates in Multiworld
 
@@ -428,7 +428,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Lingo.yaml |
 | 5 | Noita.yaml |
 
-### Old School Runescape ✅ (Split 3)
+### Old School Runescape ❌ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -538,8 +538,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | ChecksFinder.yaml |
 | 3 | Faxanadu.yaml |
 | 4 | Links Awakening DX.yaml |
-| 5 | Old School Runescape.yaml |
-| 6 | Stardew Valley.yaml |
+| 5 | Stardew Valley.yaml |
 
 ### Subnautica ✅ (Split 4)
 
@@ -650,9 +649,8 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | ChecksFinder.yaml |
 | 3 | Faxanadu.yaml |
 | 4 | Links Awakening DX.yaml |
-| 5 | Old School Runescape.yaml |
-| 6 | Stardew Valley.yaml |
-| 7 | The Legend of Zelda.yaml |
+| 5 | Stardew Valley.yaml |
+| 6 | The Legend of Zelda.yaml |
 
 ### The Messenger ✅ (Split 4)
 
@@ -772,10 +770,25 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | ChecksFinder.yaml |
 | 3 | Faxanadu.yaml |
 | 4 | Links Awakening DX.yaml |
-| 5 | Old School Runescape.yaml |
-| 6 | Stardew Valley.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | shapez.yaml |
+| 5 | Stardew Valley.yaml |
+| 6 | The Legend of Zelda.yaml |
+| 7 | shapez.yaml |
+
+
+## Bisection Results
+
+When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
+
+### Old School Runescape (Old School Runescape.yaml)
+
+**Failing pairs found:** 4
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| A Short Hike.yaml | ❌ | ✅ | ✅ | ❌ |
+| ChecksFinder.yaml | ❌ | ✅ | ✅ | ❌ |
+| Faxanadu.yaml | ❌ | ✅ | ✅ | ❌ |
+| Links Awakening DX.yaml | ❌ | ✅ | ✅ | ❌ |
 
 
 ## Second Pass Results
@@ -786,7 +799,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 |-----------|-------------------|---------------------|---------------------|--------------------|
 | A Hat in Time | 1 | 8 | 1 | ✅ Passed |
 | A Link to the Past | 1 | 8 | 1 | ✅ Passed |
-| A Short Hike | 1 | 8 | 1 | ✅ Passed |
+| A Short Hike | 1 | 7 | 1 | ✅ Passed |
 | APQuest | 1 | 7 | 1 | ✅ Passed |
 | Adventure | 1 | 7 | 1 | ✅ Passed |
 | Aquaria | 1 | 7 | 1 | ✅ Passed |
@@ -796,7 +809,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Castlevania 64 | 1 | 7 | 1 | ✅ Passed |
 | Celeste (Open World) | 2 | 8 | 2 | ✅ Passed |
 | Celeste 64 | 2 | 8 | 2 | ✅ Passed |
-| ChecksFinder | 2 | 8 | 2 | ✅ Passed |
+| ChecksFinder | 2 | 7 | 2 | ✅ Passed |
 | ChocolateChipCookies | 2 | 7 | 2 | ✅ Passed |
 | Choo-Choo Charles | 2 | 7 | 2 | ✅ Passed |
 | Civilization VI | 2 | 7 | 2 | ✅ Passed |
@@ -806,7 +819,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Dark Souls III | 2 | 7 | 2 | ✅ Passed |
 | Donkey Kong Country 3 | 3 | 8 | 3 | ✅ Passed |
 | Factorio | 3 | 8 | 3 | ✅ Passed |
-| Faxanadu | 3 | 8 | 3 | ✅ Passed |
+| Faxanadu | 3 | 7 | 3 | ✅ Passed |
 | Final Fantasy Mystic Quest | 3 | 7 | 3 | ✅ Passed |
 | Heretic | 3 | 7 | 3 | ✅ Passed |
 | Hylics 2 | 3 | 7 | 3 | ✅ Passed |
@@ -816,7 +829,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Kirby's Dream Land 3 | 3 | 7 | 3 | ✅ Passed |
 | Landstalker - The Treasures of King Nole | 4 | 8 | 4 | ✅ Passed |
 | Lingo | 4 | 8 | 4 | ✅ Passed |
-| Links Awakening DX | 4 | 8 | 4 | ✅ Passed |
+| Links Awakening DX | 4 | 7 | 4 | ✅ Passed |
 | Lufia II Ancient Cave | 4 | 7 | 4 | ✅ Passed |
 | Mario & Luigi Superstar Saga | 4 | 7 | 4 | ✅ Passed |
 | MathProof2p2e4 | 4 | 7 | 4 | ✅ Passed |
@@ -826,7 +839,6 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Metamath | 4 | 7 | 4 | ✅ Passed |
 | Muse Dash | 5 | 8 | 5 | ✅ Passed |
 | Noita | 5 | 8 | 5 | ✅ Passed |
-| Old School Runescape | 5 | 8 | 5 | ✅ Passed |
 | Overcooked! 2 | 5 | 7 | 5 | ✅ Passed |
 | Paint | 5 | 7 | 5 | ✅ Passed |
 | Raft | 5 | 7 | 5 | ✅ Passed |
@@ -836,7 +848,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Shivers | 5 | 7 | 5 | ✅ Passed |
 | Sonic Adventure 2 Battle | 6 | 8 | 6 | ✅ Passed |
 | Starcraft 2 | 6 | 8 | 6 | ✅ Passed |
-| Stardew Valley | 6 | 8 | 6 | ✅ Passed |
+| Stardew Valley | 5 | 7 | 5 | ✅ Passed |
 | Subnautica | 6 | 7 | 6 | ✅ Passed |
 | Super Mario 64 | 6 | 7 | 6 | ✅ Passed |
 | Super Mario Land 2 | 6 | 7 | 6 | ✅ Passed |
@@ -846,7 +858,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | TOEM rule builder | 6 | 7 | 6 | ✅ Passed |
 | TUNIC | 7 | 8 | 7 | ✅ Passed |
 | Terraria | 7 | 8 | 7 | ✅ Passed |
-| The Legend of Zelda | 7 | 8 | 7 | ✅ Passed |
+| The Legend of Zelda | 6 | 7 | 6 | ✅ Passed |
 | The Messenger | 7 | 7 | 7 | ✅ Passed |
 | The Wind Waker | 7 | 7 | 7 | ✅ Passed |
 | The Witness | 7 | 7 | 7 | ✅ Passed |
@@ -856,7 +868,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Wargroove | 7 | 7 | 7 | ✅ Passed |
 | WebDevJourney | 8 | 8 | 8 | ✅ Passed |
 | Yoshi's Island | 8 | 8 | 8 | ✅ Passed |
-| shapez | 8 | 8 | 8 | ✅ Passed |
+| shapez | 7 | 7 | 7 | ✅ Passed |
 
 ### Second Pass Templates in Multiworld
 
@@ -896,10 +908,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | ChecksFinder.yaml |
 | 3 | Faxanadu.yaml |
 | 4 | Links Awakening DX.yaml |
-| 5 | Old School Runescape.yaml |
-| 6 | Stardew Valley.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | shapez.yaml |
+| 5 | Stardew Valley.yaml |
+| 6 | The Legend of Zelda.yaml |
+| 7 | shapez.yaml |
 
 #### APQuest ✅ (Split 4)
 
@@ -1019,10 +1030,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | ChecksFinder.yaml |
 | 3 | Faxanadu.yaml |
 | 4 | Links Awakening DX.yaml |
-| 5 | Old School Runescape.yaml |
-| 6 | Stardew Valley.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | shapez.yaml |
+| 5 | Stardew Valley.yaml |
+| 6 | The Legend of Zelda.yaml |
+| 7 | shapez.yaml |
 
 #### ChocolateChipCookies ✅ (Split 4)
 
@@ -1142,10 +1152,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | ChecksFinder.yaml |
 | 3 | Faxanadu.yaml |
 | 4 | Links Awakening DX.yaml |
-| 5 | Old School Runescape.yaml |
-| 6 | Stardew Valley.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | shapez.yaml |
+| 5 | Stardew Valley.yaml |
+| 6 | The Legend of Zelda.yaml |
+| 7 | shapez.yaml |
 
 #### Final Fantasy Mystic Quest ✅ (Split 4)
 
@@ -1265,10 +1274,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | ChecksFinder.yaml |
 | 3 | Faxanadu.yaml |
 | 4 | Links Awakening DX.yaml |
-| 5 | Old School Runescape.yaml |
-| 6 | Stardew Valley.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | shapez.yaml |
+| 5 | Stardew Valley.yaml |
+| 6 | The Legend of Zelda.yaml |
+| 7 | shapez.yaml |
 
 #### Lufia II Ancient Cave ✅ (Split 4)
 
@@ -1379,19 +1387,6 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Starcraft 2.yaml |
 | 7 | Terraria.yaml |
 | 8 | Yoshi's Island.yaml |
-
-#### Old School Runescape ✅ (Split 3)
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Short Hike.yaml |
-| 2 | ChecksFinder.yaml |
-| 3 | Faxanadu.yaml |
-| 4 | Links Awakening DX.yaml |
-| 5 | Old School Runescape.yaml |
-| 6 | Stardew Valley.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | shapez.yaml |
 
 #### Overcooked! 2 ✅ (Split 4)
 
@@ -1511,10 +1506,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | ChecksFinder.yaml |
 | 3 | Faxanadu.yaml |
 | 4 | Links Awakening DX.yaml |
-| 5 | Old School Runescape.yaml |
-| 6 | Stardew Valley.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | shapez.yaml |
+| 5 | Stardew Valley.yaml |
+| 6 | The Legend of Zelda.yaml |
+| 7 | shapez.yaml |
 
 #### Subnautica ✅ (Split 4)
 
@@ -1634,10 +1628,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | ChecksFinder.yaml |
 | 3 | Faxanadu.yaml |
 | 4 | Links Awakening DX.yaml |
-| 5 | Old School Runescape.yaml |
-| 6 | Stardew Valley.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | shapez.yaml |
+| 5 | Stardew Valley.yaml |
+| 6 | The Legend of Zelda.yaml |
+| 7 | shapez.yaml |
 
 #### The Messenger ✅ (Split 4)
 
@@ -1757,10 +1750,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | ChecksFinder.yaml |
 | 3 | Faxanadu.yaml |
 | 4 | Links Awakening DX.yaml |
-| 5 | Old School Runescape.yaml |
-| 6 | Stardew Valley.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | shapez.yaml |
+| 5 | Stardew Valley.yaml |
+| 6 | The Legend of Zelda.yaml |
+| 7 | shapez.yaml |
 
 
 ## Notes
