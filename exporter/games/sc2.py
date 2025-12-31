@@ -1,6 +1,6 @@
 """Starcraft 2 game-specific export handler."""
 
-from typing import Dict, Any, Optional, Callable
+from typing import Dict, Any, Optional, Callable, List
 from .generic import GenericGameExportHandler
 import logging
 
@@ -306,72 +306,51 @@ class SC2GameExportHandler(GenericGameExportHandler):
         """
         Recursively expand rule functions with SC2-specific logic pattern recognition.
 
-        SC2 uses a logic object with helper methods (e.g., logic.terran_early_tech())
-        and attributes (e.g., logic.take_over_ai_allies, logic.advanced_tactics).
-        The base class handles logic.method() -> helper conversion via HELPER_OBJECT_NAMES.
-        This method handles logic.attribute patterns which may be settings (not helpers).
+        SC2Logic uses both methods and computed properties. The base class already
+        handles logic.attr -> helper conversion (since 'logic' is in HELPER_OBJECT_NAMES).
+        This method handles self.attr patterns that appear in helper method bodies.
         """
         if not rule or not isinstance(rule, dict):
             return rule
 
-        # Check for the pattern: attribute access on "logic" (not a function call)
-        # This pattern looks like:
-        # {
-        #   "type": "attribute",
-        #   "object": {"type": "name", "name": "logic"},
-        #   "attr": "attribute_name"
-        # }
-        # These could be either:
-        # 1. SC2Logic helper methods accessed without parentheses (should become helper calls)
-        # 2. SC2Logic instance attributes that map to world settings (should become self.attribute)
+        # Handle self.attr patterns in helper method bodies
+        # The base class excludes 'self' from helper conversion, so we handle it here
         if rule.get('type') == 'attribute':
             obj = rule.get('object', {})
-            obj_name = obj.get('name') if obj.get('type') == 'name' else None
-
-            # Handle both "logic.attr" and "self.attr" patterns
-            # - "logic" appears when accessing the logic object passed to rules
-            # - "self" appears in helper method bodies (methods on SC2Logic class)
-            if obj_name in ('logic', 'self'):
+            if obj.get('type') == 'name' and obj.get('name') == 'self':
                 attr_name = rule.get('attr')
+                # Convert to helper call - expand_helper will resolve settings to constants
+                converted_rule = {'type': 'helper', 'name': attr_name, 'args': []}
+                return super().expand_rule(converted_rule, _depth)
 
-                if attr_name in self.KNOWN_LOGIC_METHODS:
-                    # This is a helper method accessed without parentheses
-                    # Convert to a helper call
-                    logger.debug(f"[SC2] Converting {obj_name}.{attr_name} to helper call (method accessed as attribute)")
-
-                    # Register the helper usage for automatic discovery
-                    self.register_helper_usage(attr_name)
-
-                    converted_rule = {
-                        'type': 'helper',
-                        'name': attr_name,
-                        'args': []
-                    }
-
-                    # Continue expanding the converted rule
-                    return super().expand_rule(converted_rule)
-                else:
-                    # This is a settings attribute - resolve to a constant value
-                    # This allows the world generator to use the value without game-specific code
-                    resolved_value = self._resolve_logic_attribute(attr_name)
-                    if resolved_value is not None:
-                        logger.debug(f"[SC2] Resolving {obj_name}.{attr_name} to constant: {resolved_value}")
-                        # Convert sets to lists for JSON serialization
-                        if isinstance(resolved_value, (set, frozenset)):
-                            resolved_value = sorted(list(resolved_value))
-                        return {'type': 'constant', 'value': resolved_value}
-                    else:
-                        # Fallback: keep as self.attribute_name if we can't resolve
-                        logger.debug(f"[SC2] Could not resolve {obj_name}.{attr_name}, keeping as self.{attr_name}")
-                        converted_rule = {
-                            'type': 'attribute',
-                            'object': {'type': 'name', 'name': 'self'},
-                            'attr': attr_name
-                        }
-                        return super().expand_rule(converted_rule)
-
-        # Let the base class handle standard recursion (compare, block, if_statement, etc.)
+        # Let the base class handle standard recursion
         return self._recursively_expand_rule_children(rule, _depth)
+
+    def expand_helper(self, helper_name: str, args: List[Any] = None) -> Optional[Dict[str, Any]]:
+        """
+        Expand helper functions, resolving SC2Logic properties to constants.
+
+        SC2Logic has both methods (like terran_common_unit) and computed properties
+        (like advanced_tactics). Methods stay as helper calls; properties are
+        resolved to constant values at export time.
+        """
+        # First check base class handling (CONSTANT_HELPER_EXPANSIONS, HELPER_TO_RULE_MAPPINGS)
+        base_result = super().expand_helper(helper_name, args)
+        if base_result:
+            return base_result
+
+        # If this is NOT a known logic method, try to resolve as a computed property
+        if helper_name not in self.KNOWN_LOGIC_METHODS:
+            resolved = self._resolve_logic_attribute(helper_name)
+            if resolved is not None:
+                logger.debug(f"[SC2] Resolving {helper_name} to constant: {resolved}")
+                # Convert sets to lists for JSON serialization
+                if isinstance(resolved, (set, frozenset)):
+                    resolved = sorted(list(resolved))
+                return {'type': 'constant', 'value': resolved}
+
+        # Otherwise, keep as helper call
+        return None
 
     def _resolve_logic_attribute(self, attr: str) -> Any:
         """
