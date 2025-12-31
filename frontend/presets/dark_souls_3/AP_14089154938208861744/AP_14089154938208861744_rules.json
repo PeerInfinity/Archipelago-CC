@@ -2510,13 +2510,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "HWL: Soul of Boreal Valley Vordt"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "HWL: Soul of Boreal Valley Vordt"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -2531,13 +2536,18 @@
             "name": "Go To Lothric Castle",
             "connected_region": "Lothric Castle",
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": {
-                  "type": "constant",
-                  "value": "HWL: Soul of the Dancer"
+              "rule": "_can_get",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "HWL: Soul of the Dancer"
+                  },
+                  "_converted_from_ast": true
                 }
-              }
+              ]
             }
           },
           {
@@ -5560,13 +5570,18 @@
             "name": "Go To Cathedral of the Deep",
             "connected_region": "Cathedral of the Deep",
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": {
-                  "type": "constant",
-                  "value": "RS: Soul of a Crystal Sage"
+              "rule": "_can_get",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "RS: Soul of a Crystal Sage"
+                  },
+                  "_converted_from_ast": true
                 }
-              }
+              ]
             }
           },
           {
@@ -7214,22 +7229,32 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": {
-                          "type": "constant",
-                          "value": "Profaned Capital"
+                      "rule": "_can_get",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": "HWL: Red Eye Orb - wall tower, miniboss"
+                          },
+                          "_converted_from_ast": true
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "CanReachLocation",
-                      "args": {
-                        "location_name": {
-                          "type": "constant",
-                          "value": "HWL: Red Eye Orb - wall tower, miniboss"
+                      "rule": "_can_go_to",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": "Profaned Capital"
+                          },
+                          "_converted_from_ast": true
                         }
-                      }
+                      ]
                     }
                   ]
                 },
@@ -7257,22 +7282,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Rusted Gold Coin - don't forgive Patches"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Rusted Gold Coin - don't forgive Patches"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Hidden Blessing - Patches after searching GA"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Hidden Blessing - Patches after searching GA"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -8437,22 +8472,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": {
-                      "type": "constant",
-                      "value": "Cathedral of the Deep"
+                  "rule": "_can_go_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Cathedral of the Deep"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": {
-                      "type": "constant",
-                      "value": "Firelink Shrine Bell Tower"
+                  "rule": "_can_go_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Firelink Shrine Bell Tower"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -8472,22 +8517,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": {
-                      "type": "constant",
-                      "value": "Cathedral of the Deep"
+                  "rule": "_can_go_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Cathedral of the Deep"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": {
-                      "type": "constant",
-                      "value": "Firelink Shrine Bell Tower"
+                  "rule": "_can_go_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Firelink Shrine Bell Tower"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -8507,22 +8562,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": {
-                      "type": "constant",
-                      "value": "Cathedral of the Deep"
+                  "rule": "_can_go_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Cathedral of the Deep"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": {
-                      "type": "constant",
-                      "value": "Firelink Shrine Bell Tower"
+                  "rule": "_can_go_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Firelink Shrine Bell Tower"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -8542,22 +8607,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Rusted Gold Coin - don't forgive Patches"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Rusted Gold Coin - don't forgive Patches"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Hidden Blessing - Patches after searching GA"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Hidden Blessing - Patches after searching GA"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -8579,13 +8654,18 @@
             "name": "Go To Catacombs of Carthus",
             "connected_region": "Catacombs of Carthus",
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": {
-                  "type": "constant",
-                  "value": "FK: Soul of the Blood of the Wolf"
+              "rule": "_can_get",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "FK: Soul of the Blood of the Wolf"
+                  },
+                  "_converted_from_ast": true
                 }
-              }
+              ]
             }
           }
         ],
@@ -9912,13 +9992,18 @@
             "name": "FK: Havel's Helm - upper keep, after killing AP belfry roof NPC",
             "id": 100587,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": {
-                  "type": "constant",
-                  "value": "Archdragon Peak"
+              "rule": "_can_go_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Archdragon Peak"
+                  },
+                  "_converted_from_ast": true
                 }
-              }
+              ]
             },
             "item": {
               "name": "Twinkling Titanite",
@@ -9933,13 +10018,18 @@
             "name": "FK: Havel's Armor - upper keep, after killing AP belfry roof NPC",
             "id": 100588,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": {
-                  "type": "constant",
-                  "value": "Archdragon Peak"
+              "rule": "_can_go_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Archdragon Peak"
+                  },
+                  "_converted_from_ast": true
                 }
-              }
+              ]
             },
             "item": {
               "name": "Dragonslayer Gauntlets",
@@ -9954,13 +10044,18 @@
             "name": "FK: Havel's Gauntlets - upper keep, after killing AP belfry roof NPC",
             "id": 100589,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": {
-                  "type": "constant",
-                  "value": "Archdragon Peak"
+              "rule": "_can_go_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Archdragon Peak"
+                  },
+                  "_converted_from_ast": true
                 }
-              }
+              ]
             },
             "item": {
               "name": "Magic Clutch Ring",
@@ -9975,13 +10070,18 @@
             "name": "FK: Havel's Leggings - upper keep, after killing AP belfry roof NPC",
             "id": 100590,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": {
-                  "type": "constant",
-                  "value": "Archdragon Peak"
+              "rule": "_can_go_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Archdragon Peak"
+                  },
+                  "_converted_from_ast": true
                 }
-              }
+              ]
             },
             "item": {
               "name": "Dancer's Armor",
@@ -10004,13 +10104,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "CC: Soul of High Lord Wolnir"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "CC: Soul of High Lord Wolnir"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -11369,13 +11474,18 @@
             "name": "Go To Anor Londo",
             "connected_region": "Anor Londo",
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": {
-                  "type": "constant",
-                  "value": "IBV: Soul of Pontiff Sulyvahn"
+              "rule": "_can_get",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "IBV: Soul of Pontiff Sulyvahn"
+                  },
+                  "_converted_from_ast": true
                 }
-              }
+              ]
             }
           }
         ],
@@ -11387,13 +11497,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "US: Soul of the Rotted Greatwood"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "US: Soul of the Rotted Greatwood"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -12382,13 +12497,18 @@
             "name": "IBV: Ring of the Evil Eye - Anri",
             "id": 100752,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": {
-                  "type": "constant",
-                  "value": "CD: Soul of the Deacons of the Deep"
+              "rule": "_can_get",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "CD: Soul of the Deacons of the Deep"
+                  },
+                  "_converted_from_ast": true
                 }
-              }
+              ]
             },
             "item": {
               "name": "Dragonslayer Greatarrow x5",
@@ -12406,13 +12526,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "US: Soul of the Rotted Greatwood"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "US: Soul of the Rotted Greatwood"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -12438,13 +12563,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "US: Soul of the Rotted Greatwood"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "US: Soul of the Rotted Greatwood"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -12470,13 +12600,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "US: Soul of the Rotted Greatwood"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "US: Soul of the Rotted Greatwood"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -12502,13 +12637,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "US: Soul of the Rotted Greatwood"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "US: Soul of the Rotted Greatwood"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -12534,13 +12674,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "US: Soul of the Rotted Greatwood"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "US: Soul of the Rotted Greatwood"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -12566,13 +12711,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "US: Soul of the Rotted Greatwood"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "US: Soul of the Rotted Greatwood"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -12598,13 +12748,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "US: Soul of the Rotted Greatwood"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "US: Soul of the Rotted Greatwood"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -12664,13 +12819,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "CD: Shotel - Patches"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "CD: Shotel - Patches"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -13954,22 +14114,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "ID: Titanite Slab - Siegward"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ID: Titanite Slab - Siegward"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "PC: Soul of Yhorm the Giant"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "PC: Soul of Yhorm the Giant"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -13989,22 +14159,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "ID: Titanite Slab - Siegward"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ID: Titanite Slab - Siegward"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "PC: Soul of Yhorm the Giant"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "PC: Soul of Yhorm the Giant"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -14024,22 +14204,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "ID: Titanite Slab - Siegward"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "ID: Titanite Slab - Siegward"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "PC: Soul of Yhorm the Giant"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "PC: Soul of Yhorm the Giant"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -14093,13 +14283,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "US: Soul of the Rotted Greatwood"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "US: Soul of the Rotted Greatwood"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -14749,22 +14944,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "AL: Soul of Aldrich"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "AL: Soul of Aldrich"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -14784,22 +14989,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "AL: Soul of Aldrich"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "AL: Soul of Aldrich"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -14819,22 +15034,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "AL: Soul of Aldrich"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "AL: Soul of Aldrich"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -14854,22 +15079,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "AL: Soul of Aldrich"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "AL: Soul of Aldrich"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -14889,22 +15124,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "AL: Soul of Aldrich"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "AL: Soul of Aldrich"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -14924,22 +15169,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "AL: Soul of Aldrich"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "AL: Soul of Aldrich"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -15016,13 +15271,18 @@
             "name": "AL: Chameleon - tomb after marrying Anri",
             "id": 100909,
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": {
-                  "type": "constant",
-                  "value": "CD: Soul of the Deacons of the Deep"
+              "rule": "_can_get",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "CD: Soul of the Deacons of the Deep"
+                  },
+                  "_converted_from_ast": true
                 }
-              }
+              ]
             },
             "item": {
               "name": "Shriving Stone",
@@ -15040,22 +15300,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "AL: Soul of Aldrich"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "AL: Soul of Aldrich"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "IBV: Ring of the Evil Eye - Anri"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "IBV: Ring of the Evil Eye - Anri"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -15239,22 +15509,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "AL: Soul of Aldrich"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "AL: Soul of Aldrich"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "IBV: Ring of the Evil Eye - Anri"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "IBV: Ring of the Evil Eye - Anri"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -15273,22 +15553,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "AL: Soul of Aldrich"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "AL: Soul of Aldrich"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "IBV: Ring of the Evil Eye - Anri"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "IBV: Ring of the Evil Eye - Anri"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -15307,22 +15597,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "AL: Soul of Aldrich"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "AL: Soul of Aldrich"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "IBV: Ring of the Evil Eye - Anri"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "IBV: Ring of the Evil Eye - Anri"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -15341,22 +15641,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "AL: Soul of Aldrich"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "AL: Soul of Aldrich"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "IBV: Ring of the Evil Eye - Anri"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "IBV: Ring of the Evil Eye - Anri"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -15404,6 +15714,31 @@
                   "rule": "And",
                   "children": [
                     {
+                      "rule": "_can_get",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": "LC: Soul of Dragonslayer Armour"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Grand Archives Key"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
                       "rule": "Has",
                       "args": {
                         "item_name": "Pyromancy Flame"
@@ -15413,26 +15748,6 @@
                       "rule": "Has",
                       "args": {
                         "item_name": "Transposing Kiln"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachLocation",
-                      "args": {
-                        "location_name": {
-                          "type": "constant",
-                          "value": "LC: Soul of Dragonslayer Armour"
-                        }
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Grand Archives Key"
                       }
                     }
                   ]
@@ -16382,22 +16697,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "AL: Cinders of a Lord - Aldrich"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "AL: Cinders of a Lord - Aldrich"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "PC: Cinders of a Lord - Yhorm the Giant"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "PC: Cinders of a Lord - Yhorm the Giant"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -16416,22 +16741,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "AL: Cinders of a Lord - Aldrich"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "AL: Cinders of a Lord - Aldrich"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "PC: Cinders of a Lord - Yhorm the Giant"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "PC: Cinders of a Lord - Yhorm the Giant"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -16465,22 +16800,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FK: Soul of the Blood of the Wolf"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FK: Soul of the Blood of the Wolf"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "LC: Soul of Dragonslayer Armour"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "LC: Soul of Dragonslayer Armour"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -16499,22 +16844,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FK: Soul of the Blood of the Wolf"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FK: Soul of the Blood of the Wolf"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "LC: Soul of Dragonslayer Armour"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "LC: Soul of Dragonslayer Armour"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -16647,13 +17002,18 @@
             "name": "Go To Untended Graves",
             "connected_region": "Untended Graves",
             "access_rule": {
-              "rule": "CanReachLocation",
-              "args": {
-                "location_name": {
-                  "type": "constant",
-                  "value": "CKG: Soul of Consumed Oceiros"
+              "rule": "_can_get",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "CKG: Soul of Consumed Oceiros"
+                  },
+                  "_converted_from_ast": true
                 }
-              }
+              ]
             }
           }
         ],
@@ -16983,13 +17343,18 @@
             "name": "CKG: Drakeblood Helm - tomb, after killing AP mausoleum NPC",
             "id": 101028,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": {
-                  "type": "constant",
-                  "value": "Archdragon Peak"
+              "rule": "_can_go_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Archdragon Peak"
+                  },
+                  "_converted_from_ast": true
                 }
-              }
+              ]
             },
             "item": {
               "name": "White Dragon Breath",
@@ -17004,13 +17369,18 @@
             "name": "CKG: Drakeblood Armor - tomb, after killing AP mausoleum NPC",
             "id": 101029,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": {
-                  "type": "constant",
-                  "value": "Archdragon Peak"
+              "rule": "_can_go_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Archdragon Peak"
+                  },
+                  "_converted_from_ast": true
                 }
-              }
+              ]
             },
             "item": {
               "name": "Titanite Chunk",
@@ -17025,13 +17395,18 @@
             "name": "CKG: Drakeblood Gauntlets - tomb, after killing AP mausoleum NPC",
             "id": 101030,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": {
-                  "type": "constant",
-                  "value": "Archdragon Peak"
+              "rule": "_can_go_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Archdragon Peak"
+                  },
+                  "_converted_from_ast": true
                 }
-              }
+              ]
             },
             "item": {
               "name": "Archdeacon's Great Staff",
@@ -17046,13 +17421,18 @@
             "name": "CKG: Drakeblood Leggings - tomb, after killing AP mausoleum NPC",
             "id": 101031,
             "access_rule": {
-              "rule": "CanReachRegion",
-              "args": {
-                "region_name": {
-                  "type": "constant",
-                  "value": "Archdragon Peak"
+              "rule": "_can_go_to",
+              "_original_ast_type": "helper",
+              "_converted_from_ast": true,
+              "args": [
+                {
+                  "rule": "Constant",
+                  "args": {
+                    "value": "Archdragon Peak"
+                  },
+                  "_converted_from_ast": true
                 }
-              }
+              ]
             },
             "item": {
               "name": "Soul of a Crestfallen Knight",
@@ -18200,13 +18580,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "US: Soul of the Rotted Greatwood"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "US: Soul of the Rotted Greatwood"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -18232,13 +18617,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "US: Soul of the Rotted Greatwood"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "US: Soul of the Rotted Greatwood"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -18264,13 +18654,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "US: Soul of the Rotted Greatwood"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "US: Soul of the Rotted Greatwood"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -18296,13 +18691,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "US: Soul of the Rotted Greatwood"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "US: Soul of the Rotted Greatwood"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -18328,13 +18728,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "US: Soul of the Rotted Greatwood"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "US: Soul of the Rotted Greatwood"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -18360,22 +18765,32 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Ember - shop for Greirat's Ashes"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Ember - shop for Greirat's Ashes"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "CD: Shotel - Patches"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "CD: Shotel - Patches"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -18590,18 +19005,23 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FK: Cinders of a Lord - Abyss Watcher"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
                   "rule": "_has_any_scroll",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FK: Cinders of a Lord - Abyss Watcher"
-                    }
-                  }
                 }
               ]
             },
@@ -18663,18 +19083,23 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FK: Cinders of a Lord - Abyss Watcher"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
                   "rule": "_has_any_scroll",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FK: Cinders of a Lord - Abyss Watcher"
-                    }
-                  }
                 }
               ]
             },
@@ -18694,18 +19119,23 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FK: Cinders of a Lord - Abyss Watcher"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
                   "rule": "_has_any_scroll",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FK: Cinders of a Lord - Abyss Watcher"
-                    }
-                  }
                 }
               ]
             },
@@ -18725,18 +19155,23 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FK: Cinders of a Lord - Abyss Watcher"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
                   "rule": "_has_any_scroll",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FK: Cinders of a Lord - Abyss Watcher"
-                    }
-                  }
                 }
               ]
             },
@@ -18756,18 +19191,23 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FK: Cinders of a Lord - Abyss Watcher"
+                      },
+                      "_converted_from_ast": true
+                    }
+                  ]
+                },
+                {
                   "rule": "_has_any_scroll",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
-                },
-                {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FK: Cinders of a Lord - Abyss Watcher"
-                    }
-                  }
                 }
               ]
             },
@@ -19643,13 +20083,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Hawkwood's Shield - gravestone after Hawkwood leaves"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Hawkwood's Shield - gravestone after Hawkwood leaves"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -19731,13 +20176,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Hawkwood's Shield - gravestone after Hawkwood leaves"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Hawkwood's Shield - gravestone after Hawkwood leaves"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -19949,13 +20399,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": {
-                      "type": "constant",
-                      "value": "Undead Settlement"
+                  "rule": "_can_go_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Undead Settlement"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -19981,13 +20436,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": {
-                      "type": "constant",
-                      "value": "Undead Settlement"
+                  "rule": "_can_go_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Undead Settlement"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -20013,31 +20473,46 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": {
-                      "type": "constant",
-                      "value": "Irithyll of the Boreal Valley"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "CD: Shotel - Patches"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "CD: Shotel - Patches"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Divine Blessing - Greirat from US"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Divine Blessing - Greirat from US"
+                  "rule": "_can_go_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Irithyll of the Boreal Valley"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -20057,31 +20532,46 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": {
-                      "type": "constant",
-                      "value": "Irithyll of the Boreal Valley"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "CD: Shotel - Patches"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "CD: Shotel - Patches"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Divine Blessing - Greirat from US"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Divine Blessing - Greirat from US"
+                  "rule": "_can_go_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Irithyll of the Boreal Valley"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -20101,31 +20591,46 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": {
-                      "type": "constant",
-                      "value": "Irithyll of the Boreal Valley"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "CD: Shotel - Patches"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "CD: Shotel - Patches"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Divine Blessing - Greirat from US"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Divine Blessing - Greirat from US"
+                  "rule": "_can_go_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Irithyll of the Boreal Valley"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -20145,31 +20650,46 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": {
-                      "type": "constant",
-                      "value": "Irithyll of the Boreal Valley"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "CD: Shotel - Patches"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "CD: Shotel - Patches"
+                  "rule": "_can_get",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "FS: Divine Blessing - Greirat from US"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 },
                 {
-                  "rule": "CanReachLocation",
-                  "args": {
-                    "location_name": {
-                      "type": "constant",
-                      "value": "FS: Divine Blessing - Greirat from US"
+                  "rule": "_can_go_to",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "Constant",
+                      "args": {
+                        "value": "Irithyll of the Boreal Valley"
+                      },
+                      "_converted_from_ast": true
                     }
-                  }
+                  ]
                 }
               ]
             },
@@ -20192,22 +20712,46 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": {
-                          "type": "constant",
-                          "value": "Grand Archives"
+                      "rule": "_can_get",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": "CD: Shotel - Patches"
+                          },
+                          "_converted_from_ast": true
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "CanReachLocation",
-                      "args": {
-                        "location_name": {
-                          "type": "constant",
-                          "value": "FS: Divine Blessing - Greirat from IBV"
+                      "rule": "_can_get",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": "FS: Divine Blessing - Greirat from US"
+                          },
+                          "_converted_from_ast": true
                         }
-                      }
+                      ]
+                    },
+                    {
+                      "rule": "_can_go_to",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": "Irithyll of the Boreal Valley"
+                          },
+                          "_converted_from_ast": true
+                        }
+                      ]
                     }
                   ]
                 },
@@ -20215,31 +20759,32 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": {
-                          "type": "constant",
-                          "value": "Irithyll of the Boreal Valley"
+                      "rule": "_can_get",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": "FS: Divine Blessing - Greirat from IBV"
+                          },
+                          "_converted_from_ast": true
                         }
-                      }
+                      ]
                     },
                     {
-                      "rule": "CanReachLocation",
-                      "args": {
-                        "location_name": {
-                          "type": "constant",
-                          "value": "CD: Shotel - Patches"
+                      "rule": "_can_go_to",
+                      "_original_ast_type": "helper",
+                      "_converted_from_ast": true,
+                      "args": [
+                        {
+                          "rule": "Constant",
+                          "args": {
+                            "value": "Grand Archives"
+                          },
+                          "_converted_from_ast": true
                         }
-                      }
-                    },
-                    {
-                      "rule": "CanReachLocation",
-                      "args": {
-                        "location_name": {
-                          "type": "constant",
-                          "value": "FS: Divine Blessing - Greirat from US"
-                        }
-                      }
+                      ]
                     }
                   ]
                 }
@@ -39761,7 +40306,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": false
     }
   },
@@ -39775,14 +40319,11 @@
           "location"
         ],
         "body": {
-          "type": "state_method",
-          "method": "can_reach_location",
-          "args": [
-            {
-              "type": "name",
-              "name": "location"
-            }
-          ]
+          "type": "location_check",
+          "location": {
+            "type": "name",
+            "name": "location"
+          }
         }
       },
       "_can_go_to": {
@@ -39790,28 +40331,25 @@
           "region"
         ],
         "body": {
-          "type": "state_method",
-          "method": "can_reach_entrance",
-          "args": [
-            {
-              "type": "f_string",
-              "parts": [
-                {
-                  "type": "constant",
-                  "value": "Go To "
-                },
-                {
-                  "type": "formatted_value",
-                  "value": {
-                    "type": "name",
-                    "name": "region"
-                  }
+          "type": "can_reach_entrance",
+          "entrance": {
+            "type": "f_string",
+            "parts": [
+              {
+                "type": "constant",
+                "value": "Go To "
+              },
+              {
+                "type": "formatted_value",
+                "value": {
+                  "type": "name",
+                  "name": "region"
                 }
-              ],
-              "all_simple": true,
-              "value": "Go To {region}"
-            }
-          ]
+              }
+            ],
+            "all_simple": true,
+            "value": "Go To {region}"
+          }
         }
       },
       "_has_any_scroll": {

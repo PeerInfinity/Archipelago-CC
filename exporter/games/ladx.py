@@ -71,10 +71,11 @@ class LADXGameExportHandler(GenericGameExportHandler):
 
                 # Case 2: String = item or event name
                 elif isinstance(condition, str):
-                    logger.debug(f"LADX exit '{exit_name}' requires item/event: {condition}")
+                    mapped_item = self._map_ladxr_item_name(condition)
+                    logger.debug(f"LADX exit '{exit_name}' requires item/event: {condition} -> {mapped_item}")
                     return {
                         'type': 'item_check',
-                        'item': condition
+                        'item': mapped_item
                     }
 
                 # Case 3: LADXR condition object (AND/OR) - convert to rules
@@ -165,82 +166,4 @@ class LADXGameExportHandler(GenericGameExportHandler):
             return 'RUPEES'
         # Use the canonical mapping from the world
         return ladxr_item_to_la_item_name.get(item_str, item_str)
-
-    def postprocess_entrance_rule(self, rule: Dict[str, Any], entrance_name: str = None) -> Dict[str, Any]:
-        """
-        Post-process entrance rules to handle LADX's isinstance pattern.
-
-        LADX entrances use isinstance(self.condition, str) to check if the condition
-        is a simple string vs a complex condition object. We need to simplify this
-        for JavaScript by removing the isinstance check.
-        """
-        if not rule:
-            return rule
-
-        # Detect the isinstance pattern used in LADX entrance access_rule methods
-        if (rule.get('type') == 'conditional' and
-            rule.get('test', {}).get('type') == 'helper' and
-            rule.get('test', {}).get('name') == 'isinstance'):
-
-            args = rule.get('test', {}).get('args', [])
-            if len(args) >= 2 and args[1].get('type') == 'name' and args[1].get('name') == 'str':
-                # This is checking isinstance(something, str)
-                first_arg = args[0]
-
-                # Case 1: isinstance(self.condition, str) - can't resolve at export time
-                if (first_arg.get('type') == 'attribute' and
-                    first_arg.get('attr') == 'condition'):
-                    logger.debug(f"LADX entrance '{entrance_name}' uses isinstance(self.condition, str), treating as always accessible")
-                    return None
-
-                # Case 2: isinstance(constant, str) - can evaluate at export time
-                elif first_arg.get('type') == 'constant':
-                    # The constant has been resolved - if it's a string, create an item check
-                    constant_value = first_arg.get('value')
-                    if isinstance(constant_value, str) and constant_value:
-                        mapped_name = self._map_ladxr_item_name(constant_value)
-                        logger.debug(f"LADX entrance '{entrance_name}' parsed item condition: {constant_value} -> {mapped_name}")
-                        return {'type': 'item_check', 'item': mapped_name}
-
-                    # If not a string or empty, fall back to the if_true branch
-                    if_true = rule.get('if_true')
-                    logger.debug(f"LADX entrance '{entrance_name}' uses isinstance on constant, simplifying to if_true branch")
-                    return self._postprocess_rule_recursive(if_true) if if_true else None
-
-        # For other rule types, continue with standard recursive postprocessing
-        return self._postprocess_rule_recursive(rule)
-
-    def _postprocess_rule_recursive(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Recursively postprocess nested rule structures."""
-        if not rule or not isinstance(rule, dict):
-            return rule
-
-        rule_type = rule.get('type')
-
-        # Map LADXR item names to Archipelago names in item_check rules
-        if rule_type == 'item_check' and 'item' in rule:
-            item_name = rule['item']
-            if isinstance(item_name, str):
-                mapped_name = self._map_ladxr_item_name(item_name)
-                if mapped_name != item_name:
-                    logger.debug(f"Mapped item name: {item_name} -> {mapped_name}")
-                    rule['item'] = mapped_name
-
-        # Process nested conditions
-        if rule_type in ['and', 'or'] and 'conditions' in rule:
-            rule['conditions'] = [
-                self._postprocess_rule_recursive(cond)
-                for cond in rule['conditions']
-            ]
-        elif rule_type == 'not' and 'condition' in rule:
-            rule['condition'] = self._postprocess_rule_recursive(rule['condition'])
-        elif rule_type == 'conditional':
-            if 'test' in rule:
-                rule['test'] = self._postprocess_rule_recursive(rule['test'])
-            if 'if_true' in rule:
-                rule['if_true'] = self._postprocess_rule_recursive(rule['if_true'])
-            if 'if_false' in rule:
-                rule['if_false'] = self._postprocess_rule_recursive(rule['if_false'])
-
-        return rule
 

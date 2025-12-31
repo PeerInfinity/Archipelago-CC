@@ -1,10 +1,16 @@
 """Stardew Valley game-specific export handler.
 
-NOTE: This exporter cannot be simplified using base class declarative tools
-(STATE_METHOD_REPLACEMENTS, CLOSURE_VAR_IMPORTS, etc.) because Stardew Valley
-uses a completely custom StardewRule class system instead of lambda functions.
-Each StardewRule type (Received, Reach, And, Or, Count, Has, etc.) requires
-specific serialization logic that cannot be replaced with declarative configuration.
+Stardew Valley uses a custom StardewRule class system instead of lambda functions
+for access rules. This requires custom serialization logic in override_rule_analysis()
+rather than declarative tools like STATE_METHOD_REPLACEMENTS.
+
+Key StardewRule types handled:
+- Received/TotalReceived: Item requirements → item_check
+- Reach: Region/location accessibility → region_check/location_check
+- And/Or/Count: Logical combinations → and/or/weighted_count_true
+- Has: Lazy evaluation wrapper → helper or inlined rule (with caching)
+- True_/False_: Literal values → constants
+- HasProgressionPercent: Progress tracking → item_check with virtual item
 """
 
 from typing import Dict, Any, Optional, Set
@@ -17,23 +23,9 @@ logger = logging.getLogger(__name__)
 class StardewValleyGameExportHandler(GenericGameExportHandler):
     """Export handler for Stardew Valley.
 
-    Stardew Valley uses a custom StardewRule class hierarchy instead of lambda
-    functions for access rules. This requires the override_rule_analysis() hook
-    to detect and serialize these custom rule objects to JSON format.
-
-    The StardewRule types handled:
-    - Received: Item requirement → item_check
-    - Reach: Region/location accessibility → region_check/location_check
-    - TotalReceived: Count across multiple items → item_check or helper
-    - And/Or: Logical combinations → and/or conditions
-    - True_/False_: Literal values → constants
-    - HasProgressionPercent: Progress tracking → item_check
-    - Has: Lazy evaluation wrapper → helper or cached rule
-    - Count: Weighted conditions → weighted_count_true
-
-    To reduce rules.json file size, Has rules (which represent item acquisition
-    logic) are exported as helper references instead of being fully inlined.
-    The unique Has rules are then exported as helper definitions.
+    Serializes StardewRule objects to JSON format via override_rule_analysis().
+    Has rules are cached and exported as helpers when they exceed HAS_RULE_HELPER_THRESHOLD
+    nodes to reduce rules.json file size.
     """
 
     # Threshold for preserving Has rules as helpers (in rule nodes)
@@ -100,23 +92,9 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
         Adds total_progression_items count which is needed for computing
         "Received Progression Percent" in the frontend.
         """
-        # Get base game info
         game_info = super().get_game_info(world)
-
-        # Add total progression items count
-        # This is used to calculate "Received Progression Percent"
-        if hasattr(world, 'total_progression_items'):
-            game_info['total_progression_items'] = world.total_progression_items
-            logger.debug(f"Added total_progression_items: {world.total_progression_items}")
-        else:
-            # Fallback: count progression items in the itempool
-            total_prog = 0
-            for item in world.multiworld.itempool:
-                if item.player == world.player and item.advancement:
-                    total_prog += 1
-            game_info['total_progression_items'] = total_prog
-            logger.debug(f"Calculated total_progression_items from itempool: {total_prog}")
-
+        # Stardew Valley always sets total_progression_items during create_items()
+        game_info['total_progression_items'] = world.total_progression_items
         return game_info
 
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:

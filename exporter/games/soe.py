@@ -5,9 +5,13 @@ Python lambda rules. Instead, pyevermizer provides requirements/provides data
 that we convert to helper calls.
 """
 
-from typing import Any, Dict, List, Optional
-from .generic import GenericGameExportHandler
+from functools import cached_property
+import inspect
+import itertools
 import logging
+from typing import Any, Dict, List, Optional
+
+from .generic import GenericGameExportHandler
 
 logger = logging.getLogger(__name__)
 
@@ -18,56 +22,46 @@ class SoEGameExportHandler(GenericGameExportHandler):
     # SOE uses resolved_items instead of base_items for sphere inventory
     USE_RESOLVED_ITEMS = True
 
-    def __init__(self, world=None):
-        super().__init__(world)
-        self._pyevermizer = None
-        self._progress_id_to_name = None
-        self._location_name_to_raw = None
-
-    @property
+    @cached_property
     def pyevermizer(self):
         """Lazy-load pyevermizer module."""
-        if self._pyevermizer is None:
-            try:
-                import pyevermizer
-                self._pyevermizer = pyevermizer
-            except ImportError:
-                logger.warning("Could not import pyevermizer")
-                self._pyevermizer = False  # Mark as failed
-        return self._pyevermizer if self._pyevermizer else None
+        try:
+            import pyevermizer
+            return pyevermizer
+        except ImportError:
+            logger.warning("Could not import pyevermizer")
+            return None
 
-    @property
+    @cached_property
     def progress_id_to_name(self) -> Dict[int, str]:
-        """Lazy-build progress ID to name mapping."""
-        if self._progress_id_to_name is None:
-            self._progress_id_to_name = {}
-            if self.pyevermizer:
-                import inspect
-                for name, val in inspect.getmembers(self.pyevermizer):
-                    if name.startswith('P_') and isinstance(val, int):
-                        self._progress_id_to_name[val] = name
-        return self._progress_id_to_name
+        """Build progress ID to name mapping from pyevermizer P_* constants."""
+        if not self.pyevermizer:
+            return {}
+        return {
+            val: name
+            for name, val in inspect.getmembers(self.pyevermizer)
+            if name.startswith('P_') and isinstance(val, int)
+        }
 
-    @property
+    @cached_property
     def location_name_to_raw(self) -> Dict[str, Any]:
-        """Lazy-build location name to raw pyevermizer location mapping."""
-        if self._location_name_to_raw is None:
-            self._location_name_to_raw = {}
-            if self.pyevermizer:
-                import itertools
-                for loc in itertools.chain(
-                    self.pyevermizer.get_locations(),
-                    self.pyevermizer.get_sniff_locations()
-                ):
-                    # Use the AP location name format
-                    if loc.type == self.pyevermizer.CHECK_GOURD:
-                        loc_name = f"{loc.name} #{loc.index}"
-                    elif loc.type == self.pyevermizer.CHECK_SNIFF:
-                        loc_name = f"{loc.name} Sniff #{loc.index}"
-                    else:
-                        loc_name = loc.name
-                    self._location_name_to_raw[loc_name] = loc
-        return self._location_name_to_raw
+        """Build location name to raw pyevermizer location mapping."""
+        if not self.pyevermizer:
+            return {}
+        result = {}
+        for loc in itertools.chain(
+            self.pyevermizer.get_locations(),
+            self.pyevermizer.get_sniff_locations()
+        ):
+            # Use the AP location name format
+            if loc.type == self.pyevermizer.CHECK_GOURD:
+                loc_name = f"{loc.name} #{loc.index}"
+            elif loc.type == self.pyevermizer.CHECK_SNIFF:
+                loc_name = f"{loc.name} Sniff #{loc.index}"
+            else:
+                loc_name = loc.name
+            result[loc_name] = loc
+        return result
 
     def _create_has_helper(self, progress_id: int, count: int = 1) -> Dict[str, Any]:
         """Create a helper call rule for checking progress."""
@@ -99,8 +93,6 @@ class SoEGameExportHandler(GenericGameExportHandler):
         if not self.pyevermizer:
             return item_data
 
-        import itertools
-
         # Extend with pyevermizer provides information
         for item in itertools.chain(
             self.pyevermizer.get_items(),
@@ -130,10 +122,6 @@ class SoEGameExportHandler(GenericGameExportHandler):
             item_data['__soe_logic_rules__'] = {'name': '__soe_logic_rules__', 'rules': logic_rules}
 
         return item_data
-
-    def postprocess_rule(self, rule) -> Optional[Dict[str, Any]]:
-        """Skip Python rule analysis - get all rules from pyevermizer."""
-        return None
 
     def get_location_attributes(self, location, world) -> Dict[str, Any]:
         """Get location access rules from pyevermizer."""
