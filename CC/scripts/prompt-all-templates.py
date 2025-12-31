@@ -42,6 +42,7 @@ from prompt_lib import (
     get_worldgen_seed_failures,
     get_worldgen_spoiler_failures,
     get_worldgen_crossval_failures,
+    get_worldgen_rules_comp_failures,
     categorize_world_generation_error,
     categorize_seed_generation_error,
     # prompt_generators.standard
@@ -57,6 +58,7 @@ from prompt_lib import (
     generate_worldgen_seed_failure_prompt,
     generate_worldgen_spoiler_failure_prompt,
     generate_worldgen_crossval_failure_prompt,
+    generate_worldgen_rules_comp_failure_prompt,
     # execution
     run_template_test,
     run_prompt_for_game,
@@ -84,7 +86,7 @@ def main():
     # Load appropriate exclude list based on mode if not explicitly provided
     if args.skip_list is None:
         # Determine the appropriate test_type based on mode
-        if args.worldgen_world_failures or args.worldgen_seed_failures or args.worldgen_spoiler_failures or args.worldgen_crossval_failures or args.only_worldgen or args.include_pattern == "WorldGen":
+        if args.worldgen_world_failures or args.worldgen_seed_failures or args.worldgen_spoiler_failures or args.worldgen_crossval_failures or args.worldgen_rules_comp_failures or args.only_worldgen or args.include_pattern == "WorldGen":
             exclude_test_type = 'worldgen'
         else:
             # For spoiler/multiclient/multiworld tests, use 'main' (permanent + main test exclusions)
@@ -103,7 +105,7 @@ def main():
     prompt_exclusions = load_prompt_exclusion_lists(project_root)
 
     # Handle worldgen modes - these iterate through failures, not templates
-    if args.worldgen_world_failures or args.worldgen_seed_failures or args.worldgen_spoiler_failures or args.worldgen_crossval_failures:
+    if args.worldgen_world_failures or args.worldgen_seed_failures or args.worldgen_spoiler_failures or args.worldgen_crossval_failures or args.worldgen_rules_comp_failures:
         quiet_mode = (args.text or args.prompt or args.promptfile) and not args.loud
         collected_prompts = [] if args.promptfile else None
 
@@ -217,6 +219,38 @@ def main():
 
                 prompt = generate_worldgen_crossval_failure_prompt(
                     game_name, template_file, world_mapping, args.seed
+                )
+
+                if args.promptfile:
+                    collected_prompts.append(prompt)
+                else:
+                    print(prompt)
+                    if args.text or args.prompt:
+                        return 0
+
+                if args.max_files and (i + 1) >= args.max_files:
+                    if not quiet_mode:
+                        print(f"\n Reached maximum file limit ({args.max_files}), stopping...")
+                    break
+
+        elif args.worldgen_rules_comp_failures:
+            failures = get_worldgen_rules_comp_failures(project_root, args.worldgen_test_mode)
+            if not quiet_mode:
+                print(f"Found {len(failures)} WorldGen Stage 5 (Rules Comparison) failures ({args.worldgen_test_mode} mode)")
+
+            for i, failure in enumerate(sorted(failures, key=lambda x: x['game_name'])):
+                game_name = failure['game_name']
+                template_file = failure['template']
+                differences_count = failure['differences_count']
+
+                if not quiet_mode:
+                    print(f"\n{'='*60}")
+                    print(f"[{i+1}/{len(failures)}] {game_name}")
+                    print(f"Differences: {differences_count}")
+                    print('='*60)
+
+                prompt = generate_worldgen_rules_comp_failure_prompt(
+                    game_name, template_file, differences_count, world_mapping, args.seed
                 )
 
                 if args.promptfile:

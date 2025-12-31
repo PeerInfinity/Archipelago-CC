@@ -17,6 +17,7 @@ from .worldgen import (
     generate_worldgen_seed_failure_prompt,
     generate_worldgen_spoiler_failure_prompt,
     generate_worldgen_crossval_failure_prompt,
+    generate_worldgen_rules_comp_failure_prompt,
 )
 
 __all__ = [
@@ -33,4 +34,5 @@ __all__ = [
     'generate_worldgen_seed_failure_prompt',
     'generate_worldgen_spoiler_failure_prompt',
     'generate_worldgen_crossval_failure_prompt',
+    'generate_worldgen_rules_comp_failure_prompt',
 ]

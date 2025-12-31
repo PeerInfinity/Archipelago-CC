@@ -59,6 +59,8 @@ def create_argument_parser():
                        help='Generate prompts for WorldGen Stage 3 failures (spoiler test fails)')
     parser.add_argument('--worldgen-crossval-failures', action='store_true',
                        help='Generate prompts for WorldGen Stage 4 failures (cross-validation fails)')
+    parser.add_argument('--worldgen-rules-comp-failures', action='store_true',
+                       help='Generate prompts for WorldGen Stage 5 failures (rules.json comparison fails)')
     parser.add_argument('--worldgen-test-mode', type=str, choices=['canonical', 'random'], default='canonical',
                        help='Which world generator test results to use (default: canonical)')
     parser.add_argument('--all-promptfiles', action='store_true',
@@ -160,9 +162,9 @@ def validate_arguments(args):
         print("Error: --gen-errors and --exporter-simplify are mutually exclusive")
         sys.exit(1)
 
-    worldgen_modes = [args.worldgen_world_failures, args.worldgen_seed_failures, args.worldgen_spoiler_failures, args.worldgen_crossval_failures]
+    worldgen_modes = [args.worldgen_world_failures, args.worldgen_seed_failures, args.worldgen_spoiler_failures, args.worldgen_crossval_failures, args.worldgen_rules_comp_failures]
     if sum(worldgen_modes) > 1:
-        print("Error: --worldgen-world-failures, --worldgen-seed-failures, --worldgen-spoiler-failures, and --worldgen-crossval-failures are mutually exclusive")
+        print("Error: --worldgen-world-failures, --worldgen-seed-failures, --worldgen-spoiler-failures, --worldgen-crossval-failures, and --worldgen-rules-comp-failures are mutually exclusive")
         sys.exit(1)
 
     if any(worldgen_modes) and (args.multiclient or args.multiworld):

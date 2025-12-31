@@ -98,7 +98,7 @@ def truncate_value(value: Any, max_length: int = 100) -> str:
 
 
 def is_canonical_difference(path: str) -> bool:
-    """Check if a difference path is caused by --canonical-seed1.
+    """Check if a difference path is caused by --canonical-seed1 or WorldGen.
 
     These differences are expected when comparing an original export
     with a WorldGen export that uses --canonical-seed1:
@@ -107,6 +107,7 @@ def is_canonical_difference(path: str) -> bool:
     - item placements at locations (item.name, item.advancement, item.player)
     - item_groups (item group assignments)
     - randomize_items option (WorldGen-specific, controls canonical placement)
+    - world_classes (class names differ between original and WorldGen)
     """
     # canonical_placements section
     if 'canonical_placements' in path:
@@ -127,6 +128,11 @@ def is_canonical_difference(path: str) -> bool:
     # randomize_items option (WorldGen-specific for canonical placement support)
     # Matches: world.1.options.randomize_items, world.1.option_definitions.randomize_items
     if 'randomize_items' in path:
+        return True
+
+    # world_classes (WorldGen creates class names based on game display name,
+    # which may differ from the original world's class name)
+    if 'world_classes' in path:
         return True
 
     return False
