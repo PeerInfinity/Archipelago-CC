@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-30T06:03:54.427018",
-    "last_updated": "2025-12-30T06:03:54.427023",
+    "last_updated": "2025-12-31T01:22:42.946161",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1842,31 +1842,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "977ec74cf97c47165de92924878a5ab9f8abe507a6ea92e7e2ddece238f035a4",
-          "new_sphere_log_hash": "9c394110f70e78f8977dfbbee53f4518a2130447dc8e96a9848df6ef204a77e9",
-          "original_rules_hash": "977ec74cf97c47165de92924878a5ab9f8abe507a6ea92e7e2ddece238f035a4",
-          "original_sphere_log_hash": "9c394110f70e78f8977dfbbee53f4518a2130447dc8e96a9848df6ef204a77e9",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-30T06:02:09.456888"
-        }
-      },
       "game_name_from_filename": "lingo",
       "game_name_from_yaml": "Lingo",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 6.47,
+        "processing_time_seconds": 9.97,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/lingo/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 968495,
+        "size_bytes": 968452,
         "size_mb": 0.92
       },
       "seed": "1",
@@ -1874,7 +1862,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 5.74,
+        "processing_time_seconds": 8.99,
         "return_code": 0,
         "sphere_reached": 5.1,
         "success": true,
@@ -1882,10 +1870,10 @@
         "warning_count": 0
       },
       "template_filename": "Lingo.yaml",
-      "timestamp": "2025-12-30T05:59:34.848506",
+      "timestamp": "2025-12-31T01:22:23.555488",
       "world_info": {
         "exporter_path": "exporter/games/lingo.py",
-        "exporter_size": 39389,
+        "exporter_size": 36620,
         "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
         "game_logic_size": 10907,
         "game_name_from_filename": "lingo",
