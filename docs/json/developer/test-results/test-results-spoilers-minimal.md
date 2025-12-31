@@ -6,11 +6,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-31 04:18:57
+**Generated:** 2025-12-31 05:13:25
 
-**Source Data Created:** 2025-12-31T03:37:24.141156
+**Source Data Created:** 2025-12-31T05:13:24.685004
 
-**Source Data Last Updated:** 2025-12-31T03:37:24.141162
+**Source Data Last Updated:** 2025-12-31T05:13:24.685012
 
 ## Summary
 
@@ -83,22 +83,22 @@
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 27.1KB | 86.2KB |
 | Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 18.8KB | 8.0KB |
-| Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.3KB | ✅ |
-| Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 12.9KB | ✅ |
+| Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
+| Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 12.4KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
-| Super Metroid | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | 61.0KB | 114.5KB |
+| Super Metroid | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | 60.9KB | 114.5KB |
 | TOEM original | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
 | TUNIC | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 3.1KB | ✅ |
-| Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 18.1KB | ✅ |
+| Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 16.8KB | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | The Messenger | ✅ Passed | 0 | 6.3 | 6.3 | 🟢 Complete | 4.7KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | ✅ | ✅ |
-| The Witness | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 25.5KB | ✅ |
-| Timespinner | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 2.7KB | ✅ |
+| The Witness | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 14.1KB | ✅ |
+| Timespinner | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 1.8KB | ✅ |
 | Undertale | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
-| VVVVVV | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | 2.4KB | ✅ |
+| VVVVVV | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | 2.3KB | ✅ |
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | WebDevJourney | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 3.8KB | ✅ |
