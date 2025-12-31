@@ -207,7 +207,8 @@ jobs:
     needs: [setup, run-canonical-tests]
     # Run if: random mode, OR both mode (after canonical completes)
     # The 'always()' ensures this runs even if canonical was skipped
-    if: ${{ always() && (inputs.test_mode == 'random' || inputs.test_mode == 'both') && needs.setup.result == 'success' }}
+    # The '!cancelled()' ensures cancellation is respected
+    if: ${{ always() && !cancelled() && (inputs.test_mode == 'random' || inputs.test_mode == 'both') && needs.setup.result == 'success' }}
     timeout-minutes: 180
 
     strategy:
@@ -321,8 +322,8 @@ jobs:
   combine-results:
     name: Combine Results and Generate Report
     runs-on: ubuntu-latest
-    needs: [run-canonical-tests, run-random-tests]
-    if: ${{ always() && needs.setup.result == 'success' }}
+    needs: [setup, run-canonical-tests, run-random-tests]
+    if: ${{ always() && !cancelled() && needs.setup.result == 'success' }}
 
     steps:
       - name: Checkout test-results-update branch
