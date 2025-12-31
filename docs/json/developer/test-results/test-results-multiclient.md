@@ -6,21 +6,21 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-31 04:18:57
+**Generated:** 2025-12-31 05:45:45
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 72 (98.6%)
-- **Failed:** 1 (1.4%)
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 42/72 (58.3% of passed)
-- **Passing with Generic Logic:** 66/72 (91.7% of passed)
-- **Passing with Both Generic:** 42/72 (58.3% of passed)
+- **Passing with Generic Exporter:** 42/73 (57.5% of passed)
+- **Passing with Generic Logic:** 67/73 (91.8% of passed)
+- **Passing with Both Generic:** 42/73 (57.5% of passed)
 
 ## Test Results
 
@@ -68,7 +68,7 @@
 | Metamath | ✅ Passed | 0 | ✅ | 9/9 | 9/9 | 0/0 | ✅ | 9/9 | ✅ | ✅ |
 | Muse Dash | ✅ Passed | 0 | ✅ | 90/90 | 90/90 | 0/0 | ✅ | 90/90 | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | ✅ | 117/117 | 109/109 | 8/8 | ✅ | 117/117 | ✅ | ✅ |
-| Old School Runescape | ❌ Failed | 0 | ❌ | 44/76 | 33/54 | 11/22 | ❌ | 40/76 | 1.0KB | ✅ |
+| Old School Runescape | ✅ Passed | 0 | ✅ | 76/76 | 54/54 | 22/22 | ✅ | 76/76 | 1.0KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 23.1KB | ✅ |
 | Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 2.7KB | ✅ |
 | Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 5.4KB | ✅ |
@@ -79,22 +79,22 @@
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 27.1KB | 86.2KB |
 | Stardew Valley | ✅ Passed | 0 | ✅ | 500/500 | 491/491 | 9/9 | ✅ | 500/500 | 18.8KB | 8.0KB |
-| Subnautica | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | 2.3KB | ✅ |
-| Super Mario 64 | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | 12.9KB | ✅ |
+| Subnautica | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | 2.2KB | ✅ |
+| Super Mario 64 | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | 12.4KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60/60 | 53/53 | 7/7 | ✅ | 60/60 | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 0 | ✅ | 108/108 | 108/108 | 0/0 | ✅ | 108/108 | ✅ | ✅ |
-| Super Metroid | ✅ Passed | 0 | ✅ | 109/109 | 100/100 | 9/9 | ✅ | 109/109 | 61.0KB | 114.5KB |
+| Super Metroid | ✅ Passed | 0 | ✅ | 109/109 | 100/100 | 9/9 | ✅ | 109/109 | 60.9KB | 114.5KB |
 | TOEM original | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
 | TUNIC | ✅ Passed | 0 | ✅ | 317/317 | 302/302 | 15/15 | ✅ | 317/317 | 3.1KB | ✅ |
-| Terraria | ✅ Passed | 0 | ✅ | 244/244 | 63/63 | 181/181 | ✅ | 244/244 | 18.1KB | ✅ |
+| Terraria | ✅ Passed | 0 | ✅ | 244/244 | 63/63 | 181/181 | ✅ | 244/244 | 16.8KB | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | ✅ | ✅ |
 | The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 4.7KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | ✅ | ✅ |
-| The Witness | ✅ Passed | 0 | ✅ | 147/147 | 132/132 | 15/15 | ✅ | 147/147 | 25.5KB | ✅ |
-| Timespinner | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | 2.7KB | ✅ |
+| The Witness | ✅ Passed | 0 | ✅ | 147/147 | 132/132 | 15/15 | ✅ | 147/147 | 14.1KB | ✅ |
+| Timespinner | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | 1.8KB | ✅ |
 | Undertale | ✅ Passed | 0 | ✅ | 51/51 | 48/48 | 3/3 | ✅ | 51/51 | ✅ | ✅ |
-| VVVVVV | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | 2.4KB | ✅ |
+| VVVVVV | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | 2.3KB | ✅ |
 | Wargroove | ✅ Passed | 0 | ✅ | 39/39 | 38/38 | 1/1 | ✅ | 39/39 | ✅ | ✅ |
 | WebDevJourney | ✅ Passed | 0 | ✅ | 62/62 | 61/61 | 1/1 | ✅ | 62/62 | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | 0 | ✅ | 207/207 | 191/191 | 16/16 | ✅ | 207/207 | 3.8KB | ✅ |
