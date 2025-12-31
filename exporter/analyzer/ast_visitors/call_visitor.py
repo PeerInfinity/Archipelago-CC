@@ -85,6 +85,77 @@ class CallVisitorMixin:
             func_name = func_info['name']
             logging.debug(f"Checking helper: {func_name}")
 
+            # Handle Rule Builder function calls (from rule_builder module imports)
+            # These are recognized by their names and converted to proper AST types
+            if func_name == 'Has':
+                # Has(item_name) or Has(item_name, count)
+                if args:
+                    item_arg = args[0]
+                    item_name = item_arg.get('value') if item_arg.get('type') == 'constant' else None
+                    if item_name:
+                        result = {'type': 'item_check', 'item': item_name}
+                        if len(args) > 1:
+                            count_arg = args[1]
+                            count = count_arg.get('value') if count_arg.get('type') == 'constant' else None
+                            if count is not None and count != 1:
+                                result['count'] = count
+                        logging.debug(f"Recognized Rule Builder Has() -> item_check: {result}")
+                        return result
+            elif func_name == 'HasAll':
+                # HasAll(item1, item2, ...) or HasAll([item1, item2])
+                items = []
+                for arg in args:
+                    if arg.get('type') == 'constant':
+                        value = arg.get('value')
+                        if isinstance(value, str):
+                            items.append(value)
+                        elif isinstance(value, list):
+                            items.extend(value)
+                if items:
+                    result = {'type': 'state_method', 'method': 'has_all',
+                              'args': [{'type': 'constant', 'value': sorted(items)}]}
+                    logging.debug(f"Recognized Rule Builder HasAll() -> state_method.has_all: {result}")
+                    return result
+            elif func_name == 'HasAny':
+                # HasAny(item1, item2, ...)
+                items = []
+                for arg in args:
+                    if arg.get('type') == 'constant':
+                        value = arg.get('value')
+                        if isinstance(value, str):
+                            items.append(value)
+                        elif isinstance(value, list):
+                            items.extend(value)
+                if items:
+                    result = {'type': 'state_method', 'method': 'has_any',
+                              'args': [{'type': 'constant', 'value': sorted(items)}]}
+                    logging.debug(f"Recognized Rule Builder HasAny() -> state_method.has_any: {result}")
+                    return result
+            elif func_name == 'And':
+                # And(cond1, cond2, ...)
+                if args:
+                    result = {'type': 'and', 'conditions': args}
+                    logging.debug(f"Recognized Rule Builder And() -> and: {result}")
+                    return result
+                return {'type': 'constant', 'value': True}
+            elif func_name == 'Or':
+                # Or(cond1, cond2, ...)
+                if args:
+                    result = {'type': 'or', 'conditions': args}
+                    logging.debug(f"Recognized Rule Builder Or() -> or: {result}")
+                    return result
+                return {'type': 'constant', 'value': False}
+            elif func_name == 'Not':
+                # Not(condition)
+                if args:
+                    result = {'type': 'not', 'condition': args[0]}
+                    logging.debug(f"Recognized Rule Builder Not() -> not: {result}")
+                    return result
+            elif func_name == 'True_':
+                return {'type': 'constant', 'value': True}
+            elif func_name == 'False_':
+                return {'type': 'constant', 'value': False}
+
             # Filter arguments for game handler and result creation
             filtered_args = self._filter_special_args(args_with_nodes)
 

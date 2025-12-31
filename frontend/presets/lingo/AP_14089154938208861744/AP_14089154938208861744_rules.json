@@ -35233,7 +35233,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "use_auto_indirect_conditions": true
     }

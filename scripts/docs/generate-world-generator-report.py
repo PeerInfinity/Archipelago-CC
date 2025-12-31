@@ -78,6 +78,8 @@ def compute_summary_stats(results: Dict) -> Dict:
         'failed_test_worlds': 0,
         'successful_test_seeds': 0,
         'failed_test_seeds': 0,
+        'rules_comparison_passed': 0,
+        'rules_comparison_failed': 0,
         'test_spoiler_passed': 0,
         'test_spoiler_failed': 0,
         'cross_validation_passed': 0,
@@ -121,14 +123,21 @@ def compute_summary_stats(results: Dict) -> Dict:
         elif seed_gen:
             stats['failed_test_seeds'] += 1
 
-        # Stage 3: WorldGen spoiler test
+        # Stage 3: Rules comparison
+        rules_comp = result.get('test_world', {}).get('rules_comparison', {})
+        if rules_comp.get('pass_fail') == 'pass':
+            stats['rules_comparison_passed'] += 1
+        elif rules_comp.get('pass_fail') == 'fail':
+            stats['rules_comparison_failed'] += 1
+
+        # Stage 4: WorldGen spoiler test
         test_spoiler = result.get('test_world', {}).get('spoiler_test', {})
         if test_spoiler.get('pass_fail') == 'pass':
             stats['test_spoiler_passed'] += 1
         elif test_spoiler.get('pass_fail') == 'fail':
             stats['test_spoiler_failed'] += 1
 
-        # Cross-validation
+        # Stage 5: Cross-validation
         cross_val = result.get('test_world', {}).get('cross_validation', {})
         if cross_val.get('pass_fail') == 'pass':
             stats['cross_validation_passed'] += 1
@@ -415,6 +424,7 @@ def generate_summary_table(results: Dict, title: str = "Summary") -> str:
     orig_spoiler_total = stats.get('original_spoiler_passed', 0) + stats.get('original_spoiler_failed', 0)
     world_gen_total = stats.get('successful_test_worlds', 0) + stats.get('failed_test_worlds', 0)
     test_seed_total = stats.get('successful_test_seeds', 0) + stats.get('failed_test_seeds', 0)
+    rules_comp_total = stats.get('rules_comparison_passed', 0) + stats.get('rules_comparison_failed', 0)
     test_spoiler_total = stats.get('test_spoiler_passed', 0) + stats.get('test_spoiler_failed', 0)
     cross_val_total = stats.get('cross_validation_passed', 0) + stats.get('cross_validation_failed', 0)
 
@@ -429,8 +439,9 @@ def generate_summary_table(results: Dict, title: str = "Summary") -> str:
         f"| Original Spoiler Test | {stats.get('original_spoiler_passed', 0)} | {stats.get('original_spoiler_failed', 0)} | {orig_spoiler_total} |",
         f"| Stage 1: World Generation | {stats.get('successful_test_worlds', 0)} | {stats.get('failed_test_worlds', 0)} | {world_gen_total} |",
         f"| Stage 2: Seed Generation | {stats.get('successful_test_seeds', 0)} | {stats.get('failed_test_seeds', 0)} | {test_seed_total} |",
-        f"| Stage 3: WorldGen Spoiler Test | {stats.get('test_spoiler_passed', 0)} | {stats.get('test_spoiler_failed', 0)} | {test_spoiler_total} |",
-        f"| Stage 4: Cross-Validation | {stats.get('cross_validation_passed', 0)} | {stats.get('cross_validation_failed', 0)} | {cross_val_total} |",
+        f"| Stage 3: Rules Comparison | {stats.get('rules_comparison_passed', 0)} | {stats.get('rules_comparison_failed', 0)} | {rules_comp_total} |",
+        f"| Stage 4: WorldGen Spoiler Test | {stats.get('test_spoiler_passed', 0)} | {stats.get('test_spoiler_failed', 0)} | {test_spoiler_total} |",
+        f"| Stage 5: Cross-Validation | {stats.get('cross_validation_passed', 0)} | {stats.get('cross_validation_failed', 0)} | {cross_val_total} |",
         "",
     ]
 
@@ -447,8 +458,8 @@ def generate_results_table(results: Dict, title: str = "Detailed Results") -> st
     lines = [
         f"## {title}",
         "",
-        "| Game | Original Gen | Original Spoiler | World Gen | Seed Gen | WorldGen Spoiler | Cross-Validation |",
-        "|------|--------------|------------------|-----------|----------|------------------|------------------|",
+        "| Game | Original Gen | Original Spoiler | World Gen | Seed Gen | Rules Comp | WorldGen Spoiler | Cross-Validation |",
+        "|------|--------------|------------------|-----------|----------|------------|------------------|------------------|",
     ]
 
     # Handle both dict and list formats
@@ -484,7 +495,15 @@ def generate_results_table(results: Dict, title: str = "Detailed Results") -> st
         if not world_gen.get('success'):
             test_gen_status = '-'
 
-        # Stage 3: WorldGen spoiler test
+        # Stage 3: Rules comparison
+        rules_comp = result.get('test_world', {}).get('rules_comparison', {})
+        rules_comp_status = get_status_emoji(False, rules_comp.get('pass_fail'))
+        if rules_comp.get('note'):
+            rules_comp_status = 'Skipped'
+        if not test_gen.get('success'):
+            rules_comp_status = '-'
+
+        # Stage 4: WorldGen spoiler test
         test_spoiler = result.get('test_world', {}).get('spoiler_test', {})
         test_spoiler_status = get_status_emoji(False, test_spoiler.get('pass_fail'))
         if test_spoiler.get('note'):
@@ -492,7 +511,7 @@ def generate_results_table(results: Dict, title: str = "Detailed Results") -> st
         if not test_gen.get('success'):
             test_spoiler_status = '-'
 
-        # Cross-validation
+        # Stage 5: Cross-validation
         cross_val = result.get('test_world', {}).get('cross_validation', {})
         cross_val_status = get_status_emoji(False, cross_val.get('pass_fail'))
         if cross_val.get('note'):
@@ -504,7 +523,7 @@ def generate_results_table(results: Dict, title: str = "Detailed Results") -> st
 
         lines.append(
             f"| {game_name} | {orig_gen_status} | {orig_test_status} | {world_gen_status} | "
-            f"{test_gen_status} | {test_spoiler_status} | {cross_val_status} |"
+            f"{test_gen_status} | {rules_comp_status} | {test_spoiler_status} | {cross_val_status} |"
         )
 
     lines.append("")
@@ -661,8 +680,9 @@ def generate_single_mode_report(results: Dict, mode_name: str = None) -> str:
         "**World Generator Tests** (the actual round-trip test):",
         "- **World Gen** (Stage 1): Create `_worldgen` Python world files from rules.json",
         "- **Seed Gen** (Stage 2): Generate a seed with the `_worldgen` world",
-        "- **WorldGen Spoiler** (Stage 3): Validate the `_worldgen` world's sphere log against its rules",
-        "- **Cross-Validation** (Stage 4): Validate the **original** sphere log against `_worldgen` rules (proves equivalent logic)",
+        "- **Rules Comp** (Stage 3): Compare original rules.json with `_worldgen` rules.json",
+        "- **WorldGen Spoiler** (Stage 4): Validate the `_worldgen` world's sphere log against its rules",
+        "- **Cross-Validation** (Stage 5): Validate the **original** sphere log against `_worldgen` rules (proves equivalent logic)",
         "",
     ]
 
@@ -720,8 +740,9 @@ def generate_dual_mode_report(canonical_results: Dict, random_results: Dict) -> 
         "**World Generator Tests** (the actual round-trip test):",
         "- **World Gen** (Stage 1): Create `_worldgen` Python world files from rules.json",
         "- **Seed Gen** (Stage 2): Generate a seed with the `_worldgen` world",
-        "- **WorldGen Spoiler** (Stage 3): Validate the `_worldgen` world's sphere log against its rules",
-        "- **Cross-Validation** (Stage 4): Validate the **original** sphere log against `_worldgen` rules (proves equivalent logic)",
+        "- **Rules Comp** (Stage 3): Compare original rules.json with `_worldgen` rules.json",
+        "- **WorldGen Spoiler** (Stage 4): Validate the `_worldgen` world's sphere log against its rules",
+        "- **Cross-Validation** (Stage 5): Validate the **original** sphere log against `_worldgen` rules (proves equivalent logic)",
         "",
         "---",
         "",

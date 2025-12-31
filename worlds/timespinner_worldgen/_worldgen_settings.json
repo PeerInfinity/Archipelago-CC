@@ -392,6 +392,10 @@
     "world_directory": "timespinner"
   },
   "world_attributes": {
+    "pyramid_keys_unlock": "GateLakeSereneRight",
+    "present_keys_unlock": "GateSealedSirensCave",
+    "past_keys_unlock": "GateLakeSereneRight",
+    "time_keys_unlock": "GateRightPyramid",
     "precalculated_weights": {
       "flood_basement": false,
       "flood_basement_high": false,
@@ -808,15 +812,6 @@
           ]
         }
       ]
-    },
-    "flag_specific_keycards": false,
-    "flag_eye_spy": false,
-    "flag_unchained_keys": false,
-    "flag_prism_break": false,
-    "flag_find_the_flame": false,
-    "pyramid_keys_unlock": "GateLakeSereneRight",
-    "present_keys_unlock": "GateSealedSirensCave",
-    "past_keys_unlock": "GateLakeSereneRight",
-    "time_keys_unlock": "GateRightPyramid"
+    }
   }
 }

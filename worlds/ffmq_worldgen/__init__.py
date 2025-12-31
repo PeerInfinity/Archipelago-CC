@@ -189,6 +189,15 @@ class FinalFantasyMysticQuestWorldGenWorld(RuleWorldMixin, World):
         "Event": frozenset(["Minotaur", "Kaeli 1", "Kaeli 2", "Barrel Pushed", "Tristam", "Tristam Bone Item Given", "Long Spine Bombed", "Short Spine Bombed", "Skull 1 Bombed", "Skull 2 Bombed", "Flamerus Rex", "Phoebe 1", "Summer Aquaria", "Phanquid", "Freezer Crab", "Ice Pyramid 1F Statue", "Ice Pyramid 3F Statue", "Ice Pyramid 4F Statue", "Ice Pyramid 5F Statue", "Ice Golem", "Ship Liberated", "Spencer Cave Libra Block Bombed", "Reuben 1", "Jinn", "Reuben Dad Saved", "Medusa", "Lava Dome Plate", "Dualhead Hydra", "Gidrah", "Dullahan", "Rainbow Bridge", "Pazuzu 1F", "Pazuzu 2F Lock", "Pazuzu 2F", "Pazuzu 3F", "Pazuzu 4F Lock", "Pazuzu 4F", "Pazuzu 5F", "Pazuzu 6F Lock", "Pazuzu 6F", "Pazuzu", "Ship Dock Access", "Ship Steering Wheel", "Ship Loaned", "Stone Golem", "Twinhead Wyvern", "Zuh", "Dark King"]),
     }
 
+    # Progressive item mapping: progressive_item -> [component_items_in_order]
+    # When collecting a progressive item, it grants access to the next uncollected component
+    progression_mapping: ClassVar[Dict[str, list]] = {
+        "Progressive Sword": ["Steel Sword", "Knight Sword", "Excalibur"],
+        "Progressive Axe": ["Axe", "Battle Axe", "Giant's Axe"],
+        "Progressive Claw": ["Cat Claw", "Charm Claw", "Dragon Claw"],
+        "Progressive Bomb": ["Bomb", "Jumbo Bomb", "Mega Grenade"],
+    }
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
@@ -590,6 +599,29 @@ class FinalFantasyMysticQuestWorldGenWorld(RuleWorldMixin, World):
         data = item_table[name]
         return FinalFantasyMysticQuestWorldGenItem(name, data.classification, data.id, self.player)
 
+
+    def collect_item(self, state, item, remove=False):
+        """Handle progressive item collection.
+
+        When a progressive item is collected, this returns the name of the next
+        uncollected component item. This allows rules that check for component
+        items (e.g., state.has("steel-processing")) to work correctly when the
+        player has collected the progressive version (e.g., "progressive-processing").
+        """
+        if item.advancement and item.name in self.progression_mapping:
+            components = self.progression_mapping[item.name]
+            if remove:
+                # When removing, find the last component the player has
+                for component_name in reversed(components):
+                    if state.has(component_name, item.player):
+                        return component_name
+            else:
+                # When collecting, find the first component the player doesn't have
+                for component_name in components:
+                    if not state.has(component_name, item.player):
+                        return component_name
+
+        return super().collect_item(state, item, remove)
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""

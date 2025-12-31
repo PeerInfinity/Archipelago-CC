@@ -42,10 +42,6 @@
     "world_directory": "cvcotm"
   },
   "world_attributes": {
-    "nerf_roc_wing": 0,
-    "ignore_cleansing": 0,
-    "iron_maiden_behavior": 0,
-    "completion_goal": 0,
     "total_last_keys": 1,
     "required_last_keys": 1,
     "world_description": "Castlevania: Circle of the Moon is a launch title for the Game Boy Advance and the first of three Castlevania games\nreleased for the handheld in the \"Metroidvania\" format. As Nathan Graves, wielding the Hunter Whip and utilizing the\nDual Set-Up System for new possibilities, you must battle your way through Camilla's castle and rescue your master\nfrom a demonic ritual to restore the Count's power...",

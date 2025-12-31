@@ -2145,7 +2145,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": true,
       "add_sphere_items_upfront": true
     }
@@ -2156,8 +2155,7 @@
         {
           "pattern": "^(\\d+) coins?$",
           "extract_value": true,
-          "target": " coins",
-          "discriminator": null
+          "target": " coins"
         }
       ],
       "prog_items_init": {

@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 # Helper functions
 def _castlevaniacircleofthemoonworldgen_has_jump_level_1(state: "CollectionState", player: int) -> bool:
-    return state.has_any(('Double', 'Roc Wing'), player)
+    return (state.has('Double', player)) or (state.has('Roc Wing', player))
 
 
 def _castlevaniacircleofthemoonworldgen_has_jump_level_2(state: "CollectionState", player: int) -> bool:
@@ -49,7 +49,7 @@ def _castlevaniacircleofthemoonworldgen_has_push(state: "CollectionState", playe
 
 
 def _castlevaniacircleofthemoonworldgen_has_ice_or_stone(state: "CollectionState", player: int) -> bool:
-    return (state.has_any(('Serpent Card', 'Cockatrice Card'), player)) and (state.has_any(('Mercury Card', 'Mars Card'), player))
+    return ((state.has('Serpent Card', player)) or (state.has('Cockatrice Card', player))) and ((state.has('Mercury Card', player)) or (state.has('Mars Card', player)))
 
 
 def _castlevaniacircleofthemoonworldgen_can_touch_water(state: "CollectionState", player: int) -> bool:

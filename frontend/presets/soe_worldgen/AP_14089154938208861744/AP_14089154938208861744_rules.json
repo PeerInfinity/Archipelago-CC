@@ -18,7 +18,9 @@
           {
             "name": "New Game",
             "connected_region": "Ingame",
-            "access_rule": null
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": []
@@ -12404,61 +12406,876 @@
   },
   "items": {
     "1": {
-      "15 Moniez": {
-        "name": "15 Moniez",
-        "provides": [],
+      "Acid Rain": {
+        "name": "Acid Rain",
+        "id": 64000,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "Atlas": {
+        "name": "Atlas",
+        "id": 64001,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 21,
+            "progress_name": "P_21"
+          }
+        ],
+        "classification": "useful"
+      },
+      "Barrier": {
+        "name": "Barrier",
+        "id": 64002,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 46,
+            "progress_name": "P_46"
+          }
+        ],
+        "classification": "useful"
+      },
+      "Call Up": {
+        "name": "Call Up",
+        "id": 64003,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 46,
+            "progress_name": "P_46"
+          }
+        ],
+        "classification": "useful"
+      },
+      "Corrosion": {
+        "name": "Corrosion",
+        "id": 64004,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Crush": {
+        "name": "Crush",
+        "id": 64005,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 45,
+            "progress_name": "P_45"
+          }
+        ],
+        "classification": "useful"
+      },
+      "Cure": {
+        "name": "Cure",
+        "id": 64006,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Defend": {
+        "name": "Defend",
+        "id": 64007,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Double Drain": {
+        "name": "Double Drain",
+        "id": 64008,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 45,
+            "progress_name": "P_45"
+          }
+        ],
+        "classification": "useful"
+      },
+      "Drain": {
+        "name": "Drain",
+        "id": 64009,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Energize": {
+        "name": "Energize",
+        "id": 64010,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 46,
+            "progress_name": "P_46"
+          }
+        ],
+        "classification": "useful"
+      },
+      "Escape": {
+        "name": "Escape",
+        "id": 64011,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Explosion": {
+        "name": "Explosion",
+        "id": 64012,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 45,
+            "progress_name": "P_45"
+          }
+        ],
+        "classification": "useful"
+      },
+      "Fireball": {
+        "name": "Fireball",
+        "id": 64013,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 45,
+            "progress_name": "P_45"
+          }
+        ],
+        "classification": "useful"
+      },
+      "Fire Power": {
+        "name": "Fire Power",
+        "id": 64014,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 45,
+            "progress_name": "P_45"
+          }
+        ],
+        "classification": "useful"
+      },
+      "Flash": {
+        "name": "Flash",
+        "id": 64015,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Force Field": {
+        "name": "Force Field",
+        "id": 64016,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Hard Ball": {
+        "name": "Hard Ball",
+        "id": 64017,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Heal": {
+        "name": "Heal",
+        "id": 64018,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Lance": {
+        "name": "Lance",
+        "id": 64019,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 45,
+            "progress_name": "P_45"
+          }
+        ],
+        "classification": "useful"
+      },
+      "Levitate": {
+        "name": "Levitate",
+        "id": 64020,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 20,
+            "progress_name": "P_20"
+          },
+          {
+            "count": 1,
+            "progress_id": 30,
+            "progress_name": "P_30"
+          }
+        ],
+        "classification": "progression"
+      },
+      "Lightning Storm": {
+        "name": "Lightning Storm",
+        "id": 64021,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 45,
+            "progress_name": "P_45"
+          }
+        ],
+        "classification": "useful"
+      },
+      "Miracle Cure": {
+        "name": "Miracle Cure",
+        "id": 64022,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Nitro": {
+        "name": "Nitro",
+        "id": 64023,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 45,
+            "progress_name": "P_45"
+          }
+        ],
+        "classification": "useful"
+      },
+      "One Up": {
+        "name": "One Up",
+        "id": 64024,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Reflect": {
+        "name": "Reflect",
+        "id": 64025,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Regrowth": {
+        "name": "Regrowth",
+        "id": 64026,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Revealer": {
+        "name": "Revealer",
+        "id": 64027,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 19,
+            "progress_name": "P_REVEALER"
+          },
+          {
+            "count": 1,
+            "progress_id": 24,
+            "progress_name": "P_24"
+          }
+        ],
+        "classification": "progression"
+      },
+      "Revive": {
+        "name": "Revive",
+        "id": 64028,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Slow Burn": {
+        "name": "Slow Burn",
+        "id": 64029,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Speed": {
+        "name": "Speed",
+        "id": 64030,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Sting": {
+        "name": "Sting",
+        "id": 64031,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 45,
+            "progress_name": "P_45"
+          }
+        ],
+        "classification": "useful"
+      },
+      "Stop": {
+        "name": "Stop",
+        "id": 64032,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Super Heal": {
+        "name": "Super Heal",
+        "id": 64033,
+        "groups": [
+          "Alchemy",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Nothing": {
+        "name": "Nothing",
+        "id": 64050,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "Wheel": {
+        "name": "Wheel",
+        "id": 64051,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 14,
+            "progress_name": "P_14"
+          }
+        ],
+        "classification": "progression"
+      },
+      "Gladiator Sword": {
+        "name": "Gladiator Sword",
+        "id": 64052,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 1,
+            "progress_name": "P_WEAPON"
+          },
+          {
+            "count": 1,
+            "progress_id": 36,
+            "progress_name": "P_36"
+          }
+        ],
+        "classification": "progression"
+      },
+      "Crusader Sword": {
+        "name": "Crusader Sword",
+        "id": 64053,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 1,
+            "progress_name": "P_WEAPON"
+          },
+          {
+            "count": 1,
+            "progress_id": 37,
+            "progress_name": "P_37"
+          }
+        ],
+        "classification": "progression"
+      },
+      "Spider Claw": {
+        "name": "Spider Claw",
+        "id": 64054,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 1,
+            "progress_name": "P_WEAPON"
+          },
+          {
+            "count": 1,
+            "progress_id": 2,
+            "progress_name": "P_2"
+          },
+          {
+            "count": 1,
+            "progress_id": 35,
+            "progress_name": "P_35"
+          }
+        ],
+        "classification": "progression"
+      },
+      "Bronze Axe": {
+        "name": "Bronze Axe",
+        "id": 64055,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 1,
+            "progress_name": "P_WEAPON"
+          },
+          {
+            "count": 1,
+            "progress_id": 2,
+            "progress_name": "P_2"
+          },
+          {
+            "count": 1,
+            "progress_id": 5,
+            "progress_name": "P_5"
+          },
+          {
+            "count": 1,
+            "progress_id": 4,
+            "progress_name": "P_4"
+          },
+          {
+            "count": 1,
+            "progress_id": 36,
+            "progress_name": "P_36"
+          }
+        ],
+        "classification": "progression"
+      },
+      "Horn Spear": {
+        "name": "Horn Spear",
+        "id": 64056,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 1,
+            "progress_name": "P_WEAPON"
+          },
+          {
+            "count": 1,
+            "progress_id": 2,
+            "progress_name": "P_2"
+          },
+          {
+            "count": 1,
+            "progress_id": 35,
+            "progress_name": "P_35"
+          }
+        ],
+        "classification": "progression"
+      },
+      "Bronze Spear": {
+        "name": "Bronze Spear",
+        "id": 64057,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 1,
+            "progress_name": "P_WEAPON"
+          },
+          {
+            "count": 1,
+            "progress_id": 2,
+            "progress_name": "P_2"
+          },
+          {
+            "count": 1,
+            "progress_id": 8,
+            "progress_name": "P_8"
+          },
+          {
+            "count": 1,
+            "progress_id": 36,
+            "progress_name": "P_36"
+          }
+        ],
+        "classification": "progression"
+      },
+      "Lance (Weapon)": {
+        "name": "Lance (Weapon)",
+        "id": 64058,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 1,
+            "progress_name": "P_WEAPON"
+          },
+          {
+            "count": 1,
+            "progress_id": 2,
+            "progress_name": "P_2"
+          },
+          {
+            "count": 1,
+            "progress_id": 8,
+            "progress_name": "P_8"
+          },
+          {
+            "count": 1,
+            "progress_id": 37,
+            "progress_name": "P_37"
+          }
+        ],
+        "classification": "progression"
+      },
+      "Bazooka": {
+        "name": "Bazooka",
+        "id": 64061,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 42,
+            "progress_name": "P_42"
+          }
+        ],
+        "classification": "useful"
+      },
+      "10,000 Gold Coins": {
+        "name": "10,000 Gold Coins",
+        "id": 64062,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Diamond Eye": {
+        "name": "Diamond Eye",
+        "id": 64064,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "provides": [
+          {
+            "count": 1,
+            "progress_id": 12,
+            "progress_name": "P_12"
+          }
+        ],
+        "classification": "progression"
+      },
+      "15 Moniez": {
+        "name": "15 Moniez",
         "id": 64100,
         "groups": [
           "Any Moniez",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Petal": {
         "name": "Petal",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 12,
-        "classification": "filler",
         "id": 64101,
         "groups": [
           "Any Petal",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 12,
+        "classification": "filler"
       },
       "Nectar": {
         "name": "Nectar",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 11,
-        "classification": "filler",
         "id": 64103,
         "groups": [
           "Any Nectar",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 11,
+        "classification": "filler"
       },
       "Oil": {
         "name": "Oil",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 5,
-        "classification": "filler",
         "id": 64104,
         "groups": [
           "Any Oil",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 5,
+        "classification": "filler"
       },
       "Progressive helmet": {
         "name": "Progressive helmet",
+        "id": 64105,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
         "provides": [
           {
             "count": 1,
@@ -12466,87 +13283,83 @@
             "progress_name": "P_39"
           }
         ],
-        "event": false,
-        "type": null,
-        "max_count": 3,
-        "classification": "useful",
-        "id": 64105,
-        "groups": [
-          "Everything"
-        ]
+        "classification": "useful"
       },
       "Wax": {
         "name": "Wax",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 11,
-        "classification": "filler",
         "id": 64107,
         "groups": [
           "Any Wax",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 11,
+        "classification": "filler"
       },
       "2 Wax": {
         "name": "2 Wax",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 4,
-        "classification": "filler",
         "id": 64109,
         "groups": [
           "Any Wax",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 4,
+        "classification": "filler"
       },
       "Water": {
         "name": "Water",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 23,
-        "classification": "filler",
         "id": 64110,
         "groups": [
           "Any Water",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 23,
+        "classification": "filler"
       },
       "4 Water": {
         "name": "4 Water",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 5,
-        "classification": "filler",
         "id": 64114,
         "groups": [
           "Any Water",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 5,
+        "classification": "filler"
       },
       "2 Clay": {
         "name": "2 Clay",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64116,
         "groups": [
           "Any Clay",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Call bead": {
         "name": "Call bead",
+        "id": 64117,
+        "groups": [
+          "Any Call bead",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 12,
         "provides": [
           {
             "count": 1,
@@ -12554,211 +13367,196 @@
             "progress_name": "P_43"
           }
         ],
-        "event": false,
-        "type": null,
-        "max_count": 12,
-        "classification": "useful",
-        "id": 64117,
-        "groups": [
-          "Any Call bead",
-          "Everything"
-        ]
+        "classification": "useful"
       },
       "2 Water": {
         "name": "2 Water",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64119,
         "groups": [
           "Any Water",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "Roots": {
         "name": "Roots",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 8,
-        "classification": "filler",
         "id": 64120,
         "groups": [
           "Any Root",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 8,
+        "classification": "filler"
       },
       "2 Roots": {
         "name": "2 Roots",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 3,
-        "classification": "filler",
         "id": 64122,
         "groups": [
           "Any Root",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "filler"
       },
       "3 Clay": {
         "name": "3 Clay",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64124,
         "groups": [
           "Any Clay",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "18 Moniez": {
         "name": "18 Moniez",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64125,
         "groups": [
           "Any Moniez",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Clay": {
         "name": "Clay",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 13,
-        "classification": "filler",
         "id": 64126,
         "groups": [
           "Any Clay",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 13,
+        "classification": "filler"
       },
       "30 Moniez": {
         "name": "30 Moniez",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64130,
         "groups": [
           "Any Moniez",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "3 Water": {
         "name": "3 Water",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 5,
-        "classification": "filler",
         "id": 64132,
         "groups": [
           "Any Water",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 5,
+        "classification": "filler"
       },
       "4 Clay": {
         "name": "4 Clay",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64136,
         "groups": [
           "Any Clay",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "5 Ash": {
         "name": "5 Ash",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 3,
-        "classification": "filler",
         "id": 64137,
         "groups": [
           "Any Ash",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "filler"
       },
       "4 Crystal": {
         "name": "4 Crystal",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64138,
         "groups": [
           "Any Crystal",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Biscuit": {
         "name": "Biscuit",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 10,
-        "classification": "filler",
         "id": 64141,
         "groups": [
           "Any Biscuit",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 10,
+        "classification": "filler"
       },
       "4 Wax": {
         "name": "4 Wax",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 4,
-        "classification": "filler",
         "id": 64144,
         "groups": [
           "Any Wax",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 4,
+        "classification": "filler"
       },
       "2 Crystal": {
         "name": "2 Crystal",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64145,
         "groups": [
           "Any Crystal",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "Progressive gloves": {
         "name": "Progressive gloves",
+        "id": 64146,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
         "provides": [
           {
             "count": 1,
@@ -12766,31 +13564,30 @@
             "progress_name": "P_39"
           }
         ],
-        "event": false,
-        "type": null,
-        "max_count": 3,
-        "classification": "useful",
-        "id": 64146,
-        "groups": [
-          "Everything"
-        ]
+        "classification": "useful"
       },
       "4 Ash": {
         "name": "4 Ash",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 3,
-        "classification": "filler",
         "id": 64153,
         "groups": [
           "Any Ash",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "filler"
       },
       "Gauge": {
         "name": "Gauge",
+        "id": 64157,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
         "provides": [
           {
             "count": 1,
@@ -12798,100 +13595,94 @@
             "progress_name": "P_13"
           }
         ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression",
-        "id": 64157,
-        "groups": [
-          "Everything"
-        ]
+        "classification": "progression"
       },
       "3 Wax": {
         "name": "3 Wax",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64171,
         "groups": [
           "Any Wax",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "3 Ash": {
-        "name": "3 Ash",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "3 Ash": {
+        "name": "3 Ash",
         "id": 64178,
         "groups": [
           "Any Ash",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "5 Wax": {
-        "name": "5 Wax",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "5 Wax": {
+        "name": "5 Wax",
         "id": 64179,
         "groups": [
           "Any Wax",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "6 Water": {
         "name": "6 Water",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 4,
-        "classification": "filler",
         "id": 64180,
         "groups": [
           "Any Water",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "Mud Pepper": {
-        "name": "Mud Pepper",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 4,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "Mud Pepper": {
+        "name": "Mud Pepper",
         "id": 64181,
         "groups": [
           "Any Mud Pepper",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 4,
+        "classification": "filler"
       },
       "100 Moniez": {
         "name": "100 Moniez",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64183,
         "groups": [
           "Any Moniez",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "Progressive vest": {
         "name": "Progressive vest",
+        "id": 64200,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 4,
         "provides": [
           {
             "count": 1,
@@ -12899,150 +13690,140 @@
             "progress_name": "P_39"
           }
         ],
-        "event": false,
-        "type": null,
-        "max_count": 4,
-        "classification": "useful",
-        "id": 64200,
-        "groups": [
-          "Everything"
-        ]
+        "classification": "useful"
       },
       "3 Limestone": {
         "name": "3 Limestone",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64205,
         "groups": [
           "Any Limestone",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "200 Moniez": {
         "name": "200 Moniez",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64208,
         "groups": [
           "Any Moniez",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ash": {
         "name": "Ash",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64210,
         "groups": [
           "Any Ash",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "3 Bone": {
         "name": "3 Bone",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64217,
         "groups": [
           "Any Bone",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "Regenerate": {
-        "name": "Regenerate",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "Regenerate": {
+        "name": "Regenerate",
         "id": 64218,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Herbal Essence": {
         "name": "Herbal Essence",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 4,
-        "classification": "filler",
         "id": 64220,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 4,
+        "classification": "filler"
       },
       "Honey": {
         "name": "Honey",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 8,
-        "classification": "filler",
         "id": 64221,
         "groups": [
           "Any Honey",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 8,
+        "classification": "filler"
       },
       "2 Limestone": {
         "name": "2 Limestone",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 3,
-        "classification": "filler",
         "id": 64223,
         "groups": [
           "Any Limestone",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "filler"
       },
       "3 Vinegar": {
         "name": "3 Vinegar",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64225,
         "groups": [
           "Any Vinegar",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "Pixie Dust": {
         "name": "Pixie Dust",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 4,
-        "classification": "filler",
         "id": 64229,
         "groups": [
           "Any Pixie Dust",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 4,
+        "classification": "filler"
       },
       "Wings": {
         "name": "Wings",
+        "id": 64232,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 5,
         "provides": [
           {
             "count": 1,
@@ -13050,45 +13831,44 @@
             "progress_name": "P_44"
           }
         ],
-        "event": false,
-        "type": null,
-        "max_count": 5,
-        "classification": "useful",
-        "id": 64232,
-        "groups": [
-          "Everything"
-        ]
+        "classification": "useful"
       },
       "3 Dry Ice": {
         "name": "3 Dry Ice",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64233,
         "groups": [
           "Any Dry Ice",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mushroom": {
         "name": "Mushroom",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64236,
         "groups": [
           "Any Mushroom",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "2 Call beads": {
         "name": "2 Call beads",
+        "id": 64237,
+        "groups": [
+          "Any Call bead",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
         "provides": [
           {
             "count": 2,
@@ -13096,240 +13876,224 @@
             "progress_name": "P_43"
           }
         ],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "useful",
-        "id": 64237,
-        "groups": [
-          "Any Call bead",
-          "Everything"
-        ]
+        "classification": "useful"
       },
       "2 Iron": {
         "name": "2 Iron",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64239,
         "groups": [
           "Any Iron",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "4 Feathers": {
         "name": "4 Feathers",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64242,
         "groups": [
           "Any Feather",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Acorns": {
         "name": "Acorns",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 3,
-        "classification": "filler",
         "id": 64245,
         "groups": [
           "Any Acorn",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "filler"
       },
       "2 Meteorite": {
         "name": "2 Meteorite",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64246,
         "groups": [
           "Any Meteorite",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "2 Gunpowder": {
-        "name": "2 Gunpowder",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "2 Gunpowder": {
+        "name": "2 Gunpowder",
         "id": 64248,
         "groups": [
           "Any Gunpowder",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "Grease": {
-        "name": "Grease",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "Grease": {
+        "name": "Grease",
         "id": 64249,
         "groups": [
           "Any Grease",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "3 Ethanol": {
         "name": "3 Ethanol",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 6,
-        "classification": "filler",
         "id": 64251,
         "groups": [
           "Any Ethanol",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 6,
+        "classification": "filler"
       },
       "2 Dry Ice": {
         "name": "2 Dry Ice",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64252,
         "groups": [
           "Any Dry Ice",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "2 Vinegar": {
-        "name": "2 Vinegar",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "2 Vinegar": {
+        "name": "2 Vinegar",
         "id": 64265,
         "groups": [
           "Any Vinegar",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Brimstone": {
         "name": "Brimstone",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64267,
         "groups": [
           "Any Brimstone",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "3 Nectar": {
         "name": "3 Nectar",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64268,
         "groups": [
           "Any Nectar",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "3 Brimstone": {
         "name": "3 Brimstone",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64272,
         "groups": [
           "Any Brimstone",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "2 Ash": {
         "name": "2 Ash",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64273,
         "groups": [
           "Any Ash",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "6 Ash": {
         "name": "6 Ash",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 3,
-        "classification": "filler",
         "id": 64275,
         "groups": [
           "Any Ash",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "filler"
       },
       "4 Brimstone": {
         "name": "4 Brimstone",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64277,
         "groups": [
           "Any Brimstone",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "3 Honey": {
         "name": "3 Honey",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64278,
         "groups": [
           "Any Honey",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "3 Call beads": {
         "name": "3 Call beads",
+        "id": 64279,
+        "groups": [
+          "Any Call bead",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
         "provides": [
           {
             "count": 3,
@@ -13337,359 +14101,334 @@
             "progress_name": "P_43"
           }
         ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64279,
-        "groups": [
-          "Any Call bead",
-          "Everything"
-        ]
+        "classification": "useful"
       },
       "Ethanol": {
         "name": "Ethanol",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64281,
         "groups": [
           "Any Ethanol",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "2 Acorns": {
         "name": "2 Acorns",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 4,
-        "classification": "filler",
         "id": 64292,
         "groups": [
           "Any Acorn",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 4,
+        "classification": "filler"
       },
       "4 Ethanol": {
         "name": "4 Ethanol",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64294,
         "groups": [
           "Any Ethanol",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "Feather": {
         "name": "Feather",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64295,
         "groups": [
           "Any Feather",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "Aura": {
-        "name": "Aura",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "Aura": {
+        "name": "Aura",
         "id": 64299,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Amulet of Annihilation": {
         "name": "Amulet of Annihilation",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 4,
-        "classification": "filler",
         "id": 64300,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 4,
+        "classification": "filler"
       },
       "Atlas Medallion": {
         "name": "Atlas Medallion",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64302,
         "groups": [
           "Any Atlas Medallion",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "3 Acorns": {
-        "name": "3 Acorns",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "3 Acorns": {
+        "name": "3 Acorns",
         "id": 64303,
         "groups": [
           "Any Acorn",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "5 Iron": {
         "name": "5 Iron",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64307,
         "groups": [
           "Any Iron",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "2 Petal": {
-        "name": "2 Petal",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "2 Petal": {
+        "name": "2 Petal",
         "id": 64308,
         "groups": [
           "Any Petal",
           "Everything"
-        ]
-      },
-      "4 Nectar": {
-        "name": "4 Nectar",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "4 Nectar": {
+        "name": "4 Nectar",
         "id": 64310,
         "groups": [
           "Any Nectar",
           "Everything"
-        ]
-      },
-      "Crystal": {
-        "name": "Crystal",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "Crystal": {
+        "name": "Crystal",
         "id": 64313,
         "groups": [
           "Any Crystal",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "Limestone": {
-        "name": "Limestone",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "Limestone": {
+        "name": "Limestone",
         "id": 64314,
         "groups": [
           "Any Limestone",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "2 Brimstone": {
-        "name": "2 Brimstone",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "2 Brimstone": {
+        "name": "2 Brimstone",
         "id": 64321,
         "groups": [
           "Any Brimstone",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "6 Vinegar": {
-        "name": "6 Vinegar",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "6 Vinegar": {
+        "name": "6 Vinegar",
         "id": 64323,
         "groups": [
           "Any Vinegar",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "8 Ash": {
-        "name": "8 Ash",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "8 Ash": {
+        "name": "8 Ash",
         "id": 64325,
         "groups": [
           "Any Ash",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "4 Vinegar": {
-        "name": "4 Vinegar",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "4 Vinegar": {
+        "name": "4 Vinegar",
         "id": 64326,
         "groups": [
           "Any Vinegar",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "2 Bone": {
         "name": "2 Bone",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64337,
         "groups": [
           "Any Bone",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "20 Moniez": {
         "name": "20 Moniez",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64340,
         "groups": [
           "Any Moniez",
           "Everything"
-        ]
-      },
-      "2 Ethanol": {
-        "name": "2 Ethanol",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "2 Ethanol": {
+        "name": "2 Ethanol",
         "id": 64341,
         "groups": [
           "Any Ethanol",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "10 Crystal": {
-        "name": "10 Crystal",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "10 Crystal": {
+        "name": "10 Crystal",
         "id": 64343,
         "groups": [
           "Any Crystal",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "7 Roots": {
-        "name": "7 Roots",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "7 Roots": {
+        "name": "7 Roots",
         "id": 64345,
         "groups": [
           "Any Root",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "2 Honey": {
-        "name": "2 Honey",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "2 Honey": {
+        "name": "2 Honey",
         "id": 64347,
         "groups": [
           "Any Honey",
           "Everything"
-        ]
-      },
-      "5 Oil": {
-        "name": "5 Oil",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "5 Oil": {
+        "name": "5 Oil",
         "id": 64349,
         "groups": [
           "Any Oil",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "500 Moniez": {
-        "name": "500 Moniez",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "500 Moniez": {
+        "name": "500 Moniez",
         "id": 64350,
         "groups": [
           "Any Moniez",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Knight Basher": {
         "name": "Knight Basher",
+        "id": 64351,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
         "provides": [
           {
             "count": 1,
@@ -13722,74 +14461,70 @@
             "progress_name": "P_37"
           }
         ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression",
-        "id": 64351,
-        "groups": [
-          "Everything",
-          "Weapons"
-        ]
+        "classification": "progression"
       },
       "3 Mushroom": {
         "name": "3 Mushroom",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
         "id": 64357,
         "groups": [
           "Any Mushroom",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "4 Iron": {
         "name": "4 Iron",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64369,
         "groups": [
           "Any Iron",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "3 Oil": {
-        "name": "3 Oil",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "3 Oil": {
+        "name": "3 Oil",
         "id": 64370,
         "groups": [
           "Any Oil",
           "Everything",
           "Ingredients"
-        ]
-      },
-      "3 Feathers": {
-        "name": "3 Feathers",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "3 Feathers": {
+        "name": "3 Feathers",
         "id": 64371,
         "groups": [
           "Any Feather",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Laser Lance": {
         "name": "Laser Lance",
+        "id": 64374,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
         "provides": [
           {
             "count": 1,
@@ -13812,18 +14547,17 @@
             "progress_name": "P_38"
           }
         ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression",
-        "id": 64374,
-        "groups": [
-          "Everything",
-          "Weapons"
-        ]
+        "classification": "progression"
       },
       "30 Cryo Blast": {
         "name": "30 Cryo Blast",
+        "id": 64375,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
         "provides": [
           {
             "count": 1,
@@ -13836,31 +14570,30 @@
             "progress_name": "P_41"
           }
         ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64375,
-        "groups": [
-          "Everything"
-        ]
+        "classification": "useful"
       },
       "3 Meteorite": {
         "name": "3 Meteorite",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64378,
         "groups": [
           "Any Meteorite",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "30 Particle Bombs": {
         "name": "30 Particle Bombs",
+        "id": 64379,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
         "provides": [
           {
             "count": 1,
@@ -13873,17 +14606,17 @@
             "progress_name": "P_41"
           }
         ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64379,
-        "groups": [
-          "Everything"
-        ]
+        "classification": "useful"
       },
       "30 Thunderballs": {
         "name": "30 Thunderballs",
+        "id": 64381,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
         "provides": [
           {
             "count": 1,
@@ -13891,17 +14624,18 @@
             "progress_name": "P_40"
           }
         ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64381,
-        "groups": [
-          "Everything"
-        ]
+        "classification": "useful"
       },
       "Atom Smasher": {
         "name": "Atom Smasher",
+        "id": 64383,
+        "groups": [
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
         "provides": [
           {
             "count": 1,
@@ -13929,32 +14663,30 @@
             "progress_name": "P_38"
           }
         ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression",
-        "id": 64383,
-        "groups": [
-          "Everything",
-          "Weapons"
-        ]
+        "classification": "progression"
       },
       "4 Dry Ice": {
         "name": "4 Dry Ice",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 64384,
         "groups": [
           "Any Dry Ice",
           "Everything",
           "Ingredients"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Energy Core": {
         "name": "Energy Core",
+        "id": 64385,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
         "provides": [
           {
             "count": 1,
@@ -13962,850 +14694,17 @@
             "progress_name": "P_ENERGY_CORE"
           }
         ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression",
-        "id": 64385,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "Spider Claw": {
-        "name": "Spider Claw",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 1,
-            "progress_name": "P_WEAPON"
-          },
-          {
-            "count": 1,
-            "progress_id": 2,
-            "progress_name": "P_2"
-          },
-          {
-            "count": 1,
-            "progress_id": 35,
-            "progress_name": "P_35"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression",
-        "id": 64054,
-        "groups": [
-          "Everything",
-          "Weapons"
-        ]
-      },
-      "Wheel": {
-        "name": "Wheel",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 14,
-            "progress_name": "P_14"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression",
-        "id": 64051,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "Horn Spear": {
-        "name": "Horn Spear",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 1,
-            "progress_name": "P_WEAPON"
-          },
-          {
-            "count": 1,
-            "progress_id": 2,
-            "progress_name": "P_2"
-          },
-          {
-            "count": 1,
-            "progress_id": 35,
-            "progress_name": "P_35"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression",
-        "id": 64056,
-        "groups": [
-          "Everything",
-          "Weapons"
-        ]
-      },
-      "Gladiator Sword": {
-        "name": "Gladiator Sword",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 1,
-            "progress_name": "P_WEAPON"
-          },
-          {
-            "count": 1,
-            "progress_id": 36,
-            "progress_name": "P_36"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression",
-        "id": 64052,
-        "groups": [
-          "Everything",
-          "Weapons"
-        ]
-      },
-      "Diamond Eye": {
-        "name": "Diamond Eye",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 12,
-            "progress_name": "P_12"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 3,
-        "classification": "progression",
-        "id": 64064,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "Crusader Sword": {
-        "name": "Crusader Sword",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 1,
-            "progress_name": "P_WEAPON"
-          },
-          {
-            "count": 1,
-            "progress_id": 37,
-            "progress_name": "P_37"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression",
-        "id": 64053,
-        "groups": [
-          "Everything",
-          "Weapons"
-        ]
-      },
-      "Lance (Weapon)": {
-        "name": "Lance (Weapon)",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 1,
-            "progress_name": "P_WEAPON"
-          },
-          {
-            "count": 1,
-            "progress_id": 2,
-            "progress_name": "P_2"
-          },
-          {
-            "count": 1,
-            "progress_id": 8,
-            "progress_name": "P_8"
-          },
-          {
-            "count": 1,
-            "progress_id": 37,
-            "progress_name": "P_37"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression",
-        "id": 64058,
-        "groups": [
-          "Everything",
-          "Weapons"
-        ]
-      },
-      "Bazooka": {
-        "name": "Bazooka",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 42,
-            "progress_name": "P_42"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64061,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "10,000 Gold Coins": {
-        "name": "10,000 Gold Coins",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64062,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "Bronze Axe": {
-        "name": "Bronze Axe",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 1,
-            "progress_name": "P_WEAPON"
-          },
-          {
-            "count": 1,
-            "progress_id": 2,
-            "progress_name": "P_2"
-          },
-          {
-            "count": 1,
-            "progress_id": 5,
-            "progress_name": "P_5"
-          },
-          {
-            "count": 1,
-            "progress_id": 4,
-            "progress_name": "P_4"
-          },
-          {
-            "count": 1,
-            "progress_id": 36,
-            "progress_name": "P_36"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression",
-        "id": 64055,
-        "groups": [
-          "Everything",
-          "Weapons"
-        ]
-      },
-      "Nothing": {
-        "name": "Nothing",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 2,
-        "classification": "filler",
-        "id": 64050,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "Bronze Spear": {
-        "name": "Bronze Spear",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 1,
-            "progress_name": "P_WEAPON"
-          },
-          {
-            "count": 1,
-            "progress_id": 2,
-            "progress_name": "P_2"
-          },
-          {
-            "count": 1,
-            "progress_id": 8,
-            "progress_name": "P_8"
-          },
-          {
-            "count": 1,
-            "progress_id": 36,
-            "progress_name": "P_36"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression",
-        "id": 64057,
-        "groups": [
-          "Everything",
-          "Weapons"
-        ]
-      },
-      "Acid Rain": {
-        "name": "Acid Rain",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64000,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Atlas": {
-        "name": "Atlas",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 21,
-            "progress_name": "P_21"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64001,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Barrier": {
-        "name": "Barrier",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 46,
-            "progress_name": "P_46"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64002,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Call Up": {
-        "name": "Call Up",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 46,
-            "progress_name": "P_46"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64003,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Corrosion": {
-        "name": "Corrosion",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64004,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Crush": {
-        "name": "Crush",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 45,
-            "progress_name": "P_45"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64005,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Cure": {
-        "name": "Cure",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64006,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Defend": {
-        "name": "Defend",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64007,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Double Drain": {
-        "name": "Double Drain",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 45,
-            "progress_name": "P_45"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64008,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Drain": {
-        "name": "Drain",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64009,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Energize": {
-        "name": "Energize",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 46,
-            "progress_name": "P_46"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64010,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Escape": {
-        "name": "Escape",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64011,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Explosion": {
-        "name": "Explosion",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 45,
-            "progress_name": "P_45"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64012,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Fireball": {
-        "name": "Fireball",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 45,
-            "progress_name": "P_45"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64013,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Fire Power": {
-        "name": "Fire Power",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 45,
-            "progress_name": "P_45"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64014,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Flash": {
-        "name": "Flash",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64015,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Force Field": {
-        "name": "Force Field",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64016,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Hard Ball": {
-        "name": "Hard Ball",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64017,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Heal": {
-        "name": "Heal",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64018,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Lance": {
-        "name": "Lance",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 45,
-            "progress_name": "P_45"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64019,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Levitate": {
-        "name": "Levitate",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 20,
-            "progress_name": "P_20"
-          },
-          {
-            "count": 1,
-            "progress_id": 30,
-            "progress_name": "P_30"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression",
-        "id": 64020,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Lightning Storm": {
-        "name": "Lightning Storm",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 45,
-            "progress_name": "P_45"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64021,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Miracle Cure": {
-        "name": "Miracle Cure",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64022,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Nitro": {
-        "name": "Nitro",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 45,
-            "progress_name": "P_45"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64023,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "One Up": {
-        "name": "One Up",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64024,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Reflect": {
-        "name": "Reflect",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64025,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Regrowth": {
-        "name": "Regrowth",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64026,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Revealer": {
-        "name": "Revealer",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 19,
-            "progress_name": "P_REVEALER"
-          },
-          {
-            "count": 1,
-            "progress_id": 24,
-            "progress_name": "P_24"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression",
-        "id": 64027,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Revive": {
-        "name": "Revive",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64028,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Slow Burn": {
-        "name": "Slow Burn",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64029,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Speed": {
-        "name": "Speed",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64030,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Sting": {
-        "name": "Sting",
-        "provides": [
-          {
-            "count": 1,
-            "progress_id": 45,
-            "progress_name": "P_45"
-          }
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "useful",
-        "id": 64031,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Stop": {
-        "name": "Stop",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64032,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
-      },
-      "Super Heal": {
-        "name": "Super Heal",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64033,
-        "groups": [
-          "Alchemy",
-          "Everything"
-        ]
+        "classification": "progression"
       },
       "Energy Core Fragment": {
         "name": "Energy Core Fragment",
+        "id": 64800,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
         "provides": [
           {
             "count": 1,
@@ -14813,122 +14712,177 @@
             "progress_name": "P_CORE_FRAGMENT"
           }
         ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
-        "id": 64800,
-        "groups": [
-          "Everything"
-        ]
+        "classification": "filler"
       },
-      "Root": {
-        "name": "Root",
-        "provides": [],
+      "Quake Trap": {
+        "name": "Quake Trap",
+        "id": 64900,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
-        "id": 65515,
-        "groups": [
-          "Everything"
-        ]
+        "classification": "filler"
       },
-      "Vinegar": {
-        "name": "Vinegar",
-        "provides": [],
+      "Poison Trap": {
+        "name": "Poison Trap",
+        "id": 64901,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
-        "id": 65514,
-        "groups": [
-          "Everything"
-        ]
+        "classification": "filler"
       },
-      "Bone": {
-        "name": "Bone",
-        "provides": [],
+      "Confound Trap": {
+        "name": "Confound Trap",
+        "id": 64902,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
-        "id": 65530,
-        "groups": [
-          "Everything"
-        ]
+        "classification": "filler"
       },
-      "Acorn": {
-        "name": "Acorn",
-        "provides": [],
+      "HUD Trap": {
+        "name": "HUD Trap",
+        "id": 64903,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
-        "id": 65533,
-        "groups": [
-          "Everything"
-        ]
+        "classification": "filler"
       },
-      "Iron": {
-        "name": "Iron",
-        "provides": [],
+      "OHKO Trap": {
+        "name": "OHKO Trap",
+        "id": 64904,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
-        "id": 65521,
-        "groups": [
-          "Everything"
-        ]
+        "classification": "filler"
       },
       "Iron Bracer": {
         "name": "Iron Bracer",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 65031,
         "groups": [
           "Everything"
-        ]
-      },
-      "Dry Ice": {
-        "name": "Dry Ice",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
-        "id": 65526,
+        "classification": "filler"
+      },
+      "Vinegar": {
+        "name": "Vinegar",
+        "id": 65514,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Root": {
+        "name": "Root",
+        "id": 65515,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Meteorite": {
         "name": "Meteorite",
-        "provides": [],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "filler",
         "id": 65519,
         "groups": [
           "Everything"
-        ]
-      },
-      "Gunpowder": {
-        "name": "Gunpowder",
-        "provides": [],
+        ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler",
+        "classification": "filler"
+      },
+      "Iron": {
+        "name": "Iron",
+        "id": 65521,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Gunpowder": {
+        "name": "Gunpowder",
         "id": 65522,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dry Ice": {
+        "name": "Dry Ice",
+        "id": 65526,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bone": {
+        "name": "Bone",
+        "id": 65530,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Acorn": {
+        "name": "Acorn",
+        "id": 65533,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       },
       "__soe_logic_rules__": {
         "name": "__soe_logic_rules__",
@@ -15280,75 +15234,6 @@
           }
         ],
         "classification": "filler"
-      },
-      "Quake Trap": {
-        "name": "Quake Trap",
-        "id": 64900,
-        "groups": [
-          "Everything",
-          "Traps"
-        ],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Poison Trap": {
-        "name": "Poison Trap",
-        "id": 64901,
-        "groups": [
-          "Everything",
-          "Traps"
-        ],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Confound Trap": {
-        "name": "Confound Trap",
-        "id": 64902,
-        "groups": [
-          "Everything",
-          "Traps"
-        ],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "HUD Trap": {
-        "name": "HUD Trap",
-        "id": 64903,
-        "groups": [
-          "Everything",
-          "Traps"
-        ],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "OHKO Trap": {
-        "name": "OHKO Trap",
-        "id": 64904,
-        "groups": [
-          "Everything",
-          "Traps"
-        ],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Victory": {
-        "name": "Victory",
-        "id": null,
-        "groups": [],
-        "classification": "progression",
-        "event": true,
-        "type": null,
-        "max_count": 1
       }
     }
   },
@@ -15959,7 +15844,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": true
     }
   },

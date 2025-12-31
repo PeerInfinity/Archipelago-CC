@@ -5625,7 +5625,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "MathProof2p2e4"
+            "game": "Math Adventure"
           }
         ],
         "files": [
@@ -5734,7 +5734,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "ChocolateChipCookies"
+            "game": "Baking Adventure"
           }
         ],
         "files": [
@@ -5843,7 +5843,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "WebDevJourney"
+            "game": "Coding Adventure"
           }
         ],
         "files": [

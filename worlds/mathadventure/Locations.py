@@ -5,7 +5,7 @@ base_location_id = 200000000
 
 
 class MathProofLocation(Location):
-    game: str = "MathProof2p2e4"
+    game: str = "Math Adventure"
 
 
 class LocationData:

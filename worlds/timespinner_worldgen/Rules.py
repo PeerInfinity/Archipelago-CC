@@ -505,6 +505,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Lake Desolation (Upper): Secret room", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_location("Lake Desolation (Upper): Double jump cave platform", player),
         HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin')
     )
@@ -517,6 +522,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Lake Desolation (Upper): Crash site chest 2", player),
         Has('Killed Maw')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Desolation (Lower): Not so secret room", player),
+        True_()
     )
 
     world.set_rule(
@@ -577,6 +587,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Left): Bottom floor", player),
         HasAny('Security Keycard A', 'Security Keycard B', 'Security Keycard C')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Varndagroth Towers (Left): Air vents secret", player),
+        True_()
     )
 
     world.set_rule(
@@ -710,6 +725,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Lab: Lab secret", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_location("Lab: Download and chest room terminal (Experiment #13)", player),
         Has('Tablet')
     )
@@ -740,6 +760,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Sealed Caves (Xarion): Secret room", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_location("Sealed Caves (Xarion): Last chance before Xarion", player),
         HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin')
     )
@@ -752,6 +777,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Forest: Bat jump ledge", player),
         Or(HelperCall(helper_func=_timespinnerworldgen_has_doublejump_of_npc, helper_name="has_doublejump_of_npc"), HelperCall(helper_func=_timespinnerworldgen_has_fastjump_on_npc, helper_name="has_fastjump_on_npc"), HelperCall(helper_func=_timespinnerworldgen_has_forwarddash_doublejump, helper_name="has_forwarddash_doublejump"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Forest: Green platform secret", player),
+        True_()
     )
 
     world.set_rule(
@@ -782,6 +812,16 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Lake Serene (Upper): Double jump cave platform", player),
         HasAny('Celestial Sash', 'Lightwall', 'Succubus Hairpin')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Serene (Upper): Cave secret", player),
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Lake Serene (Lower): Underwater secret", player),
+        True_()
     )
 
     world.set_rule(
@@ -902,6 +942,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("Castle Keep: Royal guard tiny room", player),
         Or(HelperCall(helper_func=_timespinnerworldgen_has_doublejump, helper_name="has_doublejump"), HelperCall(helper_func=_timespinnerworldgen_has_fastjump_on_npc, helper_name="has_fastjump_on_npc"))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Castle Basement: Secret pedestal", player),
+        True_()
     )
 
     world.set_rule(

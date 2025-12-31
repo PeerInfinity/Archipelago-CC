@@ -32002,7 +32002,76 @@
     "1": {}
   },
   "progression_mapping": {
-    "1": {}
+    "1": {
+      "Progressive Sword": {
+        "items": [
+          {
+            "name": "Steel Sword",
+            "level": 1
+          },
+          {
+            "name": "Knight Sword",
+            "level": 2
+          },
+          {
+            "name": "Excalibur",
+            "level": 3
+          }
+        ],
+        "base_item": "Progressive Sword"
+      },
+      "Progressive Axe": {
+        "items": [
+          {
+            "name": "Axe",
+            "level": 1
+          },
+          {
+            "name": "Battle Axe",
+            "level": 2
+          },
+          {
+            "name": "Giant's Axe",
+            "level": 3
+          }
+        ],
+        "base_item": "Progressive Axe"
+      },
+      "Progressive Claw": {
+        "items": [
+          {
+            "name": "Cat Claw",
+            "level": 1
+          },
+          {
+            "name": "Charm Claw",
+            "level": 2
+          },
+          {
+            "name": "Dragon Claw",
+            "level": 3
+          }
+        ],
+        "base_item": "Progressive Claw"
+      },
+      "Progressive Bomb": {
+        "items": [
+          {
+            "name": "Bomb",
+            "level": 1
+          },
+          {
+            "name": "Jumbo Bomb",
+            "level": 2
+          },
+          {
+            "name": "Mega Grenade",
+            "level": 3
+          }
+        ],
+        "base_item": "Progressive Bomb"
+      }
+    }
   },
   "starting_items": {
     "1": [
@@ -40611,7 +40680,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": false
     }
   },

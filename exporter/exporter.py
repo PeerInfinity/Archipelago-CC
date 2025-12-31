@@ -1626,6 +1626,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             raw_address = getattr(location, 'address', None)
                             location_id = raw_address if isinstance(raw_address, int) else None
 
+                            # Determine if this is an event location
+                            # Event locations have event=True or address=None
+                            is_event = getattr(location, 'event', False) or location_id is None
+
                             location_data = {
                                 'name': location_name,
                                 'id': location_id,  # Use actual location address (None for events or non-int addresses)
@@ -1634,6 +1638,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                 'item': None,
                                 'locked': getattr(location, 'locked', False)  # True if item was placed via place_locked_item
                             }
+
+                            # Only include event flag if True (to reduce JSON size)
+                            if is_event:
+                                location_data['event'] = True
 
                             # Only include progress_type if not DEFAULT
                             if progress_type_str:
@@ -2091,12 +2099,6 @@ def cleanup_export_data(data):
         for player_id, world_data in data['world'].items():
             data['world'][player_id] = sort_lists_for_consistency(world_data)
 
-    # Sort lists in metamath_data for consistent output
-    # This handles cases like dependencies arrays in theorem data
-    if 'metamath_data' in data:
-        for player_id, metamath_data in data['metamath_data'].items():
-            data['metamath_data'][player_id] = sort_lists_for_consistency(metamath_data)
-
     return data
 
 # --- Helper for Field Exclusion ---
@@ -2177,7 +2179,6 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'world',
         'exporter',
         'game_info',
-        'metamath_data',
         'helpers'
     ]
 
@@ -2185,7 +2186,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     player_specific_keys = [
         'regions', 'dungeons', 'items', 'item_groups', 'progression_mapping',
         'world', 'exporter', 'start_regions', 'itempool_counts',
-        'canonical_placements', 'game_info', 'starting_items', 'metamath_data'
+        'canonical_placements', 'game_info', 'starting_items'
     ]
 
     # Prepare the combined export data for all players using the helper

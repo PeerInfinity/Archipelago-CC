@@ -44,6 +44,27 @@
     "world_directory": "yoshisisland"
   },
   "world_attributes": {
+    "game_logic": "Easy",
+    "midring_start": true,
+    "clouds_always_visible": false,
+    "consumable_logic": true,
+    "bowser_door": 0,
+    "luigi_pieces": 25,
+    "boss_order": [
+      "Burt The Bashful's Boss Room",
+      "Salvo The Slime's Boss Room",
+      "Bigger Boo's Boss Room",
+      "Roger The Ghost's Boss Room",
+      "Prince Froggy's Boss Room",
+      "Naval Piranha's Boss Room",
+      "Marching Milde's Boss Room",
+      "Hookbill The Koopa's Boss Room",
+      "Sluggy The Unshaven's Boss Room",
+      "Raphael The Raven's Boss Room",
+      "Tap-Tap The Red Nose's Boss Room"
+    ],
+    "castle_unlock": 5,
+    "boss_unlock": 0,
     "locked_locations": [],
     "level_colors": [
       0,
@@ -135,19 +156,6 @@
       2
     ],
     "baby_mario_sfx": 68,
-    "boss_order": [
-      "Burt The Bashful's Boss Room",
-      "Salvo The Slime's Boss Room",
-      "Bigger Boo's Boss Room",
-      "Roger The Ghost's Boss Room",
-      "Prince Froggy's Boss Room",
-      "Naval Piranha's Boss Room",
-      "Marching Milde's Boss Room",
-      "Hookbill The Koopa's Boss Room",
-      "Sluggy The Unshaven's Boss Room",
-      "Raphael The Raven's Boss Room",
-      "Tap-Tap The Red Nose's Boss Room"
-    ],
     "boss_room_id": [
       0,
       1,
@@ -1012,14 +1020,6 @@
           ]
         }
       ]
-    },
-    "game_logic": "Easy",
-    "midring_start": true,
-    "clouds_always_visible": false,
-    "consumable_logic": true,
-    "bowser_door": 0,
-    "luigi_pieces": 25,
-    "castle_unlock": 5,
-    "boss_unlock": 0
+    }
   }
 }

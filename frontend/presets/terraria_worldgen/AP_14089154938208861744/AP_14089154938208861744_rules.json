@@ -1619,7 +1619,9 @@
           {
             "name": "Solidifier",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "rule": "True_"
+            },
             "item": {
               "name": "Solidifier",
               "player": 1,
@@ -1632,7 +1634,9 @@
           {
             "name": "Nerdy Slime",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "rule": "True_"
+            },
             "item": {
               "name": "Nerdy Slime",
               "player": 1,
@@ -1860,7 +1864,9 @@
           {
             "name": "Evil Boss Part",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "rule": "True_"
+            },
             "item": {
               "name": "Evil Boss Part",
               "player": 1,
@@ -2516,7 +2522,9 @@
           {
             "name": "Bee Keeper",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "rule": "True_"
+            },
             "item": {
               "name": "Bee Keeper",
               "player": 1,
@@ -2529,7 +2537,9 @@
           {
             "name": "Bee Wax",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "rule": "True_"
+            },
             "item": {
               "name": "Bee Wax",
               "player": 1,
@@ -9619,6 +9629,47 @@
           "display_name": "Randomize Items"
         }
       },
+      "armor_minions": {
+        "Wulfrum Armor": 1,
+        "Flinx Fur Coat": 1,
+        "Victide Armor": 1,
+        "Obsidian Armor": 1,
+        "Bee Armor": 2,
+        "Aerospec Armor": 1,
+        "Statigel Armor": 1,
+        "Spider Armor": 3,
+        "Forbidden Armor": 2,
+        "Daedalus Armor": 2,
+        "Hallowed Armor": 3,
+        "Fathom Swarmer Armor": 2,
+        "Tiki Armor": 4,
+        "Hydrothermic Armor": 2,
+        "Plaguebringer Armor": 3,
+        "Spooky Armor": 4,
+        "Astral Armor": 3,
+        "Stardust Armor": 5,
+        "Tarragon Armor": 3,
+        "Bloodflare Armor": 3,
+        "Omega Blue Armor": 2,
+        "Fearmonger Armor": 2,
+        "Silva Armor": 5,
+        "Auric Tesla Armor": 6,
+        "Demonshade Armor": 10
+      },
+      "accessory_minions": {
+        "Summoning Potion": 1,
+        "Voltaic Jelly": 1,
+        "Pygmy Necklace": 1,
+        "Bewitching Table": 1,
+        "The First Shadowflame": 1,
+        "Nuclear Fuel Rod": 1,
+        "Starbuster Core": 1,
+        "Necromantic Scroll": 1,
+        "Papyrus Scarab": 1,
+        "Eldritch Soul Artifact": 1,
+        "Profaned Soul Artifact": 1,
+        "Angelic Alliance": 2
+      },
       "shops": [],
       "ter_items": [
         "Copper Shortsword",
@@ -10110,52 +10161,11 @@
         "Skeletron Prime"
       ],
       "ter_goals": {
-        "Post-Skeletron Prime": "Skeletron Prime",
+        "Post-The Twins": "The Twins",
         "Post-The Destroyer": "The Destroyer",
-        "Post-The Twins": "The Twins"
+        "Post-Skeletron Prime": "Skeletron Prime"
       },
       "world_description": "Terraria WorldGen for Archipelago.\n\nAuto-generated world implementation.",
-      "armor_minions": {
-        "Wulfrum Armor": 1,
-        "Flinx Fur Coat": 1,
-        "Victide Armor": 1,
-        "Obsidian Armor": 1,
-        "Bee Armor": 2,
-        "Aerospec Armor": 1,
-        "Statigel Armor": 1,
-        "Spider Armor": 3,
-        "Forbidden Armor": 2,
-        "Daedalus Armor": 2,
-        "Hallowed Armor": 3,
-        "Fathom Swarmer Armor": 2,
-        "Tiki Armor": 4,
-        "Hydrothermic Armor": 2,
-        "Plaguebringer Armor": 3,
-        "Spooky Armor": 4,
-        "Astral Armor": 3,
-        "Stardust Armor": 5,
-        "Tarragon Armor": 3,
-        "Bloodflare Armor": 3,
-        "Omega Blue Armor": 2,
-        "Fearmonger Armor": 2,
-        "Silva Armor": 5,
-        "Auric Tesla Armor": 6,
-        "Demonshade Armor": 10
-      },
-      "accessory_minions": {
-        "Summoning Potion": 1,
-        "Voltaic Jelly": 1,
-        "Pygmy Necklace": 1,
-        "Bewitching Table": 1,
-        "The First Shadowflame": 1,
-        "Nuclear Fuel Rod": 1,
-        "Starbuster Core": 1,
-        "Necromantic Scroll": 1,
-        "Papyrus Scarab": 1,
-        "Eldritch Soul Artifact": 1,
-        "Profaned Soul Artifact": 1,
-        "Angelic Alliance": 2
-      },
       "slot_data": {
         "goal": [
           "Skeletron Prime",
@@ -10181,7 +10191,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": false
     }
   },

@@ -6914,27 +6914,6 @@
         ],
         "base_item": "progressive-advanced-material-processing"
       },
-      "progressive-armor": {
-        "items": [
-          {
-            "name": "heavy-armor",
-            "level": 1
-          },
-          {
-            "name": "modular-armor",
-            "level": 2
-          },
-          {
-            "name": "power-armor",
-            "level": 3
-          },
-          {
-            "name": "power-armor-mk2",
-            "level": 4
-          }
-        ],
-        "base_item": "progressive-armor"
-      },
       "progressive-automation": {
         "items": [
           {
@@ -6952,56 +6931,6 @@
         ],
         "base_item": "progressive-automation"
       },
-      "progressive-braking-force": {
-        "items": [
-          {
-            "name": "braking-force-1",
-            "level": 1
-          },
-          {
-            "name": "braking-force-2",
-            "level": 2
-          },
-          {
-            "name": "braking-force-3",
-            "level": 3
-          },
-          {
-            "name": "braking-force-4",
-            "level": 4
-          },
-          {
-            "name": "braking-force-5",
-            "level": 5
-          },
-          {
-            "name": "braking-force-6",
-            "level": 6
-          },
-          {
-            "name": "braking-force-7",
-            "level": 7
-          }
-        ],
-        "base_item": "progressive-braking-force"
-      },
-      "progressive-efficiency-module": {
-        "items": [
-          {
-            "name": "efficiency-module",
-            "level": 1
-          },
-          {
-            "name": "efficiency-module-2",
-            "level": 2
-          },
-          {
-            "name": "efficiency-module-3",
-            "level": 3
-          }
-        ],
-        "base_item": "progressive-efficiency-module"
-      },
       "progressive-electric-energy-distribution": {
         "items": [
           {
@@ -7014,19 +6943,6 @@
           }
         ],
         "base_item": "progressive-electric-energy-distribution"
-      },
-      "progressive-energy-shield": {
-        "items": [
-          {
-            "name": "energy-shield-equipment",
-            "level": 1
-          },
-          {
-            "name": "energy-shield-mk2-equipment",
-            "level": 2
-          }
-        ],
-        "base_item": "progressive-energy-shield"
       },
       "progressive-engine": {
         "items": [
@@ -7074,210 +6990,6 @@
         ],
         "base_item": "progressive-flamethrower"
       },
-      "progressive-fluid-handling": {
-        "items": [
-          {
-            "name": "fluid-handling",
-            "level": 1
-          },
-          {
-            "name": "fluid-wagon",
-            "level": 2
-          }
-        ],
-        "base_item": "progressive-fluid-handling"
-      },
-      "progressive-follower": {
-        "items": [
-          {
-            "name": "defender",
-            "level": 1
-          },
-          {
-            "name": "distractor",
-            "level": 2
-          },
-          {
-            "name": "destroyer",
-            "level": 3
-          }
-        ],
-        "base_item": "progressive-follower"
-      },
-      "progressive-follower-robot-count": {
-        "items": [
-          {
-            "name": "follower-robot-count-1",
-            "level": 1
-          },
-          {
-            "name": "follower-robot-count-2",
-            "level": 2
-          },
-          {
-            "name": "follower-robot-count-3",
-            "level": 3
-          },
-          {
-            "name": "follower-robot-count-4",
-            "level": 4
-          }
-        ],
-        "base_item": "progressive-follower-robot-count"
-      },
-      "progressive-inserter": {
-        "items": [
-          {
-            "name": "fast-inserter",
-            "level": 1
-          },
-          {
-            "name": "bulk-inserter",
-            "level": 2
-          },
-          {
-            "name": "inserter-capacity-bonus-1",
-            "level": 3
-          },
-          {
-            "name": "inserter-capacity-bonus-2",
-            "level": 4
-          },
-          {
-            "name": "inserter-capacity-bonus-3",
-            "level": 5
-          },
-          {
-            "name": "inserter-capacity-bonus-4",
-            "level": 6
-          },
-          {
-            "name": "inserter-capacity-bonus-5",
-            "level": 7
-          },
-          {
-            "name": "inserter-capacity-bonus-6",
-            "level": 8
-          },
-          {
-            "name": "inserter-capacity-bonus-7",
-            "level": 9
-          }
-        ],
-        "base_item": "progressive-inserter"
-      },
-      "progressive-inserter-capacity-bonus": {
-        "items": [
-          {
-            "name": "inserter-capacity-bonus-1",
-            "level": 1
-          },
-          {
-            "name": "inserter-capacity-bonus-2",
-            "level": 2
-          },
-          {
-            "name": "inserter-capacity-bonus-3",
-            "level": 3
-          },
-          {
-            "name": "inserter-capacity-bonus-4",
-            "level": 4
-          },
-          {
-            "name": "inserter-capacity-bonus-5",
-            "level": 5
-          },
-          {
-            "name": "inserter-capacity-bonus-6",
-            "level": 6
-          },
-          {
-            "name": "inserter-capacity-bonus-7",
-            "level": 7
-          }
-        ],
-        "base_item": "progressive-inserter-capacity-bonus"
-      },
-      "progressive-laser-shooting-speed": {
-        "items": [
-          {
-            "name": "laser-shooting-speed-1",
-            "level": 1
-          },
-          {
-            "name": "laser-shooting-speed-2",
-            "level": 2
-          },
-          {
-            "name": "laser-shooting-speed-3",
-            "level": 3
-          },
-          {
-            "name": "laser-shooting-speed-4",
-            "level": 4
-          },
-          {
-            "name": "laser-shooting-speed-5",
-            "level": 5
-          },
-          {
-            "name": "laser-shooting-speed-6",
-            "level": 6
-          },
-          {
-            "name": "laser-shooting-speed-7",
-            "level": 7
-          }
-        ],
-        "base_item": "progressive-laser-shooting-speed"
-      },
-      "progressive-laser-weapons-damage": {
-        "items": [
-          {
-            "name": "laser-weapons-damage-1",
-            "level": 1
-          },
-          {
-            "name": "laser-weapons-damage-2",
-            "level": 2
-          },
-          {
-            "name": "laser-weapons-damage-3",
-            "level": 3
-          },
-          {
-            "name": "laser-weapons-damage-4",
-            "level": 4
-          },
-          {
-            "name": "laser-weapons-damage-5",
-            "level": 5
-          },
-          {
-            "name": "laser-weapons-damage-6",
-            "level": 6
-          }
-        ],
-        "base_item": "progressive-laser-weapons-damage"
-      },
-      "progressive-logistics": {
-        "items": [
-          {
-            "name": "logistics",
-            "level": 1
-          },
-          {
-            "name": "logistics-2",
-            "level": 2
-          },
-          {
-            "name": "logistics-3",
-            "level": 3
-          }
-        ],
-        "base_item": "progressive-logistics"
-      },
       "progressive-military": {
         "items": [
           {
@@ -7298,78 +7010,6 @@
           }
         ],
         "base_item": "progressive-military"
-      },
-      "progressive-mining-productivity": {
-        "items": [
-          {
-            "name": "mining-productivity-1",
-            "level": 1
-          },
-          {
-            "name": "mining-productivity-2",
-            "level": 2
-          },
-          {
-            "name": "mining-productivity-3",
-            "level": 3
-          }
-        ],
-        "base_item": "progressive-mining-productivity"
-      },
-      "progressive-personal-battery": {
-        "items": [
-          {
-            "name": "battery-equipment",
-            "level": 1
-          },
-          {
-            "name": "battery-mk2-equipment",
-            "level": 2
-          }
-        ],
-        "base_item": "progressive-personal-battery"
-      },
-      "progressive-personal-roboport-equipment": {
-        "items": [
-          {
-            "name": "personal-roboport-equipment",
-            "level": 1
-          },
-          {
-            "name": "personal-roboport-mk2-equipment",
-            "level": 2
-          }
-        ],
-        "base_item": "progressive-personal-roboport-equipment"
-      },
-      "progressive-physical-projectile-damage": {
-        "items": [
-          {
-            "name": "physical-projectile-damage-1",
-            "level": 1
-          },
-          {
-            "name": "physical-projectile-damage-2",
-            "level": 2
-          },
-          {
-            "name": "physical-projectile-damage-3",
-            "level": 3
-          },
-          {
-            "name": "physical-projectile-damage-4",
-            "level": 4
-          },
-          {
-            "name": "physical-projectile-damage-5",
-            "level": 5
-          },
-          {
-            "name": "physical-projectile-damage-6",
-            "level": 6
-          }
-        ],
-        "base_item": "progressive-physical-projectile-damage"
       },
       "progressive-processing": {
         "items": [
@@ -7425,81 +7065,6 @@
         ],
         "base_item": "progressive-productivity-module"
       },
-      "progressive-refined-flammables": {
-        "items": [
-          {
-            "name": "refined-flammables-1",
-            "level": 1
-          },
-          {
-            "name": "refined-flammables-2",
-            "level": 2
-          },
-          {
-            "name": "refined-flammables-3",
-            "level": 3
-          },
-          {
-            "name": "refined-flammables-4",
-            "level": 4
-          },
-          {
-            "name": "refined-flammables-5",
-            "level": 5
-          },
-          {
-            "name": "refined-flammables-6",
-            "level": 6
-          }
-        ],
-        "base_item": "progressive-refined-flammables"
-      },
-      "progressive-research-speed": {
-        "items": [
-          {
-            "name": "research-speed-1",
-            "level": 1
-          },
-          {
-            "name": "research-speed-2",
-            "level": 2
-          },
-          {
-            "name": "research-speed-3",
-            "level": 3
-          },
-          {
-            "name": "research-speed-4",
-            "level": 4
-          },
-          {
-            "name": "research-speed-5",
-            "level": 5
-          },
-          {
-            "name": "research-speed-6",
-            "level": 6
-          }
-        ],
-        "base_item": "progressive-research-speed"
-      },
-      "progressive-rocketry": {
-        "items": [
-          {
-            "name": "rocketry",
-            "level": 1
-          },
-          {
-            "name": "explosive-rocketry",
-            "level": 2
-          },
-          {
-            "name": "atomic-bomb",
-            "level": 3
-          }
-        ],
-        "base_item": "progressive-rocketry"
-      },
       "progressive-science-pack": {
         "items": [
           {
@@ -7528,52 +7093,6 @@
           }
         ],
         "base_item": "progressive-science-pack"
-      },
-      "progressive-speed-module": {
-        "items": [
-          {
-            "name": "speed-module",
-            "level": 1
-          },
-          {
-            "name": "speed-module-2",
-            "level": 2
-          },
-          {
-            "name": "speed-module-3",
-            "level": 3
-          }
-        ],
-        "base_item": "progressive-speed-module"
-      },
-      "progressive-stronger-explosives": {
-        "items": [
-          {
-            "name": "stronger-explosives-1",
-            "level": 1
-          },
-          {
-            "name": "stronger-explosives-2",
-            "level": 2
-          },
-          {
-            "name": "stronger-explosives-3",
-            "level": 3
-          },
-          {
-            "name": "stronger-explosives-4",
-            "level": 4
-          },
-          {
-            "name": "stronger-explosives-5",
-            "level": 5
-          },
-          {
-            "name": "stronger-explosives-6",
-            "level": 6
-          }
-        ],
-        "base_item": "progressive-stronger-explosives"
       },
       "progressive-train-network": {
         "items": [
@@ -7616,36 +7135,6 @@
         ],
         "base_item": "progressive-train-network"
       },
-      "progressive-turret": {
-        "items": [
-          {
-            "name": "gun-turret",
-            "level": 1
-          },
-          {
-            "name": "laser-turret",
-            "level": 2
-          }
-        ],
-        "base_item": "progressive-turret"
-      },
-      "progressive-vehicle": {
-        "items": [
-          {
-            "name": "automobilism",
-            "level": 1
-          },
-          {
-            "name": "tank",
-            "level": 2
-          },
-          {
-            "name": "spidertron",
-            "level": 3
-          }
-        ],
-        "base_item": "progressive-vehicle"
-      },
       "progressive-wall": {
         "items": [
           {
@@ -7658,77 +7147,6 @@
           }
         ],
         "base_item": "progressive-wall"
-      },
-      "progressive-weapon-shooting-speed": {
-        "items": [
-          {
-            "name": "weapon-shooting-speed-1",
-            "level": 1
-          },
-          {
-            "name": "weapon-shooting-speed-2",
-            "level": 2
-          },
-          {
-            "name": "weapon-shooting-speed-3",
-            "level": 3
-          },
-          {
-            "name": "weapon-shooting-speed-4",
-            "level": 4
-          },
-          {
-            "name": "weapon-shooting-speed-5",
-            "level": 5
-          },
-          {
-            "name": "weapon-shooting-speed-6",
-            "level": 6
-          }
-        ],
-        "base_item": "progressive-weapon-shooting-speed"
-      },
-      "progressive-worker-robots-speed": {
-        "items": [
-          {
-            "name": "worker-robots-speed-1",
-            "level": 1
-          },
-          {
-            "name": "worker-robots-speed-2",
-            "level": 2
-          },
-          {
-            "name": "worker-robots-speed-3",
-            "level": 3
-          },
-          {
-            "name": "worker-robots-speed-4",
-            "level": 4
-          },
-          {
-            "name": "worker-robots-speed-5",
-            "level": 5
-          }
-        ],
-        "base_item": "progressive-worker-robots-speed"
-      },
-      "progressive-worker-robots-storage": {
-        "items": [
-          {
-            "name": "worker-robots-storage-1",
-            "level": 1
-          },
-          {
-            "name": "worker-robots-storage-2",
-            "level": 2
-          },
-          {
-            "name": "worker-robots-storage-3",
-            "level": 3
-          }
-        ],
-        "base_item": "progressive-worker-robots-storage"
       }
     }
   },
@@ -8526,7 +7944,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": true
     }
   },

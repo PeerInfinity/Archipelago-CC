@@ -25309,6 +25309,24 @@
           "display_name": "Virtual Console Changes"
         }
       },
+      "level_names_inverse": {
+        "1": "Grass Land",
+        "2": "Ripple Field",
+        "3": "Sand Canyon",
+        "4": "Cloudy Park",
+        "5": "Iceberg"
+      },
+      "ability_map": {
+        "No Ability": "<lambda>",
+        "Burning Ability": "can_reach_burning",
+        "Stone Ability": "can_reach_stone",
+        "Ice Ability": "can_reach_ice",
+        "Needle Ability": "can_reach_needle",
+        "Clean Ability": "can_reach_clean",
+        "Parasol Ability": "can_reach_parasol",
+        "Spark Ability": "can_reach_spark",
+        "Cutter Ability": "can_reach_cutter"
+      },
       "copy_abilities": {
         "Waddle Dee": "No Ability",
         "Bronto Burt": "No Ability",
@@ -25955,24 +25973,6 @@
           }
         ]
       },
-      "level_names_inverse": {
-        "1": "Grass Land",
-        "2": "Ripple Field",
-        "3": "Sand Canyon",
-        "4": "Cloudy Park",
-        "5": "Iceberg"
-      },
-      "ability_map": {
-        "No Ability": "<lambda>",
-        "Burning Ability": "can_reach_burning",
-        "Stone Ability": "can_reach_stone",
-        "Ice Ability": "can_reach_ice",
-        "Needle Ability": "can_reach_needle",
-        "Clean Ability": "can_reach_clean",
-        "Parasol Ability": "can_reach_parasol",
-        "Spark Ability": "can_reach_spark",
-        "Cutter Ability": "can_reach_cutter"
-      },
       "world_directory": "kdl3"
     }
   },
@@ -25981,7 +25981,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": false
     }
   },

@@ -27,7 +27,7 @@ class ChocolateChipCookiesWorld(World):
     baking process step by step to create delicious cookies!
     """
 
-    game = "ChocolateChipCookies"
+    game = "Baking Adventure"
     web = ChocolateChipCookiesWeb()
     options_dataclass = ChocolateChipCookiesOptions
     options: ChocolateChipCookiesOptions
