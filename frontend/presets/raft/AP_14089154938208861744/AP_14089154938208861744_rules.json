@@ -6811,73 +6811,7 @@
   },
   "progression_mapping": {
     "1": {
-      "progressive-salve": {
-        "base_item": "progressive-salve",
-        "items": [
-          {
-            "name": "Healing salve",
-            "level": 1
-          },
-          {
-            "name": "Good healing salve",
-            "level": 2
-          }
-        ]
-      },
-      "progressive-backpack": {
-        "base_item": "progressive-backpack",
-        "items": [
-          {
-            "name": "Backpack",
-            "level": 1
-          },
-          {
-            "name": "Big backpack",
-            "level": 2
-          }
-        ]
-      },
-      "progressive-containers": {
-        "base_item": "progressive-containers",
-        "items": [
-          {
-            "name": "Clay bowl",
-            "level": 1
-          },
-          {
-            "name": "Drinking glass",
-            "level": 2
-          }
-        ]
-      },
-      "progressive-headlight": {
-        "base_item": "progressive-headlight",
-        "items": [
-          {
-            "name": "Head light",
-            "level": 1
-          },
-          {
-            "name": "Advanced head light",
-            "level": 2
-          }
-        ]
-      },
-      "progressive-biofuel": {
-        "base_item": "progressive-biofuel",
-        "items": [
-          {
-            "name": "Biofuel refiner",
-            "level": 1
-          },
-          {
-            "name": "Advanced biofuel refiner",
-            "level": 2
-          }
-        ]
-      },
       "progressive-bottle": {
-        "base_item": "progressive-bottle",
         "items": [
           {
             "name": "Empty bottle",
@@ -6887,61 +6821,10 @@
             "name": "Empty canteen",
             "level": 2
           }
-        ]
-      },
-      "progressive-grill": {
-        "base_item": "progressive-grill",
-        "items": [
-          {
-            "name": "Advanced grill",
-            "level": 1
-          },
-          {
-            "name": "Electric grill",
-            "level": 2
-          }
-        ]
-      },
-      "progressive-purifier": {
-        "base_item": "progressive-purifier",
-        "items": [
-          {
-            "name": "Advanced purifier",
-            "level": 1
-          },
-          {
-            "name": "Electric purifier",
-            "level": 2
-          }
-        ]
-      },
-      "progressive-crop-plot": {
-        "base_item": "progressive-crop-plot",
-        "items": [
-          {
-            "name": "Medium crop plot",
-            "level": 1
-          },
-          {
-            "name": "Large crop plot",
-            "level": 2
-          },
-          {
-            "name": "Advanced small crop plot",
-            "level": 3
-          },
-          {
-            "name": "Advanced medium crop plot",
-            "level": 4
-          },
-          {
-            "name": "Advanced large crop plot",
-            "level": 5
-          }
-        ]
+        ],
+        "base_item": "progressive-bottle"
       },
       "progressive-battery": {
-        "base_item": "progressive-battery",
         "items": [
           {
             "name": "Battery",
@@ -6959,23 +6842,10 @@
             "name": "Wind turbine",
             "level": 4
           }
-        ]
-      },
-      "progressive-anchor": {
-        "base_item": "progressive-anchor",
-        "items": [
-          {
-            "name": "Stationary anchor",
-            "level": 1
-          },
-          {
-            "name": "Advanced stationary anchor",
-            "level": 2
-          }
-        ]
+        ],
+        "base_item": "progressive-battery"
       },
       "progressive-engine": {
-        "base_item": "progressive-engine",
         "items": [
           {
             "name": "Engine",
@@ -6989,49 +6859,10 @@
             "name": "Engine controls",
             "level": 3
           }
-        ]
-      },
-      "progressive-scarecrow": {
-        "base_item": "progressive-scarecrow",
-        "items": [
-          {
-            "name": "Scarecrow",
-            "level": 1
-          },
-          {
-            "name": "Advanced Scarecrow",
-            "level": 2
-          }
-        ]
-      },
-      "progressive-net": {
-        "base_item": "progressive-net",
-        "items": [
-          {
-            "name": "Simple collection net",
-            "level": 1
-          },
-          {
-            "name": "Advanced collection net",
-            "level": 2
-          }
-        ]
-      },
-      "progressive-storage": {
-        "base_item": "progressive-storage",
-        "items": [
-          {
-            "name": "Storage",
-            "level": 1
-          },
-          {
-            "name": "Large Storage",
-            "level": 2
-          }
-        ]
+        ],
+        "base_item": "progressive-engine"
       },
       "progressive-zipline": {
-        "base_item": "progressive-zipline",
         "items": [
           {
             "name": "Zipline tool",
@@ -7045,10 +6876,10 @@
             "name": "Electric zipline tool",
             "level": 3
           }
-        ]
+        ],
+        "base_item": "progressive-zipline"
       },
       "progressive-metals": {
-        "base_item": "progressive-metals",
         "items": [
           {
             "name": "Smelter",
@@ -7062,57 +6893,10 @@
             "name": "Electric Smelter",
             "level": 3
           }
-        ]
-      },
-      "progressive-bow": {
-        "base_item": "progressive-bow",
-        "items": [
-          {
-            "name": "Basic bow",
-            "level": 1
-          },
-          {
-            "name": "Stone arrow",
-            "level": 2
-          },
-          {
-            "name": "Metal arrow",
-            "level": 3
-          },
-          {
-            "name": "Titanium arrow",
-            "level": 4
-          }
-        ]
-      },
-      "progressive-axe": {
-        "base_item": "progressive-axe",
-        "items": [
-          {
-            "name": "Metal axe",
-            "level": 1
-          },
-          {
-            "name": "Titanium axe",
-            "level": 2
-          }
-        ]
-      },
-      "progressive-hook": {
-        "base_item": "progressive-hook",
-        "items": [
-          {
-            "name": "Scrap hook",
-            "level": 1
-          },
-          {
-            "name": "Titanium hook",
-            "level": 2
-          }
-        ]
+        ],
+        "base_item": "progressive-metals"
       },
       "progressive-spear": {
-        "base_item": "progressive-spear",
         "items": [
           {
             "name": "Metal spear",
@@ -7126,10 +6910,10 @@
             "name": "Titanium sword",
             "level": 3
           }
-        ]
+        ],
+        "base_item": "progressive-spear"
       },
       "progressive-frequency": {
-        "base_item": "progressive-frequency",
         "items": [
           {
             "name": "Vasagatan Frequency",
@@ -7159,7 +6943,223 @@
             "name": "Utopia Frequency",
             "level": 7
           }
-        ]
+        ],
+        "base_item": "progressive-frequency"
+      },
+      "progressive-salve": {
+        "items": [
+          {
+            "name": "Healing salve",
+            "level": 1
+          },
+          {
+            "name": "Good healing salve",
+            "level": 2
+          }
+        ],
+        "base_item": "progressive-salve"
+      },
+      "progressive-backpack": {
+        "items": [
+          {
+            "name": "Backpack",
+            "level": 1
+          },
+          {
+            "name": "Big backpack",
+            "level": 2
+          }
+        ],
+        "base_item": "progressive-backpack"
+      },
+      "progressive-containers": {
+        "items": [
+          {
+            "name": "Clay bowl",
+            "level": 1
+          },
+          {
+            "name": "Drinking glass",
+            "level": 2
+          }
+        ],
+        "base_item": "progressive-containers"
+      },
+      "progressive-headlight": {
+        "items": [
+          {
+            "name": "Head light",
+            "level": 1
+          },
+          {
+            "name": "Advanced head light",
+            "level": 2
+          }
+        ],
+        "base_item": "progressive-headlight"
+      },
+      "progressive-biofuel": {
+        "items": [
+          {
+            "name": "Biofuel refiner",
+            "level": 1
+          },
+          {
+            "name": "Advanced biofuel refiner",
+            "level": 2
+          }
+        ],
+        "base_item": "progressive-biofuel"
+      },
+      "progressive-grill": {
+        "items": [
+          {
+            "name": "Advanced grill",
+            "level": 1
+          },
+          {
+            "name": "Electric grill",
+            "level": 2
+          }
+        ],
+        "base_item": "progressive-grill"
+      },
+      "progressive-purifier": {
+        "items": [
+          {
+            "name": "Advanced purifier",
+            "level": 1
+          },
+          {
+            "name": "Electric purifier",
+            "level": 2
+          }
+        ],
+        "base_item": "progressive-purifier"
+      },
+      "progressive-crop-plot": {
+        "items": [
+          {
+            "name": "Medium crop plot",
+            "level": 1
+          },
+          {
+            "name": "Large crop plot",
+            "level": 2
+          },
+          {
+            "name": "Advanced small crop plot",
+            "level": 3
+          },
+          {
+            "name": "Advanced medium crop plot",
+            "level": 4
+          },
+          {
+            "name": "Advanced large crop plot",
+            "level": 5
+          }
+        ],
+        "base_item": "progressive-crop-plot"
+      },
+      "progressive-anchor": {
+        "items": [
+          {
+            "name": "Stationary anchor",
+            "level": 1
+          },
+          {
+            "name": "Advanced stationary anchor",
+            "level": 2
+          }
+        ],
+        "base_item": "progressive-anchor"
+      },
+      "progressive-scarecrow": {
+        "items": [
+          {
+            "name": "Scarecrow",
+            "level": 1
+          },
+          {
+            "name": "Advanced Scarecrow",
+            "level": 2
+          }
+        ],
+        "base_item": "progressive-scarecrow"
+      },
+      "progressive-net": {
+        "items": [
+          {
+            "name": "Simple collection net",
+            "level": 1
+          },
+          {
+            "name": "Advanced collection net",
+            "level": 2
+          }
+        ],
+        "base_item": "progressive-net"
+      },
+      "progressive-storage": {
+        "items": [
+          {
+            "name": "Storage",
+            "level": 1
+          },
+          {
+            "name": "Large Storage",
+            "level": 2
+          }
+        ],
+        "base_item": "progressive-storage"
+      },
+      "progressive-bow": {
+        "items": [
+          {
+            "name": "Basic bow",
+            "level": 1
+          },
+          {
+            "name": "Stone arrow",
+            "level": 2
+          },
+          {
+            "name": "Metal arrow",
+            "level": 3
+          },
+          {
+            "name": "Titanium arrow",
+            "level": 4
+          }
+        ],
+        "base_item": "progressive-bow"
+      },
+      "progressive-axe": {
+        "items": [
+          {
+            "name": "Metal axe",
+            "level": 1
+          },
+          {
+            "name": "Titanium axe",
+            "level": 2
+          }
+        ],
+        "base_item": "progressive-axe"
+      },
+      "progressive-hook": {
+        "items": [
+          {
+            "name": "Scrap hook",
+            "level": 1
+          },
+          {
+            "name": "Titanium hook",
+            "level": 2
+          }
+        ],
+        "base_item": "progressive-hook"
       }
     }
   },
@@ -7397,7 +7397,6 @@
       "rule_format": {
         "version": "1.0"
       },
-      "assume_bidirectional_exits": false,
       "use_resolved_items": true,
       "add_sphere_items_upfront": true
     }
