@@ -54,6 +54,11 @@ class HelperDiscoveryMixin:
             if not name.startswith('_') or name.startswith('__'):
                 continue
 
+            # Skip internal defeat rule functions - these are wired to Boss objects,
+            # not exported as helpers
+            if name.startswith('_can_defeat_'):
+                continue
+
             obj = getattr(rules_module, name)
             if not callable(obj) or not hasattr(obj, '__code__'):
                 continue
