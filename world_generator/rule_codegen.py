@@ -1756,10 +1756,12 @@ class RuleCodeGenerator:
 
         return f'Compare({left_code}, "{op}", {right_code})'
 
-    def _get_list_constant_value(self, operand: Any) -> Optional[list]:
+    def _get_list_constant_value(self, operand: Any) -> Optional[tuple]:
         """
-        Extract a list constant value from an operand for static comparison.
-        Returns None if the operand is not a resolvable list constant.
+        Extract a tuple/list constant value from an operand for static comparison.
+        Returns a tuple if the operand can be resolved, None otherwise.
+
+        Placement lookups return (item_name, player) tuples to match Tuple rules.
         """
         if not isinstance(operand, dict):
             return None
@@ -1776,27 +1778,59 @@ class RuleCodeGenerator:
                 else:
                     # Non-constant item in list - can't statically evaluate
                     return None
-            return result
+            return tuple(result)
+
+        if op_type == 'tuple':
+            # Extract values from tuple type
+            elements = operand.get('elements', [])
+            result = []
+            for item in elements:
+                if isinstance(item, dict) and item.get('type') == 'constant':
+                    result.append(item.get('value'))
+                else:
+                    # Non-constant item in tuple - can't statically evaluate
+                    return None
+            return tuple(result)
 
         if op_type == 'placement_lookup':
-            # Resolve placement lookup to list value
+            # Resolve placement lookup to tuple value
             location_rule = operand.get('location', {})
             if isinstance(location_rule, dict) and location_rule.get('type') == 'constant':
                 location_name = location_rule.get('value', '')
                 if location_name and location_name in self.placements:
                     item_name = self.placements[location_name]
-                    return [item_name, 1]  # [item_name, player]
+                    return (item_name, 1)  # (item_name, player)
             return None  # Unknown location
 
-        # Handle Rule Builder format AST_placement_lookup
+        # Handle Rule Builder format
         rb_rule = operand.get('rule', '')
+
         if rb_rule == 'AST_placement_lookup':
             args = operand.get('args', {})
             location_name = args.get('location', '')
             if location_name and location_name in self.placements:
                 item_name = self.placements[location_name]
-                return [item_name, 1]  # [item_name, player]
+                return (item_name, 1)  # (item_name, player)
             return None  # Unknown location
+
+        # Handle Rule Builder format Tuple (e.g., {"rule": "Tuple", "args": {"value": [...]}})
+        if rb_rule == 'Tuple':
+            args = operand.get('args', {})
+            value_list = args.get('value', args.get('elements', []))
+            result = []
+            for item in value_list:
+                if isinstance(item, dict):
+                    # Check for Rule Builder format Constant
+                    if item.get('rule') == 'Constant':
+                        result.append(item.get('args', {}).get('value'))
+                    elif item.get('type') == 'constant':
+                        result.append(item.get('value'))
+                    else:
+                        # Non-constant item in tuple - can't statically evaluate
+                        return None
+                else:
+                    result.append(item)
+            return tuple(result)
 
         # Handle Rule Builder format List (e.g., {"rule": "List", "args": {"value": [...]}})
         if rb_rule == 'List':
@@ -1815,7 +1849,7 @@ class RuleCodeGenerator:
                         return None
                 else:
                     result.append(item)
-            return result
+            return tuple(result)
 
         return None
 
@@ -3669,6 +3703,7 @@ class RuleCodeGenerator:
 
         Placement lookups check what item is at a specific location.
         We resolve these at code generation time using the known placements.
+        Returns a tuple (item_name, player) to match the format used by Tuple rules.
         """
         location_rule = rule.get('location', {})
 
@@ -3677,8 +3712,9 @@ class RuleCodeGenerator:
             location_name = location_rule.get('value', '')
             if location_name and location_name in self.placements:
                 item_name = self.placements[location_name]
-                # Return as a Python list [item_name, player] - player is always 1 for worldgen
-                return f'[{repr(item_name)}, 1]'
+                # Return as a Python tuple (item_name, player) - player is always 1 for worldgen
+                # Must use tuple to match Tuple rule format for correct == comparisons
+                return f'({repr(item_name)}, 1)'
 
         # Location not found - return None which will make comparisons fail correctly
         return 'None'
@@ -3866,6 +3902,7 @@ class HelperCodeGenerator:
         self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower()
         self.known_helpers: Set[str] = set()  # Track which helpers exist for validation
         self.uses_math: bool = False  # Track if math functions are used
+        self.uses_placement_lookup: bool = False  # Track if placement_lookup is used
         self.placements: Dict[str, str] = {}  # location_name -> item_name
         # Track NamedTuple types encountered during code generation
         # Maps tuple of field names to a generated class name
@@ -4291,6 +4328,7 @@ class HelperCodeGenerator:
             'formatted_value': self._expr_formatted_value,
             'generator_expression': self._expr_generator_expression,
             'region_reference': self._expr_region_reference,
+            'region_attribute': self._expr_region_attribute,
         }
 
         handler = handlers.get(expr_type)
@@ -4384,6 +4422,24 @@ class HelperCodeGenerator:
             if rule_type == 'False_':
                 return 'False'
 
+            # Handle Tuple rules (Rule Builder format)
+            if rule_type == 'Tuple':
+                args = expr.get('args', {})
+                # Support both 'value' (current format) and 'elements' (legacy)
+                elements = args.get('value', args.get('elements', []))
+                items = [self._generate_expression(e) for e in elements]
+                if len(items) == 1:
+                    return f"({items[0]},)"
+                return f"({', '.join(items)})"
+
+            # Handle List rules (Rule Builder format)
+            if rule_type == 'List':
+                args = expr.get('args', {})
+                # Support both 'value' and 'elements' keys
+                elements = args.get('value', args.get('elements', []))
+                items = [self._generate_expression(e) for e in elements]
+                return f"[{', '.join(items)}]"
+
             # Handle Conditional rules (Rule Builder format)
             if rule_type == 'Conditional':
                 args = expr.get('args', {})
@@ -4450,7 +4506,8 @@ class HelperCodeGenerator:
                 location = args.get('location', '')
                 if location and location in self.placements:
                     item_name = self.placements[location]
-                    return f'[{repr(item_name)}, 1]'
+                    # Return tuple to match Tuple rule format for correct == comparisons
+                    return f'({repr(item_name)}, 1)'
                 return 'None'
 
             # Handle AST_function_call - try to simplify or preserve structure
@@ -4527,23 +4584,34 @@ class HelperCodeGenerator:
         return base_path
 
     def _expr_placement_lookup(self, expr: Dict[str, Any]) -> str:
-        """Resolve a placement_lookup to the actual item at that location.
+        """Generate code to look up what item is placed at a location.
 
-        Placement lookups check what item is at a specific location.
-        We resolve these at code generation time using the known placements.
+        For canonical seeds, we read from the CANONICAL_PLACEMENTS dict which is
+        generated at WorldGen time. This works correctly during fill because it
+        reads from static data rather than the actual location.item.
+
+        The return format is (item_name, player) tuple to match location_item_name().
         """
+        # Flag that we need the CANONICAL_PLACEMENTS dict
+        self.uses_placement_lookup = True
+
         location_rule = expr.get('location', {})
 
-        # Get the location name
-        if isinstance(location_rule, dict) and location_rule.get('type') == 'constant':
-            location_name = location_rule.get('value', '')
-            if location_name and location_name in self.placements:
-                item_name = self.placements[location_name]
-                # Return as a Python list [item_name, player] - player is always 1 for worldgen
-                return f'[{repr(item_name)}, 1]'
+        # Generate the location name expression
+        if isinstance(location_rule, dict):
+            if location_rule.get('type') == 'constant':
+                location_name = location_rule.get('value', '')
+                location_expr = repr(location_name)
+            else:
+                location_expr = self._generate_expression(location_rule)
+        elif isinstance(location_rule, str):
+            location_expr = repr(location_rule)
+        else:
+            location_expr = repr(str(location_rule))
 
-        # Location not found - return None which will make comparisons fail correctly
-        return 'None'
+        # Generate code that reads from CANONICAL_PLACEMENTS dict
+        # Returns (item_name, player) tuple or None if not found
+        return f'CANONICAL_PLACEMENTS.get({location_expr})'
 
     def _expr_constant(self, expr: Dict[str, Any]) -> str:
         """Generate constant expression."""
@@ -5282,6 +5350,22 @@ class HelperCodeGenerator:
         """
         region = expr.get('region', '')
         return f"state.multiworld.get_region({repr(region)}, player)"
+
+    def _expr_region_attribute(self, expr: Dict[str, Any]) -> str:
+        """Generate code to access an attribute on a region parameter.
+
+        Used for rules that reference region properties like is_light_world, is_dark_world.
+
+        AST format: {"type": "region_attribute", "region": {"type": "name", "name": "region"}, "attr": "is_light_world"}
+        Returns: region.is_light_world
+        """
+        region_expr = expr.get('region', {})
+        attr = expr.get('attr', '')
+
+        # Generate the region expression (usually just 'region')
+        region_code = self._generate_expression(region_expr)
+
+        return f"{region_code}.{attr}"
 
     def _expr_can_reach(self, expr: Dict[str, Any]) -> str:
         """Generate state.can_reach() for region."""

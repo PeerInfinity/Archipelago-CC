@@ -1059,7 +1059,8 @@ class ASTToRuleBuilder:
 
     def _convert_tuple(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Convert tuple rule."""
-        value = rule.get('value', [])
+        # Support both 'elements' (preferred) and 'value' (legacy) keys
+        value = rule.get('elements', rule.get('value', []))
         converted_value = [
             self._convert_rule(item) if isinstance(item, dict) else item
             for item in value
