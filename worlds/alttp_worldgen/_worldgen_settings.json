@@ -90,6 +90,7 @@
     "uw_palettes": "default"
   },
   "exporter": {
+    "world_class_name": "ALTTPWorld",
     "use_resolved_items": false
   },
   "game": "A Link to the Past",

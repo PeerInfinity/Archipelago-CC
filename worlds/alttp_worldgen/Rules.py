@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 from worlds.generic.Rules import location_item_name, item_name_in_location_names
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Compare, CountItem, False_, Has, HasAll, HasAny, HasGroup, HelperCall, Or, True_
+from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Compare, False_, Has, HasAll, HasAny, HasGroup, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -557,7 +557,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Fairy", player),
-        And(CanReachRegion('Big Bomb Shop'), CanReachRegion('East Dark World'), HasAll('Crystal 5', 'Crystal 6'), Or(HasAll('Beat Agahnim 1', 'Magic Mirror'), HelperCall(helper_func=cross_peg_bridge, helper_name="cross_peg_bridge")))
+        And(CanReachRegion('Big Bomb Shop'), CanReachRegion('East Dark World'), Or(HasAll('Beat Agahnim 1', 'Magic Mirror'), HelperCall(helper_func=cross_peg_bridge, helper_name="cross_peg_bridge")), HasAll('Crystal 5', 'Crystal 6'))
     )
 
     world.set_rule(
@@ -868,7 +868,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Swamp Palace Moat", player),
-        And(HasAll('Flippers', 'Open Floodgate'), Has('Magic Mirror'))
+        HasAll('Magic Mirror', 'Flippers', 'Open Floodgate')
     )
 
     world.set_rule(
@@ -957,7 +957,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_entrance("Ice Palace (East)", player).access_rule = \
-        lambda state: ((((state.has('Small Key (Ice Palace)', player, 4)) if (item_name_in_location_names(state, 'Big Key (Ice Palace)', player, [])) else (state.has('Small Key (Ice Palace)', player, 6)))) or (state.has('Hookshot', player)))
+        lambda state: ((((state.has('Small Key (Ice Palace)', player, 4)) if (item_name_in_location_names(state, 'Big Key (Ice Palace)', player, [('Ice Palace - Spike Room', 1), ('Ice Palace - Hammer Block Key Drop', 1), ('Ice Palace - Big Key Chest', 1), ('Ice Palace - Map Chest', 1)])) else (state.has('Small Key (Ice Palace)', player, 6)))) or (state.has('Hookshot', player)))
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (Kholdstare)", player),
@@ -1080,7 +1080,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Trinexx)", player),
-        And(Has('Small Key (Turtle Rock)', 6), HasAll('Big Key (Turtle Rock)', 'Cane of Somaria'), Has('Moon Pearl'))
+        And(Has('Small Key (Turtle Rock)', 6), HasAll('Moon Pearl', 'Big Key (Turtle Rock)', 'Cane of Somaria'))
     )
 
     world.set_rule(
@@ -1108,7 +1108,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Big Key Door", player),
-        And(Has('Small Key (Palace of Darkness)', 6), HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), HasAll('Big Key (Palace of Darkness)', 'Hammer'), Has('Lamp'))
+        And(Has('Small Key (Palace of Darkness)', 6), HelperCall(helper_func=can_shoot_arrows, helper_name="can_shoot_arrows"), HasAll('Lamp', 'Big Key (Palace of Darkness)', 'Hammer'))
     )
 
     world.set_rule(
@@ -1364,7 +1364,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Zelda's Chest", player),
-        And(Has('Small Key (Hyrule Castle)', 4), Or(True_(), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(1,))), Has('Big Key (Hyrule Castle)'))
+        And(Has('Small Key (Hyrule Castle)', 4), Or(Compare(1, "in", ('easy', 'default')), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(1,))), Has('Big Key (Hyrule Castle)'))
     )
 
     world.set_rule(
@@ -1588,12 +1588,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hookshot Cave - Top Right", player),
-        And(HasAll('Hookshot', 'Moon Pearl'), Has('Moon Pearl'))
+        HasAll('Moon Pearl', 'Hookshot')
     )
 
     world.set_rule(
         multiworld.get_location("Hookshot Cave - Top Left", player),
-        And(HasAll('Hookshot', 'Moon Pearl'), Has('Moon Pearl'))
+        HasAll('Moon Pearl', 'Hookshot')
     )
 
     world.set_rule(
@@ -1603,7 +1603,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hookshot Cave - Bottom Left", player),
-        And(HasAll('Hookshot', 'Moon Pearl'), Has('Moon Pearl'))
+        HasAll('Moon Pearl', 'Hookshot')
     )
 
     multiworld.get_location("Mimic Cave", player).access_rule = \
@@ -1898,17 +1898,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Compass Chest", player),
-        And(HasAll('Cane of Somaria', 'Moon Pearl'), Has('Moon Pearl'))
+        HasAll('Moon Pearl', 'Cane of Somaria')
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Roller Room - Left", player),
-        And(HasAll('Cane of Somaria', 'Fire Rod'), Has('Moon Pearl'))
+        HasAll('Moon Pearl', 'Cane of Somaria', 'Fire Rod')
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Roller Room - Right", player),
-        And(HasAll('Cane of Somaria', 'Fire Rod'), Has('Moon Pearl'))
+        HasAll('Moon Pearl', 'Cane of Somaria', 'Fire Rod')
     )
 
     world.set_rule(
@@ -1923,7 +1923,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Big Key Chest", player),
-        And(Compare(CountItem('Small Key (Turtle Rock)'), ">=", HelperCall(helper_func=tr_big_key_chest_keys_needed, helper_name="tr_big_key_chest_keys_needed")), Has('Moon Pearl'))
+        And(Has('Small Key (Turtle Rock)', HelperCall(helper_func=tr_big_key_chest_keys_needed, helper_name="tr_big_key_chest_keys_needed")), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -2109,7 +2109,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Ganons Tower - Firesnake Room", player).access_rule = \
-        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 5)) and (((item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [('Ganons Tower - Randomizer Room - Top Left', 1), ('Ganons Tower - Randomizer Room - Top Right', 1), ('Ganons Tower - Randomizer Room - Bottom Left', 1), ('Ganons Tower - Randomizer Room - Bottom Right', 1)])) or (item_name_in_location_names(state, 'Small Key (Ganons Tower)', player, [])))))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (state.has('Moon Pearl', player)))
+        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 5)) and (((item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [('Ganons Tower - Randomizer Room - Top Left', 1), ('Ganons Tower - Randomizer Room - Top Right', 1), ('Ganons Tower - Randomizer Room - Bottom Left', 1), ('Ganons Tower - Randomizer Room - Bottom Right', 1)])) or (item_name_in_location_names(state, 'Small Key (Ganons Tower)', player, [('Ganons Tower - Firesnake Room', 1)])))))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (state.has('Moon Pearl', player)))
 
     multiworld.get_location("Ganons Tower - Randomizer Room - Top Left", player).access_rule = \
         lambda state: ((can_use_bombs(state, player)) and (((((state.has('Small Key (Ganons Tower)', player, 6)) and (item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [('Ganons Tower - Randomizer Room - Top Left', 1), ('Ganons Tower - Randomizer Room - Top Right', 1), ('Ganons Tower - Randomizer Room - Bottom Left', 1), ('Ganons Tower - Randomizer Room - Bottom Right', 1)])))) or (state.has('Small Key (Ganons Tower)', player, 8)))) and (state.has('Moon Pearl', player)))
@@ -2130,7 +2130,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Big Chest", player),
-        And(HasAll('Big Key (Ganons Tower)', 'Moon Pearl'), Has('Moon Pearl'))
+        HasAll('Moon Pearl', 'Big Key (Ganons Tower)')
     )
 
     multiworld.get_location("Ganons Tower - Big Key Room - Left", player).access_rule = \
