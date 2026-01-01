@@ -494,13 +494,13 @@ class RuleCodeGenerator:
         return result
 
     def get_function_name(self, helper_name: str) -> str:
-        """Get the Python function name for a helper."""
-        prefix = f"_{self.game_name_lower}_"
-        if helper_name.startswith(prefix):
-            return helper_name
-        if helper_name.startswith('_'):
-            return helper_name
-        return f"{prefix}{helper_name}"
+        """Get the Python function name for a helper.
+
+        Returns the helper name as-is, without any prefix. The helpers are
+        defined in the world's Rules.py module, so they're already namespaced
+        and don't need a game-specific prefix.
+        """
+        return helper_name
 
     def get_imports(self) -> List[str]:
         """Get the list of required Rule Builder imports."""
@@ -3969,16 +3969,11 @@ class HelperCodeGenerator:
         """
         Get the Python function name for a helper.
 
-        If the helper already has the game prefix (e.g., '_undertale_has_plot'),
-        we use it as-is. Otherwise, we add the prefix.
+        Returns the helper name as-is, without any prefix. The helpers are
+        defined in the world's Rules.py module, so they're already namespaced
+        and don't need a game-specific prefix.
         """
-        prefix = f"_{self.game_name_lower}_"
-        if helper_name.startswith(prefix):
-            return helper_name
-        if helper_name.startswith('_'):
-            # Already has some underscore prefix, use as-is
-            return helper_name
-        return f"{prefix}{helper_name}"
+        return helper_name
 
     def generate_helper_function(
         self,
