@@ -538,32 +538,13 @@ class ASTToRuleBuilder:
         AST: {"type": "and", "conditions": [...]}
         RB: {"rule": "And", "options": [], "children": [...]}
 
-        Optimization: If all conditions are simple item_check rules with count=1,
-        convert to HasAll for cleaner output.
+        Note: Previously optimized And(Has(A), Has(B)) to HasAll(A, B).
+        Optimization disabled to preserve round-trip fidelity.
         """
         conditions = rule.get('conditions', [])
 
         if not conditions:
             return self._make_rule('True_', {})
-
-        # Check if all conditions are simple item_check rules with count=1
-        # If so, we can optimize to HasAll
-        simple_item_checks = []
-        all_simple = True
-        for cond in conditions:
-            if cond.get('type') == 'item_check':
-                count = cond.get('count', 1)
-                if count == 1:
-                    item = cond.get('item', '')
-                    if isinstance(item, str) and item:
-                        simple_item_checks.append(item)
-                        continue
-            all_simple = False
-            break
-
-        if all_simple and len(simple_item_checks) >= 2:
-            # Optimize to HasAll
-            return self._make_rule('HasAll', {'items': simple_item_checks})
 
         converted_children = [self._convert_rule(cond) for cond in conditions]
 
@@ -579,32 +560,13 @@ class ASTToRuleBuilder:
         AST: {"type": "or", "conditions": [...]}
         RB: {"rule": "Or", "options": [], "children": [...]}
 
-        Optimization: If all conditions are simple item_check rules with count=1,
-        convert to HasAny for cleaner output.
+        Note: Previously optimized Or(Has(A), Has(B)) to HasAny(A, B).
+        Optimization disabled to preserve round-trip fidelity.
         """
         conditions = rule.get('conditions', [])
 
         if not conditions:
             return self._make_rule('False_', {})
-
-        # Check if all conditions are simple item_check rules with count=1
-        # If so, we can optimize to HasAny
-        simple_item_checks = []
-        all_simple = True
-        for cond in conditions:
-            if cond.get('type') == 'item_check':
-                count = cond.get('count', 1)
-                if count == 1:
-                    item = cond.get('item', '')
-                    if isinstance(item, str) and item:
-                        simple_item_checks.append(item)
-                        continue
-            all_simple = False
-            break
-
-        if all_simple and len(simple_item_checks) >= 2:
-            # Optimize to HasAny
-            return self._make_rule('HasAny', {'items': simple_item_checks})
 
         converted_children = [self._convert_rule(cond) for cond in conditions]
 

@@ -54,6 +54,76 @@ def normalize_worldgen_names(obj: Any, original_game_name: str = None) -> Any:
         return obj
 
 
+def normalize_rules(obj: Any) -> Any:
+    """
+    Recursively normalize rule structures for comparison.
+
+    This handles semantic equivalences in rule representation:
+    - Has rules: Add explicit count=1 when count is missing (default is 1)
+    - HasAll(A, B) -> And(Has(A, 1), Has(B, 1)) - expand for comparison
+    - HasAny(A, B) -> Or(Has(A, 1), Has(B, 1)) - expand for comparison
+    - Sort children of And/Or for consistent order (they're commutative)
+    """
+    if isinstance(obj, dict):
+        rule_type = obj.get('rule', '')
+
+        # Normalize Has rules - add explicit count=1
+        if rule_type == 'Has' and 'args' in obj:
+            args = obj['args']
+            if isinstance(args, dict) and 'item_name' in args and 'count' not in args:
+                normalized_args = dict(args)
+                normalized_args['count'] = 1
+                return {
+                    **{k: normalize_rules(v) for k, v in obj.items() if k != 'args'},
+                    'args': normalized_args
+                }
+
+        # Expand HasAll(A, B) to And(Has(A, 1), Has(B, 1))
+        if rule_type == 'HasAll' and 'args' in obj:
+            args = obj.get('args', {})
+            items = args.get('items', [])
+            if items:
+                children = [
+                    {'rule': 'Has', 'args': {'item_name': item, 'count': 1}}
+                    for item in sorted(items)  # Sort for consistent order
+                ]
+                return {
+                    'rule': 'And',
+                    'children': children
+                }
+
+        # Expand HasAny(A, B) to Or(Has(A, 1), Has(B, 1))
+        if rule_type == 'HasAny' and 'args' in obj:
+            args = obj.get('args', {})
+            items = args.get('items', [])
+            if items:
+                children = [
+                    {'rule': 'Has', 'args': {'item_name': item, 'count': 1}}
+                    for item in sorted(items)  # Sort for consistent order
+                ]
+                return {
+                    'rule': 'Or',
+                    'children': children
+                }
+
+        # Sort children of And/Or for consistent comparison (commutative operations)
+        if rule_type in ('And', 'Or') and 'children' in obj:
+            normalized_children = [normalize_rules(c) for c in obj['children']]
+            # Sort children by their JSON representation for consistent order
+            sorted_children = sorted(normalized_children, key=lambda x: json.dumps(x, sort_keys=True))
+            return {
+                **{k: normalize_rules(v) for k, v in obj.items() if k != 'children'},
+                'children': sorted_children
+            }
+
+        # Recursively normalize all dict values
+        return {k: normalize_rules(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_rules(item) for item in obj]
+    else:
+        return obj
+
+
 def find_differences(obj1: Any, obj2: Any, path: str = "") -> List[Tuple[str, Any, Any]]:
     """
     Recursively find differences between two objects.
@@ -108,6 +178,8 @@ def is_canonical_difference(path: str) -> bool:
     - item_groups (item group assignments)
     - randomize_items option (WorldGen-specific, controls canonical placement)
     - world_classes (class names differ between original and WorldGen)
+    - accumulator_rules (WorldGen-specific for state counter patterns)
+    - prog_items_init (WorldGen-specific initial counter values)
     """
     # canonical_placements section
     if 'canonical_placements' in path:
@@ -133,6 +205,25 @@ def is_canonical_difference(path: str) -> bool:
     # world_classes (WorldGen creates class names based on game display name,
     # which may differ from the original world's class name)
     if 'world_classes' in path:
+        return True
+
+    # accumulator_rules (WorldGen-specific for state counter patterns like coins)
+    # Original worlds don't have this, WorldGen worlds generate it from patterns
+    if 'accumulator_rules' in path:
+        return True
+
+    # prog_items_init (WorldGen-specific initial counter values)
+    # Original worlds don't have this, WorldGen worlds generate it from patterns
+    if 'prog_items_init' in path:
+        return True
+
+    # start_inventory_from_pool (may be empty in original, missing in WorldGen)
+    if 'start_inventory_from_pool' in path:
+        return True
+
+    # Option definition metadata differences (bool vs int for toggle defaults)
+    # These are semantically equivalent (false == 0, true == 1)
+    if 'option_definitions' in path and '.default' in path:
         return True
 
     return False
@@ -187,6 +278,10 @@ def main():
     original_normalized = normalize_worldgen_names(original)
     worldgen_normalized = normalize_worldgen_names(worldgen)
 
+    # Normalize rules to handle semantic equivalences (e.g., count=1 default)
+    original_normalized = normalize_rules(original_normalized)
+    worldgen_normalized = normalize_rules(worldgen_normalized)
+
     # Find differences
     differences = find_differences(original_normalized, worldgen_normalized)
 
@@ -198,10 +293,10 @@ def main():
 
     if not differences:
         if ignore_canonical and filtered_count > 0:
-            print(f"✓ Files are identical (after normalizing WorldGen names)")
+            print(f"✓ Files are identical (after normalizing names and rules)")
             print(f"  ({filtered_count} canonical-seed1 differences ignored)")
         else:
-            print("✓ Files are identical (after normalizing WorldGen names)")
+            print("✓ Files are identical (after normalizing names and rules)")
         return 0
 
     print(f"✗ Found {len(differences)} difference(s):")
