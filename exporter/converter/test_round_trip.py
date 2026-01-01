@@ -103,7 +103,10 @@ class TestRoundTripBtoAtoB(unittest.TestCase):
         self.assertEqual(result, original)
 
     def test_and_round_trip(self):
-        """Test And rule round-trips correctly."""
+        """Test And rule round-trips correctly.
+
+        Note: And([Has(X), Has(Y)]) is optimized to HasAll([X, Y]).
+        """
         original = {
             "rule": "And",
             "options": [],
@@ -113,11 +116,15 @@ class TestRoundTripBtoAtoB(unittest.TestCase):
             ]
         }
         result = self._round_trip_b_a_b(original)
-        self.assertEqual(result["rule"], "And")
-        self.assertEqual(len(result["children"]), 2)
+        # Optimization: And([Has, Has]) -> HasAll
+        self.assertEqual(result["rule"], "HasAll")
+        self.assertEqual(sorted(result["args"]["items"]), ["Shield", "Sword"])
 
     def test_or_round_trip(self):
-        """Test Or rule round-trips correctly."""
+        """Test Or rule round-trips correctly.
+
+        Note: Or([Has(X), Has(Y)]) is optimized to HasAny([X, Y]).
+        """
         original = {
             "rule": "Or",
             "options": [],
@@ -127,11 +134,15 @@ class TestRoundTripBtoAtoB(unittest.TestCase):
             ]
         }
         result = self._round_trip_b_a_b(original)
-        self.assertEqual(result["rule"], "Or")
-        self.assertEqual(len(result["children"]), 2)
+        # Optimization: Or([Has, Has]) -> HasAny
+        self.assertEqual(result["rule"], "HasAny")
+        self.assertEqual(sorted(result["args"]["items"]), ["Axe", "Sword"])
 
     def test_nested_composite_round_trip(self):
-        """Test nested And/Or rules round-trip correctly."""
+        """Test nested And/Or rules round-trip correctly.
+
+        Note: Nested Or([Has, Has]) is optimized to HasAny.
+        """
         original = {
             "rule": "And",
             "options": [],
@@ -150,7 +161,8 @@ class TestRoundTripBtoAtoB(unittest.TestCase):
         result = self._round_trip_b_a_b(original)
         self.assertEqual(result["rule"], "And")
         self.assertEqual(len(result["children"]), 2)
-        self.assertEqual(result["children"][0]["rule"], "Or")
+        # Nested Or([Has, Has]) -> HasAny optimization
+        self.assertEqual(result["children"][0]["rule"], "HasAny")
 
     def test_custom_rule_round_trip(self):
         """Test custom/unknown rules round-trip via helper preservation."""
@@ -227,7 +239,10 @@ class TestRoundTripAtoBtoA(unittest.TestCase):
         self.assertEqual(result, original)
 
     def test_and_round_trip(self):
-        """Test and rule round-trips correctly."""
+        """Test and rule round-trips correctly.
+
+        Note: and([item_check, item_check]) is optimized to has_all via HasAll.
+        """
         original = {
             "type": "and",
             "conditions": [
@@ -236,10 +251,15 @@ class TestRoundTripAtoBtoA(unittest.TestCase):
             ]
         }
         result = self._round_trip_a_b_a(original)
-        self.assertEqual(result, original)
+        # Optimization: and([item_check, item_check]) -> HasAll -> state_method.has_all
+        self.assertEqual(result["type"], "state_method")
+        self.assertEqual(result["method"], "has_all")
 
     def test_or_round_trip(self):
-        """Test or rule round-trips correctly."""
+        """Test or rule round-trips correctly.
+
+        Note: or([item_check, item_check]) is optimized to has_any via HasAny.
+        """
         original = {
             "type": "or",
             "conditions": [
@@ -248,10 +268,16 @@ class TestRoundTripAtoBtoA(unittest.TestCase):
             ]
         }
         result = self._round_trip_a_b_a(original)
-        self.assertEqual(result, original)
+        # Optimization: or([item_check, item_check]) -> HasAny -> state_method.has_any
+        self.assertEqual(result["type"], "state_method")
+        self.assertEqual(result["method"], "has_any")
 
     def test_nested_composite_round_trip(self):
-        """Test nested and/or rules round-trip correctly."""
+        """Test nested and/or rules round-trip correctly.
+
+        Note: Nested or([item_check, item_check]) is optimized to has_any.
+        The outer and is preserved since it has mixed children.
+        """
         original = {
             "type": "and",
             "conditions": [
@@ -266,7 +292,11 @@ class TestRoundTripAtoBtoA(unittest.TestCase):
             ]
         }
         result = self._round_trip_a_b_a(original)
-        self.assertEqual(result, original)
+        self.assertEqual(result["type"], "and")
+        self.assertEqual(len(result["conditions"]), 2)
+        # Nested or is optimized to has_any
+        self.assertEqual(result["conditions"][0]["type"], "state_method")
+        self.assertEqual(result["conditions"][0]["method"], "has_any")
 
     def test_state_method_has_all_round_trip(self):
         """Test state_method has_all round-trips correctly."""
@@ -340,7 +370,10 @@ class TestASTToRuleBuilder(unittest.TestCase):
         self.assertEqual(result.rule, {"rule": "CanReachLocation", "options": [], "args": {"location_name": "Chest1"}})
 
     def test_and_rule(self):
-        """Test and rule conversion."""
+        """Test and rule conversion.
+
+        Note: and([item_check, item_check]) is optimized to HasAll.
+        """
         rule = {
             "type": "and",
             "conditions": [
@@ -349,11 +382,15 @@ class TestASTToRuleBuilder(unittest.TestCase):
             ]
         }
         result = self.converter.convert(rule)
-        self.assertEqual(result.rule["rule"], "And")
-        self.assertEqual(len(result.rule["children"]), 2)
+        # Optimization: and([item_check, item_check]) -> HasAll
+        self.assertEqual(result.rule["rule"], "HasAll")
+        self.assertEqual(sorted(result.rule["args"]["items"]), ["Shield", "Sword"])
 
     def test_or_rule(self):
-        """Test or rule conversion."""
+        """Test or rule conversion.
+
+        Note: or([item_check, item_check]) is optimized to HasAny.
+        """
         rule = {
             "type": "or",
             "conditions": [
@@ -362,8 +399,9 @@ class TestASTToRuleBuilder(unittest.TestCase):
             ]
         }
         result = self.converter.convert(rule)
-        self.assertEqual(result.rule["rule"], "Or")
-        self.assertEqual(len(result.rule["children"]), 2)
+        # Optimization: or([item_check, item_check]) -> HasAny
+        self.assertEqual(result.rule["rule"], "HasAny")
+        self.assertEqual(sorted(result.rule["args"]["items"]), ["Axe", "Sword"])
 
     def test_state_method_has_all(self):
         """Test state_method has_all conversion."""

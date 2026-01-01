@@ -538,15 +538,38 @@ class ASTToRuleBuilder:
         AST: {"type": "and", "conditions": [...]}
         RB: {"rule": "And", "options": [], "children": [...]}
 
-        Note: Previously optimized And(Has(A), Has(B)) to HasAll(A, B).
-        Optimization disabled to preserve round-trip fidelity.
+        Optimization: Collects simple item_check rules with count=1 and combines
+        them into HasAll, even when mixed with other conditions. This matches
+        the Rule Builder's _simplify_and behavior for consistent output.
         """
         conditions = rule.get('conditions', [])
 
         if not conditions:
             return self._make_rule('True_', {})
 
-        converted_children = [self._convert_rule(cond) for cond in conditions]
+        # Separate simple item checks (count=1) from other conditions
+        # This partial optimization matches Rule Builder's _simplify_and
+        simple_item_checks = []
+        other_conditions = []
+        for cond in conditions:
+            if cond.get('type') == 'item_check':
+                count = cond.get('count', 1)
+                item = cond.get('item', '')
+                if count == 1 and isinstance(item, str) and item:
+                    simple_item_checks.append(item)
+                else:
+                    other_conditions.append(cond)
+            else:
+                other_conditions.append(cond)
+
+        # Convert other conditions
+        converted_children = [self._convert_rule(cond) for cond in other_conditions]
+
+        # Add simple item checks as HasAll (if 2+) or Has (if 1)
+        if len(simple_item_checks) >= 2:
+            converted_children.append(self._make_rule('HasAll', {'items': simple_item_checks}))
+        elif len(simple_item_checks) == 1:
+            converted_children.append(self._make_rule('Has', {'item_name': simple_item_checks[0]}))
 
         if len(converted_children) == 1:
             return converted_children[0]
@@ -560,15 +583,38 @@ class ASTToRuleBuilder:
         AST: {"type": "or", "conditions": [...]}
         RB: {"rule": "Or", "options": [], "children": [...]}
 
-        Note: Previously optimized Or(Has(A), Has(B)) to HasAny(A, B).
-        Optimization disabled to preserve round-trip fidelity.
+        Optimization: Collects simple item_check rules with count=1 and combines
+        them into HasAny, even when mixed with other conditions. This matches
+        the Rule Builder's _simplify_or behavior for consistent output.
         """
         conditions = rule.get('conditions', [])
 
         if not conditions:
             return self._make_rule('False_', {})
 
-        converted_children = [self._convert_rule(cond) for cond in conditions]
+        # Separate simple item checks (count=1) from other conditions
+        # This partial optimization matches Rule Builder's _simplify_or
+        simple_item_checks = []
+        other_conditions = []
+        for cond in conditions:
+            if cond.get('type') == 'item_check':
+                count = cond.get('count', 1)
+                item = cond.get('item', '')
+                if count == 1 and isinstance(item, str) and item:
+                    simple_item_checks.append(item)
+                else:
+                    other_conditions.append(cond)
+            else:
+                other_conditions.append(cond)
+
+        # Convert other conditions
+        converted_children = [self._convert_rule(cond) for cond in other_conditions]
+
+        # Add simple item checks as HasAny (if 2+) or Has (if 1)
+        if len(simple_item_checks) >= 2:
+            converted_children.append(self._make_rule('HasAny', {'items': simple_item_checks}))
+        elif len(simple_item_checks) == 1:
+            converted_children.append(self._make_rule('Has', {'item_name': simple_item_checks[0]}))
 
         if len(converted_children) == 1:
             return converted_children[0]

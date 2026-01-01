@@ -760,9 +760,38 @@ class RuleCodeGenerator:
                 return self._make_bool_constant(True)
             if len(children) == 1:
                 return self._convert_rule(children[0])
-            # Preserve original And structure without optimizing to HasAll
-            # This ensures round-trip fidelity when comparing exports
-            child_exprs = [self._convert_rule(child) for child in children]
+            # Optimization: If all children are simple Has rules with count=1,
+            # use HasAll instead of And(Has(...), Has(...), ...)
+            # This matches the Rule Builder's _simplify_and behavior
+            simple_has_items = []
+            other_children = []
+            for child in children:
+                child_rule = child.get('rule', '')
+                child_args = child.get('args', {})
+                if child_rule == 'Has' and child_args.get('count', 1) == 1:
+                    item_name = child_args.get('item_name', '')
+                    if item_name:
+                        simple_has_items.append(item_name)
+                    else:
+                        other_children.append(child)
+                else:
+                    other_children.append(child)
+
+            # Convert other children
+            child_exprs = [self._convert_rule(child) for child in other_children]
+
+            # Add simple Has items as HasAll (if 2+) or Has (if 1)
+            if len(simple_has_items) >= 2:
+                self.required_imports.add('HasAll')
+                items_str = ', '.join(repr(item) for item in simple_has_items)
+                child_exprs.append(f'HasAll({items_str})')
+            elif len(simple_has_items) == 1:
+                self.required_imports.add('Has')
+                child_exprs.append(f'Has({repr(simple_has_items[0])})')
+
+            if len(child_exprs) == 1:
+                return child_exprs[0]
+
             self.required_imports.add('And')
             return f'And({", ".join(child_exprs)})'
 
@@ -771,9 +800,38 @@ class RuleCodeGenerator:
                 return self._make_bool_constant(False)
             if len(children) == 1:
                 return self._convert_rule(children[0])
-            # Preserve original Or structure without optimizing to HasAny
-            # This ensures round-trip fidelity when comparing exports
-            child_exprs = [self._convert_rule(child) for child in children]
+            # Optimization: If all children are simple Has rules with count=1,
+            # use HasAny instead of Or(Has(...), Has(...), ...)
+            # This matches the Rule Builder's _simplify_or behavior
+            simple_has_items = []
+            other_children = []
+            for child in children:
+                child_rule = child.get('rule', '')
+                child_args = child.get('args', {})
+                if child_rule == 'Has' and child_args.get('count', 1) == 1:
+                    item_name = child_args.get('item_name', '')
+                    if item_name:
+                        simple_has_items.append(item_name)
+                    else:
+                        other_children.append(child)
+                else:
+                    other_children.append(child)
+
+            # Convert other children
+            child_exprs = [self._convert_rule(child) for child in other_children]
+
+            # Add simple Has items as HasAny (if 2+) or Has (if 1)
+            if len(simple_has_items) >= 2:
+                self.required_imports.add('HasAny')
+                items_str = ', '.join(repr(item) for item in simple_has_items)
+                child_exprs.append(f'HasAny({items_str})')
+            elif len(simple_has_items) == 1:
+                self.required_imports.add('Has')
+                child_exprs.append(f'Has({repr(simple_has_items[0])})')
+
+            if len(child_exprs) == 1:
+                return child_exprs[0]
+
             self.required_imports.add('Or')
             return f'Or({", ".join(child_exprs)})'
 
