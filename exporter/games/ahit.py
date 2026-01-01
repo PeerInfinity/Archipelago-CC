@@ -57,23 +57,23 @@ class AHitGameExportHandler(GenericGameExportHandler):
 
         return self._entrance_cache.get(entrance_name)
 
-    def expand_helper(self, helper_name: str, args: List[Any] = None) -> Optional[Dict[str, Any]]:
-        """Expand helper functions with special handling for can_clear_required_act.
+    def expand_helper(self, helper_name: str, args: Optional[List[Any]] = None) -> Optional[Dict[str, Any]]:
+        """Expand can_clear_required_act(entrance) at export time.
 
-        Resolves can_clear_required_act(entrance) at export time to:
+        Returns:
         - can_reach(connected_region) for Free Roam regions
         - can_reach(connected_region) AND location_rule_ref("Act Completion (region)") otherwise
         """
         if helper_name == 'can_clear_required_act' and args:
-            # Get the entrance argument
-            entrance_arg = args[0] if args else None
-            entrance_name = None
+            entrance_arg = args[0]
 
-            # Extract constant value from argument
+            # Extract entrance name from argument (constant dict or raw string)
             if isinstance(entrance_arg, dict) and entrance_arg.get('type') == 'constant':
                 entrance_name = entrance_arg.get('value')
             elif isinstance(entrance_arg, str):
                 entrance_name = entrance_arg
+            else:
+                entrance_name = None
 
             if entrance_name:
                 connected_region = self._get_entrance_connected_region(entrance_name)
