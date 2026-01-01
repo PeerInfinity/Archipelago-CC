@@ -108,6 +108,10 @@ def is_canonical_difference(path: str) -> bool:
     - item_groups (item group assignments)
     - randomize_items option (WorldGen-specific, controls canonical placement)
     - world_classes (class names differ between original and WorldGen)
+    - world_description (WorldGen has generated description)
+    - web.tutorials (WorldGen doesn't have tutorial info)
+    - shops (WorldGen may add empty shops array)
+    - Game-specific option values that WorldGen doesn't export
     """
     # canonical_placements section
     if 'canonical_placements' in path:
@@ -134,6 +138,32 @@ def is_canonical_difference(path: str) -> bool:
     # which may differ from the original world's class name)
     if 'world_classes' in path:
         return True
+
+    # world_description (WorldGen has a generated description)
+    if 'world_description' in path:
+        return True
+
+    # web.tutorials (WorldGen doesn't have tutorial info)
+    if 'web.tutorials' in path:
+        return True
+
+    # shops (WorldGen may add empty shops array)
+    if path.endswith('.shops'):
+        return True
+
+    # Game-specific option values that WorldGen doesn't export
+    # (e.g., move_rando_actions, star_costs, area_connections, etc.)
+    game_specific_options = [
+        'move_rando_actions',
+        'move_rando_bitvec',
+        'star_costs',
+        'area_connections',
+        'number_of_stars',
+        'filler_count',
+    ]
+    for opt in game_specific_options:
+        if opt in path:
+            return True
 
     return False
 

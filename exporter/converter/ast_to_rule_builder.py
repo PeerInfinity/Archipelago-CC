@@ -552,9 +552,12 @@ class ASTToRuleBuilder:
         all_simple = True
         for cond in conditions:
             if cond.get('type') == 'item_check':
-                count = cond.get('count', 1)
+                count_raw = cond.get('count', 1)
+                # Unwrap constant wrapper if present
+                count, _ = self._extract_constant_value(count_raw)
                 if count == 1:
-                    item = cond.get('item', '')
+                    item_raw = cond.get('item', '')
+                    item, _ = self._extract_constant_value(item_raw)
                     if isinstance(item, str) and item:
                         simple_item_checks.append(item)
                         continue
@@ -562,8 +565,12 @@ class ASTToRuleBuilder:
             break
 
         if all_simple and len(simple_item_checks) >= 2:
-            # Optimize to HasAll
-            return self._make_rule('HasAll', {'items': simple_item_checks})
+            # Optimize to HasAll - deduplicate items
+            unique_items = list(dict.fromkeys(simple_item_checks))  # Preserve order while deduplicating
+            if len(unique_items) == 1:
+                # After deduplication, only one unique item - simplify to Has
+                return self._make_rule('Has', {'item_name': unique_items[0]})
+            return self._make_rule('HasAll', {'items': unique_items})
 
         converted_children = [self._convert_rule(cond) for cond in conditions]
 
@@ -593,9 +600,12 @@ class ASTToRuleBuilder:
         all_simple = True
         for cond in conditions:
             if cond.get('type') == 'item_check':
-                count = cond.get('count', 1)
+                count_raw = cond.get('count', 1)
+                # Unwrap constant wrapper if present
+                count, _ = self._extract_constant_value(count_raw)
                 if count == 1:
-                    item = cond.get('item', '')
+                    item_raw = cond.get('item', '')
+                    item, _ = self._extract_constant_value(item_raw)
                     if isinstance(item, str) and item:
                         simple_item_checks.append(item)
                         continue
@@ -603,8 +613,12 @@ class ASTToRuleBuilder:
             break
 
         if all_simple and len(simple_item_checks) >= 2:
-            # Optimize to HasAny
-            return self._make_rule('HasAny', {'items': simple_item_checks})
+            # Optimize to HasAny - deduplicate items
+            unique_items = list(dict.fromkeys(simple_item_checks))  # Preserve order while deduplicating
+            if len(unique_items) == 1:
+                # After deduplication, only one unique item - simplify to Has
+                return self._make_rule('Has', {'item_name': unique_items[0]})
+            return self._make_rule('HasAny', {'items': unique_items})
 
         converted_children = [self._convert_rule(cond) for cond in conditions]
 
