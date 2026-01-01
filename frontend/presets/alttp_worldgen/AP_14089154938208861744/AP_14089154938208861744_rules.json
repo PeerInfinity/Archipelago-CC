@@ -2915,18 +2915,6 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "has_fire_source",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Desert Palace)",
-                    "count": 4
-                  }
-                },
-                {
                   "rule": "AST_function_call",
                   "args": {
                     "function": {
@@ -2940,6 +2928,18 @@
                     "_original_ast_type": "function_call"
                   },
                   "_converted_from_ast": true
+                },
+                {
+                  "rule": "has_fire_source",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Desert Palace)",
+                    "count": 4
+                  }
                 },
                 {
                   "rule": "Has",
@@ -3060,8 +3060,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Lamp",
-                      "Big Key (Eastern Palace)"
+                      "Big Key (Eastern Palace)",
+                      "Lamp"
                     ]
                   }
                 }
@@ -3105,7 +3105,7 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -3123,13 +3123,13 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
                             "op": "==",
                             "right": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -3147,7 +3147,7 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
@@ -3253,24 +3253,38 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Eastern Palace)",
-                    "count": 2
-                  }
-                },
-                {
                   "rule": "can_shoot_arrows",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "StateMethod",
                   "args": {
-                    "items": [
-                      "Big Key (Eastern Palace)",
-                      "Lamp"
-                    ]
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Big Key (Eastern Palace)"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Lamp"
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Eastern Palace)",
+                    "count": 2
                   }
                 }
               ]
@@ -3334,24 +3348,38 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Small Key (Eastern Palace)",
-                    "count": 2
-                  }
-                },
-                {
                   "rule": "can_shoot_arrows",
                   "_original_ast_type": "helper",
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "StateMethod",
                   "args": {
-                    "items": [
-                      "Big Key (Eastern Palace)",
-                      "Lamp"
-                    ]
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Big Key (Eastern Palace)"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Lamp"
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Small Key (Eastern Palace)",
+                    "count": 2
                   }
                 }
               ]
@@ -3577,34 +3605,6 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Compare",
-                      "args": {
-                        "left": 1,
-                        "op": "in",
-                        "right": [
-                          "easy",
-                          "default"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "can_kill_most_things",
-                      "_original_ast_type": "helper",
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
                 {
                   "rule": "Has",
                   "args": {
@@ -5320,7 +5320,7 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "List",
+                          "rule": "Tuple",
                           "args": {
                             "value": [
                               {
@@ -5338,13 +5338,13 @@
                                 "_converted_from_ast": true
                               }
                             ],
-                            "_original_ast_type": "list"
+                            "_original_ast_type": "tuple"
                           },
                           "_converted_from_ast": true
                         },
                         "op": "==",
                         "right": {
-                          "rule": "List",
+                          "rule": "Tuple",
                           "args": {
                             "value": [
                               {
@@ -5362,7 +5362,7 @@
                                 "_converted_from_ast": true
                               }
                             ],
-                            "_original_ast_type": "list"
+                            "_original_ast_type": "tuple"
                           },
                           "_converted_from_ast": true
                         },
@@ -5387,6 +5387,10 @@
             "access_rule": {
               "rule": "And",
               "children": [
+                {
+                  "rule": "can_activate_crystal_switch",
+                  "_original_ast_type": "helper"
+                },
                 {
                   "rule": "Or",
                   "children": [
@@ -5419,10 +5423,6 @@
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "can_activate_crystal_switch",
-                  "_original_ast_type": "helper"
                 },
                 {
                   "rule": "Has",
@@ -5668,6 +5668,18 @@
               "rule": "And",
               "children": [
                 {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "Big Bomb Shop"
+                  }
+                },
+                {
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "East Dark World"
+                  }
+                },
+                {
                   "rule": "Or",
                   "children": [
                     {
@@ -5684,18 +5696,6 @@
                       "_original_ast_type": "helper"
                     }
                   ]
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "Big Bomb Shop"
-                  }
-                },
-                {
-                  "rule": "CanReachRegion",
-                  "args": {
-                    "region_name": "East Dark World"
-                  }
                 },
                 {
                   "rule": "HasAll",
@@ -7778,6 +7778,18 @@
                           "rule": "Or",
                           "children": [
                             {
+                              "rule": "has_hearts",
+                              "_original_ast_type": "helper",
+                              "args": [
+                                {
+                                  "rule": "Constant",
+                                  "args": {
+                                    "value": 4
+                                  }
+                                }
+                              ]
+                            },
+                            {
                               "rule": "can_extend_magic",
                               "_original_ast_type": "helper",
                               "args": [
@@ -7789,18 +7801,6 @@
                                 },
                                 {
                                   "rule": "True_"
-                                }
-                              ]
-                            },
-                            {
-                              "rule": "has_hearts",
-                              "_original_ast_type": "helper",
-                              "args": [
-                                {
-                                  "rule": "Constant",
-                                  "args": {
-                                    "value": 4
-                                  }
                                 }
                               ]
                             },
@@ -7826,8 +7826,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Moon Pearl",
-                      "Hammer"
+                      "Hammer",
+                      "Moon Pearl"
                     ]
                   }
                 }
@@ -8123,7 +8123,7 @@
                             },
                             "op": "in",
                             "right": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -8141,7 +8141,7 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
@@ -8433,7 +8433,7 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "List",
+                          "rule": "Tuple",
                           "args": {
                             "value": [
                               {
@@ -8451,13 +8451,13 @@
                                 "_converted_from_ast": true
                               }
                             ],
-                            "_original_ast_type": "list"
+                            "_original_ast_type": "tuple"
                           },
                           "_converted_from_ast": true
                         },
                         "op": "==",
                         "right": {
-                          "rule": "List",
+                          "rule": "Tuple",
                           "args": {
                             "value": [
                               {
@@ -8475,7 +8475,7 @@
                                 "_converted_from_ast": true
                               }
                             ],
-                            "_original_ast_type": "list"
+                            "_original_ast_type": "tuple"
                           },
                           "_converted_from_ast": true
                         },
@@ -9006,7 +9006,7 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -9024,13 +9024,13 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
                             "op": "==",
                             "right": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -9048,7 +9048,7 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
@@ -9075,13 +9075,27 @@
                   ]
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "StateMethod",
                   "args": {
-                    "items": [
-                      "Hammer",
-                      "Moon Pearl"
-                    ]
-                  }
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Hammer"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Moon Pearl"
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -9539,7 +9553,7 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "List",
+                          "rule": "Tuple",
                           "args": {
                             "value": [
                               {
@@ -9557,13 +9571,13 @@
                                 "_converted_from_ast": true
                               }
                             ],
-                            "_original_ast_type": "list"
+                            "_original_ast_type": "tuple"
                           },
                           "_converted_from_ast": true
                         },
                         "op": "==",
                         "right": {
-                          "rule": "List",
+                          "rule": "Tuple",
                           "args": {
                             "value": [
                               {
@@ -9581,7 +9595,7 @@
                                 "_converted_from_ast": true
                               }
                             ],
-                            "_original_ast_type": "list"
+                            "_original_ast_type": "tuple"
                           },
                           "_converted_from_ast": true
                         },
@@ -10082,7 +10096,7 @@
                   "rule": "Has",
                   "args": {
                     "item_name": "Small Key (Ice Palace)",
-                    "count": 4
+                    "count": 6
                   }
                 },
                 {
@@ -10556,7 +10570,7 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "List",
+                          "rule": "Tuple",
                           "args": {
                             "value": [
                               {
@@ -10574,7 +10588,7 @@
                                 "_converted_from_ast": true
                               }
                             ],
-                            "_original_ast_type": "list"
+                            "_original_ast_type": "tuple"
                           },
                           "_converted_from_ast": true
                         },
@@ -10584,7 +10598,7 @@
                           "args": {
                             "value": [
                               {
-                                "rule": "List",
+                                "rule": "Tuple",
                                 "args": {
                                   "value": [
                                     {
@@ -10602,7 +10616,7 @@
                                       "_converted_from_ast": true
                                     }
                                   ],
-                                  "_original_ast_type": "list"
+                                  "_original_ast_type": "tuple"
                                 },
                                 "_converted_from_ast": true
                               }
@@ -10619,7 +10633,7 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "List",
+                          "rule": "Tuple",
                           "args": {
                             "value": [
                               {
@@ -10637,7 +10651,7 @@
                                 "_converted_from_ast": true
                               }
                             ],
-                            "_original_ast_type": "list"
+                            "_original_ast_type": "tuple"
                           },
                           "_converted_from_ast": true
                         },
@@ -10647,7 +10661,7 @@
                           "args": {
                             "value": [
                               {
-                                "rule": "List",
+                                "rule": "Tuple",
                                 "args": {
                                   "value": [
                                     {
@@ -10665,7 +10679,7 @@
                                       "_converted_from_ast": true
                                     }
                                   ],
-                                  "_original_ast_type": "list"
+                                  "_original_ast_type": "tuple"
                                 },
                                 "_converted_from_ast": true
                               }
@@ -10969,7 +10983,7 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -10987,13 +11001,13 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
                             "op": "==",
                             "right": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -11011,7 +11025,7 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
@@ -11023,7 +11037,7 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -11041,13 +11055,13 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
                             "op": "==",
                             "right": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -11065,7 +11079,7 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
@@ -11077,7 +11091,7 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -11095,13 +11109,13 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
                             "op": "==",
                             "right": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -11119,7 +11133,7 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
@@ -11250,8 +11264,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Lamp",
-                      "Cane of Somaria"
+                      "Cane of Somaria",
+                      "Lamp"
                     ]
                   }
                 }
@@ -11731,8 +11745,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Moon Pearl",
-                      "Big Key (Turtle Rock)"
+                      "Big Key (Turtle Rock)",
+                      "Moon Pearl"
                     ]
                   }
                 }
@@ -11934,8 +11948,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Moon Pearl",
-                      "Big Key (Turtle Rock)"
+                      "Big Key (Turtle Rock)",
+                      "Moon Pearl"
                     ]
                   }
                 }
@@ -12095,9 +12109,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Moon Pearl",
                       "Big Key (Turtle Rock)",
-                      "Cane of Somaria"
+                      "Cane of Somaria",
+                      "Moon Pearl"
                     ]
                   }
                 }
@@ -12491,7 +12505,7 @@
                           "rule": "Compare",
                           "args": {
                             "left": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -12509,7 +12523,7 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
@@ -12519,7 +12533,7 @@
                               "args": {
                                 "value": [
                                   {
-                                    "rule": "List",
+                                    "rule": "Tuple",
                                     "args": {
                                       "value": [
                                         {
@@ -12537,7 +12551,7 @@
                                           "_converted_from_ast": true
                                         }
                                       ],
-                                      "_original_ast_type": "list"
+                                      "_original_ast_type": "tuple"
                                     },
                                     "_converted_from_ast": true
                                   }
@@ -12603,9 +12617,9 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Lamp",
                       "Big Key (Palace of Darkness)",
-                      "Hammer"
+                      "Hammer",
+                      "Lamp"
                     ]
                   }
                 }
@@ -12764,7 +12778,7 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "List",
+                          "rule": "Tuple",
                           "args": {
                             "value": [
                               {
@@ -12782,7 +12796,7 @@
                                 "_converted_from_ast": true
                               }
                             ],
-                            "_original_ast_type": "list"
+                            "_original_ast_type": "tuple"
                           },
                           "_converted_from_ast": true
                         },
@@ -12792,7 +12806,7 @@
                           "args": {
                             "value": [
                               {
-                                "rule": "List",
+                                "rule": "Tuple",
                                 "args": {
                                   "value": [
                                     {
@@ -12810,7 +12824,7 @@
                                       "_converted_from_ast": true
                                     }
                                   ],
-                                  "_original_ast_type": "list"
+                                  "_original_ast_type": "tuple"
                                 },
                                 "_converted_from_ast": true
                               }
@@ -12982,8 +12996,8 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
-                      "Moon Pearl",
-                      "Big Key (Palace of Darkness)"
+                      "Big Key (Palace of Darkness)",
+                      "Moon Pearl"
                     ]
                   }
                 }
@@ -13416,13 +13430,27 @@
                   ]
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "StateMethod",
                   "args": {
-                    "items": [
-                      "Fire Rod",
-                      "Moon Pearl"
-                    ]
-                  }
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Fire Rod"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Moon Pearl"
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -13464,13 +13492,27 @@
                   ]
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "StateMethod",
                   "args": {
-                    "items": [
-                      "Fire Rod",
-                      "Moon Pearl"
-                    ]
-                  }
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Fire Rod"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Moon Pearl"
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -13512,13 +13554,27 @@
                   ]
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "StateMethod",
                   "args": {
-                    "items": [
-                      "Fire Rod",
-                      "Moon Pearl"
-                    ]
-                  }
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Fire Rod"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Moon Pearl"
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -13560,13 +13616,27 @@
                   ]
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "StateMethod",
                   "args": {
-                    "items": [
-                      "Fire Rod",
-                      "Moon Pearl"
-                    ]
-                  }
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Fire Rod"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Moon Pearl"
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -13608,13 +13678,27 @@
                   ]
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "StateMethod",
                   "args": {
-                    "items": [
-                      "Fire Rod",
-                      "Moon Pearl"
-                    ]
-                  }
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Fire Rod"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Moon Pearl"
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -13649,7 +13733,7 @@
                       "rule": "Compare",
                       "args": {
                         "left": {
-                          "rule": "List",
+                          "rule": "Tuple",
                           "args": {
                             "value": [
                               {
@@ -13667,7 +13751,7 @@
                                 "_converted_from_ast": true
                               }
                             ],
-                            "_original_ast_type": "list"
+                            "_original_ast_type": "tuple"
                           },
                           "_converted_from_ast": true
                         },
@@ -13677,7 +13761,7 @@
                           "args": {
                             "value": [
                               {
-                                "rule": "List",
+                                "rule": "Tuple",
                                 "args": {
                                   "value": [
                                     {
@@ -13695,7 +13779,7 @@
                                       "_converted_from_ast": true
                                     }
                                   ],
-                                  "_original_ast_type": "list"
+                                  "_original_ast_type": "tuple"
                                 },
                                 "_converted_from_ast": true
                               }
@@ -14910,13 +14994,27 @@
                   ]
                 },
                 {
-                  "rule": "HasAll",
+                  "rule": "StateMethod",
                   "args": {
-                    "items": [
-                      "Beat Agahnim 2",
-                      "Moon Pearl"
-                    ]
-                  }
+                    "method": "has_all",
+                    "args": [
+                      {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Beat Agahnim 2"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Moon Pearl"
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             },
@@ -15025,15 +15123,35 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasAny",
+                  "rule": "StateMethod",
                   "args": {
-                    "items": [
-                      "Cane of Byrna",
-                      "Cane of Somaria",
-                      "Fire Rod",
-                      "Ice Rod"
-                    ]
-                  }
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Cane of Byrna"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Cane of Somaria"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Fire Rod"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Ice Rod"
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -15163,13 +15281,27 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasAny",
+                  "rule": "StateMethod",
                   "args": {
-                    "items": [
-                      "Blue Boomerang",
-                      "Red Boomerang"
-                    ]
-                  }
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Blue Boomerang"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Red Boomerang"
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -15206,13 +15338,27 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasAny",
+                  "rule": "StateMethod",
                   "args": {
-                    "items": [
-                      "Bug Catching Net",
-                      "Hammer"
-                    ]
-                  }
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Bug Catching Net"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Hammer"
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -15386,13 +15532,27 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasAny",
+                  "rule": "StateMethod",
                   "args": {
-                    "items": [
-                      "Cane of Byrna",
-                      "Cane of Somaria"
-                    ]
-                  }
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Cane of Byrna"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Cane of Somaria"
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -15554,13 +15714,27 @@
                           "_converted_from_ast": true
                         },
                         {
-                          "rule": "HasAll",
+                          "rule": "StateMethod",
                           "args": {
-                            "items": [
-                              "Bombos",
-                              "Fire Rod"
-                            ]
-                          }
+                            "method": "has_all",
+                            "args": [
+                              {
+                                "type": "tuple",
+                                "elements": [
+                                  {
+                                    "type": "constant",
+                                    "value": "Bombos"
+                                  },
+                                  {
+                                    "type": "constant",
+                                    "value": "Fire Rod"
+                                  }
+                                ]
+                              }
+                            ],
+                            "_original_ast_type": "state_method"
+                          },
+                          "_converted_from_ast": true
                         }
                       ]
                     },
@@ -15736,13 +15910,27 @@
                   "rule": "Not",
                   "args": {
                     "condition": {
-                      "rule": "HasAll",
+                      "rule": "StateMethod",
                       "args": {
-                        "items": [
-                          "Fire Rod",
-                          "Ice Rod"
-                        ]
-                      }
+                        "method": "has_all",
+                        "args": [
+                          {
+                            "type": "tuple",
+                            "elements": [
+                              {
+                                "type": "constant",
+                                "value": "Fire Rod"
+                              },
+                              {
+                                "type": "constant",
+                                "value": "Ice Rod"
+                              }
+                            ]
+                          }
+                        ],
+                        "_original_ast_type": "state_method"
+                      },
+                      "_converted_from_ast": true
                     }
                   }
                 },
@@ -15802,14 +15990,31 @@
                       ]
                     },
                     {
-                      "rule": "HasAny",
+                      "rule": "StateMethod",
                       "args": {
-                        "items": [
-                          "Golden Sword",
-                          "Hammer",
-                          "Tempered Sword"
-                        ]
-                      }
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "tuple",
+                            "elements": [
+                              {
+                                "type": "constant",
+                                "value": "Golden Sword"
+                              },
+                              {
+                                "type": "constant",
+                                "value": "Hammer"
+                              },
+                              {
+                                "type": "constant",
+                                "value": "Tempered Sword"
+                              }
+                            ]
+                          }
+                        ],
+                        "_original_ast_type": "state_method"
+                      },
+                      "_converted_from_ast": true
                     }
                   ]
                 },
@@ -15913,13 +16118,27 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasAny",
+                  "rule": "StateMethod",
                   "args": {
-                    "items": [
-                      "Bug Catching Net",
-                      "Hammer"
-                    ]
-                  }
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Bug Catching Net"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Hammer"
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -16040,13 +16259,27 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasAny",
+                  "rule": "StateMethod",
                   "args": {
-                    "items": [
-                      "Blue Boomerang",
-                      "Red Boomerang"
-                    ]
-                  }
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Blue Boomerang"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Red Boomerang"
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -16067,15 +16300,35 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "HasAny",
+                  "rule": "StateMethod",
                   "args": {
-                    "items": [
-                      "Cane of Byrna",
-                      "Cane of Somaria",
-                      "Fire Rod",
-                      "Ice Rod"
-                    ]
-                  }
+                    "method": "has_any",
+                    "args": [
+                      {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "constant",
+                            "value": "Cane of Byrna"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Cane of Somaria"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Fire Rod"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Ice Rod"
+                          }
+                        ]
+                      }
+                    ],
+                    "_original_ast_type": "state_method"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -20627,22 +20880,1099 @@
         "test": {
           "type": "compare",
           "left": {
-            "type": "list",
-            "value": [
-              {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
                 "type": "constant",
-                "value": "Small Key (Hyrule Castle)"
+                "value": {
+                  "Agahnim 1": [
+                    "Beat Agahnim 1",
+                    1
+                  ],
+                  "Agahnim 2": [
+                    "Beat Agahnim 2",
+                    1
+                  ],
+                  "Aginah's Cave": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Blacksmith": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Blind's Hideout - Far Left": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Blind's Hideout - Far Right": [
+                    "Arrows (10)",
+                    1
+                  ],
+                  "Blind's Hideout - Left": [
+                    "Flute",
+                    1
+                  ],
+                  "Blind's Hideout - Right": [
+                    "Quake",
+                    1
+                  ],
+                  "Blind's Hideout - Top": [
+                    "Rupees (5)",
+                    1
+                  ],
+                  "Bombos Tablet": [
+                    "Hammer",
+                    1
+                  ],
+                  "Bonk Rock Cave": [
+                    "Boss Heart Container",
+                    1
+                  ],
+                  "Bottle Merchant": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Brewery": [
+                    "Boss Heart Container",
+                    1
+                  ],
+                  "Bumper Cave Ledge": [
+                    "Progressive Sword",
+                    1
+                  ],
+                  "C-Shaped House": [
+                    "Bottle (Blue Potion)",
+                    1
+                  ],
+                  "Capacity Upgrade Shop": [
+                    "Capacity Upgrade Shop",
+                    1
+                  ],
+                  "Castle Tower - Circle of Pots Key Drop": [
+                    "Small Key (Agahnims Tower)",
+                    1
+                  ],
+                  "Castle Tower - Dark Archer Key Drop": [
+                    "Small Key (Agahnims Tower)",
+                    1
+                  ],
+                  "Castle Tower - Dark Maze": [
+                    "Small Key (Agahnims Tower)",
+                    1
+                  ],
+                  "Castle Tower - Room 03": [
+                    "Small Key (Agahnims Tower)",
+                    1
+                  ],
+                  "Catfish": [
+                    "Progressive Glove",
+                    1
+                  ],
+                  "Cave 45": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Checkerboard Cave": [
+                    "Arrows (10)",
+                    1
+                  ],
+                  "Chest Game": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Chicken House": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Dark Blacksmith Ruins": [
+                    "Pick Up Purple Chest",
+                    1
+                  ],
+                  "Desert Ledge": [
+                    "Bombos",
+                    1
+                  ],
+                  "Desert Palace - Beamos Hall Pot Key": [
+                    "Small Key (Desert Palace)",
+                    1
+                  ],
+                  "Desert Palace - Big Chest": [
+                    "Small Key (Desert Palace)",
+                    1
+                  ],
+                  "Desert Palace - Big Key Chest": [
+                    "Compass (Desert Palace)",
+                    1
+                  ],
+                  "Desert Palace - Boss": [
+                    "Rupees (50)",
+                    1
+                  ],
+                  "Desert Palace - Compass Chest": [
+                    "Map (Desert Palace)",
+                    1
+                  ],
+                  "Desert Palace - Desert Tiles 1 Pot Key": [
+                    "Small Key (Desert Palace)",
+                    1
+                  ],
+                  "Desert Palace - Desert Tiles 2 Pot Key": [
+                    "Small Key (Desert Palace)",
+                    1
+                  ],
+                  "Desert Palace - Map Chest": [
+                    "Big Key (Desert Palace)",
+                    1
+                  ],
+                  "Desert Palace - Prize": [
+                    "Red Pendant",
+                    1
+                  ],
+                  "Desert Palace - Torch": [
+                    "Bug Catching Net",
+                    1
+                  ],
+                  "Digging Game": [
+                    "Bombs (10)",
+                    1
+                  ],
+                  "Eastern Palace - Big Chest": [
+                    "Map (Eastern Palace)",
+                    1
+                  ],
+                  "Eastern Palace - Big Key Chest": [
+                    "Big Key (Eastern Palace)",
+                    1
+                  ],
+                  "Eastern Palace - Boss": [
+                    "Compass (Eastern Palace)",
+                    1
+                  ],
+                  "Eastern Palace - Cannonball Chest": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Eastern Palace - Compass Chest": [
+                    "Mushroom",
+                    1
+                  ],
+                  "Eastern Palace - Dark Eyegore Key Drop": [
+                    "Small Key (Eastern Palace)",
+                    1
+                  ],
+                  "Eastern Palace - Dark Square Pot Key": [
+                    "Small Key (Eastern Palace)",
+                    1
+                  ],
+                  "Eastern Palace - Map Chest": [
+                    "Lamp",
+                    1
+                  ],
+                  "Eastern Palace - Prize": [
+                    "Crystal 2",
+                    1
+                  ],
+                  "Ether Tablet": [
+                    "Arrows (10)",
+                    1
+                  ],
+                  "Floating Island": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Floodgate": [
+                    "Open Floodgate",
+                    1
+                  ],
+                  "Floodgate Chest": [
+                    "Arrows (10)",
+                    1
+                  ],
+                  "Flute Activation Spot": [
+                    "Activated Flute",
+                    1
+                  ],
+                  "Flute Spot": [
+                    "Progressive Sword",
+                    1
+                  ],
+                  "Frog": [
+                    "Get Frog",
+                    1
+                  ],
+                  "Ganon": [
+                    "Triforce",
+                    1
+                  ],
+                  "Ganons Tower - Big Chest": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Ganons Tower - Big Key Chest": [
+                    "Arrows (10)",
+                    1
+                  ],
+                  "Ganons Tower - Big Key Room - Left": [
+                    "Compass (Ganons Tower)",
+                    1
+                  ],
+                  "Ganons Tower - Big Key Room - Right": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Ganons Tower - Bob's Chest": [
+                    "Boss Heart Container",
+                    1
+                  ],
+                  "Ganons Tower - Bob's Torch": [
+                    "Small Key (Ganons Tower)",
+                    1
+                  ],
+                  "Ganons Tower - Compass Room - Bottom Left": [
+                    "Shovel",
+                    1
+                  ],
+                  "Ganons Tower - Compass Room - Bottom Right": [
+                    "Map (Ganons Tower)",
+                    1
+                  ],
+                  "Ganons Tower - Compass Room - Top Left": [
+                    "Small Key (Ganons Tower)",
+                    1
+                  ],
+                  "Ganons Tower - Compass Room - Top Right": [
+                    "Rupees (50)",
+                    1
+                  ],
+                  "Ganons Tower - Conveyor Cross Pot Key": [
+                    "Arrows (10)",
+                    1
+                  ],
+                  "Ganons Tower - Conveyor Star Pits Pot Key": [
+                    "Bottle (Bee)",
+                    1
+                  ],
+                  "Ganons Tower - DMs Room - Bottom Left": [
+                    "Small Key (Ganons Tower)",
+                    1
+                  ],
+                  "Ganons Tower - DMs Room - Bottom Right": [
+                    "Small Key (Ganons Tower)",
+                    1
+                  ],
+                  "Ganons Tower - DMs Room - Top Left": [
+                    "Small Key (Ganons Tower)",
+                    1
+                  ],
+                  "Ganons Tower - DMs Room - Top Right": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Ganons Tower - Double Switch Pot Key": [
+                    "Small Key (Ganons Tower)",
+                    1
+                  ],
+                  "Ganons Tower - Firesnake Room": [
+                    "Rupees (5)",
+                    1
+                  ],
+                  "Ganons Tower - Hope Room - Left": [
+                    "Small Key (Ganons Tower)",
+                    1
+                  ],
+                  "Ganons Tower - Hope Room - Right": [
+                    "Arrows (10)",
+                    1
+                  ],
+                  "Ganons Tower - Map Chest": [
+                    "Progressive Shield",
+                    1
+                  ],
+                  "Ganons Tower - Mini Helmasaur Key Drop": [
+                    "Magic Powder",
+                    1
+                  ],
+                  "Ganons Tower - Mini Helmasaur Room - Left": [
+                    "Rupees (50)",
+                    1
+                  ],
+                  "Ganons Tower - Mini Helmasaur Room - Right": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Ganons Tower - Pre-Moldorm Chest": [
+                    "Bombs (3)",
+                    1
+                  ],
+                  "Ganons Tower - Randomizer Room - Bottom Left": [
+                    "Boss Heart Container",
+                    1
+                  ],
+                  "Ganons Tower - Randomizer Room - Bottom Right": [
+                    "Small Key (Ganons Tower)",
+                    1
+                  ],
+                  "Ganons Tower - Randomizer Room - Top Left": [
+                    "Big Key (Ganons Tower)",
+                    1
+                  ],
+                  "Ganons Tower - Randomizer Room - Top Right": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Ganons Tower - Tile Room": [
+                    "Sanctuary Heart Container",
+                    1
+                  ],
+                  "Ganons Tower - Validation Chest": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Graveyard Cave": [
+                    "Rupee (1)",
+                    1
+                  ],
+                  "Hobo": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Hookshot Cave - Bottom Left": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Hookshot Cave - Bottom Right": [
+                    "Bombs (3)",
+                    1
+                  ],
+                  "Hookshot Cave - Top Left": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Hookshot Cave - Top Right": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Hype Cave - Bottom": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Hype Cave - Generous Guy": [
+                    "Rupees (300)",
+                    1
+                  ],
+                  "Hype Cave - Middle Left": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Hype Cave - Middle Right": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Hype Cave - Top": [
+                    "Bombs (3)",
+                    1
+                  ],
+                  "Hyrule Castle - Big Key Drop": [
+                    "Map (Hyrule Castle)",
+                    1
+                  ],
+                  "Hyrule Castle - Boomerang Chest": [
+                    "Small Key (Hyrule Castle)",
+                    1
+                  ],
+                  "Hyrule Castle - Boomerang Guard Key Drop": [
+                    "Progressive Shield",
+                    1
+                  ],
+                  "Hyrule Castle - Map Chest": [
+                    "Big Key (Hyrule Castle)",
+                    1
+                  ],
+                  "Hyrule Castle - Map Guard Key Drop": [
+                    "Small Key (Hyrule Castle)",
+                    1
+                  ],
+                  "Hyrule Castle - Zelda's Chest": [
+                    "Progressive Mail",
+                    1
+                  ],
+                  "Ice Palace - Big Chest": [
+                    "Fire Rod",
+                    1
+                  ],
+                  "Ice Palace - Big Key Chest": [
+                    "Bombs (3)",
+                    1
+                  ],
+                  "Ice Palace - Boss": [
+                    "Small Key (Ice Palace)",
+                    1
+                  ],
+                  "Ice Palace - Compass Chest": [
+                    "Progressive Sword",
+                    1
+                  ],
+                  "Ice Palace - Conveyor Key Drop": [
+                    "Small Key (Ice Palace)",
+                    1
+                  ],
+                  "Ice Palace - Freezor Chest": [
+                    "Small Key (Ice Palace)",
+                    1
+                  ],
+                  "Ice Palace - Hammer Block Key Drop": [
+                    "Compass (Ice Palace)",
+                    1
+                  ],
+                  "Ice Palace - Iced T Room": [
+                    "Map (Ice Palace)",
+                    1
+                  ],
+                  "Ice Palace - Jelly Key Drop": [
+                    "Small Key (Ice Palace)",
+                    1
+                  ],
+                  "Ice Palace - Many Pots Pot Key": [
+                    "Small Key (Ice Palace)",
+                    1
+                  ],
+                  "Ice Palace - Map Chest": [
+                    "Small Key (Ice Palace)",
+                    1
+                  ],
+                  "Ice Palace - Prize": [
+                    "Crystal 1",
+                    1
+                  ],
+                  "Ice Palace - Spike Room": [
+                    "Big Key (Ice Palace)",
+                    1
+                  ],
+                  "Ice Rod Cave": [
+                    "Rupees (50)",
+                    1
+                  ],
+                  "Kakariko Tavern": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Kakariko Well - Bottom": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Kakariko Well - Left": [
+                    "Progressive Sword",
+                    1
+                  ],
+                  "Kakariko Well - Middle": [
+                    "Rupees (5)",
+                    1
+                  ],
+                  "Kakariko Well - Right": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Kakariko Well - Top": [
+                    "Rupees (300)",
+                    1
+                  ],
+                  "King Zora": [
+                    "Single Arrow",
+                    1
+                  ],
+                  "King's Tomb": [
+                    "Rupee (1)",
+                    1
+                  ],
+                  "Lake Hylia Island": [
+                    "Arrows (10)",
+                    1
+                  ],
+                  "Library": [
+                    "Rupees (300)",
+                    1
+                  ],
+                  "Link's House": [
+                    "Bombs (3)",
+                    1
+                  ],
+                  "Link's Uncle": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Lost Woods Hideout": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Lumberjack Tree": [
+                    "Rupees (300)",
+                    1
+                  ],
+                  "Magic Bat": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Master Sword Pedestal": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Maze Race": [
+                    "Arrows (10)",
+                    1
+                  ],
+                  "Mimic Cave": [
+                    "Boss Heart Container",
+                    1
+                  ],
+                  "Mini Moldorm Cave - Far Left": [
+                    "Cape",
+                    1
+                  ],
+                  "Mini Moldorm Cave - Far Right": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Mini Moldorm Cave - Generous Guy": [
+                    "Bombs (3)",
+                    1
+                  ],
+                  "Mini Moldorm Cave - Left": [
+                    "Bombs (3)",
+                    1
+                  ],
+                  "Mini Moldorm Cave - Right": [
+                    "Moon Pearl",
+                    1
+                  ],
+                  "Mire Shed - Left": [
+                    "Bombs (3)",
+                    1
+                  ],
+                  "Mire Shed - Right": [
+                    "Progressive Shield",
+                    1
+                  ],
+                  "Misery Mire - Big Chest": [
+                    "Small Key (Misery Mire)",
+                    1
+                  ],
+                  "Misery Mire - Big Key Chest": [
+                    "Bombs (3)",
+                    1
+                  ],
+                  "Misery Mire - Boss": [
+                    "Compass (Misery Mire)",
+                    1
+                  ],
+                  "Misery Mire - Bridge Chest": [
+                    "Small Key (Misery Mire)",
+                    1
+                  ],
+                  "Misery Mire - Compass Chest": [
+                    "Big Key (Misery Mire)",
+                    1
+                  ],
+                  "Misery Mire - Conveyor Crystal Key Drop": [
+                    "Map (Misery Mire)",
+                    1
+                  ],
+                  "Misery Mire - Fishbone Pot Key": [
+                    "Small Key (Misery Mire)",
+                    1
+                  ],
+                  "Misery Mire - Main Lobby": [
+                    "Small Key (Misery Mire)",
+                    1
+                  ],
+                  "Misery Mire - Map Chest": [
+                    "Small Key (Misery Mire)",
+                    1
+                  ],
+                  "Misery Mire - Prize": [
+                    "Crystal 6",
+                    1
+                  ],
+                  "Misery Mire - Spike Chest": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Misery Mire - Spikes Pot Key": [
+                    "Small Key (Misery Mire)",
+                    1
+                  ],
+                  "Missing Smith": [
+                    "Return Smith",
+                    1
+                  ],
+                  "Mushroom": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Old Man": [
+                    "Arrows (10)",
+                    1
+                  ],
+                  "Palace of Darkness - Big Chest": [
+                    "Rupees (300)",
+                    1
+                  ],
+                  "Palace of Darkness - Big Key Chest": [
+                    "Boss Heart Container",
+                    1
+                  ],
+                  "Palace of Darkness - Boss": [
+                    "Blue Boomerang",
+                    1
+                  ],
+                  "Palace of Darkness - Compass Chest": [
+                    "Small Key (Palace of Darkness)",
+                    1
+                  ],
+                  "Palace of Darkness - Dark Basement - Left": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Palace of Darkness - Dark Basement - Right": [
+                    "Small Key (Palace of Darkness)",
+                    1
+                  ],
+                  "Palace of Darkness - Dark Maze - Bottom": [
+                    "Map (Palace of Darkness)",
+                    1
+                  ],
+                  "Palace of Darkness - Dark Maze - Top": [
+                    "Compass (Palace of Darkness)",
+                    1
+                  ],
+                  "Palace of Darkness - Harmless Hellway": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Palace of Darkness - Map Chest": [
+                    "Small Key (Palace of Darkness)",
+                    1
+                  ],
+                  "Palace of Darkness - Prize": [
+                    "Blue Pendant",
+                    1
+                  ],
+                  "Palace of Darkness - Shooter Room": [
+                    "Big Key (Palace of Darkness)",
+                    1
+                  ],
+                  "Palace of Darkness - Stalfos Basement": [
+                    "Small Key (Palace of Darkness)",
+                    1
+                  ],
+                  "Palace of Darkness - The Arena - Bridge": [
+                    "Small Key (Palace of Darkness)",
+                    1
+                  ],
+                  "Palace of Darkness - The Arena - Ledge": [
+                    "Small Key (Palace of Darkness)",
+                    1
+                  ],
+                  "Paradox Cave Lower - Far Left": [
+                    "Bombs (3)",
+                    1
+                  ],
+                  "Paradox Cave Lower - Far Right": [
+                    "Boss Heart Container",
+                    1
+                  ],
+                  "Paradox Cave Lower - Left": [
+                    "Bottle (Red Potion)",
+                    1
+                  ],
+                  "Paradox Cave Lower - Middle": [
+                    "Rupees (5)",
+                    1
+                  ],
+                  "Paradox Cave Lower - Right": [
+                    "Magic Mirror",
+                    1
+                  ],
+                  "Paradox Cave Upper - Left": [
+                    "Book of Mudora",
+                    1
+                  ],
+                  "Paradox Cave Upper - Right": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Peg Cave": [
+                    "Bombs (3)",
+                    1
+                  ],
+                  "Potion Shop": [
+                    "Progressive Mail",
+                    1
+                  ],
+                  "Purple Chest": [
+                    "Cane of Somaria",
+                    1
+                  ],
+                  "Pyramid": [
+                    "Rupees (50)",
+                    1
+                  ],
+                  "Pyramid Fairy - Left": [
+                    "Bombs (3)",
+                    1
+                  ],
+                  "Pyramid Fairy - Right": [
+                    "Progressive Bow",
+                    1
+                  ],
+                  "Sahasrahla": [
+                    "Boss Heart Container",
+                    1
+                  ],
+                  "Sahasrahla's Hut - Left": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Sahasrahla's Hut - Middle": [
+                    "Hookshot",
+                    1
+                  ],
+                  "Sahasrahla's Hut - Right": [
+                    "Rupees (50)",
+                    1
+                  ],
+                  "Sanctuary": [
+                    "Small Key (Hyrule Castle)",
+                    1
+                  ],
+                  "Secret Passage": [
+                    "Ice Rod",
+                    1
+                  ],
+                  "Sewers - Dark Cross": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Sewers - Key Rat Key Drop": [
+                    "Small Key (Hyrule Castle)",
+                    1
+                  ],
+                  "Sewers - Secret Room - Left": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Sewers - Secret Room - Middle": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Sewers - Secret Room - Right": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Sick Kid": [
+                    "Boss Heart Container",
+                    1
+                  ],
+                  "Skull Woods - Big Chest": [
+                    "Small Key (Skull Woods)",
+                    1
+                  ],
+                  "Skull Woods - Big Key Chest": [
+                    "Map (Skull Woods)",
+                    1
+                  ],
+                  "Skull Woods - Boss": [
+                    "Compass (Skull Woods)",
+                    1
+                  ],
+                  "Skull Woods - Bridge Room": [
+                    "Big Key (Skull Woods)",
+                    1
+                  ],
+                  "Skull Woods - Compass Chest": [
+                    "Small Key (Skull Woods)",
+                    1
+                  ],
+                  "Skull Woods - Map Chest": [
+                    "Small Key (Skull Woods)",
+                    1
+                  ],
+                  "Skull Woods - Pinball Room": [
+                    "Bombs (3)",
+                    1
+                  ],
+                  "Skull Woods - Pot Prison": [
+                    "Small Key (Skull Woods)",
+                    1
+                  ],
+                  "Skull Woods - Prize": [
+                    "Green Pendant",
+                    1
+                  ],
+                  "Skull Woods - Spike Corner Key Drop": [
+                    "Arrows (10)",
+                    1
+                  ],
+                  "Skull Woods - West Lobby Pot Key": [
+                    "Small Key (Skull Woods)",
+                    1
+                  ],
+                  "Spectacle Rock": [
+                    "Rupees (100)",
+                    1
+                  ],
+                  "Spectacle Rock Cave": [
+                    "Progressive Glove",
+                    1
+                  ],
+                  "Spike Cave": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Spiral Cave": [
+                    "Bombs (3)",
+                    1
+                  ],
+                  "Stumpy": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Sunken Treasure": [
+                    "Rupees (50)",
+                    1
+                  ],
+                  "Superbunny Cave - Bottom": [
+                    "Ether",
+                    1
+                  ],
+                  "Superbunny Cave - Top": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Swamp Palace - Big Chest": [
+                    "Progressive Bow",
+                    1
+                  ],
+                  "Swamp Palace - Big Key Chest": [
+                    "Map (Swamp Palace)",
+                    1
+                  ],
+                  "Swamp Palace - Boss": [
+                    "Bombs (3)",
+                    1
+                  ],
+                  "Swamp Palace - Compass Chest": [
+                    "Small Key (Swamp Palace)",
+                    1
+                  ],
+                  "Swamp Palace - Entrance": [
+                    "Small Key (Swamp Palace)",
+                    1
+                  ],
+                  "Swamp Palace - Flooded Room - Left": [
+                    "Small Key (Swamp Palace)",
+                    1
+                  ],
+                  "Swamp Palace - Flooded Room - Right": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Swamp Palace - Hookshot Pot Key": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Swamp Palace - Map Chest": [
+                    "Small Key (Swamp Palace)",
+                    1
+                  ],
+                  "Swamp Palace - Pot Row Pot Key": [
+                    "Big Key (Swamp Palace)",
+                    1
+                  ],
+                  "Swamp Palace - Prize": [
+                    "Crystal 5",
+                    1
+                  ],
+                  "Swamp Palace - Trench 1 Pot Key": [
+                    "Small Key (Swamp Palace)",
+                    1
+                  ],
+                  "Swamp Palace - Trench 2 Pot Key": [
+                    "Small Key (Swamp Palace)",
+                    1
+                  ],
+                  "Swamp Palace - Waterfall Room": [
+                    "Cane of Byrna",
+                    1
+                  ],
+                  "Swamp Palace - Waterway Pot Key": [
+                    "Pegasus Boots",
+                    1
+                  ],
+                  "Swamp Palace - West Chest": [
+                    "Compass (Swamp Palace)",
+                    1
+                  ],
+                  "Thieves' Town - Ambush Chest": [
+                    "Big Key (Thieves Town)",
+                    1
+                  ],
+                  "Thieves' Town - Attic": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Thieves' Town - Big Chest": [
+                    "Compass (Thieves Town)",
+                    1
+                  ],
+                  "Thieves' Town - Big Key Chest": [
+                    "Map (Thieves Town)",
+                    1
+                  ],
+                  "Thieves' Town - Blind's Cell": [
+                    "Small Key (Thieves Town)",
+                    1
+                  ],
+                  "Thieves' Town - Boss": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Thieves' Town - Compass Chest": [
+                    "Flippers",
+                    1
+                  ],
+                  "Thieves' Town - Hallway Pot Key": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Thieves' Town - Map Chest": [
+                    "Small Key (Thieves Town)",
+                    1
+                  ],
+                  "Thieves' Town - Prize": [
+                    "Crystal 4",
+                    1
+                  ],
+                  "Thieves' Town - Spike Switch Pot Key": [
+                    "Small Key (Thieves Town)",
+                    1
+                  ],
+                  "Tower of Hera - Basement Cage": [
+                    "Compass (Tower of Hera)",
+                    1
+                  ],
+                  "Tower of Hera - Big Chest": [
+                    "Map (Tower of Hera)",
+                    1
+                  ],
+                  "Tower of Hera - Big Key Chest": [
+                    "Bombs (3)",
+                    1
+                  ],
+                  "Tower of Hera - Boss": [
+                    "Small Key (Tower of Hera)",
+                    1
+                  ],
+                  "Tower of Hera - Compass Chest": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Tower of Hera - Map Chest": [
+                    "Big Key (Tower of Hera)",
+                    1
+                  ],
+                  "Tower of Hera - Prize": [
+                    "Crystal 7",
+                    1
+                  ],
+                  "Turtle Rock - Big Chest": [
+                    "Small Key (Turtle Rock)",
+                    1
+                  ],
+                  "Turtle Rock - Big Key Chest": [
+                    "Small Key (Turtle Rock)",
+                    1
+                  ],
+                  "Turtle Rock - Boss": [
+                    "Compass (Turtle Rock)",
+                    1
+                  ],
+                  "Turtle Rock - Chain Chomps": [
+                    "Small Key (Turtle Rock)",
+                    1
+                  ],
+                  "Turtle Rock - Compass Chest": [
+                    "Small Key (Turtle Rock)",
+                    1
+                  ],
+                  "Turtle Rock - Crystaroller Room": [
+                    "Red Boomerang",
+                    1
+                  ],
+                  "Turtle Rock - Eye Bridge - Bottom Left": [
+                    "Small Key (Turtle Rock)",
+                    1
+                  ],
+                  "Turtle Rock - Eye Bridge - Bottom Right": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Turtle Rock - Eye Bridge - Top Left": [
+                    "Map (Turtle Rock)",
+                    1
+                  ],
+                  "Turtle Rock - Eye Bridge - Top Right": [
+                    "Piece of Heart",
+                    1
+                  ],
+                  "Turtle Rock - Pokey 1 Key Drop": [
+                    "Small Key (Turtle Rock)",
+                    1
+                  ],
+                  "Turtle Rock - Pokey 2 Key Drop": [
+                    "Magic Upgrade (1/2)",
+                    1
+                  ],
+                  "Turtle Rock - Prize": [
+                    "Crystal 3",
+                    1
+                  ],
+                  "Turtle Rock - Roller Room - Left": [
+                    "Big Key (Turtle Rock)",
+                    1
+                  ],
+                  "Turtle Rock - Roller Room - Right": [
+                    "Arrows (10)",
+                    1
+                  ],
+                  "Waterfall Fairy - Left": [
+                    "Bottle (Blue Potion)",
+                    1
+                  ],
+                  "Waterfall Fairy - Right": [
+                    "Rupees (20)",
+                    1
+                  ],
+                  "Zora's Ledge": [
+                    "Boss Heart Container",
+                    1
+                  ]
+                }
               },
+              "attr": "get"
+            },
+            "args": [
               {
                 "type": "constant",
-                "value": 1
+                "value": "Sewers - Key Rat Key Drop"
               }
             ]
           },
           "op": "==",
           "right": {
-            "type": "list",
-            "value": [
+            "type": "tuple",
+            "elements": [
               {
                 "type": "constant",
                 "value": "Small Key (Hyrule Castle)"
@@ -20704,15 +22034,36 @@
             "method": "has_any",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Blue Boomerang",
-                  "Cane of Byrna",
-                  "Cane of Somaria",
-                  "Fire Rod",
-                  "Hookshot",
-                  "Ice Rod",
-                  "Red Boomerang"
+                "type": "tuple",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Blue Boomerang"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Cane of Byrna"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Cane of Somaria"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Fire Rod"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Hookshot"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Ice Rod"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Red Boomerang"
+                  }
                 ]
               }
             ]
@@ -21489,8 +22840,8 @@
                     },
                     "op": "in",
                     "right": {
-                      "type": "list",
-                      "value": [
+                      "type": "tuple",
+                      "elements": [
                         {
                           "type": "constant",
                           "value": "easy"
@@ -22140,12 +23491,20 @@
               }
             },
             "if_true": {
-              "type": "constant",
-              "value": true
+              "type": "region_attribute",
+              "region": {
+                "type": "name",
+                "name": "region"
+              },
+              "attr": "is_light_world"
             },
             "if_false": {
-              "type": "constant",
-              "value": true
+              "type": "region_attribute",
+              "region": {
+                "type": "name",
+                "name": "region"
+              },
+              "attr": "is_dark_world"
             }
           }
         }
@@ -22157,15 +23516,1092 @@
             "type": "assign",
             "name": "item",
             "value": {
-              "type": "list",
-              "value": [
-                {
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
                   "type": "constant",
-                  "value": "Small Key (Turtle Rock)"
+                  "value": {
+                    "Agahnim 1": [
+                      "Beat Agahnim 1",
+                      1
+                    ],
+                    "Agahnim 2": [
+                      "Beat Agahnim 2",
+                      1
+                    ],
+                    "Aginah's Cave": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Blacksmith": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Blind's Hideout - Far Left": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Blind's Hideout - Far Right": [
+                      "Arrows (10)",
+                      1
+                    ],
+                    "Blind's Hideout - Left": [
+                      "Flute",
+                      1
+                    ],
+                    "Blind's Hideout - Right": [
+                      "Quake",
+                      1
+                    ],
+                    "Blind's Hideout - Top": [
+                      "Rupees (5)",
+                      1
+                    ],
+                    "Bombos Tablet": [
+                      "Hammer",
+                      1
+                    ],
+                    "Bonk Rock Cave": [
+                      "Boss Heart Container",
+                      1
+                    ],
+                    "Bottle Merchant": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Brewery": [
+                      "Boss Heart Container",
+                      1
+                    ],
+                    "Bumper Cave Ledge": [
+                      "Progressive Sword",
+                      1
+                    ],
+                    "C-Shaped House": [
+                      "Bottle (Blue Potion)",
+                      1
+                    ],
+                    "Capacity Upgrade Shop": [
+                      "Capacity Upgrade Shop",
+                      1
+                    ],
+                    "Castle Tower - Circle of Pots Key Drop": [
+                      "Small Key (Agahnims Tower)",
+                      1
+                    ],
+                    "Castle Tower - Dark Archer Key Drop": [
+                      "Small Key (Agahnims Tower)",
+                      1
+                    ],
+                    "Castle Tower - Dark Maze": [
+                      "Small Key (Agahnims Tower)",
+                      1
+                    ],
+                    "Castle Tower - Room 03": [
+                      "Small Key (Agahnims Tower)",
+                      1
+                    ],
+                    "Catfish": [
+                      "Progressive Glove",
+                      1
+                    ],
+                    "Cave 45": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Checkerboard Cave": [
+                      "Arrows (10)",
+                      1
+                    ],
+                    "Chest Game": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Chicken House": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Dark Blacksmith Ruins": [
+                      "Pick Up Purple Chest",
+                      1
+                    ],
+                    "Desert Ledge": [
+                      "Bombos",
+                      1
+                    ],
+                    "Desert Palace - Beamos Hall Pot Key": [
+                      "Small Key (Desert Palace)",
+                      1
+                    ],
+                    "Desert Palace - Big Chest": [
+                      "Small Key (Desert Palace)",
+                      1
+                    ],
+                    "Desert Palace - Big Key Chest": [
+                      "Compass (Desert Palace)",
+                      1
+                    ],
+                    "Desert Palace - Boss": [
+                      "Rupees (50)",
+                      1
+                    ],
+                    "Desert Palace - Compass Chest": [
+                      "Map (Desert Palace)",
+                      1
+                    ],
+                    "Desert Palace - Desert Tiles 1 Pot Key": [
+                      "Small Key (Desert Palace)",
+                      1
+                    ],
+                    "Desert Palace - Desert Tiles 2 Pot Key": [
+                      "Small Key (Desert Palace)",
+                      1
+                    ],
+                    "Desert Palace - Map Chest": [
+                      "Big Key (Desert Palace)",
+                      1
+                    ],
+                    "Desert Palace - Prize": [
+                      "Red Pendant",
+                      1
+                    ],
+                    "Desert Palace - Torch": [
+                      "Bug Catching Net",
+                      1
+                    ],
+                    "Digging Game": [
+                      "Bombs (10)",
+                      1
+                    ],
+                    "Eastern Palace - Big Chest": [
+                      "Map (Eastern Palace)",
+                      1
+                    ],
+                    "Eastern Palace - Big Key Chest": [
+                      "Big Key (Eastern Palace)",
+                      1
+                    ],
+                    "Eastern Palace - Boss": [
+                      "Compass (Eastern Palace)",
+                      1
+                    ],
+                    "Eastern Palace - Cannonball Chest": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Eastern Palace - Compass Chest": [
+                      "Mushroom",
+                      1
+                    ],
+                    "Eastern Palace - Dark Eyegore Key Drop": [
+                      "Small Key (Eastern Palace)",
+                      1
+                    ],
+                    "Eastern Palace - Dark Square Pot Key": [
+                      "Small Key (Eastern Palace)",
+                      1
+                    ],
+                    "Eastern Palace - Map Chest": [
+                      "Lamp",
+                      1
+                    ],
+                    "Eastern Palace - Prize": [
+                      "Crystal 2",
+                      1
+                    ],
+                    "Ether Tablet": [
+                      "Arrows (10)",
+                      1
+                    ],
+                    "Floating Island": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Floodgate": [
+                      "Open Floodgate",
+                      1
+                    ],
+                    "Floodgate Chest": [
+                      "Arrows (10)",
+                      1
+                    ],
+                    "Flute Activation Spot": [
+                      "Activated Flute",
+                      1
+                    ],
+                    "Flute Spot": [
+                      "Progressive Sword",
+                      1
+                    ],
+                    "Frog": [
+                      "Get Frog",
+                      1
+                    ],
+                    "Ganon": [
+                      "Triforce",
+                      1
+                    ],
+                    "Ganons Tower - Big Chest": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Ganons Tower - Big Key Chest": [
+                      "Arrows (10)",
+                      1
+                    ],
+                    "Ganons Tower - Big Key Room - Left": [
+                      "Compass (Ganons Tower)",
+                      1
+                    ],
+                    "Ganons Tower - Big Key Room - Right": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Ganons Tower - Bob's Chest": [
+                      "Boss Heart Container",
+                      1
+                    ],
+                    "Ganons Tower - Bob's Torch": [
+                      "Small Key (Ganons Tower)",
+                      1
+                    ],
+                    "Ganons Tower - Compass Room - Bottom Left": [
+                      "Shovel",
+                      1
+                    ],
+                    "Ganons Tower - Compass Room - Bottom Right": [
+                      "Map (Ganons Tower)",
+                      1
+                    ],
+                    "Ganons Tower - Compass Room - Top Left": [
+                      "Small Key (Ganons Tower)",
+                      1
+                    ],
+                    "Ganons Tower - Compass Room - Top Right": [
+                      "Rupees (50)",
+                      1
+                    ],
+                    "Ganons Tower - Conveyor Cross Pot Key": [
+                      "Arrows (10)",
+                      1
+                    ],
+                    "Ganons Tower - Conveyor Star Pits Pot Key": [
+                      "Bottle (Bee)",
+                      1
+                    ],
+                    "Ganons Tower - DMs Room - Bottom Left": [
+                      "Small Key (Ganons Tower)",
+                      1
+                    ],
+                    "Ganons Tower - DMs Room - Bottom Right": [
+                      "Small Key (Ganons Tower)",
+                      1
+                    ],
+                    "Ganons Tower - DMs Room - Top Left": [
+                      "Small Key (Ganons Tower)",
+                      1
+                    ],
+                    "Ganons Tower - DMs Room - Top Right": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Ganons Tower - Double Switch Pot Key": [
+                      "Small Key (Ganons Tower)",
+                      1
+                    ],
+                    "Ganons Tower - Firesnake Room": [
+                      "Rupees (5)",
+                      1
+                    ],
+                    "Ganons Tower - Hope Room - Left": [
+                      "Small Key (Ganons Tower)",
+                      1
+                    ],
+                    "Ganons Tower - Hope Room - Right": [
+                      "Arrows (10)",
+                      1
+                    ],
+                    "Ganons Tower - Map Chest": [
+                      "Progressive Shield",
+                      1
+                    ],
+                    "Ganons Tower - Mini Helmasaur Key Drop": [
+                      "Magic Powder",
+                      1
+                    ],
+                    "Ganons Tower - Mini Helmasaur Room - Left": [
+                      "Rupees (50)",
+                      1
+                    ],
+                    "Ganons Tower - Mini Helmasaur Room - Right": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Ganons Tower - Pre-Moldorm Chest": [
+                      "Bombs (3)",
+                      1
+                    ],
+                    "Ganons Tower - Randomizer Room - Bottom Left": [
+                      "Boss Heart Container",
+                      1
+                    ],
+                    "Ganons Tower - Randomizer Room - Bottom Right": [
+                      "Small Key (Ganons Tower)",
+                      1
+                    ],
+                    "Ganons Tower - Randomizer Room - Top Left": [
+                      "Big Key (Ganons Tower)",
+                      1
+                    ],
+                    "Ganons Tower - Randomizer Room - Top Right": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Ganons Tower - Tile Room": [
+                      "Sanctuary Heart Container",
+                      1
+                    ],
+                    "Ganons Tower - Validation Chest": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Graveyard Cave": [
+                      "Rupee (1)",
+                      1
+                    ],
+                    "Hobo": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Hookshot Cave - Bottom Left": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Hookshot Cave - Bottom Right": [
+                      "Bombs (3)",
+                      1
+                    ],
+                    "Hookshot Cave - Top Left": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Hookshot Cave - Top Right": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Hype Cave - Bottom": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Hype Cave - Generous Guy": [
+                      "Rupees (300)",
+                      1
+                    ],
+                    "Hype Cave - Middle Left": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Hype Cave - Middle Right": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Hype Cave - Top": [
+                      "Bombs (3)",
+                      1
+                    ],
+                    "Hyrule Castle - Big Key Drop": [
+                      "Map (Hyrule Castle)",
+                      1
+                    ],
+                    "Hyrule Castle - Boomerang Chest": [
+                      "Small Key (Hyrule Castle)",
+                      1
+                    ],
+                    "Hyrule Castle - Boomerang Guard Key Drop": [
+                      "Progressive Shield",
+                      1
+                    ],
+                    "Hyrule Castle - Map Chest": [
+                      "Big Key (Hyrule Castle)",
+                      1
+                    ],
+                    "Hyrule Castle - Map Guard Key Drop": [
+                      "Small Key (Hyrule Castle)",
+                      1
+                    ],
+                    "Hyrule Castle - Zelda's Chest": [
+                      "Progressive Mail",
+                      1
+                    ],
+                    "Ice Palace - Big Chest": [
+                      "Fire Rod",
+                      1
+                    ],
+                    "Ice Palace - Big Key Chest": [
+                      "Bombs (3)",
+                      1
+                    ],
+                    "Ice Palace - Boss": [
+                      "Small Key (Ice Palace)",
+                      1
+                    ],
+                    "Ice Palace - Compass Chest": [
+                      "Progressive Sword",
+                      1
+                    ],
+                    "Ice Palace - Conveyor Key Drop": [
+                      "Small Key (Ice Palace)",
+                      1
+                    ],
+                    "Ice Palace - Freezor Chest": [
+                      "Small Key (Ice Palace)",
+                      1
+                    ],
+                    "Ice Palace - Hammer Block Key Drop": [
+                      "Compass (Ice Palace)",
+                      1
+                    ],
+                    "Ice Palace - Iced T Room": [
+                      "Map (Ice Palace)",
+                      1
+                    ],
+                    "Ice Palace - Jelly Key Drop": [
+                      "Small Key (Ice Palace)",
+                      1
+                    ],
+                    "Ice Palace - Many Pots Pot Key": [
+                      "Small Key (Ice Palace)",
+                      1
+                    ],
+                    "Ice Palace - Map Chest": [
+                      "Small Key (Ice Palace)",
+                      1
+                    ],
+                    "Ice Palace - Prize": [
+                      "Crystal 1",
+                      1
+                    ],
+                    "Ice Palace - Spike Room": [
+                      "Big Key (Ice Palace)",
+                      1
+                    ],
+                    "Ice Rod Cave": [
+                      "Rupees (50)",
+                      1
+                    ],
+                    "Kakariko Tavern": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Kakariko Well - Bottom": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Kakariko Well - Left": [
+                      "Progressive Sword",
+                      1
+                    ],
+                    "Kakariko Well - Middle": [
+                      "Rupees (5)",
+                      1
+                    ],
+                    "Kakariko Well - Right": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Kakariko Well - Top": [
+                      "Rupees (300)",
+                      1
+                    ],
+                    "King Zora": [
+                      "Single Arrow",
+                      1
+                    ],
+                    "King's Tomb": [
+                      "Rupee (1)",
+                      1
+                    ],
+                    "Lake Hylia Island": [
+                      "Arrows (10)",
+                      1
+                    ],
+                    "Library": [
+                      "Rupees (300)",
+                      1
+                    ],
+                    "Link's House": [
+                      "Bombs (3)",
+                      1
+                    ],
+                    "Link's Uncle": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Lost Woods Hideout": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Lumberjack Tree": [
+                      "Rupees (300)",
+                      1
+                    ],
+                    "Magic Bat": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Master Sword Pedestal": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Maze Race": [
+                      "Arrows (10)",
+                      1
+                    ],
+                    "Mimic Cave": [
+                      "Boss Heart Container",
+                      1
+                    ],
+                    "Mini Moldorm Cave - Far Left": [
+                      "Cape",
+                      1
+                    ],
+                    "Mini Moldorm Cave - Far Right": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Mini Moldorm Cave - Generous Guy": [
+                      "Bombs (3)",
+                      1
+                    ],
+                    "Mini Moldorm Cave - Left": [
+                      "Bombs (3)",
+                      1
+                    ],
+                    "Mini Moldorm Cave - Right": [
+                      "Moon Pearl",
+                      1
+                    ],
+                    "Mire Shed - Left": [
+                      "Bombs (3)",
+                      1
+                    ],
+                    "Mire Shed - Right": [
+                      "Progressive Shield",
+                      1
+                    ],
+                    "Misery Mire - Big Chest": [
+                      "Small Key (Misery Mire)",
+                      1
+                    ],
+                    "Misery Mire - Big Key Chest": [
+                      "Bombs (3)",
+                      1
+                    ],
+                    "Misery Mire - Boss": [
+                      "Compass (Misery Mire)",
+                      1
+                    ],
+                    "Misery Mire - Bridge Chest": [
+                      "Small Key (Misery Mire)",
+                      1
+                    ],
+                    "Misery Mire - Compass Chest": [
+                      "Big Key (Misery Mire)",
+                      1
+                    ],
+                    "Misery Mire - Conveyor Crystal Key Drop": [
+                      "Map (Misery Mire)",
+                      1
+                    ],
+                    "Misery Mire - Fishbone Pot Key": [
+                      "Small Key (Misery Mire)",
+                      1
+                    ],
+                    "Misery Mire - Main Lobby": [
+                      "Small Key (Misery Mire)",
+                      1
+                    ],
+                    "Misery Mire - Map Chest": [
+                      "Small Key (Misery Mire)",
+                      1
+                    ],
+                    "Misery Mire - Prize": [
+                      "Crystal 6",
+                      1
+                    ],
+                    "Misery Mire - Spike Chest": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Misery Mire - Spikes Pot Key": [
+                      "Small Key (Misery Mire)",
+                      1
+                    ],
+                    "Missing Smith": [
+                      "Return Smith",
+                      1
+                    ],
+                    "Mushroom": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Old Man": [
+                      "Arrows (10)",
+                      1
+                    ],
+                    "Palace of Darkness - Big Chest": [
+                      "Rupees (300)",
+                      1
+                    ],
+                    "Palace of Darkness - Big Key Chest": [
+                      "Boss Heart Container",
+                      1
+                    ],
+                    "Palace of Darkness - Boss": [
+                      "Blue Boomerang",
+                      1
+                    ],
+                    "Palace of Darkness - Compass Chest": [
+                      "Small Key (Palace of Darkness)",
+                      1
+                    ],
+                    "Palace of Darkness - Dark Basement - Left": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Palace of Darkness - Dark Basement - Right": [
+                      "Small Key (Palace of Darkness)",
+                      1
+                    ],
+                    "Palace of Darkness - Dark Maze - Bottom": [
+                      "Map (Palace of Darkness)",
+                      1
+                    ],
+                    "Palace of Darkness - Dark Maze - Top": [
+                      "Compass (Palace of Darkness)",
+                      1
+                    ],
+                    "Palace of Darkness - Harmless Hellway": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Palace of Darkness - Map Chest": [
+                      "Small Key (Palace of Darkness)",
+                      1
+                    ],
+                    "Palace of Darkness - Prize": [
+                      "Blue Pendant",
+                      1
+                    ],
+                    "Palace of Darkness - Shooter Room": [
+                      "Big Key (Palace of Darkness)",
+                      1
+                    ],
+                    "Palace of Darkness - Stalfos Basement": [
+                      "Small Key (Palace of Darkness)",
+                      1
+                    ],
+                    "Palace of Darkness - The Arena - Bridge": [
+                      "Small Key (Palace of Darkness)",
+                      1
+                    ],
+                    "Palace of Darkness - The Arena - Ledge": [
+                      "Small Key (Palace of Darkness)",
+                      1
+                    ],
+                    "Paradox Cave Lower - Far Left": [
+                      "Bombs (3)",
+                      1
+                    ],
+                    "Paradox Cave Lower - Far Right": [
+                      "Boss Heart Container",
+                      1
+                    ],
+                    "Paradox Cave Lower - Left": [
+                      "Bottle (Red Potion)",
+                      1
+                    ],
+                    "Paradox Cave Lower - Middle": [
+                      "Rupees (5)",
+                      1
+                    ],
+                    "Paradox Cave Lower - Right": [
+                      "Magic Mirror",
+                      1
+                    ],
+                    "Paradox Cave Upper - Left": [
+                      "Book of Mudora",
+                      1
+                    ],
+                    "Paradox Cave Upper - Right": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Peg Cave": [
+                      "Bombs (3)",
+                      1
+                    ],
+                    "Potion Shop": [
+                      "Progressive Mail",
+                      1
+                    ],
+                    "Purple Chest": [
+                      "Cane of Somaria",
+                      1
+                    ],
+                    "Pyramid": [
+                      "Rupees (50)",
+                      1
+                    ],
+                    "Pyramid Fairy - Left": [
+                      "Bombs (3)",
+                      1
+                    ],
+                    "Pyramid Fairy - Right": [
+                      "Progressive Bow",
+                      1
+                    ],
+                    "Sahasrahla": [
+                      "Boss Heart Container",
+                      1
+                    ],
+                    "Sahasrahla's Hut - Left": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Sahasrahla's Hut - Middle": [
+                      "Hookshot",
+                      1
+                    ],
+                    "Sahasrahla's Hut - Right": [
+                      "Rupees (50)",
+                      1
+                    ],
+                    "Sanctuary": [
+                      "Small Key (Hyrule Castle)",
+                      1
+                    ],
+                    "Secret Passage": [
+                      "Ice Rod",
+                      1
+                    ],
+                    "Sewers - Dark Cross": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Sewers - Key Rat Key Drop": [
+                      "Small Key (Hyrule Castle)",
+                      1
+                    ],
+                    "Sewers - Secret Room - Left": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Sewers - Secret Room - Middle": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Sewers - Secret Room - Right": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Sick Kid": [
+                      "Boss Heart Container",
+                      1
+                    ],
+                    "Skull Woods - Big Chest": [
+                      "Small Key (Skull Woods)",
+                      1
+                    ],
+                    "Skull Woods - Big Key Chest": [
+                      "Map (Skull Woods)",
+                      1
+                    ],
+                    "Skull Woods - Boss": [
+                      "Compass (Skull Woods)",
+                      1
+                    ],
+                    "Skull Woods - Bridge Room": [
+                      "Big Key (Skull Woods)",
+                      1
+                    ],
+                    "Skull Woods - Compass Chest": [
+                      "Small Key (Skull Woods)",
+                      1
+                    ],
+                    "Skull Woods - Map Chest": [
+                      "Small Key (Skull Woods)",
+                      1
+                    ],
+                    "Skull Woods - Pinball Room": [
+                      "Bombs (3)",
+                      1
+                    ],
+                    "Skull Woods - Pot Prison": [
+                      "Small Key (Skull Woods)",
+                      1
+                    ],
+                    "Skull Woods - Prize": [
+                      "Green Pendant",
+                      1
+                    ],
+                    "Skull Woods - Spike Corner Key Drop": [
+                      "Arrows (10)",
+                      1
+                    ],
+                    "Skull Woods - West Lobby Pot Key": [
+                      "Small Key (Skull Woods)",
+                      1
+                    ],
+                    "Spectacle Rock": [
+                      "Rupees (100)",
+                      1
+                    ],
+                    "Spectacle Rock Cave": [
+                      "Progressive Glove",
+                      1
+                    ],
+                    "Spike Cave": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Spiral Cave": [
+                      "Bombs (3)",
+                      1
+                    ],
+                    "Stumpy": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Sunken Treasure": [
+                      "Rupees (50)",
+                      1
+                    ],
+                    "Superbunny Cave - Bottom": [
+                      "Ether",
+                      1
+                    ],
+                    "Superbunny Cave - Top": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Swamp Palace - Big Chest": [
+                      "Progressive Bow",
+                      1
+                    ],
+                    "Swamp Palace - Big Key Chest": [
+                      "Map (Swamp Palace)",
+                      1
+                    ],
+                    "Swamp Palace - Boss": [
+                      "Bombs (3)",
+                      1
+                    ],
+                    "Swamp Palace - Compass Chest": [
+                      "Small Key (Swamp Palace)",
+                      1
+                    ],
+                    "Swamp Palace - Entrance": [
+                      "Small Key (Swamp Palace)",
+                      1
+                    ],
+                    "Swamp Palace - Flooded Room - Left": [
+                      "Small Key (Swamp Palace)",
+                      1
+                    ],
+                    "Swamp Palace - Flooded Room - Right": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Swamp Palace - Hookshot Pot Key": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Swamp Palace - Map Chest": [
+                      "Small Key (Swamp Palace)",
+                      1
+                    ],
+                    "Swamp Palace - Pot Row Pot Key": [
+                      "Big Key (Swamp Palace)",
+                      1
+                    ],
+                    "Swamp Palace - Prize": [
+                      "Crystal 5",
+                      1
+                    ],
+                    "Swamp Palace - Trench 1 Pot Key": [
+                      "Small Key (Swamp Palace)",
+                      1
+                    ],
+                    "Swamp Palace - Trench 2 Pot Key": [
+                      "Small Key (Swamp Palace)",
+                      1
+                    ],
+                    "Swamp Palace - Waterfall Room": [
+                      "Cane of Byrna",
+                      1
+                    ],
+                    "Swamp Palace - Waterway Pot Key": [
+                      "Pegasus Boots",
+                      1
+                    ],
+                    "Swamp Palace - West Chest": [
+                      "Compass (Swamp Palace)",
+                      1
+                    ],
+                    "Thieves' Town - Ambush Chest": [
+                      "Big Key (Thieves Town)",
+                      1
+                    ],
+                    "Thieves' Town - Attic": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Thieves' Town - Big Chest": [
+                      "Compass (Thieves Town)",
+                      1
+                    ],
+                    "Thieves' Town - Big Key Chest": [
+                      "Map (Thieves Town)",
+                      1
+                    ],
+                    "Thieves' Town - Blind's Cell": [
+                      "Small Key (Thieves Town)",
+                      1
+                    ],
+                    "Thieves' Town - Boss": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Thieves' Town - Compass Chest": [
+                      "Flippers",
+                      1
+                    ],
+                    "Thieves' Town - Hallway Pot Key": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Thieves' Town - Map Chest": [
+                      "Small Key (Thieves Town)",
+                      1
+                    ],
+                    "Thieves' Town - Prize": [
+                      "Crystal 4",
+                      1
+                    ],
+                    "Thieves' Town - Spike Switch Pot Key": [
+                      "Small Key (Thieves Town)",
+                      1
+                    ],
+                    "Tower of Hera - Basement Cage": [
+                      "Compass (Tower of Hera)",
+                      1
+                    ],
+                    "Tower of Hera - Big Chest": [
+                      "Map (Tower of Hera)",
+                      1
+                    ],
+                    "Tower of Hera - Big Key Chest": [
+                      "Bombs (3)",
+                      1
+                    ],
+                    "Tower of Hera - Boss": [
+                      "Small Key (Tower of Hera)",
+                      1
+                    ],
+                    "Tower of Hera - Compass Chest": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Tower of Hera - Map Chest": [
+                      "Big Key (Tower of Hera)",
+                      1
+                    ],
+                    "Tower of Hera - Prize": [
+                      "Crystal 7",
+                      1
+                    ],
+                    "Turtle Rock - Big Chest": [
+                      "Small Key (Turtle Rock)",
+                      1
+                    ],
+                    "Turtle Rock - Big Key Chest": [
+                      "Small Key (Turtle Rock)",
+                      1
+                    ],
+                    "Turtle Rock - Boss": [
+                      "Compass (Turtle Rock)",
+                      1
+                    ],
+                    "Turtle Rock - Chain Chomps": [
+                      "Small Key (Turtle Rock)",
+                      1
+                    ],
+                    "Turtle Rock - Compass Chest": [
+                      "Small Key (Turtle Rock)",
+                      1
+                    ],
+                    "Turtle Rock - Crystaroller Room": [
+                      "Red Boomerang",
+                      1
+                    ],
+                    "Turtle Rock - Eye Bridge - Bottom Left": [
+                      "Small Key (Turtle Rock)",
+                      1
+                    ],
+                    "Turtle Rock - Eye Bridge - Bottom Right": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Turtle Rock - Eye Bridge - Top Left": [
+                      "Map (Turtle Rock)",
+                      1
+                    ],
+                    "Turtle Rock - Eye Bridge - Top Right": [
+                      "Piece of Heart",
+                      1
+                    ],
+                    "Turtle Rock - Pokey 1 Key Drop": [
+                      "Small Key (Turtle Rock)",
+                      1
+                    ],
+                    "Turtle Rock - Pokey 2 Key Drop": [
+                      "Magic Upgrade (1/2)",
+                      1
+                    ],
+                    "Turtle Rock - Prize": [
+                      "Crystal 3",
+                      1
+                    ],
+                    "Turtle Rock - Roller Room - Left": [
+                      "Big Key (Turtle Rock)",
+                      1
+                    ],
+                    "Turtle Rock - Roller Room - Right": [
+                      "Arrows (10)",
+                      1
+                    ],
+                    "Waterfall Fairy - Left": [
+                      "Bottle (Blue Potion)",
+                      1
+                    ],
+                    "Waterfall Fairy - Right": [
+                      "Rupees (20)",
+                      1
+                    ],
+                    "Zora's Ledge": [
+                      "Boss Heart Container",
+                      1
+                    ]
+                  }
                 },
+                "attr": "get"
+              },
+              "args": [
                 {
                   "type": "constant",
-                  "value": 1
+                  "value": "Turtle Rock - Big Key Chest"
                 }
               ]
             }
@@ -22183,8 +24619,8 @@
                 "type": "list",
                 "value": [
                   {
-                    "type": "list",
-                    "value": [
+                    "type": "tuple",
+                    "elements": [
                       {
                         "type": "constant",
                         "value": "Small Key (Turtle Rock)"
@@ -22221,8 +24657,8 @@
                 "type": "list",
                 "value": [
                   {
-                    "type": "list",
-                    "value": [
+                    "type": "tuple",
+                    "elements": [
                       {
                         "type": "constant",
                         "value": "Big Key (Turtle Rock)"

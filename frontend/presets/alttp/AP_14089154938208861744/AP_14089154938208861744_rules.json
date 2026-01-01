@@ -3306,7 +3306,7 @@
                             },
                             "op": "==",
                             "right": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -3324,7 +3324,7 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
@@ -3746,7 +3746,7 @@
                         },
                         "op": "in",
                         "right": {
-                          "rule": "List",
+                          "rule": "Tuple",
                           "args": {
                             "value": [
                               {
@@ -3764,7 +3764,7 @@
                                 "_converted_from_ast": true
                               }
                             ],
-                            "_original_ast_type": "list"
+                            "_original_ast_type": "tuple"
                           },
                           "_converted_from_ast": true
                         },
@@ -5558,7 +5558,7 @@
                         },
                         "op": "==",
                         "right": {
-                          "rule": "List",
+                          "rule": "Tuple",
                           "args": {
                             "value": [
                               {
@@ -5576,7 +5576,7 @@
                                 "_converted_from_ast": true
                               }
                             ],
-                            "_original_ast_type": "list"
+                            "_original_ast_type": "tuple"
                           },
                           "_converted_from_ast": true
                         },
@@ -8539,7 +8539,7 @@
                             },
                             "op": "in",
                             "right": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -8557,7 +8557,7 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
@@ -8870,7 +8870,7 @@
                         },
                         "op": "==",
                         "right": {
-                          "rule": "List",
+                          "rule": "Tuple",
                           "args": {
                             "value": [
                               {
@@ -8888,7 +8888,7 @@
                                 "_converted_from_ast": true
                               }
                             ],
-                            "_original_ast_type": "list"
+                            "_original_ast_type": "tuple"
                           },
                           "_converted_from_ast": true
                         },
@@ -9395,7 +9395,7 @@
                             },
                             "op": "==",
                             "right": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -9413,7 +9413,7 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
@@ -9879,7 +9879,7 @@
                         },
                         "op": "==",
                         "right": {
-                          "rule": "List",
+                          "rule": "Tuple",
                           "args": {
                             "value": [
                               {
@@ -9897,7 +9897,7 @@
                                 "_converted_from_ast": true
                               }
                             ],
-                            "_original_ast_type": "list"
+                            "_original_ast_type": "tuple"
                           },
                           "_converted_from_ast": true
                         },
@@ -10373,24 +10373,7 @@
                       "args": {
                         "item": "Big Key (Ice Palace)",
                         "player": 1,
-                        "locations": [
-                          [
-                            "Ice Palace - Spike Room",
-                            1
-                          ],
-                          [
-                            "Ice Palace - Hammer Block Key Drop",
-                            1
-                          ],
-                          [
-                            "Ice Palace - Big Key Chest",
-                            1
-                          ],
-                          [
-                            "Ice Palace - Map Chest",
-                            1
-                          ]
-                        ],
+                        "locations": [],
                         "_original_ast_type": "placement_search"
                       },
                       "_converted_from_ast": true
@@ -10867,7 +10850,7 @@
                           "args": {
                             "value": [
                               {
-                                "rule": "List",
+                                "rule": "Tuple",
                                 "args": {
                                   "value": [
                                     {
@@ -10885,7 +10868,7 @@
                                       "_converted_from_ast": true
                                     }
                                   ],
-                                  "_original_ast_type": "list"
+                                  "_original_ast_type": "tuple"
                                 },
                                 "_converted_from_ast": true
                               }
@@ -10915,7 +10898,7 @@
                           "args": {
                             "value": [
                               {
-                                "rule": "List",
+                                "rule": "Tuple",
                                 "args": {
                                   "value": [
                                     {
@@ -10933,7 +10916,7 @@
                                       "_converted_from_ast": true
                                     }
                                   ],
-                                  "_original_ast_type": "list"
+                                  "_original_ast_type": "tuple"
                                 },
                                 "_converted_from_ast": true
                               }
@@ -11250,7 +11233,7 @@
                             },
                             "op": "==",
                             "right": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -11268,7 +11251,7 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
@@ -11289,7 +11272,7 @@
                             },
                             "op": "==",
                             "right": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -11307,7 +11290,7 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
@@ -11328,7 +11311,7 @@
                             },
                             "op": "==",
                             "right": {
-                              "rule": "List",
+                              "rule": "Tuple",
                               "args": {
                                 "value": [
                                   {
@@ -11346,7 +11329,7 @@
                                     "_converted_from_ast": true
                                   }
                                 ],
-                                "_original_ast_type": "list"
+                                "_original_ast_type": "tuple"
                               },
                               "_converted_from_ast": true
                             },
@@ -12778,7 +12761,7 @@
                               "args": {
                                 "value": [
                                   {
-                                    "rule": "List",
+                                    "rule": "Tuple",
                                     "args": {
                                       "value": [
                                         {
@@ -12796,7 +12779,7 @@
                                           "_converted_from_ast": true
                                         }
                                       ],
-                                      "_original_ast_type": "list"
+                                      "_original_ast_type": "tuple"
                                     },
                                     "_converted_from_ast": true
                                   }
@@ -13043,7 +13026,7 @@
                           "args": {
                             "value": [
                               {
-                                "rule": "List",
+                                "rule": "Tuple",
                                 "args": {
                                   "value": [
                                     {
@@ -13061,7 +13044,7 @@
                                       "_converted_from_ast": true
                                     }
                                   ],
-                                  "_original_ast_type": "list"
+                                  "_original_ast_type": "tuple"
                                 },
                                 "_converted_from_ast": true
                               }
@@ -14217,7 +14200,7 @@
                           "args": {
                             "value": [
                               {
-                                "rule": "List",
+                                "rule": "Tuple",
                                 "args": {
                                   "value": [
                                     {
@@ -14235,7 +14218,7 @@
                                       "_converted_from_ast": true
                                     }
                                   ],
-                                  "_original_ast_type": "list"
+                                  "_original_ast_type": "tuple"
                                 },
                                 "_converted_from_ast": true
                               }
@@ -14578,12 +14561,7 @@
                               "args": {
                                 "item": "Small Key (Ganons Tower)",
                                 "player": 1,
-                                "locations": [
-                                  [
-                                    "Ganons Tower - Firesnake Room",
-                                    1
-                                  ]
-                                ],
+                                "locations": [],
                                 "_original_ast_type": "placement_search"
                               },
                               "_converted_from_ast": true
@@ -21213,8 +21191,8 @@
           },
           "op": "==",
           "right": {
-            "type": "list",
-            "value": [
+            "type": "tuple",
+            "elements": [
               {
                 "type": "constant",
                 "value": "Small Key (Hyrule Castle)"
@@ -22069,8 +22047,8 @@
                     },
                     "op": "in",
                     "right": {
-                      "type": "list",
-                      "value": [
+                      "type": "tuple",
+                      "elements": [
                         {
                           "type": "constant",
                           "value": "easy"
@@ -22773,8 +22751,8 @@
                 "type": "list",
                 "value": [
                   {
-                    "type": "list",
-                    "value": [
+                    "type": "tuple",
+                    "elements": [
                       {
                         "type": "constant",
                         "value": "Small Key (Turtle Rock)"
@@ -22811,8 +22789,8 @@
                 "type": "list",
                 "value": [
                   {
-                    "type": "list",
-                    "value": [
+                    "type": "tuple",
+                    "elements": [
                       {
                         "type": "constant",
                         "value": "Big Key (Turtle Rock)"
