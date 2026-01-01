@@ -285,6 +285,9 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         # dynamically_added marker that WorldGen adds
         if path.endswith('.dynamically_added'):
             return True
+        # placeholder marker - original uses this for shop regions, WorldGen uses dynamically_added
+        if path.endswith('.placeholder'):
+            return True
         # dungeon property - WorldGen doesn't preserve this
         if path.endswith('.dungeon'):
             return True
