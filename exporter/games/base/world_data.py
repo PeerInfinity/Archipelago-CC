@@ -623,6 +623,11 @@ class WorldDataMixin:
         if getattr(region, 'dynamically_added', False):
             attributes['dynamically_added'] = True
 
+        # Always check for placeholder attribute (used for regions that exist only
+        # to be referenced by exits but have no locations or exits of their own)
+        if getattr(region, 'placeholder', False):
+            attributes['placeholder'] = True
+
         # Only do full auto-discovery if enabled
         if not self.AUTO_DISCOVER_REGION_ATTRIBUTES:
             return attributes
@@ -633,6 +638,7 @@ class WorldDataMixin:
             'entrances', 'exits', 'locations',  # Complex objects, exported separately
             'entrance_type',  # Class variable
             'dynamically_added',  # Already handled above
+            'placeholder',  # Already handled above
         }
 
         # Collect attributes to check from multiple sources
