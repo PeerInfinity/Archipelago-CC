@@ -48,7 +48,8 @@
       "start_location_hints": [],
       "start_with_map_scrolls": false
     },
-    "world_directory": "heretic"
+    "world_directory": "heretic",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "included_episodes": [

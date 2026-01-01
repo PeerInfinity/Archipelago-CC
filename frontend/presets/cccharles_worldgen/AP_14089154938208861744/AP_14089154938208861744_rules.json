@@ -36,8 +36,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Barn Key",
-                "count": 1
+                "item_name": "Barn Key"
               }
             }
           },
@@ -54,8 +53,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Candice's Key",
-                "count": 1
+                "item_name": "Candice's Key"
               }
             }
           },
@@ -1235,8 +1233,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dead Fish",
-                "count": 1
+                "item_name": "Dead Fish"
               }
             },
             "item": {
@@ -1413,8 +1410,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -1431,8 +1427,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ancient Tablet",
-                "count": 1
+                "item_name": "Ancient Tablet"
               }
             },
             "item": {
@@ -1623,8 +1618,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -1641,8 +1635,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -1659,8 +1652,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -1677,8 +1669,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -1695,8 +1686,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -1713,8 +1703,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -2070,8 +2059,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "South Mine Key",
-                "count": 1
+                "item_name": "South Mine Key"
               }
             }
           }
@@ -2327,8 +2315,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -2645,8 +2632,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Blue Box",
-                "count": 1
+                "item_name": "Blue Box"
               }
             },
             "item": {
@@ -3067,8 +3053,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -4009,8 +3994,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Journal",
-                "count": 1
+                "item_name": "Journal"
               }
             },
             "item": {
@@ -4285,8 +4269,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -4303,8 +4286,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -4321,8 +4303,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -4339,8 +4320,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -4357,8 +4337,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -4375,8 +4354,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -4775,8 +4753,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -4793,8 +4770,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -4811,8 +4787,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -4829,8 +4804,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -4847,8 +4821,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -4870,8 +4843,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Timed Dynamite",
-                "count": 1
+                "item_name": "Timed Dynamite"
               }
             }
           }
@@ -5175,8 +5147,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Box of Rockets",
-                "count": 1
+                "item_name": "Box of Rockets"
               }
             },
             "item": {
@@ -5634,8 +5605,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "North Mine Key",
-                "count": 1
+                "item_name": "North Mine Key"
               }
             }
           }
@@ -6059,8 +6029,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -6453,8 +6422,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Remote Explosive x8",
-                "count": 1
+                "item_name": "Remote Explosive x8"
               }
             },
             "item": {
@@ -6567,8 +6535,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -6585,8 +6552,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -6603,8 +6569,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -6621,8 +6586,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -6639,8 +6603,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -6657,8 +6620,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -7197,8 +7159,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -7215,8 +7176,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -7233,8 +7193,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -7251,8 +7210,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -7269,8 +7227,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -7789,8 +7746,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Employment Contracts",
-                "count": 1
+                "item_name": "Employment Contracts"
               }
             },
             "item": {
@@ -7813,8 +7769,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -7831,8 +7786,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -7849,8 +7803,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -7867,8 +7820,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -8115,8 +8067,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -8133,8 +8084,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -8151,8 +8101,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -8169,8 +8118,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -8187,8 +8135,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -8205,8 +8152,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -8223,8 +8169,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -8442,8 +8387,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mob Camp Key",
-                "count": 1
+                "item_name": "Mob Camp Key"
               }
             }
           }
@@ -8727,8 +8671,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Broken Bob",
-                "count": 1
+                "item_name": "Broken Bob"
               }
             },
             "item": {
@@ -8882,8 +8825,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mountain Ruin Key",
-                "count": 1
+                "item_name": "Mountain Ruin Key"
               }
             }
           }
@@ -9391,8 +9333,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -9415,8 +9356,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -9433,8 +9373,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -9451,8 +9390,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -10310,8 +10248,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -10328,8 +10265,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Jar of Pickles",
-                "count": 1
+                "item_name": "Jar of Pickles"
               }
             },
             "item": {
@@ -10400,8 +10336,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -10418,8 +10353,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -10436,8 +10370,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -10454,8 +10387,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -10472,8 +10404,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lockpicks",
-                "count": 1
+                "item_name": "Lockpicks"
               }
             },
             "item": {
@@ -12010,10 +11941,31 @@
           "display_name": "Randomize Items"
         }
       },
-      "shops": [],
-      "world_description": "Choo-Choo Charles WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "An independent 3D horror game, taking place on an island.\nThe main gameplay consists of traveling and fighting a monster on board a train.\nUpgrading the train requires leaving the train to gather resources with the threat of encountering the monster.",
       "web": {
-        "theme": "stone"
+        "theme": "stone",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setup Choo-Choo Charles for the Archipelago MultiWorld Randomizer.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Yaranorgoth"
+            ]
+          },
+          {
+            "name": "Guide d'Installation Multiworld",
+            "description": "Un guide pour mettre en place Choo-Choo Charles pour le Randomiseur Multiworld Archipelago",
+            "language": "Fran\u00e7ais",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "Yaranorgoth"
+            ]
+          }
+        ]
       },
       "world_directory": "cccharles_worldgen"
     }

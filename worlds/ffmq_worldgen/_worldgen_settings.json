@@ -45,7 +45,8 @@
       "starting_weapon": 3,
       "tweak_frustrating_dungeons": false
     },
-    "world_directory": "ffmq"
+    "world_directory": "ffmq",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "rooms": [

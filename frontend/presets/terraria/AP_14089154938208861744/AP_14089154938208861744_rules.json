@@ -26,7 +26,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Guide",
@@ -38,7 +39,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Squire Slime",
@@ -50,7 +52,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Traveling Merchant",
@@ -105,7 +108,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Lifeform Analyzer",
@@ -122,7 +126,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "DPS Meter",
@@ -163,7 +168,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Stopwatch",
@@ -180,7 +186,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Timber!!",
@@ -276,7 +283,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Bug Net",
@@ -306,7 +314,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Heavy Metal",
@@ -373,7 +382,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Dye Hard",
@@ -407,7 +417,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Lucky Break",
@@ -455,7 +466,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Unusual Survival Strategies",
@@ -479,7 +491,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Radar",
@@ -491,7 +504,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Wand of Sparking",
@@ -503,7 +517,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Heliophobia",
@@ -527,7 +542,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Zoologist",
@@ -539,7 +555,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Cat",
@@ -556,27 +573,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Feeling Petty",
             "id": 8257739,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cat"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dog"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Cat",
+                  "Dog"
+                ]
+              }
             },
             "item": {
               "name": "Reward: Lava Charm",
@@ -601,7 +611,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Painter",
@@ -656,7 +667,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Enchanted Sword",
@@ -668,7 +680,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Angler",
@@ -680,27 +693,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Fisherman's Pocket Guide",
             "id": null,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Angler"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Weather Radio"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Angler",
+                  "Weather Radio"
+                ]
+              }
             },
             "item": {
               "name": "Fisherman's Pocket Guide",
@@ -708,27 +714,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Weather Radio",
             "id": null,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Angler"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sextant"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Angler",
+                  "Sextant"
+                ]
+              }
             },
             "item": {
               "name": "Weather Radio",
@@ -736,27 +735,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Sextant",
             "id": null,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Angler"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fisherman's Pocket Guide"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Angler",
+                  "Fisherman's Pocket Guide"
+                ]
+              }
             },
             "item": {
               "name": "Sextant",
@@ -764,7 +756,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Water Walking Boots",
@@ -776,7 +769,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Into Orbit",
@@ -800,7 +794,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Celestial Magnet",
@@ -812,7 +807,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Clumsy Slime",
@@ -824,7 +820,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Watch Your Step!",
@@ -884,7 +881,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Compass",
@@ -896,7 +894,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Hey! Listen!",
@@ -932,7 +931,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Heart Breaker",
@@ -961,7 +961,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "The Frequent Flyer",
@@ -1019,7 +1020,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Gold Pickaxe",
@@ -1031,7 +1033,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Gold Watch",
@@ -1043,7 +1046,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Like a Boss",
@@ -1067,7 +1071,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Jeepers Creepers",
@@ -1091,7 +1096,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Funkytown",
@@ -1115,7 +1121,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Dead Men Tell No Tales",
@@ -1139,7 +1146,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Obsidian Skull",
@@ -1156,7 +1164,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Lava Charm",
@@ -1168,7 +1177,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Demonite Ore",
@@ -1180,7 +1190,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Demonite Bar",
@@ -1197,7 +1208,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Evil Sword",
@@ -1214,7 +1226,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Ice Skates",
@@ -1226,7 +1239,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Flinx Fur Coat",
@@ -1238,7 +1252,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Golfer",
@@ -1250,7 +1265,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Party Girl",
@@ -1305,7 +1321,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Cool Slime",
@@ -1322,7 +1339,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Anklet of the Wind",
@@ -1334,7 +1352,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Feral Claws",
@@ -1346,7 +1365,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Stinger",
@@ -1358,7 +1378,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Jungle Spores",
@@ -1370,7 +1391,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Vine",
@@ -1382,33 +1404,21 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Blade of Grass",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Jungle Spores"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Stinger"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Vine"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Jungle Spores",
+                  "Stinger",
+                  "Vine"
+                ]
+              }
             },
             "item": {
               "name": "Blade of Grass",
@@ -1416,7 +1426,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Nature's Gift",
@@ -1428,7 +1439,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Bezoar",
@@ -1440,7 +1452,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Summoning Potion",
@@ -1452,7 +1465,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "A Shimmer In The Dark",
@@ -1500,7 +1514,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Magma Stone",
@@ -1512,7 +1527,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Smashing, Poppet!",
@@ -1536,27 +1552,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Leading Landlord",
             "id": 8257772,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Arms Dealer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Nurse"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Arms Dealer",
+                  "Nurse"
+                ]
+              }
             },
             "item": {
               "name": "Reward: Cloud in a Bottle",
@@ -1587,21 +1596,13 @@
             "name": "Illegal Gun Parts",
             "id": null,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Arms Dealer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Flamethrower"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Arms Dealer",
+                  "Flamethrower"
+                ]
+              }
             },
             "item": {
               "name": "Illegal Gun Parts",
@@ -1609,7 +1610,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "King Slime",
@@ -1647,7 +1649,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Nerdy Slime",
@@ -1661,7 +1664,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Sandstorm",
@@ -1698,7 +1702,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Shark Tooth Necklace",
@@ -1710,7 +1715,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Quiet Neighborhood",
@@ -1734,7 +1740,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Eye of Cthulhu",
@@ -1752,27 +1759,14 @@
             "name": "Dryad",
             "id": null,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Post-Evil Boss"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Post-Eye of Cthulhu"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Post-Skeletron"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Post-Evil Boss",
+                  "Post-Eye of Cthulhu",
+                  "Post-Skeletron"
+                ]
+              }
             },
             "item": {
               "name": "Dryad",
@@ -1780,7 +1774,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Pumpkin Seeds",
@@ -1797,27 +1792,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Pumpkin",
             "id": null,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cactus"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pumpkin Seeds"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Cactus",
+                  "Pumpkin Seeds"
+                ]
+              }
             },
             "item": {
               "name": "Pumpkin",
@@ -1825,7 +1813,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Purification Powder",
@@ -1873,7 +1862,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Mystic Slime",
@@ -1890,7 +1880,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Evil Boss",
@@ -1916,7 +1907,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Evil Pickaxe",
@@ -1933,27 +1925,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Obsidian Armor",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Evil Boss Part"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Obsidian"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Evil Boss Part",
+                  "Obsidian"
+                ]
+              }
             },
             "item": {
               "name": "Obsidian Armor",
@@ -1961,7 +1946,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Tavernkeep",
@@ -1978,7 +1964,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Old One's Army Tier 1",
@@ -2045,7 +2032,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Meteorite Bar",
@@ -2092,7 +2080,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Meteor Hamaxe",
@@ -2109,141 +2098,39 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Hellforge",
             "id": null,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Adamantite Pickaxe"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Astral Pickaxe"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Beastial Pickaxe"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blossom Pickaxe"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chlorophyte Pickaxe"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cobalt Pickaxe"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crystyl Crusher"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Evil Pickaxe"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gelpick"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Genesis Pickaxe"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Laser Drill"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Luminite Pickaxe"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Molten Pickaxe"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mythril Pickaxe"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pickaxe Axe"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Picksaw"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Seismic Hampick"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shardlight Pickaxe"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shroomite Digging Claw"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Skyfringe Pickaxe"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spectre Pickaxe"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Adamantite Pickaxe",
+                  "Astral Pickaxe",
+                  "Beastial Pickaxe",
+                  "Blossom Pickaxe",
+                  "Chlorophyte Pickaxe",
+                  "Cobalt Pickaxe",
+                  "Crystyl Crusher",
+                  "Evil Pickaxe",
+                  "Gelpick",
+                  "Genesis Pickaxe",
+                  "Laser Drill",
+                  "Luminite Pickaxe",
+                  "Molten Pickaxe",
+                  "Mythril Pickaxe",
+                  "Pickaxe Axe",
+                  "Picksaw",
+                  "Seismic Hampick",
+                  "Shardlight Pickaxe",
+                  "Shroomite Digging Claw",
+                  "Skyfringe Pickaxe",
+                  "Spectre Pickaxe"
+                ]
+              }
             },
             "item": {
               "name": "Hellforge",
@@ -2251,7 +2138,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Hellstone",
@@ -2260,135 +2148,32 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Adamantite Pickaxe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Astral Pickaxe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Beastial Pickaxe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Blossom Pickaxe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chlorophyte Pickaxe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Cobalt Pickaxe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Crystyl Crusher"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Evil Pickaxe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gelpick"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Genesis Pickaxe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Laser Drill"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Luminite Pickaxe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Molten Pickaxe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Mythril Pickaxe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Pickaxe Axe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Picksaw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Seismic Hampick"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shardlight Pickaxe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shroomite Digging Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Skyfringe Pickaxe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spectre Pickaxe"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Adamantite Pickaxe",
+                      "Astral Pickaxe",
+                      "Beastial Pickaxe",
+                      "Blossom Pickaxe",
+                      "Chlorophyte Pickaxe",
+                      "Cobalt Pickaxe",
+                      "Crystyl Crusher",
+                      "Evil Pickaxe",
+                      "Gelpick",
+                      "Genesis Pickaxe",
+                      "Laser Drill",
+                      "Luminite Pickaxe",
+                      "Molten Pickaxe",
+                      "Mythril Pickaxe",
+                      "Pickaxe Axe",
+                      "Picksaw",
+                      "Seismic Hampick",
+                      "Shardlight Pickaxe",
+                      "Shroomite Digging Claw",
+                      "Skyfringe Pickaxe",
+                      "Spectre Pickaxe"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -2410,7 +2195,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Hellstone Bar",
@@ -2427,7 +2213,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Fiery Greatsword",
@@ -2444,7 +2231,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Molten Hamaxe",
@@ -2461,7 +2249,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Molten Pickaxe",
@@ -2478,7 +2267,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Miner for Fire",
@@ -2565,7 +2355,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Tinkerer's Workshop",
@@ -2582,7 +2373,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Mana Flower",
@@ -2591,21 +2383,13 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Nature's Gift"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Tinkerer's Workshop"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Nature's Gift",
+                      "Tinkerer's Workshop"
+                    ]
+                  }
                 },
                 {
                   "rule": "And",
@@ -2634,7 +2418,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Rocket Boots",
@@ -2651,33 +2436,21 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Spectre Boots",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hermes Boots"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rocket Boots"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hermes Boots",
+                  "Rocket Boots",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Spectre Boots",
@@ -2685,39 +2458,22 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Lightning Boots",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Aglet"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Anklet of the Wind"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spectre Boots"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Aglet",
+                  "Anklet of the Wind",
+                  "Spectre Boots",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Lightning Boots",
@@ -2725,33 +2481,21 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Frostspark Boots",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ice Skates"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Lightning Boots"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Ice Skates",
+                  "Lightning Boots",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Frostspark Boots",
@@ -2759,45 +2503,23 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Lava Waders",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Lava Charm"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Obsidian Rose"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Obsidian Skull"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Water Walking Boots"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Lava Charm",
+                  "Obsidian Rose",
+                  "Obsidian Skull",
+                  "Tinkerer's Workshop",
+                  "Water Walking Boots"
+                ]
+              }
             },
             "item": {
               "name": "Lava Waders",
@@ -2805,33 +2527,21 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Terraspark Boots",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Frostspark Boots"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Lava Waders"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Frostspark Boots",
+                  "Lava Waders",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Terraspark Boots",
@@ -2839,39 +2549,22 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "GPS",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Compass"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Depth Meter"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gold Watch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Compass",
+                  "Depth Meter",
+                  "Gold Watch",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "GPS",
@@ -2879,39 +2572,22 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Goblin Tech",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "DPS Meter"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Metal Detector"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Stopwatch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "DPS Meter",
+                  "Metal Detector",
+                  "Stopwatch",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Goblin Tech",
@@ -2919,39 +2595,22 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Fish Finder",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fisherman's Pocket Guide"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sextant"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Weather Radio"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Fisherman's Pocket Guide",
+                  "Sextant",
+                  "Tinkerer's Workshop",
+                  "Weather Radio"
+                ]
+              }
             },
             "item": {
               "name": "Fish Finder",
@@ -2959,7 +2618,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Diving Gear",
@@ -2976,7 +2636,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Where's My Honey?",
@@ -3014,7 +2675,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Bee Wax",
@@ -3028,7 +2690,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Bee Armor",
@@ -3045,7 +2708,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Not the Bees!",
@@ -3087,7 +2751,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Pygmy Necklace",
@@ -3128,7 +2793,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Skeletron",
@@ -3157,7 +2823,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Dungeon",
@@ -3174,7 +2841,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Dungeon Heist",
@@ -3209,27 +2877,14 @@
                           "rule": "And",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Hardmode Anvil"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Lihzahrd Brick"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Lihzahrd Temple"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Hardmode Anvil",
+                                  "Lihzahrd Brick",
+                                  "Lihzahrd Temple"
+                                ]
+                              }
                             },
                             {
                               "rule": "AST_setting_value",
@@ -3276,7 +2931,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Tally Counter",
@@ -3293,39 +2949,22 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "R.E.K. 3000",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Lifeform Analyzer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Radar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tally Counter"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Lifeform Analyzer",
+                  "Radar",
+                  "Tally Counter",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "R.E.K. 3000",
@@ -3333,45 +2972,23 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "PDA",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fish Finder"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "GPS"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Goblin Tech"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "R.E.K. 3000"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Fish Finder",
+                  "GPS",
+                  "Goblin Tech",
+                  "R.E.K. 3000",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "PDA",
@@ -3379,7 +2996,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Cell Phone",
@@ -3397,21 +3015,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Ancient Manipulator"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Polterplasm"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Ancient Manipulator",
+                                  "Polterplasm"
+                                ]
+                              }
                             },
                             {
                               "rule": "Has",
@@ -3448,27 +3058,14 @@
                   ]
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Magic Mirror"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "PDA"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Tinkerer's Workshop"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Magic Mirror",
+                      "PDA",
+                      "Tinkerer's Workshop"
+                    ]
+                  }
                 }
               ]
             },
@@ -3478,7 +3075,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Bewitching Table",
@@ -3487,21 +3085,13 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Witch Doctor"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wizard"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Witch Doctor",
+                      "Wizard"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -3523,27 +3113,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Alchemy Table",
             "id": null,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bewitching Table"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dungeon"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Bewitching Table",
+                  "Dungeon"
+                ]
+              }
             },
             "item": {
               "name": "Alchemy Table",
@@ -3551,7 +3134,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Mechanic",
@@ -3568,7 +3152,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Wire",
@@ -3609,7 +3194,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Actuator",
@@ -3626,7 +3212,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Muramasa",
@@ -3643,7 +3230,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Cobalt Shield",
@@ -3684,33 +3272,21 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Obsidian Shield",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cobalt Shield"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Obsidian Skull"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Cobalt Shield",
+                  "Obsidian Skull",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Obsidian Shield",
@@ -3718,27 +3294,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Elder Slime",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dungeon"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Post-Skeletron"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dungeon",
+                  "Post-Skeletron"
+                ]
+              }
             },
             "item": {
               "name": "Elder Slime",
@@ -3746,7 +3315,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Deerclops",
@@ -3824,7 +3394,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Wall of Flesh",
@@ -3858,7 +3429,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Emblem",
@@ -3870,27 +3442,14 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Celestial Emblem"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Mechanical Glove"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Statis' Blessing"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Celestial Emblem",
+                          "Mechanical Glove",
+                          "Statis' Blessing"
+                        ]
+                      }
                     },
                     {
                       "rule": "AST_setting_value",
@@ -3922,7 +3481,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Fast Clock",
@@ -3981,7 +3541,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Wizard",
@@ -3998,27 +3559,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Titan Glove",
             "id": null,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hardmode"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Power Glove"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Hardmode",
+                  "Power Glove"
+                ]
+              }
             },
             "item": {
               "name": "Titan Glove",
@@ -4026,33 +3580,21 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Power Glove",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Feral Claws"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Titan Glove"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Feral Claws",
+                  "Tinkerer's Workshop",
+                  "Titan Glove"
+                ]
+              }
             },
             "item": {
               "name": "Power Glove",
@@ -4060,7 +3602,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Magic Quiver",
@@ -4101,7 +3644,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Hallowed Seeds",
@@ -4110,21 +3654,13 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dryad"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hardmode"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Dryad",
+                      "Hardmode"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -4140,7 +3676,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Armor Polish",
@@ -4193,7 +3730,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Adhesive Bandage",
@@ -4223,33 +3761,21 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Medicated Bandage",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Adhesive Bandage"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bezoar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Adhesive Bandage",
+                  "Bezoar",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Medicated Bandage",
@@ -4257,7 +3783,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Megaphone",
@@ -4310,7 +3837,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Pocket Mirror",
@@ -4363,7 +3891,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Trifold Map",
@@ -4416,33 +3945,21 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "The Plan",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fast Clock"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Trifold Map"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Fast Clock",
+                  "Tinkerer's Workshop",
+                  "Trifold Map"
+                ]
+              }
             },
             "item": {
               "name": "The Plan",
@@ -4450,7 +3967,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Tax Collector",
@@ -4459,21 +3977,13 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hardmode"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Purification Powder"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Hardmode",
+                      "Purification Powder"
+                    ]
+                  }
                 },
                 {
                   "rule": "AST_setting_value",
@@ -4491,7 +4001,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Spider Fangs",
@@ -4508,7 +4019,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Spider Armor",
@@ -4525,7 +4037,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Cross Necklace",
@@ -4542,7 +4055,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Altar",
@@ -4551,63 +4065,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Abyssal Warhammer"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Astral Hamaxe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chlorophyte Warhammer"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Grax"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Luminite Hamaxe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Pwnhammer"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Seismic Hampick"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spectre Hamaxe"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Axe"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Abyssal Warhammer",
+                      "Astral Hamaxe",
+                      "Chlorophyte Warhammer",
+                      "Grax",
+                      "Luminite Hamaxe",
+                      "Pwnhammer",
+                      "Seismic Hampick",
+                      "Spectre Hamaxe",
+                      "The Axe"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -4623,7 +4094,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Begone, Evil!",
@@ -4702,123 +4174,30 @@
                       ]
                     },
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Adamantite Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Astral Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Beastial Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Blossom Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Chlorophyte Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Cobalt Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Crystyl Crusher"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Gelpick"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Genesis Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Laser Drill"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Luminite Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Molten Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Mythril Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Pickaxe Axe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Picksaw"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Seismic Hampick"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Shardlight Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Shroomite Digging Claw"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Spectre Pickaxe"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Adamantite Pickaxe",
+                          "Astral Pickaxe",
+                          "Beastial Pickaxe",
+                          "Blossom Pickaxe",
+                          "Chlorophyte Pickaxe",
+                          "Cobalt Pickaxe",
+                          "Crystyl Crusher",
+                          "Gelpick",
+                          "Genesis Pickaxe",
+                          "Laser Drill",
+                          "Luminite Pickaxe",
+                          "Molten Pickaxe",
+                          "Mythril Pickaxe",
+                          "Pickaxe Axe",
+                          "Picksaw",
+                          "Seismic Hampick",
+                          "Shardlight Pickaxe",
+                          "Shroomite Digging Claw",
+                          "Spectre Pickaxe"
+                        ]
+                      }
                     }
                   ]
                 },
@@ -4848,39 +4227,22 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Extra Shiny!",
             "id": 8257804,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Adamantite Ore"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chlorophyte Ore"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cobalt Ore"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mythril Ore"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Adamantite Ore",
+                  "Chlorophyte Ore",
+                  "Cobalt Ore",
+                  "Mythril Ore"
+                ]
+              }
             },
             "item": {
               "name": "Reward: Water Walking Boots",
@@ -4935,7 +4297,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Cobalt Pickaxe",
@@ -4952,7 +4315,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Blindfold",
@@ -4988,33 +4352,21 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Reflective Shades",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blindfold"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pocket Mirror"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blindfold",
+                  "Pocket Mirror",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Reflective Shades",
@@ -5022,7 +4374,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Vitamins",
@@ -5075,33 +4428,21 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Armor Bracing",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Armor Polish"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Vitamins"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Armor Polish",
+                  "Tinkerer's Workshop",
+                  "Vitamins"
+                ]
+              }
             },
             "item": {
               "name": "Armor Bracing",
@@ -5109,7 +4450,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Nazar",
@@ -5156,33 +4498,21 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Countercurse Mantra",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Megaphone"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Nazar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Megaphone",
+                  "Nazar",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Countercurse Mantra",
@@ -5190,51 +4520,24 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Ankh Charm",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Armor Bracing"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Countercurse Mantra"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Medicated Bandage"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Reflective Shades"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Plan"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Armor Bracing",
+                  "Countercurse Mantra",
+                  "Medicated Bandage",
+                  "Reflective Shades",
+                  "The Plan",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Ankh Charm",
@@ -5242,33 +4545,21 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Ankh Shield",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ankh Charm"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Obsidian Shield"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tinkerer's Workshop"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Ankh Charm",
+                  "Obsidian Shield",
+                  "Tinkerer's Workshop"
+                ]
+              }
             },
             "item": {
               "name": "Ankh Shield",
@@ -5276,7 +4567,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Soul of Night",
@@ -5297,21 +4589,13 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Bug Net"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Hardmode"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Bug Net",
+                                      "Hardmode"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "And",
@@ -5384,7 +4668,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Hallow",
@@ -5401,33 +4686,21 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Pixie Dust",
             "id": null,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hallow"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Holy Water"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Meteor Staff"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Hallow",
+                  "Holy Water",
+                  "Meteor Staff"
+                ]
+              }
             },
             "item": {
               "name": "Pixie Dust",
@@ -5435,7 +4708,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Holy Water",
@@ -5444,21 +4718,13 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hallowed Seeds"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Pixie Dust"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Hallowed Seeds",
+                      "Pixie Dust"
+                    ]
+                  }
                 },
                 {
                   "rule": "And",
@@ -5487,7 +4753,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Unicorn Horn",
@@ -5504,7 +4771,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Crystal Shard",
@@ -5521,7 +4789,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Soul of Light",
@@ -5542,21 +4811,13 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Bug Net"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Hardmode"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Bug Net",
+                                      "Hardmode"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "And",
@@ -5604,39 +4865,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Auric Bar"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Brimstone Slag"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Core of Calamity"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Cosmic Anvil"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Fabsol's Vodka"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Auric Bar",
+                                      "Brimstone Slag",
+                                      "Core of Calamity",
+                                      "Cosmic Anvil",
+                                      "Fabsol's Vodka"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "AST_setting_value",
@@ -5702,7 +4940,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Meteor Staff",
@@ -5711,33 +4950,15 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hardmode Anvil"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Meteorite Bar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Pixie Dust"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Soul of Light"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Hardmode Anvil",
+                      "Meteorite Bar",
+                      "Pixie Dust",
+                      "Soul of Light"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -5753,7 +4974,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Blessed Apple",
@@ -5770,7 +4992,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Rod of Discord",
@@ -5787,7 +5010,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Soul of Flight",
@@ -5804,7 +5028,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Head in the Clouds",
@@ -5813,90 +5038,43 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ancient Manipulator"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Fragment"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Luminite Bar"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Ancient Manipulator",
+                      "Fragment",
+                      "Luminite Bar"
+                    ]
+                  }
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hardmode"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Post-Golem"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Tavernkeep"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Hardmode",
+                      "Post-Golem",
+                      "Tavernkeep"
+                    ]
+                  }
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hardmode"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Post-Plantera"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Witch Doctor"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Hardmode",
+                      "Post-Plantera",
+                      "Witch Doctor"
+                    ]
+                  }
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Post-Plantera"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Solar Eclipse"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Post-Plantera",
+                      "Solar Eclipse"
+                    ]
+                  }
                 },
                 {
                   "rule": "And",
@@ -5905,21 +5083,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Autohammer"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Shroomite Bar"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Autohammer",
+                              "Shroomite Bar"
+                            ]
+                          }
                         },
                         {
                           "rule": "And",
@@ -5931,27 +5101,14 @@
                                   "rule": "Or",
                                   "children": [
                                     {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Hardmode"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Lihzahrd Temple"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Post-Plantera"
-                                          }
-                                        }
-                                      ]
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Hardmode",
+                                          "Lihzahrd Temple",
+                                          "Post-Plantera"
+                                        ]
+                                      }
                                     },
                                     {
                                       "rule": "And",
@@ -6078,39 +5235,16 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Auric Bar"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Brimstone Slag"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Core of Calamity"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Cosmic Anvil"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Fabsol's Vodka"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Auric Bar",
+                              "Brimstone Slag",
+                              "Core of Calamity",
+                              "Cosmic Anvil",
+                              "Fabsol's Vodka"
+                            ]
+                          }
                         },
                         {
                           "rule": "AST_setting_value",
@@ -6172,21 +5306,13 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Bug Net"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Hardmode"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Bug Net",
+                          "Hardmode"
+                        ]
+                      }
                     },
                     {
                       "rule": "And",
@@ -6251,21 +5377,13 @@
             "name": "Bunny",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hardmode"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Zoologist"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hardmode",
+                  "Zoologist"
+                ]
+              }
             },
             "item": {
               "name": "Bunny",
@@ -6273,27 +5391,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Forbidden Fragment",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hardmode"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sandstorm"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hardmode",
+                  "Sandstorm"
+                ]
+              }
             },
             "item": {
               "name": "Forbidden Fragment",
@@ -6301,7 +5412,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Don't Dread on Me",
@@ -6335,7 +5447,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "It Can Talk?!",
@@ -6386,7 +5499,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Queen Slime",
@@ -6398,39 +5512,16 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auric Bar"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Brimstone Slag"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Core of Calamity"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Cosmic Anvil"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Fabsol's Vodka"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Auric Bar",
+                          "Brimstone Slag",
+                          "Core of Calamity",
+                          "Cosmic Anvil",
+                          "Fabsol's Vodka"
+                        ]
+                      }
                     },
                     {
                       "rule": "AST_setting_value",
@@ -6476,39 +5567,16 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auric Bar"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Brimstone Slag"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Core of Calamity"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Cosmic Anvil"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Fabsol's Vodka"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Auric Bar",
+                          "Brimstone Slag",
+                          "Core of Calamity",
+                          "Cosmic Anvil",
+                          "Fabsol's Vodka"
+                        ]
+                      }
                     },
                     {
                       "rule": "AST_setting_value",
@@ -6542,7 +5610,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Diva Slime",
@@ -6559,63 +5628,26 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "The Great Slime Mitosis",
             "id": 8257814,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Clumsy Slime"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cool Slime"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Diva Slime"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Elder Slime"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mystic Slime"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Nerdy Slime"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Squire Slime"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Surly Slime"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Clumsy Slime",
+                  "Cool Slime",
+                  "Diva Slime",
+                  "Elder Slime",
+                  "Mystic Slime",
+                  "Nerdy Slime",
+                  "Squire Slime",
+                  "Surly Slime"
+                ]
+              }
             },
             "item": {
               "name": "Reward: Grappling Hook",
@@ -6690,111 +5722,28 @@
                       ]
                     },
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Adamantite Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Astral Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Beastial Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Blossom Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Chlorophyte Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Cobalt Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Crystyl Crusher"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Genesis Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Laser Drill"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Luminite Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Mythril Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Pickaxe Axe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Picksaw"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Seismic Hampick"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Shardlight Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Shroomite Digging Claw"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Spectre Pickaxe"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Adamantite Pickaxe",
+                          "Astral Pickaxe",
+                          "Beastial Pickaxe",
+                          "Blossom Pickaxe",
+                          "Chlorophyte Pickaxe",
+                          "Cobalt Pickaxe",
+                          "Crystyl Crusher",
+                          "Genesis Pickaxe",
+                          "Laser Drill",
+                          "Luminite Pickaxe",
+                          "Mythril Pickaxe",
+                          "Pickaxe Axe",
+                          "Picksaw",
+                          "Seismic Hampick",
+                          "Shardlight Pickaxe",
+                          "Shroomite Digging Claw",
+                          "Spectre Pickaxe"
+                        ]
+                      }
                     }
                   ]
                 },
@@ -6824,7 +5773,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Mythril Bar",
@@ -6871,7 +5821,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Hardmode Anvil",
@@ -6888,27 +5839,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Mythril Pickaxe",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hardmode Anvil"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mythril Bar"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hardmode Anvil",
+                  "Mythril Bar"
+                ]
+              }
             },
             "item": {
               "name": "Mythril Pickaxe",
@@ -6916,7 +5860,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Adamantite Ore",
@@ -7009,105 +5954,27 @@
                       ]
                     },
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Adamantite Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Astral Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Beastial Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Blossom Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Chlorophyte Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Crystyl Crusher"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Genesis Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Laser Drill"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Luminite Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Mythril Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Pickaxe Axe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Picksaw"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Seismic Hampick"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Shardlight Pickaxe"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Shroomite Digging Claw"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Spectre Pickaxe"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Adamantite Pickaxe",
+                          "Astral Pickaxe",
+                          "Beastial Pickaxe",
+                          "Blossom Pickaxe",
+                          "Chlorophyte Pickaxe",
+                          "Crystyl Crusher",
+                          "Genesis Pickaxe",
+                          "Laser Drill",
+                          "Luminite Pickaxe",
+                          "Mythril Pickaxe",
+                          "Pickaxe Axe",
+                          "Picksaw",
+                          "Seismic Hampick",
+                          "Shardlight Pickaxe",
+                          "Shroomite Digging Claw",
+                          "Spectre Pickaxe"
+                        ]
+                      }
                     }
                   ]
                 },
@@ -7150,33 +6017,21 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Hardmode Forge",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Adamantite Ore"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hardmode Anvil"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hellforge"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Adamantite Ore",
+                  "Hardmode Anvil",
+                  "Hellforge"
+                ]
+              }
             },
             "item": {
               "name": "Hardmode Forge",
@@ -7184,7 +6039,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Adamantite Bar",
@@ -7193,21 +6049,13 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Adamantite Ore"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hardmode Forge"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Adamantite Ore",
+                      "Hardmode Forge"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -7223,27 +6071,20 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Adamantite Pickaxe",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Adamantite Bar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hardmode Anvil"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Adamantite Bar",
+                  "Hardmode Anvil"
+                ]
+              }
             },
             "item": {
               "name": "Adamantite Pickaxe",
@@ -7251,33 +6092,21 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Forbidden Armor",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Adamantite Bar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Forbidden Fragment"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hardmode Anvil"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Adamantite Bar",
+                  "Forbidden Fragment",
+                  "Hardmode Anvil"
+                ]
+              }
             },
             "item": {
               "name": "Forbidden Armor",
@@ -7285,7 +6114,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Mechanical Eye",
@@ -7326,7 +6156,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Mechanical Worm",
@@ -7367,7 +6198,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Mechanical Skull",
@@ -7420,7 +6252,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "The Twins",
@@ -12595,8 +11428,8 @@
         "Skeletron Prime"
       ],
       "ter_goals": {
-        "Post-The Twins": "The Twins",
         "Post-The Destroyer": "The Destroyer",
+        "Post-The Twins": "The Twins",
         "Post-Skeletron Prime": "Skeletron Prime"
       },
       "world_description": "Terraria is a 2D multiplayer sandbox game featuring mining, building, exploration, and combat.\nFeatures 18 bosses and 4 classes.",

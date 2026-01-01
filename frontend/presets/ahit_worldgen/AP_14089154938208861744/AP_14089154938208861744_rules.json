@@ -869,6 +869,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -1184,8 +1185,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Umbrella",
-                    "count": 1
+                    "item_name": "Umbrella"
                   }
                 }
               ]
@@ -1214,8 +1214,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Umbrella",
-                    "count": 1
+                    "item_name": "Umbrella"
                   }
                 }
               ]
@@ -1435,8 +1434,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Umbrella",
-                    "count": 1
+                    "item_name": "Umbrella"
                   }
                 }
               ]
@@ -2142,8 +2140,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Umbrella",
-                    "count": 1
+                    "item_name": "Umbrella"
                   }
                 }
               ]
@@ -2191,8 +2188,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Umbrella",
-                    "count": 1
+                    "item_name": "Umbrella"
                   }
                 }
               ]
@@ -2226,8 +2222,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Umbrella",
-                    "count": 1
+                    "item_name": "Umbrella"
                   }
                 }
               ]
@@ -2265,8 +2260,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Snatcher's Contract - The Subcon Well",
-                "count": 1
+                "item_name": "Snatcher's Contract - The Subcon Well"
               }
             }
           },
@@ -2276,8 +2270,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Snatcher's Contract - Mail Delivery Service",
-                "count": 1
+                "item_name": "Snatcher's Contract - Mail Delivery Service"
               }
             }
           },
@@ -2287,8 +2280,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Snatcher's Contract - Toilet of Doom",
-                "count": 1
+                "item_name": "Snatcher's Contract - Toilet of Doom"
               }
             }
           },
@@ -2298,8 +2290,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Snatcher's Contract - Queen Vanessa's Manor",
-                "count": 1
+                "item_name": "Snatcher's Contract - Queen Vanessa's Manor"
               }
             }
           }
@@ -2757,6 +2748,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -3154,8 +3146,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Windmill Cleared",
-                "count": 1
+                "item_name": "Windmill Cleared"
               }
             }
           },
@@ -3194,8 +3185,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twilight Bell Cleared",
-                "count": 1
+                "item_name": "Twilight Bell Cleared"
               }
             }
           },
@@ -3221,6 +3211,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -3476,8 +3467,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "AFR Access",
-                    "count": 1
+                    "item_name": "AFR Access"
                   }
                 }
               ]
@@ -3708,6 +3698,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -3799,6 +3790,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -3890,6 +3882,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -3953,6 +3946,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -4013,6 +4007,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -4763,8 +4758,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "HUMT Access",
-                    "count": 1
+                    "item_name": "HUMT Access"
                   }
                 }
               ]
@@ -4804,8 +4798,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "HUMT Access",
-                    "count": 1
+                    "item_name": "HUMT Access"
                   }
                 }
               ]
@@ -5769,8 +5762,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "TOD Access",
-                    "count": 1
+                    "item_name": "TOD Access"
                   }
                 }
               ]
@@ -6038,8 +6030,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Umbrella",
-                    "count": 1
+                    "item_name": "Umbrella"
                   }
                 }
               ]
@@ -6210,6 +6201,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -7823,7 +7815,6 @@
           "display_name": "Randomize Items"
         }
       },
-      "shops": [],
       "act_connections": {
         "chapter1_tutorial": "chapter1_barrelboss",
         "TimeRift_Water_Subcon_Dwellers": "TimeRift_Water_Subcon_Hookshot",
@@ -7896,7 +7887,7 @@
       "excluded_bonuses": [],
       "dw_shuffle": [],
       "badge_seller_count": 4,
-      "world_description": "A Hat in Time WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "A Hat in Time is a cute-as-peck 3D platformer featuring a little girl who stitches hats for wicked powers!\nFreely explore giant worlds and recover Time Pieces to travel to new heights!",
       "slot_data": {
         "Chapter1Cost": 0,
         "Chapter2Cost": 17,
@@ -8000,7 +7991,19 @@
         "dw_death_link_amnesty": 5
       },
       "web": {
-        "theme": "partyTime"
+        "theme": "partyTime",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide for setting up A Hat in Time to be played in Archipelago.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "CookieCat"
+            ]
+          }
+        ]
       },
       "world_directory": "ahit_worldgen"
     }

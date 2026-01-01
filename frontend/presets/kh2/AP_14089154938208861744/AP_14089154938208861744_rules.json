@@ -770,7 +770,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -927,7 +928,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -985,7 +987,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1019,7 +1022,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1560,7 +1564,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1662,7 +1667,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1724,7 +1730,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2101,7 +2108,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2221,7 +2229,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2283,7 +2292,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2345,7 +2355,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3203,7 +3214,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3400,7 +3412,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3472,7 +3485,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3506,7 +3520,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3916,7 +3931,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3988,7 +4004,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4087,7 +4104,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4207,7 +4225,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4257,7 +4276,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4307,7 +4327,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4357,7 +4378,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4417,7 +4439,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4452,7 +4475,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4528,7 +4552,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4880,7 +4905,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4952,7 +4978,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5033,7 +5060,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5163,7 +5191,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5197,7 +5226,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5476,7 +5506,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5634,7 +5665,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5696,7 +5728,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5964,7 +5997,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6045,7 +6079,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6189,7 +6224,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6251,7 +6287,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6777,7 +6814,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6910,7 +6948,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6944,7 +6983,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6992,7 +7032,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -7040,7 +7081,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -7302,7 +7344,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -7416,7 +7459,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -7468,7 +7512,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -7957,7 +8002,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -8059,7 +8105,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -8093,7 +8140,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -8219,7 +8267,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -8513,7 +8562,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -8571,7 +8621,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -8605,7 +8656,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -9433,7 +9485,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -9722,7 +9775,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -9850,7 +9904,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -9922,7 +9977,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -9989,7 +10045,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -10156,7 +10213,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -10186,7 +10244,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -10216,7 +10275,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -10240,7 +10300,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -10274,7 +10335,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -10422,21 +10484,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Valor"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Valor Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Valor",
+                          "Valor Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -10493,39 +10547,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -10782,21 +10813,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Valor"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Valor Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Valor",
+                          "Valor Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -10853,39 +10876,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -11142,21 +11142,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Valor"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Valor Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Valor",
+                          "Valor Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -11213,39 +11205,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -11502,21 +11471,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Valor"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Valor Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Valor",
+                          "Valor Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -11573,39 +11534,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -11862,21 +11800,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Valor"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Valor Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Valor",
+                          "Valor Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -11933,39 +11863,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -12222,21 +12129,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Valor"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Valor Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Valor",
+                          "Valor Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -12293,39 +12192,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -12588,21 +12464,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Wisdom"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wisdom Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Wisdom",
+                          "Wisdom Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -12659,39 +12527,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -12948,21 +12793,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Wisdom"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wisdom Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Wisdom",
+                          "Wisdom Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -13019,39 +12856,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -13308,21 +13122,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Wisdom"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wisdom Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Wisdom",
+                          "Wisdom Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -13379,39 +13185,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -13668,21 +13451,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Wisdom"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wisdom Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Wisdom",
+                          "Wisdom Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -13739,39 +13514,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -14028,21 +13780,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Wisdom"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wisdom Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Wisdom",
+                          "Wisdom Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -14099,39 +13843,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -14388,21 +14109,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Wisdom"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Wisdom Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Wisdom",
+                          "Wisdom Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -14459,39 +14172,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -14754,21 +14444,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Limit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Limit Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Limit",
+                          "Limit Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -14825,39 +14507,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -15114,21 +14773,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Limit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Limit Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Limit",
+                          "Limit Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -15185,39 +14836,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -15474,21 +15102,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Limit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Limit Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Limit",
+                          "Limit Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -15545,39 +15165,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -15834,21 +15431,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Limit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Limit Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Limit",
+                          "Limit Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -15905,39 +15494,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -16194,21 +15760,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Limit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Limit Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Limit",
+                          "Limit Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -16265,39 +15823,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -16554,21 +16089,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Limit"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Limit Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Limit",
+                          "Limit Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -16625,39 +16152,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -16926,21 +16430,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Master"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Master Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Master",
+                          "Master Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -16997,39 +16493,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -17292,21 +16765,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Master"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Master Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Master",
+                          "Master Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -17363,39 +16828,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -17658,21 +17100,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Master"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Master Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Master",
+                          "Master Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -17729,39 +17163,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -18024,21 +17435,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Master"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Master Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Master",
+                          "Master Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -18095,39 +17498,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -18390,21 +17770,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Master"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Master Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Master",
+                          "Master Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -18461,39 +17833,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -18756,21 +18105,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Master"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Master Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Master",
+                          "Master Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -18827,39 +18168,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -19122,21 +18440,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Final"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Final Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Final",
+                          "Final Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -19193,39 +18503,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -19482,21 +18769,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Final"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Final Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Final",
+                          "Final Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -19553,39 +18832,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -19842,21 +19098,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Final"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Final Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Final",
+                          "Final Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -19913,39 +19161,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -20202,21 +19427,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Final"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Final Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Final",
+                          "Final Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -20273,39 +19490,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -20562,21 +19756,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Final"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Final Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Final",
+                          "Final Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -20633,39 +19819,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -20922,21 +20085,13 @@
                       ]
                     },
                     "if_true": {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Auto Final"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Final Form"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Auto Final",
+                          "Final Form"
+                        ]
+                      }
                     },
                     "if_false": {
                       "rule": "Has",
@@ -20993,39 +20148,16 @@
                               "rule": "And",
                               "children": [
                                 {
-                                  "rule": "Or",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Final Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Limit Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Master Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Valor Form"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Wisdom Form"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAny",
+                                  "args": {
+                                    "items": [
+                                      "Final Form",
+                                      "Limit Form",
+                                      "Master Form",
+                                      "Valor Form",
+                                      "Wisdom Form"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "Has",
@@ -33607,62 +32739,6 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
                     "value": "Roxas Event Location"
                   }
                 ]
@@ -33691,7 +32767,63 @@
                 "args": [
                   {
                     "type": "constant",
+                    "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
                     "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
                   }
                 ]
               },

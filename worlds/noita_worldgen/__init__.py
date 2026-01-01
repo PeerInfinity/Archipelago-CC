@@ -73,15 +73,23 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class NoitaWorldGenWeb(WebWorld):
     """Web interface for Noita WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "partyTime"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Noita integration for Archipelago multiworld games.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["Heinermann", "ScipioWright", "DaftBrit"]
+        )
+    ]
 
 
 class NoitaWorldGenWorld(RuleWorldMixin, World):
     """
-    Noita WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Noita is a magical action roguelite set in a world where every pixel is physically simulated. Fight, explore, melt,
+    burn, freeze, and evaporate your way through the procedurally generated world using wands you've created yourself.
     """
 
     game: ClassVar[str] = "Noita WorldGen"
@@ -240,10 +248,8 @@ class NoitaWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.world_description = "Noita is a magical action roguelite set in a world where every pixel is physically simulated. Fight, explore, melt,\nburn, freeze, and evaporate your way through the procedurally generated world using wands you've created yourself."
         self.slot_data = types.SimpleNamespace(death_link=0, victory_condition=0, path_option=1, hidden_chests=3, pedestal_checks=6, orbs_as_checks=0, bosses_as_checks=0, extra_orbs=0, shop_price=100)
-        self.web = types.SimpleNamespace(theme='partyTime', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Noita integration for Archipelago multiworld games.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['Heinermann', 'ScipioWright', 'DaftBrit']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -355,4 +361,14 @@ class NoitaWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "death_link": 0,
+            "victory_condition": 0,
+            "path_option": 1,
+            "hidden_chests": 3,
+            "pedestal_checks": 6,
+            "orbs_as_checks": 0,
+            "bosses_as_checks": 0,
+            "extra_orbs": 0,
+            "shop_price": 100,
+        }

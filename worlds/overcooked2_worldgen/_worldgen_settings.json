@@ -33,7 +33,8 @@
       "start_inventory": {},
       "start_location_hints": []
     },
-    "world_directory": "overcooked2"
+    "world_directory": "overcooked2",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "star_threshold_scale": 0.35,

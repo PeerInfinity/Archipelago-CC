@@ -68,8 +68,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feather Maze Checkpoint",
-                "count": 1
+                "item_name": "Feather Maze Checkpoint"
               }
             }
           },
@@ -79,8 +78,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Double Dash House Checkpoint",
-                "count": 1
+                "item_name": "Double Dash House Checkpoint"
               }
             }
           },
@@ -90,8 +88,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Badeline Tower Checkpoint",
-                "count": 1
+                "item_name": "Badeline Tower Checkpoint"
               }
             }
           },
@@ -101,8 +98,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Badeline Island Checkpoint",
-                "count": 1
+                "item_name": "Badeline Island Checkpoint"
               }
             }
           }
@@ -188,8 +184,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Traffic Blocks",
-                "count": 1
+                "item_name": "Traffic Blocks"
               }
             }
           },
@@ -290,8 +285,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Air Dash",
-                "count": 1
+                "item_name": "Air Dash"
               }
             },
             "item": {
@@ -328,8 +322,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Climb",
-                "count": 1
+                "item_name": "Climb"
               }
             },
             "item": {
@@ -471,8 +464,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Traffic Blocks",
-                    "count": 1
+                    "item_name": "Traffic Blocks"
                   }
                 }
               ]
@@ -484,8 +476,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feathers",
-                "count": 1
+                "item_name": "Feathers"
               }
             }
           },
@@ -662,8 +653,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Traffic Blocks",
-                "count": 1
+                "item_name": "Traffic Blocks"
               }
             }
           }
@@ -701,8 +691,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feathers",
-                "count": 1
+                "item_name": "Feathers"
               }
             }
           },
@@ -712,8 +701,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feathers",
-                "count": 1
+                "item_name": "Feathers"
               }
             }
           },
@@ -780,8 +768,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feathers",
-                "count": 1
+                "item_name": "Feathers"
               }
             },
             "item": {
@@ -1131,8 +1118,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dash Refills",
-                "count": 1
+                "item_name": "Dash Refills"
               }
             }
           }
@@ -1859,7 +1845,6 @@
           "display_name": "Total Strawberries"
         }
       },
-      "shops": [],
       "madeline_one_dash_hair_color": 14363648,
       "madeline_two_dash_hair_color": 16421375,
       "madeline_no_dash_hair_color": 7258367,
@@ -2111,7 +2096,7 @@
       },
       "strawberries_required": 16,
       "prog_strawberries": 16,
-      "world_description": "Celeste 64 WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Relive the magic of Celeste Mountain alongside Madeline in this small, heartfelt 3D platformer.\nCreated in a week(ish) by the Celeste team to celebrate the game\u2019s sixth anniversary \ud83c\udf53\u2728",
       "slot_data": {
         "death_link": 0,
         "death_link_amnesty": 10,
@@ -2130,7 +2115,19 @@
         "badeline_chaser_speed": 3
       },
       "web": {
-        "theme": "ice"
+        "theme": "ice",
+        "tutorials": [
+          {
+            "name": "Start Guide",
+            "description": "A guide to playing Celeste 64 in Archipelago.",
+            "language": "English",
+            "file_name": "guide_en.md",
+            "link": "guide/en",
+            "authors": [
+              "PoryGone"
+            ]
+          }
+        ]
       },
       "world_directory": "celeste64_worldgen"
     }

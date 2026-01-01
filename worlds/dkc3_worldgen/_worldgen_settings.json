@@ -28,7 +28,8 @@
       "start_location_hints": [],
       "starting_life_count": 5
     },
-    "world_directory": "dkc3"
+    "world_directory": "dkc3",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "active_level_list": [

@@ -24,7 +24,8 @@
       "starting_tool": 0,
       "trap_count": 0
     },
-    "world_directory": "paint"
+    "world_directory": "paint",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "world_description": "The classic Microsoft app, reimagined as an Archipelago game! Find your tools, expand your canvas, and paint the\ngreatest image the world has ever seen.",

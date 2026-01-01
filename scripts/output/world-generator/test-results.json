@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2025-12-31T14:34:41.321300",
+    "timestamp": "2026-01-01T00:44:59.558097",
     "seed": 1,
     "phase": "generate-test-worlds",
     "canonical_seed1": true,
@@ -18,16 +18,16 @@
     "Coding Adventure": {
       "template": "Coding Adventure.yaml",
       "game_name": "Coding Adventure",
-      "timestamp": "2025-12-31T14:34:41.914027",
+      "timestamp": "2026-01-01T00:45:00.262168",
       "original": {
         "generation": {
           "success": true,
           "seed_id": "AP_14089154938208861744",
-          "rules_path": "/home/robert/CC/Archipelago-CC/frontend/presets/codingadventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-          "sphere_log_path": "/home/robert/CC/Archipelago-CC/frontend/presets/codingadventure/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
-          "preset_dir": "/home/robert/CC/Archipelago-CC/frontend/presets/codingadventure/AP_14089154938208861744",
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/codingadventure/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 3.82
+          "processing_time_seconds": 4.31
         },
         "spoiler_test": {
           "success": false,
@@ -38,7 +38,7 @@
       "test_world": {
         "world_generation": {
           "success": true,
-          "world_dir": "/home/robert/CC/Archipelago-CC/worlds/codingadventure_worldgen",
+          "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/codingadventure_worldgen",
           "error": null,
           "processing_time_seconds": 0.06
         },
@@ -57,7 +57,7 @@
           "success": false,
           "pass_fail": "unknown"
         },
-        "world_dir": "/home/robert/CC/Archipelago-CC/worlds/codingadventure_worldgen",
+        "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/codingadventure_worldgen",
         "test_game_name": "Coding Adventure WorldGen",
         "test_template_name": "Coding Adventure WorldGen.yaml"
       },

@@ -50,7 +50,8 @@
       "start_location_hints": [],
       "start_with_computer_area_maps": false
     },
-    "world_directory": "doom_1993"
+    "world_directory": "doom_1993",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "included_episodes": [

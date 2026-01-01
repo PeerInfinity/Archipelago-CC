@@ -280,17 +280,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Boss Archivist", player),
-        And(Has('Inspectometer Battery'), Has('Quill'))
+        HasAll('Inspectometer Battery', 'Quill')
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Boss Unfinished", player),
-        And(Has('Gems Module'), Has('Inspectometer Battery'))
+        HasAll('Gems Module', 'Inspectometer Battery')
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Boss G0lly", player),
-        And(Has('Gems Module'), Has('Inspectometer Battery'))
+        HasAll('Gems Module', 'Inspectometer Battery')
     )
 
     world.set_rule(
@@ -300,12 +300,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Bone Lord Room", player),
-        And(Has('Bone Lord Holo Key'), Has('Inspectometer Battery'))
+        HasAll('Bone Lord Holo Key', 'Inspectometer Battery')
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Shop Holo Pelt", player),
-        And(Has('Gems Module'), Has('Inspectometer Battery'))
+        HasAll('Gems Module', 'Inspectometer Battery')
     )
 
     world.set_rule(
@@ -325,7 +325,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Tower Holo Pelt", player),
-        And(Has('Gems Module'), Has('Inspectometer Battery'))
+        HasAll('Gems Module', 'Inspectometer Battery')
     )
 
     world.set_rule(
@@ -355,7 +355,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Clock", player),
-        And(Has('Gems Module'), Has('Inspectometer Battery'))
+        HasAll('Gems Module', 'Inspectometer Battery')
     )
 
     world.set_rule(
@@ -365,27 +365,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Nano Armor Generator", player),
-        And(Has('Gems Module'), Has('Inspectometer Battery'))
+        HasAll('Gems Module', 'Inspectometer Battery')
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Goobert's Painting", player),
-        And(Has('Gems Module'), Has('Inspectometer Battery'))
+        HasAll('Gems Module', 'Inspectometer Battery')
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Luke's File Entry 1", player),
-        And(Has('Inspectometer Battery'), Has('Quill'))
+        HasAll('Inspectometer Battery', 'Quill')
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Luke's File Entry 2", player),
-        And(Has('Inspectometer Battery'), Has('Quill'))
+        HasAll('Inspectometer Battery', 'Quill')
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Luke's File Entry 3", player),
-        And(Has('Inspectometer Battery'), Has('Quill'))
+        HasAll('Inspectometer Battery', 'Quill')
     )
 
     world.set_rule(

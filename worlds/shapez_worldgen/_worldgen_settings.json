@@ -35,7 +35,8 @@
       "toolbar_shuffling": true,
       "traps_percentage": 0
     },
-    "world_directory": "shapez"
+    "world_directory": "shapez",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "location_count": 139,

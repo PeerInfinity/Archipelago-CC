@@ -2863,8 +2863,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Beat Evacuation (Terran)",
-                    "count": 1
+                    "item_name": "Beat Evacuation (Terran)"
                   }
                 }
               ]
@@ -2876,8 +2875,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Beat Evacuation (Terran)",
-                "count": 1
+                "item_name": "Beat Evacuation (Terran)"
               }
             }
           },
@@ -2887,8 +2885,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Beat Evacuation (Terran)",
-                "count": 1
+                "item_name": "Beat Evacuation (Terran)"
               }
             }
           }
@@ -4072,8 +4069,7 @@
                             {
                               "rule": "Has",
                               "args": {
-                                "item_name": "Marauder",
-                                "count": 1
+                                "item_name": "Marauder"
                               }
                             }
                           ]
@@ -4373,8 +4369,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "ATX Laser Battery (Battlecruiser)",
-                            "count": 1
+                            "item_name": "ATX Laser Battery (Battlecruiser)"
                           }
                         }
                       ]
@@ -4382,8 +4377,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Battlecruiser",
-                        "count": 1
+                        "item_name": "Battlecruiser"
                       }
                     }
                   ]
@@ -4528,8 +4522,7 @@
                             {
                               "rule": "Has",
                               "args": {
-                                "item_name": "Marauder",
-                                "count": 1
+                                "item_name": "Marauder"
                               }
                             }
                           ]
@@ -4829,8 +4822,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "ATX Laser Battery (Battlecruiser)",
-                            "count": 1
+                            "item_name": "ATX Laser Battery (Battlecruiser)"
                           }
                         }
                       ]
@@ -4838,8 +4830,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Battlecruiser",
-                        "count": 1
+                        "item_name": "Battlecruiser"
                       }
                     }
                   ]
@@ -4940,8 +4931,7 @@
                             {
                               "rule": "Has",
                               "args": {
-                                "item_name": "Marauder",
-                                "count": 1
+                                "item_name": "Marauder"
                               }
                             }
                           ]
@@ -5241,8 +5231,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "ATX Laser Battery (Battlecruiser)",
-                            "count": 1
+                            "item_name": "ATX Laser Battery (Battlecruiser)"
                           }
                         }
                       ]
@@ -5250,8 +5239,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Battlecruiser",
-                        "count": 1
+                        "item_name": "Battlecruiser"
                       }
                     }
                   ]
@@ -5352,8 +5340,7 @@
                             {
                               "rule": "Has",
                               "args": {
-                                "item_name": "Marauder",
-                                "count": 1
+                                "item_name": "Marauder"
                               }
                             }
                           ]
@@ -5653,8 +5640,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "ATX Laser Battery (Battlecruiser)",
-                            "count": 1
+                            "item_name": "ATX Laser Battery (Battlecruiser)"
                           }
                         }
                       ]
@@ -5662,8 +5648,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Battlecruiser",
-                        "count": 1
+                        "item_name": "Battlecruiser"
                       }
                     }
                   ]
@@ -5779,8 +5764,7 @@
                             {
                               "rule": "Has",
                               "args": {
-                                "item_name": "Marauder",
-                                "count": 1
+                                "item_name": "Marauder"
                               }
                             }
                           ]
@@ -6080,8 +6064,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "ATX Laser Battery (Battlecruiser)",
-                            "count": 1
+                            "item_name": "ATX Laser Battery (Battlecruiser)"
                           }
                         }
                       ]
@@ -6089,8 +6072,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Battlecruiser",
-                        "count": 1
+                        "item_name": "Battlecruiser"
                       }
                     }
                   ]
@@ -6191,8 +6173,7 @@
                             {
                               "rule": "Has",
                               "args": {
-                                "item_name": "Marauder",
-                                "count": 1
+                                "item_name": "Marauder"
                               }
                             }
                           ]
@@ -6492,8 +6473,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "ATX Laser Battery (Battlecruiser)",
-                            "count": 1
+                            "item_name": "ATX Laser Battery (Battlecruiser)"
                           }
                         }
                       ]
@@ -6501,8 +6481,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Battlecruiser",
-                        "count": 1
+                        "item_name": "Battlecruiser"
                       }
                     }
                   ]
@@ -6603,8 +6582,7 @@
                             {
                               "rule": "Has",
                               "args": {
-                                "item_name": "Marauder",
-                                "count": 1
+                                "item_name": "Marauder"
                               }
                             }
                           ]
@@ -6904,8 +6882,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "ATX Laser Battery (Battlecruiser)",
-                            "count": 1
+                            "item_name": "ATX Laser Battery (Battlecruiser)"
                           }
                         }
                       ]
@@ -6913,8 +6890,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Battlecruiser",
-                        "count": 1
+                        "item_name": "Battlecruiser"
                       }
                     }
                   ]
@@ -7015,8 +6991,7 @@
                             {
                               "rule": "Has",
                               "args": {
-                                "item_name": "Marauder",
-                                "count": 1
+                                "item_name": "Marauder"
                               }
                             }
                           ]
@@ -7316,8 +7291,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "ATX Laser Battery (Battlecruiser)",
-                            "count": 1
+                            "item_name": "ATX Laser Battery (Battlecruiser)"
                           }
                         }
                       ]
@@ -7325,8 +7299,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Battlecruiser",
-                        "count": 1
+                        "item_name": "Battlecruiser"
                       }
                     }
                   ]
@@ -7427,8 +7400,7 @@
                             {
                               "rule": "Has",
                               "args": {
-                                "item_name": "Marauder",
-                                "count": 1
+                                "item_name": "Marauder"
                               }
                             }
                           ]
@@ -7728,8 +7700,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "ATX Laser Battery (Battlecruiser)",
-                            "count": 1
+                            "item_name": "ATX Laser Battery (Battlecruiser)"
                           }
                         }
                       ]
@@ -7737,8 +7708,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Battlecruiser",
-                        "count": 1
+                        "item_name": "Battlecruiser"
                       }
                     }
                   ]
@@ -7839,8 +7809,7 @@
                             {
                               "rule": "Has",
                               "args": {
-                                "item_name": "Marauder",
-                                "count": 1
+                                "item_name": "Marauder"
                               }
                             }
                           ]
@@ -8140,8 +8109,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "ATX Laser Battery (Battlecruiser)",
-                            "count": 1
+                            "item_name": "ATX Laser Battery (Battlecruiser)"
                           }
                         }
                       ]
@@ -8149,8 +8117,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Battlecruiser",
-                        "count": 1
+                        "item_name": "Battlecruiser"
                       }
                     }
                   ]
@@ -8251,8 +8218,7 @@
                             {
                               "rule": "Has",
                               "args": {
-                                "item_name": "Marauder",
-                                "count": 1
+                                "item_name": "Marauder"
                               }
                             }
                           ]
@@ -8552,8 +8518,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "ATX Laser Battery (Battlecruiser)",
-                            "count": 1
+                            "item_name": "ATX Laser Battery (Battlecruiser)"
                           }
                         }
                       ]
@@ -8561,8 +8526,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Battlecruiser",
-                        "count": 1
+                        "item_name": "Battlecruiser"
                       }
                     }
                   ]
@@ -8625,8 +8589,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Beat Supernova (Terran)",
-                    "count": 1
+                    "item_name": "Beat Supernova (Terran)"
                   }
                 }
               ]
@@ -8712,8 +8675,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Tech Reactor (Terran)",
-                            "count": 1
+                            "item_name": "Tech Reactor (Terran)"
                           }
                         }
                       ]
@@ -8902,8 +8864,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Tech Reactor (Terran)",
-                            "count": 1
+                            "item_name": "Tech Reactor (Terran)"
                           }
                         }
                       ]
@@ -9064,8 +9025,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Tech Reactor (Terran)",
-                            "count": 1
+                            "item_name": "Tech Reactor (Terran)"
                           }
                         }
                       ]
@@ -9240,8 +9200,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Tech Reactor (Terran)",
-                            "count": 1
+                            "item_name": "Tech Reactor (Terran)"
                           }
                         }
                       ]
@@ -9402,8 +9361,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Tech Reactor (Terran)",
-                            "count": 1
+                            "item_name": "Tech Reactor (Terran)"
                           }
                         }
                       ]
@@ -9564,8 +9522,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Tech Reactor (Terran)",
-                            "count": 1
+                            "item_name": "Tech Reactor (Terran)"
                           }
                         }
                       ]
@@ -12139,8 +12096,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Beat Smash and Grab (Terran)",
-                    "count": 1
+                    "item_name": "Beat Smash and Grab (Terran)"
                   }
                 }
               ]
@@ -12655,8 +12611,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Reaper",
-                        "count": 1
+                        "item_name": "Reaper"
                       }
                     }
                   ]
@@ -12706,8 +12661,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Reaper",
-                        "count": 1
+                        "item_name": "Reaper"
                       }
                     }
                   ]
@@ -12757,8 +12711,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Reaper",
-                        "count": 1
+                        "item_name": "Reaper"
                       }
                     }
                   ]
@@ -12808,8 +12761,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Reaper",
-                        "count": 1
+                        "item_name": "Reaper"
                       }
                     }
                   ]
@@ -12859,8 +12811,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Reaper",
-                        "count": 1
+                        "item_name": "Reaper"
                       }
                     }
                   ]
@@ -12910,8 +12861,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Reaper",
-                        "count": 1
+                        "item_name": "Reaper"
                       }
                     }
                   ]
@@ -12961,8 +12911,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Reaper",
-                        "count": 1
+                        "item_name": "Reaper"
                       }
                     }
                   ]
@@ -13012,8 +12961,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Reaper",
-                        "count": 1
+                        "item_name": "Reaper"
                       }
                     }
                   ]
@@ -13063,8 +13011,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Reaper",
-                        "count": 1
+                        "item_name": "Reaper"
                       }
                     }
                   ]
@@ -13127,8 +13074,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Beat Haven's Fall (Terran)",
-                    "count": 1
+                    "item_name": "Beat Haven's Fall (Terran)"
                   }
                 }
               ]
@@ -13166,8 +13112,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Beat Haven's Fall (Terran)",
-                "count": 1
+                "item_name": "Beat Haven's Fall (Terran)"
               }
             }
           }
@@ -18362,8 +18307,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Goliath",
-                    "count": 1
+                    "item_name": "Goliath"
                   }
                 }
               ]
@@ -18435,8 +18379,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Goliath",
-                    "count": 1
+                    "item_name": "Goliath"
                   }
                 }
               ]
@@ -18494,8 +18437,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Goliath",
-                    "count": 1
+                    "item_name": "Goliath"
                   }
                 }
               ]
@@ -18553,8 +18495,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Goliath",
-                    "count": 1
+                    "item_name": "Goliath"
                   }
                 }
               ]
@@ -18615,8 +18556,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Goliath",
-                        "count": 1
+                        "item_name": "Goliath"
                       }
                     }
                   ]
@@ -18947,8 +18887,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Goliath",
-                        "count": 1
+                        "item_name": "Goliath"
                       }
                     }
                   ]
@@ -19174,8 +19113,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Goliath",
-                        "count": 1
+                        "item_name": "Goliath"
                       }
                     }
                   ]
@@ -19347,8 +19285,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Goliath",
-                        "count": 1
+                        "item_name": "Goliath"
                       }
                     }
                   ]
@@ -19520,8 +19457,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Goliath",
-                        "count": 1
+                        "item_name": "Goliath"
                       }
                     }
                   ]
@@ -19818,8 +19754,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Goliath",
-                    "count": 1
+                    "item_name": "Goliath"
                   }
                 }
               ]
@@ -19877,8 +19812,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Goliath",
-                    "count": 1
+                    "item_name": "Goliath"
                   }
                 }
               ]
@@ -19936,8 +19870,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Goliath",
-                    "count": 1
+                    "item_name": "Goliath"
                   }
                 }
               ]
@@ -22549,8 +22482,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Beat Belly of the Beast",
-                    "count": 1
+                    "item_name": "Beat Belly of the Beast"
                   }
                 }
               ]
@@ -22867,8 +22799,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Beat Zero Hour (Terran)",
-                    "count": 1
+                    "item_name": "Beat Zero Hour (Terran)"
                   }
                 }
               ]
@@ -22919,8 +22850,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Beat Zero Hour (Terran)",
-                "count": 1
+                "item_name": "Beat Zero Hour (Terran)"
               }
             }
           }
@@ -24217,8 +24147,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Reaper",
-                        "count": 1
+                        "item_name": "Reaper"
                       }
                     }
                   ]
@@ -24260,8 +24189,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Reaper",
-                    "count": 1
+                    "item_name": "Reaper"
                   }
                 }
               ]
@@ -24315,8 +24243,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Reaper",
-                    "count": 1
+                    "item_name": "Reaper"
                   }
                 }
               ]
@@ -24349,8 +24276,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Reaper",
-                        "count": 1
+                        "item_name": "Reaper"
                       }
                     }
                   ]
@@ -24385,8 +24311,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Reaper",
-                        "count": 1
+                        "item_name": "Reaper"
                       }
                     }
                   ]
@@ -24421,8 +24346,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Reaper",
-                        "count": 1
+                        "item_name": "Reaper"
                       }
                     }
                   ]
@@ -24457,8 +24381,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Reaper",
-                        "count": 1
+                        "item_name": "Reaper"
                       }
                     }
                   ]

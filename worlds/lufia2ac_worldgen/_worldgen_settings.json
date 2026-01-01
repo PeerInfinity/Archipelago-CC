@@ -49,7 +49,8 @@
       "start_inventory": {},
       "start_location_hints": []
     },
-    "world_directory": "lufia2ac"
+    "world_directory": "lufia2ac",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "world_description": "The Ancient Cave is a roguelike dungeon crawling game built into\nthe RGP Lufia II. Face 99 floors of ever harder to beat monsters,\nrandom items and find new companions on the way to face the Royal\nJelly in the end. Can you beat it?",

@@ -39,7 +39,8 @@
       "start_location_hints": [],
       "swim_rule": 0
     },
-    "world_directory": "subnautica"
+    "world_directory": "subnautica",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "creatures_to_scan": [],

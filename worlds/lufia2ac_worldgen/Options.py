@@ -65,8 +65,8 @@ class Boss(Choice):
     option_master = 38
     option_random_low = 39
     option_random_middle = 40
-    option_random_high = 41
-    option_random_sinistral = 42
+    option_random_sinistral = 41
+    option_random_high = 42
     default = 38
 
 class CapsuleCravingsJpStyle(Toggle):

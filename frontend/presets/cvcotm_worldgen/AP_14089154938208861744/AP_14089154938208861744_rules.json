@@ -40,8 +40,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Roc Wing",
-                "count": 1
+                "item_name": "Roc Wing"
               }
             },
             "item": {
@@ -58,8 +57,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Heavy Ring",
-                "count": 1
+                "item_name": "Heavy Ring"
               }
             },
             "item": {
@@ -143,8 +141,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tackle",
-                "count": 1
+                "item_name": "Tackle"
               }
             },
             "item": {
@@ -408,8 +405,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tackle",
-                "count": 1
+                "item_name": "Tackle"
               }
             }
           },
@@ -483,8 +479,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Heavy Ring",
-                "count": 1
+                "item_name": "Heavy Ring"
               }
             }
           },
@@ -494,8 +489,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Maiden Detonator",
-                "count": 1
+                "item_name": "Maiden Detonator"
               }
             }
           },
@@ -505,8 +499,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Roc Wing",
-                "count": 1
+                "item_name": "Roc Wing"
               }
             }
           },
@@ -516,8 +509,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Last Key",
-                "count": 1
+                "item_name": "Last Key"
               }
             }
           }
@@ -529,8 +521,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Roc Wing",
-                "count": 1
+                "item_name": "Roc Wing"
               }
             },
             "item": {
@@ -603,8 +594,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Heavy Ring",
-                "count": 1
+                "item_name": "Heavy Ring"
               }
             },
             "item": {
@@ -635,8 +625,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tackle",
-                "count": 1
+                "item_name": "Tackle"
               }
             },
             "item": {
@@ -667,8 +656,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Roc Wing",
-                "count": 1
+                "item_name": "Roc Wing"
               }
             },
             "item": {
@@ -917,8 +905,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Roc Wing",
-                "count": 1
+                "item_name": "Roc Wing"
               }
             },
             "item": {
@@ -1186,8 +1173,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tackle",
-                "count": 1
+                "item_name": "Tackle"
               }
             },
             "item": {
@@ -1237,8 +1223,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Maiden Detonator",
-                "count": 1
+                "item_name": "Maiden Detonator"
               }
             }
           },
@@ -1293,8 +1278,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Roc Wing",
-                "count": 1
+                "item_name": "Roc Wing"
               }
             }
           },
@@ -1375,8 +1359,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Heavy Ring",
-                "count": 1
+                "item_name": "Heavy Ring"
               }
             },
             "item": {
@@ -1449,8 +1432,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Heavy Ring",
-                "count": 1
+                "item_name": "Heavy Ring"
               }
             },
             "item": {
@@ -1571,8 +1553,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Maiden Detonator",
-                "count": 1
+                "item_name": "Maiden Detonator"
               }
             },
             "item": {
@@ -1673,8 +1654,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tackle",
-                "count": 1
+                "item_name": "Tackle"
               }
             }
           }
@@ -1700,8 +1680,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Heavy Ring",
-                "count": 1
+                "item_name": "Heavy Ring"
               }
             },
             "item": {
@@ -1718,8 +1697,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Heavy Ring",
-                "count": 1
+                "item_name": "Heavy Ring"
               }
             },
             "item": {
@@ -1789,8 +1767,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tackle",
-                "count": 1
+                "item_name": "Tackle"
               }
             }
           }
@@ -1802,8 +1779,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tackle",
-                "count": 1
+                "item_name": "Tackle"
               }
             },
             "item": {
@@ -1881,8 +1857,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tackle",
-                "count": 1
+                "item_name": "Tackle"
               }
             }
           }
@@ -2135,8 +2110,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Cleansing",
-                "count": 1
+                "item_name": "Cleansing"
               }
             }
           }
@@ -2256,8 +2230,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Roc Wing",
-                "count": 1
+                "item_name": "Roc Wing"
               }
             },
             "item": {
@@ -2322,8 +2295,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Cleansing",
-                "count": 1
+                "item_name": "Cleansing"
               }
             },
             "item": {
@@ -2340,8 +2312,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Roc Wing",
-                "count": 1
+                "item_name": "Roc Wing"
               }
             },
             "item": {
@@ -2358,8 +2329,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Cleansing",
-                "count": 1
+                "item_name": "Cleansing"
               }
             },
             "item": {
@@ -2376,8 +2346,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Roc Wing",
-                "count": 1
+                "item_name": "Roc Wing"
               }
             },
             "item": {
@@ -2570,8 +2539,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Roc Wing",
-                "count": 1
+                "item_name": "Roc Wing"
               }
             },
             "item": {
@@ -3469,10 +3437,9 @@
           "display_name": "Sub-weapon Shuffle"
         }
       },
-      "shops": [],
       "total_last_keys": 1,
       "required_last_keys": 1,
-      "world_description": "Castlevania - Circle of the Moon WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Castlevania: Circle of the Moon is a launch title for the Game Boy Advance and the first of three Castlevania games\nreleased for the handheld in the \"Metroidvania\" format. As Nathan Graves, wielding the Hunter Whip and utilizing the\nDual Set-Up System for new possibilities, you must battle your way through Camilla's castle and rescue your master\nfrom a demonic ritual to restore the Count's power...",
       "slot_data": {
         "death_link": 0,
         "iron_maiden_behavior": 0,
@@ -3483,7 +3450,19 @@
         "nerf_roc_wing": 0
       },
       "web": {
-        "theme": "stone"
+        "theme": "stone",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago Castlevania: Circle of the Moon randomizer on your computer and connecting it to a multiworld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Liquid Cat"
+            ]
+          }
+        ]
       },
       "world_directory": "cvcotm_worldgen"
     }

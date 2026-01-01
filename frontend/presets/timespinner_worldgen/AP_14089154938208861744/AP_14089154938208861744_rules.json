@@ -83,8 +83,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Talaria Attachment",
-                    "count": 1
+                    "item_name": "Talaria Attachment"
                   }
                 }
               ]
@@ -123,8 +122,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           }
@@ -352,8 +350,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Killed Maw",
-                "count": 1
+                "item_name": "Killed Maw"
               }
             },
             "item": {
@@ -370,8 +367,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Killed Maw",
-                "count": 1
+                "item_name": "Killed Maw"
               }
             },
             "item": {
@@ -450,8 +446,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           },
@@ -529,8 +524,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Talaria Attachment",
-                    "count": 1
+                    "item_name": "Talaria Attachment"
                   }
                 }
               ]
@@ -557,8 +551,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           }
@@ -692,8 +685,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tablet",
-                "count": 1
+                "item_name": "Tablet"
               }
             },
             "item": {
@@ -710,8 +702,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tablet",
-                "count": 1
+                "item_name": "Tablet"
               }
             },
             "item": {
@@ -728,8 +719,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tablet",
-                "count": 1
+                "item_name": "Tablet"
               }
             },
             "item": {
@@ -890,8 +880,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tablet",
-                "count": 1
+                "item_name": "Tablet"
               }
             },
             "item": {
@@ -954,8 +943,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Elevator Keycard",
-                    "count": 1
+                    "item_name": "Elevator Keycard"
                   }
                 }
               ]
@@ -1045,8 +1033,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Elevator Keycard",
-                "count": 1
+                "item_name": "Elevator Keycard"
               }
             },
             "item": {
@@ -1075,8 +1062,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Elevator Keycard",
-                "count": 1
+                "item_name": "Elevator Keycard"
               }
             }
           }
@@ -1109,8 +1095,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Elevator Keycard",
-                    "count": 1
+                    "item_name": "Elevator Keycard"
                   }
                 }
               ]
@@ -1136,8 +1121,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Elevator Keycard",
-                    "count": 1
+                    "item_name": "Elevator Keycard"
                   }
                 }
               ]
@@ -1163,8 +1147,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Elevator Keycard",
-                    "count": 1
+                    "item_name": "Elevator Keycard"
                   }
                 }
               ]
@@ -1201,8 +1184,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Elevator Keycard",
-                "count": 1
+                "item_name": "Elevator Keycard"
               }
             }
           },
@@ -1219,8 +1201,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Elevator Keycard",
-                    "count": 1
+                    "item_name": "Elevator Keycard"
                   }
                 }
               ]
@@ -1246,8 +1227,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           }
@@ -1329,8 +1309,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Security Keycard A",
-                "count": 1
+                "item_name": "Security Keycard A"
               }
             },
             "item": {
@@ -1354,8 +1333,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Tablet",
-                    "count": 1
+                    "item_name": "Tablet"
                   }
                 }
               ]
@@ -1379,8 +1357,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Elevator Keycard",
-                "count": 1
+                "item_name": "Elevator Keycard"
               }
             }
           },
@@ -1390,8 +1367,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Elevator Keycard",
-                "count": 1
+                "item_name": "Elevator Keycard"
               }
             }
           },
@@ -1401,8 +1377,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           }
@@ -1414,8 +1389,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Water Mask",
-                "count": 1
+                "item_name": "Water Mask"
               }
             },
             "item": {
@@ -1432,8 +1406,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Water Mask",
-                "count": 1
+                "item_name": "Water Mask"
               }
             },
             "item": {
@@ -1450,8 +1423,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Water Mask",
-                "count": 1
+                "item_name": "Water Mask"
               }
             },
             "item": {
@@ -1522,8 +1494,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Timespinner Wheel",
-                    "count": 1
+                    "item_name": "Timespinner Wheel"
                   }
                 }
               ]
@@ -1558,8 +1529,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Timespinner Wheel",
-                    "count": 1
+                    "item_name": "Timespinner Wheel"
                   }
                 }
               ]
@@ -1785,8 +1755,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Lab Access Genza",
-                        "count": 1
+                        "item_name": "Lab Access Genza"
                       }
                     }
                   ]
@@ -1908,8 +1877,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Lab Access Experiment",
-                    "count": 1
+                    "item_name": "Lab Access Experiment"
                   }
                 }
               ]
@@ -1958,8 +1926,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Lab Access Genza",
-                        "count": 1
+                        "item_name": "Lab Access Genza"
                       }
                     }
                   ]
@@ -1967,8 +1934,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Tablet",
-                    "count": 1
+                    "item_name": "Tablet"
                   }
                 }
               ]
@@ -1987,8 +1953,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tablet",
-                "count": 1
+                "item_name": "Tablet"
               }
             },
             "item": {
@@ -2005,8 +1970,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tablet",
-                "count": 1
+                "item_name": "Tablet"
               }
             },
             "item": {
@@ -2039,8 +2003,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Lab Access Dynamo",
-                        "count": 1
+                        "item_name": "Lab Access Dynamo"
                       }
                     }
                   ]
@@ -2082,8 +2045,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tablet",
-                "count": 1
+                "item_name": "Tablet"
               }
             },
             "item": {
@@ -2100,8 +2062,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tablet",
-                "count": 1
+                "item_name": "Tablet"
               }
             },
             "item": {
@@ -2140,8 +2101,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Talaria Attachment",
-                        "count": 1
+                        "item_name": "Talaria Attachment"
                       }
                     }
                   ]
@@ -2219,8 +2179,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tablet",
-                "count": 1
+                "item_name": "Tablet"
               }
             },
             "item": {
@@ -2370,8 +2329,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Timespinner Wheel",
-                        "count": 1
+                        "item_name": "Timespinner Wheel"
                       }
                     }
                   ]
@@ -2465,8 +2423,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Security Keycard A",
-                "count": 1
+                "item_name": "Security Keycard A"
               }
             }
           },
@@ -2476,8 +2433,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           }
@@ -2515,8 +2471,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           }
@@ -2574,8 +2529,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Talaria Attachment",
-                        "count": 1
+                        "item_name": "Talaria Attachment"
                       }
                     }
                   ]
@@ -2696,8 +2650,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           }
@@ -2784,8 +2737,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Talaria Attachment",
-                    "count": 1
+                    "item_name": "Talaria Attachment"
                   }
                 }
               ]
@@ -2817,8 +2769,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Drawbridge Key",
-                    "count": 1
+                    "item_name": "Drawbridge Key"
                   }
                 }
               ]
@@ -2902,8 +2853,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Water Mask",
-                "count": 1
+                "item_name": "Water Mask"
               }
             },
             "item": {
@@ -2920,8 +2870,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Water Mask",
-                "count": 1
+                "item_name": "Water Mask"
               }
             },
             "item": {
@@ -2993,8 +2942,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Water Mask",
-                "count": 1
+                "item_name": "Water Mask"
               }
             }
           },
@@ -3004,8 +2952,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           }
@@ -3031,8 +2978,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Water Mask",
-                "count": 1
+                "item_name": "Water Mask"
               }
             },
             "item": {
@@ -3049,8 +2995,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Water Mask",
-                "count": 1
+                "item_name": "Water Mask"
               }
             },
             "item": {
@@ -3079,8 +3024,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Water Mask",
-                "count": 1
+                "item_name": "Water Mask"
               }
             }
           }
@@ -3314,8 +3258,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Water Mask",
-                "count": 1
+                "item_name": "Water Mask"
               }
             }
           },
@@ -3332,8 +3275,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           }
@@ -3503,8 +3445,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Water Mask",
-                "count": 1
+                "item_name": "Water Mask"
               }
             }
           },
@@ -3514,8 +3455,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           }
@@ -3562,8 +3502,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Gas Mask",
-                "count": 1
+                "item_name": "Gas Mask"
               }
             },
             "item": {
@@ -3649,8 +3588,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Water Mask",
-                "count": 1
+                "item_name": "Water Mask"
               }
             },
             "item": {
@@ -3667,8 +3605,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Water Mask",
-                "count": 1
+                "item_name": "Water Mask"
               }
             },
             "item": {
@@ -3685,8 +3622,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Water Mask",
-                "count": 1
+                "item_name": "Water Mask"
               }
             },
             "item": {
@@ -3703,8 +3639,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Water Mask",
-                "count": 1
+                "item_name": "Water Mask"
               }
             },
             "item": {
@@ -3740,8 +3675,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           }
@@ -3760,8 +3694,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Timespinner Wheel",
-                    "count": 1
+                    "item_name": "Timespinner Wheel"
                   }
                 }
               ]
@@ -3787,8 +3720,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Talaria Attachment",
-                    "count": 1
+                    "item_name": "Talaria Attachment"
                   }
                 }
               ]
@@ -3896,8 +3828,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           }
@@ -4109,8 +4040,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Timespinner Wheel",
-                    "count": 1
+                    "item_name": "Timespinner Wheel"
                   }
                 }
               ]
@@ -4122,8 +4052,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           }
@@ -4261,8 +4190,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Timespinner Wheel",
-                        "count": 1
+                        "item_name": "Timespinner Wheel"
                       }
                     }
                   ]
@@ -4325,8 +4253,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Timespinner Wheel",
-                        "count": 1
+                        "item_name": "Timespinner Wheel"
                       }
                     }
                   ]
@@ -4502,8 +4429,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           }
@@ -4549,8 +4475,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           }
@@ -4628,8 +4553,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Twin Pyramid Key",
-                "count": 1
+                "item_name": "Twin Pyramid Key"
               }
             }
           }
@@ -8604,7 +8528,6 @@
       "present_keys_unlock": null,
       "past_keys_unlock": null,
       "time_keys_unlock": null,
-      "shops": [],
       "precalculated_weights": {
         "flood_basement": false,
         "flood_basement_high": false,
@@ -8641,7 +8564,7 @@
         "past_key_unlock": "GateLakeSereneRight",
         "time_key_unlock": "GateRightPyramid"
       },
-      "world_description": "Timespinner WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Timespinner is a beautiful metroidvania inspired by classic 90s action-platformers.\nTravel back in time to change fate itself. Join timekeeper Lunais on her quest for revenge against the empire that killed her family.",
       "slot_data": {
         "StartWithJewelryBox": 0,
         "DownloadableItems": 1,
@@ -8996,7 +8919,31 @@
         "Lab": false
       },
       "web": {
-        "theme": "ice"
+        "theme": "ice",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Timespinner randomizer connected to an Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Jarno"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Timespinner randomizer connected to an Archipelago Multiworld",
+            "language": "Deutsch",
+            "file_name": "setup_de.md",
+            "link": "setup/de",
+            "authors": [
+              "Grrmo",
+              "Fynxes",
+              "Blaze0168"
+            ]
+          }
+        ]
       },
       "world_directory": "timespinner_worldgen"
     }

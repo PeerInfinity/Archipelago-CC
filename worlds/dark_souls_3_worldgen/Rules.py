@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Has, HelperCall, Or
+from rule_builder import True_, False_, And, Has, HasAll, HasAny, HelperCall
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -41,7 +41,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Go To Kiln of the First Flame", player),
-        And(Has('Cinders of a Lord - Abyss Watcher'), Has('Cinders of a Lord - Aldrich'), Has('Cinders of a Lord - Lothric Prince'), Has('Cinders of a Lord - Yhorm the Giant'), Has('Transposing Kiln'))
+        HasAll('Cinders of a Lord - Abyss Watcher', 'Cinders of a Lord - Aldrich', 'Cinders of a Lord - Lothric Prince', 'Cinders of a Lord - Yhorm the Giant', 'Transposing Kiln')
     )
 
     world.set_rule(
@@ -61,7 +61,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Go To Road of Sacrifices", player),
-        And(And(Has('Pyromancy Flame'), Has('Transposing Kiln')), Has('US -> RS'))
+        And(HasAll('Pyromancy Flame', 'Transposing Kiln'), Has('US -> RS'))
     )
 
     world.set_rule(
@@ -106,12 +106,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Go To Consumed King's Garden", player),
-        And(Has('Pyromancy Flame'), Has('Transposing Kiln'))
+        HasAll('Pyromancy Flame', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_entrance("Go To Grand Archives", player),
-        And(And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('LC: Soul of Dragonslayer Armour',)), Has('Grand Archives Key')), And(Has('Pyromancy Flame'), Has('Transposing Kiln')))
+        And(And(HelperCall(helper_func=_can_get, helper_name="_can_get", args=('LC: Soul of Dragonslayer Armour',)), Has('Grand Archives Key')), HasAll('Pyromancy Flame', 'Transposing Kiln'))
     )
 
     world.set_rule(
@@ -231,202 +231,202 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("FS: Vordt's Great Hammer - Ludleth for Vordt", player),
-        And(Has('Soul of Boreal Valley Vordt'), Has('Transposing Kiln'))
+        HasAll('Soul of Boreal Valley Vordt', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Pontiff's Left Eye - Ludleth for Vordt", player),
-        And(Has('Soul of Boreal Valley Vordt'), Has('Transposing Kiln'))
+        HasAll('Soul of Boreal Valley Vordt', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Bountiful Sunlight - Ludleth for Rosaria", player),
-        And(Has('Soul of Rosaria'), Has('Transposing Kiln'))
+        HasAll('Soul of Rosaria', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Darkmoon Longbow - Ludleth for Aldrich", player),
-        And(Has('Soul of Aldrich'), Has('Transposing Kiln'))
+        HasAll('Soul of Aldrich', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Lifehunt Scythe - Ludleth for Aldrich", player),
-        And(Has('Soul of Aldrich'), Has('Transposing Kiln'))
+        HasAll('Soul of Aldrich', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Hollowslayer Greatsword - Ludleth for Greatwood", player),
-        And(Has('Soul of the Rotted Greatwood'), Has('Transposing Kiln'))
+        HasAll('Soul of the Rotted Greatwood', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Arstor's Spear - Ludleth for Greatwood", player),
-        And(Has('Soul of the Rotted Greatwood'), Has('Transposing Kiln'))
+        HasAll('Soul of the Rotted Greatwood', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Crystal Sage's Rapier - Ludleth for Sage", player),
-        And(Has('Soul of a Crystal Sage'), Has('Transposing Kiln'))
+        HasAll('Soul of a Crystal Sage', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Crystal Hail - Ludleth for Sage", player),
-        And(Has('Soul of a Crystal Sage'), Has('Transposing Kiln'))
+        HasAll('Soul of a Crystal Sage', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Cleric's Candlestick - Ludleth for Deacons", player),
-        And(Has('Soul of the Deacons of the Deep'), Has('Transposing Kiln'))
+        HasAll('Soul of the Deacons of the Deep', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Deep Soul - Ludleth for Deacons", player),
-        And(Has('Soul of the Deacons of the Deep'), Has('Transposing Kiln'))
+        HasAll('Soul of the Deacons of the Deep', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Havel's Ring - Ludleth for Stray Demon", player),
-        And(Has('Soul of a Stray Demon'), Has('Transposing Kiln'))
+        HasAll('Soul of a Stray Demon', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Boulder Heave - Ludleth for Stray Demon", player),
-        And(Has('Soul of a Stray Demon'), Has('Transposing Kiln'))
+        HasAll('Soul of a Stray Demon', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Farron Greatsword - Ludleth for Abyss Watchers", player),
-        And(Has('Soul of the Blood of the Wolf'), Has('Transposing Kiln'))
+        HasAll('Soul of the Blood of the Wolf', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Wolf Knight's Greatsword - Ludleth for Abyss Watchers", player),
-        And(Has('Soul of the Blood of the Wolf'), Has('Transposing Kiln'))
+        HasAll('Soul of the Blood of the Wolf', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Wolnir's Holy Sword - Ludleth for Wolnir", player),
-        And(Has('Soul of High Lord Wolnir'), Has('Transposing Kiln'))
+        HasAll('Soul of High Lord Wolnir', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Black Serpent - Ludleth for Wolnir", player),
-        And(Has('Soul of High Lord Wolnir'), Has('Transposing Kiln'))
+        HasAll('Soul of High Lord Wolnir', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Demon's Greataxe - Ludleth for Fire Demon", player),
-        And(Has('Soul of a Demon'), Has('Transposing Kiln'))
+        HasAll('Soul of a Demon', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Demon's Fist - Ludleth for Fire Demon", player),
-        And(Has('Soul of a Demon'), Has('Transposing Kiln'))
+        HasAll('Soul of a Demon', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Old King's Great Hammer - Ludleth for Old Demon King", player),
-        And(Has('Soul of the Old Demon King'), Has('Transposing Kiln'))
+        HasAll('Soul of the Old Demon King', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Chaos Bed Vestiges - Ludleth for Old Demon King", player),
-        And(Has('Soul of the Old Demon King'), Has('Transposing Kiln'))
+        HasAll('Soul of the Old Demon King', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Greatsword of Judgment - Ludleth for Pontiff", player),
-        And(Has('Soul of Pontiff Sulyvahn'), Has('Transposing Kiln'))
+        HasAll('Soul of Pontiff Sulyvahn', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Profaned Greatsword - Ludleth for Pontiff", player),
-        And(Has('Soul of Pontiff Sulyvahn'), Has('Transposing Kiln'))
+        HasAll('Soul of Pontiff Sulyvahn', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Yhorm's Great Machete - Ludleth for Yhorm", player),
-        And(Has('Soul of Yhorm the Giant'), Has('Transposing Kiln'))
+        HasAll('Soul of Yhorm the Giant', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Yhorm's Greatshield - Ludleth for Yhorm", player),
-        And(Has('Soul of Yhorm the Giant'), Has('Transposing Kiln'))
+        HasAll('Soul of Yhorm the Giant', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Dancer's Enchanted Swords - Ludleth for Dancer", player),
-        And(Has('Soul of the Dancer'), Has('Transposing Kiln'))
+        HasAll('Soul of the Dancer', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Soothing Sunlight - Ludleth for Dancer", player),
-        And(Has('Soul of the Dancer'), Has('Transposing Kiln'))
+        HasAll('Soul of the Dancer', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Dragonslayer Greataxe - Ludleth for Dragonslayer", player),
-        And(Has('Soul of Dragonslayer Armour'), Has('Transposing Kiln'))
+        HasAll('Soul of Dragonslayer Armour', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Dragonslayer Greatshield - Ludleth for Dragonslayer", player),
-        And(Has('Soul of Dragonslayer Armour'), Has('Transposing Kiln'))
+        HasAll('Soul of Dragonslayer Armour', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Moonlight Greatsword - Ludleth for Oceiros", player),
-        And(Has('Soul of Consumed Oceiros'), Has('Transposing Kiln'))
+        HasAll('Soul of Consumed Oceiros', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: White Dragon Breath - Ludleth for Oceiros", player),
-        And(Has('Soul of Consumed Oceiros'), Has('Transposing Kiln'))
+        HasAll('Soul of Consumed Oceiros', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Lorian's Greatsword - Ludleth for Princes", player),
-        And(Has('Soul of the Twin Princes'), Has('Transposing Kiln'))
+        HasAll('Soul of the Twin Princes', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Lothric's Holy Sword - Ludleth for Princes", player),
-        And(Has('Soul of the Twin Princes'), Has('Transposing Kiln'))
+        HasAll('Soul of the Twin Princes', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Gundyr's Halberd - Ludleth for Champion", player),
-        And(Has('Soul of Champion Gundyr'), Has('Transposing Kiln'))
+        HasAll('Soul of Champion Gundyr', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Prisoner's Chain - Ludleth for Champion", player),
-        And(Has('Soul of Champion Gundyr'), Has('Transposing Kiln'))
+        HasAll('Soul of Champion Gundyr', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Storm Curved Sword - Ludleth for Nameless", player),
-        And(Has('Soul of the Nameless King'), Has('Transposing Kiln'))
+        HasAll('Soul of the Nameless King', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Dragonslayer Swordspear - Ludleth for Nameless", player),
-        And(Has('Soul of the Nameless King'), Has('Transposing Kiln'))
+        HasAll('Soul of the Nameless King', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Lightning Storm - Ludleth for Nameless", player),
-        And(Has('Soul of the Nameless King'), Has('Transposing Kiln'))
+        HasAll('Soul of the Nameless King', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Firelink Greatsword - Ludleth for Cinder", player),
-        And(Has('Soul of the Lords'), Has('Transposing Kiln'))
+        HasAll('Soul of the Lords', 'Transposing Kiln')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Sunlight Spear - Ludleth for Cinder", player),
-        And(Has('Soul of the Lords'), Has('Transposing Kiln'))
+        HasAll('Soul of the Lords', 'Transposing Kiln')
     )
 
     world.set_rule(
@@ -501,27 +501,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("US: Old Sage's Blindfold - kill Cornyx", player),
-        And(And(Has('Carthus Pyromancy Tome'), Has('Great Swamp Pyromancy Tome'), Has('Izalith Pyromancy Tome')), And(Has('Carthus Pyromancy Tome'), Has('Great Swamp Pyromancy Tome'), Has('Izalith Pyromancy Tome')))
+        And(HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome'), HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome'))
     )
 
     world.set_rule(
         multiworld.get_location("US: Cornyx's Garb - kill Cornyx", player),
-        And(And(Has('Carthus Pyromancy Tome'), Has('Great Swamp Pyromancy Tome'), Has('Izalith Pyromancy Tome')), And(Has('Carthus Pyromancy Tome'), Has('Great Swamp Pyromancy Tome'), Has('Izalith Pyromancy Tome')))
+        And(HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome'), HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome'))
     )
 
     world.set_rule(
         multiworld.get_location("US: Cornyx's Wrap - kill Cornyx", player),
-        And(And(Has('Carthus Pyromancy Tome'), Has('Great Swamp Pyromancy Tome'), Has('Izalith Pyromancy Tome')), And(Has('Carthus Pyromancy Tome'), Has('Great Swamp Pyromancy Tome'), Has('Izalith Pyromancy Tome')))
+        And(HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome'), HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome'))
     )
 
     world.set_rule(
         multiworld.get_location("US: Cornyx's Skirt - kill Cornyx", player),
-        And(And(Has('Carthus Pyromancy Tome'), Has('Great Swamp Pyromancy Tome'), Has('Izalith Pyromancy Tome')), And(Has('Carthus Pyromancy Tome'), Has('Great Swamp Pyromancy Tome'), Has('Izalith Pyromancy Tome')))
+        And(HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome'), HasAll('Carthus Pyromancy Tome', 'Great Swamp Pyromancy Tome', 'Izalith Pyromancy Tome'))
     )
 
     world.set_rule(
         multiworld.get_location("US: Tower Key - kill Irina", player),
-        And(Has('Braille Divine Tome of Carim'), Has('Braille Divine Tome of Lothric'))
+        HasAll('Braille Divine Tome of Carim', 'Braille Divine Tome of Lothric')
     )
 
     world.set_rule(
@@ -601,7 +601,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("FS: Pestilent Mist - Orbeck for any scroll", player),
-        Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll"))
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
     )
 
     world.set_rule(
@@ -666,17 +666,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("FS: Clandestine Coat - shop with Orbeck's Ashes", player),
-        And(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll"))
+        HasAll('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
     )
 
     world.set_rule(
         multiworld.get_location("FS: Young Dragon Ring - Orbeck for one scroll and buying three spells", player),
-        Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll"))
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
     )
 
     world.set_rule(
         multiworld.get_location("FS: Morion Blade - Yuria for Orbeck's Ashes", player),
-        And(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll"))
+        HasAll('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
     )
 
     world.set_rule(
@@ -711,42 +711,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("FK: Soul of the Blood of the Wolf", player),
-        Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll"))
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
     )
 
     world.set_rule(
         multiworld.get_location("FK: Cinders of a Lord - Abyss Watcher", player),
-        Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll"))
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
     )
 
     world.set_rule(
         multiworld.get_location("FS: Hawkwood's Shield - gravestone after Hawkwood leaves", player),
-        Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll"))
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
     )
 
     world.set_rule(
         multiworld.get_location("FS: Farron Ring - Hawkwood", player),
-        Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll"))
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
     )
 
     world.set_rule(
         multiworld.get_location("FS: Undead Legion Helm - shop after killing FK boss", player),
-        Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll"))
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
     )
 
     world.set_rule(
         multiworld.get_location("FS: Undead Legion Armor - shop after killing FK boss", player),
-        Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll"))
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
     )
 
     world.set_rule(
         multiworld.get_location("FS: Undead Legion Gauntlet - shop after killing FK boss", player),
-        Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll"))
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
     )
 
     world.set_rule(
         multiworld.get_location("FS: Undead Legion Leggings - shop after killing FK boss", player),
-        Or(Has('Crystal Scroll'), Has('Golden Scroll'), Has("Logan's Scroll"), Has("Sage's Scroll"))
+        HasAny('Crystal Scroll', 'Golden Scroll', "Logan's Scroll", "Sage's Scroll")
     )
 
     world.set_rule(
@@ -1136,20 +1136,20 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("FS: Karla's Pointed Hat - kill Karla", player),
-        And(Has('Deep Braille Divine Tome'), Has('Grave Warden Pyromancy Tome'), Has('Londor Braille Divine Tome'), Has('Quelana Pyromancy Tome'))
+        HasAll('Deep Braille Divine Tome', 'Grave Warden Pyromancy Tome', 'Londor Braille Divine Tome', 'Quelana Pyromancy Tome')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Karla's Coat - kill Karla", player),
-        And(Has('Deep Braille Divine Tome'), Has('Grave Warden Pyromancy Tome'), Has('Londor Braille Divine Tome'), Has('Quelana Pyromancy Tome'))
+        HasAll('Deep Braille Divine Tome', 'Grave Warden Pyromancy Tome', 'Londor Braille Divine Tome', 'Quelana Pyromancy Tome')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Karla's Gloves - kill Karla", player),
-        And(Has('Deep Braille Divine Tome'), Has('Grave Warden Pyromancy Tome'), Has('Londor Braille Divine Tome'), Has('Quelana Pyromancy Tome'))
+        HasAll('Deep Braille Divine Tome', 'Grave Warden Pyromancy Tome', 'Londor Braille Divine Tome', 'Quelana Pyromancy Tome')
     )
 
     world.set_rule(
         multiworld.get_location("FS: Karla's Trousers - kill Karla", player),
-        And(Has('Deep Braille Divine Tome'), Has('Grave Warden Pyromancy Tome'), Has('Londor Braille Divine Tome'), Has('Quelana Pyromancy Tome'))
+        HasAll('Deep Braille Divine Tome', 'Grave Warden Pyromancy Tome', 'Londor Braille Divine Tome', 'Quelana Pyromancy Tome')
     )

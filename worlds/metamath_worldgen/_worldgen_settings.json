@@ -19,7 +19,8 @@
       "starting_statements": 0,
       "theorem": "2p2e4"
     },
-    "world_directory": "metamath"
+    "world_directory": "metamath",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "proof_structure": {

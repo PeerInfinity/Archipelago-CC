@@ -37,21 +37,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Axe Magic"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Lantern"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Axe Magic",
+                      "Lantern"
+                    ]
+                  }
                 },
                 {
                   "rule": "True_"
@@ -211,6 +203,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "price": 0,
             "type_string": "event"
           }
@@ -228,21 +221,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Axe Magic"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Lantern"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Axe Magic",
+                      "Lantern"
+                    ]
+                  }
                 },
                 {
                   "rule": "True_"
@@ -628,6 +613,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "price": 0,
             "type_string": "event"
           }
@@ -823,21 +809,13 @@
             "name": "route_gumi_ryuma -> helga_hut",
             "connected_region": "Witch Helga's Hut",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Einstein Whistle"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "event_visited_massan"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Einstein Whistle",
+                  "event_visited_massan"
+                ]
+              }
             }
           },
           {
@@ -1269,6 +1247,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "price": 0,
             "type_string": "event"
           }
@@ -1655,6 +1634,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "price": 0,
             "type_string": "event"
           }
@@ -1669,21 +1649,13 @@
             "name": "helga_hut -> route_gumi_ryuma",
             "connected_region": "Route from Gumi to Ryuma",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Einstein Whistle"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "event_visited_massan"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Einstein Whistle",
+                  "event_visited_massan"
+                ]
+              }
             }
           }
         ],
@@ -4015,6 +3987,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "price": 0,
             "type_string": "event"
           }
@@ -5657,39 +5630,16 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Blue Jewel"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Green Jewel"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Purple Jewel"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Red Jewel"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Yellow Jewel"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Blue Jewel",
+                      "Green Jewel",
+                      "Purple Jewel",
+                      "Red Jewel",
+                      "Yellow Jewel"
+                    ]
+                  }
                 },
                 {
                   "rule": "True_"
@@ -6084,21 +6034,13 @@
             "name": "king_nole_labyrinth_post_door -> king_nole_labyrinth_sacred_tree",
             "connected_region": "King Nole's Labyrinth (sacred tree)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Axe Magic"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "event_visited_king_nole_labyrinth_raft_entrance"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Axe Magic",
+                  "event_visited_king_nole_labyrinth_raft_entrance"
+                ]
+              }
             }
           }
         ],
@@ -6497,6 +6439,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "price": 0,
             "type_string": "event"
           }
@@ -6728,27 +6671,14 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gola's Fang"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gola's Horn"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gola's Nail"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Gola's Fang",
+                      "Gola's Horn",
+                      "Gola's Nail"
+                    ]
+                  }
                 },
                 {
                   "rule": "True_"
@@ -6826,6 +6756,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "price": 0,
             "type_string": "reward"
           }
@@ -8027,18 +7958,18 @@
         "seed": 2089113674,
         "dark_region": "Massan Cave",
         "hints": {
-          "Foxy (right after making Miro flee with Garlic in Mir Tower)": "I can sense Yellow Jewel inside a tower.",
-          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Green Jewel inside a tower.",
-          "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "Did you know that your world contains 100 percent of all progression items?",
-          "Foxy (in Gumi boulder map)": "I can sense Gola's Horn in the village of Massan.",
-          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Gola's Fang inside a tower.",
-          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Sun Stone on a route.",
-          "Foxy (in Destel)": "I can sense Lantern in the village of Massan.",
-          "Foxy (in room next to green golem roundabout in Lake Shrine)": "I can sense Gola's Eye on a route.",
-          "Foxy (on Kazalt bridge)": "I can sense Axe Magic in Destel region.",
-          "Foxy (inside Mercator Crypt)": "I can sense Blue Jewel in Twinkle village.",
-          "Foxy (at Waterfall Shrine crossroads)": "I can sense Logs in Verla Mines.",
-          "Foxy (in King Nole's Palace entrance room)": "I can sense Garlic in Verla Mines.",
+          "Foxy (right after making Miro flee with Garlic in Mir Tower)": "I can sense Buyer Card among the trees.",
+          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Casino Ticket close to a waterfall.",
+          "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "I can sense Safety Pass in a region inhabited by bears.",
+          "Foxy (in Gumi boulder map)": "I can sense Oracle Stone near a swamp.",
+          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Garlic in King Nole's domain.",
+          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Key near a lake.",
+          "Foxy (in Destel)": "I can sense Green Jewel inside a tower.",
+          "Foxy (in room next to green golem roundabout in Lake Shrine)": "Have you found all of the 283 items in this universe?",
+          "Foxy (on Kazalt bridge)": "I can sense Blue Jewel in Twinkle village.",
+          "Foxy (inside Mercator Crypt)": "I can sense Sun Stone on a route.",
+          "Foxy (at Waterfall Shrine crossroads)": "I can sense Axe Magic in Destel region.",
+          "Foxy (in King Nole's Palace entrance room)": "I can sense Gola's Horn in the village of Massan.",
           "Lithograph": "It's barely readable:\nRED MERCATOR ITEM\nPURPLE ITEM DESTEL\nTOWER GREEN CHALLENGE\nFIRST GROUND BLUE\nYELLOW ROOM TOWER",
           "Oracle Stone": "It shows Massan Cave\nenshrouded in darkness."
         },

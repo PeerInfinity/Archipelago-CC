@@ -81,7 +81,8 @@
       "start_inventory_from_pool": {},
       "start_location_hints": []
     },
-    "world_directory": "ahit"
+    "world_directory": "ahit",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "act_connections": {

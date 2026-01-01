@@ -28,8 +28,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Film Roll",
-                "count": 1
+                "item_name": "Film Roll"
               }
             }
           },
@@ -173,8 +172,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magnificus Eye",
-                "count": 1
+                "item_name": "Magnificus Eye"
               }
             },
             "item": {
@@ -205,8 +203,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Caged Wolf Card",
-                "count": 1
+                "item_name": "Caged Wolf Card"
               }
             },
             "item": {
@@ -223,8 +220,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Wardrobe Key",
-                "count": 1
+                "item_name": "Wardrobe Key"
               }
             },
             "item": {
@@ -241,8 +237,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Wardrobe Key",
-                "count": 1
+                "item_name": "Wardrobe Key"
               }
             },
             "item": {
@@ -259,8 +254,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Wardrobe Key",
-                "count": 1
+                "item_name": "Wardrobe Key"
               }
             },
             "item": {
@@ -277,8 +271,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Wardrobe Key",
-                "count": 1
+                "item_name": "Wardrobe Key"
               }
             },
             "item": {
@@ -295,8 +288,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dagger",
-                "count": 1
+                "item_name": "Dagger"
               }
             },
             "item": {
@@ -431,8 +423,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Monocle",
-                    "count": 1
+                    "item_name": "Monocle"
                   }
                 }
               ]
@@ -627,8 +618,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Monocle",
-                    "count": 1
+                    "item_name": "Monocle"
                   }
                 }
               ]
@@ -671,8 +661,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Monocle",
-                    "count": 1
+                    "item_name": "Monocle"
                   }
                 }
               ]
@@ -715,8 +704,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Monocle",
-                    "count": 1
+                    "item_name": "Monocle"
                   }
                 }
               ]
@@ -1005,8 +993,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Monocle",
-                    "count": 1
+                    "item_name": "Monocle"
                   }
                 }
               ]
@@ -1049,8 +1036,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Monocle",
-                    "count": 1
+                    "item_name": "Monocle"
                   }
                 }
               ]
@@ -1093,8 +1079,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Monocle",
-                    "count": 1
+                    "item_name": "Monocle"
                   }
                 }
               ]
@@ -1361,8 +1346,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Monocle",
-                    "count": 1
+                    "item_name": "Monocle"
                   }
                 }
               ]
@@ -1381,8 +1365,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ancient Obol",
-                "count": 1
+                "item_name": "Ancient Obol"
               }
             },
             "item": {
@@ -1399,8 +1382,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ancient Obol",
-                "count": 1
+                "item_name": "Ancient Obol"
               }
             },
             "item": {
@@ -1417,8 +1399,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ancient Obol",
-                "count": 1
+                "item_name": "Ancient Obol"
               }
             },
             "item": {
@@ -1459,8 +1440,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Monocle",
-                    "count": 1
+                    "item_name": "Monocle"
                   }
                 }
               ]
@@ -1671,8 +1651,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Inspectometer Battery",
-                "count": 1
+                "item_name": "Inspectometer Battery"
               }
             },
             "item": {
@@ -1811,8 +1790,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Inspectometer Battery",
-                "count": 1
+                "item_name": "Inspectometer Battery"
               }
             },
             "item": {
@@ -1829,8 +1807,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Inspectometer Battery",
-                "count": 1
+                "item_name": "Inspectometer Battery"
               }
             },
             "item": {
@@ -1847,8 +1824,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Inspectometer Battery",
-                "count": 1
+                "item_name": "Inspectometer Battery"
               }
             },
             "item": {
@@ -2082,8 +2058,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Inspectometer Battery",
-                "count": 1
+                "item_name": "Inspectometer Battery"
               }
             },
             "item": {
@@ -2249,8 +2224,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Inspectometer Battery",
-                "count": 1
+                "item_name": "Inspectometer Battery"
               }
             },
             "item": {
@@ -2288,8 +2262,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Inspectometer Battery",
-                "count": 1
+                "item_name": "Inspectometer Battery"
               }
             },
             "item": {
@@ -3085,7 +3058,6 @@
           "display_name": "Skip Tutorial"
         }
       },
-      "shops": [],
       "all_items": [
         {
           "name": "Stinkbug Card",
@@ -3300,7 +3272,7 @@
       ],
       "required_epitaph_pieces_name": "Epitaph Piece",
       "required_epitaph_pieces_count": 9,
-      "world_description": "Inscryption WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Inscryption is an inky black card-based odyssey that blends the deckbuilding roguelike,\nescape-room style puzzles, and psychological horror into a blood-laced smoothie.\nDarker still are the secrets inscrybed upon the cards...",
       "slot_data": {
         "death_link": 0,
         "act1_death_link_behaviour": 0,
@@ -3314,7 +3286,29 @@
         "epitaph_pieces_randomization": 0
       },
       "web": {
-        "theme": "dirt"
+        "theme": "dirt",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Inscryption Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "DrBibop"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "Un guide pour configurer Inscryption Archipelago Multiworld",
+            "language": "Fran\u00e7ais",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "Glowbuzz"
+            ]
+          }
+        ]
       },
       "world_directory": "inscryption_worldgen"
     }

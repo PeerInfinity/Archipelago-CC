@@ -70,8 +70,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Carrot",
-                        "count": 1
+                        "item_name": "Carrot"
                       }
                     }
                   ]
@@ -79,8 +78,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hippo Bubble",
-                    "count": 1
+                    "item_name": "Hippo Bubble"
                   }
                 }
               ]
@@ -271,8 +269,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tree Zone Secret",
-                "count": 1
+                "item_name": "Tree Zone Secret"
               }
             }
           }
@@ -499,8 +496,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Space Zone Secret",
-                "count": 1
+                "item_name": "Space Zone Secret"
               }
             }
           },
@@ -650,8 +646,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Macro Zone Secret 1",
-                "count": 1
+                "item_name": "Macro Zone Secret 1"
               }
             }
           }
@@ -831,8 +826,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Macro Zone Secret 2",
-                "count": 1
+                "item_name": "Macro Zone Secret 2"
               }
             }
           }
@@ -879,8 +873,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Macro Zone Secret 2",
-                "count": 1
+                "item_name": "Macro Zone Secret 2"
               }
             }
           }
@@ -986,8 +979,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pumpkin Zone Secret 1",
-                "count": 1
+                "item_name": "Pumpkin Zone Secret 1"
               }
             }
           }
@@ -1070,8 +1062,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pumpkin Zone Secret 2",
-                "count": 1
+                "item_name": "Pumpkin Zone Secret 2"
               }
             }
           }
@@ -1484,8 +1475,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Turtle Zone Secret",
-                "count": 1
+                "item_name": "Turtle Zone Secret"
               }
             }
           }
@@ -32186,7 +32176,6 @@
           "display_name": "Shuffle Pipe Traversal"
         }
       },
-      "shops": [],
       "auto_scroll_levels": [
         0,
         0,
@@ -38932,12 +38921,24 @@
         ]
       },
       "coin_fragments_required": 1,
-      "world_description": "Super Mario Land 2 WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Super Mario Land 2 is a classic platformer that follows Mario on a quest to reclaim his castle from the\nvillainous Wario. This iconic game features 32 levels, unique power-ups, and introduces Wario as Mario's\narch-rival.",
       "slot_data": {
         "energy_link": 1
       },
       "web": {
-        "theme": "grass"
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to playing Super Mario Land 2 with Archipelago.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Alchav"
+            ]
+          }
+        ]
       },
       "world_directory": "marioland2_worldgen"
     }

@@ -794,27 +794,14 @@
             "name": "Donut Secret 1 -> Donut Secret 1 - Secret Exit",
             "connected_region": "Donut Secret 1 - Secret Exit",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Carry"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "P-Switch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swim"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carry",
+                  "P-Switch",
+                  "Swim"
+                ]
+              }
             }
           }
         ],
@@ -1376,55 +1363,31 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Climb"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Red Switch Palace"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Climb",
+                          "Red Switch Palace"
+                        ]
+                      }
                     },
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Climb"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Yoshi"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Climb",
+                          "Yoshi"
+                        ]
+                      }
                     },
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Red Switch Palace"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Yoshi"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Red Switch Palace",
+                          "Yoshi"
+                        ]
+                      }
                     }
                   ]
                 },
@@ -1519,21 +1482,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Climb"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Yoshi"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Climb",
+                      "Yoshi"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -1551,21 +1506,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Climb"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Yoshi"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Climb",
+                      "Yoshi"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -1788,21 +1735,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Blue Switch Palace"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Carry"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Blue Switch Palace",
+                      "Carry"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -2569,21 +2508,13 @@
             "name": "#4 Ludwig's Castle -> #4 Ludwig's Castle - Normal Exit",
             "connected_region": "#4 Ludwig's Castle - Normal Exit",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Climb"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Run"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Climb",
+                  "Run"
+                ]
+              }
             }
           }
         ],
@@ -2662,21 +2593,13 @@
             "name": "Forest of Illusion 1 -> Forest of Illusion 1 - Secret Exit",
             "connected_region": "Forest of Illusion 1 - Secret Exit",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Carry"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "P-Balloon"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carry",
+                  "P-Balloon"
+                ]
+              }
             }
           }
         ],
@@ -2768,21 +2691,13 @@
             "name": "Forest of Illusion 2 -> Forest of Illusion 2 - Secret Exit",
             "connected_region": "Forest of Illusion 2 - Secret Exit",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Carry"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swim"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carry",
+                  "Swim"
+                ]
+              }
             }
           }
         ],
@@ -2864,21 +2779,13 @@
             "name": "Forest of Illusion 3 -> Forest of Illusion 3 - Normal Exit",
             "connected_region": "Forest of Illusion 3 - Normal Exit",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Carry"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Yoshi"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Carry",
+                  "Yoshi"
+                ]
+              }
             }
           },
           {
@@ -4309,27 +4216,14 @@
             "name": "Valley of Bowser 4 -> Valley of Bowser 4 - Secret Exit",
             "connected_region": "Valley of Bowser 4 - Secret Exit",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Carry"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Climb"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Yoshi"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carry",
+                  "Climb",
+                  "Yoshi"
+                ]
+              }
             }
           }
         ],
@@ -4421,27 +4315,14 @@
             "name": "Valley Ghost House -> Valley Ghost House - Secret Exit",
             "connected_region": "Valley Ghost House - Secret Exit",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Carry"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "P-Switch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Run"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carry",
+                  "P-Switch",
+                  "Run"
+                ]
+              }
             }
           }
         ],
@@ -5114,21 +4995,13 @@
             "name": "Star Road 2 -> Star Road 2 - Secret Exit",
             "connected_region": "Star Road 2 - Secret Exit",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Carry"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swim"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carry",
+                  "Swim"
+                ]
+              }
             }
           }
         ],
@@ -5299,21 +5172,13 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Green Switch Palace"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Red Switch Palace"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Green Switch Palace",
+                          "Red Switch Palace"
+                        ]
+                      }
                     },
                     {
                       "rule": "Has",
@@ -5413,51 +5278,18 @@
             "name": "Star Road 5 -> Star Road 5 - Secret Exit",
             "connected_region": "Star Road 5 - Secret Exit",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Switch Palace"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Carry"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Climb"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Green Switch Palace"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "P-Switch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Switch Palace"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Yellow Switch Palace"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Switch Palace",
+                  "Carry",
+                  "Climb",
+                  "Green Switch Palace",
+                  "P-Switch",
+                  "Red Switch Palace",
+                  "Yellow Switch Palace"
+                ]
+              }
             }
           }
         ],
@@ -5687,21 +5519,13 @@
             "name": "Way Cool -> Way Cool - Normal Exit",
             "connected_region": "Way Cool - Normal Exit",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Climb"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Yoshi"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Climb",
+                  "Yoshi"
+                ]
+              }
             }
           }
         ],

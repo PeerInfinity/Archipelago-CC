@@ -136,7 +136,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower left -> Refugee Camp", player),
-        And(Has('Timespinner Spindle'), Has('Timespinner Wheel'))
+        HasAll('Timespinner Spindle', 'Timespinner Wheel')
     )
 
     world.set_rule(

@@ -30,7 +30,8 @@
       "turtle_randomizer": 2,
       "unconfine_home_water": 0
     },
-    "world_directory": "aquaria"
+    "world_directory": "aquaria",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "regions": {

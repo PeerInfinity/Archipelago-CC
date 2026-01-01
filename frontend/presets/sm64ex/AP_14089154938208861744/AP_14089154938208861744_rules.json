@@ -337,21 +337,13 @@
             "name": "BoB: Mario Wings to the Sky",
             "id": 3626004,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cannon Unlock BoB"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Wing Cap"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Cannon Unlock BoB",
+                  "Wing Cap"
+                ]
+              }
             },
             "item": {
               "name": "Power Star",
@@ -2219,21 +2211,13 @@
             "name": "WDW: Quick Race Through Downtown!",
             "id": 3626075,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Vanish Cap"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Vanish Cap"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Vanish Cap",
+                  "Vanish Cap"
+                ]
+              }
             },
             "item": {
               "name": "Wing Cap",

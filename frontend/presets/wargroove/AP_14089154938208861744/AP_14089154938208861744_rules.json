@@ -376,27 +376,14 @@
             "name": "Robbed",
             "connected_region": "Robbed",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Barge"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Merfolk"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Warship"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Barge",
+                  "Merfolk",
+                  "Warship"
+                ]
+              }
             }
           }
         ],
@@ -405,27 +392,14 @@
             "name": "Corrupted Inlet: Victory",
             "id": 53014,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Barge"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Merfolk"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Warship"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Barge",
+                  "Merfolk",
+                  "Warship"
+                ]
+              }
             },
             "item": {
               "name": "Eastern Bridges",
@@ -444,42 +418,26 @@
             "name": "Open Season",
             "connected_region": "Open Season",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Harpy"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dragon",
+                  "Harpy"
+                ]
+              }
             }
           },
           {
             "name": "Foolish Canal: Mage Mayhem Entrance",
             "connected_region": "Foolish Canal",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Harpy"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dragon",
+                  "Harpy"
+                ]
+              }
             }
           }
         ],
@@ -488,21 +446,13 @@
             "name": "Mage Mayhem: Caesar",
             "id": 53015,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Harpy"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dragon",
+                  "Harpy"
+                ]
+              }
             },
             "item": {
               "name": "Balloon",
@@ -516,21 +466,13 @@
             "name": "Mage Mayhem: Victory",
             "id": 53016,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Harpy"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Dragon",
+                  "Harpy"
+                ]
+              }
             },
             "item": {
               "name": "Southern Walls",
@@ -552,27 +494,14 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Harpy"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spearman"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Dragon",
+                      "Harpy",
+                      "Spearman"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -590,27 +519,14 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Harpy"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spearman"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Dragon",
+                      "Harpy",
+                      "Spearman"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -630,27 +546,14 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Harpy"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spearman"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Dragon",
+                      "Harpy",
+                      "Spearman"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -677,21 +580,13 @@
             "name": "Tenri's Fall",
             "connected_region": "Tenri's Fall",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spearman"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spearman"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Spearman",
+                  "Spearman"
+                ]
+              }
             }
           }
         ],
@@ -742,21 +637,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Merfolk"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Turtle"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Merfolk",
+                      "Turtle"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -776,21 +663,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Merfolk"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Turtle"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Merfolk",
+                      "Turtle"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -829,21 +708,13 @@
             "name": "Frigid Archery: Light the Torch",
             "id": 53021,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Archer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Southern Walls"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Archer",
+                  "Southern Walls"
+                ]
+              }
             },
             "item": {
               "name": "Mage",
@@ -879,21 +750,13 @@
             "name": "Master of the Lake",
             "connected_region": "Master of the Lake",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knight"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Southern Walls"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Knight",
+                  "Southern Walls"
+                ]
+              }
             }
           }
         ],
@@ -902,21 +765,13 @@
             "name": "Archery Lessons: Chest",
             "id": 53023,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knight"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Southern Walls"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Knight",
+                  "Southern Walls"
+                ]
+              }
             },
             "item": {
               "name": "Harpoon Ship",
@@ -930,21 +785,13 @@
             "name": "Archery Lessons: Victory",
             "id": 53024,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knight"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Southern Walls"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Knight",
+                  "Southern Walls"
+                ]
+              }
             },
             "item": {
               "name": "Income Boost",
@@ -1471,27 +1318,14 @@
             "name": "Wargroove Finale: Victory",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Final Bridges"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Final Sickle"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Final Walls"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Final Bridges",
+                  "Final Sickle",
+                  "Final Walls"
+                ]
+              }
             },
             "item": {
               "name": "Wargroove Victory",
@@ -1499,7 +1333,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       }

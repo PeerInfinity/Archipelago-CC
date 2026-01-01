@@ -887,7 +887,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Ruined Atoll -> Ruined Atoll Frog Mouth", player),
-        Or(Has("Hero's Laurels"), Has('Magic Orb'))
+        HasAny("Hero's Laurels", 'Magic Orb')
     )
 
     world.set_rule(
@@ -907,12 +907,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Ruined Atoll Lower Entry Area -> Ruined Atoll", player),
-        Or(Has("Hero's Laurels"), Has('Magic Orb'))
+        HasAny("Hero's Laurels", 'Magic Orb')
     )
 
     world.set_rule(
         multiworld.get_entrance("Ruined Atoll Frog Mouth -> Ruined Atoll", player),
-        Or(Has("Hero's Laurels"), Has('Magic Orb'))
+        HasAny("Hero's Laurels", 'Magic Orb')
     )
 
     world.set_rule(
@@ -1057,7 +1057,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Fortress Exterior from East Forest -> Fortress Exterior from Overworld", player),
-        Or(Has("Hero's Laurels"), Has('Magic Orb'))
+        HasAny("Hero's Laurels", 'Magic Orb')
     )
 
     world.set_rule(

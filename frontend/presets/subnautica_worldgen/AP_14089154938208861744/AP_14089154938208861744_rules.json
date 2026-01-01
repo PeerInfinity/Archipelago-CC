@@ -5230,9 +5230,8 @@
           "display_name": "Swim Rule"
         }
       },
-      "shops": [],
       "creatures_to_scan": [],
-      "world_description": "Subnautica WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Subnautica is an undersea exploration game. Stranded on an alien world, you become infected by\nan unknown bacteria. The planet's automatic quarantine will shoot you down if you try to leave.\nYou must find a cure for yourself, build an escape rocket, and leave the planet.",
       "slot_data": {
         "goal": "launch",
         "swim_rule": "easy",
@@ -5243,7 +5242,19 @@
         "empty_tanks": 1
       },
       "web": {
-        "theme": "grass"
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Subnautica randomizer connected to an Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Berserker"
+            ]
+          }
+        ]
       },
       "world_directory": "subnautica_worldgen"
     }

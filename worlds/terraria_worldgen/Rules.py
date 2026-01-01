@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, False_, Has, HasFromListUnique, Not, Or, True_
+from rule_builder import True_, False_, And, False_, Has, HasAll, HasAny, HasFromListUnique, Not, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -73,7 +73,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Feeling Petty", player),
-        Or(Has('Cat'), Has('Dog'))
+        HasAny('Cat', 'Dog')
     )
 
     world.set_rule(
@@ -88,17 +88,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Fisherman's Pocket Guide", player),
-        Or(Has('Angler'), Has('Weather Radio'))
+        HasAny('Angler', 'Weather Radio')
     )
 
     world.set_rule(
         multiworld.get_location("Weather Radio", player),
-        Or(Has('Angler'), Has('Sextant'))
+        HasAny('Angler', 'Sextant')
     )
 
     world.set_rule(
         multiworld.get_location("Sextant", player),
-        Or(Has('Angler'), Has("Fisherman's Pocket Guide"))
+        HasAny('Angler', "Fisherman's Pocket Guide")
     )
 
     world.set_rule(
@@ -143,12 +143,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Blade of Grass", player),
-        And(Has('Jungle Spores'), Has('Stinger'), Has('Vine'))
+        HasAll('Jungle Spores', 'Stinger', 'Vine')
     )
 
     world.set_rule(
         multiworld.get_location("Leading Landlord", player),
-        And(Has('Arms Dealer'), Has('Nurse'))
+        HasAll('Arms Dealer', 'Nurse')
     )
 
     world.set_rule(
@@ -158,7 +158,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Illegal Gun Parts", player),
-        Or(Has('Arms Dealer'), Has('Flamethrower'))
+        HasAny('Arms Dealer', 'Flamethrower')
     )
 
     world.set_rule(
@@ -168,7 +168,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dryad", player),
-        Or(Has('Post-Evil Boss'), Has('Post-Eye of Cthulhu'), Has('Post-Skeletron'))
+        HasAny('Post-Evil Boss', 'Post-Eye of Cthulhu', 'Post-Skeletron')
     )
 
     world.set_rule(
@@ -178,7 +178,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pumpkin", player),
-        Or(Has('Cactus'), Has('Pumpkin Seeds'))
+        HasAny('Cactus', 'Pumpkin Seeds')
     )
 
     world.set_rule(
@@ -198,7 +198,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Obsidian Armor", player),
-        And(Has('Evil Boss Part'), Has('Obsidian'))
+        HasAll('Evil Boss Part', 'Obsidian')
     )
 
     world.set_rule(
@@ -228,12 +228,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hellforge", player),
-        Or(Has('Adamantite Pickaxe'), Has('Astral Pickaxe'), Has('Beastial Pickaxe'), Has('Blossom Pickaxe'), Has('Chlorophyte Pickaxe'), Has('Cobalt Pickaxe'), Has('Crystyl Crusher'), Has('Evil Pickaxe'), Has('Gelpick'), Has('Genesis Pickaxe'), Has('Laser Drill'), Has('Luminite Pickaxe'), Has('Molten Pickaxe'), Has('Mythril Pickaxe'), Has('Pickaxe Axe'), Has('Picksaw'), Has('Seismic Hampick'), Has('Shardlight Pickaxe'), Has('Shroomite Digging Claw'), Has('Skyfringe Pickaxe'), Has('Spectre Pickaxe'))
+        HasAny('Adamantite Pickaxe', 'Astral Pickaxe', 'Beastial Pickaxe', 'Blossom Pickaxe', 'Chlorophyte Pickaxe', 'Cobalt Pickaxe', 'Crystyl Crusher', 'Evil Pickaxe', 'Gelpick', 'Genesis Pickaxe', 'Laser Drill', 'Luminite Pickaxe', 'Molten Pickaxe', 'Mythril Pickaxe', 'Pickaxe Axe', 'Picksaw', 'Seismic Hampick', 'Shardlight Pickaxe', 'Shroomite Digging Claw', 'Skyfringe Pickaxe', 'Spectre Pickaxe')
     )
 
     world.set_rule(
         multiworld.get_location("Hellstone", player),
-        Or(Or(Has('Adamantite Pickaxe'), Has('Astral Pickaxe'), Has('Beastial Pickaxe'), Has('Blossom Pickaxe'), Has('Chlorophyte Pickaxe'), Has('Cobalt Pickaxe'), Has('Crystyl Crusher'), Has('Evil Pickaxe'), Has('Gelpick'), Has('Genesis Pickaxe'), Has('Laser Drill'), Has('Luminite Pickaxe'), Has('Molten Pickaxe'), Has('Mythril Pickaxe'), Has('Pickaxe Axe'), Has('Picksaw'), Has('Seismic Hampick'), Has('Shardlight Pickaxe'), Has('Shroomite Digging Claw'), Has('Skyfringe Pickaxe'), Has('Spectre Pickaxe')), Has('Hardmode'), Has('Hellstone Bar'))
+        Or(HasAny('Adamantite Pickaxe', 'Astral Pickaxe', 'Beastial Pickaxe', 'Blossom Pickaxe', 'Chlorophyte Pickaxe', 'Cobalt Pickaxe', 'Crystyl Crusher', 'Evil Pickaxe', 'Gelpick', 'Genesis Pickaxe', 'Laser Drill', 'Luminite Pickaxe', 'Molten Pickaxe', 'Mythril Pickaxe', 'Pickaxe Axe', 'Picksaw', 'Seismic Hampick', 'Shardlight Pickaxe', 'Shroomite Digging Claw', 'Skyfringe Pickaxe', 'Spectre Pickaxe'), Has('Hardmode'), Has('Hellstone Bar'))
     )
 
     world.set_rule(
@@ -278,7 +278,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mana Flower", player),
-        Or(And(Has("Nature's Gift"), Has("Tinkerer's Workshop")), And(False_(), Has('Ethereal Talisman')))
+        Or(HasAll("Nature's Gift", "Tinkerer's Workshop"), And(False_(), Has('Ethereal Talisman')))
     )
 
     world.set_rule(
@@ -288,42 +288,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Spectre Boots", player),
-        And(Has('Hermes Boots'), Has('Rocket Boots'), Has("Tinkerer's Workshop"))
+        HasAll('Hermes Boots', 'Rocket Boots', "Tinkerer's Workshop")
     )
 
     world.set_rule(
         multiworld.get_location("Lightning Boots", player),
-        And(Has('Aglet'), Has('Anklet of the Wind'), Has('Spectre Boots'), Has("Tinkerer's Workshop"))
+        HasAll('Aglet', 'Anklet of the Wind', 'Spectre Boots', "Tinkerer's Workshop")
     )
 
     world.set_rule(
         multiworld.get_location("Frostspark Boots", player),
-        And(Has('Ice Skates'), Has('Lightning Boots'), Has("Tinkerer's Workshop"))
+        HasAll('Ice Skates', 'Lightning Boots', "Tinkerer's Workshop")
     )
 
     world.set_rule(
         multiworld.get_location("Lava Waders", player),
-        And(Has('Lava Charm'), Has('Obsidian Rose'), Has('Obsidian Skull'), Has("Tinkerer's Workshop"), Has('Water Walking Boots'))
+        HasAll('Lava Charm', 'Obsidian Rose', 'Obsidian Skull', "Tinkerer's Workshop", 'Water Walking Boots')
     )
 
     world.set_rule(
         multiworld.get_location("Terraspark Boots", player),
-        And(Has('Frostspark Boots'), Has('Lava Waders'), Has("Tinkerer's Workshop"))
+        HasAll('Frostspark Boots', 'Lava Waders', "Tinkerer's Workshop")
     )
 
     world.set_rule(
         multiworld.get_location("GPS", player),
-        And(Has('Compass'), Has('Depth Meter'), Has('Gold Watch'), Has("Tinkerer's Workshop"))
+        HasAll('Compass', 'Depth Meter', 'Gold Watch', "Tinkerer's Workshop")
     )
 
     world.set_rule(
         multiworld.get_location("Goblin Tech", player),
-        And(Has('DPS Meter'), Has('Metal Detector'), Has('Stopwatch'), Has("Tinkerer's Workshop"))
+        HasAll('DPS Meter', 'Metal Detector', 'Stopwatch', "Tinkerer's Workshop")
     )
 
     world.set_rule(
         multiworld.get_location("Fish Finder", player),
-        And(Has("Fisherman's Pocket Guide"), Has('Sextant'), Has("Tinkerer's Workshop"), Has('Weather Radio'))
+        HasAll("Fisherman's Pocket Guide", 'Sextant', "Tinkerer's Workshop", 'Weather Radio')
     )
 
     world.set_rule(
@@ -368,7 +368,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Bone", player),
-        Or(And(Or(And(And(Has('Hardmode Anvil'), Has('Lihzahrd Brick'), Has('Lihzahrd Temple')), False_()), True_(), Has('Mirage Mirror')), False_()), Has('Dungeon'))
+        Or(And(Or(And(HasAll('Hardmode Anvil', 'Lihzahrd Brick', 'Lihzahrd Temple'), False_()), True_(), Has('Mirage Mirror')), False_()), Has('Dungeon'))
     )
 
     world.set_rule(
@@ -378,27 +378,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("R.E.K. 3000", player),
-        And(Has('Lifeform Analyzer'), Has('Radar'), Has('Tally Counter'), Has("Tinkerer's Workshop"))
+        HasAll('Lifeform Analyzer', 'Radar', 'Tally Counter', "Tinkerer's Workshop")
     )
 
     world.set_rule(
         multiworld.get_location("PDA", player),
-        And(Has('Fish Finder'), Has('GPS'), Has('Goblin Tech'), Has('R.E.K. 3000'), Has("Tinkerer's Workshop"))
+        HasAll('Fish Finder', 'GPS', 'Goblin Tech', 'R.E.K. 3000', "Tinkerer's Workshop")
     )
 
     world.set_rule(
         multiworld.get_location("Cell Phone", player),
-        Or(And(And(Or(And(Has('Ancient Manipulator'), Has('Polterplasm')), Has('Post-Moon Lord')), Has('Dungeon')), False_(), False_()), And(Has('Magic Mirror'), Has('PDA'), Has("Tinkerer's Workshop")))
+        Or(And(And(Or(HasAll('Ancient Manipulator', 'Polterplasm'), Has('Post-Moon Lord')), Has('Dungeon')), False_(), False_()), HasAll('Magic Mirror', 'PDA', "Tinkerer's Workshop"))
     )
 
     world.set_rule(
         multiworld.get_location("Bewitching Table", player),
-        Or(And(Has('Witch Doctor'), Has('Wizard')), Has('Alchemy Table'), Has('Dungeon'))
+        Or(HasAll('Witch Doctor', 'Wizard'), Has('Alchemy Table'), Has('Dungeon'))
     )
 
     world.set_rule(
         multiworld.get_location("Alchemy Table", player),
-        Or(Has('Bewitching Table'), Has('Dungeon'))
+        HasAny('Bewitching Table', 'Dungeon')
     )
 
     world.set_rule(
@@ -428,12 +428,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Obsidian Shield", player),
-        And(Has('Cobalt Shield'), Has('Obsidian Skull'), Has("Tinkerer's Workshop"))
+        HasAll('Cobalt Shield', 'Obsidian Skull', "Tinkerer's Workshop")
     )
 
     world.set_rule(
         multiworld.get_location("Elder Slime", player),
-        And(Has('Dungeon'), Has('Post-Skeletron'))
+        HasAll('Dungeon', 'Post-Skeletron')
     )
 
     world.set_rule(
@@ -453,7 +453,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Emblem", player),
-        Or(And(Or(Has('Celestial Emblem'), Has('Mechanical Glove'), Has("Statis' Blessing")), False_()), Has('Avenger Emblem'), Has('Guide'))
+        Or(And(HasAny('Celestial Emblem', 'Mechanical Glove', "Statis' Blessing"), False_()), Has('Avenger Emblem'), Has('Guide'))
     )
 
     world.set_rule(
@@ -468,12 +468,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Titan Glove", player),
-        Or(Has('Hardmode'), Has('Power Glove'))
+        HasAny('Hardmode', 'Power Glove')
     )
 
     world.set_rule(
         multiworld.get_location("Power Glove", player),
-        And(Has('Feral Claws'), Has("Tinkerer's Workshop"), Has('Titan Glove'))
+        HasAll('Feral Claws', "Tinkerer's Workshop", 'Titan Glove')
     )
 
     world.set_rule(
@@ -483,7 +483,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hallowed Seeds", player),
-        Or(And(Has('Dryad'), Has('Hardmode')), Has('Holy Water'))
+        Or(HasAll('Dryad', 'Hardmode'), Has('Holy Water'))
     )
 
     world.set_rule(
@@ -498,7 +498,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Medicated Bandage", player),
-        And(Has('Adhesive Bandage'), Has('Bezoar'), Has("Tinkerer's Workshop"))
+        HasAll('Adhesive Bandage', 'Bezoar', "Tinkerer's Workshop")
     )
 
     world.set_rule(
@@ -518,12 +518,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Plan", player),
-        And(Has('Fast Clock'), Has("Tinkerer's Workshop"), Has('Trifold Map'))
+        HasAll('Fast Clock', "Tinkerer's Workshop", 'Trifold Map')
     )
 
     world.set_rule(
         multiworld.get_location("Tax Collector", player),
-        Or(And(Has('Hardmode'), Has('Purification Powder')), False_())
+        Or(HasAll('Hardmode', 'Purification Powder'), False_())
     )
 
     world.set_rule(
@@ -543,7 +543,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Altar", player),
-        And(Or(Has('Abyssal Warhammer'), Has('Astral Hamaxe'), Has('Chlorophyte Warhammer'), Has('Grax'), Has('Luminite Hamaxe'), Has('Pwnhammer'), Has('Seismic Hampick'), Has('Spectre Hamaxe'), Has('The Axe')), Has('Hardmode'))
+        And(HasAny('Abyssal Warhammer', 'Astral Hamaxe', 'Chlorophyte Warhammer', 'Grax', 'Luminite Hamaxe', 'Pwnhammer', 'Seismic Hampick', 'Spectre Hamaxe', 'The Axe'), Has('Hardmode'))
     )
 
     world.set_rule(
@@ -553,12 +553,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Cobalt Ore", player),
-        Or(And(Or(And(Not(False_()), Has('Altar')), And(False_(), Has('Hardmode'))), Or(Has('Adamantite Pickaxe'), Has('Astral Pickaxe'), Has('Beastial Pickaxe'), Has('Blossom Pickaxe'), Has('Chlorophyte Pickaxe'), Has('Cobalt Pickaxe'), Has('Crystyl Crusher'), Has('Gelpick'), Has('Genesis Pickaxe'), Has('Laser Drill'), Has('Luminite Pickaxe'), Has('Molten Pickaxe'), Has('Mythril Pickaxe'), Has('Pickaxe Axe'), Has('Picksaw'), Has('Seismic Hampick'), Has('Shardlight Pickaxe'), Has('Shroomite Digging Claw'), Has('Spectre Pickaxe'))), Has('Cobalt Bar'), Has('Hardmode'), Has('Mythril Ore'))
+        Or(And(Or(And(Not(False_()), Has('Altar')), And(False_(), Has('Hardmode'))), HasAny('Adamantite Pickaxe', 'Astral Pickaxe', 'Beastial Pickaxe', 'Blossom Pickaxe', 'Chlorophyte Pickaxe', 'Cobalt Pickaxe', 'Crystyl Crusher', 'Gelpick', 'Genesis Pickaxe', 'Laser Drill', 'Luminite Pickaxe', 'Molten Pickaxe', 'Mythril Pickaxe', 'Pickaxe Axe', 'Picksaw', 'Seismic Hampick', 'Shardlight Pickaxe', 'Shroomite Digging Claw', 'Spectre Pickaxe')), Has('Cobalt Bar'), Has('Hardmode'), Has('Mythril Ore'))
     )
 
     world.set_rule(
         multiworld.get_location("Extra Shiny!", player),
-        Or(Has('Adamantite Ore'), Has('Chlorophyte Ore'), Has('Cobalt Ore'), Has('Mythril Ore'))
+        HasAny('Adamantite Ore', 'Chlorophyte Ore', 'Cobalt Ore', 'Mythril Ore')
     )
 
     world.set_rule(
@@ -578,7 +578,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Reflective Shades", player),
-        And(Has('Blindfold'), Has('Pocket Mirror'), Has("Tinkerer's Workshop"))
+        HasAll('Blindfold', 'Pocket Mirror', "Tinkerer's Workshop")
     )
 
     world.set_rule(
@@ -588,7 +588,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Armor Bracing", player),
-        And(Has('Armor Polish'), Has("Tinkerer's Workshop"), Has('Vitamins'))
+        HasAll('Armor Polish', "Tinkerer's Workshop", 'Vitamins')
     )
 
     world.set_rule(
@@ -598,22 +598,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Countercurse Mantra", player),
-        And(Has('Megaphone'), Has('Nazar'), Has("Tinkerer's Workshop"))
+        HasAll('Megaphone', 'Nazar', "Tinkerer's Workshop")
     )
 
     world.set_rule(
         multiworld.get_location("Ankh Charm", player),
-        And(Has('Armor Bracing'), Has('Countercurse Mantra'), Has('Medicated Bandage'), Has('Reflective Shades'), Has('The Plan'), Has("Tinkerer's Workshop"))
+        HasAll('Armor Bracing', 'Countercurse Mantra', 'Medicated Bandage', 'Reflective Shades', 'The Plan', "Tinkerer's Workshop")
     )
 
     world.set_rule(
         multiworld.get_location("Ankh Shield", player),
-        And(Has('Ankh Charm'), Has('Obsidian Shield'), Has("Tinkerer's Workshop"))
+        HasAll('Ankh Charm', 'Obsidian Shield', "Tinkerer's Workshop")
     )
 
     world.set_rule(
         multiworld.get_location("Soul of Night", player),
-        Or(And(Or(And(Or(And(Has('Bug Net'), Has('Hardmode')), And(False_(), False_(), Has('Titan Heart'))), False_()), Has('Altar')), False_()), Has('Hardmode'))
+        Or(And(Or(And(Or(HasAll('Bug Net', 'Hardmode'), And(False_(), False_(), Has('Titan Heart'))), False_()), Has('Altar')), False_()), Has('Hardmode'))
     )
 
     world.set_rule(
@@ -623,12 +623,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pixie Dust", player),
-        Or(Has('Hallow'), Has('Holy Water'), Has('Meteor Staff'))
+        HasAny('Hallow', 'Holy Water', 'Meteor Staff')
     )
 
     world.set_rule(
         multiworld.get_location("Holy Water", player),
-        Or(And(Has('Hallowed Seeds'), Has('Pixie Dust')), And(False_(), Has("Statis' Blessing")))
+        Or(HasAll('Hallowed Seeds', 'Pixie Dust'), And(False_(), Has("Statis' Blessing")))
     )
 
     world.set_rule(
@@ -643,12 +643,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Soul of Light", player),
-        Or(And(Or(And(Or(And(Has('Bug Net'), Has('Hardmode')), And(False_(), False_(), Has('Titan Heart'))), False_()), Or(And(And(Has('Auric Bar'), Has('Brimstone Slag'), Has('Core of Calamity'), Has('Cosmic Anvil'), Has("Fabsol's Vodka")), False_(), False_()), Has('Hallow'))), False_()), Has('Hallow'), Has('Light Disc'), Has('Meteor Staff'))
+        Or(And(Or(And(Or(HasAll('Bug Net', 'Hardmode'), And(False_(), False_(), Has('Titan Heart'))), False_()), Or(And(HasAll('Auric Bar', 'Brimstone Slag', 'Core of Calamity', 'Cosmic Anvil', "Fabsol's Vodka"), False_(), False_()), Has('Hallow'))), False_()), Has('Hallow'), Has('Light Disc'), Has('Meteor Staff'))
     )
 
     world.set_rule(
         multiworld.get_location("Meteor Staff", player),
-        Or(And(Has('Hardmode Anvil'), Has('Meteorite Bar'), Has('Pixie Dust'), Has('Soul of Light')), Has('Asteroid Staff'))
+        Or(HasAll('Hardmode Anvil', 'Meteorite Bar', 'Pixie Dust', 'Soul of Light'), Has('Asteroid Staff'))
     )
 
     world.set_rule(
@@ -668,17 +668,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Head in the Clouds", player),
-        Or(And(Has('Ancient Manipulator'), Has('Fragment'), Has('Luminite Bar')), And(Has('Hardmode'), Has('Post-Golem'), Has('Tavernkeep')), And(Has('Hardmode'), Has('Post-Plantera'), Has('Witch Doctor')), And(Has('Post-Plantera'), Has('Solar Eclipse')), And(Or(And(Has('Autohammer'), Has('Shroomite Bar')), And(Or(Or(And(Has('Hardmode'), Has('Lihzahrd Temple'), Has('Post-Plantera')), And(False_(), Has('Essence of Sunlight'), Has('Hardmode Anvil'), Has('Lihzahrd Temple'))), HasFromListUnique('Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime', count=1), Has('Hardmode'), Has('Pixie Dust'), Has('Post-Plantera'), Has('Solar Eclipse'), Has('Soul of Light'), Has('Soul of Night'), Has('Spectre Bar')), Has('Hardmode Anvil')), Has('Pumpkin Moon'), Has('Pumpkin Moon')), Has('Soul of Flight')), Or(And(And(Has('Auric Bar'), Has('Brimstone Slag'), Has('Core of Calamity'), Has('Cosmic Anvil'), Has("Fabsol's Vodka")), False_(), False_()), And(Or(False_(), Has('Post-Plantera')), Has('Hallow'), Has('Hardmode'))), Or(And(Has('Bug Net'), Has('Hardmode')), And(False_(), False_(), Has('Titan Heart'))), False_(), Has('Frost Moon'), Has('Steampunker'))
+        Or(HasAll('Ancient Manipulator', 'Fragment', 'Luminite Bar'), HasAll('Hardmode', 'Post-Golem', 'Tavernkeep'), HasAll('Hardmode', 'Post-Plantera', 'Witch Doctor'), HasAll('Post-Plantera', 'Solar Eclipse'), And(Or(HasAll('Autohammer', 'Shroomite Bar'), And(Or(Or(HasAll('Hardmode', 'Lihzahrd Temple', 'Post-Plantera'), And(False_(), Has('Essence of Sunlight'), Has('Hardmode Anvil'), Has('Lihzahrd Temple'))), HasFromListUnique('Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime', count=1), Has('Hardmode'), Has('Pixie Dust'), Has('Post-Plantera'), Has('Solar Eclipse'), Has('Soul of Light'), Has('Soul of Night'), Has('Spectre Bar')), Has('Hardmode Anvil')), Has('Pumpkin Moon'), Has('Pumpkin Moon')), Has('Soul of Flight')), Or(And(HasAll('Auric Bar', 'Brimstone Slag', 'Core of Calamity', 'Cosmic Anvil', "Fabsol's Vodka"), False_(), False_()), And(Or(False_(), Has('Post-Plantera')), Has('Hallow'), Has('Hardmode'))), Or(HasAll('Bug Net', 'Hardmode'), And(False_(), False_(), Has('Titan Heart'))), False_(), Has('Frost Moon'), Has('Steampunker'))
     )
 
     world.set_rule(
         multiworld.get_location("Bunny", player),
-        And(Has('Hardmode'), Has('Zoologist'))
+        HasAll('Hardmode', 'Zoologist')
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Fragment", player),
-        And(Has('Hardmode'), Has('Sandstorm'))
+        HasAll('Hardmode', 'Sandstorm')
     )
 
     world.set_rule(
@@ -708,12 +708,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Queen Slime", player),
-        Or(And(And(Has('Auric Bar'), Has('Brimstone Slag'), Has('Core of Calamity'), Has('Cosmic Anvil'), Has("Fabsol's Vodka")), False_(), False_()), Has('Hallow'))
+        Or(And(HasAll('Auric Bar', 'Brimstone Slag', 'Core of Calamity', 'Cosmic Anvil', "Fabsol's Vodka"), False_(), False_()), Has('Hallow'))
     )
 
     world.set_rule(
         multiworld.get_location("Sparkle Slime Balloon", player),
-        Or(And(And(Has('Auric Bar'), Has('Brimstone Slag'), Has('Core of Calamity'), Has('Cosmic Anvil'), Has("Fabsol's Vodka")), False_(), False_()), Has('Hallow'))
+        Or(And(HasAll('Auric Bar', 'Brimstone Slag', 'Core of Calamity', 'Cosmic Anvil', "Fabsol's Vodka"), False_(), False_()), Has('Hallow'))
     )
 
     world.set_rule(
@@ -723,12 +723,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Great Slime Mitosis", player),
-        And(Has('Clumsy Slime'), Has('Cool Slime'), Has('Diva Slime'), Has('Elder Slime'), Has('Mystic Slime'), Has('Nerdy Slime'), Has('Squire Slime'), Has('Surly Slime'))
+        HasAll('Clumsy Slime', 'Cool Slime', 'Diva Slime', 'Elder Slime', 'Mystic Slime', 'Nerdy Slime', 'Squire Slime', 'Surly Slime')
     )
 
     world.set_rule(
         multiworld.get_location("Mythril Ore", player),
-        Or(And(Or(And(Not(False_()), Has('Altar')), And(False_(), HasFromListUnique('Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime', count=1))), Or(Has('Adamantite Pickaxe'), Has('Astral Pickaxe'), Has('Beastial Pickaxe'), Has('Blossom Pickaxe'), Has('Chlorophyte Pickaxe'), Has('Cobalt Pickaxe'), Has('Crystyl Crusher'), Has('Genesis Pickaxe'), Has('Laser Drill'), Has('Luminite Pickaxe'), Has('Mythril Pickaxe'), Has('Pickaxe Axe'), Has('Picksaw'), Has('Seismic Hampick'), Has('Shardlight Pickaxe'), Has('Shroomite Digging Claw'), Has('Spectre Pickaxe'))), Has('Adamantite Ore'), Has('Hardmode'), Has('Mythril Bar'))
+        Or(And(Or(And(Not(False_()), Has('Altar')), And(False_(), HasFromListUnique('Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime', count=1))), HasAny('Adamantite Pickaxe', 'Astral Pickaxe', 'Beastial Pickaxe', 'Blossom Pickaxe', 'Chlorophyte Pickaxe', 'Cobalt Pickaxe', 'Crystyl Crusher', 'Genesis Pickaxe', 'Laser Drill', 'Luminite Pickaxe', 'Mythril Pickaxe', 'Pickaxe Axe', 'Picksaw', 'Seismic Hampick', 'Shardlight Pickaxe', 'Shroomite Digging Claw', 'Spectre Pickaxe')), Has('Adamantite Ore'), Has('Hardmode'), Has('Mythril Bar'))
     )
 
     world.set_rule(
@@ -743,32 +743,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mythril Pickaxe", player),
-        And(Has('Hardmode Anvil'), Has('Mythril Bar'))
+        HasAll('Hardmode Anvil', 'Mythril Bar')
     )
 
     world.set_rule(
         multiworld.get_location("Adamantite Ore", player),
-        Or(And(Not(False_()), Has('Chlorophyte Ore')), And(Or(And(Not(False_()), Has('Altar')), And(False_(), HasFromListUnique('Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime', count=2))), Or(Has('Adamantite Pickaxe'), Has('Astral Pickaxe'), Has('Beastial Pickaxe'), Has('Blossom Pickaxe'), Has('Chlorophyte Pickaxe'), Has('Crystyl Crusher'), Has('Genesis Pickaxe'), Has('Laser Drill'), Has('Luminite Pickaxe'), Has('Mythril Pickaxe'), Has('Pickaxe Axe'), Has('Picksaw'), Has('Seismic Hampick'), Has('Shardlight Pickaxe'), Has('Shroomite Digging Claw'), Has('Spectre Pickaxe'))), And(False_(), Has('Hallowed Ore')), Has('Adamantite Bar'), Has('Hardmode'))
+        Or(And(Not(False_()), Has('Chlorophyte Ore')), And(Or(And(Not(False_()), Has('Altar')), And(False_(), HasFromListUnique('Post-The Twins', 'Post-The Destroyer', 'Post-Skeletron Prime', count=2))), HasAny('Adamantite Pickaxe', 'Astral Pickaxe', 'Beastial Pickaxe', 'Blossom Pickaxe', 'Chlorophyte Pickaxe', 'Crystyl Crusher', 'Genesis Pickaxe', 'Laser Drill', 'Luminite Pickaxe', 'Mythril Pickaxe', 'Pickaxe Axe', 'Picksaw', 'Seismic Hampick', 'Shardlight Pickaxe', 'Shroomite Digging Claw', 'Spectre Pickaxe')), And(False_(), Has('Hallowed Ore')), Has('Adamantite Bar'), Has('Hardmode'))
     )
 
     world.set_rule(
         multiworld.get_location("Hardmode Forge", player),
-        And(Has('Adamantite Ore'), Has('Hardmode Anvil'), Has('Hellforge'))
+        HasAll('Adamantite Ore', 'Hardmode Anvil', 'Hellforge')
     )
 
     world.set_rule(
         multiworld.get_location("Adamantite Bar", player),
-        Or(And(Has('Adamantite Ore'), Has('Hardmode Forge')), Has('Hardmode'))
+        Or(HasAll('Adamantite Ore', 'Hardmode Forge'), Has('Hardmode'))
     )
 
     world.set_rule(
         multiworld.get_location("Adamantite Pickaxe", player),
-        And(Has('Adamantite Bar'), Has('Hardmode Anvil'))
+        HasAll('Adamantite Bar', 'Hardmode Anvil')
     )
 
     world.set_rule(
         multiworld.get_location("Forbidden Armor", player),
-        And(Has('Adamantite Bar'), Has('Forbidden Fragment'), Has('Hardmode Anvil'))
+        HasAll('Adamantite Bar', 'Forbidden Fragment', 'Hardmode Anvil')
     )
 
     world.set_rule(

@@ -52,7 +52,8 @@
       "warp_improvements": "",
       "warps": 0
     },
-    "world_directory": "ladx"
+    "world_directory": "ladx",
+    "use_resolved_items": true
   },
   "world_attributes": {
     "dungeon_item_types": {

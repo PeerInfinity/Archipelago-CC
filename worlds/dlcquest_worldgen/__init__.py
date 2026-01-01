@@ -69,15 +69,30 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class DLCQuestWorldGenWeb(WebWorld):
     """Web interface for DLCQuest WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "grass"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Archipelago DLCQuest game on your computer.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["axe_y"]
+        ),
+        Tutorial(
+            "Guide de configuration MultiWorld",
+            "Un guide pour configurer DLCQuest sur votre PC.",
+            "Français",
+            "setup_fr.md",
+            "setup/fr",
+            ["Deoxis"]
+        )
+    ]
 
 
 class DLCQuestWorldGenWorld(RuleWorldMixin, World):
     """
-    DLCQuest WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    DLCQuest is a metroid ish game where everything is an in-game dlc.
     """
 
     game: ClassVar[str] = "DLCQuest WorldGen"
@@ -165,10 +180,8 @@ class DLCQuestWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.world_description = 'DLCQuest is a metroid ish game where everything is an in-game dlc.'
         self.slot_data = types.SimpleNamespace(death_link=0, ending_choice=1, campaign=0, coinsanity=0, item_shuffle=0, permanent_coins=0, coinbundlerange=20, seed=71185160)
-        self.web = types.SimpleNamespace(theme='grass', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Archipelago DLCQuest game on your computer.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['axe_y']}, {'name': 'Guide de configuration MultiWorld', 'description': 'Un guide pour configurer DLCQuest sur votre PC.', 'language': 'Français', 'file_name': 'setup_fr.md', 'link': 'setup/fr', 'authors': ['Deoxis']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -312,4 +325,13 @@ class DLCQuestWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "death_link": 0,
+            "ending_choice": 1,
+            "campaign": 0,
+            "coinsanity": 0,
+            "item_shuffle": 0,
+            "permanent_coins": 0,
+            "coinbundlerange": 20,
+            "seed": 71185160,
+        }

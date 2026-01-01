@@ -40,15 +40,23 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class ChecksFinderWorldGenWeb(WebWorld):
     """Web interface for ChecksFinder WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "grass"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to playing Archipelago ChecksFinder.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["SunCat"]
+        )
+    ]
 
 
 class ChecksFinderWorldGenWorld(RuleWorldMixin, World):
     """
-    ChecksFinder WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    ChecksFinder is a game where you avoid mines and collect checks by beating boards!
+    You win when you get all your items and beat the last board!
     """
 
     game: ClassVar[str] = "ChecksFinder WorldGen"
@@ -106,10 +114,8 @@ class ChecksFinderWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.world_description = 'ChecksFinder is a game where you avoid mines and collect checks by beating boards!\nYou win when you get all your items and beat the last board!'
         self.slot_data = types.SimpleNamespace(world_seed=2277925128, seed_name='14089154938208861744', player_name='Player1', player_id=1, client_version=7, race=False)
-        self.web = types.SimpleNamespace(theme='grass', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to playing Archipelago ChecksFinder.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['SunCat']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -203,4 +209,11 @@ class ChecksFinderWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "world_seed": 2277925128,
+            "seed_name": "14089154938208861744",
+            "player_name": "Player1",
+            "player_id": 1,
+            "client_version": 7,
+            "race": False,
+        }

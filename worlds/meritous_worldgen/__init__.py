@@ -64,15 +64,24 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class MeritousWorldGenWeb(WebWorld):
     """Web interface for Meritous WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "ice"
+    tutorials = [
+        Tutorial(
+            "Meritous Setup Guide",
+            "A guide to setting up the Archipelago Meritous software on your computer.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["KewlioMZX"]
+        )
+    ]
 
 
 class MeritousWorldGenWorld(RuleWorldMixin, World):
     """
-    Meritous WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Meritous Gaiden is a procedurally generated bullet-hell dungeon crawl game.
+    Five generations after the Orcus Dome incident, strange experiments conducted in a new
+    structure on the moon are tearing at the very fabric of reality...
     """
 
     game: ClassVar[str] = "Meritous WorldGen"
@@ -220,7 +229,6 @@ class MeritousWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.goal = 0
         self.include_evolution_traps = 0
         self.include_psi_keys = 1
@@ -228,7 +236,6 @@ class MeritousWorldGenWorld(RuleWorldMixin, World):
         self.death_link = 0
         self.world_description = 'Meritous Gaiden is a procedurally generated bullet-hell dungeon crawl game.\nFive generations after the Orcus Dome incident, strange experiments conducted in a new\nstructure on the moon are tearing at the very fabric of reality...'
         self.slot_data = types.SimpleNamespace(goal=0, cost_scale=[80, 5, 4], death_link=0)
-        self.web = types.SimpleNamespace(theme='ice', tutorials=[{'name': 'Meritous Setup Guide', 'description': 'A guide to setting up the Archipelago Meritous software on your computer.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['KewlioMZX']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -340,4 +347,8 @@ class MeritousWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "goal": 0,
+            "cost_scale": [80, 5, 4],
+            "death_link": 0,
+        }

@@ -31,7 +31,8 @@
       "strawberries_required_percentage": 80,
       "total_strawberries": 20
     },
-    "world_directory": "celeste64"
+    "world_directory": "celeste64",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "madeline_one_dash_hair_color": 14363648,

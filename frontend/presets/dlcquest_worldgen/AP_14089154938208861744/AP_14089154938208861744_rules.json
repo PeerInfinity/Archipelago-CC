@@ -34,8 +34,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Movement Pack",
-                "count": 1
+                "item_name": "Movement Pack"
               }
             }
           }
@@ -163,8 +162,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Time is Money Pack",
-                "count": 1
+                "item_name": "Time is Money Pack"
               }
             }
           },
@@ -174,8 +172,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Psychological Warfare Pack",
-                "count": 1
+                "item_name": "Psychological Warfare Pack"
               }
             }
           }
@@ -259,8 +256,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Time is Money Pack",
-                "count": 1
+                "item_name": "Time is Money Pack"
               }
             },
             "item": {
@@ -297,8 +293,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Double Jump Pack",
-                "count": 1
+                "item_name": "Double Jump Pack"
               }
             }
           },
@@ -308,8 +303,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Map Pack",
-                "count": 1
+                "item_name": "Map Pack"
               }
             }
           }
@@ -417,8 +411,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Double Jump Pack",
-                "count": 1
+                "item_name": "Double Jump Pack"
               }
             }
           }
@@ -430,8 +423,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Time is Money Pack",
-                "count": 1
+                "item_name": "Time is Money Pack"
               }
             },
             "item": {
@@ -468,8 +460,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Time is Money Pack",
-                "count": 1
+                "item_name": "Time is Money Pack"
               }
             }
           },
@@ -479,8 +470,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Double Jump Pack",
-                "count": 1
+                "item_name": "Double Jump Pack"
               }
             }
           }
@@ -540,8 +530,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Time is Money Pack",
-                "count": 1
+                "item_name": "Time is Money Pack"
               }
             },
             "item": {
@@ -614,8 +603,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Time is Money Pack",
-                "count": 1
+                "item_name": "Time is Money Pack"
               }
             },
             "item": {
@@ -782,8 +770,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Gun Pack",
-                "count": 1
+                "item_name": "Gun Pack"
               }
             }
           },
@@ -793,8 +780,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Double Jump Pack",
-                "count": 1
+                "item_name": "Double Jump Pack"
               }
             }
           }
@@ -874,8 +860,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Double Jump Pack",
-                "count": 1
+                "item_name": "Double Jump Pack"
               }
             }
           }
@@ -2013,8 +1998,7 @@
           "display_name": "Time Is Money"
         }
       },
-      "shops": [],
-      "world_description": "DLCQuest WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "DLCQuest is a metroid ish game where everything is an in-game dlc.",
       "slot_data": {
         "death_link": 0,
         "ending_choice": 1,
@@ -2026,7 +2010,29 @@
         "seed": 71185160
       },
       "web": {
-        "theme": "grass"
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago DLCQuest game on your computer.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "axe_y"
+            ]
+          },
+          {
+            "name": "Guide de configuration MultiWorld",
+            "description": "Un guide pour configurer DLCQuest sur votre PC.",
+            "language": "Fran\u00e7ais",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "Deoxis"
+            ]
+          }
+        ]
       },
       "world_directory": "dlcquest_worldgen"
     }

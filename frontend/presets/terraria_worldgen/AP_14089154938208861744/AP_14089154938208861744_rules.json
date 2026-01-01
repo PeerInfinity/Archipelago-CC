@@ -117,8 +117,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Traveling Merchant",
-                "count": 1
+                "item_name": "Traveling Merchant"
               }
             },
             "item": {
@@ -136,8 +135,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Traveling Merchant",
-                "count": 1
+                "item_name": "Traveling Merchant"
               }
             },
             "item": {
@@ -155,8 +153,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Traveling Merchant",
-                "count": 1
+                "item_name": "Traveling Merchant"
               }
             },
             "item": {
@@ -271,8 +268,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Merchant",
-                "count": 1
+                "item_name": "Merchant"
               }
             },
             "item": {
@@ -358,8 +354,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dye Trader",
-                "count": 1
+                "item_name": "Dye Trader"
               }
             },
             "item": {
@@ -376,8 +371,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Merchant",
-                "count": 1
+                "item_name": "Merchant"
               }
             },
             "item": {
@@ -533,8 +527,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Zoologist",
-                "count": 1
+                "item_name": "Zoologist"
               }
             },
             "item": {
@@ -572,8 +565,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Zoologist",
-                "count": 1
+                "item_name": "Zoologist"
               }
             },
             "item": {
@@ -923,8 +915,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Merchant",
-                "count": 1
+                "item_name": "Merchant"
               }
             },
             "item": {
@@ -942,8 +933,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Nurse",
-                "count": 1
+                "item_name": "Nurse"
               }
             },
             "item": {
@@ -960,8 +950,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bug Net",
-                "count": 1
+                "item_name": "Bug Net"
               }
             },
             "item": {
@@ -1129,8 +1118,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Obsidian",
-                "count": 1
+                "item_name": "Obsidian"
               }
             },
             "item": {
@@ -1174,8 +1162,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Demonite Ore",
-                "count": 1
+                "item_name": "Demonite Ore"
               }
             },
             "item": {
@@ -1193,8 +1180,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Demonite Bar",
-                "count": 1
+                "item_name": "Demonite Bar"
               }
             },
             "item": {
@@ -1307,8 +1293,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Party Girl",
-                "count": 1
+                "item_name": "Party Girl"
               }
             },
             "item": {
@@ -1559,8 +1544,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Arms Dealer",
-                "count": 1
+                "item_name": "Arms Dealer"
               }
             },
             "item": {
@@ -1661,8 +1645,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Post-Desert Scourge",
-                    "count": 1
+                    "item_name": "Post-Desert Scourge"
                   }
                 }
               ]
@@ -1754,8 +1737,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dryad",
-                "count": 1
+                "item_name": "Dryad"
               }
             },
             "item": {
@@ -1806,8 +1788,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Dryad",
-                        "count": 1
+                        "item_name": "Dryad"
                       }
                     }
                   ]
@@ -1815,8 +1796,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Evil Powder",
-                    "count": 1
+                    "item_name": "Evil Powder"
                   }
                 }
               ]
@@ -1836,8 +1816,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Purification Powder",
-                "count": 1
+                "item_name": "Purification Powder"
               }
             },
             "item": {
@@ -1882,8 +1861,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Evil Boss Part",
-                "count": 1
+                "item_name": "Evil Boss Part"
               }
             },
             "item": {
@@ -1922,8 +1900,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Post-Evil Boss",
-                "count": 1
+                "item_name": "Post-Evil Boss"
               }
             },
             "item": {
@@ -1941,8 +1918,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tavernkeep",
-                "count": 1
+                "item_name": "Tavernkeep"
               }
             },
             "item": {
@@ -1995,8 +1971,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Meteorite Bar",
-                "count": 1
+                "item_name": "Meteorite Bar"
               }
             },
             "item": {
@@ -2096,8 +2071,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hellstone",
-                "count": 1
+                "item_name": "Hellstone"
               }
             },
             "item": {
@@ -2115,8 +2089,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hellstone Bar",
-                "count": 1
+                "item_name": "Hellstone Bar"
               }
             },
             "item": {
@@ -2134,8 +2107,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hellstone Bar",
-                "count": 1
+                "item_name": "Hellstone Bar"
               }
             },
             "item": {
@@ -2153,8 +2125,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hellstone Bar",
-                "count": 1
+                "item_name": "Hellstone Bar"
               }
             },
             "item": {
@@ -2172,8 +2143,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Molten Pickaxe",
-                "count": 1
+                "item_name": "Molten Pickaxe"
               }
             },
             "item": {
@@ -2222,8 +2192,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Post-Goblin Army",
-                "count": 1
+                "item_name": "Post-Goblin Army"
               }
             },
             "item": {
@@ -2241,8 +2210,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Goblin Tinkerer",
-                "count": 1
+                "item_name": "Goblin Tinkerer"
               }
             },
             "item": {
@@ -2281,8 +2249,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Goblin Tinkerer",
-                "count": 1
+                "item_name": "Goblin Tinkerer"
               }
             },
             "item": {
@@ -2482,8 +2449,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tinkerer's Workshop",
-                "count": 1
+                "item_name": "Tinkerer's Workshop"
               }
             },
             "item": {
@@ -2555,8 +2521,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bee Wax",
-                "count": 1
+                "item_name": "Bee Wax"
               }
             },
             "item": {
@@ -2574,8 +2539,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bee Armor",
-                "count": 1
+                "item_name": "Bee Armor"
               }
             },
             "item": {
@@ -2592,8 +2556,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Post-Queen Bee",
-                "count": 1
+                "item_name": "Post-Queen Bee"
               }
             },
             "item": {
@@ -2611,8 +2574,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Witch Doctor",
-                "count": 1
+                "item_name": "Witch Doctor"
               }
             },
             "item": {
@@ -2642,8 +2604,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Post-Skeletron",
-                "count": 1
+                "item_name": "Post-Skeletron"
               }
             },
             "item": {
@@ -2661,8 +2622,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Post-Skeletron",
-                "count": 1
+                "item_name": "Post-Skeletron"
               }
             },
             "item": {
@@ -2680,8 +2640,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dungeon",
-                "count": 1
+                "item_name": "Dungeon"
               }
             },
             "item": {
@@ -2698,8 +2657,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dungeon",
-                "count": 1
+                "item_name": "Dungeon"
               }
             },
             "item": {
@@ -2717,8 +2675,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dungeon",
-                "count": 1
+                "item_name": "Dungeon"
               }
             },
             "item": {
@@ -2861,8 +2818,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dungeon",
-                "count": 1
+                "item_name": "Dungeon"
               }
             },
             "item": {
@@ -2880,8 +2836,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mechanic",
-                "count": 1
+                "item_name": "Mechanic"
               }
             },
             "item": {
@@ -2899,8 +2854,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mechanic",
-                "count": 1
+                "item_name": "Mechanic"
               }
             },
             "item": {
@@ -2918,8 +2872,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dungeon",
-                "count": 1
+                "item_name": "Dungeon"
               }
             },
             "item": {
@@ -2937,8 +2890,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dungeon",
-                "count": 1
+                "item_name": "Dungeon"
               }
             },
             "item": {
@@ -3023,8 +2975,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Purified Gel",
-                        "count": 1
+                        "item_name": "Purified Gel"
                       }
                     }
                   ]
@@ -3057,8 +3008,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Guide",
-                "count": 1
+                "item_name": "Guide"
               }
             },
             "item": {
@@ -3075,8 +3025,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Guide",
-                "count": 1
+                "item_name": "Guide"
               }
             },
             "item": {
@@ -3136,8 +3085,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hardmode",
-                "count": 1
+                "item_name": "Hardmode"
               }
             },
             "item": {
@@ -3198,8 +3146,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hardmode",
-                "count": 1
+                "item_name": "Hardmode"
               }
             },
             "item": {
@@ -3229,8 +3176,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Holy Water",
-                    "count": 1
+                    "item_name": "Holy Water"
                   }
                 }
               ]
@@ -3271,8 +3217,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hardmode",
-                "count": 1
+                "item_name": "Hardmode"
               }
             },
             "item": {
@@ -3418,8 +3363,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hardmode",
-                "count": 1
+                "item_name": "Hardmode"
               }
             },
             "item": {
@@ -3437,8 +3381,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Spider Fangs",
-                "count": 1
+                "item_name": "Spider Fangs"
               }
             },
             "item": {
@@ -3456,8 +3399,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hardmode",
-                "count": 1
+                "item_name": "Hardmode"
               }
             },
             "item": {
@@ -3494,8 +3436,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hardmode",
-                    "count": 1
+                    "item_name": "Hardmode"
                   }
                 }
               ]
@@ -3515,8 +3456,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Altar",
-                "count": 1
+                "item_name": "Altar"
               }
             },
             "item": {
@@ -3571,8 +3511,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Altar",
-                        "count": 1
+                        "item_name": "Altar"
                       }
                     }
                   ]
@@ -3647,8 +3586,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Cobalt Bar",
-                "count": 1
+                "item_name": "Cobalt Bar"
               }
             },
             "item": {
@@ -3842,8 +3780,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hardmode",
-                "count": 1
+                "item_name": "Hardmode"
               }
             },
             "item": {
@@ -3861,8 +3798,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hardmode",
-                "count": 1
+                "item_name": "Hardmode"
               }
             },
             "item": {
@@ -3923,8 +3859,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hallow",
-                "count": 1
+                "item_name": "Hallow"
               }
             },
             "item": {
@@ -3942,8 +3877,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hallow",
-                "count": 1
+                "item_name": "Hallow"
               }
             },
             "item": {
@@ -3997,8 +3931,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Asteroid Staff",
-                    "count": 1
+                    "item_name": "Asteroid Staff"
                   }
                 }
               ]
@@ -4018,8 +3951,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hallow",
-                "count": 1
+                "item_name": "Hallow"
               }
             },
             "item": {
@@ -4037,8 +3969,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hallow",
-                "count": 1
+                "item_name": "Hallow"
               }
             },
             "item": {
@@ -4056,8 +3987,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hardmode",
-                "count": 1
+                "item_name": "Hardmode"
               }
             },
             "item": {
@@ -4175,8 +4105,7 @@
                             {
                               "rule": "Has",
                               "args": {
-                                "item_name": "Hardmode Anvil",
-                                "count": 1
+                                "item_name": "Hardmode Anvil"
                               }
                             }
                           ]
@@ -4184,8 +4113,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Pumpkin Moon",
-                            "count": 1
+                            "item_name": "Pumpkin Moon"
                           }
                         }
                       ]
@@ -4193,8 +4121,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Soul of Flight",
-                        "count": 1
+                        "item_name": "Soul of Flight"
                       }
                     }
                   ]
@@ -4285,8 +4212,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hardmode",
-                "count": 1
+                "item_name": "Hardmode"
               }
             },
             "item": {
@@ -4303,8 +4229,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hardmode",
-                "count": 1
+                "item_name": "Hardmode"
               }
             },
             "item": {
@@ -4322,8 +4247,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Truffle",
-                "count": 1
+                "item_name": "Truffle"
               }
             },
             "item": {
@@ -4340,8 +4264,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hardmode",
-                "count": 1
+                "item_name": "Hardmode"
               }
             },
             "item": {
@@ -4358,8 +4281,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Post-Pirate Invasion",
-                "count": 1
+                "item_name": "Post-Pirate Invasion"
               }
             },
             "item": {
@@ -4377,8 +4299,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hallow",
-                "count": 1
+                "item_name": "Hallow"
               }
             },
             "item": {
@@ -4395,8 +4316,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hallow",
-                "count": 1
+                "item_name": "Hallow"
               }
             },
             "item": {
@@ -4414,8 +4334,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sparkle Slime Balloon",
-                "count": 1
+                "item_name": "Sparkle Slime Balloon"
               }
             },
             "item": {
@@ -4495,8 +4414,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Altar",
-                        "count": 1
+                        "item_name": "Altar"
                       }
                     }
                   ]
@@ -4549,8 +4467,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mythril Bar",
-                "count": 1
+                "item_name": "Mythril Bar"
               }
             },
             "item": {
@@ -4601,8 +4518,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Chlorophyte Ore",
-                        "count": 1
+                        "item_name": "Chlorophyte Ore"
                       }
                     }
                   ]
@@ -4642,8 +4558,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Altar",
-                        "count": 1
+                        "item_name": "Altar"
                       }
                     }
                   ]
@@ -4708,8 +4623,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hardmode",
-                    "count": 1
+                    "item_name": "Hardmode"
                   }
                 }
               ]
@@ -4846,8 +4760,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Mechanical Eye",
-                    "count": 1
+                    "item_name": "Mechanical Eye"
                   }
                 }
               ]
@@ -4875,8 +4788,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Mechanical Worm",
-                    "count": 1
+                    "item_name": "Mechanical Worm"
                   }
                 }
               ]
@@ -4904,8 +4816,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Mechanical Skull",
-                    "count": 1
+                    "item_name": "Mechanical Skull"
                   }
                 }
               ]
@@ -9670,7 +9581,6 @@
         "Profaned Soul Artifact": 1,
         "Angelic Alliance": 2
       },
-      "shops": [],
       "ter_items": [
         "Copper Shortsword",
         "Guide",
@@ -10161,11 +10071,11 @@
         "Skeletron Prime"
       ],
       "ter_goals": {
-        "Post-The Twins": "The Twins",
         "Post-The Destroyer": "The Destroyer",
+        "Post-The Twins": "The Twins",
         "Post-Skeletron Prime": "Skeletron Prime"
       },
-      "world_description": "Terraria WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Terraria is a 2D multiplayer sandbox game featuring mining, building, exploration, and combat.\nFeatures 18 bosses and 4 classes.",
       "slot_data": {
         "goal": [
           "Skeletron Prime",
@@ -10181,7 +10091,19 @@
         "fishing_achievements": 0
       },
       "web": {
-        "theme": "grass"
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Terraria randomizer connected to an Archipelago Multiworld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Seldom"
+            ]
+          }
+        ]
       },
       "world_directory": "terraria_worldgen"
     }

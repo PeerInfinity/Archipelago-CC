@@ -229,15 +229,25 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class MegaManBattleNetwork3WorldGenWeb(WebWorld):
     """Web interface for MegaMan Battle Network 3 WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "ice"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the MegaMan Battle Network 3 Randomizer connected to an Archipelago Multiworld.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["digiholic"]
+        )
+    ]
 
 
 class MegaManBattleNetwork3WorldGenWorld(RuleWorldMixin, World):
     """
-    MegaMan Battle Network 3 WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Play as Lan and MegaMan to stop the evil organization WWW led by the nefarious
+    Dr. Wily in their plans to take over the Net! Collect BattleChips, Customize your Navi,
+    and utilize powerful Style Changes to grow strong enough to take on the greatest
+    threat the Internet has ever faced!
     """
 
     game: ClassVar[str] = "MegaMan Battle Network 3 WorldGen"
@@ -542,12 +552,10 @@ class MegaManBattleNetwork3WorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.item_frequencies = {'Progressive Undernet Rank': 8, 'ExpMem': 2, 'Unlocker': 10, 'HPMemory': 23, 'RegUP1': 4, 'RegUP2': 13, 'RegUP3': 4, 'Untrap': 2, 'SubMem': 4, 'MiniEnrg': 3, 'FullEnrg': 5, 'CopyDmg *': 3, 'Charge+1 (White)': 2, 'Charge+1 (Pink)': 2, '600z': 2, '800z': 2, '1000z': 2, '1200z': 2, '1 BugFrag': 10, '10 BugFrags': 5}
         self.rom_name = 'MMBN3_ROM_NOT_GENERATED'
         self.world_description = 'Play as Lan and MegaMan to stop the evil organization WWW led by the nefarious\nDr. Wily in their plans to take over the Net! Collect BattleChips, Customize your Navi,\nand utilize powerful Style Changes to grow strong enough to take on the greatest\nthreat the Internet has ever faced!'
         self.slot_data = types.SimpleNamespace(extra_ranks=0, include_jobs=1, trade_quest_hinting=2)
-        self.web = types.SimpleNamespace(theme='ice', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the MegaMan Battle Network 3 Randomizer connected to an Archipelago Multiworld.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['digiholic']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -659,4 +667,8 @@ class MegaManBattleNetwork3WorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "extra_ranks": 0,
+            "include_jobs": 1,
+            "trade_quest_hinting": 2,
+        }
