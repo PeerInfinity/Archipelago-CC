@@ -185,7 +185,7 @@ def truncate_value(value: Any, max_length: int = 100) -> str:
     return s
 
 
-def is_canonical_difference(path: str, val1: Any = None, val2: Any = None) -> bool:
+def is_canonical_difference(path: str, original_value: Any = None, worldgen_value: Any = None) -> bool:
     """Check if a difference path is caused by --canonical-seed1 or WorldGen.
 
     These differences are expected when comparing an original export
@@ -320,7 +320,7 @@ def is_canonical_difference(path: str, val1: Any = None, val2: Any = None) -> bo
         return True
 
     # shops - WorldGen adds empty array when missing
-    if path.endswith('.shops') and (val1 == '<missing>' or val2 == []):
+    if path.endswith('.shops') and (original_value == '<missing>' or worldgen_value == []):
         return True
 
     # start_inventory_from_pool - may be omitted in WorldGen
