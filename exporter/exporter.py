@@ -1382,7 +1382,11 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                 # Store reference to dungeon instead of full dungeon data
                 if hasattr(region, 'dungeon') and region.dungeon:
-                    dungeon_name = getattr(region.dungeon, 'name', None)
+                    # Handle both Dungeon objects (have .name) and strings (from WorldGen)
+                    if hasattr(region.dungeon, 'name'):
+                        dungeon_name = region.dungeon.name
+                    else:
+                        dungeon_name = str(region.dungeon) if region.dungeon else None
                     if dungeon_name:
                         region_data['dungeon'] = dungeon_name
 

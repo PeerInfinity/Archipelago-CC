@@ -394,6 +394,15 @@ def generate_regions_py(data: ExtractedData) -> str:
             escaped_name = region_name.replace('\\', '\\\\').replace('"', '\\"')
             dynamically_added_regions.append(f'"{escaped_name}"')
 
+    # Build region dungeons dict (region -> dungeon name mapping)
+    dungeon_entries = []
+    for region_name, region_data in data.regions.items():
+        if region_data.dungeon:
+            escaped_name = region_name.replace('\\', '\\\\').replace('"', '\\"')
+            escaped_dungeon = region_data.dungeon.replace('\\', '\\\\').replace('"', '\\"')
+            dungeon_entries.append(f'    "{escaped_name}": "{escaped_dungeon}",')
+    region_dungeons_content = '\n'.join(dungeon_entries)
+
     # Build entrance connections
     entrance_lines = []
 
@@ -426,6 +435,16 @@ REGION_HINTS: Dict[str, str] = {{
         dynamically_added_section = f'''
 # Regions that were added after sphere calculation (from original export)
 DYNAMICALLY_ADDED_REGIONS = {{{dynamically_added_list}}}
+'''
+
+    # Generate region dungeons dict section (if any)
+    region_dungeons_section = ""
+    if dungeon_entries:
+        region_dungeons_section = f'''
+# Region to dungeon mapping
+REGION_DUNGEONS: Dict[str, str] = {{
+{region_dungeons_content}
+}}
 '''
 
     # Build region extra attributes dict (only for regions with extra_attributes)
@@ -470,6 +489,16 @@ REGION_EXTRA_ATTRIBUTES: Dict[str, Dict[str, Any]] = {{
                 setattr(regions[region_name], attr_name, attr_value)
 '''
 
+    # Generate code to apply dungeon attributes to regions
+    region_dungeons_apply = ""
+    if dungeon_entries:
+        region_dungeons_apply = '''
+    # Apply dungeon assignments to regions
+    for region_name, dungeon_name in REGION_DUNGEONS.items():
+        if region_name in regions:
+            regions[region_name].dungeon = dungeon_name
+'''
+
     # Generate code to apply location extra attributes
     location_extra_apply = ""
     if has_location_extra_attrs:
@@ -489,7 +518,7 @@ from typing import {typing_import}
 from BaseClasses import MultiWorld, Region, Entrance
 from .Locations import location_table, {class_name}Location
 
-{region_hints_section}{dynamically_added_section}{region_extra_section}
+{region_hints_section}{dynamically_added_section}{region_dungeons_section}{region_extra_section}
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
@@ -511,7 +540,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     for region_name in _dynamically_added:
         if region_name in regions:
             regions[region_name].dynamically_added = True
-{region_extra_apply}
+{region_extra_apply}{region_dungeons_apply}
     # Add locations to regions
     for location_name, location_data in location_table.items():
         region = regions[location_data.region]

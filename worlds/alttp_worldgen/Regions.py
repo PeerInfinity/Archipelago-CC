@@ -250,6 +250,83 @@ REGION_HINTS: Dict[str, str] = {
 # Regions that were added after sphere calculation (from original export)
 DYNAMICALLY_ADDED_REGIONS = {"Snitch Lady (East)", "Snitch Lady (West)", "Bush Covered House", "Tavern (Front)", "Light World Bomb Hut", "Kakariko Shop", "Fortune Teller (Light)", "Lake Hylia Fortune Teller", "Lumberjack House", "Bonk Fairy (Light)", "Bonk Fairy (Dark)", "Lake Hylia Healer Fairy", "Swamp Healer Fairy", "Desert Healer Fairy", "Dark Lake Hylia Healer Fairy", "Dark Lake Hylia Ledge Healer Fairy", "Dark Desert Healer Fairy", "Dark Death Mountain Healer Fairy", "Long Fairy Cave", "Good Bee Cave", "20 Rupee Cave", "Cave Shop (Lake Hylia)", "Cave Shop (Dark Death Mountain)", "Kakariko Gamble Game", "50 Rupee Cave", "Lost Woods Gamble", "Hookshot Fairy", "Light World Death Mountain Shop", "Palace of Darkness Hint", "East Dark World Hint", "Big Bomb Shop", "Archery Game", "Dark Lake Hylia Ledge Hint", "Dark Lake Hylia Ledge Spike Cave", "Fortune Teller (Dark)", "Village of Outcasts Shop", "Dark Lake Hylia Shop", "Dark World Lumberjack Shop", "Dark World Potion Shop", "Red Shield Shop", "Dark Sanctuary Hint", "Dark Desert Hint", "Desert Northern Cliffs", "Dark Death Mountain Bunny Descent Area"}
 
+# Region to dungeon mapping
+REGION_DUNGEONS: Dict[str, str] = {
+    "Desert Palace Main (Outer)": "Desert Palace",
+    "Desert Palace Main (Inner)": "Desert Palace",
+    "Desert Palace East": "Desert Palace",
+    "Desert Palace North": "Desert Palace",
+    "Eastern Palace": "Eastern Palace",
+    "Hyrule Castle": "Hyrule Castle",
+    "Sewer Drop": "Hyrule Castle",
+    "Sewers (Dark)": "Hyrule Castle",
+    "Sewers": "Hyrule Castle",
+    "Sanctuary": "Hyrule Castle",
+    "Agahnims Tower": "Agahnims Tower",
+    "Agahnim 1": "Agahnims Tower",
+    "Tower of Hera (Bottom)": "Tower of Hera",
+    "Tower of Hera (Basement)": "Tower of Hera",
+    "Tower of Hera (Top)": "Tower of Hera",
+    "Swamp Palace (Entrance)": "Swamp Palace",
+    "Swamp Palace (First Room)": "Swamp Palace",
+    "Swamp Palace (Starting Area)": "Swamp Palace",
+    "Swamp Palace (Center)": "Swamp Palace",
+    "Swamp Palace (West)": "Swamp Palace",
+    "Swamp Palace (North)": "Swamp Palace",
+    "Thieves Town (Entrance)": "Thieves Town",
+    "Thieves Town (Deep)": "Thieves Town",
+    "Blind Fight": "Thieves Town",
+    "Skull Woods First Section": "Skull Woods",
+    "Skull Woods First Section (Right)": "Skull Woods",
+    "Skull Woods First Section (Left)": "Skull Woods",
+    "Skull Woods First Section (Top)": "Skull Woods",
+    "Skull Woods Second Section (Drop)": "Skull Woods",
+    "Skull Woods Second Section": "Skull Woods",
+    "Skull Woods Final Section (Entrance)": "Skull Woods",
+    "Skull Woods Final Section (Mothula)": "Skull Woods",
+    "Ice Palace (Entrance)": "Ice Palace",
+    "Ice Palace (Second Section)": "Ice Palace",
+    "Ice Palace (Main)": "Ice Palace",
+    "Ice Palace (East)": "Ice Palace",
+    "Ice Palace (East Top)": "Ice Palace",
+    "Ice Palace (Kholdstare)": "Ice Palace",
+    "Misery Mire (Entrance)": "Misery Mire",
+    "Misery Mire (Main)": "Misery Mire",
+    "Misery Mire (West)": "Misery Mire",
+    "Misery Mire (Final Area)": "Misery Mire",
+    "Misery Mire (Vitreous)": "Misery Mire",
+    "Turtle Rock (Entrance)": "Turtle Rock",
+    "Turtle Rock (First Section)": "Turtle Rock",
+    "Turtle Rock (Pokey Room)": "Turtle Rock",
+    "Turtle Rock (Chain Chomp Room)": "Turtle Rock",
+    "Turtle Rock (Second Section)": "Turtle Rock",
+    "Turtle Rock (Big Chest)": "Turtle Rock",
+    "Turtle Rock (Crystaroller Room)": "Turtle Rock",
+    "Turtle Rock (Dark Room)": "Turtle Rock",
+    "Turtle Rock (Eye Bridge)": "Turtle Rock",
+    "Turtle Rock (Trinexx)": "Turtle Rock",
+    "Palace of Darkness (Entrance)": "Palace of Darkness",
+    "Palace of Darkness (Center)": "Palace of Darkness",
+    "Palace of Darkness (Big Key Chest)": "Palace of Darkness",
+    "Palace of Darkness (Bonk Section)": "Palace of Darkness",
+    "Palace of Darkness (North)": "Palace of Darkness",
+    "Palace of Darkness (Maze)": "Palace of Darkness",
+    "Palace of Darkness (Harmless Hellway)": "Palace of Darkness",
+    "Palace of Darkness (Final Section)": "Palace of Darkness",
+    "Ganons Tower (Entrance)": "Ganons Tower",
+    "Ganons Tower (Tile Room)": "Ganons Tower",
+    "Ganons Tower (Compass Room)": "Ganons Tower",
+    "Ganons Tower (Hookshot Room)": "Ganons Tower",
+    "Ganons Tower (Map Room)": "Ganons Tower",
+    "Ganons Tower (Firesnake Room)": "Ganons Tower",
+    "Ganons Tower (Teleport Room)": "Ganons Tower",
+    "Ganons Tower (Bottom)": "Ganons Tower",
+    "Ganons Tower (Top)": "Ganons Tower",
+    "Ganons Tower (Before Moldorm)": "Ganons Tower",
+    "Ganons Tower (Moldorm)": "Ganons Tower",
+    "Agahnim 2": "Ganons Tower",
+}
+
 # Region extra attributes (game-specific, e.g., code)
 REGION_EXTRA_ATTRIBUTES: Dict[str, Dict[str, Any]] = {
     "Menu": {"is_dark_world": False, "is_light_world": True, "type": 1},
@@ -520,6 +597,11 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         if region_name in regions:
             for attr_name, attr_value in extra_attrs.items():
                 setattr(regions[region_name], attr_name, attr_value)
+
+    # Apply dungeon assignments to regions
+    for region_name, dungeon_name in REGION_DUNGEONS.items():
+        if region_name in regions:
+            regions[region_name].dungeon = dungeon_name
 
     # Add locations to regions
     for location_name, location_data in location_table.items():
