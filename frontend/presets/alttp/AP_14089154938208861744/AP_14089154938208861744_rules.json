@@ -5866,15 +5866,6 @@
                   }
                 },
                 {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Crystal 5",
-                      "Crystal 6"
-                    ]
-                  }
-                },
-                {
                   "rule": "Or",
                   "children": [
                     {
@@ -5892,6 +5883,15 @@
                       "_converted_from_ast": true
                     }
                   ]
+                },
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Crystal 5",
+                      "Crystal 6"
+                    ]
+                  }
                 }
               ]
             }
@@ -5970,38 +5970,19 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "AST_function_call",
-                  "args": {
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "subscript",
-                            "value": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "name",
-                                "name": "world"
-                              },
-                              "attr": "worlds"
-                            },
-                            "index": {
-                              "type": "constant",
-                              "value": 1
-                            }
-                          },
-                          "attr": "options"
-                        },
-                        "attr": "open_pyramid"
+                  "rule": "bool",
+                  "_original_ast_type": "helper",
+                  "_converted_from_ast": true,
+                  "args": [
+                    {
+                      "rule": "AST_setting_value",
+                      "args": {
+                        "setting": "open_pyramid",
+                        "_original_ast_type": "setting_value"
                       },
-                      "attr": "to_bool"
-                    },
-                    "_original_ast_type": "function_call"
-                  },
-                  "_converted_from_ast": true
+                      "_converted_from_ast": true
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
@@ -8267,24 +8248,13 @@
             "name": "Hookshot Cave - Top Right",
             "id": 60241,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Hookshot",
-                      "Moon Pearl"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Hookshot"
+                ]
+              }
             },
             "item": {
               "name": "Rupees (20)",
@@ -8298,24 +8268,13 @@
             "name": "Hookshot Cave - Top Left",
             "id": 60244,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Hookshot",
-                      "Moon Pearl"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Hookshot"
+                ]
+              }
             },
             "item": {
               "name": "Rupees (20)",
@@ -8360,24 +8319,13 @@
             "name": "Hookshot Cave - Bottom Left",
             "id": 60247,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Hookshot",
-                      "Moon Pearl"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Hookshot"
+                ]
+              }
             },
             "item": {
               "name": "Rupees (20)",
@@ -8628,24 +8576,14 @@
             "name": "Swamp Palace Moat",
             "connected_region": "Swamp Palace (First Room)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Flippers",
-                      "Open Floodgate"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Magic Mirror"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Magic Mirror",
+                  "Flippers",
+                  "Open Floodgate"
+                ]
+              }
             }
           },
           {
@@ -11670,24 +11608,13 @@
             "name": "Turtle Rock - Compass Chest",
             "id": 59938,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Cane of Somaria",
-                      "Moon Pearl"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Cane of Somaria"
+                ]
+              }
             },
             "item": {
               "name": "Small Key (Turtle Rock)",
@@ -11701,24 +11628,14 @@
             "name": "Turtle Rock - Roller Room - Left",
             "id": 59932,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Cane of Somaria",
-                      "Fire Rod"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Cane of Somaria",
+                  "Fire Rod"
+                ]
+              }
             },
             "item": {
               "name": "Big Key (Turtle Rock)",
@@ -11732,24 +11649,14 @@
             "name": "Turtle Rock - Roller Room - Right",
             "id": 59935,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Cane of Somaria",
-                      "Fire Rod"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Cane of Somaria",
+                  "Fire Rod"
+                ]
+              }
             },
             "item": {
               "name": "Arrows (10)",
@@ -12394,15 +12301,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "Moon Pearl",
                       "Big Key (Turtle Rock)",
                       "Cane of Somaria"
                     ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -12863,15 +12765,10 @@
                   "rule": "HasAll",
                   "args": {
                     "items": [
+                      "Lamp",
                       "Big Key (Palace of Darkness)",
                       "Hammer"
                     ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Lamp"
                   }
                 }
               ]
@@ -14980,24 +14877,13 @@
             "name": "Ganons Tower - Big Chest",
             "id": 60118,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "HasAll",
-                  "args": {
-                    "items": [
-                      "Big Key (Ganons Tower)",
-                      "Moon Pearl"
-                    ]
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Big Key (Ganons Tower)"
+                ]
+              }
             },
             "item": {
               "name": "Rupees (20)",
