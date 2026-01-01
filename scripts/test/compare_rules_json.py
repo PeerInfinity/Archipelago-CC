@@ -366,8 +366,13 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     # - DKC3: progress_byte, progress_bit, inverted_bit
     # - Yoshi's Island: level_id (used for hint data, not rules)
     # - Mario Land 2: level_id (used for hint data, not rules)
+    # - TWW: bit, code, region, stage_id
     if path.startswith('regions') and 'locations[' in path:
-        location_metadata_attrs = ['progress_byte', 'progress_bit', 'inverted_bit', 'level_id']
+        location_metadata_attrs = [
+            'progress_byte', 'progress_bit', 'inverted_bit',  # DKC3
+            'level_id',  # Yoshi's Island, Mario Land 2
+            'bit', 'code', 'region', 'stage_id',  # TWW (The Wind Waker)
+        ]
         for attr in location_metadata_attrs:
             if path.endswith(f'.{attr}'):
                 return True
