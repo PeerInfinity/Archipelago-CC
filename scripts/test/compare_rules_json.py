@@ -216,6 +216,7 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     - shops: WorldGen adds empty array when missing
     - accumulator_rules: WorldGen-specific for state counter patterns
     - prog_items_init: WorldGen-specific initial counter values
+    - relic_groups.Event: WorldGen exports event items as a relic group
     """
     # === Canonical placement differences ===
 
@@ -337,6 +338,10 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     # prog_items_init (WorldGen-specific initial counter values)
     # Original worlds don't have this, WorldGen worlds generate it from patterns
     if 'prog_items_init' in path:
+        return True
+
+    # relic_groups.Event: WorldGen exports event items as a relic group
+    if 'relic_groups.Event' in path:
         return True
 
 
