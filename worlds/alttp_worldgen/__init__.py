@@ -328,7 +328,7 @@ class ALinktothePastWorldGenWeb(WebWorld):
     ]
 
 
-class ALinktothePastWorldGenWorld(RuleWorldMixin, World):
+class ALTTPWorld(RuleWorldMixin, World):
     """
     The Legend of Zelda: A Link to the Past is an action/adventure game. Take on the role of
     Link, a boy who is destined to save the land of Hyrule. Delve through three palaces and nine

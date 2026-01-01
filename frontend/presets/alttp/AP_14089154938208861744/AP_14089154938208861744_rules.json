@@ -10373,7 +10373,24 @@
                       "args": {
                         "item": "Big Key (Ice Palace)",
                         "player": 1,
-                        "locations": [],
+                        "locations": [
+                          [
+                            "Ice Palace - Spike Room",
+                            1
+                          ],
+                          [
+                            "Ice Palace - Hammer Block Key Drop",
+                            1
+                          ],
+                          [
+                            "Ice Palace - Big Key Chest",
+                            1
+                          ],
+                          [
+                            "Ice Palace - Map Chest",
+                            1
+                          ]
+                        ],
                         "_original_ast_type": "placement_search"
                       },
                       "_converted_from_ast": true
@@ -14561,7 +14578,12 @@
                               "args": {
                                 "item": "Small Key (Ganons Tower)",
                                 "player": 1,
-                                "locations": [],
+                                "locations": [
+                                  [
+                                    "Ganons Tower - Firesnake Room",
+                                    1
+                                  ]
+                                ],
                                 "_original_ast_type": "placement_search"
                               },
                               "_converted_from_ast": true
@@ -21016,7 +21038,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "ALTTPWorld"
     }
   },
   "game_info": {

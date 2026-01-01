@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "ALinktothePastWorldGenWorld"
+    "1": "ALTTPWorld"
   },
   "regions": {
     "1": {
@@ -20885,7 +20885,8 @@
       "rule_format": {
         "version": "1.0"
       },
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "world_class_name": "ALTTPWorld"
     }
   },
   "game_info": {
