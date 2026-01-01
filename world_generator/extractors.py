@@ -48,6 +48,7 @@ class GameMetadata:
     resolved_settings: Dict[str, Any] = field(default_factory=dict)  # Resolved setting values from seed
     option_definitions: Dict[str, Dict[str, Any]] = field(default_factory=dict)  # Option class definitions (type, range, choices, etc.)
     use_auto_indirect_conditions: bool = False  # When True, use auto sweep for indirect region dependencies
+    original_world_class_name: Optional[str] = None  # Original class name from exporter (preserved during game name override)
 
 
 @dataclass
@@ -74,8 +75,8 @@ class LocationData:
     locked: bool = False  # True if item was placed via place_locked_item
     progress_type: Optional[str] = None  # 'EXCLUDED', 'PRIORITY', or None for DEFAULT
     show_in_spoiler: bool = True  # Whether to show in spoiler log
-    access: Optional[Dict[str, Any]] = None  # Game-specific access data (e.g., Lingo AccessRequirements)
-    extra_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific attributes (e.g., type_string, price)
+    access: Optional[Dict[str, Any]] = None  # Game-specific access data
+    extra_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific attributes
 
 
 @dataclass
@@ -197,15 +198,30 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
     """
     game_name = json_data.get('game_name', 'UnknownGame')
 
-    # Get world class name from the data or derive from game name
-    world_classes = json_data.get('world_classes', {})
-    world_class_name = None
-    if world_classes:
-        # Get the world class for the specified player, or fall back to first available
-        world_class_name = world_classes.get(player_id) or list(world_classes.values())[0]
+    # Extract exporter settings first (we may need world_class_name from it)
+    exporter_data = json_data.get('exporter', {}).get(player_id, {})
+
+    # Get world class name with priority:
+    # 1. exporter section (most authoritative, new format)
+    # 2. world_classes (legacy format)
+    # 3. derive from game name (fallback)
+    #
+    # Track original_world_class_name to preserve during game name override
+    # This is set when the class name comes from the source export (not derived)
+    original_world_class_name = exporter_data.get('world_class_name')
+    world_class_name = original_world_class_name
+
+    if not world_class_name:
+        world_classes = json_data.get('world_classes', {})
+        if world_classes:
+            # Get the world class for the specified player, or fall back to first available
+            world_class_name = world_classes.get(player_id) or list(world_classes.values())[0]
+            # Also set original_world_class_name since this came from the source export
+            original_world_class_name = world_class_name
 
     if not world_class_name:
         # Derive from game name: "My Game" -> "MyGameWorld"
+        # Note: original_world_class_name stays None since this is derived, not from source
         world_class_name = sanitize_identifier(game_name) + 'World'
 
     # Extract world data for the specified player (contains main world attributes)
@@ -213,9 +229,6 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
 
     # Extract game_info for the specified player (contains game-specific custom data)
     game_info = json_data.get('game_info', {}).get(player_id, {})
-
-    # Extract exporter settings (exporter-specific flags like bidirectional exits)
-    exporter_data = json_data.get('exporter', {}).get(player_id, {})
 
     # Extract base_id (now in world[player], fallback to game_info for legacy)
     base_id = world_data.get('base_id') or game_info.get('base_id')
@@ -296,6 +309,8 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
         option_definitions=option_definitions,
         # use_auto_indirect_conditions is now in exporter[player_id], fallback to world_data for legacy
         use_auto_indirect_conditions=exporter_data.get('use_auto_indirect_conditions', False) or world_data.get('use_auto_indirect_conditions', False),
+        # Track original world class name from exporter (preserved during game name override)
+        original_world_class_name=original_world_class_name,
     )
 
 
@@ -418,7 +433,7 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
                 locked=is_locked,
                 progress_type=progress_type,
                 show_in_spoiler=show_in_spoiler,
-                access=loc_info.get('access'),  # Game-specific access data (e.g., Lingo AccessRequirements)
+                access=loc_info.get('access'),  # Game-specific access data
                 extra_attributes=extra_attrs,
             )
 
