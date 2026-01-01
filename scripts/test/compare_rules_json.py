@@ -142,6 +142,108 @@ def normalize_rule_format(obj: Any) -> Any:
         return obj
 
 
+def normalize_and_has_patterns(obj: Any) -> Any:
+    """
+    Normalize And patterns containing only Has/HasAll into a single HasAll.
+
+    Examples:
+        And(Has(A), Has(B)) -> HasAll(A, B)
+        And(HasAll(A, B), Has(C)) -> HasAll(A, B, C)
+        And(HasAll(A, B), HasAll(C, D)) -> HasAll(A, B, C, D)
+
+    This produces cleaner, more readable rules.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_and_has_patterns(v) for k, v in obj.items()}
+
+        # Check if this is an And rule that can be combined into HasAll
+        if normalized.get('rule') == 'And':
+            children = normalized.get('children', [])
+            if children:
+                # Check if all children are Has or HasAll
+                all_items = []
+                can_combine = True
+
+                for child in children:
+                    if isinstance(child, dict):
+                        child_rule = child.get('rule')
+                        if child_rule == 'Has':
+                            item_name = child.get('args', {}).get('item_name')
+                            count = child.get('args', {}).get('count', 1)
+                            # Only combine if count is 1 (default)
+                            if item_name and count == 1:
+                                all_items.append(item_name)
+                            else:
+                                can_combine = False
+                                break
+                        elif child_rule == 'HasAll':
+                            items = child.get('args', {}).get('items', [])
+                            all_items.extend(items)
+                        else:
+                            can_combine = False
+                            break
+                    else:
+                        can_combine = False
+                        break
+
+                if can_combine and len(all_items) >= 2:
+                    return {
+                        'rule': 'HasAll',
+                        'args': {'items': all_items}
+                    }
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_and_has_patterns(item) for item in obj]
+    else:
+        return obj
+
+
+def normalize_and_or_structure(obj: Any) -> Any:
+    """
+    Normalize And/Or rule structures:
+    1. Flatten nested And/Or (e.g., And(And(a, b), c) -> And(a, b, c))
+    2. Sort children by a canonical ordering for consistent comparison
+
+    This ensures that semantically equivalent rules compare as equal regardless
+    of how they were constructed.
+    """
+    if isinstance(obj, dict):
+        # First recursively normalize children
+        normalized = {k: normalize_and_or_structure(v) for k, v in obj.items()}
+
+        rule_type = normalized.get('rule')
+        if rule_type in ('And', 'Or'):
+            children = normalized.get('children', [])
+            if children:
+                # Flatten nested And/Or of the same type
+                flattened = []
+                for child in children:
+                    if isinstance(child, dict) and child.get('rule') == rule_type:
+                        # Same type - flatten its children into ours
+                        flattened.extend(child.get('children', []))
+                    else:
+                        flattened.append(child)
+
+                # Sort children by a canonical key for consistent ordering
+                def sort_key(child):
+                    if isinstance(child, dict):
+                        # Sort by rule type first, then by string representation
+                        rule = child.get('rule', '')
+                        return (rule, json.dumps(child, sort_keys=True))
+                    return ('', str(child))
+
+                sorted_children = sorted(flattened, key=sort_key)
+                normalized['children'] = sorted_children
+
+        return normalized
+    elif isinstance(obj, list):
+        return [normalize_and_or_structure(item) for item in obj]
+    else:
+        return obj
+
+
 def find_differences(obj1: Any, obj2: Any, path: str = "") -> List[Tuple[str, Any, Any]]:
     """
     Recursively find differences between two objects.
@@ -246,6 +348,14 @@ def main():
     # Normalize rule format differences (semantically-equivalent representations)
     original_normalized = normalize_rule_format(original_normalized)
     worldgen_normalized = normalize_rule_format(worldgen_normalized)
+
+    # Normalize And+Has/HasAll patterns to single HasAll (cleaner format)
+    original_normalized = normalize_and_has_patterns(original_normalized)
+    worldgen_normalized = normalize_and_has_patterns(worldgen_normalized)
+
+    # Normalize And/Or structure (flatten nested, sort children)
+    original_normalized = normalize_and_or_structure(original_normalized)
+    worldgen_normalized = normalize_and_or_structure(worldgen_normalized)
 
     # Find differences
     differences = find_differences(original_normalized, worldgen_normalized)
