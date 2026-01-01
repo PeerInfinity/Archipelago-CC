@@ -528,6 +528,121 @@ class ASTToRuleBuilder:
         })
 
     # -------------------------------------------------------------------------
+    # Composite Rule Optimizations
+    # -------------------------------------------------------------------------
+
+    def _flatten_composite(self, rule_name: str, children: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Flatten nested And/Or of the same type.
+
+        And(A, And(B, C)) -> And(A, B, C)
+        Or(A, Or(B, C)) -> Or(A, B, C)
+        """
+        flattened = []
+        for child in children:
+            if isinstance(child, dict) and child.get('rule') == rule_name:
+                # Same type - flatten its children
+                nested_children = child.get('children', [])
+                flattened.extend(nested_children)
+            else:
+                flattened.append(child)
+        return flattened
+
+    def _remove_identity_elements(self, rule_name: str, children: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Remove identity elements from And/Or.
+
+        And(..., True_) -> And(...)  (True_ is identity for And)
+        Or(..., False_) -> Or(...)   (False_ is identity for Or)
+        """
+        identity = 'True_' if rule_name == 'And' else 'False_'
+        return [c for c in children if not (isinstance(c, dict) and c.get('rule') == identity)]
+
+    def _check_absorbing_element(self, rule_name: str, children: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+        """
+        Check for absorbing elements in And/Or.
+
+        And(..., False_) -> False_  (False_ absorbs And)
+        Or(..., True_) -> True_     (True_ absorbs Or)
+
+        Returns the absorbing element if found, None otherwise.
+        """
+        absorbing = 'False_' if rule_name == 'And' else 'True_'
+        for child in children:
+            if isinstance(child, dict) and child.get('rule') == absorbing:
+                return child
+        return None
+
+    def _combine_has_rules(self, rule_name: str, children: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Combine multiple simple Has rules into HasAll/HasAny.
+
+        And(Has(A), Has(B), Has(C)) -> And(HasAll([A, B, C]))
+        Or(Has(A), Has(B), Has(C)) -> Or(HasAny([A, B, C]))
+
+        Only combines Has rules without count (or count=1).
+        """
+        target_rule = 'HasAll' if rule_name == 'And' else 'HasAny'
+
+        simple_has_items = []
+        other_children = []
+
+        for child in children:
+            if isinstance(child, dict) and child.get('rule') == 'Has':
+                args = child.get('args', {})
+                count = args.get('count', 1)
+                item_name = args.get('item_name')
+                # Only combine simple Has (count=1 or no count)
+                if count == 1 and item_name and isinstance(item_name, str):
+                    simple_has_items.append(item_name)
+                    continue
+            other_children.append(child)
+
+        # Deduplicate while preserving order
+        unique_items = list(dict.fromkeys(simple_has_items))
+
+        if len(unique_items) >= 2:
+            other_children.append(self._make_rule(target_rule, {'items': unique_items}))
+        elif len(unique_items) == 1:
+            other_children.append(self._make_rule('Has', {'item_name': unique_items[0]}))
+
+        return other_children
+
+    def _optimize_composite(self, rule_name: str, children: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Apply all optimizations to a composite rule (And/Or).
+
+        1. Flatten nested same-type composites
+        2. Check for absorbing elements (False_ in And, True_ in Or)
+        3. Remove identity elements (True_ in And, False_ in Or)
+        4. Combine simple Has rules into HasAll/HasAny
+        5. Unwrap single-child composites
+        """
+        # 1. Flatten nested
+        children = self._flatten_composite(rule_name, children)
+
+        # 2. Check absorbing element
+        absorbing = self._check_absorbing_element(rule_name, children)
+        if absorbing:
+            return absorbing
+
+        # 3. Remove identity elements
+        children = self._remove_identity_elements(rule_name, children)
+
+        # 4. Combine Has rules
+        children = self._combine_has_rules(rule_name, children)
+
+        # 5. Handle edge cases
+        if not children:
+            # Empty And -> True_, Empty Or -> False_
+            return self._make_rule('True_' if rule_name == 'And' else 'False_', {})
+
+        if len(children) == 1:
+            return children[0]
+
+        return self._make_composite_rule(rule_name, children)
+
+    # -------------------------------------------------------------------------
     # Composite Rule Converters
     # -------------------------------------------------------------------------
 
@@ -536,25 +651,27 @@ class ASTToRuleBuilder:
         Convert and rule.
 
         AST: {"type": "and", "conditions": [...]}
-        RB: {"rule": "And", "options": [], "children": [...]}
+        RB: {"rule": "And", "children": [...]}
 
-        Optimization: Collects simple item_check rules with count=1 and combines
-        them into HasAll, even when mixed with other conditions. This matches
-        the Rule Builder's _simplify_and behavior for consistent output.
+        Optimizations applied:
+        1. Collect simple item_check rules with count=1 and combine into HasAll
+        2. Flatten nested And rules
+        3. Remove True_ identity elements
+        4. Check for False_ absorbing element
+        5. Combine already-converted Has rules into HasAll
+        6. Unwrap single-child And
         """
         conditions = rule.get('conditions', [])
 
         if not conditions:
             return self._make_rule('True_', {})
 
-        # Separate simple item checks (count=1) from other conditions
-        # This partial optimization matches Rule Builder's _simplify_and
+        # First pass: collect simple item_checks before conversion
         simple_item_checks = []
         other_conditions = []
         for cond in conditions:
             if cond.get('type') == 'item_check':
                 count_raw = cond.get('count', 1)
-                # Unwrap constant wrapper if present
                 count, _ = self._extract_constant_value(count_raw)
                 if count == 1:
                     item_raw = cond.get('item', '')
@@ -564,46 +681,45 @@ class ASTToRuleBuilder:
                         continue
             other_conditions.append(cond)
 
-        # Convert other conditions
+        # Convert remaining conditions
         converted_children = [self._convert_rule(cond) for cond in other_conditions]
 
-        # Add simple item checks as HasAll (if 2+) or Has (if 1)
-        # Deduplicate items while preserving order
+        # Add pre-conversion item checks as HasAll/Has
         unique_items = list(dict.fromkeys(simple_item_checks))
         if len(unique_items) >= 2:
             converted_children.append(self._make_rule('HasAll', {'items': unique_items}))
         elif len(unique_items) == 1:
             converted_children.append(self._make_rule('Has', {'item_name': unique_items[0]}))
 
-        if len(converted_children) == 1:
-            return converted_children[0]
-
-        return self._make_composite_rule('And', converted_children)
+        # Apply post-conversion optimizations
+        return self._optimize_composite('And', converted_children)
 
     def _convert_or(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Convert or rule.
 
         AST: {"type": "or", "conditions": [...]}
-        RB: {"rule": "Or", "options": [], "children": [...]}
+        RB: {"rule": "Or", "children": [...]}
 
-        Optimization: Collects simple item_check rules with count=1 and combines
-        them into HasAny, even when mixed with other conditions. This matches
-        the Rule Builder's _simplify_or behavior for consistent output.
+        Optimizations applied:
+        1. Collect simple item_check rules with count=1 and combine into HasAny
+        2. Flatten nested Or rules
+        3. Remove False_ identity elements
+        4. Check for True_ absorbing element
+        5. Combine already-converted Has rules into HasAny
+        6. Unwrap single-child Or
         """
         conditions = rule.get('conditions', [])
 
         if not conditions:
             return self._make_rule('False_', {})
 
-        # Separate simple item checks (count=1) from other conditions
-        # This partial optimization matches Rule Builder's _simplify_or
+        # First pass: collect simple item_checks before conversion
         simple_item_checks = []
         other_conditions = []
         for cond in conditions:
             if cond.get('type') == 'item_check':
                 count_raw = cond.get('count', 1)
-                # Unwrap constant wrapper if present
                 count, _ = self._extract_constant_value(count_raw)
                 if count == 1:
                     item_raw = cond.get('item', '')
@@ -613,37 +729,39 @@ class ASTToRuleBuilder:
                         continue
             other_conditions.append(cond)
 
-        # Convert other conditions
+        # Convert remaining conditions
         converted_children = [self._convert_rule(cond) for cond in other_conditions]
 
-        # Add simple item checks as HasAny (if 2+) or Has (if 1)
-        # Deduplicate items while preserving order
+        # Add pre-conversion item checks as HasAny/Has
         unique_items = list(dict.fromkeys(simple_item_checks))
         if len(unique_items) >= 2:
             converted_children.append(self._make_rule('HasAny', {'items': unique_items}))
         elif len(unique_items) == 1:
             converted_children.append(self._make_rule('Has', {'item_name': unique_items[0]}))
 
-        if len(converted_children) == 1:
-            return converted_children[0]
-
-        return self._make_composite_rule('Or', converted_children)
+        # Apply post-conversion optimizations
+        return self._optimize_composite('Or', converted_children)
 
     def _convert_not(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Convert not rule.
 
         AST: {"type": "not", "condition": {...}}
-        RB: No direct equivalent - preserve as custom rule
+        RB: {"rule": "Not", "args": {"condition": {...}}}
+
+        Optimization: Not(Not(X)) -> X
         """
         condition = rule.get('condition', {})
         converted_condition = self._convert_rule(condition)
 
-        self.warnings.append("'not' rule has no direct Rule Builder equivalent, preserved as custom rule")
-        return self._make_custom_rule('Not', {
-            'condition': converted_condition,
-            '_original_ast_type': 'not'
-        })
+        # Optimization: Not(Not(X)) -> X
+        if (isinstance(converted_condition, dict) and
+            converted_condition.get('rule') == 'Not' and
+            'args' in converted_condition and
+            'condition' in converted_condition['args']):
+            return converted_condition['args']['condition']
+
+        return self._make_rule('Not', {'condition': converted_condition})
 
     # -------------------------------------------------------------------------
     # Reachability Converters
