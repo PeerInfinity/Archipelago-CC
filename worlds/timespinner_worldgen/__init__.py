@@ -12,7 +12,7 @@ from rule_builder import RuleWorldMixin
 if TYPE_CHECKING:
     from BaseClasses import CollectionState, MultiWorld
 
-from .Items import item_table, TimespinnerWorldGenItem
+from .Items import item_table, ItemData, TimespinnerWorldGenItem
 from .Locations import location_table, TimespinnerWorldGenLocation
 from .Options import TimespinnerWorldGenOptions
 from .Regions import create_regions
@@ -211,6 +211,10 @@ class TimespinnerWorldGenWorld(RuleWorldMixin, World):
     item_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.id for name, data in item_table.items() if data.id is not None
     }
+
+    # Expose item_table as item_name_to_item for exporter compatibility
+    # This allows the exporter handler to find item classifications
+    item_name_to_item: ClassVar[Dict[str, "ItemData"]] = item_table
 
     location_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.location_id for name, data in location_table.items()

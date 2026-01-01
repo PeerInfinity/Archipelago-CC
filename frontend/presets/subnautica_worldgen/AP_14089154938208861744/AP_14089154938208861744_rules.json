@@ -4193,7 +4193,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Ion Power Cell": {
         "name": "Ion Power Cell",
@@ -4545,7 +4545,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Neptune Boosters": {
         "name": "Neptune Boosters",
@@ -4556,7 +4556,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Neptune Fuel Reserve": {
         "name": "Neptune Fuel Reserve",
@@ -4567,7 +4567,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Neptune Cockpit": {
         "name": "Neptune Cockpit",
@@ -4578,7 +4578,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Water Filtration Machine": {
         "name": "Water Filtration Machine",

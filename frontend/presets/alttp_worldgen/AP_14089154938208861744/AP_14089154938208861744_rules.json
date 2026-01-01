@@ -41,7 +41,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Light World": {
         "name": "Light World",
@@ -738,7 +741,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Death Mountain Entrance": {
         "name": "Death Mountain Entrance",
@@ -759,7 +765,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Lake Hylia Central Island": {
         "name": "Lake Hylia Central Island",
@@ -781,7 +790,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Blinds Hideout": {
         "name": "Blinds Hideout",
@@ -859,7 +871,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Hyrule Castle Secret Entrance": {
         "name": "Hyrule Castle Secret Entrance",
@@ -902,7 +917,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Zoras River": {
         "name": "Zoras River",
@@ -940,7 +958,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Waterfall of Wishing": {
         "name": "Waterfall of Wishing",
@@ -975,7 +996,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Kings Grave Area": {
         "name": "Kings Grave Area",
@@ -1000,7 +1024,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Kings Grave": {
         "name": "Kings Grave",
@@ -1021,7 +1048,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "North Fairy Cave": {
         "name": "North Fairy Cave",
@@ -1035,7 +1065,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Dam": {
         "name": "Dam",
@@ -1071,7 +1104,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Links House": {
         "name": "Links House",
@@ -1100,7 +1136,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Chris Houlihan Room": {
         "name": "Chris Houlihan Room",
@@ -1114,7 +1153,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": false,
+        "type": 3
       },
       "Tavern": {
         "name": "Tavern",
@@ -1135,7 +1177,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Elder House": {
         "name": "Elder House",
@@ -1156,133 +1201,190 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Snitch Lady (East)": {
         "name": "Snitch Lady (East)",
         "hint_text": "a boring house",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Snitch Lady (West)": {
         "name": "Snitch Lady (West)",
         "hint_text": "a boring house",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Bush Covered House": {
         "name": "Bush Covered House",
         "hint_text": "the grass man",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Tavern (Front)": {
         "name": "Tavern (Front)",
         "hint_text": "the tavern",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Light World Bomb Hut": {
         "name": "Light World Bomb Hut",
         "hint_text": "a restock room",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Kakariko Shop": {
         "name": "Kakariko Shop",
         "hint_text": "a common shop",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Fortune Teller (Light)": {
         "name": "Fortune Teller (Light)",
         "hint_text": "a fortune teller",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Lake Hylia Fortune Teller": {
         "name": "Lake Hylia Fortune Teller",
         "hint_text": "a fortune teller",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Lumberjack House": {
         "name": "Lumberjack House",
         "hint_text": "a boring house",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Bonk Fairy (Light)": {
         "name": "Bonk Fairy (Light)",
         "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Bonk Fairy (Dark)": {
         "name": "Bonk Fairy (Dark)",
         "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Lake Hylia Healer Fairy": {
         "name": "Lake Hylia Healer Fairy",
         "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Swamp Healer Fairy": {
         "name": "Swamp Healer Fairy",
         "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Desert Healer Fairy": {
         "name": "Desert Healer Fairy",
         "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Dark Lake Hylia Healer Fairy": {
         "name": "Dark Lake Hylia Healer Fairy",
         "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Dark Lake Hylia Ledge Healer Fairy": {
         "name": "Dark Lake Hylia Ledge Healer Fairy",
         "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Dark Desert Healer Fairy": {
         "name": "Dark Desert Healer Fairy",
         "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Dark Death Mountain Healer Fairy": {
         "name": "Dark Death Mountain Healer Fairy",
         "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Chicken House": {
         "name": "Chicken House",
@@ -1304,7 +1406,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Aginahs Cave": {
         "name": "Aginahs Cave",
@@ -1326,7 +1431,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Sahasrahlas Hut": {
         "name": "Sahasrahlas Hut",
@@ -1395,7 +1503,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Kakariko Well (top)": {
         "name": "Kakariko Well (top)",
@@ -1481,7 +1592,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Kakariko Well (bottom)": {
         "name": "Kakariko Well (bottom)",
@@ -1495,7 +1609,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Blacksmiths Hut": {
         "name": "Blacksmiths Hut",
@@ -1548,7 +1665,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Bat Cave Drop Ledge": {
         "name": "Bat Cave Drop Ledge",
@@ -1562,7 +1682,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Bat Cave (right)": {
         "name": "Bat Cave (right)",
@@ -1594,7 +1717,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Bat Cave (left)": {
         "name": "Bat Cave (left)",
@@ -1608,7 +1734,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Sick Kids House": {
         "name": "Sick Kids House",
@@ -1633,7 +1762,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Hobo Bridge": {
         "name": "Hobo Bridge",
@@ -1654,7 +1786,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Lost Woods Hideout (top)": {
         "name": "Lost Woods Hideout (top)",
@@ -1683,7 +1818,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Lost Woods Hideout (bottom)": {
         "name": "Lost Woods Hideout (bottom)",
@@ -1697,7 +1835,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Lumberjack Tree (top)": {
         "name": "Lumberjack Tree (top)",
@@ -1726,7 +1867,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Lumberjack Tree (bottom)": {
         "name": "Lumberjack Tree (bottom)",
@@ -1740,7 +1884,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Cave 45 Ledge": {
         "name": "Cave 45 Ledge",
@@ -1754,7 +1901,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Cave 45": {
         "name": "Cave 45",
@@ -1775,7 +1925,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Graveyard Ledge": {
         "name": "Graveyard Ledge",
@@ -1789,7 +1942,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Graveyard Cave": {
         "name": "Graveyard Cave",
@@ -1811,7 +1967,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Checkerboard Cave": {
         "name": "Checkerboard Cave",
@@ -1832,14 +1991,20 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Long Fairy Cave": {
         "name": "Long Fairy Cave",
         "hint_text": "a fairy fountain",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Mini Moldorm Cave": {
         "name": "Mini Moldorm Cave",
@@ -1961,7 +2126,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Ice Rod Cave": {
         "name": "Ice Rod Cave",
@@ -1982,35 +2150,50 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Good Bee Cave": {
         "name": "Good Bee Cave",
         "hint_text": "a cold bee",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "20 Rupee Cave": {
         "name": "20 Rupee Cave",
         "hint_text": "a cave with some cash",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Cave Shop (Lake Hylia)": {
         "name": "Cave Shop (Lake Hylia)",
         "hint_text": "a common shop",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Cave Shop (Dark Death Mountain)": {
         "name": "Cave Shop (Dark Death Mountain)",
         "hint_text": "a common shop",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Bonk Rock Cave": {
         "name": "Bonk Rock Cave",
@@ -2031,7 +2214,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Library": {
         "name": "Library",
@@ -2055,14 +2241,20 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Kakariko Gamble Game": {
         "name": "Kakariko Gamble Game",
         "hint_text": "a game of chance",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Potion Shop": {
         "name": "Potion Shop",
@@ -2086,7 +2278,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Lake Hylia Island": {
         "name": "Lake Hylia Island",
@@ -2107,7 +2302,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Capacity Upgrade": {
         "name": "Capacity Upgrade",
@@ -2129,7 +2327,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Two Brothers House": {
         "name": "Two Brothers House",
@@ -2152,7 +2353,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Maze Race Ledge": {
         "name": "Maze Race Ledge",
@@ -2181,14 +2385,20 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "50 Rupee Cave": {
         "name": "50 Rupee Cave",
         "hint_text": "a cave with some cash",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Desert Ledge": {
         "name": "Desert Ledge",
@@ -2225,7 +2435,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Desert Ledge (Northeast)": {
         "name": "Desert Ledge (Northeast)",
@@ -2240,7 +2453,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Desert Palace Stairs": {
         "name": "Desert Palace Stairs",
@@ -2254,7 +2470,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Desert Palace Lone Stairs": {
         "name": "Desert Palace Lone Stairs",
@@ -2275,7 +2494,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Desert Palace Entrance (North) Spot": {
         "name": "Desert Palace Entrance (North) Spot",
@@ -2297,7 +2519,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Desert Palace Main (Outer)": {
         "name": "Desert Palace Main (Outer)",
@@ -2385,7 +2610,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 4
       },
       "Desert Palace Main (Inner)": {
         "name": "Desert Palace Main (Inner)",
@@ -2406,7 +2634,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 4
       },
       "Desert Palace East": {
         "name": "Desert Palace East",
@@ -2450,7 +2681,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 4
       },
       "Desert Palace North": {
         "name": "Desert Palace North",
@@ -2616,7 +2850,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 4
       },
       "Eastern Palace": {
         "name": "Eastern Palace",
@@ -2853,7 +3090,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 4
       },
       "Master Sword Meadow": {
         "name": "Master Sword Meadow",
@@ -2881,14 +3121,20 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Lost Woods Gamble": {
         "name": "Lost Woods Gamble",
         "hint_text": "a game of chance",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Hyrule Castle Courtyard": {
         "name": "Hyrule Castle Courtyard",
@@ -2909,7 +3155,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Hyrule Castle Ledge": {
         "name": "Hyrule Castle Ledge",
@@ -2959,7 +3208,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Hyrule Castle": {
         "name": "Hyrule Castle",
@@ -3190,7 +3442,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 4
       },
       "Sewer Drop": {
         "name": "Sewer Drop",
@@ -3204,7 +3459,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 4
       },
       "Sewers (Dark)": {
         "name": "Sewers (Dark)",
@@ -3301,7 +3559,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 4
       },
       "Sewers": {
         "name": "Sewers",
@@ -3345,7 +3606,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 4
       },
       "Sewers Secret Room": {
         "name": "Sewers Secret Room",
@@ -3394,7 +3658,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 4
       },
       "Sanctuary": {
         "name": "Sanctuary",
@@ -3423,7 +3690,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 4
       },
       "Agahnims Tower": {
         "name": "Agahnims Tower",
@@ -3606,7 +3876,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 4
       },
       "Agahnim 1": {
         "name": "Agahnim 1",
@@ -3628,7 +3901,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 4
       },
       "Old Man Cave": {
         "name": "Old Man Cave",
@@ -3670,7 +3946,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Old Man House": {
         "name": "Old Man House",
@@ -3694,7 +3973,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Old Man House Back": {
         "name": "Old Man House Back",
@@ -3718,7 +4000,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Death Mountain": {
         "name": "Death Mountain",
@@ -3791,7 +4076,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Death Mountain Return Cave": {
         "name": "Death Mountain Return Cave",
@@ -3818,7 +4106,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Death Mountain Return Ledge": {
         "name": "Death Mountain Return Ledge",
@@ -3839,7 +4130,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Spectacle Rock Cave (Top)": {
         "name": "Spectacle Rock Cave (Top)",
@@ -3875,7 +4169,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Spectacle Rock Cave (Bottom)": {
         "name": "Spectacle Rock Cave (Bottom)",
@@ -3889,7 +4186,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Spectacle Rock Cave (Peak)": {
         "name": "Spectacle Rock Cave (Peak)",
@@ -3910,7 +4210,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "East Death Mountain (Bottom)": {
         "name": "East Death Mountain (Bottom)",
@@ -3971,14 +4274,20 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Hookshot Fairy": {
         "name": "Hookshot Fairy",
         "hint_text": "fairies deep in a cave",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Paradox Cave Front": {
         "name": "Paradox Cave Front",
@@ -4007,7 +4316,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Paradox Cave Chest Area": {
         "name": "Paradox Cave Chest Area",
@@ -4244,7 +4556,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Paradox Cave": {
         "name": "Paradox Cave",
@@ -4272,14 +4587,20 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Light World Death Mountain Shop": {
         "name": "Light World Death Mountain Shop",
         "hint_text": "a common shop",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "East Death Mountain (Top)": {
         "name": "East Death Mountain (Top)",
@@ -4343,7 +4664,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Spiral Cave Ledge": {
         "name": "Spiral Cave Ledge",
@@ -4364,7 +4688,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Spiral Cave (Top)": {
         "name": "Spiral Cave (Top)",
@@ -4400,7 +4727,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Spiral Cave (Bottom)": {
         "name": "Spiral Cave (Bottom)",
@@ -4414,7 +4744,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Fairy Ascension Plateau": {
         "name": "Fairy Ascension Plateau",
@@ -4435,7 +4768,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Fairy Ascension Cave (Bottom)": {
         "name": "Fairy Ascension Cave (Bottom)",
@@ -4456,7 +4792,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Fairy Ascension Cave (Drop)": {
         "name": "Fairy Ascension Cave (Drop)",
@@ -4470,7 +4809,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Fairy Ascension Cave (Top)": {
         "name": "Fairy Ascension Cave (Top)",
@@ -4491,7 +4833,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Fairy Ascension Ledge": {
         "name": "Fairy Ascension Ledge",
@@ -4512,7 +4857,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Death Mountain (Top)": {
         "name": "Death Mountain (Top)",
@@ -4559,7 +4907,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Spectacle Rock": {
         "name": "Spectacle Rock",
@@ -4588,7 +4939,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Tower of Hera (Bottom)": {
         "name": "Tower of Hera (Bottom)",
@@ -4704,7 +5058,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 4
       },
       "Tower of Hera (Basement)": {
         "name": "Tower of Hera (Basement)",
@@ -4726,7 +5083,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 4
       },
       "Tower of Hera (Top)": {
         "name": "Tower of Hera (Top)",
@@ -4793,7 +5153,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 4
       },
       "East Dark World": {
         "name": "East Dark World",
@@ -4973,7 +5336,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Catfish": {
         "name": "Catfish",
@@ -5006,7 +5372,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Northeast Dark World": {
         "name": "Northeast Dark World",
@@ -5084,21 +5453,30 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Palace of Darkness Hint": {
         "name": "Palace of Darkness Hint",
         "hint_text": "a storyteller",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "East Dark World Hint": {
         "name": "East Dark World Hint",
         "hint_text": "a storyteller",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "South Dark World": {
         "name": "South Dark World",
@@ -5275,7 +5653,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Bombos Tablet Ledge": {
         "name": "Bombos Tablet Ledge",
@@ -5297,21 +5678,30 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Big Bomb Shop": {
         "name": "Big Bomb Shop",
         "hint_text": "the bomb shop",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Archery Game": {
         "name": "Archery Game",
         "hint_text": "a game of skill",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Dark Lake Hylia": {
         "name": "Dark Lake Hylia",
@@ -5346,7 +5736,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Dark Lake Hylia Central Island": {
         "name": "Dark Lake Hylia Central Island",
@@ -5370,7 +5763,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Dark Lake Hylia Ledge": {
         "name": "Dark Lake Hylia Ledge",
@@ -5435,21 +5831,30 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Dark Lake Hylia Ledge Hint": {
         "name": "Dark Lake Hylia Ledge Hint",
         "hint_text": "a storyteller",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Dark Lake Hylia Ledge Spike Cave": {
         "name": "Dark Lake Hylia Ledge Spike Cave",
         "hint_text": "a spiky hint",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Hype Cave": {
         "name": "Hype Cave",
@@ -5574,7 +5979,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "West Dark World": {
         "name": "West Dark World",
@@ -5784,7 +6192,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Dark Grassy Lawn": {
         "name": "Dark Grassy Lawn",
@@ -5811,7 +6222,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Hammer Peg Area": {
         "name": "Hammer Peg Area",
@@ -5879,7 +6293,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Bumper Cave Entrance": {
         "name": "Bumper Cave Entrance",
@@ -5910,42 +6327,60 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Fortune Teller (Dark)": {
         "name": "Fortune Teller (Dark)",
         "hint_text": "a fortune teller",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Village of Outcasts Shop": {
         "name": "Village of Outcasts Shop",
         "hint_text": "a common shop",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Dark Lake Hylia Shop": {
         "name": "Dark Lake Hylia Shop",
         "hint_text": "a common shop",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Dark World Lumberjack Shop": {
         "name": "Dark World Lumberjack Shop",
         "hint_text": "a common shop",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Dark World Potion Shop": {
         "name": "Dark World Potion Shop",
         "hint_text": "a common shop",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Dark World Hammer Peg Cave": {
         "name": "Dark World Hammer Peg Cave",
@@ -5966,7 +6401,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Pyramid Fairy": {
         "name": "Pyramid Fairy",
@@ -6007,7 +6445,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Brewery": {
         "name": "Brewery",
@@ -6031,7 +6472,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "C-Shaped House": {
         "name": "C-Shaped House",
@@ -6055,7 +6499,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Chest Game": {
         "name": "Chest Game",
@@ -6079,21 +6526,30 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Red Shield Shop": {
         "name": "Red Shield Shop",
         "hint_text": "the rare shop",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Dark Sanctuary Hint": {
         "name": "Dark Sanctuary Hint",
         "hint_text": "a storyteller",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Bumper Cave": {
         "name": "Bumper Cave",
@@ -6137,7 +6593,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Bumper Cave Ledge": {
         "name": "Bumper Cave Ledge",
@@ -6183,7 +6642,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Skull Woods Forest": {
         "name": "Skull Woods Forest",
@@ -6228,7 +6690,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Skull Woods Forest (West)": {
         "name": "Skull Woods Forest (West)",
@@ -6265,7 +6730,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Dark Desert": {
         "name": "Dark Desert",
@@ -6356,7 +6824,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Mire Shed": {
         "name": "Mire Shed",
@@ -6397,14 +6868,20 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Dark Desert Hint": {
         "name": "Dark Desert Hint",
         "hint_text": "a storyteller",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Dark Death Mountain (West Bottom)": {
         "name": "Dark Death Mountain (West Bottom)",
@@ -6435,7 +6912,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Dark Death Mountain (Top)": {
         "name": "Dark Death Mountain (Top)",
@@ -6537,7 +7017,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Dark Death Mountain Ledge": {
         "name": "Dark Death Mountain Ledge",
@@ -6578,7 +7061,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Dark Death Mountain Isolated Ledge": {
         "name": "Dark Death Mountain Isolated Ledge",
@@ -6602,7 +7088,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Dark Death Mountain (East Bottom)": {
         "name": "Dark Death Mountain (East Bottom)",
@@ -6636,7 +7125,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Superbunny Cave (Top)": {
         "name": "Superbunny Cave (Top)",
@@ -6685,7 +7177,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Superbunny Cave (Bottom)": {
         "name": "Superbunny Cave (Bottom)",
@@ -6706,7 +7201,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Spike Cave": {
         "name": "Spike Cave",
@@ -6821,7 +7319,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Hookshot Cave": {
         "name": "Hookshot Cave",
@@ -6949,7 +7450,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Hookshot Cave (Upper)": {
         "name": "Hookshot Cave (Upper)",
@@ -6971,7 +7475,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Death Mountain Floating Island (Dark World)": {
         "name": "Death Mountain Floating Island (Dark World)",
@@ -7002,7 +7509,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Death Mountain Floating Island (Light World)": {
         "name": "Death Mountain Floating Island (Light World)",
@@ -7023,7 +7533,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Turtle Rock (Top)": {
         "name": "Turtle Rock (Top)",
@@ -7037,7 +7550,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Mimic Cave Ledge": {
         "name": "Mimic Cave Ledge",
@@ -7051,7 +7567,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Mimic Cave": {
         "name": "Mimic Cave",
@@ -7126,7 +7645,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 3
       },
       "Swamp Palace (Entrance)": {
         "name": "Swamp Palace (Entrance)",
@@ -7154,7 +7676,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Swamp Palace (First Room)": {
         "name": "Swamp Palace (First Room)",
@@ -7189,7 +7714,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Swamp Palace (Starting Area)": {
         "name": "Swamp Palace (Starting Area)",
@@ -7291,7 +7819,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Swamp Palace (Center)": {
         "name": "Swamp Palace (Center)",
@@ -7406,7 +7937,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Swamp Palace (West)": {
         "name": "Swamp Palace (West)",
@@ -7447,7 +7981,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Swamp Palace (North)": {
         "name": "Swamp Palace (North)",
@@ -7581,7 +8118,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Thieves Town (Entrance)": {
         "name": "Thieves Town (Entrance)",
@@ -7674,7 +8214,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Thieves Town (Deep)": {
         "name": "Thieves Town (Deep)",
@@ -7820,7 +8363,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Blind Fight": {
         "name": "Blind Fight",
@@ -7862,7 +8408,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Skull Woods First Section": {
         "name": "Skull Woods First Section",
@@ -7923,7 +8472,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Skull Woods First Section (Right)": {
         "name": "Skull Woods First Section (Right)",
@@ -7970,7 +8522,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Skull Woods First Section (Left)": {
         "name": "Skull Woods First Section (Left)",
@@ -8044,7 +8599,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Skull Woods First Section (Top)": {
         "name": "Skull Woods First Section (Top)",
@@ -8091,7 +8649,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Skull Woods Second Section (Drop)": {
         "name": "Skull Woods Second Section (Drop)",
@@ -8108,7 +8669,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Skull Woods Second Section": {
         "name": "Skull Woods Second Section",
@@ -8164,7 +8728,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Skull Woods Final Section (Entrance)": {
         "name": "Skull Woods Final Section (Entrance)",
@@ -8222,7 +8789,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Skull Woods Final Section (Mothula)": {
         "name": "Skull Woods Final Section (Mothula)",
@@ -8305,7 +8875,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ice Palace (Entrance)": {
         "name": "Ice Palace (Entrance)",
@@ -8398,7 +8971,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ice Palace (Second Section)": {
         "name": "Ice Palace (Second Section)",
@@ -8434,7 +9010,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ice Palace (Main)": {
         "name": "Ice Palace (Main)",
@@ -8602,7 +9181,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ice Palace (East)": {
         "name": "Ice Palace (East)",
@@ -8646,7 +9228,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ice Palace (East Top)": {
         "name": "Ice Palace (East Top)",
@@ -8704,7 +9289,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ice Palace (Kholdstare)": {
         "name": "Ice Palace (Kholdstare)",
@@ -8746,7 +9334,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Misery Mire (Entrance)": {
         "name": "Misery Mire (Entrance)",
@@ -8802,7 +9393,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Misery Mire (Main)": {
         "name": "Misery Mire (Main)",
@@ -9177,7 +9771,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Misery Mire (West)": {
         "name": "Misery Mire (West)",
@@ -9236,7 +9833,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Misery Mire (Final Area)": {
         "name": "Misery Mire (Final Area)",
@@ -9265,7 +9865,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Misery Mire (Vitreous)": {
         "name": "Misery Mire (Vitreous)",
@@ -9307,7 +9910,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Turtle Rock (Entrance)": {
         "name": "Turtle Rock (Entrance)",
@@ -9337,7 +9943,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Turtle Rock (First Section)": {
         "name": "Turtle Rock (First Section)",
@@ -9427,7 +10036,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Turtle Rock (Pokey Room)": {
         "name": "Turtle Rock (Pokey Room)",
@@ -9506,7 +10118,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Turtle Rock (Chain Chomp Room)": {
         "name": "Turtle Rock (Chain Chomp Room)",
@@ -9603,7 +10218,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Turtle Rock (Second Section)": {
         "name": "Turtle Rock (Second Section)",
@@ -9758,7 +10376,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Turtle Rock (Second Section Bomb Wall)": {
         "name": "Turtle Rock (Second Section Bomb Wall)",
@@ -9780,7 +10401,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Turtle Rock (Big Chest)": {
         "name": "Turtle Rock (Big Chest)",
@@ -9856,7 +10480,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Turtle Rock (Crystaroller Room)": {
         "name": "Turtle Rock (Crystaroller Room)",
@@ -9899,7 +10526,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Turtle Rock (Dark Room)": {
         "name": "Turtle Rock (Dark Room)",
@@ -9932,7 +10562,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Turtle Rock (Eye Bridge Bomb Wall)": {
         "name": "Turtle Rock (Eye Bridge Bomb Wall)",
@@ -9954,7 +10587,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Turtle Rock (Eye Bridge)": {
         "name": "Turtle Rock (Eye Bridge)",
@@ -10145,7 +10781,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Turtle Rock (Trinexx)": {
         "name": "Turtle Rock (Trinexx)",
@@ -10187,7 +10826,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Palace of Darkness (Entrance)": {
         "name": "Palace of Darkness (Entrance)",
@@ -10246,7 +10888,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Palace of Darkness (Center)": {
         "name": "Palace of Darkness (Center)",
@@ -10382,7 +11027,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Palace of Darkness (Big Key Chest)": {
         "name": "Palace of Darkness (Big Key Chest)",
@@ -10406,7 +11054,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Palace of Darkness (Bonk Section)": {
         "name": "Palace of Darkness (Bonk Section)",
@@ -10467,7 +11118,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Palace of Darkness (North)": {
         "name": "Palace of Darkness (North)",
@@ -10598,7 +11252,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Palace of Darkness (Maze)": {
         "name": "Palace of Darkness (Maze)",
@@ -10668,7 +11325,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Palace of Darkness (Harmless Hellway)": {
         "name": "Palace of Darkness (Harmless Hellway)",
@@ -10692,7 +11352,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Palace of Darkness (Final Section)": {
         "name": "Palace of Darkness (Final Section)",
@@ -10734,7 +11397,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ganons Tower (Entrance)": {
         "name": "Ganons Tower (Entrance)",
@@ -10873,7 +11539,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ganons Tower (Tile Room)": {
         "name": "Ganons Tower (Tile Room)",
@@ -10920,7 +11589,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ganons Tower (Compass Room)": {
         "name": "Ganons Tower (Compass Room)",
@@ -11174,7 +11846,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ganons Tower (Hookshot Room)": {
         "name": "Ganons Tower (Hookshot Room)",
@@ -11365,7 +12040,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ganons Tower (Map Room)": {
         "name": "Ganons Tower (Map Room)",
@@ -11389,7 +12067,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ganons Tower (Firesnake Room)": {
         "name": "Ganons Tower (Firesnake Room)",
@@ -11437,7 +12118,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ganons Tower (Teleport Room)": {
         "name": "Ganons Tower (Teleport Room)",
@@ -11584,7 +12268,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ganons Tower (Bottom)": {
         "name": "Ganons Tower (Bottom)",
@@ -11706,7 +12393,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ganons Tower (Top)": {
         "name": "Ganons Tower (Top)",
@@ -11738,7 +12428,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ganons Tower (Before Moldorm)": {
         "name": "Ganons Tower (Before Moldorm)",
@@ -11867,7 +12560,10 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Ganons Tower (Moldorm)": {
         "name": "Ganons Tower (Moldorm)",
@@ -11884,7 +12580,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Agahnim 2": {
         "name": "Agahnim 2",
@@ -11926,7 +12625,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 4
       },
       "Pyramid": {
         "name": "Pyramid",
@@ -11995,7 +12697,10 @@
             "locked": true,
             "event": true
           }
-        ]
+        ],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Bottom of Pyramid": {
         "name": "Bottom of Pyramid",
@@ -12009,7 +12714,10 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 3
       },
       "Pyramid Ledge": {
         "name": "Pyramid Ledge",
@@ -12030,21 +12738,30 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       },
       "Desert Northern Cliffs": {
         "name": "Desert Northern Cliffs",
         "hint_text": "Light World",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": false,
+        "is_light_world": true,
+        "type": 1
       },
       "Dark Death Mountain Bunny Descent Area": {
         "name": "Dark Death Mountain Bunny Descent Area",
         "hint_text": "Dark World",
         "exits": [],
         "locations": [],
-        "dynamically_added": true
+        "dynamically_added": true,
+        "is_dark_world": true,
+        "is_light_world": false,
+        "type": 2
       }
     }
   },

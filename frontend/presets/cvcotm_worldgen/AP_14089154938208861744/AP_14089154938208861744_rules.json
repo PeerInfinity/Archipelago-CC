@@ -2981,7 +2981,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Maiden Detonator": {
         "name": "Maiden Detonator",

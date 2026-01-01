@@ -1723,7 +1723,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Pumpkin Zone Progression": {
         "name": "Pumpkin Zone Progression",
@@ -1886,7 +1886,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Hippo Bubble": {
         "name": "Hippo Bubble",
@@ -1897,7 +1897,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Water Physics": {
         "name": "Water Physics",

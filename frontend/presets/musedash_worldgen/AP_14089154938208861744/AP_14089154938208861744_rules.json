@@ -1569,7 +1569,7 @@
         "event": false,
         "type": null,
         "max_count": 9,
-        "classification": "progression_deprioritized_skip_balancing"
+        "classification": "progression"
       },
       "Bad Apple Trap": {
         "name": "Bad Apple Trap",

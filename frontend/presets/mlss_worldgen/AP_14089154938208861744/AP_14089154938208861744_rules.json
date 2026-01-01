@@ -11551,7 +11551,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Bean Fruit 2": {
         "name": "Bean Fruit 2",
@@ -11563,7 +11563,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Bean Fruit 3": {
         "name": "Bean Fruit 3",
@@ -11575,7 +11575,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Bean Fruit 4": {
         "name": "Bean Fruit 4",
@@ -11587,7 +11587,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Bean Fruit 5": {
         "name": "Bean Fruit 5",
@@ -11599,7 +11599,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Bean Fruit 6": {
         "name": "Bean Fruit 6",
@@ -11611,7 +11611,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Bean Fruit 7": {
         "name": "Bean Fruit 7",
@@ -11623,7 +11623,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Blue Neon Egg": {
         "name": "Blue Neon Egg",

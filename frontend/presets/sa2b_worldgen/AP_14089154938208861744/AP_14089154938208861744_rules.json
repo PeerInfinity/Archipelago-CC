@@ -4161,7 +4161,7 @@
         "event": false,
         "type": null,
         "max_count": 138,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Sonic - Magic Gloves": {
         "name": "Sonic - Magic Gloves",
