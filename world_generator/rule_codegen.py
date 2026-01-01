@@ -3872,6 +3872,10 @@ class HelperCodeGenerator:
         self.namedtuple_types: Dict[tuple, str] = {}
         # Maps original NamedTuple type name to the tuple of fields
         self.namedtuple_names: Dict[str, tuple] = {}
+        # Context for current location/entrance being processed
+        # Used to substitute 'location' or 'entrance' variable references
+        self._current_location: Optional[str] = None
+        self._current_entrance: Optional[str] = None
 
     def set_known_helpers(self, helper_names: Set[str]) -> None:
         """Set the list of known helper names for this game."""
@@ -3880,6 +3884,16 @@ class HelperCodeGenerator:
     def set_placements(self, placements: Dict[str, str]) -> None:
         """Set the placement data for resolving placement_lookup rules."""
         self.placements = placements or {}
+
+    def set_context(self, location: Optional[str] = None, entrance: Optional[str] = None) -> None:
+        """Set the current context for variable substitution.
+
+        When generating rules for a specific location or entrance, set the context
+        so that references to 'location' or 'entrance' variables can be substituted
+        with the appropriate state.multiworld.get_*() lookup.
+        """
+        self._current_location = location
+        self._current_entrance = entrance
 
     def _get_namedtuple_class_name(self, fields: tuple) -> str:
         """
@@ -4354,6 +4368,13 @@ class HelperCodeGenerator:
                 items_tuple = tuple(items)
                 return f"state.has_all({items_tuple!r}, player)"
 
+            # Handle HasAny rules (Rule Builder format)
+            if rule_type == 'HasAny':
+                args = expr.get('args', {})
+                items = args.get('items', [])
+                items_tuple = tuple(items)
+                return f"state.has_any({items_tuple!r}, player)"
+
             # Handle True_/False_ rules
             if rule_type == 'True_':
                 return 'True'
@@ -4561,6 +4582,14 @@ class HelperCodeGenerator:
         # In helper functions, 'world' isn't available directly - access via state
         if name == 'world':
             return 'state.multiworld.worlds[player]'
+        # Substitute 'location' with a lookup when we have context
+        if name == 'location' and self._current_location:
+            escaped = self._current_location.replace('\\', '\\\\').replace('"', '\\"')
+            return f'state.multiworld.get_location("{escaped}", player)'
+        # Substitute 'entrance' with a lookup when we have context
+        if name == 'entrance' and self._current_entrance:
+            escaped = self._current_entrance.replace('\\', '\\\\').replace('"', '\\"')
+            return f'state.multiworld.get_entrance("{escaped}", player)'
         return name
 
     def _expr_item_check(self, expr: Dict[str, Any]) -> str:

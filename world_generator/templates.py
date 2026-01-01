@@ -9,7 +9,7 @@ import json
 import re
 from typing import Any, Dict, List, Set
 from .constants import BUILTIN_SETTINGS
-from .extractors import ExtractedData, ItemData, LocationData, ExitData, HelperData
+from .extractors import ExtractedData, ItemData, LocationData, ExitData, HelperData, DungeonData, BossData
 from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule
 
 
@@ -215,9 +215,9 @@ def _rule_needs_lambda(rule: dict) -> bool:
         return True
 
     # AST format dynamic references also need lambda
-    # Note: AST_function_call is excluded because it often references variables
-    # (like 'location') that aren't available in the lambda context. These are
-    # typically boss defeat checks that can be evaluated at generation time.
+    # Note: AST_function_call is excluded because it often references complex objects
+    # (like location.parent_region.dungeon.boss) that aren't available in WorldGen.
+    # These are typically boss defeat checks that get evaluated at generation time.
     if rule_name in ('AST_setting_value', 'AST_placement_lookup', 'AST_placement_search'):
         return True
 
@@ -380,6 +380,119 @@ location_table: Dict[str, LocationData] = {{
 '''
 
 
+def _generate_dungeon_classes_and_data(data: ExtractedData, game_name: str) -> tuple:
+    """Generate Dungeon/Boss wrapper classes and dungeon data.
+
+    Returns:
+        Tuple of (dungeon_classes_code, dungeon_data_code, dungeon_setup_code, has_dungeons)
+    """
+    if not data.dungeons:
+        return "", "", "", False
+
+    # Note: Defeat rule functions are generated in Rules.py (see generate_rules_py)
+    # because they need access to helper functions defined there.
+
+    # Build boss function mapping for reference in dungeon data
+    boss_func_mapping = {}  # (dungeon_name, boss_key) -> function_name
+    for dungeon_name, dungeon_data in data.dungeons.items():
+        for boss_key, boss_data in dungeon_data.bosses.items():
+            if boss_data.defeat_rule:
+                safe_dungeon = re.sub(r'[^a-zA-Z0-9]', '_', dungeon_name)
+                safe_key = 'default' if boss_key == 'None' else boss_key
+                func_name = f"_can_defeat_{safe_dungeon}_{safe_key}"
+                boss_func_mapping[(dungeon_name, boss_key)] = func_name
+
+    # Generate dungeon classes
+    dungeon_classes = '''
+# Dungeon and Boss wrapper classes for WorldGen
+class _Boss:
+    """Boss wrapper for WorldGen dungeons."""
+    def __init__(self, name: str, defeat_func_name: str = None):
+        self.name = name
+        self._defeat_func_name = defeat_func_name
+        self._defeat_func = None  # Set by set_rules() via setup_dungeon_bosses()
+        self.player = None  # Set when dungeon is created
+
+    def can_defeat(self, state) -> bool:
+        """Check if this boss can be defeated."""
+        if self._defeat_func is None:
+            return True
+        return self._defeat_func(state, self.player)
+
+
+class _Dungeon:
+    """Dungeon wrapper for WorldGen."""
+    def __init__(self, name: str, player: int):
+        self.name = name
+        self.player = player
+        self.bosses: Dict[str, _Boss] = {}
+
+    @property
+    def boss(self) -> _Boss:
+        """Get the default boss (key 'None')."""
+        return self.bosses.get('None')
+
+    @boss.setter
+    def boss(self, value: _Boss):
+        """Set the default boss."""
+        self.bosses['None'] = value
+
+'''
+
+    # Generate dungeon data structure
+    dungeon_data_entries = []
+    for dungeon_name, dungeon_data in data.dungeons.items():
+        escaped_name = dungeon_name.replace('\\', '\\\\').replace('"', '\\"')
+
+        # Build bosses dict - store function name as string for later lookup
+        boss_entries = []
+        for boss_key, boss_data in dungeon_data.bosses.items():
+            escaped_boss_name = boss_data.name.replace('\\', '\\\\').replace('"', '\\"')
+            func_name = boss_func_mapping.get((dungeon_name, boss_key))
+            func_name_str = f'"{func_name}"' if func_name else 'None'
+            boss_entries.append(f'        "{boss_key}": ("{escaped_boss_name}", {func_name_str}),')
+
+        bosses_content = '\n'.join(boss_entries) if boss_entries else ''
+
+        # Build regions list
+        regions_list = ', '.join(f'"{r.replace(chr(34), chr(92)+chr(34))}"' for r in dungeon_data.regions)
+
+        dungeon_data_entries.append(f'''    "{escaped_name}": {{
+        "regions": [{regions_list}],
+        "bosses": {{
+{bosses_content}
+        }},
+    }},''')
+
+    dungeon_data_code = '''
+# Dungeon data (name -> {regions, bosses})
+# Boss defeat functions are defined in Rules.py and wired up by set_rules()
+DUNGEON_DATA = {
+''' + '\n'.join(dungeon_data_entries) + '''
+}
+'''
+
+    # Generate dungeon setup code - creates dungeons but defeat functions are wired later
+    dungeon_setup_code = '''
+    # Create dungeon objects (defeat functions are wired up by set_rules())
+    dungeons = {}
+    for dungeon_name, dungeon_info in DUNGEON_DATA.items():
+        dungeon = _Dungeon(dungeon_name, player)
+        for boss_key, (boss_name, defeat_func_name) in dungeon_info["bosses"].items():
+            boss = _Boss(boss_name, defeat_func_name)
+            boss.player = player
+            dungeon.bosses[boss_key] = boss
+        dungeons[dungeon_name] = dungeon
+
+    # Assign dungeons to regions
+    for region_name, dungeon_name in REGION_DUNGEONS.items():
+        if region_name in regions and dungeon_name in dungeons:
+            regions[region_name].dungeon = dungeons[dungeon_name]
+'''
+
+    return dungeon_classes, dungeon_data_code, dungeon_setup_code, True
+
+
 def generate_regions_py(data: ExtractedData) -> str:
     """Generate Regions.py file content."""
     game_name = data.metadata.game_name
@@ -504,11 +617,19 @@ REGION_EXTRA_ATTRIBUTES: Dict[str, Dict[str, Any]] = {{
                 setattr(regions[region_name], attr_name, attr_value)
 '''
 
+    # Generate dungeon classes and data if dungeons exist
+    dungeon_classes, dungeon_data_code, dungeon_setup_code, has_dungeons = \
+        _generate_dungeon_classes_and_data(data, game_name)
+
     # Generate code to apply dungeon attributes to regions
     region_dungeons_apply = ""
-    if dungeon_entries:
+    if has_dungeons:
+        # Use full dungeon object setup
+        region_dungeons_apply = dungeon_setup_code
+    elif dungeon_entries:
+        # Fallback: simple string assignment if no dungeon data but region mapping exists
         region_dungeons_apply = '''
-    # Apply dungeon assignments to regions
+    # Apply dungeon assignments to regions (string names only)
     for region_name, dungeon_name in REGION_DUNGEONS.items():
         if region_name in regions:
             regions[region_name].dungeon = dungeon_name
@@ -523,6 +644,11 @@ REGION_EXTRA_ATTRIBUTES: Dict[str, Dict[str, Any]] = {{
             setattr(location, attr_name, attr_value)
 '''
 
+    # Build dungeon section (classes + data)
+    dungeon_section = ""
+    if has_dungeons:
+        dungeon_section = dungeon_classes + dungeon_data_code
+
     return f'''"""
 Region definitions for {game_name}.
 
@@ -532,7 +658,7 @@ Auto-generated by world_generator.
 from typing import {typing_import}
 from BaseClasses import MultiWorld, Region, Entrance
 from .Locations import location_table, {class_name}Location
-
+{dungeon_section}
 {region_hints_section}{dynamically_added_section}{region_dungeons_section}{region_extra_section}
 def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
@@ -681,7 +807,10 @@ def generate_rules_py(data: ExtractedData) -> str:
 
             if _rule_needs_lambda(exit_data.access_rule):
                 # Use lambda with helper code generator
+                # Set context so 'entrance' variable references can be substituted
+                helper_generator.set_context(entrance=exit_name)
                 rule_expr = helper_generator._generate_expression(exit_data.access_rule)
+                helper_generator.set_context()  # Clear context
                 entrance_rules.append(
                     f'    multiworld.get_entrance("{exit_escaped}", player).access_rule = \\\n'
                     f'        lambda state: {rule_expr}'
@@ -703,7 +832,10 @@ def generate_rules_py(data: ExtractedData) -> str:
 
             if _rule_needs_lambda(loc_data.access_rule):
                 # Use lambda with helper code generator
+                # Set context so 'location' variable references can be substituted
+                helper_generator.set_context(location=loc_name)
                 rule_expr = helper_generator._generate_expression(loc_data.access_rule)
+                helper_generator.set_context()  # Clear context
                 location_rules.append(
                     f'    multiworld.get_location("{loc_escaped}", player).access_rule = \\\n'
                     f'        lambda state: {rule_expr}'
@@ -722,6 +854,32 @@ def generate_rules_py(data: ExtractedData) -> str:
     rule_builder_imports = rule_builder_generator.get_imports()
     rule_builder_imports_str = ', '.join(rule_builder_imports)
 
+    # Generate boss defeat rule functions if dungeons exist
+    defeat_rule_functions = []
+    defeat_func_names = []
+    if data.dungeons:
+        for dungeon_name, dungeon_data in data.dungeons.items():
+            for boss_key, boss_data in dungeon_data.bosses.items():
+                if boss_data.defeat_rule:
+                    safe_dungeon = re.sub(r'[^a-zA-Z0-9]', '_', dungeon_name)
+                    safe_key = 'default' if boss_key == 'None' else boss_key
+                    func_name = f"_can_defeat_{safe_dungeon}_{safe_key}"
+                    defeat_func_names.append(func_name)
+
+                    try:
+                        rule_expr = helper_generator._generate_expression(boss_data.defeat_rule)
+                        defeat_rule_functions.append(f'''
+def {func_name}(state: "CollectionState", player: int) -> bool:
+    """Defeat rule for {boss_data.name} in {dungeon_name}."""
+    return {rule_expr}
+''')
+                    except Exception as e:
+                        defeat_rule_functions.append(f'''
+def {func_name}(state: "CollectionState", player: int) -> bool:
+    """Defeat rule for {boss_data.name} in {dungeon_name} (fallback: {e})."""
+    return True
+''')
+
     # Build helper section
     helpers_section = ''
     if helper_functions:
@@ -732,6 +890,10 @@ def generate_rules_py(data: ExtractedData) -> str:
             helpers_section += '\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
         else:
             helpers_section = '\n\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
+
+    # Add defeat rule functions after helpers
+    if defeat_rule_functions:
+        helpers_section += '\n\n# Boss defeat rule functions\n' + '\n'.join(defeat_rule_functions)
 
     # Build indirect condition registrations
     indirect_section = ''
@@ -761,14 +923,56 @@ def generate_rules_py(data: ExtractedData) -> str:
     if not rules_content.strip():
         rules_content = '    pass  # No non-trivial rules'
 
+    # Add dungeon boss setup call if dungeons exist
+    dungeon_setup_section = ''
+    dungeon_setup_function = ''
+    if defeat_func_names:
+        # Add call to setup function at end of set_rules
+        dungeon_setup_section = '''
+
+    # Wire up boss defeat functions to dungeon objects
+    _setup_dungeon_bosses(multiworld, player)'''
+
+        # Generate the setup function
+        func_lookups = []
+        for func_name in defeat_func_names:
+            func_lookups.append(f'        "{func_name}": {func_name},')
+        func_lookup_content = '\n'.join(func_lookups)
+
+        dungeon_setup_function = f'''
+
+
+def _setup_dungeon_bosses(multiworld, player: int) -> None:
+    """Wire up boss defeat functions to dungeon objects.
+
+    This is called at the end of set_rules() to connect the defeat
+    rule functions to the Boss objects created in Regions.py.
+    """
+    # Map function names to actual functions
+    defeat_funcs = {{
+{func_lookup_content}
+    }}
+
+    # Find all regions and wire up their dungeon bosses
+    for region in multiworld.get_regions(player):
+        if hasattr(region, 'dungeon') and region.dungeon is not None:
+            dungeon = region.dungeon
+            if hasattr(dungeon, 'bosses'):
+                for boss in dungeon.bosses.values():
+                    if hasattr(boss, '_defeat_func_name') and boss._defeat_func_name:
+                        func = defeat_funcs.get(boss._defeat_func_name)
+                        if func:
+                            boss._defeat_func = func
+'''
+
     # Build import section
     imports_section = ''
     if rule_builder_imports:
         imports_section = f'\nfrom rule_builder import {rule_builder_imports_str}\n'
 
-    # Add CollectionState import if we have helpers or lambda rules
+    # Add CollectionState import if we have helpers, lambda rules, or dungeons
     collection_state_import = ''
-    if has_helpers or needs_lambda:
+    if has_helpers or needs_lambda or defeat_rule_functions:
         collection_state_import = 'from BaseClasses import CollectionState\n'
 
     # Add math import if needed for sqrt, floor, etc.
@@ -799,8 +1003,8 @@ def set_rules(world: "World") -> None:
     """Set access rules for all locations and entrances."""
     player = world.player
     multiworld = world.multiworld
-{rules_content}
-'''
+{rules_content}{dungeon_setup_section}
+{dungeon_setup_function}'''
 
 
 def _extract_setting_values(rule: dict, settings: Set[str]) -> None:

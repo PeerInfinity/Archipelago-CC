@@ -150,6 +150,21 @@ class HelperData:
 
 
 @dataclass
+class BossData:
+    """Extracted boss data."""
+    name: str
+    defeat_rule: Optional[Dict[str, Any]] = None  # Rule Builder format rule for defeating the boss
+
+
+@dataclass
+class DungeonData:
+    """Extracted dungeon data."""
+    name: str
+    regions: List[str] = field(default_factory=list)  # Region names in this dungeon
+    bosses: Dict[str, BossData] = field(default_factory=dict)  # Boss key -> BossData (key is 'None', 'top', 'middle', 'bottom', etc.)
+
+
+@dataclass
 class ExtractedData:
     """All extracted data from a JSON rules file."""
     metadata: GameMetadata
@@ -170,6 +185,7 @@ class ExtractedData:
     canonical_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (vanilla/original locations from world class)
     progression_mapping: Dict[str, List[str]] = field(default_factory=dict)  # progressive_item -> [component_items] in order
     world_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific world instance attributes
+    dungeons: Dict[str, DungeonData] = field(default_factory=dict)  # dungeon_name -> DungeonData
 
 
 def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> GameMetadata:
@@ -1010,6 +1026,40 @@ def extract_world_attributes(json_data: Dict[str, Any], player_id: str = '1') ->
     return world_attributes
 
 
+def extract_dungeons(json_data: Dict[str, Any], player_id: str = '1') -> Dict[str, DungeonData]:
+    """
+    Extract dungeon data from JSON.
+
+    Args:
+        json_data: Parsed JSON rules file
+        player_id: Player ID to extract data for (default: '1')
+
+    Returns:
+        Dictionary of dungeon_name -> DungeonData
+    """
+    dungeons_data = json_data.get('dungeons', {}).get(player_id, {})
+    dungeons = {}
+
+    for dungeon_name, dungeon_info in dungeons_data.items():
+        # Extract boss data
+        bosses = {}
+        bosses_info = dungeon_info.get('bosses', {})
+        for boss_key, boss_info in bosses_info.items():
+            # boss_key is 'None', 'top', 'middle', 'bottom', etc.
+            bosses[boss_key] = BossData(
+                name=boss_info.get('name', ''),
+                defeat_rule=boss_info.get('defeat_rule')
+            )
+
+        dungeons[dungeon_name] = DungeonData(
+            name=dungeon_name,
+            regions=dungeon_info.get('regions', []),
+            bosses=bosses
+        )
+
+    return dungeons
+
+
 def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedData:
     """
     Extract all data from a JSON rules file.
@@ -1073,6 +1123,9 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     # Extract game-specific world attributes
     world_attributes = extract_world_attributes(json_data, player_id=player_id)
 
+    # Extract dungeon data (including bosses and defeat rules)
+    dungeons = extract_dungeons(json_data, player_id=player_id)
+
     return ExtractedData(
         metadata=metadata,
         items=items,
@@ -1092,4 +1145,5 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
         canonical_placements=canonical_placements,
         progression_mapping=progression_mapping,
         world_attributes=world_attributes,
+        dungeons=dungeons,
     )
