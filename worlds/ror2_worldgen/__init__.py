@@ -74,15 +74,24 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class RiskofRain2WorldGenWeb(WebWorld):
     """Web interface for Risk of Rain 2 WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "grass"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Risk of Rain 2 integration for Archipelago multiworld games.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["Ijwu", "Kindasneaki"]
+        )
+    ]
 
 
 class RiskofRain2WorldGenWorld(RuleWorldMixin, World):
     """
-    Risk of Rain 2 WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Escape a chaotic alien planet by fighting through hordes of frenzied monsters – with your friends, or on your own.
+    Combine loot in surprising ways and master each character until you become the havoc you feared upon your
+    first crash landing.
     """
 
     game: ClassVar[str] = "Risk of Rain 2 WorldGen"
@@ -344,11 +353,9 @@ class RiskofRain2WorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.total_revivals = 7
         self.world_description = 'Escape a chaotic alien planet by fighting through hordes of frenzied monsters – with your friends, or on your own.\nCombine loot in surprising ways and master each character until you become the havoc you feared upon your\nfirst crash landing.'
         self.slot_data = types.SimpleNamespace(itemPickupStep=1, shrineUseStep=0, goal=1, victory=0, totalLocations=40, chestsPerStage=10, shrinesPerStage=5, scavengersPerStage=0, scannerPerStage=1, altarsPerStage=1, totalRevivals=4, startWithRevive=1, finalStageDeath=0, deathLink=0, requireStages=1, progressiveStages=1, seed='3991975562123098', offset=37000)
-        self.web = types.SimpleNamespace(theme='grass', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Risk of Rain 2 integration for Archipelago multiworld games.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['Ijwu', 'Kindasneaki']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -460,4 +467,23 @@ class RiskofRain2WorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "itemPickupStep": 1,
+            "shrineUseStep": 0,
+            "goal": 1,
+            "victory": 0,
+            "totalLocations": 40,
+            "chestsPerStage": 10,
+            "shrinesPerStage": 5,
+            "scavengersPerStage": 0,
+            "scannerPerStage": 1,
+            "altarsPerStage": 1,
+            "totalRevivals": 4,
+            "startWithRevive": 1,
+            "finalStageDeath": 0,
+            "deathLink": 0,
+            "requireStages": 1,
+            "progressiveStages": 1,
+            "seed": "3991975562123098",
+            "offset": 37000,
+        }

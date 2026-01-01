@@ -19,7 +19,8 @@
       "start_inventory_from_pool": {},
       "start_location_hints": []
     },
-    "world_directory": "toem_original"
+    "world_directory": "toem_original",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "slot_data": {

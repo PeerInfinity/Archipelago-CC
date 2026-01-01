@@ -48,8 +48,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "event_visited_swamp_shrine",
-                "count": 1
+                "item_name": "event_visited_swamp_shrine"
               }
             }
           },
@@ -264,8 +263,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Idol Stone",
-                "count": 1
+                "item_name": "Idol Stone"
               }
             }
           },
@@ -375,8 +373,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Idol Stone",
-                "count": 1
+                "item_name": "Idol Stone"
               }
             }
           }
@@ -584,8 +581,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "event_visited_swamp_shrine",
-                "count": 1
+                "item_name": "event_visited_swamp_shrine"
               }
             }
           },
@@ -707,8 +703,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Safety Pass",
-                "count": 1
+                "item_name": "Safety Pass"
               }
             }
           }
@@ -860,8 +855,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "event_visited_thieves_hideout_post_key",
-                "count": 1
+                "item_name": "event_visited_thieves_hideout_post_key"
               }
             }
           },
@@ -871,8 +865,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sun Stone",
-                "count": 1
+                "item_name": "Sun Stone"
               }
             }
           },
@@ -1030,8 +1023,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sun Stone",
-                "count": 1
+                "item_name": "Sun Stone"
               }
             }
           }
@@ -1085,8 +1077,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key",
-                "count": 1
+                "item_name": "Key"
               }
             }
           }
@@ -1463,8 +1454,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Safety Pass",
-                "count": 1
+                "item_name": "Safety Pass"
               }
             }
           },
@@ -1488,8 +1478,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Buyer Card",
-                "count": 1
+                "item_name": "Buyer Card"
               }
             }
           },
@@ -1499,8 +1488,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Casino Ticket",
-                "count": 1
+                "item_name": "Casino Ticket"
               }
             }
           },
@@ -1517,8 +1505,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key",
-                "count": 1
+                "item_name": "Key"
               }
             }
           },
@@ -1528,8 +1515,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "event_visited_ryuma_lighthouse_repaired",
-                "count": 1
+                "item_name": "event_visited_ryuma_lighthouse_repaired"
               }
             }
           }
@@ -1808,8 +1794,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Casino Ticket",
-                "count": 1
+                "item_name": "Casino Ticket"
               }
             }
           }
@@ -1996,8 +1981,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Buyer Card",
-                "count": 1
+                "item_name": "Buyer Card"
               }
             }
           }
@@ -2085,8 +2069,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Axe Magic",
-                "count": 1
+                "item_name": "Axe Magic"
               }
             }
           },
@@ -2096,8 +2079,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Axe Magic",
-                "count": 1
+                "item_name": "Axe Magic"
               }
             }
           },
@@ -2107,8 +2089,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Armlet",
-                "count": 1
+                "item_name": "Armlet"
               }
             }
           },
@@ -2118,8 +2099,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "event_visited_verla_mines",
-                "count": 1
+                "item_name": "event_visited_verla_mines"
               }
             }
           }
@@ -2193,8 +2173,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Axe Magic",
-                "count": 1
+                "item_name": "Axe Magic"
               }
             }
           }
@@ -2226,8 +2205,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Axe Magic",
-                "count": 1
+                "item_name": "Axe Magic"
               }
             }
           }
@@ -2323,8 +2301,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Garlic",
-                "count": 1
+                "item_name": "Garlic"
               }
             }
           }
@@ -2658,8 +2635,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Einstein Whistle",
-                "count": 1
+                "item_name": "Einstein Whistle"
               }
             }
           },
@@ -2669,8 +2645,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "EkeEke",
-                "count": 1
+                "item_name": "EkeEke"
               }
             }
           },
@@ -2680,8 +2655,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Axe Magic",
-                "count": 1
+                "item_name": "Axe Magic"
               }
             }
           }
@@ -2811,8 +2785,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "EkeEke",
-                "count": 1
+                "item_name": "EkeEke"
               }
             }
           }
@@ -2872,8 +2845,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Einstein Whistle",
-                "count": 1
+                "item_name": "Einstein Whistle"
               }
             }
           }
@@ -2954,8 +2926,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "event_visited_verla_mines",
-                "count": 1
+                "item_name": "event_visited_verla_mines"
               }
             }
           }
@@ -3058,8 +3029,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "event_visited_verla_mines",
-                "count": 1
+                "item_name": "event_visited_verla_mines"
               }
             }
           }
@@ -3133,8 +3103,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "event_visited_verla_mines",
-                "count": 1
+                "item_name": "event_visited_verla_mines"
               }
             }
           }
@@ -3201,8 +3170,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Fireproof",
-                "count": 1
+                "item_name": "Fireproof"
               }
             }
           }
@@ -3389,8 +3357,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Fireproof",
-                "count": 1
+                "item_name": "Fireproof"
               }
             }
           }
@@ -4000,8 +3967,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sword of Gaia",
-                "count": 1
+                "item_name": "Sword of Gaia"
               }
             }
           }
@@ -4117,8 +4083,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Axe Magic",
-                "count": 1
+                "item_name": "Axe Magic"
               }
             }
           },
@@ -4501,8 +4466,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Axe Magic",
-                "count": 1
+                "item_name": "Axe Magic"
               }
             }
           },
@@ -4519,8 +4483,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Axe Magic",
-                "count": 1
+                "item_name": "Axe Magic"
               }
             }
           },
@@ -4530,8 +4493,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Gola's Eye",
-                "count": 1
+                "item_name": "Gola's Eye"
               }
             }
           }
@@ -4773,8 +4735,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Gola's Eye",
-                "count": 1
+                "item_name": "Gola's Eye"
               }
             }
           },
@@ -4998,8 +4959,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key",
-                "count": 1
+                "item_name": "Key"
               }
             }
           },
@@ -5009,8 +4969,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Iron Boots",
-                "count": 1
+                "item_name": "Iron Boots"
               }
             }
           }
@@ -5105,8 +5064,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Snow Spikes",
-                "count": 1
+                "item_name": "Snow Spikes"
               }
             }
           },
@@ -5116,8 +5074,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Snow Spikes",
-                "count": 1
+                "item_name": "Snow Spikes"
               }
             }
           },
@@ -5386,8 +5343,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Axe Magic",
-                "count": 1
+                "item_name": "Axe Magic"
               }
             }
           }
@@ -5455,8 +5411,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Logs",
-                "count": 1
+                "item_name": "Logs"
               }
             }
           }
@@ -7104,7 +7059,6 @@
           "display_name": "Use Spell Book"
         }
       },
-      "shops": [],
       "regions_table": {
         "menu": "Menu",
         "massan": "Massan",
@@ -7233,7 +7187,7 @@
         "Blue Jewel",
         "Yellow Jewel"
       ],
-      "world_description": "Landstalker - The Treasures of King Nole WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Landstalker: The Treasures of King Nole is a classic Action-RPG with an isometric view (also known as \"2.5D\").\nYou play Nigel, a treasure hunter exploring the island of Mercator trying to find the legendary treasure.\nRoam freely on the island, get stronger to beat dungeons and gather the required key items in order to reach the\nhidden palace and claim the treasure.",
       "slot_data": {
         "goal": 0,
         "jewel_count": 5,
@@ -7257,18 +7211,18 @@
         "seed": 2089113674,
         "dark_region": "Massan Cave",
         "hints": {
-          "Foxy (right after making Miro flee with Garlic in Mir Tower)": "I can sense Yellow Jewel inside a tower.",
-          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Green Jewel inside a tower.",
-          "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "Did you know that your world contains 100 percent of all progression items?",
-          "Foxy (in Gumi boulder map)": "I can sense Gola's Horn in the village of Massan.",
-          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Gola's Fang inside a tower.",
-          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Sun Stone on a route.",
-          "Foxy (in Destel)": "I can sense Lantern in the village of Massan.",
-          "Foxy (in room next to green golem roundabout in Lake Shrine)": "I can sense Gola's Eye on a route.",
-          "Foxy (on Kazalt bridge)": "I can sense Axe Magic in Destel region.",
-          "Foxy (inside Mercator Crypt)": "I can sense Blue Jewel in Twinkle village.",
-          "Foxy (at Waterfall Shrine crossroads)": "I can sense Logs in Verla Mines.",
-          "Foxy (in King Nole's Palace entrance room)": "I can sense Garlic in Verla Mines.",
+          "Foxy (right after making Miro flee with Garlic in Mir Tower)": "I can sense Buyer Card among the trees.",
+          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Casino Ticket close to a waterfall.",
+          "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "I can sense Safety Pass in a region inhabited by bears.",
+          "Foxy (in Gumi boulder map)": "I can sense Oracle Stone near a swamp.",
+          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Garlic in King Nole's domain.",
+          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Key near a lake.",
+          "Foxy (in Destel)": "I can sense Green Jewel inside a tower.",
+          "Foxy (in room next to green golem roundabout in Lake Shrine)": "Have you found all of the 283 items in this universe?",
+          "Foxy (on Kazalt bridge)": "I can sense Blue Jewel in Twinkle village.",
+          "Foxy (inside Mercator Crypt)": "I can sense Sun Stone on a route.",
+          "Foxy (at Waterfall Shrine crossroads)": "I can sense Axe Magic in Destel region.",
+          "Foxy (in King Nole's Palace entrance room)": "I can sense Gola's Horn in the village of Massan.",
           "Lithograph": "It's barely readable:\nRED MERCATOR ITEM\nPURPLE ITEM DESTEL\nTOWER GREEN CHALLENGE\nFIRST GROUND BLUE\nYELLOW ROOM TOWER",
           "Oracle Stone": "It shows Massan Cave\nenshrouded in darkness."
         },
@@ -7347,7 +7301,19 @@
         }
       },
       "web": {
-        "theme": "grass"
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Landstalker Randomizer software on your computer.",
+            "language": "English",
+            "file_name": "landstalker_setup_en.md",
+            "link": "landstalker_setup/en",
+            "authors": [
+              "Dinopony"
+            ]
+          }
+        ]
       },
       "world_directory": "landstalker_worldgen"
     }

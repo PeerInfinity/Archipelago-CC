@@ -3488,8 +3488,7 @@
           "display_name": "Trap Fill Percent"
         }
       },
-      "shops": [],
-      "world_description": "Paint WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "The classic Microsoft app, reimagined as an Archipelago game! Find your tools, expand your canvas, and paint the\ngreatest image the world has ever seen.",
       "slot_data": {
         "logic_percent": 80,
         "goal_percent": 80,
@@ -3499,7 +3498,19 @@
         "version": "0.5.2"
       },
       "web": {
-        "theme": "partyTime"
+        "theme": "partyTime",
+        "tutorials": [
+          {
+            "name": "Start Guide",
+            "description": "A guide to playing Paint in Archipelago.",
+            "language": "English",
+            "file_name": "guide_en.md",
+            "link": "guide/en",
+            "authors": [
+              "MarioManTAW"
+            ]
+          }
+        ]
       },
       "world_directory": "paint_worldgen"
     }

@@ -53,7 +53,8 @@
       "white_scrap": 32,
       "yellow_scrap": 1
     },
-    "world_directory": "ror2"
+    "world_directory": "ror2",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "total_revivals": 7,

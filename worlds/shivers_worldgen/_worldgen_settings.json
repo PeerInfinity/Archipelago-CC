@@ -37,7 +37,8 @@
       "start_inventory": {},
       "start_location_hints": []
     },
-    "world_directory": "shivers"
+    "world_directory": "shivers",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "pot_completed_list": [],

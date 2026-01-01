@@ -4026,42 +4026,26 @@
             "name": "OrderedStage_5 -> Hidden Realm: A Moment, Fractured",
             "connected_region": "Hidden Realm: A Moment, Fractured",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hidden Realm: A Moment, Fractured"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Stage 5"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hidden Realm: A Moment, Fractured",
+                  "Stage 5"
+                ]
+              }
             }
           },
           {
             "name": "OrderedStage_5 -> Commencement",
             "connected_region": "Commencement",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Commencement"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Stage 5"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Commencement",
+                  "Stage 5"
+                ]
+              }
             }
           }
         ],
@@ -4082,6 +4066,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -4547,21 +4532,13 @@
             "name": "Hidden Realm: A Moment, Fractured -> Hidden Realm: A Moment, Whole",
             "connected_region": "Hidden Realm: A Moment, Whole",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Beads of Fealty"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hidden Realm: A Moment, Whole"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Beads of Fealty",
+                  "Hidden Realm: A Moment, Whole"
+                ]
+              }
             }
           }
         ],
@@ -4608,7 +4585,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4629,21 +4607,13 @@
             "name": "Hidden Realm: Bazaar Between Time -> Void Fields",
             "connected_region": "Void Fields",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hidden Realm: Bazaar Between Time"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Void Fields"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hidden Realm: Bazaar Between Time",
+                  "Void Fields"
+                ]
+              }
             }
           }
         ],

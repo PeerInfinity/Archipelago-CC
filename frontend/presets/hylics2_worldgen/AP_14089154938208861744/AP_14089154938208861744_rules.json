@@ -3823,8 +3823,7 @@
           "display_name": "Start Location"
         }
       },
-      "shops": [],
-      "world_description": "Hylics 2 WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Hylics 2 is a surreal and unusual RPG, with a bizarre yet unique visual style. Play as Wayne,\ntravel the world, and gather your allies to defeat the nefarious Gibby in his Hylemxylem!",
       "slot_data": {
         "party_shuffle": 0,
         "medallion_shuffle": 0,
@@ -3833,7 +3832,19 @@
         "death_link": 0
       },
       "web": {
-        "theme": "ocean"
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to settings up the Hylics 2 randomizer connected to an Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "TRPG"
+            ]
+          }
+        ]
       },
       "world_directory": "hylics2_worldgen"
     }

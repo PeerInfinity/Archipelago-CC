@@ -50,7 +50,8 @@
       "trap_fill_percentage": 0,
       "trap_link": false
     },
-    "world_directory": "smw"
+    "world_directory": "smw",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "active_level_dict": {

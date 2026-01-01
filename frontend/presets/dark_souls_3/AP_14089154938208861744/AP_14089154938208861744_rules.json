@@ -152,39 +152,16 @@
             "name": "Go To Kiln of the First Flame",
             "connected_region": "Kiln of the First Flame",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cinders of a Lord - Abyss Watcher"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cinders of a Lord - Aldrich"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cinders of a Lord - Lothric Prince"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cinders of a Lord - Yhorm the Giant"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Cinders of a Lord - Abyss Watcher",
+                  "Cinders of a Lord - Aldrich",
+                  "Cinders of a Lord - Lothric Prince",
+                  "Cinders of a Lord - Yhorm the Giant",
+                  "Transposing Kiln"
+                ]
+              }
             }
           }
         ],
@@ -847,21 +824,13 @@
             "name": "FS: Vordt's Great Hammer - Ludleth for Vordt",
             "id": 100054,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Boreal Valley Vordt"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of Boreal Valley Vordt",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Ring of Sacrifice",
@@ -876,21 +845,13 @@
             "name": "FS: Pontiff's Left Eye - Ludleth for Vordt",
             "id": 100055,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Boreal Valley Vordt"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of Boreal Valley Vordt",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Spiked Shield",
@@ -905,21 +866,13 @@
             "name": "FS: Bountiful Sunlight - Ludleth for Rosaria",
             "id": 100056,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Rosaria"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of Rosaria",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Twinkling Titanite",
@@ -934,21 +887,13 @@
             "name": "FS: Darkmoon Longbow - Ludleth for Aldrich",
             "id": 100057,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Aldrich"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of Aldrich",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Homing Soulmass",
@@ -963,21 +908,13 @@
             "name": "FS: Lifehunt Scythe - Ludleth for Aldrich",
             "id": 100058,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Aldrich"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of Aldrich",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Sellsword Twinblades",
@@ -992,21 +929,13 @@
             "name": "FS: Hollowslayer Greatsword - Ludleth for Greatwood",
             "id": 100059,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Rotted Greatwood"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Rotted Greatwood",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Herald Gloves",
@@ -1021,21 +950,13 @@
             "name": "FS: Arstor's Spear - Ludleth for Greatwood",
             "id": 100060,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Rotted Greatwood"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Rotted Greatwood",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Lightning Gem",
@@ -1050,21 +971,13 @@
             "name": "FS: Crystal Sage's Rapier - Ludleth for Sage",
             "id": 100061,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of a Crystal Sage"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of a Crystal Sage",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Irithyll Straight Sword",
@@ -1079,21 +992,13 @@
             "name": "FS: Crystal Hail - Ludleth for Sage",
             "id": 100062,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of a Crystal Sage"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of a Crystal Sage",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Yhorm's Great Machete",
@@ -1108,21 +1013,13 @@
             "name": "FS: Cleric's Candlestick - Ludleth for Deacons",
             "id": 100063,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Deacons of the Deep"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Deacons of the Deep",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Twinkling Titanite",
@@ -1137,21 +1034,13 @@
             "name": "FS: Deep Soul - Ludleth for Deacons",
             "id": 100064,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Deacons of the Deep"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Deacons of the Deep",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Hollow Gem",
@@ -1166,21 +1055,13 @@
             "name": "FS: Havel's Ring - Ludleth for Stray Demon",
             "id": 100065,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of a Stray Demon"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of a Stray Demon",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Dragon Head Stone",
@@ -1195,21 +1076,13 @@
             "name": "FS: Boulder Heave - Ludleth for Stray Demon",
             "id": 100066,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of a Stray Demon"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of a Stray Demon",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Rusted Coin",
@@ -1224,21 +1097,13 @@
             "name": "FS: Farron Greatsword - Ludleth for Abyss Watchers",
             "id": 100067,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Blood of the Wolf"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Blood of the Wolf",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Raw Gem",
@@ -1253,21 +1118,13 @@
             "name": "FS: Wolf Knight's Greatsword - Ludleth for Abyss Watchers",
             "id": 100068,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Blood of the Wolf"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Blood of the Wolf",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Clandestine Coat",
@@ -1282,21 +1139,13 @@
             "name": "FS: Wolnir's Holy Sword - Ludleth for Wolnir",
             "id": 100069,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of High Lord Wolnir"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of High Lord Wolnir",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Pickaxe",
@@ -1311,21 +1160,13 @@
             "name": "FS: Black Serpent - Ludleth for Wolnir",
             "id": 100070,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of High Lord Wolnir"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of High Lord Wolnir",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Sunlight Shield",
@@ -1340,21 +1181,13 @@
             "name": "FS: Demon's Greataxe - Ludleth for Fire Demon",
             "id": 100071,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of a Demon"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of a Demon",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Red Tearstone Ring",
@@ -1369,21 +1202,13 @@
             "name": "FS: Demon's Fist - Ludleth for Fire Demon",
             "id": 100072,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of a Demon"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of a Demon",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Homeward Bone",
@@ -1398,21 +1223,13 @@
             "name": "FS: Old King's Great Hammer - Ludleth for Old Demon King",
             "id": 100073,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Old Demon King"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Old Demon King",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Large Titanite Shard",
@@ -1427,21 +1244,13 @@
             "name": "FS: Chaos Bed Vestiges - Ludleth for Old Demon King",
             "id": 100074,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Old Demon King"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Old Demon King",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Flynn's Ring",
@@ -1456,21 +1265,13 @@
             "name": "FS: Greatsword of Judgment - Ludleth for Pontiff",
             "id": 100075,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Pontiff Sulyvahn"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of Pontiff Sulyvahn",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Crest Shield",
@@ -1485,21 +1286,13 @@
             "name": "FS: Profaned Greatsword - Ludleth for Pontiff",
             "id": 100076,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Pontiff Sulyvahn"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of Pontiff Sulyvahn",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Smough's Helm",
@@ -1514,21 +1307,13 @@
             "name": "FS: Yhorm's Great Machete - Ludleth for Yhorm",
             "id": 100077,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Yhorm the Giant"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of Yhorm the Giant",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Titanite Scale",
@@ -1543,21 +1328,13 @@
             "name": "FS: Yhorm's Greatshield - Ludleth for Yhorm",
             "id": 100078,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Yhorm the Giant"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of Yhorm the Giant",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Northern Armor",
@@ -1572,21 +1349,13 @@
             "name": "FS: Dancer's Enchanted Swords - Ludleth for Dancer",
             "id": 100079,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Dancer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Dancer",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Great Scythe",
@@ -1601,21 +1370,13 @@
             "name": "FS: Soothing Sunlight - Ludleth for Dancer",
             "id": 100080,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Dancer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Dancer",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Titanite Shard",
@@ -1630,21 +1391,13 @@
             "name": "FS: Dragonslayer Greataxe - Ludleth for Dragonslayer",
             "id": 100081,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Dragonslayer Armour"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of Dragonslayer Armour",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Plank Shield",
@@ -1659,21 +1412,13 @@
             "name": "FS: Dragonslayer Greatshield - Ludleth for Dragonslayer",
             "id": 100082,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Dragonslayer Armour"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of Dragonslayer Armour",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Outrider Knight Armor",
@@ -1688,21 +1433,13 @@
             "name": "FS: Moonlight Greatsword - Ludleth for Oceiros",
             "id": 100083,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Consumed Oceiros"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of Consumed Oceiros",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Leonhard's Trousers",
@@ -1717,21 +1454,13 @@
             "name": "FS: White Dragon Breath - Ludleth for Oceiros",
             "id": 100084,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Consumed Oceiros"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of Consumed Oceiros",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Titanite Shard",
@@ -1746,21 +1475,13 @@
             "name": "FS: Lorian's Greatsword - Ludleth for Princes",
             "id": 100085,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Twin Princes"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Twin Princes",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Large Titanite Shard",
@@ -1775,21 +1496,13 @@
             "name": "FS: Lothric's Holy Sword - Ludleth for Princes",
             "id": 100086,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Twin Princes"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Twin Princes",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Large Titanite Shard",
@@ -1804,21 +1517,13 @@
             "name": "FS: Gundyr's Halberd - Ludleth for Champion",
             "id": 100087,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Champion Gundyr"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of Champion Gundyr",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Bloodred Moss Clump",
@@ -1833,21 +1538,13 @@
             "name": "FS: Prisoner's Chain - Ludleth for Champion",
             "id": 100088,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Champion Gundyr"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of Champion Gundyr",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Hood of Prayer",
@@ -1862,21 +1559,13 @@
             "name": "FS: Storm Curved Sword - Ludleth for Nameless",
             "id": 100089,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Nameless King"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Nameless King",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Alva Leggings",
@@ -1891,21 +1580,13 @@
             "name": "FS: Dragonslayer Swordspear - Ludleth for Nameless",
             "id": 100090,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Nameless King"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Nameless King",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Old Sorcerer Hat",
@@ -1920,21 +1601,13 @@
             "name": "FS: Lightning Storm - Ludleth for Nameless",
             "id": 100091,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Nameless King"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Nameless King",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Manikin Claws",
@@ -1949,21 +1622,13 @@
             "name": "FS: Firelink Greatsword - Ludleth for Cinder",
             "id": 100092,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Lords"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Lords",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Titanite Scale",
@@ -1978,21 +1643,13 @@
             "name": "FS: Sunlight Spear - Ludleth for Cinder",
             "id": 100093,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of the Lords"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Soul of the Lords",
+                  "Transposing Kiln"
+                ]
+              }
             },
             "item": {
               "name": "Titanite Chunk",
@@ -3379,21 +3036,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Pyromancy Flame"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Transposing Kiln"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Pyromancy Flame",
+                      "Transposing Kiln"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -3456,50 +3105,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Carthus Pyromancy Tome"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Great Swamp Pyromancy Tome"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Izalith Pyromancy Tome"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Carthus Pyromancy Tome",
+                      "Great Swamp Pyromancy Tome",
+                      "Izalith Pyromancy Tome"
+                    ]
+                  }
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Carthus Pyromancy Tome"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Great Swamp Pyromancy Tome"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Izalith Pyromancy Tome"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Carthus Pyromancy Tome",
+                      "Great Swamp Pyromancy Tome",
+                      "Izalith Pyromancy Tome"
+                    ]
+                  }
                 }
               ]
             },
@@ -3518,50 +3141,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Carthus Pyromancy Tome"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Great Swamp Pyromancy Tome"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Izalith Pyromancy Tome"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Carthus Pyromancy Tome",
+                      "Great Swamp Pyromancy Tome",
+                      "Izalith Pyromancy Tome"
+                    ]
+                  }
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Carthus Pyromancy Tome"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Great Swamp Pyromancy Tome"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Izalith Pyromancy Tome"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Carthus Pyromancy Tome",
+                      "Great Swamp Pyromancy Tome",
+                      "Izalith Pyromancy Tome"
+                    ]
+                  }
                 }
               ]
             },
@@ -3580,50 +3177,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Carthus Pyromancy Tome"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Great Swamp Pyromancy Tome"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Izalith Pyromancy Tome"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Carthus Pyromancy Tome",
+                      "Great Swamp Pyromancy Tome",
+                      "Izalith Pyromancy Tome"
+                    ]
+                  }
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Carthus Pyromancy Tome"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Great Swamp Pyromancy Tome"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Izalith Pyromancy Tome"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Carthus Pyromancy Tome",
+                      "Great Swamp Pyromancy Tome",
+                      "Izalith Pyromancy Tome"
+                    ]
+                  }
                 }
               ]
             },
@@ -3642,50 +3213,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Carthus Pyromancy Tome"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Great Swamp Pyromancy Tome"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Izalith Pyromancy Tome"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Carthus Pyromancy Tome",
+                      "Great Swamp Pyromancy Tome",
+                      "Izalith Pyromancy Tome"
+                    ]
+                  }
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Carthus Pyromancy Tome"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Great Swamp Pyromancy Tome"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Izalith Pyromancy Tome"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Carthus Pyromancy Tome",
+                      "Great Swamp Pyromancy Tome",
+                      "Izalith Pyromancy Tome"
+                    ]
+                  }
                 }
               ]
             },
@@ -3701,21 +3246,13 @@
             "name": "US: Tower Key - kill Irina",
             "id": 100196,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Braille Divine Tome of Carim"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Braille Divine Tome of Lothric"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Braille Divine Tome of Carim",
+                  "Braille Divine Tome of Lothric"
+                ]
+              }
             },
             "item": {
               "name": "Hunter's Ring",
@@ -5013,7 +4550,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "FS: Soul Arrow - Yoel/Yuria shop",
@@ -6620,33 +6158,15 @@
             "name": "FS: Pestilent Mist - Orbeck for any scroll",
             "id": 100393,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crystal Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Golden Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Logan's Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sage's Scroll"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Ember",
@@ -6877,33 +6397,15 @@
             "name": "FS: Clandestine Coat - shop with Orbeck's Ashes",
             "id": 100406,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crystal Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Golden Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Logan's Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sage's Scroll"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Titanite Slab",
@@ -6918,33 +6420,15 @@
             "name": "FS: Young Dragon Ring - Orbeck for one scroll and buying three spells",
             "id": 100407,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crystal Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Golden Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Logan's Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sage's Scroll"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Murakumo",
@@ -6982,7 +6466,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "FS: Exile Mask - shop after killing NPCs in RS",
@@ -7062,33 +6547,15 @@
             "name": "FS: Morion Blade - Yuria for Orbeck's Ashes",
             "id": 100414,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crystal Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Golden Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Logan's Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sage's Scroll"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Large Soul of a Weary Warrior",
@@ -8358,7 +7825,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "CD: Barbed Straight Sword - Kirk drop",
@@ -8702,33 +8170,15 @@
             "name": "FK: Soul of the Blood of the Wolf",
             "id": 100510,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crystal Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Golden Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Logan's Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sage's Scroll"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Throwing Knife x8",
@@ -8742,33 +8192,15 @@
             "name": "FK: Cinders of a Lord - Abyss Watcher",
             "id": 100511,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crystal Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Golden Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Logan's Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sage's Scroll"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Estus Shard",
@@ -9736,33 +9168,15 @@
             "name": "FS: Hawkwood's Shield - gravestone after Hawkwood leaves",
             "id": 100580,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crystal Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Golden Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Logan's Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sage's Scroll"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Brigand Gauntlets",
@@ -9791,33 +9205,15 @@
             "name": "FS: Farron Ring - Hawkwood",
             "id": 100582,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crystal Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Golden Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Logan's Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sage's Scroll"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Blooming Purple Moss Clump x3",
@@ -9832,33 +9228,15 @@
             "name": "FS: Undead Legion Helm - shop after killing FK boss",
             "id": 100583,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crystal Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Golden Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Logan's Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sage's Scroll"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Black Serpent",
@@ -9872,33 +9250,15 @@
             "name": "FS: Undead Legion Armor - shop after killing FK boss",
             "id": 100584,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crystal Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Golden Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Logan's Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sage's Scroll"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Deep Gem",
@@ -9912,33 +9272,15 @@
             "name": "FS: Undead Legion Gauntlet - shop after killing FK boss",
             "id": 100585,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crystal Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Golden Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Logan's Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sage's Scroll"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Morne's Great Hammer",
@@ -9952,33 +9294,15 @@
             "name": "FS: Undead Legion Leggings - shop after killing FK boss",
             "id": 100586,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Crystal Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Golden Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Logan's Scroll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sage's Scroll"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Crystal Scroll",
+                  "Golden Scroll",
+                  "Logan's Scroll",
+                  "Sage's Scroll"
+                ]
+              }
             },
             "item": {
               "name": "Large Titanite Shard",
@@ -12431,7 +11755,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "FS: Sneering Mask - Yoel's room, kill Londor Pale Shade twice",
@@ -15687,21 +15012,13 @@
             "name": "Go To Consumed King's Garden",
             "connected_region": "Consumed King's Garden",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pyromancy Flame"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Transposing Kiln"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Pyromancy Flame",
+                  "Transposing Kiln"
+                ]
+              }
             }
           },
           {
@@ -15736,21 +15053,13 @@
                   ]
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Pyromancy Flame"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Transposing Kiln"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Pyromancy Flame",
+                      "Transposing Kiln"
+                    ]
+                  }
                 }
               ]
             }
@@ -21017,33 +20326,15 @@
             "name": "FS: Karla's Pointed Hat - kill Karla",
             "id": 101502,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Deep Braille Divine Tome"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Grave Warden Pyromancy Tome"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Londor Braille Divine Tome"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Quelana Pyromancy Tome"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Deep Braille Divine Tome",
+                  "Grave Warden Pyromancy Tome",
+                  "Londor Braille Divine Tome",
+                  "Quelana Pyromancy Tome"
+                ]
+              }
             },
             "item": {
               "name": "Twinkling Titanite x3",
@@ -21058,33 +20349,15 @@
             "name": "FS: Karla's Coat - kill Karla",
             "id": 101503,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Deep Braille Divine Tome"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Grave Warden Pyromancy Tome"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Londor Braille Divine Tome"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Quelana Pyromancy Tome"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Deep Braille Divine Tome",
+                  "Grave Warden Pyromancy Tome",
+                  "Londor Braille Divine Tome",
+                  "Quelana Pyromancy Tome"
+                ]
+              }
             },
             "item": {
               "name": "Spirit Tree Crest Shield",
@@ -21099,33 +20372,15 @@
             "name": "FS: Karla's Gloves - kill Karla",
             "id": 101504,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Deep Braille Divine Tome"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Grave Warden Pyromancy Tome"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Londor Braille Divine Tome"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Quelana Pyromancy Tome"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Deep Braille Divine Tome",
+                  "Grave Warden Pyromancy Tome",
+                  "Londor Braille Divine Tome",
+                  "Quelana Pyromancy Tome"
+                ]
+              }
             },
             "item": {
               "name": "Carthus Rouge x3",
@@ -21140,33 +20395,15 @@
             "name": "FS: Karla's Trousers - kill Karla",
             "id": 101505,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Deep Braille Divine Tome"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Grave Warden Pyromancy Tome"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Londor Braille Divine Tome"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Quelana Pyromancy Tome"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Deep Braille Divine Tome",
+                  "Grave Warden Pyromancy Tome",
+                  "Londor Braille Divine Tome",
+                  "Quelana Pyromancy Tome"
+                ]
+              }
             },
             "item": {
               "name": "Shield of Want",

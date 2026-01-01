@@ -1178,21 +1178,13 @@
             "name": "Varndagroth tower left -> Refugee Camp",
             "connected_region": "Refugee Camp",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Timespinner Spindle"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Timespinner Wheel"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Timespinner Spindle",
+                  "Timespinner Wheel"
+                ]
+              }
             }
           }
         ],
@@ -2902,7 +2894,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4419,7 +4412,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Caves of Banishment (Maw): Mineshaft",
@@ -4823,7 +4817,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Castle Keep: Advisor jump",
@@ -5357,7 +5352,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Royal Towers: Aelana's attic",
@@ -5719,7 +5715,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },

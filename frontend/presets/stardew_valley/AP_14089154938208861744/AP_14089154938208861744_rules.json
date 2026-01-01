@@ -9398,57 +9398,19 @@
             "name": "Collect All Rarecrows",
             "id": 719031,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rarecrow #1"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rarecrow #2"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rarecrow #3"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rarecrow #4"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rarecrow #5"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rarecrow #6"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rarecrow #7"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rarecrow #8"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Rarecrow #1",
+                  "Rarecrow #2",
+                  "Rarecrow #3",
+                  "Rarecrow #4",
+                  "Rarecrow #5",
+                  "Rarecrow #6",
+                  "Rarecrow #7",
+                  "Rarecrow #8"
+                ]
+              }
             },
             "item": {
               "name": "Progressive Shed",
@@ -10027,7 +9989,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Iron Bar (Logic event)",
@@ -10054,7 +10017,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Gold Bar (Logic event)",
@@ -10081,7 +10045,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Iridium Bar (Logic event)",
@@ -10108,7 +10073,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Copper Ore (Logic event)",
@@ -10205,7 +10171,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Iron Ore (Logic event)",
@@ -10303,7 +10270,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Gold Ore (Logic event)",
@@ -10401,7 +10369,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Iridium Ore (Logic event)",
@@ -10522,7 +10491,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -10724,51 +10694,18 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Traveling Merchant: Friday"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Traveling Merchant: Monday"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Traveling Merchant: Saturday"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Traveling Merchant: Sunday"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Traveling Merchant: Thursday"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Traveling Merchant: Tuesday"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Traveling Merchant: Wednesday"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Traveling Merchant: Friday",
+                      "Traveling Merchant: Monday",
+                      "Traveling Merchant: Saturday",
+                      "Traveling Merchant: Sunday",
+                      "Traveling Merchant: Thursday",
+                      "Traveling Merchant: Tuesday",
+                      "Traveling Merchant: Wednesday"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -11729,21 +11666,13 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Boat Repair"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Island Obelisk"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Boat Repair",
+                      "Island Obelisk"
+                    ]
+                  }
                 },
                 {
                   "rule": "AST_region_check",
@@ -11825,21 +11754,13 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Boat Repair"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Island Obelisk"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Boat Repair",
+                      "Island Obelisk"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -12149,21 +12070,13 @@
             "name": "A Favor For Clint",
             "id": 717540,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Iron Bar (Logic event)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Winter"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Iron Bar (Logic event)",
+                  "Winter"
+                ]
+              }
             },
             "item": {
               "name": "Lupini: Red Eagle",
@@ -12177,21 +12090,13 @@
             "name": "Granny's Gift",
             "id": 717542,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spring"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spring"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Spring",
+                  "Spring"
+                ]
+              }
             },
             "item": {
               "name": "Progressive Backpack",
@@ -13911,21 +13816,13 @@
             "name": "Staff Of Power",
             "id": 717541,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Iridium Bar (Logic event)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Winter"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Iridium Bar (Logic event)",
+                  "Winter"
+                ]
+              }
             },
             "item": {
               "name": "Fishing Level",
@@ -16857,33 +16754,15 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Club"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Dagger"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Sword"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Weapon"
-                              }
-                            }
-                          ]
+                          "rule": "HasAny",
+                          "args": {
+                            "items": [
+                              "Progressive Club",
+                              "Progressive Dagger",
+                              "Progressive Sword",
+                              "Progressive Weapon"
+                            ]
+                          }
                         },
                         {
                           "rule": "AST_region_check",
@@ -16899,33 +16778,15 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Club"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Dagger"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Sword"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Weapon"
-                              }
-                            }
-                          ]
+                          "rule": "HasAny",
+                          "args": {
+                            "items": [
+                              "Progressive Club",
+                              "Progressive Dagger",
+                              "Progressive Sword",
+                              "Progressive Weapon"
+                            ]
+                          }
                         },
                         {
                           "rule": "AST_region_check",
@@ -16941,33 +16802,15 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Club"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Dagger"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Sword"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Weapon"
-                              }
-                            }
-                          ]
+                          "rule": "HasAny",
+                          "args": {
+                            "items": [
+                              "Progressive Club",
+                              "Progressive Dagger",
+                              "Progressive Sword",
+                              "Progressive Weapon"
+                            ]
+                          }
                         },
                         {
                           "rule": "AST_region_check",
@@ -16983,33 +16826,15 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Club"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Dagger"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Sword"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Weapon"
-                              }
-                            }
-                          ]
+                          "rule": "HasAny",
+                          "args": {
+                            "items": [
+                              "Progressive Club",
+                              "Progressive Dagger",
+                              "Progressive Sword",
+                              "Progressive Weapon"
+                            ]
+                          }
                         },
                         {
                           "rule": "AST_region_check",
@@ -17025,33 +16850,15 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Club"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Dagger"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Sword"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Weapon"
-                              }
-                            }
-                          ]
+                          "rule": "HasAny",
+                          "args": {
+                            "items": [
+                              "Progressive Club",
+                              "Progressive Dagger",
+                              "Progressive Sword",
+                              "Progressive Weapon"
+                            ]
+                          }
                         },
                         {
                           "rule": "AST_region_check",
@@ -17067,33 +16874,15 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Club"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Dagger"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Sword"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Weapon"
-                              }
-                            }
-                          ]
+                          "rule": "HasAny",
+                          "args": {
+                            "items": [
+                              "Progressive Club",
+                              "Progressive Dagger",
+                              "Progressive Sword",
+                              "Progressive Weapon"
+                            ]
+                          }
                         },
                         {
                           "rule": "AST_region_check",
@@ -17109,33 +16898,15 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Club"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Dagger"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Sword"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Weapon"
-                              }
-                            }
-                          ]
+                          "rule": "HasAny",
+                          "args": {
+                            "items": [
+                              "Progressive Club",
+                              "Progressive Dagger",
+                              "Progressive Sword",
+                              "Progressive Weapon"
+                            ]
+                          }
                         },
                         {
                           "rule": "AST_region_check",
@@ -17151,33 +16922,15 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Club"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Dagger"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Sword"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Weapon"
-                              }
-                            }
-                          ]
+                          "rule": "HasAny",
+                          "args": {
+                            "items": [
+                              "Progressive Club",
+                              "Progressive Dagger",
+                              "Progressive Sword",
+                              "Progressive Weapon"
+                            ]
+                          }
                         },
                         {
                           "rule": "AST_region_check",
@@ -17193,33 +16946,15 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Club"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Dagger"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Sword"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Progressive Weapon"
-                              }
-                            }
-                          ]
+                          "rule": "HasAny",
+                          "args": {
+                            "items": [
+                              "Progressive Club",
+                              "Progressive Dagger",
+                              "Progressive Sword",
+                              "Progressive Weapon"
+                            ]
+                          }
                         },
                         {
                           "rule": "AST_region_check",
@@ -17623,33 +17358,15 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Club"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Dagger"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Weapon"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Progressive Club",
+                          "Progressive Dagger",
+                          "Progressive Sword",
+                          "Progressive Weapon"
+                        ]
+                      }
                     },
                     {
                       "rule": "AST_region_check",
@@ -18157,33 +17874,15 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Club"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Dagger"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Weapon"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Progressive Club",
+                          "Progressive Dagger",
+                          "Progressive Sword",
+                          "Progressive Weapon"
+                        ]
+                      }
                     },
                     {
                       "rule": "AST_region_check",
@@ -18645,33 +18344,15 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Club"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Dagger"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Weapon"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Progressive Club",
+                          "Progressive Dagger",
+                          "Progressive Sword",
+                          "Progressive Weapon"
+                        ]
+                      }
                     },
                     {
                       "rule": "AST_region_check",
@@ -18687,33 +18368,15 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Club"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Dagger"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Weapon"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Progressive Club",
+                          "Progressive Dagger",
+                          "Progressive Sword",
+                          "Progressive Weapon"
+                        ]
+                      }
                     },
                     {
                       "rule": "AST_region_check",
@@ -18729,33 +18392,15 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Club"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Dagger"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Weapon"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Progressive Club",
+                          "Progressive Dagger",
+                          "Progressive Sword",
+                          "Progressive Weapon"
+                        ]
+                      }
                     },
                     {
                       "rule": "AST_region_check",
@@ -18771,33 +18416,15 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Club"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Dagger"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Weapon"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Progressive Club",
+                          "Progressive Dagger",
+                          "Progressive Sword",
+                          "Progressive Weapon"
+                        ]
+                      }
                     },
                     {
                       "rule": "AST_region_check",
@@ -18921,33 +18548,15 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Club"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Dagger"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Weapon"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Progressive Club",
+                          "Progressive Dagger",
+                          "Progressive Sword",
+                          "Progressive Weapon"
+                        ]
+                      }
                     },
                     {
                       "rule": "AST_region_check",
@@ -19025,33 +18634,15 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Club"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Dagger"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Weapon"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Progressive Club",
+                          "Progressive Dagger",
+                          "Progressive Sword",
+                          "Progressive Weapon"
+                        ]
+                      }
                     },
                     {
                       "rule": "AST_region_check",
@@ -19267,33 +18858,15 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Club"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Dagger"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Sword"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Weapon"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Progressive Club",
+                          "Progressive Dagger",
+                          "Progressive Sword",
+                          "Progressive Weapon"
+                        ]
+                      }
                     },
                     {
                       "rule": "AST_region_check",
@@ -19800,7 +19373,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -20376,33 +19950,15 @@
             "name": "Winter Foraging Bundle",
             "id": 717004,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Winter"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Winter"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Winter"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Winter"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Winter",
+                  "Winter",
+                  "Winter",
+                  "Winter"
+                ]
+              }
             },
             "item": {
               "name": "Book: The Art O' Crabbing",
@@ -24933,21 +24489,13 @@
             "name": "Upgrade Copper Tools",
             "connected_region": "Blacksmith Copper Upgrades",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Copper Bar (Logic event)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shipping Bin"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Copper Bar (Logic event)",
+                  "Shipping Bin"
+                ]
+              }
             }
           }
         ],
@@ -42702,21 +42250,13 @@
             "name": "Attend Desert Festival",
             "connected_region": "Desert Festival",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bus Repair"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spring"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Bus Repair",
+                  "Spring"
+                ]
+              }
             }
           }
         ],
@@ -43288,33 +42828,15 @@
                   "rule": "True_"
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Club"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dagger"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Weapon"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Progressive Club",
+                      "Progressive Dagger",
+                      "Progressive Sword",
+                      "Progressive Weapon"
+                    ]
+                  }
                 }
               ]
             }
@@ -43589,33 +43111,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Club"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dagger"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Weapon"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Progressive Club",
+                      "Progressive Dagger",
+                      "Progressive Sword",
+                      "Progressive Weapon"
+                    ]
+                  }
                 },
                 {
                   "rule": "AST_region_check",
@@ -43736,33 +43240,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Club"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dagger"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Weapon"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Progressive Club",
+                      "Progressive Dagger",
+                      "Progressive Sword",
+                      "Progressive Weapon"
+                    ]
+                  }
                 },
                 {
                   "rule": "AST_region_check",
@@ -45583,21 +45069,13 @@
             "name": "Upgrade Iron Tools",
             "connected_region": "Blacksmith Iron Upgrades",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Iron Bar (Logic event)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shipping Bin"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Iron Bar (Logic event)",
+                  "Shipping Bin"
+                ]
+              }
             }
           }
         ],
@@ -52190,21 +51668,13 @@
             "name": "Parrot Express Docks to Dig Site",
             "connected_region": "Dig Site",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dig Site Bridge"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Parrot Express"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dig Site Bridge",
+                  "Parrot Express"
+                ]
+              }
             }
           },
           {
@@ -52836,21 +52306,13 @@
             "name": "Parrot Express Jungle to Dig Site",
             "connected_region": "Dig Site",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dig Site Bridge"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Parrot Express"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dig Site Bridge",
+                  "Parrot Express"
+                ]
+              }
             }
           },
           {
@@ -54009,21 +53471,13 @@
             "name": "Parrot Express Volcano to Dig Site",
             "connected_region": "Dig Site",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dig Site Bridge"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Parrot Express"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dig Site Bridge",
+                  "Parrot Express"
+                ]
+              }
             }
           },
           {
@@ -55033,63 +54487,39 @@
             "name": "Parrot Express Dig Site to Volcano",
             "connected_region": "Island North",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dig Site Bridge"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Parrot Express"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dig Site Bridge",
+                  "Parrot Express"
+                ]
+              }
             }
           },
           {
             "name": "Parrot Express Dig Site to Docks",
             "connected_region": "Island South",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dig Site Bridge"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Parrot Express"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dig Site Bridge",
+                  "Parrot Express"
+                ]
+              }
             }
           },
           {
             "name": "Parrot Express Dig Site to Jungle",
             "connected_region": "Island West",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dig Site Bridge"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Parrot Express"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dig Site Bridge",
+                  "Parrot Express"
+                ]
+              }
             }
           }
         ],

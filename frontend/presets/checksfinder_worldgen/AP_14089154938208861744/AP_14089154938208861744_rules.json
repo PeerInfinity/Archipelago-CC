@@ -675,8 +675,7 @@
           "display_name": "Randomize Items"
         }
       },
-      "shops": [],
-      "world_description": "ChecksFinder WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "ChecksFinder is a game where you avoid mines and collect checks by beating boards!\nYou win when you get all your items and beat the last board!",
       "slot_data": {
         "world_seed": 2277925128,
         "seed_name": "14089154938208861744",
@@ -686,7 +685,19 @@
         "race": false
       },
       "web": {
-        "theme": "grass"
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to playing Archipelago ChecksFinder.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "SunCat"
+            ]
+          }
+        ]
       },
       "world_directory": "checksfinder_worldgen"
     }

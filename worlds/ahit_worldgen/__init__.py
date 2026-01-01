@@ -78,15 +78,23 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class AHatinTimeWorldGenWeb(WebWorld):
     """Web interface for A Hat in Time WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "partyTime"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide for setting up A Hat in Time to be played in Archipelago.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["CookieCat"]
+        )
+    ]
 
 
 class AHatinTimeWorldGenWorld(RuleWorldMixin, World):
     """
-    A Hat in Time WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    A Hat in Time is a cute-as-peck 3D platformer featuring a little girl who stitches hats for wicked powers!
+    Freely explore giant worlds and recover Time Pieces to travel to new heights!
     """
 
     game: ClassVar[str] = "A Hat in Time WorldGen"
@@ -369,7 +377,6 @@ class AHatinTimeWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.act_connections = types.SimpleNamespace(chapter1_tutorial='chapter1_barrelboss', TimeRift_Water_Subcon_Dwellers='TimeRift_Water_Subcon_Hookshot', Spaceship_WaterRift_MailRoom='TimeRift_Water_TWreck_Panels', TimeRift_Water_TWreck_Panels='TimeRift_Water_Subcon_Dwellers', TimeRift_Water_AlpineSkyline_Cats='Spaceship_WaterRift_Gallery', TimeRift_Cave_Mafia='TimeRift_Cave_Mafia', TimeRift_Water_TWreck_Parade='TimeRift_Water_AlpineSkyline_Cats', TimeRift_Water_Mafia_Hard='TimeRift_Water_Alp_Goats', TimeRift_Cave_BirdBasement='TimeRift_Cave_Alps', TimeRift_Cave_Alps='TimeRift_Cave_BirdBasement', TimeRift_Water_Mafia_Easy='TimeRift_Water_TWreck_Parade', TimeRift_Cave_Raccoon='TimeRift_Cave_Raccoon', TimeRift_Water_Alp_Goats='Spaceship_WaterRift_MailRoom', Spaceship_WaterRift_Gallery='TimeRift_Water_Mafia_Easy', TimeRift_Water_Subcon_Hookshot='TimeRift_Water_Mafia_Hard', snatcher_boss='chapter1_tutorial', AlpineSkyline_Finale='harbor_impossible_race', chapter3_secret_finale='subcon_cave', AlpineFreeRoam='chapter3_murder', subcon_village_icewall='snatcher_boss', subcon_cave='chapter3_secret_finale', mafiatown_lava='moon_camerasnap', moon_parade='mafiatown_lava', chapter1_boss='mafiatown_goldenvault', subcon_maildelivery='moon_parade', chapter1_cannon_repair='subcon_village_icewall', chapter2_toiletboss='vanessa_manor_attic', DeadBirdStudio='chapter2_toiletboss', vanessa_manor_attic='chapter1_boss', chapter1_barrelboss='chapter1_cannon_repair', moon_camerasnap='subcon_maildelivery', chapter3_murder='trainwreck_selfdestruct', mafiatown_goldenvault='DeadBirdStudio', trainwreck_selfdestruct='AlpineFreeRoam', harbor_impossible_race='AlpineSkyline_Finale', award_ceremony='award_ceremony')
         self.shop_locs = ['Mafia Boss Shop Item', 'Badge Seller - Item 1', 'Badge Seller - Item 2', 'Badge Seller - Item 3', 'Badge Seller - Item 4']
         self.hat_craft_order = [2, 4, 1, 0, 3]
@@ -381,7 +388,6 @@ class AHatinTimeWorldGenWorld(RuleWorldMixin, World):
         self.badge_seller_count = 4
         self.world_description = 'A Hat in Time is a cute-as-peck 3D platformer featuring a little girl who stitches hats for wicked powers!\nFreely explore giant worlds and recover Time Pieces to travel to new heights!'
         self.slot_data = {'Chapter1Cost': 0, 'Chapter2Cost': 17, 'Chapter3Cost': 12, 'Chapter4Cost': 8, 'Chapter5Cost': 35, 'Chapter6Cost': -1, 'Chapter7Cost': -1, 'BadgeSellerItemCount': 4, 'SeedNumber': '1', 'SeedName': '14089154938208861744', 'TotalLocations': 223, 'SprintYarnCost': 8, 'BrewingYarnCost': 4, 'IceYarnCost': 8, 'DwellerYarnCost': 6, 'TimeStopYarnCost': 5, 'Hat1': 2, 'Hat2': 4, 'Hat3': 1, 'Hat4': 0, 'Hat5': 3, 'chapter1_tutorial': 'chapter1_barrelboss', 'TimeRift_Water_Subcon_Dwellers': 'TimeRift_Water_Subcon_Hookshot', 'Spaceship_WaterRift_MailRoom': 'TimeRift_Water_TWreck_Panels', 'TimeRift_Water_TWreck_Panels': 'TimeRift_Water_Subcon_Dwellers', 'TimeRift_Water_AlpineSkyline_Cats': 'Spaceship_WaterRift_Gallery', 'TimeRift_Cave_Mafia': 'TimeRift_Cave_Mafia', 'TimeRift_Water_TWreck_Parade': 'TimeRift_Water_AlpineSkyline_Cats', 'TimeRift_Water_Mafia_Hard': 'TimeRift_Water_Alp_Goats', 'TimeRift_Cave_BirdBasement': 'TimeRift_Cave_Alps', 'TimeRift_Cave_Alps': 'TimeRift_Cave_BirdBasement', 'TimeRift_Water_Mafia_Easy': 'TimeRift_Water_TWreck_Parade', 'TimeRift_Cave_Raccoon': 'TimeRift_Cave_Raccoon', 'TimeRift_Water_Alp_Goats': 'Spaceship_WaterRift_MailRoom', 'Spaceship_WaterRift_Gallery': 'TimeRift_Water_Mafia_Easy', 'TimeRift_Water_Subcon_Hookshot': 'TimeRift_Water_Mafia_Hard', 'snatcher_boss': 'chapter1_tutorial', 'AlpineSkyline_Finale': 'harbor_impossible_race', 'chapter3_secret_finale': 'subcon_cave', 'AlpineFreeRoam': 'chapter3_murder', 'subcon_village_icewall': 'snatcher_boss', 'subcon_cave': 'chapter3_secret_finale', 'mafiatown_lava': 'moon_camerasnap', 'moon_parade': 'mafiatown_lava', 'chapter1_boss': 'mafiatown_goldenvault', 'subcon_maildelivery': 'moon_parade', 'chapter1_cannon_repair': 'subcon_village_icewall', 'chapter2_toiletboss': 'vanessa_manor_attic', 'DeadBirdStudio': 'chapter2_toiletboss', 'vanessa_manor_attic': 'chapter1_boss', 'chapter1_barrelboss': 'chapter1_cannon_repair', 'moon_camerasnap': 'subcon_maildelivery', 'chapter3_murder': 'trainwreck_selfdestruct', 'mafiatown_goldenvault': 'DeadBirdStudio', 'trainwreck_selfdestruct': 'AlpineFreeRoam', 'harbor_impossible_race': 'AlpineSkyline_Finale', 'award_ceremony': 'award_ceremony', 'ShopItemNames': {'2000301013': 'Relic (Cool Cow) (Player1)', '2000301003': '25 Pons (Player1)', '2000301004': 'Random Cosmetic (Player1)', '2000301005': 'Time Piece (Player1)', '2000301006': '25 Pons (Player1)'}, 'EndGoal': 1, 'ActRandomizer': 1, 'ShuffleAlpineZiplines': 0, 'LogicDifficulty': -1, 'CTRLogic': 0, 'RandomizeHatOrder': 1, 'UmbrellaLogic': 0, 'StartWithCompassBadge': 1, 'CompassBadgeMode': 1, 'ShuffleStorybookPages': 1, 'ShuffleActContracts': 1, 'ShuffleSubconPaintings': 0, 'NoPaintingSkips': 0, 'HatItems': 0, 'EnableDLC1': 0, 'Tasksanity': 0, 'TasksanityTaskStep': 1, 'TasksanityCheckCount': 18, 'ShipShapeCustomTaskGoal': 0, 'ExcludeTour': 0, 'EnableDeathWish': 0, 'DWShuffle': 0, 'DeathWishOnly': 0, 'DWEnableBonus': 0, 'DWAutoCompleteBonuses': 1, 'DWTimePieceRequirement': 15, 'EnableDLC2': 0, 'MetroMinPonCost': 50, 'MetroMaxPonCost': 200, 'BaseballBat': 0, 'NoTicketSkips': 0, 'MinPonCost': 75, 'MaxPonCost': 300, 'death_link': 0, 'death_link_amnesty': 0, 'dw_death_link_amnesty': 5}
-        self.web = types.SimpleNamespace(theme='partyTime', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide for setting up A Hat in Time to be played in Archipelago.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['CookieCat']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -507,4 +513,99 @@ class AHatinTimeWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "Chapter1Cost": 0,
+            "Chapter2Cost": 17,
+            "Chapter3Cost": 12,
+            "Chapter4Cost": 8,
+            "Chapter5Cost": 35,
+            "Chapter6Cost": -1,
+            "Chapter7Cost": -1,
+            "BadgeSellerItemCount": 4,
+            "SeedNumber": "1",
+            "SeedName": "14089154938208861744",
+            "TotalLocations": 223,
+            "SprintYarnCost": 8,
+            "BrewingYarnCost": 4,
+            "IceYarnCost": 8,
+            "DwellerYarnCost": 6,
+            "TimeStopYarnCost": 5,
+            "Hat1": 2,
+            "Hat2": 4,
+            "Hat3": 1,
+            "Hat4": 0,
+            "Hat5": 3,
+            "chapter1_tutorial": "chapter1_barrelboss",
+            "TimeRift_Water_Subcon_Dwellers": "TimeRift_Water_Subcon_Hookshot",
+            "Spaceship_WaterRift_MailRoom": "TimeRift_Water_TWreck_Panels",
+            "TimeRift_Water_TWreck_Panels": "TimeRift_Water_Subcon_Dwellers",
+            "TimeRift_Water_AlpineSkyline_Cats": "Spaceship_WaterRift_Gallery",
+            "TimeRift_Cave_Mafia": "TimeRift_Cave_Mafia",
+            "TimeRift_Water_TWreck_Parade": "TimeRift_Water_AlpineSkyline_Cats",
+            "TimeRift_Water_Mafia_Hard": "TimeRift_Water_Alp_Goats",
+            "TimeRift_Cave_BirdBasement": "TimeRift_Cave_Alps",
+            "TimeRift_Cave_Alps": "TimeRift_Cave_BirdBasement",
+            "TimeRift_Water_Mafia_Easy": "TimeRift_Water_TWreck_Parade",
+            "TimeRift_Cave_Raccoon": "TimeRift_Cave_Raccoon",
+            "TimeRift_Water_Alp_Goats": "Spaceship_WaterRift_MailRoom",
+            "Spaceship_WaterRift_Gallery": "TimeRift_Water_Mafia_Easy",
+            "TimeRift_Water_Subcon_Hookshot": "TimeRift_Water_Mafia_Hard",
+            "snatcher_boss": "chapter1_tutorial",
+            "AlpineSkyline_Finale": "harbor_impossible_race",
+            "chapter3_secret_finale": "subcon_cave",
+            "AlpineFreeRoam": "chapter3_murder",
+            "subcon_village_icewall": "snatcher_boss",
+            "subcon_cave": "chapter3_secret_finale",
+            "mafiatown_lava": "moon_camerasnap",
+            "moon_parade": "mafiatown_lava",
+            "chapter1_boss": "mafiatown_goldenvault",
+            "subcon_maildelivery": "moon_parade",
+            "chapter1_cannon_repair": "subcon_village_icewall",
+            "chapter2_toiletboss": "vanessa_manor_attic",
+            "DeadBirdStudio": "chapter2_toiletboss",
+            "vanessa_manor_attic": "chapter1_boss",
+            "chapter1_barrelboss": "chapter1_cannon_repair",
+            "moon_camerasnap": "subcon_maildelivery",
+            "chapter3_murder": "trainwreck_selfdestruct",
+            "mafiatown_goldenvault": "DeadBirdStudio",
+            "trainwreck_selfdestruct": "AlpineFreeRoam",
+            "harbor_impossible_race": "AlpineSkyline_Finale",
+            "award_ceremony": "award_ceremony",
+            "ShopItemNames": {'2000301013': 'Relic (Cool Cow) (Player1)', '2000301003': '25 Pons (Player1)', '2000301004': 'Random Cosmetic (Player1)', '2000301005': 'Time Piece (Player1)', '2000301006': '25 Pons (Player1)'},
+            "EndGoal": 1,
+            "ActRandomizer": 1,
+            "ShuffleAlpineZiplines": 0,
+            "LogicDifficulty": -1,
+            "CTRLogic": 0,
+            "RandomizeHatOrder": 1,
+            "UmbrellaLogic": 0,
+            "StartWithCompassBadge": 1,
+            "CompassBadgeMode": 1,
+            "ShuffleStorybookPages": 1,
+            "ShuffleActContracts": 1,
+            "ShuffleSubconPaintings": 0,
+            "NoPaintingSkips": 0,
+            "HatItems": 0,
+            "EnableDLC1": 0,
+            "Tasksanity": 0,
+            "TasksanityTaskStep": 1,
+            "TasksanityCheckCount": 18,
+            "ShipShapeCustomTaskGoal": 0,
+            "ExcludeTour": 0,
+            "EnableDeathWish": 0,
+            "DWShuffle": 0,
+            "DeathWishOnly": 0,
+            "DWEnableBonus": 0,
+            "DWAutoCompleteBonuses": 1,
+            "DWTimePieceRequirement": 15,
+            "EnableDLC2": 0,
+            "MetroMinPonCost": 50,
+            "MetroMaxPonCost": 200,
+            "BaseballBat": 0,
+            "NoTicketSkips": 0,
+            "MinPonCost": 75,
+            "MaxPonCost": 300,
+            "death_link": 0,
+            "death_link_amnesty": 0,
+            "dw_death_link_amnesty": 5,
+        }

@@ -156,8 +156,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Statement 4",
-                "count": 1
+                "item_name": "Statement 4"
               }
             }
           }
@@ -188,8 +187,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Statement 5",
-                "count": 1
+                "item_name": "Statement 5"
               }
             }
           }
@@ -271,8 +269,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Statement 5",
-                "count": 1
+                "item_name": "Statement 5"
               }
             },
             "item": {
@@ -350,8 +347,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Statement 4",
-                "count": 1
+                "item_name": "Statement 4"
               }
             },
             "item": {
@@ -1797,7 +1793,7 @@
         },
         "randomize_items": {
           "type": "toggle",
-          "default": 0,
+          "default": true,
           "display_name": "Randomize Items"
         },
         "starting_statements": {
@@ -1814,7 +1810,6 @@
           "display_name": "Theorem to Prove"
         }
       },
-      "shops": [],
       "proof_structure": {
         "label_to_index": {
           "2cn": 1,
@@ -1929,7 +1924,7 @@
           "Statement 9"
         ]
       },
-      "world_description": "Metamath WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Turn MetaMath proofs into Archipelago worlds!\nEach proof step is both a location (proving it) and an item (ability to use it).\nNavigate logical dependencies across the multiworld to complete your proof.",
       "slot_data": {
         "proof_structure": {
           "1": {

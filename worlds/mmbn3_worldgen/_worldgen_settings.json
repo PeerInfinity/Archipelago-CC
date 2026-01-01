@@ -18,7 +18,8 @@
       "start_location_hints": [],
       "trade_quest_hinting": 2
     },
-    "world_directory": "mmbn3"
+    "world_directory": "mmbn3",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "item_frequencies": {

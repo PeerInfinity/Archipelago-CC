@@ -251,15 +251,89 @@ class _ShopWrapper:
 
 class ALinktothePastWorldGenWeb(WebWorld):
     """Web interface for A Link to the Past WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "grass"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "English",
+            "multiworld_en.md",
+            "multiworld/en",
+            ["Farrak Kilhn", "Berserker"]
+        ),
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "Deutsch",
+            "multiworld_de.md",
+            "multiworld/de",
+            ["Fischfilet"]
+        ),
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "Español",
+            "multiworld_es.md",
+            "multiworld/es",
+            ["Edos"]
+        ),
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "Français",
+            "multiworld_fr.md",
+            "multiworld/fr",
+            ["Coxla"]
+        ),
+        Tutorial(
+            "MSU-1 Setup Guide",
+            "A guide to setting up MSU-1, which allows for custom in-game music.",
+            "English",
+            "msu1_en.md",
+            "msu1/en",
+            ["Farrak Kilhn"]
+        ),
+        Tutorial(
+            "MSU-1 Setup Guide",
+            "A guide to setting up MSU-1, which allows for custom in-game music.",
+            "Español",
+            "msu1_es.md",
+            "msu1/es",
+            ["Edos"]
+        ),
+        Tutorial(
+            "MSU-1 Setup Guide",
+            "A guide to setting up MSU-1, which allows for custom in-game music.",
+            "Français",
+            "msu1_fr.md",
+            "msu1/fr",
+            ["Coxla"]
+        ),
+        Tutorial(
+            "Plando Guide",
+            "A guide to creating Multiworld Plandos with LTTP",
+            "English",
+            "plando_en.md",
+            "plando/en",
+            ["Berserker"]
+        ),
+        Tutorial(
+            "'OOF' Sound Replacement",
+            "A guide to customizing Link's 'oof' sound",
+            "English",
+            "oof_sound_en.md",
+            "oof_sound/en",
+            ["Nyx Edelstein"]
+        )
+    ]
 
 
 class ALinktothePastWorldGenWorld(RuleWorldMixin, World):
     """
-    A Link to the Past WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    The Legend of Zelda: A Link to the Past is an action/adventure game. Take on the role of
+    Link, a boy who is destined to save the land of Hyrule. Delve through three palaces and nine
+    dungeons on your quest to rescue the descendents of the seven wise men and defeat the evil
+    Ganon!
     """
 
     game: ClassVar[str] = "A Link to the Past WorldGen"
@@ -624,7 +698,6 @@ class ALinktothePastWorldGenWorld(RuleWorldMixin, World):
         self.rupoor_cost = 10
         self.world_description = 'The Legend of Zelda: A Link to the Past is an action/adventure game. Take on the role of\nLink, a boy who is destined to save the land of Hyrule. Delve through three palaces and nine\ndungeons on your quest to rescue the descendents of the seven wise men and defeat the evil\nGanon!'
         self.slot_data = types.SimpleNamespace(crystals_needed_for_gt=7, crystals_needed_for_ganon=7, open_pyramid=2, big_key_shuffle=0, small_key_shuffle=0, compass_shuffle=0, map_shuffle=0, progressive=2, swordless=0, retro_bow=0, retro_caves=0, shop_item_slots=0, boss_shuffle=0, pot_shuffle=0, enemy_shuffle=0, key_drop_shuffle=1, bombless_start=0, randomize_shop_inventories=0, shuffle_shop_inventories=0, shuffle_capacity_upgrades=0, entrance_shuffle=0, dark_room_logic=0, goal=0, mode=1, triforce_pieces_mode=2, triforce_pieces_percentage=150, triforce_pieces_required=20, triforce_pieces_available=30, triforce_pieces_extra=10, mm_medalion='Quake', tr_medalion='Ether')
-        self.web = types.SimpleNamespace(theme='grass', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.', 'language': 'English', 'file_name': 'multiworld_en.md', 'link': 'multiworld/en', 'authors': ['Farrak Kilhn', 'Berserker']}, {'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.', 'language': 'Deutsch', 'file_name': 'multiworld_de.md', 'link': 'multiworld/de', 'authors': ['Fischfilet']}, {'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.', 'language': 'Español', 'file_name': 'multiworld_es.md', 'link': 'multiworld/es', 'authors': ['Edos']}, {'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.', 'language': 'Français', 'file_name': 'multiworld_fr.md', 'link': 'multiworld/fr', 'authors': ['Coxla']}, {'name': 'MSU-1 Setup Guide', 'description': 'A guide to setting up MSU-1, which allows for custom in-game music.', 'language': 'English', 'file_name': 'msu1_en.md', 'link': 'msu1/en', 'authors': ['Farrak Kilhn']}, {'name': 'MSU-1 Setup Guide', 'description': 'A guide to setting up MSU-1, which allows for custom in-game music.', 'language': 'Español', 'file_name': 'msu1_es.md', 'link': 'msu1/es', 'authors': ['Edos']}, {'name': 'MSU-1 Setup Guide', 'description': 'A guide to setting up MSU-1, which allows for custom in-game music.', 'language': 'Français', 'file_name': 'msu1_fr.md', 'link': 'msu1/fr', 'authors': ['Coxla']}, {'name': 'Plando Guide', 'description': 'A guide to creating Multiworld Plandos with LTTP', 'language': 'English', 'file_name': 'plando_en.md', 'link': 'plando/en', 'authors': ['Berserker']}, {'name': "'OOF' Sound Replacement", 'description': "A guide to customizing Link's 'oof' sound", 'language': 'English', 'file_name': 'oof_sound_en.md', 'link': 'oof_sound/en', 'authors': ['Nyx Edelstein']}])
 
     def _create_shops(self, shops_data: list) -> list:
         """Convert shop data dicts to ShopWrapper objects."""
@@ -745,4 +818,36 @@ class ALinktothePastWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "crystals_needed_for_gt": 7,
+            "crystals_needed_for_ganon": 7,
+            "open_pyramid": 2,
+            "big_key_shuffle": 0,
+            "small_key_shuffle": 0,
+            "compass_shuffle": 0,
+            "map_shuffle": 0,
+            "progressive": 2,
+            "swordless": 0,
+            "retro_bow": 0,
+            "retro_caves": 0,
+            "shop_item_slots": 0,
+            "boss_shuffle": 0,
+            "pot_shuffle": 0,
+            "enemy_shuffle": 0,
+            "key_drop_shuffle": 1,
+            "bombless_start": 0,
+            "randomize_shop_inventories": 0,
+            "shuffle_shop_inventories": 0,
+            "shuffle_capacity_upgrades": 0,
+            "entrance_shuffle": 0,
+            "dark_room_logic": 0,
+            "goal": 0,
+            "mode": 1,
+            "triforce_pieces_mode": 2,
+            "triforce_pieces_percentage": 150,
+            "triforce_pieces_required": 20,
+            "triforce_pieces_available": 30,
+            "triforce_pieces_extra": 10,
+            "mm_medalion": "Quake",
+            "tr_medalion": "Ether",
+        }

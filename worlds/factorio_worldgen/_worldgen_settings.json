@@ -333,7 +333,8 @@
         }
       }
     },
-    "world_directory": "factorio"
+    "world_directory": "factorio",
+    "use_resolved_items": true
   },
   "world_attributes": {
     "custom_recipes": {

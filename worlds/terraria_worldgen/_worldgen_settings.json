@@ -23,7 +23,8 @@
       "start_inventory": {},
       "start_location_hints": []
     },
-    "world_directory": "terraria"
+    "world_directory": "terraria",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "armor_minions": {
@@ -557,8 +558,8 @@
       "Skeletron Prime"
     ],
     "ter_goals": {
-      "Post-The Twins": "The Twins",
       "Post-The Destroyer": "The Destroyer",
+      "Post-The Twins": "The Twins",
       "Post-Skeletron Prime": "Skeletron Prime"
     },
     "world_description": "Terraria is a 2D multiplayer sandbox game featuring mining, building, exploration, and combat.\nFeatures 18 bosses and 4 classes.",

@@ -54,8 +54,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Front Door",
-                "count": 1
+                "item_name": "Key for Front Door"
               }
             }
           }
@@ -129,8 +128,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Key for Office Elevator",
-                    "count": 1
+                    "item_name": "Key for Office Elevator"
                   }
                 }
               ]
@@ -169,8 +167,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Key for Three Floor Elevator",
-                    "count": 1
+                    "item_name": "Key for Three Floor Elevator"
                   }
                 }
               ]
@@ -292,8 +289,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Underground Lake",
-                "count": 1
+                "item_name": "Key for Underground Lake"
               }
             }
           },
@@ -316,8 +312,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Underground Lake",
-                "count": 1
+                "item_name": "Key for Underground Lake"
               }
             }
           },
@@ -392,8 +387,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -413,8 +408,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Office Elevator",
-                "count": 1
+                "item_name": "Key for Office Elevator"
               }
             }
           }
@@ -450,8 +444,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Office Elevator",
-                "count": 1
+                "item_name": "Key for Office Elevator"
               }
             }
           },
@@ -461,8 +454,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Workshop",
-                "count": 1
+                "item_name": "Key for Workshop"
               }
             }
           },
@@ -472,8 +464,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Office",
-                "count": 1
+                "item_name": "Key for Office"
               }
             }
           },
@@ -664,8 +655,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Bedroom",
-                "count": 1
+                "item_name": "Key for Bedroom"
               }
             }
           }
@@ -716,8 +706,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Office",
-                "count": 1
+                "item_name": "Key for Office"
               }
             }
           },
@@ -727,8 +716,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Library",
-                "count": 1
+                "item_name": "Key for Library"
               }
             }
           },
@@ -738,8 +726,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Viewed Egyptian Hieroglyphics Explained",
-                "count": 1
+                "item_name": "Viewed Egyptian Hieroglyphics Explained"
               }
             }
           },
@@ -749,8 +736,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Prehistoric Room",
-                "count": 1
+                "item_name": "Key for Prehistoric Room"
               }
             }
           },
@@ -760,8 +746,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Egypt Room",
-                "count": 1
+                "item_name": "Key for Egypt Room"
               }
             }
           },
@@ -784,8 +769,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Crawling",
-                    "count": 1
+                    "item_name": "Crawling"
                   }
                 }
               ]
@@ -797,8 +781,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Front Door",
-                "count": 1
+                "item_name": "Key for Front Door"
               }
             }
           },
@@ -929,8 +912,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Viewed Egyptian Hieroglyphics Explained",
-                "count": 1
+                "item_name": "Viewed Egyptian Hieroglyphics Explained"
               }
             },
             "item": {
@@ -970,8 +952,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Lost Your Head",
-                    "count": 1
+                    "item_name": "Lost Your Head"
                   }
                 }
               ]
@@ -1011,8 +992,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Library",
-                "count": 1
+                "item_name": "Key for Library"
               }
             }
           },
@@ -1150,8 +1130,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Three Floor Elevator",
-                "count": 1
+                "item_name": "Key for Three Floor Elevator"
               }
             }
           },
@@ -1161,8 +1140,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Generator Room",
-                "count": 1
+                "item_name": "Key for Generator Room"
               }
             }
           }
@@ -1218,8 +1196,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Viewed Norse Stone",
-                            "count": 1
+                            "item_name": "Viewed Norse Stone"
                           }
                         }
                       ]
@@ -1278,8 +1255,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1308,8 +1285,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Viewed Theater Movie",
-                "count": 1
+                "item_name": "Viewed Theater Movie"
               }
             },
             "item": {
@@ -1363,8 +1339,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Crawling",
-                "count": 1
+                "item_name": "Crawling"
               }
             }
           },
@@ -1374,8 +1349,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Projector Room",
-                "count": 1
+                "item_name": "Key for Projector Room"
               }
             }
           }
@@ -1480,8 +1454,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1517,8 +1491,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Set Time",
-                "count": 1
+                "item_name": "Set Time"
               }
             },
             "item": {
@@ -1582,8 +1555,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1633,8 +1606,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1647,8 +1620,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Prehistoric Room",
-                "count": 1
+                "item_name": "Key for Prehistoric Room"
               }
             }
           },
@@ -1658,8 +1630,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Greenhouse",
-                "count": 1
+                "item_name": "Key for Greenhouse"
               }
             }
           },
@@ -1669,8 +1640,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Ocean Room",
-                "count": 1
+                "item_name": "Key for Ocean Room"
               }
             }
           },
@@ -1718,8 +1688,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1768,8 +1738,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Ocean Room",
-                "count": 1
+                "item_name": "Key for Ocean Room"
               }
             }
           },
@@ -1900,8 +1869,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Viewed Theater Movie",
-                "count": 1
+                "item_name": "Viewed Theater Movie"
               }
             },
             "item": {
@@ -1957,8 +1925,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Crawling",
-                    "count": 1
+                    "item_name": "Crawling"
                   }
                 }
               ]
@@ -2002,8 +1969,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2016,8 +1983,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Egypt Room",
-                "count": 1
+                "item_name": "Key for Egypt Room"
               }
             }
           },
@@ -2037,8 +2003,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Crawling",
-                "count": 1
+                "item_name": "Crawling"
               }
             }
           },
@@ -2057,8 +2022,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Viewed Egyptian Hieroglyphics Explained",
-                "count": 1
+                "item_name": "Viewed Egyptian Hieroglyphics Explained"
               }
             },
             "item": {
@@ -2125,8 +2089,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2146,8 +2110,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Shaman Room",
-                "count": 1
+                "item_name": "Key for Shaman Room"
               }
             }
           },
@@ -2223,8 +2186,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2237,8 +2200,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Shaman Room",
-                "count": 1
+                "item_name": "Key for Shaman Room"
               }
             }
           },
@@ -2328,8 +2290,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Aligned Planets",
-                "count": 1
+                "item_name": "Aligned Planets"
               }
             }
           }
@@ -2394,8 +2355,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2438,8 +2399,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2478,8 +2439,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Set Song",
-                "count": 1
+                "item_name": "Set Song"
               }
             },
             "item": {
@@ -2525,8 +2485,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Set Song",
-                "count": 1
+                "item_name": "Set Song"
               }
             },
             "item": {
@@ -2599,8 +2558,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2620,8 +2579,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Janitor Closet",
-                "count": 1
+                "item_name": "Key for Janitor Closet"
               }
             }
           },
@@ -2696,8 +2654,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Viewed Fortune",
-                "count": 1
+                "item_name": "Viewed Fortune"
               }
             }
           },
@@ -2707,8 +2664,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for UFO Room",
-                "count": 1
+                "item_name": "Key for UFO Room"
               }
             }
           }
@@ -2790,8 +2746,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2804,8 +2760,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Crawling",
-                "count": 1
+                "item_name": "Crawling"
               }
             }
           },
@@ -2815,8 +2770,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Three Floor Elevator",
-                "count": 1
+                "item_name": "Key for Three Floor Elevator"
               }
             }
           },
@@ -2826,8 +2780,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Three Floor Elevator",
-                "count": 1
+                "item_name": "Key for Three Floor Elevator"
               }
             }
           },
@@ -2958,8 +2911,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2979,8 +2932,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for UFO Room",
-                "count": 1
+                "item_name": "Key for UFO Room"
               }
             }
           },
@@ -2990,8 +2942,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Torture Room",
-                "count": 1
+                "item_name": "Key for Torture Room"
               }
             }
           }
@@ -3037,8 +2988,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Torture Room",
-                "count": 1
+                "item_name": "Key for Torture Room"
               }
             }
           },
@@ -3048,8 +2998,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Puzzle Room",
-                "count": 1
+                "item_name": "Key for Puzzle Room"
               }
             }
           },
@@ -3068,8 +3017,7 @@
                     "if_true": {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Viewed Egyptian Hieroglyphics Explained",
-                        "count": 1
+                        "item_name": "Viewed Egyptian Hieroglyphics Explained"
                       }
                     },
                     "if_false": {
@@ -3080,8 +3028,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Viewed Page 17",
-                    "count": 1
+                    "item_name": "Viewed Page 17"
                   }
                 }
               ]
@@ -3173,8 +3120,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3187,8 +3134,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key for Puzzle Room",
-                "count": 1
+                "item_name": "Key for Puzzle Room"
               }
             }
           },
@@ -3334,8 +3280,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lost Your Head",
-                "count": 1
+                "item_name": "Lost Your Head"
               }
             }
           }
@@ -5173,7 +5118,6 @@
           "display_name": "Randomize Items"
         }
       },
-      "shops": [],
       "pot_completed_list": [],
       "storage_placements": {
         "Workshop Drawers": "Metal Pot Bottom",
@@ -5200,7 +5144,7 @@
         "Transforming Mask": "Water Pot Top",
         "Library Statue": "Sand Pot Bottom"
       },
-      "world_description": "Shivers WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Shivers is a horror themed point and click adventure.\nExplore the mysteries of Windlenot's Museum of the Strange and Unusual.",
       "slot_data": {
         "StoragePlacements": {
           "Workshop Drawers": "Metal Pot Bottom",
@@ -5236,7 +5180,20 @@
         "PuzzleCollectBehavior": 1
       },
       "web": {
-        "theme": "grass"
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Shivers Setup Guide",
+            "description": "A guide to setting up Shivers for Multiworld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "GodlFire",
+              "Cynbel_Terreus"
+            ]
+          }
+        ]
       },
       "world_directory": "shivers_worldgen"
     }

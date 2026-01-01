@@ -258,6 +258,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -1860,6 +1861,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -3719,6 +3721,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -3851,21 +3854,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -4023,21 +4018,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -4200,21 +4187,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -4375,21 +4354,13 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Book of Magic"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Magical Rod"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Book of Magic",
+                                      "Magical Rod"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "HasGroup",
@@ -4580,21 +4551,13 @@
                                   "rule": "Or",
                                   "children": [
                                     {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Book of Magic"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Magical Rod"
-                                          }
-                                        }
-                                      ]
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Book of Magic",
+                                          "Magical Rod"
+                                        ]
+                                      }
                                     },
                                     {
                                       "rule": "HasGroup",
@@ -4784,21 +4747,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -4953,21 +4908,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -5122,21 +5069,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -5294,21 +5233,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -5482,21 +5413,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -5526,6 +5449,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -5658,21 +5582,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -5824,21 +5740,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -5990,21 +5898,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -6159,21 +6059,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -6339,21 +6231,13 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Book of Magic"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Magical Rod"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Book of Magic",
+                                      "Magical Rod"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "HasGroup",
@@ -6521,21 +6405,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -6687,21 +6563,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -6853,21 +6721,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -7052,21 +6912,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -7218,21 +7070,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -7417,21 +7261,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -7583,21 +7419,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -7749,21 +7577,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -7915,21 +7735,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -8081,21 +7893,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -8258,21 +8062,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -8299,6 +8095,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -8431,21 +8228,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -8597,21 +8386,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -8763,21 +8544,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -8932,21 +8705,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -9123,21 +8888,13 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Book of Magic"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Magical Rod"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Book of Magic",
+                                      "Magical Rod"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "HasGroup",
@@ -9316,21 +9073,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -9482,21 +9231,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -9648,21 +9389,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -9814,21 +9547,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -9980,21 +9705,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -10146,21 +9863,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -10312,21 +10021,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -10489,21 +10190,13 @@
                       "rule": "Or",
                       "children": [
                         {
-                          "rule": "And",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Book of Magic"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Magical Rod"
-                              }
-                            }
-                          ]
+                          "rule": "HasAll",
+                          "args": {
+                            "items": [
+                              "Book of Magic",
+                              "Magical Rod"
+                            ]
+                          }
                         },
                         {
                           "rule": "HasGroup",
@@ -10530,6 +10223,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -10668,21 +10362,13 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Book of Magic"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Magical Rod"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Book of Magic",
+                                      "Magical Rod"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "HasGroup",
@@ -10856,21 +10542,13 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Book of Magic"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Magical Rod"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Book of Magic",
+                                      "Magical Rod"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "HasGroup",
@@ -11041,21 +10719,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -11221,21 +10891,13 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Book of Magic"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Magical Rod"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Book of Magic",
+                                      "Magical Rod"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "HasGroup",
@@ -11412,21 +11074,13 @@
                                   "rule": "Or",
                                   "children": [
                                     {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Book of Magic"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Magical Rod"
-                                          }
-                                        }
-                                      ]
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Book of Magic",
+                                          "Magical Rod"
+                                        ]
+                                      }
                                     },
                                     {
                                       "rule": "HasGroup",
@@ -11605,21 +11259,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -11785,21 +11431,13 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Book of Magic"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Magical Rod"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Book of Magic",
+                                      "Magical Rod"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "HasGroup",
@@ -11970,21 +11608,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -12147,21 +11777,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -12324,21 +11946,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -12501,21 +12115,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -12678,21 +12284,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -12858,21 +12456,13 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Book of Magic"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Magical Rod"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Book of Magic",
+                                      "Magical Rod"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "HasGroup",
@@ -13046,21 +12636,13 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Book of Magic"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Magical Rod"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Book of Magic",
+                                      "Magical Rod"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "HasGroup",
@@ -13234,21 +12816,13 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Book of Magic"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Magical Rod"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Book of Magic",
+                                      "Magical Rod"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "HasGroup",
@@ -13419,21 +12993,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -13596,21 +13162,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -13773,21 +13331,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -13953,21 +13503,13 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Book of Magic"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Magical Rod"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Book of Magic",
+                                      "Magical Rod"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "HasGroup",
@@ -14149,21 +13691,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -14198,6 +13732,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -14339,21 +13874,13 @@
                                   "rule": "Or",
                                   "children": [
                                     {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Book of Magic"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Magical Rod"
-                                          }
-                                        }
-                                      ]
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Book of Magic",
+                                          "Magical Rod"
+                                        ]
+                                      }
                                     },
                                     {
                                       "rule": "HasGroup",
@@ -14554,21 +14081,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -14731,21 +14250,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -14908,21 +14419,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -15088,21 +14591,13 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Book of Magic"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Magical Rod"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Book of Magic",
+                                      "Magical Rod"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "HasGroup",
@@ -15290,21 +14785,13 @@
                                   "rule": "Or",
                                   "children": [
                                     {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Book of Magic"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Magical Rod"
-                                          }
-                                        }
-                                      ]
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Book of Magic",
+                                          "Magical Rod"
+                                        ]
+                                      }
                                     },
                                     {
                                       "rule": "HasGroup",
@@ -15494,21 +14981,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -15671,21 +15150,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -15881,21 +15352,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -16091,21 +15554,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -16268,21 +15723,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -16445,21 +15892,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -16628,21 +16067,13 @@
                                   "rule": "Or",
                                   "children": [
                                     {
-                                      "rule": "And",
-                                      "children": [
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Book of Magic"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Magical Rod"
-                                          }
-                                        }
-                                      ]
+                                      "rule": "HasAll",
+                                      "args": {
+                                        "items": [
+                                          "Book of Magic",
+                                          "Magical Rod"
+                                        ]
+                                      }
                                     },
                                     {
                                       "rule": "HasGroup",
@@ -16843,21 +16274,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -17053,21 +16476,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -17230,21 +16645,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -17407,21 +16814,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -17584,21 +16983,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -17772,21 +17163,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -17821,6 +17204,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -17956,21 +17340,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -18145,21 +17521,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -18334,21 +17702,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -18523,21 +17883,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -18712,21 +18064,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -18901,21 +18245,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -19090,21 +18426,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -19279,21 +18607,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -19468,21 +18788,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -19657,21 +18969,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -19846,21 +19150,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -20035,21 +19331,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -20224,21 +19512,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -20413,21 +19693,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -20602,21 +19874,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -20791,21 +20055,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -20980,21 +20236,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -21169,21 +20417,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -21358,21 +20598,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -21547,21 +20779,13 @@
                           "rule": "Or",
                           "children": [
                             {
-                              "rule": "And",
-                              "children": [
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Book of Magic"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Magical Rod"
-                                  }
-                                }
-                              ]
+                              "rule": "HasAll",
+                              "args": {
+                                "items": [
+                                  "Book of Magic",
+                                  "Magical Rod"
+                                ]
+                              }
                             },
                             {
                               "rule": "HasGroup",
@@ -21739,21 +20963,13 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Book of Magic"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Magical Rod"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Book of Magic",
+                                      "Magical Rod"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "HasGroup",
@@ -21794,21 +21010,13 @@
                   ]
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Bow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Silver Arrow"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Bow",
+                      "Silver Arrow"
+                    ]
+                  }
                 }
               ]
             },
@@ -21819,6 +21027,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           },
           {
@@ -21951,21 +21160,13 @@
                               "rule": "Or",
                               "children": [
                                 {
-                                  "rule": "And",
-                                  "children": [
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Book of Magic"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
-                                        "item_name": "Magical Rod"
-                                      }
-                                    }
-                                  ]
+                                  "rule": "HasAll",
+                                  "args": {
+                                    "items": [
+                                      "Book of Magic",
+                                      "Magical Rod"
+                                    ]
+                                  }
                                 },
                                 {
                                   "rule": "HasGroup",
@@ -22020,6 +21221,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]

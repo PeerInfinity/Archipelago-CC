@@ -987,6 +987,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -3094,6 +3095,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -3709,6 +3711,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -4226,6 +4229,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -4317,6 +4321,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -4408,6 +4413,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -4471,6 +4477,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -4534,6 +4541,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]
@@ -6776,6 +6784,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           }
         ]

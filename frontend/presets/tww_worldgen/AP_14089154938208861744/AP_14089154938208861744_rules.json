@@ -347,8 +347,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Hookshot",
-                        "count": 1
+                        "item_name": "Hookshot"
                       }
                     }
                   ]
@@ -541,8 +540,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Wind Waker",
-                "count": 1
+                "item_name": "Wind Waker"
               }
             },
             "item": {
@@ -574,8 +572,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "DRC Small Key",
-                "count": 1
+                "item_name": "DRC Small Key"
               }
             },
             "item": {
@@ -603,8 +600,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Grappling Hook",
-                    "count": 1
+                    "item_name": "Grappling Hook"
                   }
                 }
               ]
@@ -641,8 +637,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "DRC Small Key",
-                "count": 1
+                "item_name": "DRC Small Key"
               }
             },
             "item": {
@@ -699,8 +694,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Grappling Hook",
-                        "count": 1
+                        "item_name": "Grappling Hook"
                       }
                     }
                   ]
@@ -842,8 +836,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Grappling Hook",
-                        "count": 1
+                        "item_name": "Grappling Hook"
                       }
                     }
                   ]
@@ -1039,8 +1032,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Grappling Hook",
-                        "count": 1
+                        "item_name": "Grappling Hook"
                       }
                     }
                   ]
@@ -1134,8 +1126,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Grappling Hook",
-                    "count": 1
+                    "item_name": "Grappling Hook"
                   }
                 }
               ]
@@ -1243,8 +1234,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Grappling Hook",
-                    "count": 1
+                    "item_name": "Grappling Hook"
                   }
                 }
               ]
@@ -1274,8 +1264,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Grappling Hook",
-                    "count": 1
+                    "item_name": "Grappling Hook"
                   }
                 }
               ]
@@ -1332,8 +1321,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bombs",
-                "count": 1
+                "item_name": "Bombs"
               }
             },
             "item": {
@@ -1412,8 +1400,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bombs",
-                "count": 1
+                "item_name": "Bombs"
               }
             },
             "item": {
@@ -1441,8 +1428,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Bombs",
-                    "count": 1
+                    "item_name": "Bombs"
                   }
                 }
               ]
@@ -1468,8 +1454,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Bombs",
-                    "count": 1
+                    "item_name": "Bombs"
                   }
                 }
               ]
@@ -1488,8 +1473,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bombs",
-                "count": 1
+                "item_name": "Bombs"
               }
             },
             "item": {
@@ -1513,8 +1497,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Wind Waker",
-                    "count": 1
+                    "item_name": "Wind Waker"
                   }
                 }
               ]
@@ -1603,8 +1586,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Power Bracelets",
-                    "count": 1
+                    "item_name": "Power Bracelets"
                   }
                 }
               ]
@@ -1723,8 +1705,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Power Bracelets",
-                    "count": 1
+                    "item_name": "Power Bracelets"
                   }
                 }
               ]
@@ -1843,8 +1824,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Power Bracelets",
-                    "count": 1
+                    "item_name": "Power Bracelets"
                   }
                 }
               ]
@@ -1946,8 +1926,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Power Bracelets",
-                    "count": 1
+                    "item_name": "Power Bracelets"
                   }
                 }
               ]
@@ -2008,8 +1987,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Iron Boots",
-                    "count": 1
+                    "item_name": "Iron Boots"
                   }
                 }
               ]
@@ -2117,8 +2095,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Hookshot",
-                            "count": 1
+                            "item_name": "Hookshot"
                           }
                         }
                       ]
@@ -2150,8 +2127,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Iron Boots",
-                            "count": 1
+                            "item_name": "Iron Boots"
                           }
                         }
                       ]
@@ -2215,8 +2191,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Iron Boots",
-                    "count": 1
+                    "item_name": "Iron Boots"
                   }
                 }
               ]
@@ -2274,8 +2249,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Iron Boots",
-                    "count": 1
+                    "item_name": "Iron Boots"
                   }
                 }
               ]
@@ -2301,8 +2275,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Iron Boots",
-                    "count": 1
+                    "item_name": "Iron Boots"
                   }
                 }
               ]
@@ -2376,8 +2349,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot",
-                    "count": 1
+                    "item_name": "Hookshot"
                   }
                 }
               ]
@@ -2626,8 +2598,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Skull Hammer",
-                "count": 1
+                "item_name": "Skull Hammer"
               }
             },
             "item": {
@@ -2651,8 +2622,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Skull Hammer",
-                    "count": 1
+                    "item_name": "Skull Hammer"
                   }
                 }
               ]
@@ -2712,8 +2682,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Hookshot",
-                        "count": 1
+                        "item_name": "Hookshot"
                       }
                     }
                   ]
@@ -2823,8 +2792,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Grappling Hook",
-                "count": 1
+                "item_name": "Grappling Hook"
               }
             },
             "item": {
@@ -5501,7 +5469,6 @@
           "display_name": "Sword Mode"
         }
       },
-      "shops": [],
       "dungeons": {
         "Dragon Roost Cavern": "Dragon Roost Cavern",
         "Forbidden Woods": "Forbidden Woods",
@@ -5848,7 +5815,7 @@
       "logic_precise_2": false,
       "logic_precise_1": false,
       "logic_tuner_logic_enabled": false,
-      "world_description": "The Wind Waker WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Legend has it that whenever evil has appeared, a hero named Link has arisen to defeat it. The legend continues on\nthe surface of a vast and mysterious sea as Link sets sail in his most epic, awe-inspiring adventure yet. Aided by a\nmagical conductor's baton called the Wind Waker, he will face unimaginable monsters, explore puzzling dungeons, and\nmeet a cast of unforgettable characters as he searches for his kidnapped sister.",
       "slot_data": {
         "progression_dungeons": 1,
         "progression_tingle_chests": 0,
@@ -5890,7 +5857,30 @@
         "death_link": 0
       },
       "web": {
-        "theme": "ocean"
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago The Wind Waker software on your computer.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "tanjo3",
+              "Lunix"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago The Wind Waker software on your computer.",
+            "language": "Fran\u00e7ais",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "mobby45"
+            ]
+          }
+        ]
       },
       "world_directory": "tww_worldgen"
     }

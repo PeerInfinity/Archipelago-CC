@@ -14,7 +14,8 @@
       "start_inventory": {},
       "start_location_hints": []
     },
-    "world_directory": "checksfinder"
+    "world_directory": "checksfinder",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "world_description": "ChecksFinder is a game where you avoid mines and collect checks by beating boards!\nYou win when you get all your items and beat the last board!",

@@ -77,8 +77,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Clip Extension",
-                "count": 1
+                "item_name": "Clip Extension"
               }
             },
             "item": {
@@ -109,8 +108,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Clip Extension",
-                "count": 1
+                "item_name": "Clip Extension"
               }
             },
             "item": {
@@ -140,8 +138,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Ice Spreadshot",
-                    "count": 1
+                    "item_name": "Ice Spreadshot"
                   }
                 }
               ]
@@ -252,8 +249,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flamethrower",
-                "count": 1
+                "item_name": "Flamethrower"
               }
             },
             "item": {
@@ -285,8 +281,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flamethrower",
-                "count": 1
+                "item_name": "Flamethrower"
               }
             },
             "item": {
@@ -330,8 +325,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Powered Blaster",
-                "count": 1
+                "item_name": "Powered Blaster"
               }
             }
           },
@@ -341,8 +335,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Powered Blaster",
-                "count": 1
+                "item_name": "Powered Blaster"
               }
             }
           },
@@ -352,8 +345,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Powered Blaster",
-                "count": 1
+                "item_name": "Powered Blaster"
               }
             }
           },
@@ -373,8 +365,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Powered Blaster",
-                "count": 1
+                "item_name": "Powered Blaster"
               }
             },
             "item": {
@@ -433,8 +424,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Cave Key",
-                "count": 1
+                "item_name": "Cave Key"
               }
             },
             "item": {
@@ -587,8 +577,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Volt Laser",
-                "count": 1
+                "item_name": "Volt Laser"
               }
             },
             "item": {
@@ -1158,9 +1147,8 @@
           "display_name": "Trap Chance"
         }
       },
-      "shops": [],
       "is_pool_expanded": true,
-      "world_description": "Saving Princess WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Explore a space station crawling with rogue machines and even rival bounty hunters\nwith the same objective as you - but with far, far different intentions!\n\nExpand your arsenal as you collect upgrades to your trusty arm cannon and armor!",
       "slot_data": {
         "death_link": 0,
         "expanded_pool": 1,
@@ -1190,7 +1178,19 @@
         ]
       },
       "web": {
-        "theme": "partyTime"
+        "theme": "partyTime",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up Saving Princess for Archipelago multiworld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "LeonarthCG"
+            ]
+          }
+        ]
       },
       "world_directory": "saving_princess_worldgen"
     }

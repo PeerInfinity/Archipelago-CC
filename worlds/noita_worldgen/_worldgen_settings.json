@@ -25,7 +25,8 @@
       "start_location_hints": [],
       "victory_condition": 0
     },
-    "world_directory": "noita"
+    "world_directory": "noita",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "world_description": "Noita is a magical action roguelite set in a world where every pixel is physically simulated. Fight, explore, melt,\nburn, freeze, and evaporate your way through the procedurally generated world using wands you've created yourself.",

@@ -202,15 +202,22 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class HereticWorldGenWeb(WebWorld):
     """Web interface for Heretic WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "dirt"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Heretic randomizer connected to an Archipelago Multiworld",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["Daivuk"]
+        )
+    ]
 
 
 class HereticWorldGenWorld(RuleWorldMixin, World):
     """
-    Heretic WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Heretic is a dark fantasy first-person shooter video game released in December 1994. It was developed by Raven Software.
     """
 
     game: ClassVar[str] = "Heretic WorldGen"
@@ -752,13 +759,11 @@ class HereticWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.included_episodes = [1, 1, 1, 0, 0]
         self.location_count = 475
         self.starting_levels = ['The Docks (E1M1)', 'The Crater (E2M1)', 'The Storehouse (E3M1)']
         self.world_description = 'Heretic is a dark fantasy first-person shooter video game released in December 1994. It was developed by Raven Software.'
         self.slot_data = types.SimpleNamespace(goal=0, difficulty=2, random_monsters=1, random_pickups=1, random_music=0, allow_death_logic=0, pro=0, death_link=0, reset_level_on_death=1, check_sanity=0, episode1=1, episode2=1, episode3=1, episode4=0, episode5=0, ammo1start=100, ammo2start=50, ammo3start=200, ammo4start=200, ammo5start=20, ammo6start=150, ammo1add=100, ammo2add=50, ammo3add=200, ammo4add=200, ammo5add=20, ammo6add=150)
-        self.web = types.SimpleNamespace(theme='dirt', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Heretic randomizer connected to an Archipelago Multiworld', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['Daivuk']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -852,4 +857,32 @@ class HereticWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "goal": 0,
+            "difficulty": 2,
+            "random_monsters": 1,
+            "random_pickups": 1,
+            "random_music": 0,
+            "allow_death_logic": 0,
+            "pro": 0,
+            "death_link": 0,
+            "reset_level_on_death": 1,
+            "check_sanity": 0,
+            "episode1": 1,
+            "episode2": 1,
+            "episode3": 1,
+            "episode4": 0,
+            "episode5": 0,
+            "ammo1start": 100,
+            "ammo2start": 50,
+            "ammo3start": 200,
+            "ammo4start": 200,
+            "ammo5start": 20,
+            "ammo6start": 150,
+            "ammo1add": 100,
+            "ammo2add": 50,
+            "ammo3add": 200,
+            "ammo4add": 200,
+            "ammo5add": 20,
+            "ammo6add": 150,
+        }

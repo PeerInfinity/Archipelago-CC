@@ -91,7 +91,8 @@
       "turtle_rock_medallion": "ether",
       "uw_palettes": "default"
     },
-    "world_directory": "alttp"
+    "world_directory": "alttp",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "has_progressive_bows": true,

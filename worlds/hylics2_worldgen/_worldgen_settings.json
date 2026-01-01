@@ -21,7 +21,8 @@
       "start_location": 0,
       "start_location_hints": []
     },
-    "world_directory": "hylics2"
+    "world_directory": "hylics2",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "world_description": "Hylics 2 is a surreal and unusual RPG, with a bizarre yet unique visual style. Play as Wayne,\ntravel the world, and gather your allies to defeat the nefarious Gibby in his Hylemxylem!",

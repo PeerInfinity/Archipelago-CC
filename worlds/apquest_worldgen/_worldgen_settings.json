@@ -21,7 +21,8 @@
       "start_with_one_confetti_cannon": false,
       "trap_chance": 0
     },
-    "world_directory": "apquest"
+    "world_directory": "apquest",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "world_description": "APQuest is a minimal 8bit-era inspired adventure game with grid-like movement.\nGood games don't need more than six checks.",

@@ -26,7 +26,8 @@
       "start_inventory_from_pool": {},
       "start_location_hints": []
     },
-    "world_directory": "inscryption"
+    "world_directory": "inscryption",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "all_items": [

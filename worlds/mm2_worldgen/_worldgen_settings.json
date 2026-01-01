@@ -29,7 +29,8 @@
       "wily_5_requirement": 8,
       "yoku_jumps": false
     },
-    "world_directory": "mm2"
+    "world_directory": "mm2",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "weapon_damage": {

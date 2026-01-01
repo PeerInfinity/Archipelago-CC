@@ -21,8 +21,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumbridge",
-                "count": 1
+                "item_name": "Area: Lumbridge"
               }
             }
           }
@@ -203,8 +202,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumbridge Farms",
-                "count": 1
+                "item_name": "Area: Lumbridge Farms"
               }
             }
           },
@@ -214,8 +212,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumbridge Farms",
-                "count": 1
+                "item_name": "Area: Lumbridge Farms"
               }
             }
           },
@@ -225,8 +222,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Al Kharid",
-                "count": 1
+                "item_name": "Area: Al Kharid"
               }
             }
           },
@@ -236,8 +232,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumbridge Swamp",
-                "count": 1
+                "item_name": "Area: Lumbridge Swamp"
               }
             }
           },
@@ -247,8 +242,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: HAM Hideout",
-                "count": 1
+                "item_name": "Area: HAM Hideout"
               }
             }
           },
@@ -258,8 +252,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: South of Varrock",
-                "count": 1
+                "item_name": "Area: South of Varrock"
               }
             }
           },
@@ -278,8 +271,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Area: Barbarian Village",
-                    "count": 1
+                    "item_name": "Area: Barbarian Village"
                   }
                 }
               ]
@@ -306,8 +298,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Area: Edgeville",
-                    "count": 1
+                    "item_name": "Area: Edgeville"
                   }
                 }
               ]
@@ -706,8 +697,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumbridge",
-                "count": 1
+                "item_name": "Area: Lumbridge"
               }
             }
           },
@@ -717,8 +707,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: HAM Hideout",
-                "count": 1
+                "item_name": "Area: HAM Hideout"
               }
             }
           },
@@ -843,8 +832,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumbridge Farms",
-                "count": 1
+                "item_name": "Area: Lumbridge Farms"
               }
             }
           },
@@ -854,8 +842,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumbridge",
-                "count": 1
+                "item_name": "Area: Lumbridge"
               }
             }
           },
@@ -865,8 +852,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumbridge Swamp",
-                "count": 1
+                "item_name": "Area: Lumbridge Swamp"
               }
             }
           },
@@ -876,8 +862,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Draynor Village",
-                "count": 1
+                "item_name": "Area: Draynor Village"
               }
             }
           },
@@ -900,8 +885,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: South of Varrock",
-                "count": 1
+                "item_name": "Area: South of Varrock"
               }
             }
           },
@@ -911,8 +895,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: HAM Hideout",
-                "count": 1
+                "item_name": "Area: HAM Hideout"
               }
             }
           },
@@ -922,8 +905,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Draynor Village",
-                "count": 1
+                "item_name": "Area: Draynor Village"
               }
             }
           },
@@ -1056,8 +1038,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: South of Varrock",
-                "count": 1
+                "item_name": "Area: South of Varrock"
               }
             }
           },
@@ -1067,8 +1048,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumbridge",
-                "count": 1
+                "item_name": "Area: Lumbridge"
               }
             }
           },
@@ -1133,8 +1113,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumbridge Farms",
-                "count": 1
+                "item_name": "Area: Lumbridge Farms"
               }
             }
           },
@@ -1144,8 +1123,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Draynor Manor",
-                "count": 1
+                "item_name": "Area: Draynor Manor"
               }
             }
           }
@@ -1161,8 +1139,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Al Kharid",
-                "count": 1
+                "item_name": "Area: Al Kharid"
               }
             }
           },
@@ -1172,8 +1149,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: West Varrock",
-                "count": 1
+                "item_name": "Area: West Varrock"
               }
             }
           },
@@ -1183,8 +1159,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Central Varrock",
-                "count": 1
+                "item_name": "Area: Central Varrock"
               }
             }
           },
@@ -1194,8 +1169,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumberyard",
-                "count": 1
+                "item_name": "Area: Lumberyard"
               }
             }
           },
@@ -1205,8 +1179,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumbridge Farms",
-                "count": 1
+                "item_name": "Area: Lumbridge Farms"
               }
             }
           },
@@ -1216,8 +1189,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumbridge",
-                "count": 1
+                "item_name": "Area: Lumbridge"
               }
             }
           },
@@ -1227,8 +1199,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Barbarian Village",
-                "count": 1
+                "item_name": "Area: Barbarian Village"
               }
             }
           },
@@ -1253,8 +1224,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Area: Edgeville",
-                    "count": 1
+                    "item_name": "Area: Edgeville"
                   }
                 }
               ]
@@ -1431,8 +1401,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Wilderness",
-                "count": 1
+                "item_name": "Area: Wilderness"
               }
             }
           },
@@ -1442,8 +1411,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: South of Varrock",
-                "count": 1
+                "item_name": "Area: South of Varrock"
               }
             }
           },
@@ -1453,8 +1421,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Central Varrock",
-                "count": 1
+                "item_name": "Area: Central Varrock"
               }
             }
           },
@@ -1464,8 +1431,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Varrock Palace",
-                "count": 1
+                "item_name": "Area: Varrock Palace"
               }
             }
           },
@@ -1495,8 +1461,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Varrock Palace",
-                "count": 1
+                "item_name": "Area: Varrock Palace"
               }
             }
           },
@@ -1506,8 +1471,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumberyard",
-                "count": 1
+                "item_name": "Area: Lumberyard"
               }
             }
           },
@@ -1517,8 +1481,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: South of Varrock",
-                "count": 1
+                "item_name": "Area: South of Varrock"
               }
             }
           },
@@ -1528,8 +1491,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: West Varrock",
-                "count": 1
+                "item_name": "Area: West Varrock"
               }
             }
           },
@@ -1838,8 +1800,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Wilderness",
-                "count": 1
+                "item_name": "Area: Wilderness"
               }
             }
           },
@@ -1849,8 +1810,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumberyard",
-                "count": 1
+                "item_name": "Area: Lumberyard"
               }
             }
           },
@@ -1860,8 +1820,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Central Varrock",
-                "count": 1
+                "item_name": "Area: Central Varrock"
               }
             }
           },
@@ -1871,8 +1830,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: West Varrock",
-                "count": 1
+                "item_name": "Area: West Varrock"
               }
             }
           },
@@ -1965,8 +1923,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Wilderness",
-                "count": 1
+                "item_name": "Area: Wilderness"
               }
             }
           },
@@ -1976,8 +1933,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Varrock Palace",
-                "count": 1
+                "item_name": "Area: Varrock Palace"
               }
             }
           },
@@ -1987,8 +1943,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: South of Varrock",
-                "count": 1
+                "item_name": "Area: South of Varrock"
               }
             }
           },
@@ -1998,8 +1953,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Barbarian Village",
-                "count": 1
+                "item_name": "Area: Barbarian Village"
               }
             }
           },
@@ -2009,8 +1963,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Edgeville",
-                "count": 1
+                "item_name": "Area: Edgeville"
               }
             }
           },
@@ -2103,8 +2056,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Area: West Varrock",
-                    "count": 1
+                    "item_name": "Area: West Varrock"
                   }
                 }
               ]
@@ -2164,8 +2116,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: West Varrock",
-                "count": 1
+                "item_name": "Area: West Varrock"
               }
             }
           },
@@ -2319,8 +2270,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Wilderness",
-                "count": 1
+                "item_name": "Area: Wilderness"
               }
             }
           },
@@ -2330,8 +2280,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: West Varrock",
-                "count": 1
+                "item_name": "Area: West Varrock"
               }
             }
           },
@@ -2341,8 +2290,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Barbarian Village",
-                "count": 1
+                "item_name": "Area: Barbarian Village"
               }
             }
           },
@@ -2361,8 +2309,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Area: South of Varrock",
-                    "count": 1
+                    "item_name": "Area: South of Varrock"
                   }
                 }
               ]
@@ -2389,8 +2336,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Area: Lumbridge",
-                    "count": 1
+                    "item_name": "Area: Lumbridge"
                   }
                 }
               ]
@@ -2595,8 +2541,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Edgeville",
-                "count": 1
+                "item_name": "Area: Edgeville"
               }
             }
           },
@@ -2606,8 +2551,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: West Varrock",
-                "count": 1
+                "item_name": "Area: West Varrock"
               }
             }
           },
@@ -2617,8 +2561,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Draynor Manor",
-                "count": 1
+                "item_name": "Area: Draynor Manor"
               }
             }
           },
@@ -2628,8 +2571,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Dwarven Mines",
-                "count": 1
+                "item_name": "Area: Dwarven Mines"
               }
             }
           },
@@ -2756,8 +2698,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Barbarian Village",
-                "count": 1
+                "item_name": "Area: Barbarian Village"
               }
             }
           },
@@ -2767,8 +2708,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: South of Varrock",
-                "count": 1
+                "item_name": "Area: South of Varrock"
               }
             }
           },
@@ -2778,8 +2718,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Draynor Village",
-                "count": 1
+                "item_name": "Area: Draynor Village"
               }
             }
           },
@@ -2789,8 +2728,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Falador",
-                "count": 1
+                "item_name": "Area: Falador"
               }
             }
           },
@@ -2813,8 +2751,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Draynor Village",
-                "count": 1
+                "item_name": "Area: Draynor Village"
               }
             }
           }
@@ -2866,8 +2803,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Dwarven Mines",
-                "count": 1
+                "item_name": "Area: Dwarven Mines"
               }
             }
           },
@@ -2877,8 +2813,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Draynor Manor",
-                "count": 1
+                "item_name": "Area: Draynor Manor"
               }
             }
           },
@@ -2888,8 +2823,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Falador Farms",
-                "count": 1
+                "item_name": "Area: Falador Farms"
               }
             }
           }
@@ -2905,8 +2839,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Ice Mountain",
-                "count": 1
+                "item_name": "Area: Ice Mountain"
               }
             }
           },
@@ -2916,8 +2849,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Monastery",
-                "count": 1
+                "item_name": "Area: Monastery"
               }
             }
           },
@@ -2927,8 +2859,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Barbarian Village",
-                "count": 1
+                "item_name": "Area: Barbarian Village"
               }
             }
           },
@@ -2938,8 +2869,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Falador",
-                "count": 1
+                "item_name": "Area: Falador"
               }
             }
           },
@@ -2949,8 +2879,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Falador",
-                "count": 1
+                "item_name": "Area: Falador"
               }
             }
           },
@@ -2960,8 +2889,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "1 QP (Doric's Quest)",
-                "count": 1
+                "item_name": "1 QP (Doric's Quest)"
               }
             }
           },
@@ -3066,8 +2994,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Monastery",
-                "count": 1
+                "item_name": "Area: Monastery"
               }
             }
           },
@@ -3077,8 +3004,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Ice Mountain",
-                "count": 1
+                "item_name": "Area: Ice Mountain"
               }
             }
           },
@@ -3088,8 +3014,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Falador",
-                "count": 1
+                "item_name": "Area: Falador"
               }
             }
           },
@@ -3201,8 +3126,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Armor",
-                    "count": 1
+                    "item_name": "Progressive Armor"
                   }
                 }
               ]
@@ -3331,8 +3255,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Wilderness",
-                "count": 1
+                "item_name": "Area: Wilderness"
               }
             }
           },
@@ -3342,8 +3265,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Dwarven Mines",
-                "count": 1
+                "item_name": "Area: Dwarven Mines"
               }
             }
           },
@@ -3431,8 +3353,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Wilderness",
-                "count": 1
+                "item_name": "Area: Wilderness"
               }
             }
           },
@@ -3442,8 +3363,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Monastery",
-                "count": 1
+                "item_name": "Area: Monastery"
               }
             }
           },
@@ -3453,8 +3373,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Dwarven Mines",
-                "count": 1
+                "item_name": "Area: Dwarven Mines"
               }
             }
           },
@@ -3483,8 +3402,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Ice Mountain",
-                "count": 1
+                "item_name": "Area: Ice Mountain"
               }
             }
           },
@@ -3525,8 +3443,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Wilderness",
-                "count": 1
+                "item_name": "Area: Wilderness"
               }
             }
           },
@@ -3536,8 +3453,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Dwarven Mines",
-                "count": 1
+                "item_name": "Area: Dwarven Mines"
               }
             }
           },
@@ -3547,8 +3463,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Dwarven Mines",
-                "count": 1
+                "item_name": "Area: Dwarven Mines"
               }
             }
           },
@@ -3558,8 +3473,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Ice Mountain",
-                "count": 1
+                "item_name": "Area: Ice Mountain"
               }
             }
           },
@@ -3582,8 +3496,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Dwarven Mines",
-                "count": 1
+                "item_name": "Area: Dwarven Mines"
               }
             }
           },
@@ -3593,8 +3506,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Falador Farms",
-                "count": 1
+                "item_name": "Area: Falador Farms"
               }
             }
           },
@@ -3604,8 +3516,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Dwarven Mines",
-                "count": 1
+                "item_name": "Area: Dwarven Mines"
               }
             }
           },
@@ -3825,8 +3736,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Falador",
-                "count": 1
+                "item_name": "Area: Falador"
               }
             }
           },
@@ -3836,8 +3746,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Falador",
-                "count": 1
+                "item_name": "Area: Falador"
               }
             }
           },
@@ -3847,8 +3756,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Draynor Village",
-                "count": 1
+                "item_name": "Area: Draynor Village"
               }
             }
           },
@@ -3858,8 +3766,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Port Sarim",
-                "count": 1
+                "item_name": "Area: Port Sarim"
               }
             }
           },
@@ -3869,8 +3776,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Rimmington",
-                "count": 1
+                "item_name": "Area: Rimmington"
               }
             }
           },
@@ -3880,8 +3786,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Crafting Guild",
-                "count": 1
+                "item_name": "Area: Crafting Guild"
               }
             }
           },
@@ -3946,8 +3851,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Falador Farms",
-                "count": 1
+                "item_name": "Area: Falador Farms"
               }
             }
           },
@@ -3957,8 +3861,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Mudskipper Point",
-                "count": 1
+                "item_name": "Area: Mudskipper Point"
               }
             }
           },
@@ -3968,8 +3871,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Rimmington",
-                "count": 1
+                "item_name": "Area: Rimmington"
               }
             }
           },
@@ -3979,8 +3881,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Mudskipper Point",
-                "count": 1
+                "item_name": "Area: Mudskipper Point"
               }
             }
           },
@@ -4052,8 +3953,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Area: Crandor",
-                    "count": 1
+                    "item_name": "Area: Crandor"
                   }
                 }
               ]
@@ -4193,8 +4093,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Port Sarim",
-                "count": 1
+                "item_name": "Area: Port Sarim"
               }
             }
           },
@@ -4204,8 +4103,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Karamja",
-                "count": 1
+                "item_name": "Area: Karamja"
               }
             }
           }
@@ -4221,8 +4119,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Rimmington",
-                "count": 1
+                "item_name": "Area: Rimmington"
               }
             }
           },
@@ -4232,8 +4129,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Port Sarim",
-                "count": 1
+                "item_name": "Area: Port Sarim"
               }
             }
           },
@@ -4291,8 +4187,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Mudskipper Point",
-                "count": 1
+                "item_name": "Area: Mudskipper Point"
               }
             }
           },
@@ -4364,8 +4259,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Area: Crandor",
-                    "count": 1
+                    "item_name": "Area: Crandor"
                   }
                 }
               ]
@@ -4432,8 +4326,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Karamja",
-                "count": 1
+                "item_name": "Area: Karamja"
               }
             }
           },
@@ -4443,8 +4336,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Port Sarim",
-                "count": 1
+                "item_name": "Area: Port Sarim"
               }
             }
           },
@@ -4599,8 +4491,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Falador Farms",
-                "count": 1
+                "item_name": "Area: Falador Farms"
               }
             }
           },
@@ -4610,8 +4501,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Port Sarim",
-                "count": 1
+                "item_name": "Area: Port Sarim"
               }
             }
           },
@@ -4621,8 +4511,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Mudskipper Point",
-                "count": 1
+                "item_name": "Area: Mudskipper Point"
               }
             }
           },
@@ -4632,8 +4521,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Crafting Guild",
-                "count": 1
+                "item_name": "Area: Crafting Guild"
               }
             }
           },
@@ -4652,8 +4540,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Area: Corsair Cove",
-                    "count": 1
+                    "item_name": "Area: Corsair Cove"
                   }
                 }
               ]
@@ -4861,8 +4748,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Falador Farms",
-                "count": 1
+                "item_name": "Area: Falador Farms"
               }
             }
           },
@@ -4872,8 +4758,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Rimmington",
-                "count": 1
+                "item_name": "Area: Rimmington"
               }
             }
           },
@@ -4896,8 +4781,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Falador Farms",
-                "count": 1
+                "item_name": "Area: Falador Farms"
               }
             }
           },
@@ -4997,8 +4881,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Area: Crafting Guild",
-                    "count": 1
+                    "item_name": "Area: Crafting Guild"
                   }
                 }
               ]
@@ -5134,8 +5017,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Area: Crafting Guild",
-                    "count": 1
+                    "item_name": "Area: Crafting Guild"
                   }
                 }
               ]
@@ -5202,8 +5084,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Draynor Manor",
-                "count": 1
+                "item_name": "Area: Draynor Manor"
               }
             }
           },
@@ -5213,8 +5094,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumbridge Farms",
-                "count": 1
+                "item_name": "Area: Lumbridge Farms"
               }
             }
           },
@@ -5224,8 +5104,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: HAM Hideout",
-                "count": 1
+                "item_name": "Area: HAM Hideout"
               }
             }
           },
@@ -5235,8 +5114,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Wizard Tower",
-                "count": 1
+                "item_name": "Area: Wizard Tower"
               }
             }
           },
@@ -5399,8 +5277,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Draynor Village",
-                "count": 1
+                "item_name": "Area: Draynor Village"
               }
             }
           },
@@ -5477,8 +5354,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Rimmington",
-                "count": 1
+                "item_name": "Area: Rimmington"
               }
             }
           },
@@ -5515,8 +5391,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: South of Varrock",
-                "count": 1
+                "item_name": "Area: South of Varrock"
               }
             }
           },
@@ -5526,8 +5401,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Citharede Abbey",
-                "count": 1
+                "item_name": "Area: Citharede Abbey"
               }
             }
           },
@@ -5537,8 +5411,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumbridge",
-                "count": 1
+                "item_name": "Area: Lumbridge"
               }
             }
           },
@@ -5548,8 +5421,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Port Sarim",
-                "count": 1
+                "item_name": "Area: Port Sarim"
               }
             }
           },
@@ -5761,8 +5633,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Al Kharid",
-                "count": 1
+                "item_name": "Area: Al Kharid"
               }
             }
           },
@@ -5834,8 +5705,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Lumberyard",
-                "count": 1
+                "item_name": "Area: Lumberyard"
               }
             }
           },
@@ -5845,8 +5715,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Varrock Palace",
-                "count": 1
+                "item_name": "Area: Varrock Palace"
               }
             }
           },
@@ -5856,8 +5725,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: West Varrock",
-                "count": 1
+                "item_name": "Area: West Varrock"
               }
             }
           },
@@ -5867,8 +5735,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Edgeville",
-                "count": 1
+                "item_name": "Area: Edgeville"
               }
             }
           },
@@ -5878,8 +5745,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Monastery",
-                "count": 1
+                "item_name": "Area: Monastery"
               }
             }
           },
@@ -5889,8 +5755,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Ice Mountain",
-                "count": 1
+                "item_name": "Area: Ice Mountain"
               }
             }
           },
@@ -5900,8 +5765,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Area: Ice Mountain",
-                "count": 1
+                "item_name": "Area: Ice Mountain"
               }
             }
           },
@@ -5926,8 +5790,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Area: South of Varrock",
-                    "count": 1
+                    "item_name": "Area: South of Varrock"
                   }
                 }
               ]
@@ -9165,7 +9028,6 @@
           "display_name": "Woodcutting Task Weight"
         }
       },
-      "shops": [],
       "qp_items": {
         "1 QP (Cook's Assistant)": 1,
         "3 QP (Demon Slayer)": 3,
@@ -11559,7 +11421,7 @@
         "1 QP (Below Ice Mountain)"
       ],
       "base_id": 458752,
-      "world_description": "Old School Runescape WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "The best retro fantasy MMORPG on the planet. Old School is RuneScape but\u2026 older! This is the open world you know and love, but as it was in 2007.\nThe Randomizer takes the form of a Chunk-Restricted f2p Ironman that takes a brand new account up through defeating\nthe Green Dragon of Crandor and earning a spot in the fabled Champion's Guild!",
       "slot_data": {
         "brutal_grinds": 0,
         "data_csv_tag": "v2.0.5",
@@ -11577,7 +11439,19 @@
         "max_combat_level": 50
       },
       "web": {
-        "theme": "stone"
+        "theme": "stone",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Old School Runescape Randomizer connected to an Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "digiholic"
+            ]
+          }
+        ]
       },
       "world_directory": "osrs_worldgen"
     }

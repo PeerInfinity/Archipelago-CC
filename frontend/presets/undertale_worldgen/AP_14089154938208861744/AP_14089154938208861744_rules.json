@@ -47,8 +47,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ruins Key",
-                "count": 1
+                "item_name": "Ruins Key"
               }
             }
           },
@@ -58,8 +57,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Snowdin Key",
-                "count": 1
+                "item_name": "Snowdin Key"
               }
             }
           },
@@ -69,8 +67,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Waterfall Key",
-                "count": 1
+                "item_name": "Waterfall Key"
               }
             }
           },
@@ -80,8 +77,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hotland Key",
-                "count": 1
+                "item_name": "Hotland Key"
               }
             }
           },
@@ -91,8 +87,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Core Key",
-                "count": 1
+                "item_name": "Core Key"
               }
             }
           }
@@ -2393,8 +2388,7 @@
           "display_name": "Include Temy Armor"
         }
       },
-      "shops": [],
-      "world_description": "Undertale WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Undertale is an RPG where every choice you make matters. You could choose to hurt all the enemies, eventually\ncausing genocide of the monster species. Or you can spare all the enemies, befriending them and freeing them\nfrom their underground prison.",
       "slot_data": {
         "world_seed": 3777206549,
         "seed_name": "14089154938208861744",
@@ -2422,7 +2416,19 @@
         "temy_include": 1
       },
       "web": {
-        "theme": "grass"
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago Undertale software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Mewlif"
+            ]
+          }
+        ]
       },
       "world_directory": "undertale_worldgen"
     }

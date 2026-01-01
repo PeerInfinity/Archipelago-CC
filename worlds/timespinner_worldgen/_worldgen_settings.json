@@ -389,7 +389,8 @@
       ],
       "unchained_keys": false
     },
-    "world_directory": "timespinner"
+    "world_directory": "timespinner",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "pyramid_keys_unlock": "GateLakeSereneRight",

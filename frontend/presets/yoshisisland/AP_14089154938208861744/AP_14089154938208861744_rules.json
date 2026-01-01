@@ -878,6 +878,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "level_id": 3
           }
         ]
@@ -1202,6 +1203,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "level_id": 6
           }
         ]
@@ -1336,6 +1338,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "level_id": 7
           }
         ]
@@ -1765,6 +1768,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "level_id": 15
           }
         ]
@@ -1952,6 +1956,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "level_id": 17
           }
         ]
@@ -2108,6 +2113,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "level_id": 18
           }
         ]
@@ -2266,6 +2272,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "level_id": 19
           }
         ]
@@ -2662,6 +2669,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "level_id": 27
           }
         ]
@@ -3123,6 +3131,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "level_id": 31
           }
         ]
@@ -3604,6 +3613,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "level_id": 39
           }
         ]
@@ -3985,6 +3995,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "level_id": 42
           }
         ]
@@ -4116,6 +4127,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "level_id": 43
           }
         ]
@@ -4624,6 +4636,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "level_id": 51
           }
         ]
@@ -5009,6 +5022,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "level_id": 55
           }
         ]
@@ -5438,6 +5452,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "level_id": 63
           }
         ]
@@ -5920,6 +5935,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "level_id": 67
           }
         ]

@@ -69,8 +69,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "1-1 Level Complete",
-                    "count": 1
+                    "item_name": "1-1 Level Complete"
                   }
                 }
               ]
@@ -110,8 +109,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "1-2 Level Complete",
-                    "count": 1
+                    "item_name": "1-2 Level Complete"
                   }
                 }
               ]
@@ -151,8 +149,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "1-3 Level Complete",
-                    "count": 1
+                    "item_name": "1-3 Level Complete"
                   }
                 }
               ]
@@ -297,8 +294,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Green Ramp",
-                        "count": 1
+                        "item_name": "Green Ramp"
                       }
                     }
                   ]
@@ -306,8 +302,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "2-1 Level Complete",
-                    "count": 1
+                    "item_name": "2-1 Level Complete"
                   }
                 }
               ]
@@ -359,8 +354,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Green Ramp",
-                        "count": 1
+                        "item_name": "Green Ramp"
                       }
                     }
                   ]
@@ -368,8 +362,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "2-2 Level Complete",
-                    "count": 1
+                    "item_name": "2-2 Level Complete"
                   }
                 }
               ]
@@ -409,8 +402,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "2-3 Level Complete",
-                    "count": 1
+                    "item_name": "2-3 Level Complete"
                   }
                 }
               ]
@@ -450,8 +442,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "2-4 Level Complete",
-                    "count": 1
+                    "item_name": "2-4 Level Complete"
                   }
                 }
               ]
@@ -491,8 +482,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "2-5 Level Complete",
-                    "count": 1
+                    "item_name": "2-5 Level Complete"
                   }
                 }
               ]
@@ -504,8 +494,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Blue Ramp",
-                "count": 1
+                "item_name": "Blue Ramp"
               }
             }
           },
@@ -715,8 +704,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "3-5 Level Complete",
-                    "count": 1
+                    "item_name": "3-5 Level Complete"
                   }
                 }
               ]
@@ -763,8 +751,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "4-1 Level Complete",
-                    "count": 1
+                    "item_name": "4-1 Level Complete"
                   }
                 }
               ]
@@ -804,8 +791,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "4-2 Level Complete",
-                    "count": 1
+                    "item_name": "4-2 Level Complete"
                   }
                 }
               ]
@@ -845,8 +831,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "4-3 Level Complete",
-                    "count": 1
+                    "item_name": "4-3 Level Complete"
                   }
                 }
               ]
@@ -886,8 +871,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "4-4 Level Complete",
-                    "count": 1
+                    "item_name": "4-4 Level Complete"
                   }
                 }
               ]
@@ -927,8 +911,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "4-5 Level Complete",
-                    "count": 1
+                    "item_name": "4-5 Level Complete"
                   }
                 }
               ]
@@ -1009,8 +992,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Green Ramp",
-                        "count": 1
+                        "item_name": "Green Ramp"
                       }
                     }
                   ]
@@ -1018,8 +1000,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "5-1 Level Complete",
-                    "count": 1
+                    "item_name": "5-1 Level Complete"
                   }
                 }
               ]
@@ -1059,8 +1040,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "5-2 Level Complete",
-                    "count": 1
+                    "item_name": "5-2 Level Complete"
                   }
                 }
               ]
@@ -1232,8 +1212,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Pink Ramp",
-                    "count": 1
+                    "item_name": "Pink Ramp"
                   }
                 }
               ]
@@ -1373,8 +1352,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Green Ramp",
-                        "count": 1
+                        "item_name": "Green Ramp"
                       }
                     }
                   ]
@@ -1382,8 +1360,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "6-3 Level Complete",
-                    "count": 1
+                    "item_name": "6-3 Level Complete"
                   }
                 }
               ]
@@ -1500,8 +1477,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Kevin-2",
-                "count": 1
+                "item_name": "Kevin-2"
               }
             }
           },
@@ -1511,8 +1487,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Kevin-3",
-                "count": 1
+                "item_name": "Kevin-3"
               }
             }
           },
@@ -1522,8 +1497,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Kevin-4",
-                "count": 1
+                "item_name": "Kevin-4"
               }
             }
           },
@@ -1533,8 +1507,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Kevin-5",
-                "count": 1
+                "item_name": "Kevin-5"
               }
             }
           },
@@ -1544,8 +1517,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Kevin-6",
-                "count": 1
+                "item_name": "Kevin-6"
               }
             }
           },
@@ -2501,8 +2473,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Wok Wheels",
-                    "count": 1
+                    "item_name": "Wok Wheels"
                   }
                 }
               ]
@@ -3042,8 +3013,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Throw/Catch",
-                    "count": 1
+                    "item_name": "Progressive Throw/Catch"
                   }
                 }
               ]
@@ -4374,8 +4344,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Fire Extinguisher",
-                    "count": 1
+                    "item_name": "Fire Extinguisher"
                   }
                 }
               ]
@@ -4915,8 +4884,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Throw/Catch",
-                    "count": 1
+                    "item_name": "Progressive Throw/Catch"
                   }
                 }
               ]
@@ -5082,8 +5050,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Throw/Catch",
-                "count": 1
+                "item_name": "Progressive Throw/Catch"
               }
             },
             "item": {
@@ -5100,8 +5067,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Throw/Catch",
-                "count": 1
+                "item_name": "Progressive Throw/Catch"
               }
             },
             "item": {
@@ -5119,8 +5085,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Throw/Catch",
-                "count": 1
+                "item_name": "Progressive Throw/Catch"
               }
             },
             "item": {
@@ -5203,8 +5168,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Throw/Catch",
-                    "count": 1
+                    "item_name": "Progressive Throw/Catch"
                   }
                 }
               ]
@@ -5370,8 +5334,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Throw/Catch",
-                "count": 1
+                "item_name": "Progressive Throw/Catch"
               }
             },
             "item": {
@@ -5388,8 +5351,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Throw/Catch",
-                "count": 1
+                "item_name": "Progressive Throw/Catch"
               }
             },
             "item": {
@@ -5407,8 +5369,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Throw/Catch",
-                "count": 1
+                "item_name": "Progressive Throw/Catch"
               }
             },
             "item": {
@@ -5491,8 +5452,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Throw/Catch",
-                    "count": 1
+                    "item_name": "Progressive Throw/Catch"
                   }
                 }
               ]
@@ -5658,8 +5618,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Control Stick Batteries",
-                "count": 1
+                "item_name": "Control Stick Batteries"
               }
             },
             "item": {
@@ -5676,8 +5635,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Control Stick Batteries",
-                "count": 1
+                "item_name": "Control Stick Batteries"
               }
             },
             "item": {
@@ -5695,8 +5653,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Control Stick Batteries",
-                "count": 1
+                "item_name": "Control Stick Batteries"
               }
             },
             "item": {
@@ -5779,8 +5736,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Control Stick Batteries",
-                    "count": 1
+                    "item_name": "Control Stick Batteries"
                   }
                 }
               ]
@@ -7019,8 +6975,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Control Stick Batteries",
-                "count": 1
+                "item_name": "Control Stick Batteries"
               }
             },
             "item": {
@@ -7037,8 +6992,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Control Stick Batteries",
-                "count": 1
+                "item_name": "Control Stick Batteries"
               }
             },
             "item": {
@@ -7056,8 +7010,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Control Stick Batteries",
-                "count": 1
+                "item_name": "Control Stick Batteries"
               }
             },
             "item": {
@@ -7140,8 +7093,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Control Stick Batteries",
-                    "count": 1
+                    "item_name": "Control Stick Batteries"
                   }
                 }
               ]
@@ -7417,8 +7369,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Wok Wheels",
-                    "count": 1
+                    "item_name": "Wok Wheels"
                   }
                 }
               ]
@@ -7849,8 +7800,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Control Stick Batteries",
-                "count": 1
+                "item_name": "Control Stick Batteries"
               }
             },
             "item": {
@@ -7867,8 +7817,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Control Stick Batteries",
-                "count": 1
+                "item_name": "Control Stick Batteries"
               }
             },
             "item": {
@@ -7886,8 +7835,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Control Stick Batteries",
-                "count": 1
+                "item_name": "Control Stick Batteries"
               }
             },
             "item": {
@@ -7970,8 +7918,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Control Stick Batteries",
-                    "count": 1
+                    "item_name": "Control Stick Batteries"
                   }
                 }
               ]
@@ -9567,8 +9514,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Wok Wheels",
-                    "count": 1
+                    "item_name": "Wok Wheels"
                   }
                 }
               ]
@@ -9999,8 +9945,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Control Stick Batteries",
-                "count": 1
+                "item_name": "Control Stick Batteries"
               }
             },
             "item": {
@@ -10017,8 +9962,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Control Stick Batteries",
-                "count": 1
+                "item_name": "Control Stick Batteries"
               }
             },
             "item": {
@@ -10036,8 +9980,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Control Stick Batteries",
-                "count": 1
+                "item_name": "Control Stick Batteries"
               }
             },
             "item": {
@@ -10120,8 +10063,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Control Stick Batteries",
-                    "count": 1
+                    "item_name": "Control Stick Batteries"
                   }
                 }
               ]
@@ -13276,8 +13218,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Throw/Catch",
-                    "count": 1
+                    "item_name": "Progressive Throw/Catch"
                   }
                 }
               ]
@@ -14943,7 +14884,6 @@
           "display_name": "Stars to Win"
         }
       },
-      "shops": [],
       "star_threshold_scale": 0.35,
       "level_unlock_counts": {
         "1": 0,
@@ -15037,7 +14977,7 @@
         "Bonus Star",
         "Bonus Star"
       ],
-      "world_description": "Overcooked! 2 WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Overcooked! 2 is a frantically paced arcade cooking game where\nplayers race against the clock to complete orders for points. Bring\npeace to the Onion Kingdom once again by recovering lost items and abilities,\nearning stars to unlock levels, and defeating the unbread horde. Levels are\nrandomized to increase gameplay variety. Play with up to 4 friends.",
       "player_name": "Player1",
       "slot_data": {
         "DisableAllMods": false,
@@ -15703,7 +15643,19 @@
         "AlwaysServeOldestOrder": true
       },
       "web": {
-        "theme": "partyTime"
+        "theme": "partyTime",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Overcooked! 2 randomizer on your computer.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "toasterparty"
+            ]
+          }
+        ]
       },
       "world_directory": "overcooked2_worldgen"
     }

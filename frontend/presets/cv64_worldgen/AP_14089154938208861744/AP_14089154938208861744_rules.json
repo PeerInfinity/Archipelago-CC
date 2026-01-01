@@ -28,8 +28,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Special1",
-                "count": 1
+                "item_name": "Special1"
               }
             }
           },
@@ -481,8 +480,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Left Tower Key",
-                "count": 1
+                "item_name": "Left Tower Key"
               }
             }
           }
@@ -729,8 +727,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Storeroom Key",
-                "count": 1
+                "item_name": "Storeroom Key"
               }
             }
           },
@@ -740,8 +737,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Archives Key",
-                "count": 1
+                "item_name": "Archives Key"
               }
             }
           },
@@ -751,8 +747,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Garden Key",
-                "count": 1
+                "item_name": "Garden Key"
               }
             }
           }
@@ -1175,8 +1170,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Storeroom Key",
-                "count": 1
+                "item_name": "Storeroom Key"
               }
             }
           }
@@ -1269,8 +1263,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Garden Key",
-                "count": 1
+                "item_name": "Garden Key"
               }
             }
           },
@@ -1280,8 +1273,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Copper Key",
-                "count": 1
+                "item_name": "Copper Key"
               }
             }
           }
@@ -2095,8 +2087,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Chamber Key",
-                "count": 1
+                "item_name": "Chamber Key"
               }
             }
           },
@@ -3036,8 +3027,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Execution Key",
-                "count": 1
+                "item_name": "Execution Key"
               }
             }
           },
@@ -3158,8 +3148,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Science Key1",
-                "count": 1
+                "item_name": "Science Key1"
               }
             }
           },
@@ -3169,8 +3158,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Science Key2",
-                "count": 1
+                "item_name": "Science Key2"
               }
             }
           }
@@ -3249,8 +3237,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Science Key2",
-                "count": 1
+                "item_name": "Science Key2"
               }
             }
           },
@@ -3260,8 +3247,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Science Key3",
-                "count": 1
+                "item_name": "Science Key3"
               }
             }
           },
@@ -3536,8 +3522,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Clocktower Key1",
-                "count": 1
+                "item_name": "Clocktower Key1"
               }
             }
           }
@@ -3582,8 +3567,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Clocktower Key1",
-                "count": 1
+                "item_name": "Clocktower Key1"
               }
             }
           },
@@ -3593,8 +3577,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Clocktower Key2",
-                "count": 1
+                "item_name": "Clocktower Key2"
               }
             }
           }
@@ -3653,8 +3636,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Clocktower Key2",
-                "count": 1
+                "item_name": "Clocktower Key2"
               }
             }
           },
@@ -3664,8 +3646,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Clocktower Key3",
-                "count": 1
+                "item_name": "Clocktower Key3"
               }
             }
           }
@@ -4959,7 +4940,6 @@
           "display_name": "Window Color R"
         }
       },
-      "shops": [],
       "total_s1s": 7,
       "s1s_per_warp": 1,
       "drac_condition": 1,
@@ -5066,9 +5046,21 @@
       "reinhardt_stages": true,
       "carrie_stages": true,
       "starting_stage": "Forest of Silence",
-      "world_description": "Castlevania 64 WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Castlevania for the Nintendo 64 is the first 3D game in the Castlevania franchise. As either whip-wielding Belmont\ndescendant Reinhardt Schneider or powerful sorceress Carrie Fernandez, brave many terrifying traps and foes as you\nmake your way to Dracula's chamber and stop his rule of terror!",
       "web": {
-        "theme": "stone"
+        "theme": "stone",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago Castlevania 64 randomizer on your computer and connecting it to a multiworld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Liquid Cat"
+            ]
+          }
+        ]
       },
       "world_directory": "cv64_worldgen"
     }

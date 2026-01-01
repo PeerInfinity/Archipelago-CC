@@ -78,15 +78,32 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class InscryptionWorldGenWeb(WebWorld):
     """Web interface for Inscryption WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "dirt"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Inscryption Archipelago Multiworld",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["DrBibop"]
+        ),
+        Tutorial(
+            "Multiworld Setup Guide",
+            "Un guide pour configurer Inscryption Archipelago Multiworld",
+            "Français",
+            "setup_fr.md",
+            "setup/fr",
+            ["Glowbuzz"]
+        )
+    ]
 
 
 class InscryptionWorldGenWorld(RuleWorldMixin, World):
     """
-    Inscryption WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Inscryption is an inky black card-based odyssey that blends the deckbuilding roguelike,
+    escape-room style puzzles, and psychological horror into a blood-laced smoothie.
+    Darker still are the secrets inscrybed upon the cards...
     """
 
     game: ClassVar[str] = "Inscryption WorldGen"
@@ -219,13 +236,11 @@ class InscryptionWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.all_items = [{'name': 'Stinkbug Card', 'count': 1, 'classification': 2}, {'name': 'Stunted Wolf Card', 'count': 1, 'classification': 2}, {'name': 'Wardrobe Key', 'count': 1, 'classification': 1}, {'name': 'Skink Card', 'count': 1, 'classification': 2}, {'name': 'Ant Cards', 'count': 1, 'classification': 2}, {'name': 'Caged Wolf Card', 'count': 1, 'classification': 1}, {'name': 'Squirrel Totem Head', 'count': 1, 'classification': 1}, {'name': 'Dagger', 'count': 1, 'classification': 1}, {'name': 'Film Roll', 'count': 1, 'classification': 1}, {'name': 'Ring', 'count': 1, 'classification': 2}, {'name': 'Magnificus Eye', 'count': 1, 'classification': 1}, {'name': "Oil Painting's Clover Plant", 'count': 1, 'classification': 1}, {'name': 'Extra Candle', 'count': 1, 'classification': 2}, {'name': 'Bee Figurine', 'count': 1, 'classification': 2}, {'name': 'Greater Smoke', 'count': 1, 'classification': 2}, {'name': 'Angler Hook', 'count': 1, 'classification': 2}, {'name': 'Camera Replica', 'count': 1, 'classification': 1}, {'name': 'Pile Of Meat', 'count': 1, 'classification': 1}, {'name': 'Epitaph Piece', 'count': 9, 'classification': 1}, {'name': 'Epitaph Pieces', 'count': 3, 'classification': 1}, {'name': 'Monocle', 'count': 1, 'classification': 1}, {'name': 'Bone Lord Femur', 'count': 1, 'classification': 2}, {'name': 'Bone Lord Horn', 'count': 1, 'classification': 2}, {'name': 'Bone Lord Holo Key', 'count': 1, 'classification': 1}, {'name': 'Mycologists Holo Key', 'count': 1, 'classification': 1}, {'name': 'Ancient Obol', 'count': 1, 'classification': 1}, {'name': 'Great Kraken Card', 'count': 1, 'classification': 2}, {'name': 'Drowned Soul Card', 'count': 1, 'classification': 2}, {'name': 'Salmon Card', 'count': 1, 'classification': 2}, {'name': "Dock's Clover Plant", 'count': 1, 'classification': 2}, {'name': 'Extra Battery', 'count': 1, 'classification': 2}, {'name': 'Nano Armor Generator', 'count': 1, 'classification': 2}, {'name': "Mrs. Bomb's Remote", 'count': 1, 'classification': 2}, {'name': 'Inspectometer Battery', 'count': 1, 'classification': 1}, {'name': 'Gems Module', 'count': 1, 'classification': 1}, {'name': 'Lonely Wizbot Card', 'count': 1, 'classification': 2}, {'name': 'Fishbot Card', 'count': 1, 'classification': 2}, {'name': 'Ourobot Card', 'count': 1, 'classification': 2}, {'name': 'Holo Pelt', 'count': 5, 'classification': 1}, {'name': 'Quill', 'count': 1, 'classification': 1}, {'name': 'Currency', 'count': 1, 'classification': 0}, {'name': 'Card Pack', 'count': 1, 'classification': 0}]
         self.required_epitaph_pieces_name = 'Epitaph Piece'
         self.required_epitaph_pieces_count = 9
         self.world_description = 'Inscryption is an inky black card-based odyssey that blends the deckbuilding roguelike,\nescape-room style puzzles, and psychological horror into a blood-laced smoothie.\nDarker still are the secrets inscrybed upon the cards...'
         self.slot_data = types.SimpleNamespace(death_link=0, act1_death_link_behaviour=0, goal=0, randomize_codes=0, randomize_deck=0, randomize_sigils=0, optional_death_card=2, skip_tutorial=1, skip_epilogue=0, epitaph_pieces_randomization=0)
-        self.web = types.SimpleNamespace(theme='dirt', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Inscryption Archipelago Multiworld', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['DrBibop']}, {'name': 'Multiworld Setup Guide', 'description': 'Un guide pour configurer Inscryption Archipelago Multiworld', 'language': 'Français', 'file_name': 'setup_fr.md', 'link': 'setup/fr', 'authors': ['Glowbuzz']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -319,4 +334,15 @@ class InscryptionWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "death_link": 0,
+            "act1_death_link_behaviour": 0,
+            "goal": 0,
+            "randomize_codes": 0,
+            "randomize_deck": 0,
+            "randomize_sigils": 0,
+            "optional_death_card": 2,
+            "skip_tutorial": 1,
+            "skip_epilogue": 0,
+            "epitaph_pieces_randomization": 0,
+        }

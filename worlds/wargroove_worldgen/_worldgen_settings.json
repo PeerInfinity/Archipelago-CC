@@ -23,7 +23,8 @@
       "start_inventory_from_pool": {},
       "start_location_hints": []
     },
-    "world_directory": "wargroove"
+    "world_directory": "wargroove",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "world_description": "Command an army, in this retro style turn based strategy game!",

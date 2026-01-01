@@ -538,34 +538,42 @@ class ASTToRuleBuilder:
         AST: {"type": "and", "conditions": [...]}
         RB: {"rule": "And", "options": [], "children": [...]}
 
-        Optimization: If all conditions are simple item_check rules with count=1,
-        convert to HasAll for cleaner output.
+        Optimization: Collects simple item_check rules with count=1 and combines
+        them into HasAll, even when mixed with other conditions. This matches
+        the Rule Builder's _simplify_and behavior for consistent output.
         """
         conditions = rule.get('conditions', [])
 
         if not conditions:
             return self._make_rule('True_', {})
 
-        # Check if all conditions are simple item_check rules with count=1
-        # If so, we can optimize to HasAll
+        # Separate simple item checks (count=1) from other conditions
+        # This partial optimization matches Rule Builder's _simplify_and
         simple_item_checks = []
-        all_simple = True
+        other_conditions = []
         for cond in conditions:
             if cond.get('type') == 'item_check':
-                count = cond.get('count', 1)
+                count_raw = cond.get('count', 1)
+                # Unwrap constant wrapper if present
+                count, _ = self._extract_constant_value(count_raw)
                 if count == 1:
-                    item = cond.get('item', '')
+                    item_raw = cond.get('item', '')
+                    item, _ = self._extract_constant_value(item_raw)
                     if isinstance(item, str) and item:
                         simple_item_checks.append(item)
                         continue
-            all_simple = False
-            break
+            other_conditions.append(cond)
 
-        if all_simple and len(simple_item_checks) >= 2:
-            # Optimize to HasAll
-            return self._make_rule('HasAll', {'items': simple_item_checks})
+        # Convert other conditions
+        converted_children = [self._convert_rule(cond) for cond in other_conditions]
 
-        converted_children = [self._convert_rule(cond) for cond in conditions]
+        # Add simple item checks as HasAll (if 2+) or Has (if 1)
+        # Deduplicate items while preserving order
+        unique_items = list(dict.fromkeys(simple_item_checks))
+        if len(unique_items) >= 2:
+            converted_children.append(self._make_rule('HasAll', {'items': unique_items}))
+        elif len(unique_items) == 1:
+            converted_children.append(self._make_rule('Has', {'item_name': unique_items[0]}))
 
         if len(converted_children) == 1:
             return converted_children[0]
@@ -579,34 +587,42 @@ class ASTToRuleBuilder:
         AST: {"type": "or", "conditions": [...]}
         RB: {"rule": "Or", "options": [], "children": [...]}
 
-        Optimization: If all conditions are simple item_check rules with count=1,
-        convert to HasAny for cleaner output.
+        Optimization: Collects simple item_check rules with count=1 and combines
+        them into HasAny, even when mixed with other conditions. This matches
+        the Rule Builder's _simplify_or behavior for consistent output.
         """
         conditions = rule.get('conditions', [])
 
         if not conditions:
             return self._make_rule('False_', {})
 
-        # Check if all conditions are simple item_check rules with count=1
-        # If so, we can optimize to HasAny
+        # Separate simple item checks (count=1) from other conditions
+        # This partial optimization matches Rule Builder's _simplify_or
         simple_item_checks = []
-        all_simple = True
+        other_conditions = []
         for cond in conditions:
             if cond.get('type') == 'item_check':
-                count = cond.get('count', 1)
+                count_raw = cond.get('count', 1)
+                # Unwrap constant wrapper if present
+                count, _ = self._extract_constant_value(count_raw)
                 if count == 1:
-                    item = cond.get('item', '')
+                    item_raw = cond.get('item', '')
+                    item, _ = self._extract_constant_value(item_raw)
                     if isinstance(item, str) and item:
                         simple_item_checks.append(item)
                         continue
-            all_simple = False
-            break
+            other_conditions.append(cond)
 
-        if all_simple and len(simple_item_checks) >= 2:
-            # Optimize to HasAny
-            return self._make_rule('HasAny', {'items': simple_item_checks})
+        # Convert other conditions
+        converted_children = [self._convert_rule(cond) for cond in other_conditions]
 
-        converted_children = [self._convert_rule(cond) for cond in conditions]
+        # Add simple item checks as HasAny (if 2+) or Has (if 1)
+        # Deduplicate items while preserving order
+        unique_items = list(dict.fromkeys(simple_item_checks))
+        if len(unique_items) >= 2:
+            converted_children.append(self._make_rule('HasAny', {'items': unique_items}))
+        elif len(unique_items) == 1:
+            converted_children.append(self._make_rule('Has', {'item_name': unique_items[0]}))
 
         if len(converted_children) == 1:
             return converted_children[0]

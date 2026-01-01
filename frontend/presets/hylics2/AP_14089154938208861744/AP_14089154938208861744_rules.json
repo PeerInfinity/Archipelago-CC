@@ -2845,21 +2845,13 @@
             "name": "Defeat Gibby",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "UPPER CHAMBER KEY"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "VESSEL ROOM KEY"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "UPPER CHAMBER KEY",
+                  "VESSEL ROOM KEY"
+                ]
+              }
             },
             "item": {
               "name": "Victory",
@@ -2867,7 +2859,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       }

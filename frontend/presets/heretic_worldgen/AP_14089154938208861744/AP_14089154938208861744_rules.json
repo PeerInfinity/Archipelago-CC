@@ -34,8 +34,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Docks (E1M1)",
-                "count": 1
+                "item_name": "The Docks (E1M1)"
               }
             }
           },
@@ -57,8 +56,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "The Dungeons (E1M2)",
-                    "count": 1
+                    "item_name": "The Dungeons (E1M2)"
                   }
                 }
               ]
@@ -82,8 +80,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "The Gatehouse (E1M3)",
-                    "count": 1
+                    "item_name": "The Gatehouse (E1M3)"
                   }
                 }
               ]
@@ -107,8 +104,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "The Guard Tower (E1M4)",
-                    "count": 1
+                    "item_name": "The Guard Tower (E1M4)"
                   }
                 }
               ]
@@ -231,8 +227,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Crater (E2M1)",
-                "count": 1
+                "item_name": "The Crater (E2M1)"
               }
             }
           },
@@ -254,8 +249,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "The Lava Pits (E2M2)",
-                    "count": 1
+                    "item_name": "The Lava Pits (E2M2)"
                   }
                 }
               ]
@@ -447,8 +441,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Storehouse (E3M1)",
-                "count": 1
+                "item_name": "The Storehouse (E3M1)"
               }
             }
           },
@@ -666,8 +659,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Docks (E1M1) - Yellow key",
-                "count": 1
+                "item_name": "The Docks (E1M1) - Yellow key"
               }
             }
           }
@@ -817,8 +809,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Dungeons (E1M2) - Yellow key",
-                "count": 1
+                "item_name": "The Dungeons (E1M2) - Yellow key"
               }
             }
           },
@@ -828,8 +819,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Dungeons (E1M2) - Green key",
-                "count": 1
+                "item_name": "The Dungeons (E1M2) - Green key"
               }
             }
           }
@@ -916,8 +906,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Dungeons (E1M2) - Blue key",
-                "count": 1
+                "item_name": "The Dungeons (E1M2) - Blue key"
               }
             }
           }
@@ -955,8 +944,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Dungeons (E1M2) - Blue key",
-                "count": 1
+                "item_name": "The Dungeons (E1M2) - Blue key"
               }
             }
           }
@@ -1106,8 +1094,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Gatehouse (E1M3) - Yellow key",
-                "count": 1
+                "item_name": "The Gatehouse (E1M3) - Yellow key"
               }
             }
           },
@@ -1117,8 +1104,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Gatehouse (E1M3) - Yellow key",
-                "count": 1
+                "item_name": "The Gatehouse (E1M3) - Yellow key"
               }
             }
           },
@@ -1128,8 +1114,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Gatehouse (E1M3) - Green key",
-                "count": 1
+                "item_name": "The Gatehouse (E1M3) - Green key"
               }
             }
           }
@@ -1342,8 +1327,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Gatehouse (E1M3) - Green key",
-                "count": 1
+                "item_name": "The Gatehouse (E1M3) - Green key"
               }
             }
           }
@@ -1402,8 +1386,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Guard Tower (E1M4) - Yellow key",
-                "count": 1
+                "item_name": "The Guard Tower (E1M4) - Yellow key"
               }
             }
           }
@@ -1546,8 +1529,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Guard Tower (E1M4) - Green key",
-                "count": 1
+                "item_name": "The Guard Tower (E1M4) - Green key"
               }
             }
           },
@@ -1613,8 +1595,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Guard Tower (E1M4) - Green key",
-                "count": 1
+                "item_name": "The Guard Tower (E1M4) - Green key"
               }
             }
           }
@@ -1645,8 +1626,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Citadel (E1M5) - Yellow key",
-                "count": 1
+                "item_name": "The Citadel (E1M5) - Yellow key"
               }
             }
           }
@@ -1719,8 +1699,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Citadel (E1M5) - Blue key",
-                "count": 1
+                "item_name": "The Citadel (E1M5) - Blue key"
               }
             }
           }
@@ -1793,8 +1772,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Citadel (E1M5) - Green key",
-                "count": 1
+                "item_name": "The Citadel (E1M5) - Green key"
               }
             }
           }
@@ -1853,8 +1831,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Citadel (E1M5) - Blue key",
-                "count": 1
+                "item_name": "The Citadel (E1M5) - Blue key"
               }
             }
           }
@@ -2025,8 +2002,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Cathedral (E1M6) - Yellow key",
-                "count": 1
+                "item_name": "The Cathedral (E1M6) - Yellow key"
               }
             }
           }
@@ -2085,8 +2061,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Cathedral (E1M6) - Green key",
-                "count": 1
+                "item_name": "The Cathedral (E1M6) - Green key"
               }
             }
           },
@@ -2404,8 +2379,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Crypts (E1M7) - Yellow key",
-                "count": 1
+                "item_name": "The Crypts (E1M7) - Yellow key"
               }
             }
           },
@@ -2415,8 +2389,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Crypts (E1M7) - Green key",
-                "count": 1
+                "item_name": "The Crypts (E1M7) - Green key"
               }
             }
           }
@@ -2545,8 +2518,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Crypts (E1M7) - Green key",
-                "count": 1
+                "item_name": "The Crypts (E1M7) - Green key"
               }
             }
           },
@@ -2556,8 +2528,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Crypts (E1M7) - Blue key",
-                "count": 1
+                "item_name": "The Crypts (E1M7) - Blue key"
               }
             }
           }
@@ -2693,8 +2664,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Crypts (E1M7) - Green key",
-                "count": 1
+                "item_name": "The Crypts (E1M7) - Green key"
               }
             }
           }
@@ -2955,8 +2925,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Graveyard (E1M9) - Yellow key",
-                "count": 1
+                "item_name": "The Graveyard (E1M9) - Yellow key"
               }
             }
           },
@@ -2966,8 +2935,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Graveyard (E1M9) - Green key",
-                "count": 1
+                "item_name": "The Graveyard (E1M9) - Green key"
               }
             }
           },
@@ -2977,8 +2945,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Graveyard (E1M9) - Blue key",
-                "count": 1
+                "item_name": "The Graveyard (E1M9) - Blue key"
               }
             }
           }
@@ -3121,8 +3088,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Graveyard (E1M9) - Yellow key",
-                "count": 1
+                "item_name": "The Graveyard (E1M9) - Yellow key"
               }
             }
           }
@@ -3167,8 +3133,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Graveyard (E1M9) - Green key",
-                "count": 1
+                "item_name": "The Graveyard (E1M9) - Green key"
               }
             }
           }
@@ -3269,8 +3234,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Crater (E2M1) - Yellow key",
-                "count": 1
+                "item_name": "The Crater (E2M1) - Yellow key"
               }
             }
           }
@@ -3364,8 +3328,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Crater (E2M1) - Green key",
-                "count": 1
+                "item_name": "The Crater (E2M1) - Green key"
               }
             }
           }
@@ -3452,8 +3415,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Crater (E2M1) - Green key",
-                "count": 1
+                "item_name": "The Crater (E2M1) - Green key"
               }
             }
           }
@@ -3484,8 +3446,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Lava Pits (E2M2) - Yellow key",
-                "count": 1
+                "item_name": "The Lava Pits (E2M2) - Yellow key"
               }
             }
           }
@@ -3572,8 +3533,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Lava Pits (E2M2) - Green key",
-                "count": 1
+                "item_name": "The Lava Pits (E2M2) - Green key"
               }
             }
           },
@@ -3583,8 +3543,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Lava Pits (E2M2) - Yellow key",
-                "count": 1
+                "item_name": "The Lava Pits (E2M2) - Yellow key"
               }
             }
           }
@@ -3734,8 +3693,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Lava Pits (E2M2) - Green key",
-                "count": 1
+                "item_name": "The Lava Pits (E2M2) - Green key"
               }
             }
           }
@@ -3808,8 +3766,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The River of Fire (E2M3) - Yellow key",
-                "count": 1
+                "item_name": "The River of Fire (E2M3) - Yellow key"
               }
             }
           },
@@ -3819,8 +3776,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The River of Fire (E2M3) - Blue key",
-                "count": 1
+                "item_name": "The River of Fire (E2M3) - Blue key"
               }
             }
           },
@@ -3830,8 +3786,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The River of Fire (E2M3) - Green key",
-                "count": 1
+                "item_name": "The River of Fire (E2M3) - Green key"
               }
             }
           }
@@ -3946,8 +3901,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The River of Fire (E2M3) - Blue key",
-                "count": 1
+                "item_name": "The River of Fire (E2M3) - Blue key"
               }
             }
           }
@@ -4020,8 +3974,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The River of Fire (E2M3) - Yellow key",
-                "count": 1
+                "item_name": "The River of Fire (E2M3) - Yellow key"
               }
             }
           }
@@ -4066,8 +4019,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The River of Fire (E2M3) - Green key",
-                "count": 1
+                "item_name": "The River of Fire (E2M3) - Green key"
               }
             }
           }
@@ -4140,8 +4092,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Ice Grotto (E2M4) - Green key",
-                "count": 1
+                "item_name": "The Ice Grotto (E2M4) - Green key"
               }
             }
           },
@@ -4151,8 +4102,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Ice Grotto (E2M4) - Yellow key",
-                "count": 1
+                "item_name": "The Ice Grotto (E2M4) - Yellow key"
               }
             }
           }
@@ -4267,8 +4217,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Ice Grotto (E2M4) - Blue key",
-                "count": 1
+                "item_name": "The Ice Grotto (E2M4) - Blue key"
               }
             }
           }
@@ -4389,8 +4338,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Ice Grotto (E2M4) - Blue key",
-                "count": 1
+                "item_name": "The Ice Grotto (E2M4) - Blue key"
               }
             }
           }
@@ -4561,8 +4509,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Catacombs (E2M5) - Yellow key",
-                "count": 1
+                "item_name": "The Catacombs (E2M5) - Yellow key"
               }
             }
           }
@@ -4649,8 +4596,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Catacombs (E2M5) - Blue key",
-                "count": 1
+                "item_name": "The Catacombs (E2M5) - Blue key"
               }
             }
           }
@@ -4681,8 +4627,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Catacombs (E2M5) - Green key",
-                "count": 1
+                "item_name": "The Catacombs (E2M5) - Green key"
               }
             }
           },
@@ -4860,8 +4805,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Catacombs (E2M5) - Blue key",
-                "count": 1
+                "item_name": "The Catacombs (E2M5) - Blue key"
               }
             }
           },
@@ -4948,8 +4892,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Labyrinth (E2M6) - Blue key",
-                "count": 1
+                "item_name": "The Labyrinth (E2M6) - Blue key"
               }
             }
           },
@@ -4959,8 +4902,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Labyrinth (E2M6) - Yellow key",
-                "count": 1
+                "item_name": "The Labyrinth (E2M6) - Yellow key"
               }
             }
           },
@@ -4970,8 +4912,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Labyrinth (E2M6) - Green key",
-                "count": 1
+                "item_name": "The Labyrinth (E2M6) - Green key"
               }
             }
           }
@@ -5058,8 +4999,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Labyrinth (E2M6) - Blue key",
-                "count": 1
+                "item_name": "The Labyrinth (E2M6) - Blue key"
               }
             }
           }
@@ -5342,8 +5282,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Great Hall (E2M7) - Yellow key",
-                "count": 1
+                "item_name": "The Great Hall (E2M7) - Yellow key"
               }
             }
           },
@@ -5353,8 +5292,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Great Hall (E2M7) - Green key",
-                "count": 1
+                "item_name": "The Great Hall (E2M7) - Green key"
               }
             }
           }
@@ -5525,8 +5463,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Great Hall (E2M7) - Blue key",
-                "count": 1
+                "item_name": "The Great Hall (E2M7) - Blue key"
               }
             }
           }
@@ -5571,8 +5508,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Great Hall (E2M7) - Blue key",
-                "count": 1
+                "item_name": "The Great Hall (E2M7) - Blue key"
               }
             }
           },
@@ -5582,8 +5518,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Great Hall (E2M7) - Yellow key",
-                "count": 1
+                "item_name": "The Great Hall (E2M7) - Yellow key"
               }
             }
           }
@@ -5900,8 +5835,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Glacier (E2M9) - Yellow key",
-                "count": 1
+                "item_name": "The Glacier (E2M9) - Yellow key"
               }
             }
           },
@@ -5911,8 +5845,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Glacier (E2M9) - Blue key",
-                "count": 1
+                "item_name": "The Glacier (E2M9) - Blue key"
               }
             }
           },
@@ -5922,8 +5855,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Glacier (E2M9) - Green key",
-                "count": 1
+                "item_name": "The Glacier (E2M9) - Green key"
               }
             }
           }
@@ -6080,8 +6012,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Glacier (E2M9) - Blue key",
-                "count": 1
+                "item_name": "The Glacier (E2M9) - Blue key"
               }
             }
           }
@@ -6154,8 +6085,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Glacier (E2M9) - Yellow key",
-                "count": 1
+                "item_name": "The Glacier (E2M9) - Yellow key"
               }
             }
           }
@@ -6340,8 +6270,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Storehouse (E3M1) - Yellow key",
-                "count": 1
+                "item_name": "The Storehouse (E3M1) - Yellow key"
               }
             }
           },
@@ -6351,8 +6280,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Storehouse (E3M1) - Green key",
-                "count": 1
+                "item_name": "The Storehouse (E3M1) - Green key"
               }
             }
           }
@@ -6467,8 +6395,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Storehouse (E3M1) - Yellow key",
-                "count": 1
+                "item_name": "The Storehouse (E3M1) - Yellow key"
               }
             }
           }
@@ -6499,8 +6426,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Storehouse (E3M1) - Green key",
-                "count": 1
+                "item_name": "The Storehouse (E3M1) - Green key"
               }
             }
           }
@@ -6587,8 +6513,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Cesspool (E3M2) - Yellow key",
-                "count": 1
+                "item_name": "The Cesspool (E3M2) - Yellow key"
               }
             }
           }
@@ -6689,8 +6614,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Cesspool (E3M2) - Blue key",
-                "count": 1
+                "item_name": "The Cesspool (E3M2) - Blue key"
               }
             }
           }
@@ -6742,8 +6666,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Cesspool (E3M2) - Green key",
-                "count": 1
+                "item_name": "The Cesspool (E3M2) - Green key"
               }
             }
           }
@@ -6886,8 +6809,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Cesspool (E3M2) - Blue key",
-                "count": 1
+                "item_name": "The Cesspool (E3M2) - Blue key"
               }
             }
           },
@@ -6904,8 +6826,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Cesspool (E3M2) - Green key",
-                "count": 1
+                "item_name": "The Cesspool (E3M2) - Green key"
               }
             }
           }
@@ -7048,8 +6969,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Confluence (E3M3) - Green key",
-                "count": 1
+                "item_name": "The Confluence (E3M3) - Green key"
               }
             }
           },
@@ -7059,8 +6979,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Confluence (E3M3) - Yellow key",
-                "count": 1
+                "item_name": "The Confluence (E3M3) - Yellow key"
               }
             }
           }
@@ -7119,8 +7038,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Confluence (E3M3) - Blue key",
-                "count": 1
+                "item_name": "The Confluence (E3M3) - Blue key"
               }
             }
           }
@@ -7347,8 +7265,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Confluence (E3M3) - Green key",
-                "count": 1
+                "item_name": "The Confluence (E3M3) - Green key"
               }
             }
           },
@@ -7358,8 +7275,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Confluence (E3M3) - Blue key",
-                "count": 1
+                "item_name": "The Confluence (E3M3) - Blue key"
               }
             }
           },
@@ -7537,8 +7453,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Azure Fortress (E3M4) - Green key",
-                "count": 1
+                "item_name": "The Azure Fortress (E3M4) - Green key"
               }
             }
           },
@@ -7548,8 +7463,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Azure Fortress (E3M4) - Yellow key",
-                "count": 1
+                "item_name": "The Azure Fortress (E3M4) - Yellow key"
               }
             }
           }
@@ -7986,8 +7900,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Ophidian Lair (E3M5) - Yellow key",
-                "count": 1
+                "item_name": "The Ophidian Lair (E3M5) - Yellow key"
               }
             }
           },
@@ -7997,8 +7910,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Ophidian Lair (E3M5) - Green key",
-                "count": 1
+                "item_name": "The Ophidian Lair (E3M5) - Green key"
               }
             }
           }
@@ -8309,8 +8221,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Halls of Fear (E3M6) - Yellow key",
-                "count": 1
+                "item_name": "The Halls of Fear (E3M6) - Yellow key"
               }
             }
           }
@@ -8411,8 +8322,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Halls of Fear (E3M6) - Blue key",
-                "count": 1
+                "item_name": "The Halls of Fear (E3M6) - Blue key"
               }
             }
           },
@@ -8520,8 +8430,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Halls of Fear (E3M6) - Blue key",
-                "count": 1
+                "item_name": "The Halls of Fear (E3M6) - Blue key"
               }
             }
           },
@@ -8538,8 +8447,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Halls of Fear (E3M6) - Green key",
-                "count": 1
+                "item_name": "The Halls of Fear (E3M6) - Green key"
               }
             }
           }
@@ -8801,8 +8709,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Chasm (E3M7) - Yellow key",
-                "count": 1
+                "item_name": "The Chasm (E3M7) - Yellow key"
               }
             }
           }
@@ -8951,8 +8858,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Chasm (E3M7) - Yellow key",
-                "count": 1
+                "item_name": "The Chasm (E3M7) - Yellow key"
               }
             }
           },
@@ -8962,8 +8868,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Chasm (E3M7) - Green key",
-                "count": 1
+                "item_name": "The Chasm (E3M7) - Green key"
               }
             }
           },
@@ -8973,8 +8878,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Chasm (E3M7) - Blue key",
-                "count": 1
+                "item_name": "The Chasm (E3M7) - Blue key"
               }
             }
           }
@@ -9033,8 +8937,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Chasm (E3M7) - Green key",
-                "count": 1
+                "item_name": "The Chasm (E3M7) - Green key"
               }
             }
           }
@@ -9379,8 +9282,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Aquifer (E3M9) - Yellow key",
-                "count": 1
+                "item_name": "The Aquifer (E3M9) - Yellow key"
               }
             }
           }
@@ -9473,8 +9375,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Aquifer (E3M9) - Green key",
-                "count": 1
+                "item_name": "The Aquifer (E3M9) - Green key"
               }
             }
           },
@@ -9484,8 +9385,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Aquifer (E3M9) - Yellow key",
-                "count": 1
+                "item_name": "The Aquifer (E3M9) - Yellow key"
               }
             }
           }
@@ -9572,8 +9472,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Aquifer (E3M9) - Green key",
-                "count": 1
+                "item_name": "The Aquifer (E3M9) - Green key"
               }
             }
           },
@@ -14041,7 +13940,6 @@
           "display_name": "Start With Map Scrolls"
         }
       },
-      "shops": [],
       "included_episodes": [
         1,
         1,
@@ -14055,7 +13953,7 @@
         "The Crater (E2M1)",
         "The Storehouse (E3M1)"
       ],
-      "world_description": "Heretic WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Heretic is a dark fantasy first-person shooter video game released in December 1994. It was developed by Raven Software.",
       "slot_data": {
         "goal": 0,
         "difficulty": 2,
@@ -14086,7 +13984,19 @@
         "ammo6add": 150
       },
       "web": {
-        "theme": "dirt"
+        "theme": "dirt",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Heretic randomizer connected to an Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Daivuk"
+            ]
+          }
+        ]
       },
       "world_directory": "heretic_worldgen"
     }

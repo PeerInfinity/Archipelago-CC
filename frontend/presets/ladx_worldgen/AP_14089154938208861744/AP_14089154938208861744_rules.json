@@ -62,8 +62,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -103,8 +102,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -129,8 +127,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -186,8 +183,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -197,8 +193,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -208,8 +203,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -303,8 +297,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             }
           },
@@ -314,8 +307,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ocarina",
-                "count": 1
+                "item_name": "Ocarina"
               }
             }
           },
@@ -379,8 +371,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -397,8 +388,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -457,8 +447,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tail Key",
-                "count": 1
+                "item_name": "Tail Key"
               }
             }
           }
@@ -601,8 +590,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             }
           }
@@ -633,8 +621,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ocarina",
-                "count": 1
+                "item_name": "Ocarina"
               }
             }
           }
@@ -708,8 +695,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -719,8 +705,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           },
@@ -768,8 +753,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -779,8 +763,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -811,8 +794,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -834,8 +816,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Rooster",
-                    "count": 1
+                    "item_name": "Rooster"
                   }
                 }
               ]
@@ -872,8 +853,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Rooster",
-                    "count": 1
+                    "item_name": "Rooster"
                   }
                 }
               ]
@@ -933,8 +913,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -1075,8 +1054,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -1086,8 +1064,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -1124,8 +1101,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -1135,8 +1111,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -1146,8 +1121,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -1157,8 +1131,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -1168,8 +1141,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -1179,8 +1151,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           }
@@ -1196,8 +1167,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -1207,8 +1177,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -1218,8 +1187,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bananas",
-                "count": 1
+                "item_name": "Bananas"
               }
             }
           },
@@ -1229,8 +1197,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Stick",
-                "count": 1
+                "item_name": "Stick"
               }
             }
           },
@@ -1270,8 +1237,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Flippers",
-                    "count": 1
+                    "item_name": "Flippers"
                   }
                 }
               ]
@@ -1300,8 +1266,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             }
           },
@@ -1311,8 +1276,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -1322,8 +1286,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -1340,8 +1303,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "CASTLE_BUTTON",
-                "count": 1
+                "item_name": "CASTLE_BUTTON"
               }
             }
           },
@@ -1364,8 +1326,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rooster",
-                "count": 1
+                "item_name": "Rooster"
               }
             }
           },
@@ -1382,8 +1343,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           },
@@ -1408,8 +1368,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Rooster",
-                        "count": 1
+                        "item_name": "Rooster"
                       }
                     }
                   ]
@@ -1426,8 +1385,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -1509,8 +1467,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -1520,8 +1477,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -1545,8 +1501,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -1582,8 +1537,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -1600,8 +1554,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -1611,8 +1564,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -1757,8 +1709,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -1830,8 +1781,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Sword",
-                "count": 1
+                "item_name": "Progressive Sword"
               }
             }
           },
@@ -1841,8 +1791,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -1872,8 +1821,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Sword",
-                "count": 1
+                "item_name": "Progressive Sword"
               }
             }
           }
@@ -1904,8 +1852,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -2057,8 +2004,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -2116,8 +2062,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -2148,8 +2093,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Letter",
-                "count": 1
+                "item_name": "Letter"
               }
             }
           },
@@ -2172,8 +2116,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Letter",
-                "count": 1
+                "item_name": "Letter"
               }
             }
           }
@@ -2205,8 +2148,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -2261,8 +2203,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -2426,8 +2367,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feather",
-                "count": 1
+                "item_name": "Feather"
               }
             }
           },
@@ -2452,8 +2392,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Feather",
-                        "count": 1
+                        "item_name": "Feather"
                       }
                     }
                   ]
@@ -2497,8 +2436,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feather",
-                "count": 1
+                "item_name": "Feather"
               }
             }
           },
@@ -2556,8 +2494,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather",
-                    "count": 1
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -2602,8 +2539,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather",
-                    "count": 1
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -2615,8 +2551,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -2672,8 +2607,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -2741,8 +2675,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -2844,8 +2777,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -2865,8 +2797,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -2884,8 +2815,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -2895,8 +2825,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feather",
-                "count": 1
+                "item_name": "Feather"
               }
             }
           }
@@ -2912,8 +2841,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feather",
-                "count": 1
+                "item_name": "Feather"
               }
             }
           },
@@ -3099,8 +3027,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Feather",
-                        "count": 1
+                        "item_name": "Feather"
                       }
                     }
                   ]
@@ -3294,8 +3221,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -3305,8 +3231,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -3316,8 +3241,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rooster",
-                "count": 1
+                "item_name": "Rooster"
               }
             }
           },
@@ -3327,8 +3251,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -3338,8 +3261,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -3349,8 +3271,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           },
@@ -3360,8 +3281,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           }
@@ -3400,8 +3320,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rooster",
-                "count": 1
+                "item_name": "Rooster"
               }
             }
           },
@@ -3433,8 +3352,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feather",
-                "count": 1
+                "item_name": "Feather"
               }
             }
           },
@@ -3457,8 +3375,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feather",
-                "count": 1
+                "item_name": "Feather"
               }
             }
           },
@@ -3527,8 +3444,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -3570,8 +3486,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "CASTLE_BUTTON",
-                "count": 1
+                "item_name": "CASTLE_BUTTON"
               }
             }
           },
@@ -3636,8 +3551,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Bomb",
-                    "count": 1
+                    "item_name": "Bomb"
                   }
                 }
               ]
@@ -3754,8 +3668,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Bomb",
-                    "count": 1
+                    "item_name": "Bomb"
                   }
                 }
               ]
@@ -3824,8 +3737,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -3920,8 +3832,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -3954,8 +3865,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           }
@@ -3971,8 +3881,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -3982,8 +3891,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -3993,8 +3901,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -4004,8 +3911,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Angler Key",
-                "count": 1
+                "item_name": "Angler Key"
               }
             }
           }
@@ -4021,8 +3927,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           }
@@ -4051,8 +3956,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           }
@@ -4119,8 +4023,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Shield",
-                    "count": 1
+                    "item_name": "Progressive Shield"
                   }
                 }
               ]
@@ -4210,8 +4113,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Shield",
-                    "count": 1
+                    "item_name": "Progressive Shield"
                   }
                 }
               ]
@@ -4236,8 +4138,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Small Key (Angler's Tunnel)",
-                "count": 1
+                "item_name": "Small Key (Angler's Tunnel)"
               }
             }
           }
@@ -4344,8 +4245,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -4399,8 +4299,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           }
@@ -4478,8 +4377,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Flippers",
-                    "count": 1
+                    "item_name": "Flippers"
                   }
                 }
               ]
@@ -4491,8 +4389,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -4515,8 +4412,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -4547,8 +4443,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Sword",
-                    "count": 1
+                    "item_name": "Progressive Sword"
                   }
                 }
               ]
@@ -4583,8 +4478,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Flippers",
-                    "count": 1
+                    "item_name": "Flippers"
                   }
                 }
               ]
@@ -4619,8 +4513,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Flippers",
-                    "count": 1
+                    "item_name": "Flippers"
                   }
                 }
               ]
@@ -4653,8 +4546,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           }
@@ -4710,8 +4602,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather",
-                    "count": 1
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -4770,8 +4661,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather",
-                    "count": 1
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -4804,8 +4694,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -4864,8 +4753,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Sword",
-                    "count": 1
+                    "item_name": "Progressive Sword"
                   }
                 }
               ]
@@ -4934,8 +4822,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Flippers",
-                    "count": 1
+                    "item_name": "Flippers"
                   }
                 }
               ]
@@ -5029,8 +4916,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           },
@@ -5059,8 +4945,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           }
@@ -5138,8 +5023,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "RAFT",
-                "count": 1
+                "item_name": "RAFT"
               }
             }
           },
@@ -5169,8 +5053,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "RAFT",
-                "count": 1
+                "item_name": "RAFT"
               }
             }
           },
@@ -5229,8 +5112,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -5253,8 +5135,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -5264,8 +5145,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -5275,8 +5155,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           }
@@ -5292,8 +5171,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Broom",
-                "count": 1
+                "item_name": "Broom"
               }
             }
           },
@@ -5316,8 +5194,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -5340,8 +5217,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             }
           },
@@ -5368,8 +5244,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -5379,8 +5254,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -5417,8 +5291,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Broom",
-                "count": 1
+                "item_name": "Broom"
               }
             }
           }
@@ -5485,8 +5358,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             }
           }
@@ -5557,8 +5429,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -5568,8 +5439,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           }
@@ -5622,8 +5492,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           },
@@ -5646,8 +5515,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           }
@@ -5678,8 +5546,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -5723,8 +5590,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Rooster",
-                    "count": 1
+                    "item_name": "Rooster"
                   }
                 }
               ]
@@ -5762,8 +5628,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Rooster",
-                    "count": 1
+                    "item_name": "Rooster"
                   }
                 }
               ]
@@ -5796,8 +5661,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -6001,8 +5865,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             }
           },
@@ -6025,8 +5888,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             }
           },
@@ -6049,8 +5911,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hibiscus",
-                "count": 1
+                "item_name": "Hibiscus"
               }
             }
           },
@@ -6073,8 +5934,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hibiscus",
-                "count": 1
+                "item_name": "Hibiscus"
               }
             }
           }
@@ -6106,8 +5966,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Honeycomb",
-                "count": 1
+                "item_name": "Honeycomb"
               }
             }
           },
@@ -6130,8 +5989,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Honeycomb",
-                "count": 1
+                "item_name": "Honeycomb"
               }
             }
           }
@@ -6291,8 +6149,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -6302,8 +6159,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           }
@@ -6319,8 +6175,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           }
@@ -6351,8 +6206,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Sword",
-                "count": 1
+                "item_name": "Progressive Sword"
               }
             }
           },
@@ -6362,8 +6216,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -6491,8 +6344,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -6599,8 +6451,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -6650,8 +6501,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -6739,8 +6589,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           },
@@ -6792,8 +6641,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -6838,8 +6686,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           }
@@ -6944,8 +6791,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feather",
-                "count": 1
+                "item_name": "Feather"
               }
             }
           },
@@ -6990,8 +6836,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Progressive Power Bracelet",
-                        "count": 1
+                        "item_name": "Progressive Power Bracelet"
                       }
                     }
                   ]
@@ -6999,8 +6844,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather",
-                    "count": 1
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -7035,8 +6879,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Progressive Power Bracelet",
-                            "count": 1
+                            "item_name": "Progressive Power Bracelet"
                           }
                         }
                       ]
@@ -7044,8 +6887,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Bomb",
-                        "count": 1
+                        "item_name": "Bomb"
                       }
                     }
                   ]
@@ -7053,8 +6895,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather",
-                    "count": 1
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -7079,8 +6920,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feather",
-                "count": 1
+                "item_name": "Feather"
               }
             }
           },
@@ -7136,8 +6976,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Small Key (Turtle Rock)",
-                "count": 1
+                "item_name": "Small Key (Turtle Rock)"
               }
             }
           }
@@ -7188,8 +7027,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           },
@@ -7206,8 +7044,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bow",
-                "count": 1
+                "item_name": "Bow"
               }
             }
           },
@@ -7217,8 +7054,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           },
@@ -7291,8 +7127,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Feather",
-                        "count": 1
+                        "item_name": "Feather"
                       }
                     }
                   ]
@@ -7348,8 +7183,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Rod",
-                "count": 1
+                "item_name": "Magic Rod"
               }
             }
           }
@@ -7399,8 +7233,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Feather",
-                        "count": 1
+                        "item_name": "Feather"
                       }
                     }
                   ]
@@ -7519,8 +7352,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Rod",
-                "count": 1
+                "item_name": "Magic Rod"
               }
             }
           }
@@ -7551,8 +7383,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           }
@@ -7611,8 +7442,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bow",
-                "count": 1
+                "item_name": "Bow"
               }
             }
           }
@@ -7643,8 +7473,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           }
@@ -7717,8 +7546,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           },
@@ -7859,8 +7687,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           },
@@ -7911,8 +7738,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Small Key (Turtle Rock)",
-                "count": 1
+                "item_name": "Small Key (Turtle Rock)"
               }
             }
           }
@@ -7928,8 +7754,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Small Key (Turtle Rock)",
-                "count": 1
+                "item_name": "Small Key (Turtle Rock)"
               }
             }
           },
@@ -7949,8 +7774,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot",
-                    "count": 1
+                    "item_name": "Hookshot"
                   }
                 }
               ]
@@ -7991,8 +7815,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot",
-                    "count": 1
+                    "item_name": "Hookshot"
                   }
                 }
               ]
@@ -8044,8 +7867,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Small Key (Turtle Rock)",
-                "count": 1
+                "item_name": "Small Key (Turtle Rock)"
               }
             }
           },
@@ -8268,8 +8090,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Progressive Power Bracelet",
-                        "count": 1
+                        "item_name": "Progressive Power Bracelet"
                       }
                     }
                   ]
@@ -8277,8 +8098,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather",
-                    "count": 1
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -8334,8 +8154,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Progressive Power Bracelet",
-                            "count": 1
+                            "item_name": "Progressive Power Bracelet"
                           }
                         }
                       ]
@@ -8343,8 +8162,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Bomb",
-                        "count": 1
+                        "item_name": "Bomb"
                       }
                     }
                   ]
@@ -8352,8 +8170,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather",
-                    "count": 1
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -8365,8 +8182,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -8397,8 +8213,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -8429,8 +8244,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Powder",
-                "count": 1
+                "item_name": "Magic Powder"
               }
             }
           },
@@ -8453,8 +8267,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Powder",
-                "count": 1
+                "item_name": "Magic Powder"
               }
             }
           }
@@ -8505,8 +8318,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rooster",
-                "count": 1
+                "item_name": "Rooster"
               }
             }
           },
@@ -8536,8 +8348,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rooster",
-                "count": 1
+                "item_name": "Rooster"
               }
             }
           }
@@ -8629,8 +8440,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pineapple",
-                "count": 1
+                "item_name": "Pineapple"
               }
             }
           },
@@ -8674,8 +8484,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           },
@@ -8711,8 +8520,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           },
@@ -8763,8 +8571,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -8846,8 +8653,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot",
-                    "count": 1
+                    "item_name": "Hookshot"
                   }
                 }
               ]
@@ -8938,8 +8744,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -9007,8 +8812,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Small Key (Eagle's Tower)",
-                "count": 1
+                "item_name": "Small Key (Eagle's Tower)"
               }
             }
           }
@@ -9063,8 +8867,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -9119,8 +8922,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 1
+                        "item_name": "Progressive Shield"
                       }
                     }
                   ]
@@ -9151,8 +8953,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Small Key (Eagle's Tower)",
-                "count": 1
+                "item_name": "Small Key (Eagle's Tower)"
               }
             }
           }
@@ -9183,8 +8984,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -9260,8 +9060,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 1
+                        "item_name": "Progressive Shield"
                       }
                     }
                   ]
@@ -9602,8 +9401,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -9634,8 +9432,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -9645,8 +9442,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Nightmare Key (Eagle's Tower)",
-                "count": 1
+                "item_name": "Nightmare Key (Eagle's Tower)"
               }
             }
           }
@@ -9662,8 +9458,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Nightmare Key (Eagle's Tower)",
-                "count": 1
+                "item_name": "Nightmare Key (Eagle's Tower)"
               }
             }
           },
@@ -9673,8 +9468,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -9684,8 +9478,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           }
@@ -9701,8 +9494,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -9733,8 +9525,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           },
@@ -9985,8 +9776,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Sword",
-                    "count": 1
+                    "item_name": "Progressive Sword"
                   }
                 }
               ]
@@ -10028,8 +9818,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Sword",
-                    "count": 1
+                    "item_name": "Progressive Sword"
                   }
                 }
               ]
@@ -10101,8 +9890,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Rooster",
-                    "count": 1
+                    "item_name": "Rooster"
                   }
                 }
               ]
@@ -10140,8 +9928,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -10157,8 +9944,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -10184,8 +9970,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Shovel",
-                    "count": 1
+                    "item_name": "Shovel"
                   }
                 }
               ]
@@ -10197,8 +9982,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -10230,8 +10014,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Shovel",
-                    "count": 1
+                    "item_name": "Shovel"
                   }
                 }
               ]
@@ -10290,8 +10073,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Rooster",
-                    "count": 1
+                    "item_name": "Rooster"
                   }
                 }
               ]
@@ -10389,8 +10171,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -10430,8 +10211,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Magic Powder",
-                    "count": 1
+                    "item_name": "Magic Powder"
                   }
                 }
               ]
@@ -10509,8 +10289,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -10606,8 +10385,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Magic Powder",
-                    "count": 1
+                    "item_name": "Magic Powder"
                   }
                 }
               ]
@@ -10640,8 +10418,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -10686,8 +10463,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -10713,8 +10489,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -10781,8 +10556,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -10944,8 +10718,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Nightmare Key (Color Dungeon)",
-                    "count": 1
+                    "item_name": "Nightmare Key (Color Dungeon)"
                   }
                 }
               ]
@@ -10978,8 +10751,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Nightmare Key (Color Dungeon)",
-                    "count": 1
+                    "item_name": "Nightmare Key (Color Dungeon)"
                   }
                 }
               ]
@@ -11026,8 +10798,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bananas",
-                "count": 1
+                "item_name": "Bananas"
               }
             }
           }
@@ -11059,8 +10830,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Stick",
-                "count": 1
+                "item_name": "Stick"
               }
             }
           }
@@ -11099,8 +10869,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             }
           },
@@ -11110,8 +10879,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Slime Key",
-                "count": 1
+                "item_name": "Slime Key"
               }
             }
           }
@@ -11127,8 +10895,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             }
           }
@@ -11159,8 +10926,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             }
           },
@@ -11170,8 +10936,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -11194,8 +10959,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             }
           }
@@ -11226,8 +10990,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -11368,8 +11131,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Pegasus Boots",
-                    "count": 1
+                    "item_name": "Pegasus Boots"
                   }
                 }
               ]
@@ -11446,8 +11208,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Pegasus Boots",
-                    "count": 1
+                    "item_name": "Pegasus Boots"
                   }
                 }
               ]
@@ -11817,8 +11578,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Bomb",
-                    "count": 1
+                    "item_name": "Bomb"
                   }
                 }
               ]
@@ -11850,8 +11610,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 1
+                        "item_name": "Progressive Shield"
                       }
                     }
                   ]
@@ -12025,8 +11784,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Bomb",
-                    "count": 1
+                    "item_name": "Bomb"
                   }
                 }
               ]
@@ -12079,8 +11837,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Progressive Shield",
-                        "count": 1
+                        "item_name": "Progressive Shield"
                       }
                     }
                   ]
@@ -12103,8 +11860,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           }
@@ -12135,8 +11891,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           }
@@ -12502,8 +12257,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Flippers",
-                    "count": 1
+                    "item_name": "Flippers"
                   }
                 }
               ]
@@ -12574,8 +12328,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             }
           }
@@ -12606,8 +12359,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -12638,8 +12390,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rooster",
-                "count": 1
+                "item_name": "Rooster"
               }
             }
           }
@@ -12698,8 +12449,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             }
           },
@@ -12735,8 +12485,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             }
           }
@@ -12825,8 +12574,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Ocarina",
-                    "count": 1
+                    "item_name": "Ocarina"
                   }
                 }
               ]
@@ -12853,8 +12601,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Rooster",
-                        "count": 1
+                        "item_name": "Rooster"
                       }
                     }
                   ]
@@ -12871,8 +12618,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -12914,8 +12660,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Ocarina",
-                    "count": 1
+                    "item_name": "Ocarina"
                   }
                 }
               ]
@@ -13016,8 +12761,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Bomb",
-                    "count": 1
+                    "item_name": "Bomb"
                   }
                 }
               ]
@@ -13061,8 +12805,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Bomb",
-                    "count": 1
+                    "item_name": "Bomb"
                   }
                 }
               ]
@@ -13087,8 +12830,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             }
           },
@@ -13111,8 +12853,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             }
           }
@@ -13252,8 +12993,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Shovel",
-                    "count": 1
+                    "item_name": "Shovel"
                   }
                 }
               ]
@@ -13294,8 +13034,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Shovel",
-                    "count": 1
+                    "item_name": "Shovel"
                   }
                 }
               ]
@@ -13399,8 +13138,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -13423,8 +13161,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           },
@@ -13459,8 +13196,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Small Key (Catfish's Maw)",
-                "count": 1
+                "item_name": "Small Key (Catfish's Maw)"
               }
             }
           }
@@ -13476,8 +13212,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           }
@@ -13612,8 +13347,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           },
@@ -13636,8 +13370,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Small Key (Catfish's Maw)",
-                "count": 1
+                "item_name": "Small Key (Catfish's Maw)"
               }
             }
           },
@@ -13668,8 +13401,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot",
-                    "count": 1
+                    "item_name": "Hookshot"
                   }
                 }
               ]
@@ -13726,8 +13458,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           }
@@ -13788,8 +13519,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather",
-                    "count": 1
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -13801,8 +13531,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feather",
-                "count": 1
+                "item_name": "Feather"
               }
             }
           },
@@ -13910,8 +13639,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot",
-                    "count": 1
+                    "item_name": "Hookshot"
                   }
                 }
               ]
@@ -13929,8 +13657,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           },
@@ -13957,8 +13684,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           },
@@ -14037,8 +13763,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feather",
-                "count": 1
+                "item_name": "Feather"
               }
             }
           },
@@ -14060,8 +13785,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot",
-                    "count": 1
+                    "item_name": "Hookshot"
                   }
                 }
               ]
@@ -14073,8 +13797,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           },
@@ -14084,8 +13807,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           },
@@ -14123,8 +13845,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -14154,8 +13875,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot",
-                    "count": 1
+                    "item_name": "Hookshot"
                   }
                 }
               ]
@@ -14188,8 +13908,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           }
@@ -14220,8 +13939,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           }
@@ -14335,8 +14053,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -14403,8 +14120,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           }
@@ -14435,8 +14151,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -14477,8 +14192,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Flippers",
-                            "count": 1
+                            "item_name": "Flippers"
                           }
                         }
                       ]
@@ -14486,8 +14200,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Hookshot",
-                        "count": 1
+                        "item_name": "Hookshot"
                       }
                     }
                   ]
@@ -14495,8 +14208,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Rooster",
-                    "count": 1
+                    "item_name": "Rooster"
                   }
                 }
               ]
@@ -14539,8 +14251,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Flippers",
-                            "count": 1
+                            "item_name": "Flippers"
                           }
                         }
                       ]
@@ -14548,8 +14259,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Hookshot",
-                        "count": 1
+                        "item_name": "Hookshot"
                       }
                     }
                   ]
@@ -14557,8 +14267,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Rooster",
-                    "count": 1
+                    "item_name": "Rooster"
                   }
                 }
               ]
@@ -14583,8 +14292,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -14594,8 +14302,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Face Key",
-                "count": 1
+                "item_name": "Face Key"
               }
             }
           },
@@ -14679,8 +14386,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -14704,8 +14410,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -14749,8 +14454,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Small Key (Face Shrine)",
-                "count": 1
+                "item_name": "Small Key (Face Shrine)"
               }
             }
           }
@@ -14890,8 +14594,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -14936,8 +14639,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 1
+                    "item_name": "Progressive Power Bracelet"
                   }
                 }
               ]
@@ -15055,8 +14757,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -15087,8 +14788,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -15144,8 +14844,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feather",
-                "count": 1
+                "item_name": "Feather"
               }
             }
           }
@@ -15176,8 +14875,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Feather",
-                "count": 1
+                "item_name": "Feather"
               }
             }
           }
@@ -15221,8 +14919,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Small Key (Face Shrine)",
-                "count": 1
+                "item_name": "Small Key (Face Shrine)"
               }
             }
           }
@@ -15261,8 +14958,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather",
-                    "count": 1
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -15290,8 +14986,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather",
-                    "count": 1
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -15356,8 +15051,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Pegasus Boots",
-                    "count": 1
+                    "item_name": "Pegasus Boots"
                   }
                 }
               ]
@@ -15478,8 +15172,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Pegasus Boots",
-                    "count": 1
+                    "item_name": "Pegasus Boots"
                   }
                 }
               ]
@@ -15525,8 +15218,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Hookshot",
-                        "count": 1
+                        "item_name": "Hookshot"
                       }
                     }
                   ]
@@ -15571,8 +15263,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot",
-                    "count": 1
+                    "item_name": "Hookshot"
                   }
                 }
               ]
@@ -15605,8 +15296,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -15682,8 +15372,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -15726,8 +15415,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Powder",
-                "count": 1
+                "item_name": "Magic Powder"
               }
             }
           },
@@ -15750,8 +15438,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Powder",
-                "count": 1
+                "item_name": "Magic Powder"
               }
             }
           }
@@ -15782,8 +15469,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           },
@@ -15806,8 +15492,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -15886,8 +15571,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dog Food",
-                "count": 1
+                "item_name": "Dog Food"
               }
             }
           },
@@ -15920,8 +15604,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dog Food",
-                "count": 1
+                "item_name": "Dog Food"
               }
             }
           }
@@ -15953,8 +15636,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Yoshi Doll",
-                "count": 1
+                "item_name": "Yoshi Doll"
               }
             }
           },
@@ -15977,8 +15659,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Yoshi Doll",
-                "count": 1
+                "item_name": "Yoshi Doll"
               }
             }
           }
@@ -16025,8 +15706,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -16057,8 +15737,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             }
           }
@@ -16089,8 +15768,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             }
           }
@@ -16356,8 +16034,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             }
           },
@@ -16367,8 +16044,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ribbon",
-                "count": 1
+                "item_name": "Ribbon"
               }
             }
           },
@@ -16391,8 +16067,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             }
           }
@@ -16423,8 +16098,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ribbon",
-                "count": 1
+                "item_name": "Ribbon"
               }
             }
           }
@@ -16648,8 +16322,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           },
@@ -16687,8 +16360,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather",
-                    "count": 1
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -16894,8 +16566,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bomb",
-                "count": 1
+                "item_name": "Bomb"
               }
             }
           }
@@ -16926,8 +16597,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Shield",
-                "count": 1
+                "item_name": "Progressive Shield"
               }
             }
           },
@@ -16954,8 +16624,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Shield",
-                "count": 1
+                "item_name": "Progressive Shield"
               }
             }
           }
@@ -16996,8 +16665,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather",
-                    "count": 1
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -17063,8 +16731,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather",
-                    "count": 1
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -17147,8 +16814,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather",
-                    "count": 1
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -17160,8 +16826,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Nightmare Key (Tail Cave)",
-                "count": 1
+                "item_name": "Nightmare Key (Tail Cave)"
               }
             }
           }
@@ -17177,8 +16842,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Nightmare Key (Tail Cave)",
-                "count": 1
+                "item_name": "Nightmare Key (Tail Cave)"
               }
             }
           },
@@ -17188,8 +16852,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Sword",
-                "count": 1
+                "item_name": "Progressive Sword"
               }
             }
           }
@@ -17205,8 +16868,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Sword",
-                "count": 1
+                "item_name": "Progressive Sword"
               }
             }
           }
@@ -17251,8 +16913,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -17296,8 +16957,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Power Bracelet",
-                "count": 1
+                "item_name": "Progressive Power Bracelet"
               }
             }
           }
@@ -17347,8 +17007,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Powder",
-                "count": 1
+                "item_name": "Magic Powder"
               }
             }
           },
@@ -17371,8 +17030,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Powder",
-                "count": 1
+                "item_name": "Magic Powder"
               }
             }
           }
@@ -17403,8 +17061,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Toadstool",
-                "count": 1
+                "item_name": "Toadstool"
               }
             }
           },
@@ -17427,8 +17084,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Toadstool",
-                "count": 1
+                "item_name": "Toadstool"
               }
             }
           }
@@ -19769,7 +19425,6 @@
           "display_name": "Warps"
         }
       },
-      "shops": [],
       "dungeon_item_types": {
         "MAP": 0,
         "COMPASS": 0,
@@ -26092,7 +25747,7 @@
         "TRIFORCE": "PIECE_OF_POWER"
       },
       "base_id": 10000000,
-      "world_description": "Links Awakening DX WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "After a previous adventure, Link is stranded on Koholint Island, full of mystery and familiar faces.\nGather the 8 Instruments of the Sirens to wake the Wind Fish, so that Link can go home!",
       "slot_data": {
         "world_version": "2.0.1",
         "instrument_count": 8,
@@ -26221,7 +25876,19 @@
         }
       },
       "web": {
-        "theme": "ocean"
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up Links Awakening DX for MultiWorld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "zig"
+            ]
+          }
+        ]
       },
       "world_directory": "ladx_worldgen"
     }

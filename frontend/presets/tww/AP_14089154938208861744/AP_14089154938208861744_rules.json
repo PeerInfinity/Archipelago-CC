@@ -329,6 +329,7 @@
               "type": "Event"
             },
             "locked": true,
+            "event": true,
             "bit": 64,
             "region": "The Great Sea",
             "stage_id": 8

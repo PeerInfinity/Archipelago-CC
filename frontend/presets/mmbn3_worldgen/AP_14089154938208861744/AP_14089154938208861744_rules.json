@@ -41,8 +41,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "SubPET",
-                "count": 1
+                "item_name": "SubPET"
               }
             }
           },
@@ -52,8 +51,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Needle",
-                "count": 1
+                "item_name": "Needle"
               }
             }
           },
@@ -63,8 +61,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "PETCase",
-                "count": 1
+                "item_name": "PETCase"
               }
             }
           }
@@ -76,8 +73,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "SonicWav W",
-                "count": 1
+                "item_name": "SonicWav W"
               }
             },
             "item": {
@@ -94,8 +90,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bubbler C",
-                "count": 1
+                "item_name": "Bubbler C"
               }
             },
             "item": {
@@ -112,8 +107,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Recov120 S",
-                "count": 1
+                "item_name": "Recov120 S"
               }
             },
             "item": {
@@ -1195,8 +1189,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "CSciPass",
-                    "count": 1
+                    "item_name": "CSciPass"
                   }
                 }
               ]
@@ -1220,8 +1213,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Press",
-                        "count": 1
+                        "item_name": "Press"
                       }
                     }
                   ]
@@ -1229,8 +1221,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "CYokaPas",
-                    "count": 1
+                    "item_name": "CYokaPas"
                   }
                 }
               ]
@@ -1251,8 +1242,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "CBeacPas",
-                    "count": 1
+                    "item_name": "CBeacPas"
                   }
                 }
               ]
@@ -1388,8 +1378,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "CSciPass",
-                    "count": 1
+                    "item_name": "CSciPass"
                   }
                 }
               ]
@@ -1408,8 +1397,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Needle",
-                "count": 1
+                "item_name": "Needle"
               }
             }
           },
@@ -1419,8 +1407,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "PETCase",
-                "count": 1
+                "item_name": "PETCase"
               }
             }
           }
@@ -1432,8 +1419,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shake1 S",
-                "count": 1
+                "item_name": "Shake1 S"
               }
             },
             "item": {
@@ -1589,8 +1575,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Recov30 *",
-                "count": 1
+                "item_name": "Recov30 *"
               }
             },
             "item": {
@@ -1898,8 +1883,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Press",
-                    "count": 1
+                    "item_name": "Press"
                   }
                 }
               ]
@@ -2247,8 +2231,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Press",
-                        "count": 1
+                        "item_name": "Press"
                       }
                     }
                   ]
@@ -2256,8 +2239,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "CYokaPas",
-                    "count": 1
+                    "item_name": "CYokaPas"
                   }
                 }
               ]
@@ -2278,8 +2260,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "CBeacPas",
-                    "count": 1
+                    "item_name": "CBeacPas"
                   }
                 }
               ]
@@ -2314,8 +2295,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "WWW ID",
-                "count": 1
+                "item_name": "WWW ID"
               }
             },
             "item": {
@@ -2377,8 +2357,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Press",
-                        "count": 1
+                        "item_name": "Press"
                       }
                     }
                   ]
@@ -2386,8 +2365,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "CYokaPas",
-                    "count": 1
+                    "item_name": "CYokaPas"
                   }
                 }
               ]
@@ -2406,8 +2384,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "SubPET",
-                "count": 1
+                "item_name": "SubPET"
               }
             }
           },
@@ -2417,8 +2394,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "PETCase",
-                "count": 1
+                "item_name": "PETCase"
               }
             }
           },
@@ -2442,8 +2418,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hammer",
-                    "count": 1
+                    "item_name": "Hammer"
                   }
                 }
               ]
@@ -2485,8 +2460,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "FireSwrd P",
-                "count": 1
+                "item_name": "FireSwrd P"
               }
             },
             "item": {
@@ -2893,8 +2867,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Humor",
-                "count": 1
+                "item_name": "Humor"
               }
             },
             "item": {
@@ -3380,8 +3353,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "CSciPass",
-                    "count": 1
+                    "item_name": "CSciPass"
                   }
                 }
               ]
@@ -3402,8 +3374,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "CBeacPas",
-                    "count": 1
+                    "item_name": "CBeacPas"
                   }
                 }
               ]
@@ -3431,8 +3402,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "WWW ID",
-                "count": 1
+                "item_name": "WWW ID"
               }
             },
             "item": {
@@ -3487,8 +3457,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Press",
-                "count": 1
+                "item_name": "Press"
               }
             },
             "item": {
@@ -3517,8 +3486,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "SubPET",
-                "count": 1
+                "item_name": "SubPET"
               }
             }
           },
@@ -3528,8 +3496,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Needle",
-                "count": 1
+                "item_name": "Needle"
               }
             }
           },
@@ -3580,8 +3547,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "DynaWave V",
-                "count": 1
+                "item_name": "DynaWave V"
               }
             },
             "item": {
@@ -3598,8 +3564,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "WideSwrd C",
-                "count": 1
+                "item_name": "WideSwrd C"
               }
             },
             "item": {
@@ -3616,8 +3581,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "HoleMetr H",
-                "count": 1
+                "item_name": "HoleMetr H"
               }
             },
             "item": {
@@ -3634,8 +3598,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shadow J",
-                "count": 1
+                "item_name": "Shadow J"
               }
             },
             "item": {
@@ -3652,8 +3615,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "GrabBack K",
-                "count": 1
+                "item_name": "GrabBack K"
               }
             },
             "item": {
@@ -3810,8 +3772,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Press",
-                "count": 1
+                "item_name": "Press"
               }
             },
             "item": {
@@ -4267,8 +4228,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "CSciPass",
-                    "count": 1
+                    "item_name": "CSciPass"
                   }
                 }
               ]
@@ -4292,8 +4252,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Press",
-                        "count": 1
+                        "item_name": "Press"
                       }
                     }
                   ]
@@ -4301,8 +4260,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "CYokaPas",
-                    "count": 1
+                    "item_name": "CYokaPas"
                   }
                 }
               ]
@@ -4328,8 +4286,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Press",
-                    "count": 1
+                    "item_name": "Press"
                   }
                 }
               ]
@@ -4398,8 +4355,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Press",
-                "count": 1
+                "item_name": "Press"
               }
             },
             "item": {
@@ -4430,8 +4386,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "BlckMnd",
-                "count": 1
+                "item_name": "BlckMnd"
               }
             },
             "item": {
@@ -4468,8 +4423,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "WWW ID",
-                "count": 1
+                "item_name": "WWW ID"
               }
             },
             "item": {
@@ -5042,8 +4996,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Press",
-                "count": 1
+                "item_name": "Press"
               }
             },
             "item": {
@@ -5076,8 +5029,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Press",
-                "count": 1
+                "item_name": "Press"
               }
             },
             "item": {
@@ -8414,7 +8366,6 @@
           "display_name": "Trade Quest Hinting"
         }
       },
-      "shops": [],
       "item_frequencies": {
         "Progressive Undernet Rank": 8,
         "ExpMem": 2,
@@ -8438,14 +8389,26 @@
         "10 BugFrags": 5
       },
       "rom_name": "MMBN3_ROM_NOT_GENERATED",
-      "world_description": "MegaMan Battle Network 3 WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Play as Lan and MegaMan to stop the evil organization WWW led by the nefarious\nDr. Wily in their plans to take over the Net! Collect BattleChips, Customize your Navi,\nand utilize powerful Style Changes to grow strong enough to take on the greatest\nthreat the Internet has ever faced!",
       "slot_data": {
         "extra_ranks": 0,
         "include_jobs": 1,
         "trade_quest_hinting": 2
       },
       "web": {
-        "theme": "ice"
+        "theme": "ice",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the MegaMan Battle Network 3 Randomizer connected to an Archipelago Multiworld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "digiholic"
+            ]
+          }
+        ]
       },
       "world_directory": "mmbn3_worldgen"
     }

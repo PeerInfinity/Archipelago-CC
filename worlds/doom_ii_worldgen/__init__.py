@@ -203,15 +203,24 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class DOOMIIWorldGenWeb(WebWorld):
     """Web interface for DOOM II WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "dirt"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the DOOM II randomizer connected to an Archipelago Multiworld",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["Daivuk"]
+        )
+    ]
 
 
 class DOOMIIWorldGenWorld(RuleWorldMixin, World):
     """
-    DOOM II WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Doom II, also known as Doom II: Hell on Earth, is a first-person shooter game by id Software.
+    It was released for MS-DOS in 1994.
+    Compared to its predecessor, Doom II features larger levels, new enemies, a new "super shotgun" weapon
     """
 
     game: ClassVar[str] = "DOOM II WorldGen"
@@ -703,13 +712,11 @@ class DOOMIIWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.included_episodes = [1, 1, 1, 0]
         self.location_count = 423
         self.starting_levels = ['Entryway (MAP01)', 'The Factory (MAP12)', 'Nirvana (MAP21)']
         self.world_description = 'Doom II, also known as Doom II: Hell on Earth, is a first-person shooter game by id Software.\nIt was released for MS-DOS in 1994.\nCompared to its predecessor, Doom II features larger levels, new enemies, a new "super shotgun" weapon'
         self.slot_data = types.SimpleNamespace(difficulty=2, random_monsters=2, random_pickups=1, random_music=0, flip_levels=0, allow_death_logic=0, pro=0, death_link=0, reset_level_on_death=1, episode1=1, episode2=1, episode3=1, episode4=0, ammo1start=200, ammo2start=50, ammo3start=300, ammo4start=50, ammo1add=200, ammo2add=50, ammo3add=300, ammo4add=50)
-        self.web = types.SimpleNamespace(theme='dirt', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the DOOM II randomizer connected to an Archipelago Multiworld', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['Daivuk']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -803,4 +810,26 @@ class DOOMIIWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "difficulty": 2,
+            "random_monsters": 2,
+            "random_pickups": 1,
+            "random_music": 0,
+            "flip_levels": 0,
+            "allow_death_logic": 0,
+            "pro": 0,
+            "death_link": 0,
+            "reset_level_on_death": 1,
+            "episode1": 1,
+            "episode2": 1,
+            "episode3": 1,
+            "episode4": 0,
+            "ammo1start": 200,
+            "ammo2start": 50,
+            "ammo3start": 300,
+            "ammo4start": 50,
+            "ammo1add": 200,
+            "ammo2add": 50,
+            "ammo3add": 300,
+            "ammo4add": 50,
+        }

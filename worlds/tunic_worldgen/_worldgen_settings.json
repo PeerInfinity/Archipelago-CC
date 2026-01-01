@@ -45,7 +45,8 @@
       "start_with_sword": false,
       "sword_progression": true
     },
-    "world_directory": "tunic"
+    "world_directory": "tunic",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "using_ut": false,

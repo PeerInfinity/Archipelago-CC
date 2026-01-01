@@ -44,7 +44,8 @@
       "strict_cap_requirements": true,
       "strict_move_requirements": true
     },
-    "world_directory": "sm64ex"
+    "world_directory": "sm64ex",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "move_rando_bitvec": 0,

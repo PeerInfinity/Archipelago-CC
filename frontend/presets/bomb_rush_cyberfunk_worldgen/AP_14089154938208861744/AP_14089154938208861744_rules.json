@@ -2024,8 +2024,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2889,8 +2889,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3469,8 +3469,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4097,8 +4097,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4863,8 +4863,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       }

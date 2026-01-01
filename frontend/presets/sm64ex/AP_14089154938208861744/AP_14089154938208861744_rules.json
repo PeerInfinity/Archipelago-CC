@@ -102,21 +102,13 @@
             "name": "Menu -> Basement",
             "connected_region": "Basement",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Basement Key"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Key"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Basement Key",
+                  "Progressive Key"
+                ]
+              }
             }
           },
           {
@@ -337,21 +329,13 @@
             "name": "BoB: Mario Wings to the Sky",
             "id": 3626004,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cannon Unlock BoB"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Wing Cap"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Cannon Unlock BoB",
+                  "Wing Cap"
+                ]
+              }
             },
             "item": {
               "name": "Power Star",
@@ -2219,21 +2203,10 @@
             "name": "WDW: Quick Race Through Downtown!",
             "id": 3626075,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Vanish Cap"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Vanish Cap"
-                  }
-                }
-              ]
+              "rule": "Has",
+              "args": {
+                "item_name": "Vanish Cap"
+              }
             },
             "item": {
               "name": "Wing Cap",

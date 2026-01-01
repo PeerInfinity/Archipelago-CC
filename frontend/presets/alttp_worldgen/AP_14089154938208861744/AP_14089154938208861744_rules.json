@@ -73,8 +73,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Flippers",
-                    "count": 1
+                    "item_name": "Flippers"
                   }
                 }
               ]
@@ -157,8 +156,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hammer",
-                "count": 1
+                "item_name": "Hammer"
               }
             }
           },
@@ -182,8 +180,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -243,8 +240,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -254,8 +250,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             }
           },
@@ -286,8 +281,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Book of Mudora",
-                "count": 1
+                "item_name": "Book of Mudora"
               }
             }
           },
@@ -334,8 +328,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Activated Flute",
-                "count": 1
+                "item_name": "Activated Flute"
               }
             }
           },
@@ -352,8 +345,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Activated Flute",
-                    "count": 1
+                    "item_name": "Activated Flute"
                   }
                 }
               ]
@@ -422,8 +414,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Hammer",
-                            "count": 1
+                            "item_name": "Hammer"
                           }
                         }
                       ]
@@ -437,8 +428,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -557,8 +547,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             }
           },
@@ -568,8 +557,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           },
@@ -579,8 +567,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             }
           },
@@ -648,8 +635,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Beat Agahnim 1",
-                "count": 1
+                "item_name": "Beat Agahnim 1"
               }
             }
           }
@@ -689,8 +675,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             },
             "item": {
@@ -707,8 +692,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Open Floodgate",
-                "count": 1
+                "item_name": "Open Floodgate"
               }
             },
             "item": {
@@ -725,8 +709,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pick Up Purple Chest",
-                "count": 1
+                "item_name": "Pick Up Purple Chest"
               }
             },
             "item": {
@@ -743,8 +726,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flute",
-                "count": 1
+                "item_name": "Flute"
               }
             },
             "item": {
@@ -753,7 +735,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -946,8 +929,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flippers",
-                "count": 1
+                "item_name": "Flippers"
               }
             },
             "item": {
@@ -1005,8 +987,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             }
           },
@@ -1073,7 +1054,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Floodgate Chest",
@@ -1402,8 +1384,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Green Pendant",
-                "count": 1
+                "item_name": "Green Pendant"
               }
             },
             "item": {
@@ -1527,8 +1508,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Return Smith",
-                "count": 1
+                "item_name": "Return Smith"
               }
             },
             "item": {
@@ -1554,8 +1534,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Get Frog",
-                    "count": 1
+                    "item_name": "Get Frog"
                   }
                 }
               ]
@@ -1566,7 +1545,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1603,8 +1583,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Powder",
-                "count": 1
+                "item_name": "Magic Powder"
               }
             },
             "item": {
@@ -2065,8 +2044,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             },
             "item": {
@@ -2097,8 +2075,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mushroom",
-                "count": 1
+                "item_name": "Mushroom"
               }
             },
             "item": {
@@ -2149,7 +2126,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2365,8 +2343,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Big Key (Desert Palace)",
-                "count": 1
+                "item_name": "Big Key (Desert Palace)"
               }
             },
             "item": {
@@ -2383,8 +2360,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pegasus Boots",
-                "count": 1
+                "item_name": "Pegasus Boots"
               }
             },
             "item": {
@@ -2593,8 +2569,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Big Key (Desert Palace)",
-                    "count": 1
+                    "item_name": "Big Key (Desert Palace)"
                   }
                 }
               ]
@@ -2627,8 +2602,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Big Key (Desert Palace)",
-                    "count": 1
+                    "item_name": "Big Key (Desert Palace)"
                   }
                 }
               ]
@@ -2639,7 +2613,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2675,8 +2650,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Big Key (Eastern Palace)",
-                "count": 1
+                "item_name": "Big Key (Eastern Palace)"
               }
             },
             "item": {
@@ -2707,8 +2681,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lamp",
-                "count": 1
+                "item_name": "Lamp"
               }
             },
             "item": {
@@ -2877,7 +2850,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3017,8 +2991,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lamp",
-                "count": 1
+                "item_name": "Lamp"
               }
             }
           }
@@ -3114,8 +3087,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Big Key (Hyrule Castle)",
-                    "count": 1
+                    "item_name": "Big Key (Hyrule Castle)"
                   }
                 }
               ]
@@ -3283,8 +3255,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lamp",
-                "count": 1
+                "item_name": "Lamp"
               }
             },
             "item": {
@@ -3359,8 +3330,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Lamp",
-                    "count": 1
+                    "item_name": "Lamp"
                   }
                 }
               ]
@@ -3479,8 +3449,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Lamp",
-                    "count": 1
+                    "item_name": "Lamp"
                   }
                 }
               ]
@@ -3583,8 +3552,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Lamp",
-                    "count": 1
+                    "item_name": "Lamp"
                   }
                 }
               ]
@@ -3625,8 +3593,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Lamp",
-                    "count": 1
+                    "item_name": "Lamp"
                   }
                 }
               ]
@@ -3658,7 +3625,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3672,8 +3640,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lamp",
-                "count": 1
+                "item_name": "Lamp"
               }
             }
           },
@@ -3692,8 +3659,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lamp",
-                "count": 1
+                "item_name": "Lamp"
               }
             },
             "item": {
@@ -3723,8 +3689,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lamp",
-                "count": 1
+                "item_name": "Lamp"
               }
             }
           }
@@ -3748,8 +3713,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lamp",
-                "count": 1
+                "item_name": "Lamp"
               }
             }
           }
@@ -3815,8 +3779,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           },
@@ -3840,8 +3803,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lamp",
-                "count": 1
+                "item_name": "Lamp"
               }
             }
           },
@@ -3851,8 +3813,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lamp",
-                "count": 1
+                "item_name": "Lamp"
               }
             }
           }
@@ -3961,8 +3922,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           },
@@ -4338,8 +4298,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hammer",
-                "count": 1
+                "item_name": "Hammer"
               }
             }
           },
@@ -4370,8 +4329,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hammer",
-                    "count": 1
+                    "item_name": "Hammer"
                   }
                 }
               ]
@@ -4566,8 +4524,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hammer",
-                "count": 1
+                "item_name": "Hammer"
               }
             }
           },
@@ -4650,8 +4607,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Small Key (Tower of Hera)",
-                    "count": 1
+                    "item_name": "Small Key (Tower of Hera)"
                   }
                 }
               ]
@@ -4676,8 +4632,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Silver Bow",
-                            "count": 1
+                            "item_name": "Silver Bow"
                           }
                         }
                       ]
@@ -4704,8 +4659,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Big Key (Tower of Hera)",
-                    "count": 1
+                    "item_name": "Big Key (Tower of Hera)"
                   }
                 }
               ]
@@ -4799,8 +4753,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Big Key (Tower of Hera)",
-                "count": 1
+                "item_name": "Big Key (Tower of Hera)"
               }
             },
             "item": {
@@ -4837,7 +4790,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4912,8 +4866,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             }
           },
@@ -4936,8 +4889,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           },
@@ -4968,8 +4920,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Beat Agahnim 2",
-                "count": 1
+                "item_name": "Beat Agahnim 2"
               }
             }
           },
@@ -5000,8 +4951,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -5045,8 +4995,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -5099,8 +5048,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Hammer",
-                        "count": 1
+                        "item_name": "Hammer"
                       }
                     }
                   ]
@@ -5108,8 +5056,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -5183,8 +5130,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -5210,8 +5156,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -5223,8 +5168,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           },
@@ -5234,8 +5178,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           },
@@ -5292,8 +5235,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           }
@@ -5305,8 +5247,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -5323,8 +5264,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -5425,8 +5365,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           }
@@ -5463,8 +5402,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -5490,8 +5428,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -5532,8 +5469,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -5559,8 +5495,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -5586,8 +5521,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -5613,8 +5547,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -5680,8 +5613,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -5707,8 +5639,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             }
           },
@@ -5751,8 +5682,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -5791,8 +5721,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -5841,8 +5770,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -5853,7 +5781,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5894,8 +5823,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           },
@@ -5925,8 +5853,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -5940,8 +5867,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Return Smith",
-                "count": 1
+                "item_name": "Return Smith"
               }
             },
             "item": {
@@ -5950,7 +5876,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5971,8 +5898,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           },
@@ -6053,8 +5979,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -6071,8 +5996,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -6096,8 +6020,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -6121,8 +6044,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -6146,8 +6068,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -6196,8 +6117,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -6243,8 +6163,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           }
@@ -6290,8 +6209,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             }
           },
@@ -6322,8 +6240,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             }
           },
@@ -6371,8 +6288,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -6391,8 +6307,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           },
@@ -6402,8 +6317,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           },
@@ -6413,8 +6327,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           },
@@ -6424,8 +6337,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           },
@@ -6457,8 +6369,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -6475,8 +6386,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -6513,8 +6423,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           },
@@ -6582,8 +6491,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -6595,8 +6503,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           },
@@ -6623,8 +6530,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -6657,8 +6563,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           },
@@ -6668,8 +6573,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           }
@@ -6686,8 +6590,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           },
@@ -6754,8 +6657,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -6772,8 +6674,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -6845,8 +6746,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Cape",
-                            "count": 1
+                            "item_name": "Cape"
                           }
                         }
                       ]
@@ -6887,8 +6787,7 @@
                             {
                               "rule": "Has",
                               "args": {
-                                "item_name": "Pegasus Boots",
-                                "count": 1
+                                "item_name": "Pegasus Boots"
                               }
                             }
                           ]
@@ -6896,8 +6795,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Cane of Byrna",
-                            "count": 1
+                            "item_name": "Cane of Byrna"
                           }
                         }
                       ]
@@ -6935,8 +6833,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             }
           },
@@ -6953,8 +6850,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -7020,8 +6916,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -7102,8 +6997,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Magic Mirror",
-                "count": 1
+                "item_name": "Magic Mirror"
               }
             }
           }
@@ -7211,8 +7105,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Cane of Somaria",
-                        "count": 1
+                        "item_name": "Cane of Somaria"
                       }
                     }
                   ]
@@ -7220,8 +7113,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hammer",
-                    "count": 1
+                    "item_name": "Hammer"
                   }
                 }
               ]
@@ -7274,8 +7166,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Small Key (Swamp Palace)",
-                "count": 1
+                "item_name": "Small Key (Swamp Palace)"
               }
             }
           }
@@ -7287,8 +7178,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7321,8 +7211,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hammer",
-                    "count": 1
+                    "item_name": "Hammer"
                   }
                 }
               ]
@@ -7343,8 +7232,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -7363,8 +7251,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7391,8 +7278,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -7427,8 +7313,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot",
-                    "count": 1
+                    "item_name": "Hookshot"
                   }
                 }
               ]
@@ -7473,8 +7358,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7511,8 +7395,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7536,8 +7419,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7554,8 +7436,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7579,8 +7460,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7597,8 +7477,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7615,8 +7494,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7633,8 +7511,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7661,8 +7538,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -7691,8 +7567,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -7703,7 +7578,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -7717,8 +7593,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Big Key (Thieves Town)",
-                "count": 1
+                "item_name": "Big Key (Thieves Town)"
               }
             }
           },
@@ -7737,8 +7612,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7755,8 +7629,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7773,8 +7646,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7791,8 +7663,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7847,8 +7718,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -7899,8 +7769,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7918,8 +7787,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Small Key (Thieves Town)",
-                  "Moon Pearl"
+                  "Moon Pearl",
+                  "Small Key (Thieves Town)"
                 ]
               }
             },
@@ -7938,8 +7807,8 @@
               "rule": "HasAll",
               "args": {
                 "items": [
-                  "Small Key (Thieves Town)",
-                  "Moon Pearl"
+                  "Moon Pearl",
+                  "Small Key (Thieves Town)"
                 ]
               }
             },
@@ -7964,8 +7833,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7982,8 +7850,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -7992,7 +7859,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -8044,8 +7912,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8078,8 +7945,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -8093,8 +7959,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8127,8 +7992,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -8140,8 +8004,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             }
           }
@@ -8153,8 +8016,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8171,8 +8033,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8195,8 +8056,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             }
           }
@@ -8243,8 +8103,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             }
           }
@@ -8277,8 +8136,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8295,8 +8153,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8333,8 +8190,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Fire Rod",
-                    "count": 1
+                    "item_name": "Fire Rod"
                   }
                 }
               ]
@@ -8355,8 +8211,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8380,8 +8235,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8408,8 +8262,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -8438,8 +8291,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -8450,7 +8302,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -8475,8 +8328,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Small Key (Ice Palace)",
-                    "count": 1
+                    "item_name": "Small Key (Ice Palace)"
                   }
                 }
               ]
@@ -8504,8 +8356,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -8572,8 +8423,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8621,8 +8471,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot",
-                    "count": 1
+                    "item_name": "Hookshot"
                   }
                 }
               ]
@@ -8654,8 +8503,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Cane of Somaria",
-                            "count": 1
+                            "item_name": "Cane of Somaria"
                           }
                         }
                       ]
@@ -8689,8 +8537,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8707,8 +8554,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8745,8 +8591,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8776,8 +8621,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hammer",
-                    "count": 1
+                    "item_name": "Hammer"
                   }
                 }
               ]
@@ -8791,8 +8635,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8816,8 +8659,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8834,8 +8676,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8852,8 +8693,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8877,8 +8717,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8895,8 +8734,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8905,7 +8743,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -9035,8 +8874,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Big Key (Misery Mire)",
-                "count": 1
+                "item_name": "Big Key (Misery Mire)"
               }
             }
           }
@@ -9099,8 +8937,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -9150,8 +8987,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -9170,8 +9006,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -9217,8 +9052,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -9237,8 +9071,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -9268,8 +9101,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Big Key (Misery Mire)",
-                        "count": 1
+                        "item_name": "Big Key (Misery Mire)"
                       }
                     }
                   ]
@@ -9277,8 +9109,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -9333,8 +9164,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -9367,8 +9197,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -9394,8 +9223,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -9450,8 +9278,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -9468,8 +9295,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -9478,7 +9304,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -9505,8 +9332,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             }
           }
@@ -9523,8 +9349,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Small Key (Turtle Rock)",
-                "count": 1
+                "item_name": "Small Key (Turtle Rock)"
               }
             }
           },
@@ -9534,8 +9359,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Cane of Somaria",
-                "count": 1
+                "item_name": "Cane of Somaria"
               }
             }
           }
@@ -9669,8 +9493,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -9767,8 +9590,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -9793,8 +9615,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             }
           },
@@ -9857,8 +9678,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -9891,8 +9711,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -9926,8 +9745,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -9986,8 +9804,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -9999,8 +9816,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             }
           }
@@ -10072,8 +9888,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -10151,8 +9966,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             }
           },
@@ -10195,8 +10009,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -10223,8 +10036,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -10256,8 +10068,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -10289,8 +10100,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -10322,8 +10132,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -10349,8 +10158,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -10367,8 +10175,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -10377,7 +10184,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -10391,8 +10199,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Small Key (Palace of Darkness)",
-                "count": 1
+                "item_name": "Small Key (Palace of Darkness)"
               }
             }
           },
@@ -10428,8 +10235,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -10548,8 +10354,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -10566,8 +10371,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -10591,8 +10395,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -10615,8 +10418,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hammer",
-                "count": 1
+                "item_name": "Hammer"
               }
             }
           }
@@ -10635,8 +10437,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -10655,8 +10456,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -10733,8 +10533,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Lamp",
-                    "count": 1
+                    "item_name": "Lamp"
                   }
                 }
               ]
@@ -10748,8 +10547,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -10813,8 +10611,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -10831,8 +10628,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -10885,8 +10681,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -10910,8 +10705,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -10928,8 +10722,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -10938,7 +10731,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -10952,8 +10746,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Cane of Somaria",
-                "count": 1
+                "item_name": "Cane of Somaria"
               }
             }
           },
@@ -10975,8 +10768,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hammer",
-                    "count": 1
+                    "item_name": "Hammer"
                   }
                 }
               ]
@@ -10995,8 +10787,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Big Key (Ganons Tower)",
-                    "count": 1
+                    "item_name": "Big Key (Ganons Tower)"
                   }
                 }
               ]
@@ -11037,8 +10828,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -11055,8 +10845,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -11073,8 +10862,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -11107,8 +10895,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Fire Rod",
-                    "count": 1
+                    "item_name": "Fire Rod"
                   }
                 }
               ]
@@ -11122,8 +10909,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -11169,8 +10955,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Cane of Somaria",
-                        "count": 1
+                        "item_name": "Cane of Somaria"
                       }
                     }
                   ]
@@ -11217,8 +11002,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Cane of Somaria",
-                        "count": 1
+                        "item_name": "Cane of Somaria"
                       }
                     }
                   ]
@@ -11265,8 +11049,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Cane of Somaria",
-                        "count": 1
+                        "item_name": "Cane of Somaria"
                       }
                     }
                   ]
@@ -11313,8 +11096,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Cane of Somaria",
-                        "count": 1
+                        "item_name": "Cane of Somaria"
                       }
                     }
                   ]
@@ -11361,8 +11143,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Cane of Somaria",
-                        "count": 1
+                        "item_name": "Cane of Somaria"
                       }
                     }
                   ]
@@ -11459,8 +11240,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot",
-                    "count": 1
+                    "item_name": "Hookshot"
                   }
                 }
               ]
@@ -11564,8 +11344,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Cane of Somaria",
-                        "count": 1
+                        "item_name": "Cane of Somaria"
                       }
                     }
                   ]
@@ -11573,8 +11352,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -11600,8 +11378,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -11647,8 +11424,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -11696,8 +11472,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -11730,8 +11505,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -11764,8 +11538,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -11798,8 +11571,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -11825,8 +11597,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -11870,8 +11641,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -11897,8 +11667,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -11924,8 +11693,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -12004,8 +11772,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -12022,8 +11789,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -12054,8 +11820,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -12089,8 +11854,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -12115,8 +11879,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hookshot",
-                "count": 1
+                "item_name": "Hookshot"
               }
             }
           }
@@ -12134,8 +11897,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -12152,8 +11914,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Moon Pearl",
-                "count": 1
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -12162,7 +11923,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -12183,8 +11945,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Moon Pearl",
-                    "count": 1
+                    "item_name": "Moon Pearl"
                   }
                 }
               ]
@@ -12231,7 +11992,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -16365,7 +16127,7 @@
       "dark_world_light_cone": false,
       "save_and_quit_from_boss": true,
       "rupoor_cost": 10,
-      "world_description": "A Link to the Past WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "The Legend of Zelda: A Link to the Past is an action/adventure game. Take on the role of\nLink, a boy who is destined to save the land of Hyrule. Delve through three palaces and nine\ndungeons on your quest to rescue the descendents of the seven wise men and defeat the evil\nGanon!",
       "slot_data": {
         "crystals_needed_for_gt": 7,
         "crystals_needed_for_ganon": 7,
@@ -16400,7 +16162,100 @@
         "tr_medalion": "Ether"
       },
       "web": {
-        "theme": "grass"
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "English",
+            "file_name": "multiworld_en.md",
+            "link": "multiworld/en",
+            "authors": [
+              "Farrak Kilhn",
+              "Berserker"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "Deutsch",
+            "file_name": "multiworld_de.md",
+            "link": "multiworld/de",
+            "authors": [
+              "Fischfilet"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "Espa\u00f1ol",
+            "file_name": "multiworld_es.md",
+            "link": "multiworld/es",
+            "authors": [
+              "Edos"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago ALttP Software on your computer. This guide covers single-player, multiworld, and related software.",
+            "language": "Fran\u00e7ais",
+            "file_name": "multiworld_fr.md",
+            "link": "multiworld/fr",
+            "authors": [
+              "Coxla"
+            ]
+          },
+          {
+            "name": "MSU-1 Setup Guide",
+            "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
+            "language": "English",
+            "file_name": "msu1_en.md",
+            "link": "msu1/en",
+            "authors": [
+              "Farrak Kilhn"
+            ]
+          },
+          {
+            "name": "MSU-1 Setup Guide",
+            "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
+            "language": "Espa\u00f1ol",
+            "file_name": "msu1_es.md",
+            "link": "msu1/es",
+            "authors": [
+              "Edos"
+            ]
+          },
+          {
+            "name": "MSU-1 Setup Guide",
+            "description": "A guide to setting up MSU-1, which allows for custom in-game music.",
+            "language": "Fran\u00e7ais",
+            "file_name": "msu1_fr.md",
+            "link": "msu1/fr",
+            "authors": [
+              "Coxla"
+            ]
+          },
+          {
+            "name": "Plando Guide",
+            "description": "A guide to creating Multiworld Plandos with LTTP",
+            "language": "English",
+            "file_name": "plando_en.md",
+            "link": "plando/en",
+            "authors": [
+              "Berserker"
+            ]
+          },
+          {
+            "name": "'OOF' Sound Replacement",
+            "description": "A guide to customizing Link's 'oof' sound",
+            "language": "English",
+            "file_name": "oof_sound_en.md",
+            "link": "oof_sound/en",
+            "authors": [
+              "Nyx Edelstein"
+            ]
+          }
+        ]
       },
       "world_directory": "alttp_worldgen"
     }

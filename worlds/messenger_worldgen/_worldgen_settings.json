@@ -32,7 +32,8 @@
       "total_seals": 45,
       "traps": false
     },
-    "world_directory": "messenger"
+    "world_directory": "messenger",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "shop_prices": {

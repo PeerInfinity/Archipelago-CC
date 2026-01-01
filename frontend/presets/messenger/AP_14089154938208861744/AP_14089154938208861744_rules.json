@@ -761,7 +761,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -960,7 +961,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "parent": "Autumn Hills"
@@ -2588,7 +2590,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "parent": "Howling Grotto"
@@ -3418,7 +3421,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "parent": "Searing Crags"
@@ -3943,7 +3947,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "parent": "Glacial Peak"
@@ -5613,7 +5618,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "parent": "Riviere Turquoise"
@@ -6307,7 +6313,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "parent": "Sunken Shrine"

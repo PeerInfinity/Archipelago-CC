@@ -122,8 +122,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Boss 1 Defeated",
-                    "count": 1
+                    "item_name": "Boss 1 Defeated"
                   }
                 }
               ]
@@ -272,8 +271,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -318,8 +317,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -345,8 +343,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -354,8 +351,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Heart Container",
-                        "count": 1
+                        "item_name": "Heart Container"
                       }
                     }
                   ]
@@ -407,8 +403,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -434,8 +429,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -443,8 +437,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Heart Container",
-                        "count": 1
+                        "item_name": "Heart Container"
                       }
                     }
                   ]
@@ -496,8 +489,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -523,8 +515,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -532,8 +523,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Heart Container",
-                        "count": 1
+                        "item_name": "Heart Container"
                       }
                     }
                   ]
@@ -585,8 +575,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -612,8 +601,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -621,8 +609,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Heart Container",
-                        "count": 1
+                        "item_name": "Heart Container"
                       }
                     }
                   ]
@@ -674,8 +661,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -701,8 +687,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -710,8 +695,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Heart Container",
-                        "count": 1
+                        "item_name": "Heart Container"
                       }
                     }
                   ]
@@ -719,8 +703,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Boss 2 Defeated",
-                    "count": 1
+                    "item_name": "Boss 2 Defeated"
                   }
                 }
               ]
@@ -770,8 +753,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -797,8 +779,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -806,8 +787,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Heart Container",
-                        "count": 1
+                        "item_name": "Heart Container"
                       }
                     }
                   ]
@@ -859,8 +839,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -886,8 +865,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -895,8 +873,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Heart Container",
-                        "count": 1
+                        "item_name": "Heart Container"
                       }
                     }
                   ]
@@ -948,8 +925,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -975,8 +951,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -984,8 +959,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Heart Container",
-                        "count": 1
+                        "item_name": "Heart Container"
                       }
                     }
                   ]
@@ -1037,8 +1011,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1064,8 +1037,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -1073,8 +1045,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Heart Container",
-                        "count": 1
+                        "item_name": "Heart Container"
                       }
                     }
                   ]
@@ -1126,8 +1097,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1153,8 +1123,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -1162,8 +1131,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Heart Container",
-                        "count": 1
+                        "item_name": "Heart Container"
                       }
                     }
                   ]
@@ -1215,8 +1183,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1242,8 +1209,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -1251,8 +1217,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Heart Container",
-                        "count": 1
+                        "item_name": "Heart Container"
                       }
                     }
                   ]
@@ -1304,8 +1269,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1331,8 +1295,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -1340,8 +1303,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Heart Container",
-                        "count": 1
+                        "item_name": "Heart Container"
                       }
                     }
                   ]
@@ -1386,8 +1348,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1413,8 +1374,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -1422,8 +1382,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Heart Container",
-                        "count": 1
+                        "item_name": "Heart Container"
                       }
                     }
                   ]
@@ -1450,8 +1409,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1496,8 +1455,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1523,8 +1481,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -1585,8 +1542,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1612,8 +1568,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -1674,8 +1629,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1701,8 +1655,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -1763,8 +1716,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1790,8 +1742,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -1852,8 +1803,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1879,8 +1829,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -1897,8 +1846,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Boss 3 Defeated",
-                    "count": 1
+                    "item_name": "Boss 3 Defeated"
                   }
                 }
               ]
@@ -1948,8 +1896,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1975,8 +1922,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -2037,8 +1983,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2064,8 +2009,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -2126,8 +2070,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2153,8 +2096,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -2215,8 +2157,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2242,8 +2183,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -2304,8 +2244,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2331,8 +2270,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -2393,8 +2331,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2420,8 +2357,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -2482,8 +2418,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2509,8 +2444,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -2571,8 +2505,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2598,8 +2531,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -2660,8 +2592,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2687,8 +2618,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -2742,8 +2672,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2769,8 +2698,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -2806,8 +2734,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2882,8 +2810,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2909,8 +2836,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -3001,8 +2927,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -3028,8 +2953,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -3046,8 +2970,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -3127,8 +3050,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -3154,8 +3076,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -3198,8 +3119,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Magical Rod",
-                        "count": 1
+                        "item_name": "Magical Rod"
                       }
                     }
                   ]
@@ -3265,8 +3185,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -3292,8 +3211,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -3310,8 +3228,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -3343,8 +3260,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Magical Rod",
-                        "count": 1
+                        "item_name": "Magical Rod"
                       }
                     }
                   ]
@@ -3410,8 +3326,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -3437,8 +3352,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -3538,8 +3452,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -3565,8 +3478,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -3657,8 +3569,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -3684,8 +3595,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -3776,8 +3686,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -3803,8 +3712,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -3895,8 +3803,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -3922,8 +3829,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -3940,8 +3846,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -4014,8 +3919,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -4041,8 +3945,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -4078,8 +3981,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4145,8 +4048,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -4172,8 +4074,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -4190,8 +4091,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -4262,8 +4162,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -4289,8 +4188,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -4307,8 +4205,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -4379,8 +4276,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -4406,8 +4302,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -4424,8 +4319,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -4496,8 +4390,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -4523,8 +4416,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -4615,8 +4507,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -4642,8 +4533,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -4735,8 +4625,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -4762,8 +4651,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -4780,8 +4668,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -4852,8 +4739,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -4879,8 +4765,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -4897,8 +4782,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -4969,8 +4853,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -4996,8 +4879,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -5014,8 +4896,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -5071,8 +4952,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Bow",
-                            "count": 1
+                            "item_name": "Bow"
                           }
                         }
                       ]
@@ -5117,8 +4997,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -5144,8 +5023,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -5162,8 +5040,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -5234,8 +5111,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -5261,8 +5137,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -5279,8 +5154,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -5336,8 +5210,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Bow",
-                            "count": 1
+                            "item_name": "Bow"
                           }
                         }
                       ]
@@ -5382,8 +5255,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -5409,8 +5281,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -5427,8 +5298,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -5499,8 +5369,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -5526,8 +5395,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -5544,8 +5412,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -5616,8 +5483,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -5643,8 +5509,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -5661,8 +5526,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -5733,8 +5597,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -5760,8 +5623,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -5778,8 +5640,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -5850,8 +5711,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -5877,8 +5737,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -5895,8 +5754,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -5960,8 +5818,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -5987,8 +5844,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -6018,8 +5874,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -6031,8 +5886,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6098,8 +5953,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -6125,8 +5979,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -6143,8 +5996,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -6215,8 +6067,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -6242,8 +6093,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -6260,8 +6110,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -6332,8 +6181,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -6359,8 +6207,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -6377,8 +6224,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -6449,8 +6295,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -6476,8 +6321,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -6575,8 +6419,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -6602,8 +6445,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -6702,8 +6544,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -6729,8 +6570,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -6747,8 +6587,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -6819,8 +6658,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -6846,8 +6684,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -6864,8 +6701,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -6936,8 +6772,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -6963,8 +6798,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -6981,8 +6815,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -7053,8 +6886,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -7080,8 +6912,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -7098,8 +6929,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -7170,8 +7000,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -7197,8 +7026,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -7215,8 +7043,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -7287,8 +7114,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -7314,8 +7140,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -7332,8 +7157,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -7404,8 +7228,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -7431,8 +7254,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -7449,8 +7271,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -7514,8 +7335,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -7541,8 +7361,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -7572,8 +7391,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -7585,8 +7403,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7652,8 +7470,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -7679,8 +7496,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -7772,8 +7588,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -7799,8 +7614,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -7892,8 +7706,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -7919,8 +7732,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -8011,8 +7823,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -8038,8 +7849,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -8131,8 +7941,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -8158,8 +7967,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -8252,8 +8060,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -8279,8 +8086,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -8371,8 +8177,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -8398,8 +8203,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -8491,8 +8295,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -8518,8 +8321,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -8610,8 +8412,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -8637,8 +8438,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -8729,8 +8529,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -8756,8 +8555,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -8848,8 +8646,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -8875,8 +8672,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -8967,8 +8763,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -8994,8 +8789,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -9086,8 +8880,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -9113,8 +8906,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -9206,8 +8998,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -9233,8 +9024,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -9326,8 +9116,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -9353,8 +9142,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -9446,8 +9234,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -9473,8 +9260,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -9565,8 +9351,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -9592,8 +9377,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -9684,8 +9468,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -9711,8 +9494,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -9803,8 +9585,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -9830,8 +9611,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -9916,8 +9696,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -9943,8 +9722,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -9989,8 +9767,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -10063,8 +9841,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -10090,8 +9867,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -10203,8 +9979,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -10230,8 +10005,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -10248,8 +10022,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -10327,8 +10100,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -10354,8 +10126,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -10372,8 +10143,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -10451,8 +10221,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -10478,8 +10247,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -10496,8 +10264,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -10536,8 +10303,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Magical Rod",
-                        "count": 1
+                        "item_name": "Magical Rod"
                       }
                     }
                   ]
@@ -10594,8 +10360,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -10621,8 +10386,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -10639,8 +10403,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -10679,8 +10442,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Magical Rod",
-                        "count": 1
+                        "item_name": "Magical Rod"
                       }
                     }
                   ]
@@ -10737,8 +10499,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -10764,8 +10525,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -10863,8 +10623,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -10890,8 +10649,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -10908,8 +10666,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -10987,8 +10744,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -11014,8 +10770,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -11032,8 +10787,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -11096,8 +10850,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Bow",
-                            "count": 1
+                            "item_name": "Bow"
                           }
                         }
                       ]
@@ -11142,8 +10895,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -11169,8 +10921,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -11187,8 +10938,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -11251,8 +11001,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Bow",
-                            "count": 1
+                            "item_name": "Bow"
                           }
                         }
                       ]
@@ -11297,8 +11046,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -11324,8 +11072,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -11342,8 +11089,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -11421,8 +11167,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -11448,8 +11193,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -11466,8 +11210,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -11545,8 +11288,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -11572,8 +11314,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -11590,8 +11331,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -11669,8 +11409,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -11696,8 +11435,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -11809,8 +11547,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -11836,8 +11573,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -11854,8 +11590,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -11918,8 +11653,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Bow",
-                            "count": 1
+                            "item_name": "Bow"
                           }
                         }
                       ]
@@ -11964,8 +11698,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -11991,8 +11724,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -12009,8 +11741,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -12088,8 +11819,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -12115,8 +11845,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -12133,8 +11862,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -12212,8 +11940,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -12239,8 +11966,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -12257,8 +11983,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -12336,8 +12061,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -12363,8 +12087,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -12381,8 +12104,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -12453,8 +12175,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -12480,8 +12201,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -12511,8 +12231,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -12524,8 +12243,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12591,8 +12310,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -12618,8 +12336,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -12650,8 +12367,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -12722,8 +12438,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -12749,8 +12464,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -12781,8 +12495,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -12853,8 +12566,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -12880,8 +12592,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -12912,8 +12623,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -12984,8 +12694,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -13011,8 +12720,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -13043,8 +12751,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -13115,8 +12822,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -13142,8 +12848,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -13174,8 +12879,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -13246,8 +12950,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -13273,8 +12976,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -13305,8 +13007,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -13377,8 +13078,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -13404,8 +13104,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -13436,8 +13135,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -13508,8 +13206,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -13535,8 +13232,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -13567,8 +13263,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -13639,8 +13334,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -13666,8 +13360,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -13698,8 +13391,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -13770,8 +13462,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -13797,8 +13488,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -13829,8 +13519,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -13901,8 +13590,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -13928,8 +13616,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -13960,8 +13647,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -14032,8 +13718,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -14059,8 +13744,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -14091,8 +13775,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -14163,8 +13846,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -14190,8 +13872,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -14222,8 +13903,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -14294,8 +13974,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -14321,8 +14000,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -14353,8 +14031,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -14425,8 +14102,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -14452,8 +14128,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -14484,8 +14159,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -14556,8 +14230,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -14583,8 +14256,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -14615,8 +14287,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -14687,8 +14358,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -14714,8 +14384,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -14746,8 +14415,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -14818,8 +14486,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -14845,8 +14512,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -14877,8 +14543,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -14949,8 +14614,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -14976,8 +14640,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -15008,8 +14671,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -15080,8 +14742,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -15107,8 +14768,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -15139,8 +14799,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Stepladder",
-                    "count": 1
+                    "item_name": "Stepladder"
                   }
                 }
               ]
@@ -15211,8 +14870,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -15238,8 +14896,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -15286,8 +14943,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Zelda",
@@ -15347,8 +15004,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring",
-                            "count": 1
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -15374,8 +15030,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Red Ring",
-                            "count": 1
+                            "item_name": "Red Ring"
                           }
                         }
                       ]
@@ -15421,8 +15076,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -15573,8 +15228,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Raft",
-                    "count": 1
+                    "item_name": "Raft"
                   }
                 }
               ]
@@ -15603,8 +15257,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Raft",
-                    "count": 1
+                    "item_name": "Raft"
                   }
                 }
               ]
@@ -15633,8 +15286,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Raft",
-                    "count": 1
+                    "item_name": "Raft"
                   }
                 }
               ]
@@ -15667,8 +15319,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Stepladder",
-                "count": 1
+                "item_name": "Stepladder"
               }
             },
             "item": {
@@ -15881,8 +15532,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Bomb",
-                        "count": 1
+                        "item_name": "Bomb"
                       }
                     }
                   ]
@@ -15923,8 +15573,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Bomb",
-                        "count": 1
+                        "item_name": "Bomb"
                       }
                     }
                   ]
@@ -15965,8 +15614,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Bomb",
-                        "count": 1
+                        "item_name": "Bomb"
                       }
                     }
                   ]
@@ -15997,8 +15645,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Letter",
-                    "count": 1
+                    "item_name": "Letter"
                   }
                 }
               ]
@@ -16027,8 +15674,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Letter",
-                    "count": 1
+                    "item_name": "Letter"
                   }
                 }
               ]
@@ -16057,8 +15703,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Letter",
-                    "count": 1
+                    "item_name": "Letter"
                   }
                 }
               ]
@@ -16872,7 +16517,6 @@
           "display_name": "Randomize Items"
         }
       },
-      "shops": [],
       "levels": [
         null,
         "Level 1",
@@ -16886,14 +16530,26 @@
         "Level 9"
       ],
       "base_id": 7000,
-      "world_description": "The Legend of Zelda WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "The Legend of Zelda needs almost no introduction. Gather the eight fragments of the\nTriforce of Wisdom, enter Death Mountain, defeat Ganon, and rescue Princess Zelda.\nThis randomizer shuffles all the items in the game around, leading to a new adventure\nevery time.",
       "slot_data": {
         "TakeAnyLeft": 7115,
         "TakeAnyMiddle": 7126,
         "TakeAnyRight": 7129
       },
       "web": {
-        "theme": "stone"
+        "theme": "stone",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up The Legend of Zelda for Archipelago on your computer.",
+            "language": "English",
+            "file_name": "multiworld_en.md",
+            "link": "multiworld/en",
+            "authors": [
+              "Rosalie and Figment"
+            ]
+          }
+        ]
       },
       "world_directory": "tloz_worldgen"
     }

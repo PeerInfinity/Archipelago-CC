@@ -22,8 +22,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -62,8 +61,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -102,8 +100,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
+                "item_name": "Automated logistic-science-pack"
               }
             },
             "item": {
@@ -160,8 +157,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -410,8 +406,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -530,8 +525,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -588,8 +582,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -606,8 +599,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -624,8 +616,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated production-science-pack",
-                "count": 1
+                "item_name": "Automated production-science-pack"
               }
             },
             "item": {
@@ -748,8 +739,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
+                "item_name": "Automated logistic-science-pack"
               }
             },
             "item": {
@@ -806,8 +796,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
+                "item_name": "Automated logistic-science-pack"
               }
             },
             "item": {
@@ -824,8 +813,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -972,8 +960,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
+                "item_name": "Automated logistic-science-pack"
               }
             },
             "item": {
@@ -1032,8 +1019,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated military-science-pack",
-                "count": 1
+                "item_name": "Automated military-science-pack"
               }
             },
             "item": {
@@ -1112,8 +1098,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -1152,8 +1137,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -1191,8 +1175,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -1229,8 +1212,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -1331,8 +1313,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -1604,8 +1585,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -1642,8 +1622,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
+                "item_name": "Automated logistic-science-pack"
               }
             },
             "item": {
@@ -1660,8 +1639,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -1744,8 +1722,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -1786,8 +1763,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -1825,8 +1801,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -1970,8 +1945,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
+                "item_name": "Automated logistic-science-pack"
               }
             },
             "item": {
@@ -2071,8 +2045,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -2110,8 +2083,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -2215,8 +2187,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -2297,8 +2268,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
+                "item_name": "Automated logistic-science-pack"
               }
             },
             "item": {
@@ -2526,8 +2496,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -2587,8 +2556,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -2672,8 +2640,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
+                "item_name": "Automated logistic-science-pack"
               }
             },
             "item": {
@@ -2987,8 +2954,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -3133,8 +3099,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -3197,8 +3162,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -3237,8 +3201,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -3407,8 +3370,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -3446,8 +3408,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -3464,8 +3425,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -3503,8 +3463,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -3521,8 +3480,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
+                "item_name": "Automated logistic-science-pack"
               }
             },
             "item": {
@@ -3583,8 +3541,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
+                "item_name": "Automated logistic-science-pack"
               }
             },
             "item": {
@@ -3645,8 +3602,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated automation-science-pack",
-                "count": 1
+                "item_name": "Automated automation-science-pack"
               }
             },
             "item": {
@@ -3663,8 +3619,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Automated logistic-science-pack",
-                "count": 1
+                "item_name": "Automated logistic-science-pack"
               }
             },
             "item": {
@@ -3754,8 +3709,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "logistic-science-pack",
-                "count": 1
+                "item_name": "logistic-science-pack"
               }
             },
             "item": {
@@ -7480,7 +7434,6 @@
           "display_name": "Teleport Traps"
         }
       },
-      "shops": [],
       "custom_recipes": {
         "rocket-part": "rocket-part",
         "ap-energy-bridge": "ap-energy-bridge"
@@ -7932,9 +7885,21 @@
         "worker-robots-storage-2": "worker-robots-storage-2",
         "worker-robots-storage-3": "worker-robots-storage-3"
       },
-      "world_description": "Factorio WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Factorio is a game about automation. You play as an engineer who has crash landed on the planet\nNauvis, an inhospitable world filled with dangerous creatures called biters. Build a factory,\nresearch new technologies, and become more efficient in your quest to build a rocket and return home.",
       "web": {
-        "theme": "grass"
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago Factorio software on your computer.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Berserker, Farrak Kilhn"
+            ]
+          }
+        ]
       },
       "world_directory": "factorio_worldgen"
     }

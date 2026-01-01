@@ -88,15 +88,25 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class TheLegendofZeldaWorldGenWeb(WebWorld):
     """Web interface for The Legend of Zelda WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "stone"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up The Legend of Zelda for Archipelago on your computer.",
+            "English",
+            "multiworld_en.md",
+            "multiworld/en",
+            ["Rosalie and Figment"]
+        )
+    ]
 
 
 class TheLegendofZeldaWorldGenWorld(RuleWorldMixin, World):
     """
-    The Legend of Zelda WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    The Legend of Zelda needs almost no introduction. Gather the eight fragments of the
+    Triforce of Wisdom, enter Death Mountain, defeat Ganon, and rescue Princess Zelda.
+    This randomizer shuffles all the items in the game around, leading to a new adventure
+    every time.
     """
 
     game: ClassVar[str] = "The Legend of Zelda WorldGen"
@@ -105,6 +115,7 @@ class TheLegendofZeldaWorldGenWorld(RuleWorldMixin, World):
     options_dataclass = TheLegendofZeldaWorldGenOptions
     options: TheLegendofZeldaWorldGenOptions
 
+    base_id: ClassVar[int] = 7000
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
@@ -299,12 +310,10 @@ class TheLegendofZeldaWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.levels = [None, 'Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5', 'Level 6', 'Level 7', 'Level 8', 'Level 9']
         self.base_id = 7000
         self.world_description = 'The Legend of Zelda needs almost no introduction. Gather the eight fragments of the\nTriforce of Wisdom, enter Death Mountain, defeat Ganon, and rescue Princess Zelda.\nThis randomizer shuffles all the items in the game around, leading to a new adventure\nevery time.'
         self.slot_data = types.SimpleNamespace(TakeAnyLeft=7115, TakeAnyMiddle=7126, TakeAnyRight=7129)
-        self.web = types.SimpleNamespace(theme='stone', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up The Legend of Zelda for Archipelago on your computer.', 'language': 'English', 'file_name': 'multiworld_en.md', 'link': 'multiworld/en', 'authors': ['Rosalie and Figment']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -398,4 +407,8 @@ class TheLegendofZeldaWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "TakeAnyLeft": 7115,
+            "TakeAnyMiddle": 7126,
+            "TakeAnyRight": 7129,
+        }

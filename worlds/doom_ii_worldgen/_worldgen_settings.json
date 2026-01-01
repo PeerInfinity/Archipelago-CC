@@ -41,7 +41,8 @@
       "start_location_hints": [],
       "start_with_computer_area_maps": false
     },
-    "world_directory": "doom_ii"
+    "world_directory": "doom_ii",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "included_episodes": [
