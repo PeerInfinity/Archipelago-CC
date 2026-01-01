@@ -344,6 +344,17 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if 'relic_groups.Event' in path:
         return True
 
+    # Game-specific location attributes that are auto-discovered from the original
+    # world's Location subclass. These are client-specific metadata (e.g., which
+    # byte/bit in the game's save data tracks location completion) that WorldGen
+    # can't recreate since it uses generic Location objects.
+    # Known game-specific location attributes:
+    # - DKC3: progress_byte, progress_bit, inverted_bit
+    if path.startswith('regions') and 'locations[' in path:
+        location_metadata_attrs = ['progress_byte', 'progress_bit', 'inverted_bit']
+        for attr in location_metadata_attrs:
+            if path.endswith(f'.{attr}'):
+                return True
 
     return False
 
