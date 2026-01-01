@@ -80,12 +80,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Freeincarnate",
+              "name": "Left Difficulty Switch",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Blue Labyrinth 1",
@@ -94,12 +94,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Chalice",
+              "name": "Slow Yorgle",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Catacombs",
@@ -113,25 +113,11 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Adjacent to Catacombs",
             "id": 118000012,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Freeincarnate",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Southwest of Catacombs",
-            "id": 118000014,
             "access_rule": {
               "rule": "True_"
             },
@@ -141,7 +127,21 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
+          },
+          {
+            "name": "Southwest of Catacombs",
+            "id": 118000014,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
           },
           {
             "name": "White Castle Gate",
@@ -150,30 +150,16 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Magnet",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Black Castle Gate",
-            "id": 118000016,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Left Difficulty Switch",
+              "name": "Freeincarnate",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
-            "name": "Yellow Castle Gate",
-            "id": 118000017,
+            "name": "Black Castle Gate",
+            "id": 118000016,
             "access_rule": {
               "rule": "True_"
             },
@@ -183,7 +169,21 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
+          },
+          {
+            "name": "Yellow Castle Gate",
+            "id": 118000017,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Freeincarnate",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
           },
           {
             "name": "Northeast of Catacombs",
@@ -197,7 +197,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Southeast of Catacombs",
@@ -211,7 +211,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Slay Yorgle",
@@ -226,12 +226,12 @@
               }
             },
             "item": {
-              "name": "Slow Yorgle",
+              "name": "Freeincarnate",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -255,12 +255,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "White Key",
+              "name": "Magnet",
               "player": 1,
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Chalice Home",
@@ -333,7 +333,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "RedMaze1",
@@ -342,12 +342,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Slow Rhindle",
+              "name": "Freeincarnate",
               "player": 1,
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -376,7 +376,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -405,7 +405,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Slay Grundle",
@@ -420,12 +420,12 @@
               }
             },
             "item": {
-              "name": "Freeincarnate",
+              "name": "Yellow Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -467,7 +467,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Dungeon1",
@@ -481,7 +481,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Black Castle Foyer",
@@ -495,7 +495,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Slay Rhindle",
@@ -510,12 +510,12 @@
               }
             },
             "item": {
-              "name": "Yellow Key",
+              "name": "Slow Rhindle",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -539,12 +539,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Freeincarnate",
+              "name": "White Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -583,7 +583,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       },
@@ -607,12 +607,12 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Freeincarnate",
+              "name": "Chalice",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           }
         ]
       }
@@ -670,7 +670,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "White Key": {
         "name": "White Key",
@@ -703,7 +703,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Magnet": {
         "name": "Magnet",
@@ -831,7 +831,33 @@
     }
   },
   "canonical_placements": {
-    "1": {}
+    "1": {
+      "Blue Labyrinth 0": "Left Difficulty Switch",
+      "Blue Labyrinth 1": "Slow Yorgle",
+      "Catacombs": "Sword",
+      "Adjacent to Catacombs": "Slow Grundle",
+      "Southwest of Catacombs": "Freeincarnate",
+      "White Castle Gate": "Freeincarnate",
+      "Black Castle Gate": "Black Key",
+      "Yellow Castle Gate": "Freeincarnate",
+      "Northeast of Catacombs": "Freeincarnate",
+      "Southeast of Catacombs": "Freeincarnate",
+      "Slay Yorgle": "Freeincarnate",
+      "Inside Yellow Castle": "Magnet",
+      "Chalice Home": "Victory",
+      "RedMaze0": "Freeincarnate",
+      "RedMaze1": "Freeincarnate",
+      "Red Maze Vault Entrance": "Freeincarnate",
+      "Red Maze Vault": "Freeincarnate",
+      "Slay Grundle": "Yellow Key",
+      "Dungeon0": "Freeincarnate",
+      "Dungeon1": "Right Difficulty Switch",
+      "Black Castle Foyer": "Bridge",
+      "Slay Rhindle": "Slow Rhindle",
+      "Dungeon Vault": "White Key",
+      "Credits Left Side": "Freeincarnate",
+      "Credits Right Side": "Chalice"
+    }
   },
   "progression_mapping": {
     "1": {}
@@ -861,7 +887,7 @@
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_items": true,
+        "randomize_items": false,
         "rhindle_min_speed": 2,
         "rhindle_speed": 3,
         "start_castle": 0,

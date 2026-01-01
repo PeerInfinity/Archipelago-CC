@@ -12,7 +12,7 @@ from rule_builder import RuleWorldMixin
 if TYPE_CHECKING:
     from BaseClasses import CollectionState, MultiWorld
 
-from .Items import item_table, AdventureWorldGenItem
+from .Items import item_table, ItemData, AdventureWorldGenItem
 from .Locations import location_table, AdventureWorldGenLocation
 from .Options import AdventureWorldGenOptions
 from .Regions import create_regions
@@ -92,6 +92,10 @@ class AdventureWorldGenWorld(RuleWorldMixin, World):
         name: data.id for name, data in item_table.items() if data.id is not None
     }
 
+    # Expose item_table as item_name_to_item for exporter compatibility
+    # This allows the exporter handler to find item classifications
+    item_name_to_item: ClassVar[Dict[str, "ItemData"]] = item_table
+
     location_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.location_id for name, data in location_table.items()
         if data.location_id is not None
@@ -100,6 +104,36 @@ class AdventureWorldGenWorld(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
         "Everything": frozenset(["nothing", "Sword", "Bridge", "Yellow Key", "White Key", "Black Key", "Chalice", "Magnet", "Left Difficulty Switch", "Right Difficulty Switch", "Freeincarnate", "Slow Yorgle", "Slow Grundle", "Slow Rhindle", "Revive Dragons"]),
         "Event": frozenset(["Victory"]),
+    }
+
+    # Canonical item placements - where items belong in the "vanilla" game
+    # Used by exporter to distinguish canonical placements from always-locked items
+    canonical_placements: ClassVar[Dict[str, str]] = {
+        "Blue Labyrinth 0": "Left Difficulty Switch",
+        "Blue Labyrinth 1": "Slow Yorgle",
+        "Catacombs": "Sword",
+        "Adjacent to Catacombs": "Slow Grundle",
+        "Southwest of Catacombs": "Freeincarnate",
+        "White Castle Gate": "Freeincarnate",
+        "Black Castle Gate": "Black Key",
+        "Yellow Castle Gate": "Freeincarnate",
+        "Northeast of Catacombs": "Freeincarnate",
+        "Southeast of Catacombs": "Freeincarnate",
+        "Slay Yorgle": "Freeincarnate",
+        "Inside Yellow Castle": "Magnet",
+        "Chalice Home": "Victory",
+        "RedMaze0": "Freeincarnate",
+        "RedMaze1": "Freeincarnate",
+        "Red Maze Vault Entrance": "Freeincarnate",
+        "Red Maze Vault": "Freeincarnate",
+        "Slay Grundle": "Yellow Key",
+        "Dungeon0": "Freeincarnate",
+        "Dungeon1": "Right Difficulty Switch",
+        "Black Castle Foyer": "Bridge",
+        "Slay Rhindle": "Slow Rhindle",
+        "Dungeon Vault": "White Key",
+        "Credits Left Side": "Freeincarnate",
+        "Credits Right Side": "Chalice",
     }
 
     def __init__(self, multiworld: "MultiWorld", player: int):
@@ -123,8 +157,10 @@ class AdventureWorldGenWorld(RuleWorldMixin, World):
         self.world_description = 'Adventure for the Atari 2600 is an early graphical adventure game.\nFind the enchanted chalice and return it to the yellow castle,\nusing magic items to enter hidden rooms, retrieve out of\nreach items, or defeat the three dragons.  Beware the bat\nwho likes to steal your equipment!'
 
     def generate_early(self) -> None:
-        """Push starting items as precollected."""
+        """Push starting items and disable randomization for seed 1."""
         self._push_starting_items()
+        if self.multiworld.seed == 1:
+            self.options.randomize_items.value = False
 
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
@@ -198,6 +234,29 @@ class AdventureWorldGenWorld(RuleWorldMixin, World):
         # Set completion condition
         self.multiworld.completion_condition[self.player] = \
             lambda state: state.has("Victory", self.player)
+
+    def pre_fill(self) -> None:
+        """Pre-fill items if not randomizing."""
+        if not self.options.randomize_items.value:
+            self._place_original_items()
+
+    def _place_original_items(self) -> None:
+        """Place items in their canonical locations when not randomized."""
+        for location_name, item_name in self.canonical_placements.items():
+            location = self.multiworld.get_location(location_name, self.player)
+
+            # Skip if already filled (e.g., by _place_locked_items or generate_basic)
+            if location.item is not None:
+                continue
+
+            item = self.create_item(item_name)
+            location.place_locked_item(item)
+
+            # Remove the item from the pool if it exists
+            for pool_item in self.multiworld.itempool[:]:
+                if pool_item.name == item_name and pool_item.player == self.player:
+                    self.multiworld.itempool.remove(pool_item)
+                    break
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

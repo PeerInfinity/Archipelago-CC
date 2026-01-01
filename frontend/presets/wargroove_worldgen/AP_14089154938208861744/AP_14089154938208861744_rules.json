@@ -1536,7 +1536,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Final Walls": {
         "name": "Final Walls",
@@ -1547,7 +1547,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Final Sickle": {
         "name": "Final Sickle",
@@ -1558,7 +1558,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Income Boost": {
         "name": "Income Boost",

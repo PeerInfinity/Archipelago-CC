@@ -6231,7 +6231,7 @@
         "event": false,
         "type": null,
         "max_count": 50,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Time Piece": {
         "name": "Time Piece",
@@ -6242,7 +6242,7 @@
         "event": false,
         "type": null,
         "max_count": 40,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Progressive Painting Unlock": {
         "name": "Progressive Painting Unlock",

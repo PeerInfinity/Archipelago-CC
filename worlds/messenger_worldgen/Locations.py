@@ -18,7 +18,7 @@ class LocationData:
 
     def __init__(self, region: str, name: str, location_id: Optional[int], event: bool = False,
                  progress_type: "LocationProgressType" = None, show_in_spoiler: bool = True,
-                 access: Optional[Dict[str, Any]] = None):
+                 access: Optional[Dict[str, Any]] = None, extra_attributes: Optional[Dict[str, Any]] = None):
         self.region = region
         self.name = name
         self.location_id = location_id
@@ -26,29 +26,30 @@ class LocationData:
         self.progress_type = progress_type
         self.show_in_spoiler = show_in_spoiler
         self.access = access  # Game-specific access data (e.g., Lingo AccessRequirements)
+        self.extra_attributes = extra_attributes or {}  # Game-specific attributes (e.g., type_string, price)
 
 
 location_table: Dict[str, LocationData] = {
     "Money Wrench": LocationData("Tower HQ", "Money Wrench", 11391111, False),
-    "The Shop - Karuta Plates": LocationData("The Shop", "The Shop - Karuta Plates", 11391079, False),
-    "The Shop - Serendipitous Bodies": LocationData("The Shop", "The Shop - Serendipitous Bodies", 11391080, False),
-    "The Shop - Path of Resilience": LocationData("The Shop", "The Shop - Path of Resilience", 11391081, False),
-    "The Shop - Kusari Jacket": LocationData("The Shop", "The Shop - Kusari Jacket", 11391082, False),
-    "The Shop - Energy Shuriken": LocationData("The Shop", "The Shop - Energy Shuriken", 11391083, False),
-    "The Shop - Serendipitous Minds": LocationData("The Shop", "The Shop - Serendipitous Minds", 11391084, False),
-    "The Shop - Prepared Mind": LocationData("The Shop", "The Shop - Prepared Mind", 11391085, False),
-    "The Shop - Meditation": LocationData("The Shop", "The Shop - Meditation", 11391086, False),
-    "The Shop - Rejuvenative Spirit": LocationData("The Shop", "The Shop - Rejuvenative Spirit", 11391087, False),
-    "The Shop - Centered Mind": LocationData("The Shop", "The Shop - Centered Mind", 11391088, False),
-    "The Shop - Strike of the Ninja": LocationData("The Shop", "The Shop - Strike of the Ninja", 11391089, False),
-    "The Shop - Second Wind": LocationData("The Shop", "The Shop - Second Wind", 11391090, False),
-    "The Shop - Currents Master": LocationData("The Shop", "The Shop - Currents Master", 11391091, False),
-    "The Shop - Aerobatics Warrior": LocationData("The Shop", "The Shop - Aerobatics Warrior", 11391092, False),
-    "The Shop - Demon's Bane": LocationData("The Shop", "The Shop - Demon's Bane", 11391093, False),
-    "The Shop - Devil's Due": LocationData("The Shop", "The Shop - Devil's Due", 11391094, False),
-    "The Shop - Time Sense": LocationData("The Shop", "The Shop - Time Sense", 11391095, False),
-    "The Shop - Power Sense": LocationData("The Shop", "The Shop - Power Sense", 11391096, False),
-    "The Shop - Focused Power Sense": LocationData("The Shop", "The Shop - Focused Power Sense", 11391097, False),
+    "The Shop - Karuta Plates": LocationData("The Shop", "The Shop - Karuta Plates", 11391079, False, extra_attributes={"cost": 27}),
+    "The Shop - Serendipitous Bodies": LocationData("The Shop", "The Shop - Serendipitous Bodies", 11391080, False, extra_attributes={"cost": 318}),
+    "The Shop - Path of Resilience": LocationData("The Shop", "The Shop - Path of Resilience", 11391081, False, extra_attributes={"cost": 467}),
+    "The Shop - Kusari Jacket": LocationData("The Shop", "The Shop - Kusari Jacket", 11391082, False, extra_attributes={"cost": 675}),
+    "The Shop - Energy Shuriken": LocationData("The Shop", "The Shop - Energy Shuriken", 11391083, False, extra_attributes={"cost": 92}),
+    "The Shop - Serendipitous Minds": LocationData("The Shop", "The Shop - Serendipitous Minds", 11391084, False, extra_attributes={"cost": 201}),
+    "The Shop - Prepared Mind": LocationData("The Shop", "The Shop - Prepared Mind", 11391085, False, extra_attributes={"cost": 546}),
+    "The Shop - Meditation": LocationData("The Shop", "The Shop - Meditation", 11391086, False, extra_attributes={"cost": 1368}),
+    "The Shop - Rejuvenative Spirit": LocationData("The Shop", "The Shop - Rejuvenative Spirit", 11391087, False, extra_attributes={"cost": 1881}),
+    "The Shop - Centered Mind": LocationData("The Shop", "The Shop - Centered Mind", 11391088, False, extra_attributes={"cost": 2140}),
+    "The Shop - Strike of the Ninja": LocationData("The Shop", "The Shop - Strike of the Ninja", 11391089, False, extra_attributes={"cost": 67}),
+    "The Shop - Second Wind": LocationData("The Shop", "The Shop - Second Wind", 11391090, False, extra_attributes={"cost": 237}),
+    "The Shop - Currents Master": LocationData("The Shop", "The Shop - Currents Master", 11391091, False, extra_attributes={"cost": 743}),
+    "The Shop - Aerobatics Warrior": LocationData("The Shop", "The Shop - Aerobatics Warrior", 11391092, False, extra_attributes={"cost": 1124}),
+    "The Shop - Demon's Bane": LocationData("The Shop", "The Shop - Demon's Bane", 11391093, False, extra_attributes={"cost": 3532}),
+    "The Shop - Devil's Due": LocationData("The Shop", "The Shop - Devil's Due", 11391094, False, extra_attributes={"cost": 56}),
+    "The Shop - Time Sense": LocationData("The Shop", "The Shop - Time Sense", 11391095, False, extra_attributes={"cost": 142}),
+    "The Shop - Power Sense": LocationData("The Shop", "The Shop - Power Sense", 11391096, False, extra_attributes={"cost": 621}),
+    "The Shop - Focused Power Sense": LocationData("The Shop", "The Shop - Focused Power Sense", 11391097, False, extra_attributes={"cost": 1034}),
     "Green Kappa Figurine": LocationData("The Craftsman's Corner", "Green Kappa Figurine", 11391098, False),
     "Blue Kappa Figurine": LocationData("The Craftsman's Corner", "Blue Kappa Figurine", 11391099, False),
     "Ountarde Figurine": LocationData("The Craftsman's Corner", "Ountarde Figurine", 11391100, False),

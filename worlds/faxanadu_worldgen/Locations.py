@@ -18,7 +18,7 @@ class LocationData:
 
     def __init__(self, region: str, name: str, location_id: Optional[int], event: bool = False,
                  progress_type: "LocationProgressType" = None, show_in_spoiler: bool = True,
-                 access: Optional[Dict[str, Any]] = None):
+                 access: Optional[Dict[str, Any]] = None, extra_attributes: Optional[Dict[str, Any]] = None):
         self.region = region
         self.name = name
         self.location_id = location_id
@@ -26,6 +26,7 @@ class LocationData:
         self.progress_type = progress_type
         self.show_in_spoiler = show_in_spoiler
         self.access = access  # Game-specific access data (e.g., Lingo AccessRequirements)
+        self.extra_attributes = extra_attributes or {}  # Game-specific attributes (e.g., type_string, price)
 
 
 location_table: Dict[str, LocationData] = {

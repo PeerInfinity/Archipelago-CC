@@ -4399,7 +4399,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Iris sword": {
         "name": "Iris sword",
@@ -4411,7 +4411,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Iris shield": {
         "name": "Iris shield",
@@ -4423,7 +4423,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Iris helmet": {
         "name": "Iris helmet",
@@ -4435,7 +4435,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Iris armor": {
         "name": "Iris armor",
@@ -4447,7 +4447,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Iris ring": {
         "name": "Iris ring",
@@ -4459,7 +4459,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Iris jewel": {
         "name": "Iris jewel",
@@ -4471,7 +4471,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Iris staff": {
         "name": "Iris staff",
@@ -4483,7 +4483,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Iris pot": {
         "name": "Iris pot",
@@ -4495,7 +4495,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Iris tiara": {
         "name": "Iris tiara",
@@ -4507,7 +4507,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "progression"
       },
       "Sizzle sword": {
         "name": "Sizzle sword",
@@ -5606,10 +5606,10 @@
             "36": "daos",
             "37": "egg_dragon",
             "38": "master",
-            "39": "random_high",
-            "40": "random_sinistral",
-            "41": "random_low",
-            "42": "random_middle"
+            "39": "random_sinistral",
+            "40": "random_high",
+            "41": "random_middle",
+            "42": "random_low"
           },
           "default": 38,
           "display_name": "Boss"

@@ -13,7 +13,7 @@ from rule_builder import RuleWorldMixin
 if TYPE_CHECKING:
     from BaseClasses import CollectionState, MultiWorld
 
-from .Items import item_table, DOOM1993WorldGenItem
+from .Items import item_table, ItemData, DOOM1993WorldGenItem
 from .Locations import location_table, DOOM1993WorldGenLocation
 from .Options import DOOM1993WorldGenOptions
 from .Regions import create_regions
@@ -211,6 +211,10 @@ class DOOM1993WorldGenWorld(RuleWorldMixin, World):
     item_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.id for name, data in item_table.items() if data.id is not None
     }
+
+    # Expose item_table as item_name_to_item for exporter compatibility
+    # This allows the exporter handler to find item classifications
+    item_name_to_item: ClassVar[Dict[str, "ItemData"]] = item_table
 
     location_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.location_id for name, data in location_table.items()
