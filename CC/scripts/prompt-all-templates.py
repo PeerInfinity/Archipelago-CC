@@ -646,12 +646,24 @@ def main():
         use_minimal = args.minimal_spoilers or args.basic_spoiler_debug
         test_results = load_test_results(project_root, args.full_spoilers, use_minimal, args.multiclient, args.multiworld)
 
-        # Check if we need to run the test (skip for multiclient/multiworld/basic-spoiler-debug mode - tests must already exist)
-        if template_file not in test_results and not args.multiclient and not args.multiworld and not args.basic_spoiler_debug:
-            if not quiet_mode:
-                print("No test results found, running initial test...")
-            run_template_test(template_file, args.seed)
-            test_results = load_test_results(project_root, args.full_spoilers, args.minimal_spoilers, args.multiclient, args.multiworld)
+        # Check if we need to run the test (skip for multiclient/multiworld/basic-spoiler-debug/promptfile modes - tests must already exist)
+        if template_file not in test_results:
+            if args.multiclient or args.multiworld or args.basic_spoiler_debug or args.promptfile:
+                # In these modes, skip games that don't have test results rather than running tests
+                if not quiet_mode:
+                    print(f"⏭️  {template_file} has no test results for this mode, skipping...")
+                current_index = (current_index + 1) % len(template_files)
+                processed_count += 1
+                if processed_count % len(template_files) == 0:
+                    cycle_num = processed_count // len(template_files)
+                    if cycle_num >= args.max_loops:
+                        break
+                continue
+            else:
+                if not quiet_mode:
+                    print("No test results found, running initial test...")
+                run_template_test(template_file, args.seed)
+                test_results = load_test_results(project_root, args.full_spoilers, args.minimal_spoilers, args.multiclient, args.multiworld)
 
         # Check if test is passing (use appropriate check for multiworld mode)
         if args.multiworld:

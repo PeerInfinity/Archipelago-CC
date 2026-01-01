@@ -921,8 +921,7 @@ registerTest({
   name: 'Initial Menu Not Processed as Action',
   description: 'Verifies that the initial Menu position is displayed correctly and not executed as an action when Resume is clicked',
   category: 'loops',
-  testFunction: testInitialMenuNotProcessed,
-  enabled: true
+  testFunction: testInitialMenuNotProcessed
 });
 
 // Register the second test
@@ -931,8 +930,7 @@ registerTest({
   name: 'Real Actions Are Processed',
   description: 'Verifies that real actions in the queue are processed when Resume is clicked',
   category: 'loops',
-  testFunction: testRealActionsProcessed,
-  enabled: true
+  testFunction: testRealActionsProcessed
 });
 
 // Register mana consumption test
@@ -941,8 +939,7 @@ registerTest({
   name: 'Mana Consumption',
   description: 'Verifies that mana is consumed correctly during action processing',
   category: 'loops',
-  testFunction: testManaConsumption,
-  enabled: true
+  testFunction: testManaConsumption
 });
 
 // Register XP awarding test
@@ -951,8 +948,7 @@ registerTest({
   name: 'XP Awarding',
   description: 'Verifies that XP is awarded correctly per action',
   category: 'loops',
-  testFunction: testXPAwarding,
-  enabled: true
+  testFunction: testXPAwarding
 });
 
 // Register level-up mechanics test
@@ -961,8 +957,7 @@ registerTest({
   name: 'Level Up Mechanics',
   description: 'Verifies that level thresholds work correctly and provide cost reduction',
   category: 'loops',
-  testFunction: testLevelUpMechanics,
-  enabled: true
+  testFunction: testLevelUpMechanics
 });
 
 // Register speed adjustment test
@@ -971,8 +966,7 @@ registerTest({
   name: 'Speed Adjustment',
   description: 'Verifies that speed slider affects action processing rate',
   category: 'loops',
-  testFunction: testSpeedAdjustment,
-  enabled: true
+  testFunction: testSpeedAdjustment
 });
 
 // Register pause/resume test
@@ -981,8 +975,7 @@ registerTest({
   name: 'Pause/Resume Functionality',
   description: 'Verifies that pause/resume controls work correctly',
   category: 'loops',
-  testFunction: testPauseResume,
-  enabled: true
+  testFunction: testPauseResume
 });
 
 // Register auto-restart test
@@ -991,8 +984,7 @@ registerTest({
   name: 'Auto Restart',
   description: 'Verifies that auto-restart works when mana is depleted',
   category: 'loops',
-  testFunction: testAutoRestart,
-  enabled: true
+  testFunction: testAutoRestart
 });
 
 // Register enter/exit loop mode test
@@ -1001,6 +993,5 @@ registerTest({
   name: 'Enter/Exit Loop Mode',
   description: 'Verifies that entering and exiting loop mode works correctly',
   category: 'loops',
-  testFunction: testEnterExitLoopMode,
-  enabled: true
+  testFunction: testEnterExitLoopMode
 });
