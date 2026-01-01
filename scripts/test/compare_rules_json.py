@@ -292,6 +292,10 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     # canonical_placements section only exists with --canonical-seed1
     if 'canonical_placements' in path:
         return True
+    # locked status differs because WorldGen uses place_locked_item() for canonical
+    # placements while original uses fill algorithm. This is an implementation detail.
+    if path.endswith('.locked'):
+        return True
     return False
 
 
