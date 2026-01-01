@@ -17,11 +17,11 @@ if TYPE_CHECKING:
 
 # Helper functions
 def _alinktothepastworldgen_GanonDefeatRule(state: "CollectionState", player: int) -> bool:
-    if False:
+    if state.multiworld.worlds[player].options.swordless:
         return (state.has('Hammer', player)) and (_alinktothepastworldgen_has_fire_source(state, player)) and (state.has('Silver Bow', player)) and (_alinktothepastworldgen_can_shoot_arrows(state, player))
     can_hurt = _alinktothepastworldgen_has_beam_sword(state, player)
     common = (can_hurt) and (_alinktothepastworldgen_has_fire_source(state, player))
-    if ('no_glitches' != 'no_glitches'):
+    if (state.multiworld.worlds[player].options.glitches_required != 'no_glitches'):
         return (common) and ((state.has('Tempered Sword', player)) or (state.has('Golden Sword', player)) or ((state.has('Silver Bow', player)) and (_alinktothepastworldgen_can_shoot_arrows(state, player))) or (state.has('Lamp', player)) or (_alinktothepastworldgen_can_extend_magic(state, player, 12)))
     else:
         return (common) and (state.has('Silver Bow', player)) and (_alinktothepastworldgen_can_shoot_arrows(state, player))
@@ -54,7 +54,7 @@ def _alinktothepastworldgen_can_buy_unlimited(state: "CollectionState", player: 
 def _alinktothepastworldgen_can_extend_magic(state: "CollectionState", player: int, smallmagic = 16, fullrefill: bool = False) -> bool:
     basemagic = 8
     basemagic = (32 if state.has('Magic Upgrade (1/4)', player) else (16 if state.has('Magic Upgrade (1/2)', player) else basemagic))
-    basemagic = (((basemagic + int(((basemagic * 0.5) * _alinktothepastworldgen_bottle_count(state, player)))) if (('normal' == 'hard')) and (not (fullrefill)) else ((basemagic + int(((basemagic * 0.25) * _alinktothepastworldgen_bottle_count(state, player)))) if (('normal' == 'expert')) and (not (fullrefill)) else (basemagic + (basemagic * _alinktothepastworldgen_bottle_count(state, player))))) if (_alinktothepastworldgen_can_buy_unlimited(state, player, 'Green Potion')) or (_alinktothepastworldgen_can_buy_unlimited(state, player, 'Blue Potion')) else basemagic)
+    basemagic = (((basemagic + int(((basemagic * 0.5) * _alinktothepastworldgen_bottle_count(state, player)))) if ((state.multiworld.worlds[player].options.item_functionality == 'hard')) and (not (fullrefill)) else ((basemagic + int(((basemagic * 0.25) * _alinktothepastworldgen_bottle_count(state, player)))) if ((state.multiworld.worlds[player].options.item_functionality == 'expert')) and (not (fullrefill)) else (basemagic + (basemagic * _alinktothepastworldgen_bottle_count(state, player))))) if (_alinktothepastworldgen_can_buy_unlimited(state, player, 'Green Potion')) or (_alinktothepastworldgen_can_buy_unlimited(state, player, 'Blue Potion')) else basemagic)
     return (basemagic >= smallmagic)
 
 
@@ -64,7 +64,7 @@ def _alinktothepastworldgen_can_get_good_bee(state: "CollectionState", player: i
 
 
 def _alinktothepastworldgen_can_hold_arrows(state: "CollectionState", player: int, quantity = None) -> bool:
-    if 'off':
+    if state.multiworld.worlds[player].options.shuffle_capacity_upgrades:
         if (quantity == 0):
             return True
         if state.has('Arrow Upgrade (70)', player):
@@ -77,7 +77,7 @@ def _alinktothepastworldgen_can_hold_arrows(state: "CollectionState", player: in
 
 
 def _alinktothepastworldgen_can_kill_most_things(state: "CollectionState", player: int, enemies = 5) -> bool:
-    return ((_alinktothepastworldgen_has_melee_weapon(state, player)) and (state.has('Cane of Somaria', player)) and (state.has('Cane of Byrna', player)) and (_alinktothepastworldgen_can_extend_magic(state, player)) and (_alinktothepastworldgen_can_shoot_arrows(state, player)) and (state.has('Fire Rod', player)) and (_alinktothepastworldgen_can_use_bombs(state, player, (enemies * 4))) if False else (_alinktothepastworldgen_has_melee_weapon(state, player)) or (state.has('Cane of Somaria', player)) or ((state.has('Cane of Byrna', player)) and (((enemies < 6)) or (_alinktothepastworldgen_can_extend_magic(state, player)))) or (_alinktothepastworldgen_can_shoot_arrows(state, player)) or (state.has('Fire Rod', player)) or ((('default' in ['easy', 'default'])) and (_alinktothepastworldgen_can_use_bombs(state, player, (enemies * 4)))))
+    return ((_alinktothepastworldgen_has_melee_weapon(state, player)) and (state.has('Cane of Somaria', player)) and (state.has('Cane of Byrna', player)) and (_alinktothepastworldgen_can_extend_magic(state, player)) and (_alinktothepastworldgen_can_shoot_arrows(state, player)) and (state.has('Fire Rod', player)) and (_alinktothepastworldgen_can_use_bombs(state, player, (enemies * 4))) if state.multiworld.worlds[player].options.enemy_shuffle else (_alinktothepastworldgen_has_melee_weapon(state, player)) or (state.has('Cane of Somaria', player)) or ((state.has('Cane of Byrna', player)) and (((enemies < 6)) or (_alinktothepastworldgen_can_extend_magic(state, player)))) or (_alinktothepastworldgen_can_shoot_arrows(state, player)) or (state.has('Fire Rod', player)) or (((state.multiworld.worlds[player].options.enemy_health in ['easy', 'default'])) and (_alinktothepastworldgen_can_use_bombs(state, player, (enemies * 4)))))
 
 
 def _alinktothepastworldgen_can_lift_heavy_rocks(state: "CollectionState", player: int) -> bool:
@@ -89,22 +89,22 @@ def _alinktothepastworldgen_can_lift_rocks(state: "CollectionState", player: int
 
 
 def _alinktothepastworldgen_can_melt_things(state: "CollectionState", player: int) -> bool:
-    return (state.has('Fire Rod', player)) or ((state.has('Bombos', player)) and ((False) or (_alinktothepastworldgen_has_sword(state, player))))
+    return (state.has('Fire Rod', player)) or ((state.has('Bombos', player)) and ((state.multiworld.worlds[player].options.swordless) or (_alinktothepastworldgen_has_sword(state, player))))
 
 
 def _alinktothepastworldgen_can_retrieve_tablet(state: "CollectionState", player: int) -> bool:
-    return (state.has('Book of Mudora', player)) and ((_alinktothepastworldgen_has_beam_sword(state, player)) or ((False) and (state.has('Hammer', player))))
+    return (state.has('Book of Mudora', player)) and ((_alinktothepastworldgen_has_beam_sword(state, player)) or ((state.multiworld.worlds[player].options.swordless) and (state.has('Hammer', player))))
 
 
 def _alinktothepastworldgen_can_shoot_arrows(state: "CollectionState", player: int, count = 0) -> bool:
-    return (((state.has('Bow', player)) or (state.has('Silver Bow', player))) and (_alinktothepastworldgen_can_buy(state, player, 'Single Arrow')) if False else ((state.has('Bow', player)) or (state.has('Silver Bow', player))) and (_alinktothepastworldgen_can_hold_arrows(state, player, count)))
+    return (((state.has('Bow', player)) or (state.has('Silver Bow', player))) and (_alinktothepastworldgen_can_buy(state, player, 'Single Arrow')) if state.multiworld.worlds[player].options.retro_bow else ((state.has('Bow', player)) or (state.has('Silver Bow', player))) and (_alinktothepastworldgen_can_hold_arrows(state, player, count)))
 
 
 def _alinktothepastworldgen_can_use_bombs(state: "CollectionState", player: int, quantity = 1) -> bool:
-    bombs = (0 if False else 10)
+    bombs = (0 if state.multiworld.worlds[player].options.bombless_start else 10)
     bombs += (((state.count('Bomb Upgrade (+5)', player) * 5) + (state.count('Bomb Upgrade (+10)', player) * 10)) + (state.count('Bomb Upgrade (50)', player) * 50))
     bombs += max(0, ((state.count('Bomb Upgrade (+5)', player) - 6) * 10))
-    if (not ('off')) and (state.has('Capacity Upgrade Shop', player)):
+    if (not (state.multiworld.worlds[player].options.shuffle_capacity_upgrades)) and (state.has('Capacity Upgrade Shop', player)):
         bombs += 40
     return (bombs >= min(quantity, 50))
 
@@ -135,7 +135,7 @@ def _alinktothepastworldgen_has_melee_weapon(state: "CollectionState", player: i
 
 
 def _alinktothepastworldgen_has_misery_mire_medallion(state: "CollectionState", player: int) -> bool:
-    return state.has('Quake', player)
+    return state.has(state.multiworld.worlds[player].required_medallions[0], player)
 
 
 def _alinktothepastworldgen_has_sword(state: "CollectionState", player: int) -> bool:
@@ -143,7 +143,7 @@ def _alinktothepastworldgen_has_sword(state: "CollectionState", player: int) -> 
 
 
 def _alinktothepastworldgen_has_turtle_rock_medallion(state: "CollectionState", player: int) -> bool:
-    return state.has('Ether', player)
+    return state.has(state.multiworld.worlds[player].required_medallions[1], player)
 
 
 def _alinktothepastworldgen_heart_count(state: "CollectionState", player: int) -> bool:
@@ -153,7 +153,7 @@ def _alinktothepastworldgen_heart_count(state: "CollectionState", player: int) -
 
 
 def _alinktothepastworldgen_is_not_bunny(state: "CollectionState", player: int, region = None) -> bool:
-    return (True if state.has('Moon Pearl', player) else (True if ('open' != 'inverted') else True))
+    return (True if state.has('Moon Pearl', player) else (True if (state.multiworld.worlds[player].options.mode != 'inverted') else True))
 
 
 def _alinktothepastworldgen_tr_big_key_chest_keys_needed(state: "CollectionState", player: int) -> bool:

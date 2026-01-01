@@ -607,7 +607,11 @@ def generate_rules_py(data: ExtractedData) -> str:
     rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_settings)
     rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies, helper_params, helper_defaults, data.original_placements)
 
-    helper_generator = HelperCodeGenerator(game_name, data.metadata.resolved_settings)
+    helper_generator = HelperCodeGenerator(
+        game_name,
+        resolved_values=data.metadata.resolved_settings,
+        option_definitions=data.metadata.option_definitions
+    )
     helper_generator.set_known_helpers(set(data.helpers.keys()))
     helper_generator.set_placements(data.original_placements)
 

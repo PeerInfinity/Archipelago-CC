@@ -17171,8 +17171,8 @@
           {
             "type": "if_statement",
             "test": {
-              "type": "constant",
-              "value": false
+              "type": "setting_value",
+              "setting": "swordless"
             },
             "body": [
               {
@@ -17229,8 +17229,16 @@
           {
             "type": "if_statement",
             "test": {
-              "type": "constant",
-              "value": false
+              "type": "compare",
+              "left": {
+                "type": "setting_value",
+                "setting": "glitches_required"
+              },
+              "op": "!=",
+              "right": {
+                "type": "constant",
+                "value": "no_glitches"
+              }
             },
             "body": [
               {
@@ -17623,8 +17631,16 @@
                     "type": "and",
                     "conditions": [
                       {
-                        "type": "constant",
-                        "value": false
+                        "type": "compare",
+                        "left": {
+                          "type": "setting_value",
+                          "setting": "item_functionality"
+                        },
+                        "op": "==",
+                        "right": {
+                          "type": "constant",
+                          "value": "hard"
+                        }
                       },
                       {
                         "type": "not",
@@ -17675,8 +17691,16 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "constant",
-                          "value": false
+                          "type": "compare",
+                          "left": {
+                            "type": "setting_value",
+                            "setting": "item_functionality"
+                          },
+                          "op": "==",
+                          "right": {
+                            "type": "constant",
+                            "value": "expert"
+                          }
                         },
                         {
                           "type": "not",
@@ -17853,8 +17877,8 @@
             {
               "type": "if_statement",
               "test": {
-                "type": "constant",
-                "value": "off"
+                "type": "setting_value",
+                "setting": "shuffle_capacity_upgrades"
               },
               "body": [
                 {
@@ -18050,99 +18074,153 @@
           "enemies"
         ],
         "body": {
-          "type": "or",
-          "conditions": [
-            {
-              "type": "helper",
-              "name": "has_melee_weapon"
-            },
-            {
-              "type": "item_check",
-              "item": "Cane of Somaria"
-            },
-            {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Cane of Byrna"
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "compare",
-                      "left": {
-                        "type": "name",
-                        "name": "enemies"
-                      },
-                      "op": "<",
-                      "right": {
-                        "type": "constant",
-                        "value": 6
-                      }
+          "type": "conditional",
+          "test": {
+            "type": "setting_value",
+            "setting": "enemy_shuffle"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "has_melee_weapon"
+              },
+              {
+                "type": "item_check",
+                "item": "Cane of Somaria"
+              },
+              {
+                "type": "item_check",
+                "item": "Cane of Byrna"
+              },
+              {
+                "type": "helper",
+                "name": "can_extend_magic"
+              },
+              {
+                "type": "helper",
+                "name": "can_shoot_arrows"
+              },
+              {
+                "type": "item_check",
+                "item": "Fire Rod"
+              },
+              {
+                "type": "helper",
+                "name": "can_use_bombs",
+                "args": [
+                  {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "name",
+                      "name": "enemies"
                     },
-                    {
-                      "type": "helper",
-                      "name": "can_extend_magic"
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 4
                     }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "helper",
-              "name": "can_shoot_arrows"
-            },
-            {
-              "type": "item_check",
-              "item": "Fire Rod"
-            },
-            {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "compare",
-                  "left": {
-                    "type": "constant",
-                    "value": "default"
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "has_melee_weapon"
+              },
+              {
+                "type": "item_check",
+                "item": "Cane of Somaria"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Cane of Byrna"
                   },
-                  "op": "in",
-                  "right": {
-                    "type": "list",
-                    "value": [
+                  {
+                    "type": "or",
+                    "conditions": [
                       {
-                        "type": "constant",
-                        "value": "easy"
+                        "type": "compare",
+                        "left": {
+                          "type": "name",
+                          "name": "enemies"
+                        },
+                        "op": "<",
+                        "right": {
+                          "type": "constant",
+                          "value": 6
+                        }
                       },
                       {
-                        "type": "constant",
-                        "value": "default"
+                        "type": "helper",
+                        "name": "can_extend_magic"
                       }
                     ]
                   }
-                },
-                {
-                  "type": "helper",
-                  "name": "can_use_bombs",
-                  "args": [
-                    {
-                      "type": "binary_op",
-                      "left": {
-                        "type": "name",
-                        "name": "enemies"
-                      },
-                      "op": "*",
-                      "right": {
-                        "type": "constant",
-                        "value": 4
-                      }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "can_shoot_arrows"
+              },
+              {
+                "type": "item_check",
+                "item": "Fire Rod"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "compare",
+                    "left": {
+                      "type": "setting_value",
+                      "setting": "enemy_health"
+                    },
+                    "op": "in",
+                    "right": {
+                      "type": "list",
+                      "value": [
+                        {
+                          "type": "constant",
+                          "value": "easy"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "default"
+                        }
+                      ]
                     }
-                  ]
-                }
-              ]
-            }
-          ]
+                  },
+                  {
+                    "type": "helper",
+                    "name": "can_use_bombs",
+                    "args": [
+                      {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "name",
+                          "name": "enemies"
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "constant",
+                          "value": 4
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
         },
         "defaults": {
           "enemies": 5
@@ -18183,8 +18261,8 @@
                 "type": "or",
                 "conditions": [
                   {
-                    "type": "constant",
-                    "value": false
+                    "type": "setting_value",
+                    "setting": "swordless"
                   },
                   {
                     "type": "helper",
@@ -18214,8 +18292,8 @@
                 "type": "and",
                 "conditions": [
                   {
-                    "type": "constant",
-                    "value": false
+                    "type": "setting_value",
+                    "setting": "swordless"
                   },
                   {
                     "type": "item_check",
@@ -18232,32 +18310,67 @@
           "count"
         ],
         "body": {
-          "type": "and",
-          "conditions": [
-            {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Bow"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Silver Bow"
-                }
-              ]
-            },
-            {
-              "type": "helper",
-              "name": "can_hold_arrows",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "count"
-                }
-              ]
-            }
-          ]
+          "type": "conditional",
+          "test": {
+            "type": "setting_value",
+            "setting": "retro_bow"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Bow"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Silver Bow"
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "can_buy",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Single Arrow"
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Bow"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Silver Bow"
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "can_hold_arrows",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "count"
+                  }
+                ]
+              }
+            ]
+          }
         },
         "defaults": {
           "count": 0
@@ -18274,8 +18387,19 @@
               "type": "assign",
               "name": "bombs",
               "value": {
-                "type": "constant",
-                "value": 10
+                "type": "conditional",
+                "test": {
+                  "type": "setting_value",
+                  "setting": "bombless_start"
+                },
+                "if_true": {
+                  "type": "constant",
+                  "value": 0
+                },
+                "if_false": {
+                  "type": "constant",
+                  "value": 10
+                }
               }
             },
             {
@@ -18391,8 +18515,11 @@
                 "type": "and",
                 "conditions": [
                   {
-                    "type": "constant",
-                    "value": false
+                    "type": "not",
+                    "condition": {
+                      "type": "setting_value",
+                      "setting": "shuffle_capacity_upgrades"
+                    }
                   },
                   {
                     "type": "item_check",
@@ -18550,7 +18677,11 @@
       },
       "has_misery_mire_medallion": {
         "type": "item_check",
-        "item": "Quake"
+        "item": {
+          "type": "setting_value",
+          "setting": "required_medallions",
+          "index": 0
+        }
       },
       "has_sword": {
         "type": "or",
@@ -18575,7 +18706,11 @@
       },
       "has_turtle_rock_medallion": {
         "type": "item_check",
-        "item": "Ether"
+        "item": {
+          "type": "setting_value",
+          "setting": "required_medallions",
+          "index": 1
+        }
       },
       "heart_count": {
         "type": "block",
@@ -18688,8 +18823,27 @@
             "value": true
           },
           "if_false": {
-            "type": "constant",
-            "value": true
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "setting_value",
+                "setting": "mode"
+              },
+              "op": "!=",
+              "right": {
+                "type": "constant",
+                "value": "inverted"
+              }
+            },
+            "if_true": {
+              "type": "constant",
+              "value": true
+            },
+            "if_false": {
+              "type": "constant",
+              "value": true
+            }
           }
         }
       },

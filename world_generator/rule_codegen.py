@@ -3844,16 +3844,23 @@ class HelperCodeGenerator:
     this generates raw Python code with lambda-compatible expressions.
     """
 
-    def __init__(self, game_name: str, settings: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(
+        self,
+        game_name: str,
+        resolved_values: Optional[Dict[str, Any]] = None,
+        option_definitions: Optional[Dict[str, Any]] = None
+    ) -> None:
         """
         Initialize the helper code generator.
 
         Args:
             game_name: The game name (used for generating function names)
-            settings: Optional dict of resolved setting values for evaluating setting_value nodes
+            resolved_values: Optional dict of resolved option/attribute values (for fallback)
+            option_definitions: Optional dict defining which names are options (vs world attributes)
         """
         self.game_name = game_name
-        self.settings = settings or {}
+        self.settings = resolved_values or {}  # Values for fallback when dynamic access not possible
+        self.option_definitions = option_definitions or {}  # To distinguish options from world attributes
         # Sanitize game name for use in Python identifiers
         import re
         self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower()
@@ -4344,37 +4351,39 @@ class HelperCodeGenerator:
         return 'True'
 
     def _expr_setting_value(self, expr: Dict[str, Any]) -> str:
-        """Resolve a setting value to its actual value from the seed's settings."""
+        """Generate code to access an option or world attribute at runtime.
+
+        Instead of resolving to constants at generation time, generate code that
+        accesses the value at runtime. This allows the exporter to recognize the
+        pattern and convert it back to a setting_value rule.
+
+        For options (defined in option_definitions):
+            state.multiworld.worlds[player].options.<name>
+        For world attributes (not in option_definitions):
+            state.multiworld.worlds[player].<name>
+
+        These patterns are recognized by the exporter's _is_world_options_pattern().
+        """
         setting = expr.get('setting', '')
-        # Look up the setting value in the resolved settings from rules.json
-        # If the setting was captured during export, use its value
-        if setting in self.settings:
-            value = self.settings[setting]
-            # Handle indexed access into settings
-            if 'index' in expr:
-                index = expr['index']
-                # Handle list indexing (e.g., required_medallions[0])
-                if isinstance(value, list):
-                    if isinstance(index, int) and 0 <= index < len(value):
-                        value = value[index]
-                # Handle dict key access (e.g., sprite_data["Turtle Zone 1"])
-                elif isinstance(value, dict):
-                    if index in value:
-                        value = value[index]
-            if isinstance(value, bool):
-                return 'True' if value else 'False'
-            elif isinstance(value, str):
-                # Convert string 'true'/'false' to Python booleans
-                if value.lower() == 'true':
-                    return 'True'
-                elif value.lower() == 'false':
-                    return 'False'
-                return repr(value)
-            else:
-                return repr(value)
-        # If not found in settings, default to False for safety
-        # This prevents inaccessible regions from being created with always-True rules
-        return 'False'
+
+        # Check if this is an option or a world attribute
+        is_option = setting in self.option_definitions
+
+        # Build the base path
+        if is_option:
+            base_path = f'state.multiworld.worlds[player].options.{setting}'
+        else:
+            base_path = f'state.multiworld.worlds[player].{setting}'
+
+        # Handle indexed access (e.g., required_medallions[0])
+        if 'index' in expr:
+            index = expr['index']
+            if isinstance(index, int):
+                return f'{base_path}[{index}]'
+            elif isinstance(index, str):
+                return f'{base_path}[{repr(index)}]'
+
+        return base_path
 
     def _expr_placement_lookup(self, expr: Dict[str, Any]) -> str:
         """Resolve a placement_lookup to the actual item at that location.
