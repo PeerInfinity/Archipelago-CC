@@ -97,7 +97,7 @@ def truncate_value(value: Any, max_length: int = 100) -> str:
     return s
 
 
-def is_canonical_difference(path: str) -> bool:
+def is_canonical_difference(path: str, original_value: Any = None, worldgen_value: Any = None) -> bool:
     """Check if a difference path is caused by --canonical-seed1 or WorldGen.
 
     These differences are expected when comparing an original export
@@ -108,6 +108,10 @@ def is_canonical_difference(path: str) -> bool:
     - item_groups (item group assignments)
     - randomize_items option (WorldGen-specific, controls canonical placement)
     - world_classes (class names differ between original and WorldGen)
+    - options missing in WorldGen (game-specific options not replicated)
+    - shops field (WorldGen may export empty array)
+    - web.tutorials (WorldGen worlds don't have tutorials)
+    - world_description (WorldGen has auto-generated descriptions)
     """
     # canonical_placements section
     if 'canonical_placements' in path:
@@ -135,6 +139,23 @@ def is_canonical_difference(path: str) -> bool:
     if 'world_classes' in path:
         return True
 
+    # Options that exist in original but are missing in WorldGen
+    # (game-specific options that WorldGen doesn't replicate)
+    if '.options.' in path and worldgen_value == '<missing>':
+        return True
+
+    # Shops field differences (WorldGen may export empty array while original has no field)
+    if path.endswith('.shops'):
+        return True
+
+    # Web tutorials (WorldGen worlds don't have tutorials)
+    if '.web.tutorials' in path:
+        return True
+
+    # World description (WorldGen has auto-generated descriptions)
+    if path.endswith('.world_description'):
+        return True
+
     return False
 
 
@@ -142,7 +163,7 @@ def filter_canonical_differences(
     differences: List[Tuple[str, Any, Any]]
 ) -> List[Tuple[str, Any, Any]]:
     """Filter out differences caused by --canonical-seed1."""
-    return [diff for diff in differences if not is_canonical_difference(diff[0])]
+    return [diff for diff in differences if not is_canonical_difference(diff[0], diff[1], diff[2])]
 
 
 def main():
