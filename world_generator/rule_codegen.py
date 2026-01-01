@@ -3304,6 +3304,33 @@ class RuleCodeGenerator:
                         self.required_imports.add('And')
                         return f'And({", ".join(has_checks)})'
 
+        # Handle constant iterator type (a direct list of items to check)
+        # This occurs when the comprehension iterates over a static list like:
+        #   all(state.has(tech.name, player) for tech in ["tech1", "tech2", ...])
+        elif iterator.get('type') == 'constant' and isinstance(iterator.get('value'), list):
+            required_items = iterator.get('value', [])
+
+            if not required_items:
+                # Empty list - all() of nothing is True
+                self.required_imports.add('True_')
+                return 'True_()'
+
+            # Generate HasAll check for required items
+            if len(required_items) == 1:
+                item = required_items[0]
+                item_escaped = self._escape_string(str(item), "'")
+                self.required_imports.add('Has')
+                return f"Has('{item_escaped}')"
+            else:
+                # Multiple items - use And with Has for each
+                has_checks = []
+                for item in required_items:
+                    item_escaped = self._escape_string(str(item), "'")
+                    has_checks.append(f"Has('{item_escaped}')")
+                self.required_imports.add('Has')
+                self.required_imports.add('And')
+                return f'And({", ".join(has_checks)})'
+
         # Couldn't resolve statically - fall back to True_()
         # This shouldn't happen for properly exported Factorio rules
         self.required_imports.add('True_')
@@ -3356,6 +3383,33 @@ class RuleCodeGenerator:
                         self.required_imports.add('Has')
                         self.required_imports.add('Or')
                         return f'Or({", ".join(has_checks)})'
+
+        # Handle constant iterator type (a direct list of items to check)
+        # This occurs when the comprehension iterates over a static list like:
+        #   any(state.has(item.name, player) for item in ["item1", "item2", ...])
+        elif iterator.get('type') == 'constant' and isinstance(iterator.get('value'), list):
+            items = iterator.get('value', [])
+
+            if not items:
+                # Empty list - any() of nothing is False
+                self.required_imports.add('False_')
+                return 'False_()'
+
+            # Generate Or check for items
+            if len(items) == 1:
+                item = items[0]
+                item_escaped = self._escape_string(str(item), "'")
+                self.required_imports.add('Has')
+                return f"Has('{item_escaped}')"
+            else:
+                # Multiple items - use Or with Has for each
+                has_checks = []
+                for item in items:
+                    item_escaped = self._escape_string(str(item), "'")
+                    has_checks.append(f"Has('{item_escaped}')")
+                self.required_imports.add('Has')
+                self.required_imports.add('Or')
+                return f'Or({", ".join(has_checks)})'
 
         # Couldn't resolve statically - fall back to False_()
         self.required_imports.add('False_')
