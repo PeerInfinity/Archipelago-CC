@@ -371,8 +371,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Fishing Rod",
-                "count": 1
+                "item_name": "Progressive Fishing Rod"
               }
             },
             "item": {
@@ -389,8 +388,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Fishing Rod",
-                "count": 1
+                "item_name": "Progressive Fishing Rod"
               }
             },
             "item": {
@@ -407,8 +405,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Fishing Rod",
-                "count": 1
+                "item_name": "Progressive Fishing Rod"
               }
             },
             "item": {
@@ -425,8 +422,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Fishing Rod",
-                "count": 1
+                "item_name": "Progressive Fishing Rod"
               }
             },
             "item": {
@@ -443,8 +439,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Fishing Rod",
-                "count": 1
+                "item_name": "Progressive Fishing Rod"
               }
             },
             "item": {
@@ -461,8 +456,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Fishing Rod",
-                "count": 1
+                "item_name": "Progressive Fishing Rod"
               }
             },
             "item": {
@@ -479,8 +473,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Stick",
-                "count": 1
+                "item_name": "Stick"
               }
             },
             "item": {
@@ -497,8 +490,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Stick",
-                "count": 1
+                "item_name": "Stick"
               }
             },
             "item": {
@@ -515,8 +507,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Stick",
-                "count": 1
+                "item_name": "Stick"
               }
             },
             "item": {
@@ -533,8 +524,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Toy Shovel",
-                "count": 1
+                "item_name": "Toy Shovel"
               }
             },
             "item": {
@@ -607,8 +597,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Fishing Rod",
-                "count": 1
+                "item_name": "Progressive Fishing Rod"
               }
             },
             "item": {
@@ -669,8 +658,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Fishing Rod",
-                "count": 1
+                "item_name": "Progressive Fishing Rod"
               }
             },
             "item": {
@@ -687,8 +675,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Camping Permit",
-                "count": 1
+                "item_name": "Camping Permit"
               }
             },
             "item": {
@@ -929,8 +916,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Fishing Rod",
-                "count": 1
+                "item_name": "Progressive Fishing Rod"
               }
             },
             "item": {
@@ -947,8 +933,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Motorboat Key",
-                "count": 1
+                "item_name": "Motorboat Key"
               }
             },
             "item": {
@@ -1007,8 +992,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Shell Necklace",
-                    "count": 1
+                    "item_name": "Shell Necklace"
                   }
                 }
               ]
@@ -1041,8 +1025,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Headband",
-                "count": 1
+                "item_name": "Headband"
               }
             },
             "item": {
@@ -1059,8 +1042,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Fishing Rod",
-                "count": 1
+                "item_name": "Progressive Fishing Rod"
               }
             },
             "item": {
@@ -1091,8 +1073,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shell Necklace",
-                "count": 1
+                "item_name": "Shell Necklace"
               }
             },
             "item": {
@@ -1109,8 +1090,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Toy Shovel",
-                "count": 1
+                "item_name": "Toy Shovel"
               }
             },
             "item": {
@@ -1201,8 +1181,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Wristwatch",
-                "count": 1
+                "item_name": "Wristwatch"
               }
             },
             "item": {
@@ -1220,17 +1199,28 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Golden Feather",
-                    "count": 2
-                  }
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Golden Feather",
+                        "count": 0
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Bucket"
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Bucket",
-                    "count": 1
+                    "item_name": "Golden Feather",
+                    "count": 2
                   }
                 }
               ]
@@ -1337,8 +1327,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             },
             "item": {
@@ -1369,8 +1358,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             },
             "item": {
@@ -1401,8 +1389,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Golden Feather",
-                "count": 1
+                "item_name": "Golden Feather"
               }
             },
             "item": {
@@ -1447,8 +1434,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             },
             "item": {
@@ -1465,8 +1451,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             },
             "item": {
@@ -1571,8 +1556,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             },
             "item": {
@@ -1589,8 +1573,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             },
             "item": {
@@ -1775,8 +1758,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Shovel",
-                    "count": 1
+                    "item_name": "Shovel"
                   }
                 }
               ]
@@ -1841,8 +1823,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             },
             "item": {
@@ -1859,8 +1840,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             },
             "item": {
@@ -1891,8 +1871,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Golden Feather",
-                "count": 1
+                "item_name": "Golden Feather"
               }
             },
             "item": {
@@ -1909,8 +1888,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             },
             "item": {
@@ -1927,8 +1905,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             },
             "item": {
@@ -1960,19 +1937,38 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAny",
-                  "args": {
-                    "items": [
-                      "Bucket",
-                      "Golden Feather"
-                    ]
-                  }
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Golden Feather",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Bucket"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Golden Feather"
+                      }
+                    }
+                  ]
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Shovel",
-                    "count": 1
+                    "item_name": "Shovel"
                   }
                 }
               ]
@@ -2019,8 +2015,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shovel",
-                "count": 1
+                "item_name": "Shovel"
               }
             },
             "item": {
@@ -2041,17 +2036,28 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Golden Feather",
-                        "count": 2
-                      }
+                      "rule": "And",
+                      "children": [
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Golden Feather",
+                            "count": 0
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Bucket"
+                          }
+                        }
+                      ]
                     },
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Bucket",
-                        "count": 1
+                        "item_name": "Golden Feather",
+                        "count": 2
                       }
                     }
                   ]
@@ -2059,8 +2065,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Shovel",
-                    "count": 1
+                    "item_name": "Shovel"
                   }
                 }
               ]
@@ -2109,13 +2114,33 @@
             "name": "Old Building Race Reward",
             "id": 83124,
             "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "items": [
-                  "Bucket",
-                  "Golden Feather"
-                ]
-              }
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Golden Feather",
+                        "count": 0
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Bucket"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Golden Feather"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "21 Coins",
@@ -2956,8 +2981,7 @@
           "display_name": "Toy Shovels"
         }
       },
-      "shops": [],
-      "world_description": "A Short Hike WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "A Short Hike is a relaxing adventure set on the islands of Hawk Peak. Fly and climb using Claire's wings and Golden Feathers\nto make your way up to the summit. Along the way you'll meet other hikers, discover hidden treasures,\nand take in the beautiful world around you.",
       "slot_data": {
         "settings": {
           "goal": 3,
@@ -2969,7 +2993,19 @@
         }
       },
       "web": {
-        "theme": "ocean"
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the A Short Hike randomizer connected to an Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Chandler"
+            ]
+          }
+        ]
       },
       "world_directory": "shorthike_worldgen"
     }

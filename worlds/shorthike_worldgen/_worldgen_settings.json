@@ -29,7 +29,8 @@
       "sticks": 8,
       "toy_shovels": 5
     },
-    "world_directory": "shorthike"
+    "world_directory": "shorthike",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "world_description": "A Short Hike is a relaxing adventure set on the islands of Hawk Peak. Fly and climb using Claire's wings and Golden Feathers\nto make your way up to the summit. Along the way you'll meet other hikers, discover hidden treasures,\nand take in the beautiful world around you.",
