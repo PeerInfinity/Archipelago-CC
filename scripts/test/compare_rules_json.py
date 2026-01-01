@@ -294,6 +294,10 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         # shop property - WorldGen doesn't preserve shop data on regions
         if '.shop' in path:
             return True
+        # Game-specific location attributes that WorldGen doesn't preserve
+        # Factorio uses: complexity, count, rel_cost, revealed
+        if any(path.endswith(f'.{attr}') for attr in ['complexity', 'count', 'rel_cost', 'revealed']):
+            return True
 
     # Access rule structural differences - WorldGen generates rules differently
     # The rules are logically equivalent but structured differently
@@ -359,6 +363,14 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         for attr in location_metadata_attrs:
             if path.endswith(f'.{attr}'):
                 return True
+
+    # game_info.*.variables: Game-specific variables like required_technologies
+    # These are computed from module-level data structures that may not be populated
+    # in worldgen contexts. For example, Factorio's required_technologies is a
+    # lazy KeyedDefaultDict that only populates when specific ingredients are accessed
+    # during normal world generation. WorldGen worlds don't trigger this population.
+    if re.match(r'^game_info\.\d+\.variables\.', path):
+        return True
 
     return False
 
