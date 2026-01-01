@@ -94,6 +94,7 @@ class RegionData:
     exits: List[str] = field(default_factory=list)
     hint_text: Optional[str] = None  # Display name if different from name
     dynamically_added: bool = False  # True if region was added after sphere calculation
+    id: Optional[int] = None  # Optional region ID (game-specific, e.g., room_id in ffmq)
 
 
 def _param_is_used_in_body(param_name: str, body: Any) -> bool:
@@ -423,6 +424,7 @@ def extract_regions(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Di
         exit_names = [exit_info.get('name', '') for exit_info in region_info.get('exits', [])]
         hint_text = region_info.get('hint_text')  # Only set if different from name
         dynamically_added = region_info.get('dynamically_added', False)
+        region_id = region_info.get('id')  # Optional region ID (e.g., room_id in ffmq)
 
         # Auto-mark regions with no locations and no exits as dynamically_added.
         # The original world may filter these out (e.g., shapez does this).
@@ -437,6 +439,7 @@ def extract_regions(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Di
             exits=exit_names,
             hint_text=hint_text,
             dynamically_added=dynamically_added,
+            id=region_id,
         )
 
         # Extract exits
