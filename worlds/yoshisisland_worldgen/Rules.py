@@ -240,32 +240,32 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Overworld -> World 1", player),
-        Has('World 1 Gate')
+        Has('World 1 Gate', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> World 2", player),
-        Has('World 2 Gate')
+        Has('World 2 Gate', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> World 3", player),
-        Has('World 3 Gate')
+        Has('World 3 Gate', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> World 4", player),
-        Has('World 4 Gate')
+        Has('World 4 Gate', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> World 5", player),
-        Has('World 5 Gate')
+        Has('World 5 Gate', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> World 6", player),
-        Has('World 6 Gate')
+        Has('World 6 Gate', 1)
     )
 
     world.set_rule(
@@ -350,7 +350,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Make Eggs, Throw Eggs: Level Clear", player),
-        Has('Beanstalk')
+        Has('Beanstalk', 1)
     )
 
     world.set_rule(
@@ -370,22 +370,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Watch Out Below!: Level Clear", player),
-        Has('Large Spring Ball')
+        Has('Large Spring Ball', 1)
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Chomp Rock: Red Coins", player),
-        Has('Chomp Rock')
+        Has('Chomp Rock', 1)
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Chomp Rock: Flowers", player),
-        Has('Chomp Rock')
+        Has('Chomp Rock', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Burt The Bashful's Fort: Red Coins", player),
-        Has('Spring Ball')
+        Has('Spring Ball', 1)
     )
 
     world.set_rule(
@@ -420,7 +420,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Shy-Guys On Stilts: Flowers", player),
-        Has('Large Spring Ball')
+        Has('Large Spring Ball', 1)
     )
 
     world.set_rule(
@@ -450,12 +450,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Salvo The Slime's Castle: Red Coins", player),
-        Has('Platform Ghost')
+        Has('Platform Ghost', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Salvo The Slime's Castle: Flowers", player),
-        Has('Platform Ghost')
+        Has('Platform Ghost', 1)
     )
 
     world.set_rule(
@@ -490,7 +490,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Visit Koopa And Para-Koopa: Level Clear", player),
-        Has('Large Spring Ball')
+        Has('Large Spring Ball', 1)
     )
 
     world.set_rule(
@@ -515,7 +515,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("What's Gusty Taste Like?: Red Coins", player),
-        Has('! Switch')
+        Has('! Switch', 1)
     )
 
     world.set_rule(
@@ -555,7 +555,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Watch Out For Lakitu: Red Coins", player),
-        Has('Chomp Rock')
+        Has('Chomp Rock', 1)
     )
 
     world.set_rule(
@@ -565,12 +565,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Watch Out For Lakitu: Level Clear", player),
-        Has('Chomp Rock')
+        Has('Chomp Rock', 1)
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Mystery Maze: Red Coins", player),
-        Has('Large Spring Ball')
+        Has('Large Spring Ball', 1)
     )
 
     world.set_rule(
@@ -585,7 +585,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Mystery Maze: Level Clear", player),
-        Has('Large Spring Ball')
+        Has('Large Spring Ball', 1)
     )
 
     world.set_rule(
@@ -690,7 +690,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Prince Froggy's Fort: Red Coins", player),
-        Has('Submarine Morph')
+        Has('Submarine Morph', 1)
     )
 
     world.set_rule(
@@ -755,12 +755,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Monkeys' Favorite Lake: Stars", player),
-        Has('Large Spring Ball')
+        Has('Large Spring Ball', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Monkeys' Favorite Lake: Level Clear", player),
-        Has('Large Spring Ball')
+        Has('Large Spring Ball', 1)
     )
 
     world.set_rule(
@@ -790,12 +790,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("GO! GO! MARIO!!: Red Coins", player),
-        Has('Super Star')
+        Has('Super Star', 1)
     )
 
     world.set_rule(
         multiworld.get_location("GO! GO! MARIO!!: Flowers", player),
-        Has('Super Star')
+        Has('Super Star', 1)
     )
 
     world.set_rule(
@@ -805,7 +805,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("GO! GO! MARIO!!: Level Clear", player),
-        Has('Super Star')
+        Has('Super Star', 1)
     )
 
     world.set_rule(
@@ -825,7 +825,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Lakitus: Level Clear", player),
-        Has('Large Spring Ball')
+        Has('Large Spring Ball', 1)
     )
 
     world.set_rule(
@@ -845,7 +845,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Don't Look Back!: Level Clear", player),
-        Has('! Switch')
+        Has('! Switch', 1)
     )
 
     world.set_rule(
@@ -910,12 +910,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ride Like The Wind: Red Coins", player),
-        Has('Large Spring Ball')
+        Has('Large Spring Ball', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ride Like The Wind: Flowers", player),
-        Has('Large Spring Ball')
+        Has('Large Spring Ball', 1)
     )
 
     world.set_rule(
@@ -925,7 +925,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ride Like The Wind: Level Clear", player),
-        Has('Large Spring Ball')
+        Has('Large Spring Ball', 1)
     )
 
     world.set_rule(
@@ -1005,7 +1005,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Stars", player),
-        Or(And(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), Has('Dashed Platform'), Has('Dashed Stairs')), And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAll('Dashed Stairs', 'Platform Ghost')))
+        Or(And(HelperCall(helper_func=_yoshisislandworldgen_cansee_clouds, helper_name="cansee_clouds"), HasAll('Dashed Platform', 'Dashed Stairs')), And(HelperCall(helper_func=_yoshisislandworldgen_has_midring, helper_name="has_midring"), HasAll('Dashed Stairs', 'Platform Ghost')))
     )
 
     world.set_rule(
@@ -1105,12 +1105,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Bandits: Red Coins", player),
-        Has('Super Star')
+        Has('Super Star', 1)
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Bandits: Flowers", player),
-        Has('Super Star')
+        Has('Super Star', 1)
     )
 
     world.set_rule(
@@ -1120,7 +1120,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Bandits: Level Clear", player),
-        Has('Super Star')
+        Has('Super Star', 1)
     )
 
     world.set_rule(
@@ -1190,7 +1190,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("KEEP MOVING!!!!: Flowers", player),
-        Has('Egg Plant')
+        Has('Egg Plant', 1)
     )
 
     world.set_rule(

@@ -396,14 +396,14 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Granny's House Keys"
+                    "item_name": "Strawberry",
+                    "count": 40
                   }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Strawberry",
-                    "count": 40
+                    "item_name": "Granny's House Keys"
                   }
                 }
               ]

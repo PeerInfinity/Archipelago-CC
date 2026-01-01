@@ -96,7 +96,7 @@ def _supermarioland2worldgen_marios_castle_wario(state: "CollectionState", playe
 
 
 def _supermarioland2worldgen_not_blocked_by_sharks(state: "CollectionState", player: int) -> bool:
-    sharks = tuple(([{'screen': 1, 'sprite': 'Owl Platform (Horizontal)/Cheep Cheep (Horizontal)', 'x': 2, 'y': 16, 'misc': 192}, {'screen': 1, 'sprite': 'Horizontal Blurp', 'x': 12, 'y': 21, 'misc': 64}, {'screen': 1, 'sprite': 'Mushroom Block', 'x': 13, 'y': 3, 'misc': 64}, {'screen': 2, 'sprite': 'Horizontal Blurp', 'x': 1, 'y': 18, 'misc': 64}, {'screen': 2, 'sprite': 'Spiny Cheep Cheep', 'x': 11, 'y': 26, 'misc': 64}, {'screen': 2, 'sprite': 'Cheep Cheep (Vertical)', 'x': 26, 'y': 28, 'misc': 192}, {'screen': 3, 'sprite': 'Goomba', 'x': 3, 'y': 8, 'misc': 64}, {'screen': 3, 'sprite': 'Goomba', 'x': 17, 'y': 8, 'misc': 64}, {'screen': 3, 'sprite': 'Star Block', 'x': 17, 'y': 1, 'misc': 64}, {'screen': 3, 'sprite': 'Cheep Cheep (Vertical)', 'x': 18, 'y': 28, 'misc': 192}, {'screen': 3, 'sprite': 'Heart Block', 'x': 19, 'y': 1, 'misc': 64}, {'screen': 3, 'sprite': 'Shark', 'x': 27, 'y': 26, 'misc': 192}, {'screen': 4, 'sprite': 'Paragoomba (Diagonal)', 'x': 1, 'y': 4, 'misc': 64}, {'screen': 4, 'sprite': 'Goomba', 'x': 10, 'y': 8, 'misc': 64}, {'screen': 5, 'sprite': 'Horizontal Blurp', 'x': 1, 'y': 16, 'misc': 64}, {'screen': 5, 'sprite': 'Horizontal Blurp', 'x': 9, 'y': 22, 'misc': 192}, {'screen': 5, 'sprite': 'Horizontal Blurp', 'x': 16, 'y': 26, 'misc': 64}, {'screen': 6, 'sprite': 'Shark', 'x': 12, 'y': 21, 'misc': 64}, {'screen': 6, 'sprite': 'Midway Bell', 'x': 21, 'y': 18, 'misc': 64}, {'screen': 6, 'sprite': 'Owl Platform (Horizontal)/Cheep Cheep (Horizontal)', 'x': 25, 'y': 16, 'misc': 64}, {'screen': 7, 'sprite': 'Spiny Cheep Cheep', 'x': 21, 'y': 17, 'misc': 64}, {'screen': 7, 'sprite': 'Horizontal Blurp', 'x': 25, 'y': 26, 'misc': 64}, {'screen': 8, 'sprite': 'Cheep Cheep (Vertical)', 'x': 7, 'y': 20, 'misc': 64}, {'screen': 8, 'sprite': 'Shark', 'x': 15, 'y': 14, 'misc': 192}, {'screen': 8, 'sprite': 'Spiny Cheep Cheep', 'x': 25, 'y': 24, 'misc': 192}, {'screen': 8, 'sprite': 'Mushroom Block', 'x': 31, 'y': 3, 'misc': 64}, {'screen': 9, 'sprite': 'Cheep Cheep (Vertical)', 'x': 15, 'y': 24, 'misc': 64}, {'screen': 9, 'sprite': 'Cheep Cheep (Vertical)', 'x': 23, 'y': 20, 'misc': 192}, {'screen': 9, 'sprite': 'Cheep Cheep (Vertical)', 'x': 29, 'y': 26, 'misc': 192}, {'screen': 10, 'sprite': 'Shark', 'x': 10, 'y': 18, 'misc': 192}, {'screen': 10, 'sprite': 'Money Bag Block', 'x': 11, 'y': 31, 'misc': 32}, {'screen': 11, 'sprite': 'Shark', 'x': 5, 'y': 22, 'misc': 64}, {'screen': 11, 'sprite': 'Horizontal Blurp', 'x': 16, 'y': 28, 'misc': 192}, {'screen': 11, 'sprite': 'Bonus Bell', 'x': 21, 'y': 9, 'misc': 64}, {'screen': 11, 'sprite': 'Heart Block', 'x': 27, 'y': 23, 'misc': 64}][i]['sprite'] for i in [27, 28])).count('Shark')
+    sharks = tuple([[{'screen': 1, 'sprite': 'Owl Platform (Horizontal)/Cheep Cheep (Horizontal)', 'x': 2, 'y': 16, 'misc': 192}, {'screen': 1, 'sprite': 'Horizontal Blurp', 'x': 12, 'y': 21, 'misc': 64}, {'screen': 1, 'sprite': 'Mushroom Block', 'x': 13, 'y': 3, 'misc': 64}, {'screen': 2, 'sprite': 'Horizontal Blurp', 'x': 1, 'y': 18, 'misc': 64}, {'screen': 2, 'sprite': 'Spiny Cheep Cheep', 'x': 11, 'y': 26, 'misc': 64}, {'screen': 2, 'sprite': 'Cheep Cheep (Vertical)', 'x': 26, 'y': 28, 'misc': 192}, {'screen': 3, 'sprite': 'Goomba', 'x': 3, 'y': 8, 'misc': 64}, {'screen': 3, 'sprite': 'Goomba', 'x': 17, 'y': 8, 'misc': 64}, {'screen': 3, 'sprite': 'Star Block', 'x': 17, 'y': 1, 'misc': 64}, {'screen': 3, 'sprite': 'Cheep Cheep (Vertical)', 'x': 18, 'y': 28, 'misc': 192}, {'screen': 3, 'sprite': 'Heart Block', 'x': 19, 'y': 1, 'misc': 64}, {'screen': 3, 'sprite': 'Shark', 'x': 27, 'y': 26, 'misc': 192}, {'screen': 4, 'sprite': 'Paragoomba (Diagonal)', 'x': 1, 'y': 4, 'misc': 64}, {'screen': 4, 'sprite': 'Goomba', 'x': 10, 'y': 8, 'misc': 64}, {'screen': 5, 'sprite': 'Horizontal Blurp', 'x': 1, 'y': 16, 'misc': 64}, {'screen': 5, 'sprite': 'Horizontal Blurp', 'x': 9, 'y': 22, 'misc': 192}, {'screen': 5, 'sprite': 'Horizontal Blurp', 'x': 16, 'y': 26, 'misc': 64}, {'screen': 6, 'sprite': 'Shark', 'x': 12, 'y': 21, 'misc': 64}, {'screen': 6, 'sprite': 'Midway Bell', 'x': 21, 'y': 18, 'misc': 64}, {'screen': 6, 'sprite': 'Owl Platform (Horizontal)/Cheep Cheep (Horizontal)', 'x': 25, 'y': 16, 'misc': 64}, {'screen': 7, 'sprite': 'Spiny Cheep Cheep', 'x': 21, 'y': 17, 'misc': 64}, {'screen': 7, 'sprite': 'Horizontal Blurp', 'x': 25, 'y': 26, 'misc': 64}, {'screen': 8, 'sprite': 'Cheep Cheep (Vertical)', 'x': 7, 'y': 20, 'misc': 64}, {'screen': 8, 'sprite': 'Shark', 'x': 15, 'y': 14, 'misc': 192}, {'screen': 8, 'sprite': 'Spiny Cheep Cheep', 'x': 25, 'y': 24, 'misc': 192}, {'screen': 8, 'sprite': 'Mushroom Block', 'x': 31, 'y': 3, 'misc': 64}, {'screen': 9, 'sprite': 'Cheep Cheep (Vertical)', 'x': 15, 'y': 24, 'misc': 64}, {'screen': 9, 'sprite': 'Cheep Cheep (Vertical)', 'x': 23, 'y': 20, 'misc': 192}, {'screen': 9, 'sprite': 'Cheep Cheep (Vertical)', 'x': 29, 'y': 26, 'misc': 192}, {'screen': 10, 'sprite': 'Shark', 'x': 10, 'y': 18, 'misc': 192}, {'screen': 10, 'sprite': 'Money Bag Block', 'x': 11, 'y': 31, 'misc': 32}, {'screen': 11, 'sprite': 'Shark', 'x': 5, 'y': 22, 'misc': 64}, {'screen': 11, 'sprite': 'Horizontal Blurp', 'x': 16, 'y': 28, 'misc': 192}, {'screen': 11, 'sprite': 'Bonus Bell', 'x': 21, 'y': 9, 'misc': 64}, {'screen': 11, 'sprite': 'Heart Block', 'x': 27, 'y': 23, 'misc': 64}][i]['sprite'] for i in [27, 28]]).count('Shark')
     if (state.has('Carrot', player)) or (not (sharks)):
         return True
     if (sharks == 2):
@@ -226,7 +226,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Tree Zone 2 -> Tree Zone Secret Course", player),
-        Has('Tree Zone Secret')
+        Has('Tree Zone Secret', 1)
     )
 
     world.set_rule(
@@ -236,7 +236,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Space Zone 1 -> Space Zone Secret Course", player),
-        Has('Space Zone Secret')
+        Has('Space Zone Secret', 1)
     )
 
     world.set_rule(
@@ -251,7 +251,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Macro Zone 1 -> Macro Zone Secret Course", player),
-        Has('Macro Zone Secret 1')
+        Has('Macro Zone Secret 1', 1)
     )
 
     world.set_rule(
@@ -266,12 +266,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Macro Zone 4 -> Macro Zone Secret Course", player),
-        Has('Macro Zone Secret 2')
+        Has('Macro Zone Secret 2', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Macro Zone Secret Course -> Macro Zone 4", player),
-        Has('Macro Zone Secret 2')
+        Has('Macro Zone Secret 2', 1)
     )
 
     world.set_rule(
@@ -286,7 +286,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Pumpkin Zone 2 -> Pumpkin Zone Secret Course 1", player),
-        Has('Pumpkin Zone Secret 1')
+        Has('Pumpkin Zone Secret 1', 1)
     )
 
     world.set_rule(
@@ -296,7 +296,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Pumpkin Zone 3 -> Pumpkin Zone Secret Course 2", player),
-        Has('Pumpkin Zone Secret 2')
+        Has('Pumpkin Zone Secret 2', 1)
     )
 
     world.set_rule(
@@ -326,7 +326,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Turtle Zone 2 -> Turtle Zone Secret Course", player),
-        Has('Turtle Zone Secret')
+        Has('Turtle Zone Secret', 1)
     )
     # Location rules
     world.set_rule(

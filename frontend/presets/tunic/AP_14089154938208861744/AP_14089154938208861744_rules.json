@@ -7239,14 +7239,14 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hero's Laurels"
+                    "item_name": "Key",
+                    "count": 2
                   }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Key",
-                    "count": 2
+                    "item_name": "Hero's Laurels"
                   }
                 }
               ]
@@ -7285,14 +7285,14 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hero's Laurels"
+                    "item_name": "Key",
+                    "count": 2
                   }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Key",
-                    "count": 2
+                    "item_name": "Hero's Laurels"
                   }
                 }
               ]

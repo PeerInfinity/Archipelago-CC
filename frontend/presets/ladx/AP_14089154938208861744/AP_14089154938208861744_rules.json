@@ -1626,51 +1626,18 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Conch Horn"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coral Triangle"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Full Moon Cello"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Organ of Evening Calm"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sea Lily's Bell"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Surf Harp"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Thunder Drum"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Wind Marimba"
+                    "items": [
+                      "Conch Horn",
+                      "Coral Triangle",
+                      "Full Moon Cello",
+                      "Organ of Evening Calm",
+                      "Sea Lily's Bell",
+                      "Surf Harp",
+                      "Thunder Drum",
+                      "Wind Marimba"
+                    ]
                   }
                 }
               ]
@@ -2793,27 +2760,14 @@
                       }
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Bomb"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Bow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Magic Rod"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Power Bracelet"
+                        "items": [
+                          "Bomb",
+                          "Bow",
+                          "Magic Rod",
+                          "Progressive Power Bracelet"
+                        ]
                       }
                     }
                   ]
@@ -2844,20 +2798,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Bottle Grotto)",
                     "count": 5
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Bottle Grotto)"
+                    "items": [
+                      "Progressive Power Bracelet",
+                      "Small Key (Bottle Grotto)"
+                    ]
                   }
                 }
               ]
@@ -2905,27 +2856,14 @@
                       }
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Bomb"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Bow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Magic Rod"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Power Bracelet"
+                        "items": [
+                          "Bomb",
+                          "Bow",
+                          "Magic Rod",
+                          "Progressive Power Bracelet"
+                        ]
                       }
                     }
                   ]
@@ -2989,20 +2927,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Bottle Grotto)",
                     "count": 5
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Bottle Grotto)"
+                    "items": [
+                      "Progressive Power Bracelet",
+                      "Small Key (Bottle Grotto)"
+                    ]
                   }
                 }
               ]
@@ -4790,20 +4725,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Sword"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Angler's Tunnel)",
                     "count": 5
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Angler's Tunnel)"
+                    "items": [
+                      "Progressive Sword",
+                      "Small Key (Angler's Tunnel)"
+                    ]
                   }
                 }
               ]
@@ -4831,20 +4763,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Flippers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Angler's Tunnel)",
                     "count": 5
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Angler's Tunnel)"
+                    "items": [
+                      "Flippers",
+                      "Small Key (Angler's Tunnel)"
+                    ]
                   }
                 }
               ]
@@ -5124,20 +5053,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Sword"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Angler's Tunnel)",
                     "count": 5
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Angler's Tunnel)"
+                    "items": [
+                      "Progressive Sword",
+                      "Small Key (Angler's Tunnel)"
+                    ]
                   }
                 }
               ]
@@ -5208,20 +5134,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Flippers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Angler's Tunnel)",
                     "count": 5
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Angler's Tunnel)"
+                    "items": [
+                      "Flippers",
+                      "Small Key (Angler's Tunnel)"
+                    ]
                   }
                 }
               ]
@@ -7598,21 +7521,13 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Boomerang"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Bow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Magic Rod"
+                        "items": [
+                          "Boomerang",
+                          "Bow",
+                          "Magic Rod"
+                        ]
                       }
                     }
                   ]
@@ -7729,21 +7644,13 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Boomerang"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Bow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Magic Rod"
+                        "items": [
+                          "Boomerang",
+                          "Bow",
+                          "Magic Rod"
+                        ]
                       }
                     }
                   ]
@@ -8038,27 +7945,14 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Bomb"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Boomerang"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bow"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
+                    "items": [
+                      "Bomb",
+                      "Boomerang",
+                      "Bow",
+                      "Progressive Sword"
+                    ]
                   }
                 }
               ]
@@ -8173,27 +8067,14 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Bomb"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Boomerang"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bow"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
+                    "items": [
+                      "Bomb",
+                      "Boomerang",
+                      "Bow",
+                      "Progressive Sword"
+                    ]
                   }
                 }
               ]
@@ -8368,20 +8249,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Turtle Rock)",
                     "count": 7
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Turtle Rock)"
+                    "items": [
+                      "Hookshot",
+                      "Small Key (Turtle Rock)"
+                    ]
                   }
                 }
               ]
@@ -8416,20 +8294,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Turtle Rock)",
                     "count": 7
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Turtle Rock)"
+                    "items": [
+                      "Hookshot",
+                      "Small Key (Turtle Rock)"
+                    ]
                   }
                 }
               ]
@@ -8546,26 +8421,18 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Turtle Rock)",
                     "count": 7
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Turtle Rock)"
+                    "items": [
+                      "Feather",
+                      "Progressive Sword",
+                      "Small Key (Turtle Rock)"
+                    ]
                   }
                 }
               ]
@@ -8587,26 +8454,18 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Turtle Rock)",
                     "count": 7
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Turtle Rock)"
+                    "items": [
+                      "Feather",
+                      "Progressive Sword",
+                      "Small Key (Turtle Rock)"
+                    ]
                   }
                 }
               ]
@@ -9142,12 +9001,9 @@
             "name": "No Name 48 -> No Name 49",
             "connected_region": "No Name 49",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Bomb",
-                  "Bomb"
-                ]
+                "item_name": "Bomb"
               }
             }
           },
@@ -10370,15 +10226,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Magic Powder"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
+                    "items": [
+                      "Magic Powder",
+                      "Progressive Sword"
+                    ]
                   }
                 }
               ]
@@ -10400,51 +10253,18 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Conch Horn"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coral Triangle"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Full Moon Cello"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Organ of Evening Calm"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sea Lily's Bell"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Surf Harp"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Thunder Drum"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Wind Marimba"
+                    "items": [
+                      "Conch Horn",
+                      "Coral Triangle",
+                      "Full Moon Cello",
+                      "Organ of Evening Calm",
+                      "Sea Lily's Bell",
+                      "Surf Harp",
+                      "Thunder Drum",
+                      "Wind Marimba"
+                    ]
                   }
                 }
               ]
@@ -10472,15 +10292,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Magic Powder"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
+                    "items": [
+                      "Magic Powder",
+                      "Progressive Sword"
+                    ]
                   }
                 }
               ]
@@ -10632,15 +10449,12 @@
                       }
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Bomb"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Feather"
+                        "items": [
+                          "Bomb",
+                          "Feather"
+                        ]
                       }
                     }
                   ]
@@ -10818,15 +10632,12 @@
                       }
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Bomb"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Feather"
+                        "items": [
+                          "Bomb",
+                          "Feather"
+                        ]
                       }
                     }
                   ]
@@ -10976,20 +10787,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Magic Powder"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Color Dungeon)",
                     "count": 3
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Color Dungeon)"
+                    "items": [
+                      "Magic Powder",
+                      "Small Key (Color Dungeon)"
+                    ]
                   }
                 }
               ]
@@ -11179,20 +10987,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Magic Powder"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Color Dungeon)",
                     "count": 3
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Color Dungeon)"
+                    "items": [
+                      "Magic Powder",
+                      "Small Key (Color Dungeon)"
+                    ]
                   }
                 }
               ]
@@ -12604,15 +12409,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Bomb"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
+                    "items": [
+                      "Bomb",
+                      "Progressive Sword"
+                    ]
                   }
                 }
               ]
@@ -12863,15 +12665,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Bomb"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Sword"
+                    "items": [
+                      "Bomb",
+                      "Progressive Sword"
+                    ]
                   }
                 }
               ]
@@ -13193,15 +12992,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Feather"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pegasus Boots"
+                    "items": [
+                      "Feather",
+                      "Pegasus Boots"
+                    ]
                   }
                 }
               ]
@@ -13255,15 +13051,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Feather"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pegasus Boots"
+                    "items": [
+                      "Feather",
+                      "Pegasus Boots"
+                    ]
                   }
                 }
               ]
@@ -13710,14 +13503,14 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Ocarina"
+                    "item_name": "RUPEES",
+                    "count": 1480
                   }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "RUPEES",
-                    "count": 1480
+                    "item_name": "Ocarina"
                   }
                 }
               ]
@@ -13796,14 +13589,14 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Ocarina"
+                    "item_name": "RUPEES",
+                    "count": 1480
                   }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "RUPEES",
-                    "count": 1480
+                    "item_name": "Ocarina"
                   }
                 }
               ]
@@ -14544,20 +14337,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Catfish's Maw)",
                     "count": 2
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Catfish's Maw)"
+                    "items": [
+                      "Hookshot",
+                      "Small Key (Catfish's Maw)"
+                    ]
                   }
                 }
               ]
@@ -14807,20 +14597,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Catfish's Maw)",
                     "count": 2
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Catfish's Maw)"
+                    "items": [
+                      "Hookshot",
+                      "Small Key (Catfish's Maw)"
+                    ]
                   }
                 }
               ]
@@ -16224,14 +16011,14 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather"
+                    "item_name": "Progressive Power Bracelet",
+                    "count": 2
                   }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 2
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -16253,14 +16040,14 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather"
+                    "item_name": "Progressive Power Bracelet",
+                    "count": 2
                   }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Power Bracelet",
-                    "count": 2
+                    "item_name": "Feather"
                   }
                 }
               ]
@@ -16298,24 +16085,15 @@
                       }
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Bomb"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Magic Rod"
+                        "items": [
+                          "Bomb",
+                          "Magic Rod"
+                        ]
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pegasus Boots"
-                  }
                 },
                 {
                   "rule": "Has",
@@ -16332,9 +16110,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Face Shrine)"
+                    "items": [
+                      "Pegasus Boots",
+                      "Small Key (Face Shrine)"
+                    ]
                   }
                 }
               ]
@@ -16433,24 +16214,15 @@
                       }
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Bomb"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Magic Rod"
+                        "items": [
+                          "Bomb",
+                          "Magic Rod"
+                        ]
                       }
                     }
                   ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pegasus Boots"
-                  }
                 },
                 {
                   "rule": "Has",
@@ -16467,9 +16239,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Face Shrine)"
+                    "items": [
+                      "Pegasus Boots",
+                      "Small Key (Face Shrine)"
+                    ]
                   }
                 }
               ]
@@ -16487,26 +16262,18 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Hookshot"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Power Bracelet"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
                         "item_name": "Small Key (Face Shrine)",
                         "count": 3
                       }
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Small Key (Face Shrine)"
+                        "items": [
+                          "Hookshot",
+                          "Progressive Power Bracelet",
+                          "Small Key (Face Shrine)"
+                        ]
                       }
                     }
                   ]
@@ -16517,20 +16284,17 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Hookshot"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
                         "item_name": "Small Key (Face Shrine)",
                         "count": 3
                       }
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Small Key (Face Shrine)"
+                        "items": [
+                          "Hookshot",
+                          "Small Key (Face Shrine)"
+                        ]
                       }
                     }
                   ]
@@ -16570,20 +16334,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Hookshot"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Face Shrine)",
                     "count": 3
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Face Shrine)"
+                    "items": [
+                      "Hookshot",
+                      "Small Key (Face Shrine)"
+                    ]
                   }
                 }
               ]
@@ -17736,20 +17497,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Tail Cave)",
                     "count": 3
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Tail Cave)"
+                    "items": [
+                      "Feather",
+                      "Small Key (Tail Cave)"
+                    ]
                   }
                 }
               ]
@@ -18114,20 +17872,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Feather"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Small Key (Tail Cave)",
                     "count": 3
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Small Key (Tail Cave)"
+                    "items": [
+                      "Feather",
+                      "Small Key (Tail Cave)"
+                    ]
                   }
                 }
               ]

@@ -44,32 +44,32 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Start->Lumbridge", player),
-        Has('Area: Lumbridge')
+        Has('Area: Lumbridge', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge->Lumbridge Farms East", player),
-        Has('Area: Lumbridge Farms')
+        Has('Area: Lumbridge Farms', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge->Lumbridge Farms West", player),
-        Has('Area: Lumbridge Farms')
+        Has('Area: Lumbridge Farms', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge->Al Kharid", player),
-        Has('Area: Al Kharid')
+        Has('Area: Al Kharid', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge->Lumbridge Swamp", player),
-        Has('Area: Lumbridge Swamp')
+        Has('Area: Lumbridge Swamp', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge->HAM Hideout", player),
-        Has('Area: HAM Hideout')
+        Has('Area: HAM Hideout', 1)
     )
 
     world.set_rule(
@@ -99,92 +99,92 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge Swamp->Lumbridge", player),
-        Has('Area: Lumbridge')
+        Has('Area: Lumbridge', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge Swamp->HAM Hideout", player),
-        Has('Area: HAM Hideout')
+        Has('Area: HAM Hideout', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("HAM Hideout->Lumbridge Farms West", player),
-        Has('Area: Lumbridge Farms')
+        Has('Area: Lumbridge Farms', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("HAM Hideout->Lumbridge", player),
-        Has('Area: Lumbridge')
+        Has('Area: Lumbridge', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("HAM Hideout->Lumbridge Swamp", player),
-        Has('Area: Lumbridge Swamp')
+        Has('Area: Lumbridge Swamp', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("HAM Hideout->Draynor Village", player),
-        Has('Area: Draynor Village')
+        Has('Area: Draynor Village', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge Farms West->Sourhog's Lair", player),
-        Has('Area: South of Varrock')
+        Has('Area: South of Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge Farms West->HAM Hideout", player),
-        Has('Area: HAM Hideout')
+        Has('Area: HAM Hideout', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge Farms West->Draynor Village", player),
-        Has('Area: Draynor Village')
+        Has('Area: Draynor Village', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge Farms East->South of Varrock", player),
-        Has('Area: South of Varrock')
+        Has('Area: South of Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumbridge Farms East->Lumbridge", player),
-        Has('Area: Lumbridge')
+        Has('Area: Lumbridge', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Sourhog's Lair->Lumbridge Farms West", player),
-        Has('Area: Lumbridge Farms')
+        Has('Area: Lumbridge Farms', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Sourhog's Lair->Draynor Manor Outskirts", player),
-        Has('Area: Draynor Manor')
+        Has('Area: Draynor Manor', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("South of Varrock->Al Kharid", player),
-        Has('Area: Al Kharid')
+        Has('Area: Al Kharid', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("South of Varrock->West Varrock", player),
-        Has('Area: West Varrock')
+        Has('Area: West Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("South of Varrock->Central Varrock", player),
-        Has('Area: Central Varrock')
+        Has('Area: Central Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("South of Varrock->Lumberyard", player),
-        Has('Area: Lumberyard')
+        Has('Area: Lumberyard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("South of Varrock->Lumbridge Farms East", player),
-        Has('Area: Lumbridge Farms')
+        Has('Area: Lumbridge Farms', 1)
     )
 
     world.set_rule(
@@ -214,87 +214,87 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Lumberyard->Wilderness", player),
-        Has('Area: Wilderness')
+        Has('Area: Wilderness', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumberyard->South of Varrock", player),
-        Has('Area: South of Varrock')
+        Has('Area: South of Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumberyard->Central Varrock", player),
-        Has('Area: Central Varrock')
+        Has('Area: Central Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Lumberyard->Varrock Palace", player),
-        Has('Area: Varrock Palace')
+        Has('Area: Varrock Palace', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Central Varrock->Varrock Palace", player),
-        Has('Area: Varrock Palace')
+        Has('Area: Varrock Palace', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Central Varrock->Lumberyard", player),
-        Has('Area: Lumberyard')
+        Has('Area: Lumberyard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Central Varrock->South of Varrock", player),
-        Has('Area: South of Varrock')
+        Has('Area: South of Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Central Varrock->West Varrock", player),
-        Has('Area: West Varrock')
+        Has('Area: West Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Varrock Palace->Wilderness", player),
-        Has('Area: Wilderness')
+        Has('Area: Wilderness', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Varrock Palace->Lumberyard", player),
-        Has('Area: Lumberyard')
+        Has('Area: Lumberyard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Varrock Palace->Central Varrock", player),
-        Has('Area: Central Varrock')
+        Has('Area: Central Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Varrock Palace->West Varrock", player),
-        Has('Area: West Varrock')
+        Has('Area: West Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("West Varrock->Wilderness", player),
-        Has('Area: Wilderness')
+        Has('Area: Wilderness', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("West Varrock->Varrock Palace", player),
-        Has('Area: Varrock Palace')
+        Has('Area: Varrock Palace', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("West Varrock->South of Varrock", player),
-        Has('Area: South of Varrock')
+        Has('Area: South of Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("West Varrock->Barbarian Village", player),
-        Has('Area: Barbarian Village')
+        Has('Area: Barbarian Village', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("West Varrock->Edgeville", player),
-        Has('Area: Edgeville')
+        Has('Area: Edgeville', 1)
     )
 
     world.set_rule(
@@ -304,22 +304,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Cook's Guild->West Varrock", player),
-        Has('Area: West Varrock')
+        Has('Area: West Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Edgeville->Wilderness", player),
-        Has('Area: Wilderness')
+        Has('Area: Wilderness', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Edgeville->West Varrock", player),
-        Has('Area: West Varrock')
+        Has('Area: West Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Edgeville->Barbarian Village", player),
-        Has('Area: Barbarian Village')
+        Has('Area: Barbarian Village', 1)
     )
 
     world.set_rule(
@@ -339,22 +339,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Barbarian Village->Edgeville", player),
-        Has('Area: Edgeville')
+        Has('Area: Edgeville', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Barbarian Village->West Varrock", player),
-        Has('Area: West Varrock')
+        Has('Area: West Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Barbarian Village->Draynor Manor Outskirts", player),
-        Has('Area: Draynor Manor')
+        Has('Area: Draynor Manor', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Barbarian Village->Dwarven Mountain Pass", player),
-        Has('Area: Dwarven Mines')
+        Has('Area: Dwarven Mines', 1)
     )
 
     world.set_rule(
@@ -364,112 +364,112 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Draynor Manor Outskirts->Barbarian Village", player),
-        Has('Area: Barbarian Village')
+        Has('Area: Barbarian Village', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Draynor Manor Outskirts->Sourhog's Lair", player),
-        Has('Area: South of Varrock')
+        Has('Area: South of Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Draynor Manor Outskirts->Draynor Village", player),
-        Has('Area: Draynor Village')
+        Has('Area: Draynor Village', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Draynor Manor Outskirts->Falador East Outskirts", player),
-        Has('Area: Falador')
+        Has('Area: Falador', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Draynor Manor->Draynor Village", player),
-        Has('Area: Draynor Village')
+        Has('Area: Draynor Village', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador East Outskirts->Dwarven Mountain Pass", player),
-        Has('Area: Dwarven Mines')
+        Has('Area: Dwarven Mines', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador East Outskirts->Draynor Manor Outskirts", player),
-        Has('Area: Draynor Manor')
+        Has('Area: Draynor Manor', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador East Outskirts->Falador Farms", player),
-        Has('Area: Falador Farms')
+        Has('Area: Falador Farms', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mountain Pass->Goblin Village", player),
-        Has('Area: Ice Mountain')
+        Has('Area: Ice Mountain', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mountain Pass->Monastery", player),
-        Has('Area: Monastery')
+        Has('Area: Monastery', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mountain Pass->Barbarian Village", player),
-        Has('Area: Barbarian Village')
+        Has('Area: Barbarian Village', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mountain Pass->Falador East Outskirts", player),
-        Has('Area: Falador')
+        Has('Area: Falador', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mountain Pass->Falador", player),
-        Has('Area: Falador')
+        Has('Area: Falador', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mountain Pass->Anvil", player),
-        Has("1 QP (Doric's Quest)")
+        Has("1 QP (Doric's Quest)", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mines->Monastery", player),
-        Has('Area: Monastery')
+        Has('Area: Monastery', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mines->Ice Mountain", player),
-        Has('Area: Ice Mountain')
+        Has('Area: Ice Mountain', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dwarven Mines->Falador", player),
-        Has('Area: Falador')
+        Has('Area: Falador', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Goblin Village->Wilderness", player),
-        Has('Area: Wilderness')
+        Has('Area: Wilderness', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Goblin Village->Dwarven Mountain Pass", player),
-        Has('Area: Dwarven Mines')
+        Has('Area: Dwarven Mines', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Mountain->Wilderness", player),
-        Has('Area: Wilderness')
+        Has('Area: Wilderness', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Mountain->Monastery", player),
-        Has('Area: Monastery')
+        Has('Area: Monastery', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Mountain->Dwarven Mines", player),
-        Has('Area: Dwarven Mines')
+        Has('Area: Dwarven Mines', 1)
     )
 
     world.set_rule(
@@ -479,92 +479,92 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Camdozaal->Ice Mountain", player),
-        Has('Area: Ice Mountain')
+        Has('Area: Ice Mountain', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Monastery->Wilderness", player),
-        Has('Area: Wilderness')
+        Has('Area: Wilderness', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Monastery->Dwarven Mountain Pass", player),
-        Has('Area: Dwarven Mines')
+        Has('Area: Dwarven Mines', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Monastery->Dwarven Mines", player),
-        Has('Area: Dwarven Mines')
+        Has('Area: Dwarven Mines', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Monastery->Ice Mountain", player),
-        Has('Area: Ice Mountain')
+        Has('Area: Ice Mountain', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador->Dwarven Mountain Pass", player),
-        Has('Area: Dwarven Mines')
+        Has('Area: Dwarven Mines', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador->Falador Farms", player),
-        Has('Area: Falador Farms')
+        Has('Area: Falador Farms', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador->Dwarven Mines", player),
-        Has('Area: Dwarven Mines')
+        Has('Area: Dwarven Mines', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador Farms->Falador", player),
-        Has('Area: Falador')
+        Has('Area: Falador', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador Farms->Falador East Outskirts", player),
-        Has('Area: Falador')
+        Has('Area: Falador', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador Farms->Draynor Village", player),
-        Has('Area: Draynor Village')
+        Has('Area: Draynor Village', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador Farms->Port Sarim", player),
-        Has('Area: Port Sarim')
+        Has('Area: Port Sarim', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador Farms->Rimmington", player),
-        Has('Area: Rimmington')
+        Has('Area: Rimmington', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Falador Farms->Crafting Guild Outskirts", player),
-        Has('Area: Crafting Guild')
+        Has('Area: Crafting Guild', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Port Sarim->Falador Farms", player),
-        Has('Area: Falador Farms')
+        Has('Area: Falador Farms', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Port Sarim->Mudskipper Point", player),
-        Has('Area: Mudskipper Point')
+        Has('Area: Mudskipper Point', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Port Sarim->Rimmington", player),
-        Has('Area: Rimmington')
+        Has('Area: Rimmington', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Port Sarim->Karamja Docks", player),
-        Has('Area: Mudskipper Point')
+        Has('Area: Mudskipper Point', 1)
     )
 
     world.set_rule(
@@ -574,27 +574,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Karamja Docks->Port Sarim", player),
-        Has('Area: Port Sarim')
+        Has('Area: Port Sarim', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Karamja Docks->Karamja", player),
-        Has('Area: Karamja')
+        Has('Area: Karamja', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Mudskipper Point->Rimmington", player),
-        Has('Area: Rimmington')
+        Has('Area: Rimmington', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Mudskipper Point->Port Sarim", player),
-        Has('Area: Port Sarim')
+        Has('Area: Port Sarim', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Karamja->Karamja Docks", player),
-        Has('Area: Mudskipper Point')
+        Has('Area: Mudskipper Point', 1)
     )
 
     world.set_rule(
@@ -604,32 +604,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Crandor->Karamja", player),
-        Has('Area: Karamja')
+        Has('Area: Karamja', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Crandor->Port Sarim", player),
-        Has('Area: Port Sarim')
+        Has('Area: Port Sarim', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Rimmington->Falador Farms", player),
-        Has('Area: Falador Farms')
+        Has('Area: Falador Farms', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Rimmington->Port Sarim", player),
-        Has('Area: Port Sarim')
+        Has('Area: Port Sarim', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Rimmington->Mudskipper Point", player),
-        Has('Area: Mudskipper Point')
+        Has('Area: Mudskipper Point', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Rimmington->Crafting Guild Peninsula", player),
-        Has('Area: Crafting Guild')
+        Has('Area: Crafting Guild', 1)
     )
 
     world.set_rule(
@@ -639,17 +639,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Crafting Guild Peninsula->Falador Farms", player),
-        Has('Area: Falador Farms')
+        Has('Area: Falador Farms', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Crafting Guild Peninsula->Rimmington", player),
-        Has('Area: Rimmington')
+        Has('Area: Rimmington', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Crafting Guild Outskirts->Falador Farms", player),
-        Has('Area: Falador Farms')
+        Has('Area: Falador Farms', 1)
     )
 
     world.set_rule(
@@ -664,92 +664,92 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Draynor Village->Draynor Manor", player),
-        Has('Area: Draynor Manor')
+        Has('Area: Draynor Manor', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Draynor Village->Lumbridge Farms West", player),
-        Has('Area: Lumbridge Farms')
+        Has('Area: Lumbridge Farms', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Draynor Village->HAM Hideout", player),
-        Has('Area: HAM Hideout')
+        Has('Area: HAM Hideout', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Draynor Village->Wizard Tower", player),
-        Has('Area: Wizard Tower')
+        Has('Area: Wizard Tower', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Wizard Tower->Draynor Village", player),
-        Has('Area: Draynor Village')
+        Has('Area: Draynor Village', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Corsair Cove->Rimmington", player),
-        Has('Area: Rimmington')
+        Has('Area: Rimmington', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Al Kharid->South of Varrock", player),
-        Has('Area: South of Varrock')
+        Has('Area: South of Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Al Kharid->Citharede Abbey", player),
-        Has('Area: Citharede Abbey')
+        Has('Area: Citharede Abbey', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Al Kharid->Lumbridge", player),
-        Has('Area: Lumbridge')
+        Has('Area: Lumbridge', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Al Kharid->Port Sarim", player),
-        Has('Area: Port Sarim')
+        Has('Area: Port Sarim', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Citharede Abbey->Al Kharid", player),
-        Has('Area: Al Kharid')
+        Has('Area: Al Kharid', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->Lumberyard", player),
-        Has('Area: Lumberyard')
+        Has('Area: Lumberyard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->Varrock Palace", player),
-        Has('Area: Varrock Palace')
+        Has('Area: Varrock Palace', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->West Varrock", player),
-        Has('Area: West Varrock')
+        Has('Area: West Varrock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->Edgeville", player),
-        Has('Area: Edgeville')
+        Has('Area: Edgeville', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->Monastery", player),
-        Has('Area: Monastery')
+        Has('Area: Monastery', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->Ice Mountain", player),
-        Has('Area: Ice Mountain')
+        Has('Area: Ice Mountain', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Wilderness->Goblin Village", player),
-        Has('Area: Ice Mountain')
+        Has('Area: Ice Mountain', 1)
     )
 
     world.set_rule(

@@ -32,12 +32,12 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Equality Substitution Right", player),
-        Has('df-2')
+        Has('df-2', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Equality Substitution Left", player),
-        Has('df-3')
+        Has('df-3', 1)
     )
 
     world.set_rule(
@@ -57,5 +57,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Theorem: 2+2=4", player),
-        Has('eqtr4i')
+        Has('eqtr4i', 1)
     )

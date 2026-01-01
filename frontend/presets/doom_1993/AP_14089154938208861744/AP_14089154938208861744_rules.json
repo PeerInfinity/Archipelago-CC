@@ -45,21 +45,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -94,60 +86,29 @@
             "name": "Hub -> Phobos Lab (E1M5) Main",
             "connected_region": "Phobos Lab (E1M5) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Phobos Lab (E1M5)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Phobos Lab (E1M5)",
+                  "Shotgun"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> Central Processing (E1M6) Main",
             "connected_region": "Central Processing (E1M6) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Central Processing (E1M6)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rocket launcher"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Central Processing (E1M6)",
+                  "Chaingun",
+                  "Rocket launcher",
+                  "Shotgun"
+                ]
+              }
             }
           },
           {
@@ -167,50 +128,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Phobos Anomaly (E1M8)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Phobos Anomaly (E1M8)",
+                      "Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -219,27 +154,14 @@
             "name": "Hub -> Military Base (E1M9) Main",
             "connected_region": "Military Base (E1M9) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Military Base (E1M9)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Military Base (E1M9)",
+                  "Shotgun"
+                ]
+              }
             }
           },
           {
@@ -259,38 +181,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Containment Area (E2M2)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Containment Area (E2M2)",
+                      "Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Plasma gun"
+                    ]
+                  }
                 }
               ]
             }
@@ -302,38 +208,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Refinery (E2M3)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Refinery (E2M3)",
+                      "Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Plasma gun"
+                    ]
+                  }
                 }
               ]
             }
@@ -352,105 +242,46 @@
             "name": "Hub -> Command Center (E2M5) Main",
             "connected_region": "Command Center (E2M5) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Command Center (E2M5)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Plasma gun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Command Center (E2M5)",
+                  "Plasma gun",
+                  "Shotgun"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> Halls of the Damned (E2M6) Main",
             "connected_region": "Halls of the Damned (E2M6) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Halls of the Damned (E2M6)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Plasma gun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Halls of the Damned (E2M6)",
+                  "Plasma gun",
+                  "Shotgun"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> Spawning Vats (E2M7) Main",
             "connected_region": "Spawning Vats (E2M7) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Plasma gun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rocket launcher"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spawning Vats (E2M7)"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Plasma gun",
+                  "Rocket launcher",
+                  "Shotgun",
+                  "Spawning Vats (E2M7)"
+                ]
+              }
             }
           },
           {
@@ -470,50 +301,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Fortress of Mystery (E2M9)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Fortress of Mystery (E2M9)",
+                      "Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -535,21 +340,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -567,50 +364,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Pandemonium (E3M3)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Pandemonium (E3M3)",
+                      "Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -622,50 +393,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "House of Pain (E3M4)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "House of Pain (E3M4)",
+                      "Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -684,27 +429,14 @@
             "name": "Hub -> Mt. Erebus (E3M6) Main",
             "connected_region": "Mt. Erebus (E3M6) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mt. Erebus (E3M6)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Mt. Erebus (E3M6)",
+                  "Shotgun"
+                ]
+              }
             }
           },
           {
@@ -714,50 +446,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Limbo (E3M7)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Limbo (E3M7)",
+                      "Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -769,50 +475,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dis (E3M8)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Dis (E3M8)",
+                      "Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -824,50 +504,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Warrens (E3M9)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Plasma gun",
+                      "Shotgun",
+                      "Warrens (E3M9)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -1424,21 +1078,13 @@
             "name": "Toxin Refinery (E1M3) Start -> Toxin Refinery (E1M3) Main",
             "connected_region": "Toxin Refinery (E1M3) Main",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -1466,42 +1112,26 @@
             "name": "Command Control (E1M4) Main -> Command Control (E1M4) Blue",
             "connected_region": "Command Control (E1M4) Blue",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Command Control (E1M4) - Blue keycard"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Command Control (E1M4) - Yellow keycard"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Command Control (E1M4) - Blue keycard",
+                  "Command Control (E1M4) - Yellow keycard"
+                ]
+              }
             }
           },
           {
             "name": "Command Control (E1M4) Main -> Command Control (E1M4) Yellow",
             "connected_region": "Command Control (E1M4) Yellow",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Command Control (E1M4) - Blue keycard"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Command Control (E1M4) - Yellow keycard"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Command Control (E1M4) - Blue keycard",
+                  "Command Control (E1M4) - Yellow keycard"
+                ]
+              }
             }
           },
           {
@@ -1615,21 +1245,13 @@
             "name": "Command Control (E1M4) Blue -> Command Control (E1M4) Main",
             "connected_region": "Command Control (E1M4) Main",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Command Control (E1M4) - Blue keycard"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Command Control (E1M4) - Yellow keycard"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Command Control (E1M4) - Blue keycard",
+                  "Command Control (E1M4) - Yellow keycard"
+                ]
+              }
             }
           }
         ],
@@ -1726,21 +1348,13 @@
             "name": "Command Control (E1M4) Start -> Command Control (E1M4) Main",
             "connected_region": "Command Control (E1M4) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -2636,21 +2250,13 @@
             "name": "Computer Station (E1M7) Yellow -> Computer Station (E1M7) Courtyard",
             "connected_region": "Computer Station (E1M7) Courtyard",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Computer Station (E1M7) - Red keycard"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Computer Station (E1M7) - Yellow keycard"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Computer Station (E1M7) - Red keycard",
+                  "Computer Station (E1M7) - Yellow keycard"
+                ]
+              }
             }
           },
           {
@@ -2828,27 +2434,14 @@
             "name": "Computer Station (E1M7) Start -> Computer Station (E1M7) Main",
             "connected_region": "Computer Station (E1M7) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rocket launcher"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Rocket launcher",
+                  "Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -4286,27 +3879,14 @@
             "name": "Deimos Lab (E2M4) Start -> Deimos Lab (E2M4) Main",
             "connected_region": "Deimos Lab (E2M4) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Plasma gun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Plasma gun",
+                  "Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -4494,27 +4074,14 @@
             "name": "Halls of the Damned (E2M6) Main -> Halls of the Damned (E2M6) Blue Yellow Red",
             "connected_region": "Halls of the Damned (E2M6) Blue Yellow Red",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Halls of the Damned (E2M6) - Blue skull key"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Halls of the Damned (E2M6) - Red skull key"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Halls of the Damned (E2M6) - Yellow skull key"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Halls of the Damned (E2M6) - Blue skull key",
+                  "Halls of the Damned (E2M6) - Red skull key",
+                  "Halls of the Damned (E2M6) - Yellow skull key"
+                ]
+              }
             }
           },
           {
@@ -4772,27 +4339,14 @@
             "name": "Halls of the Damned (E2M6) Blue Yellow Red -> Halls of the Damned (E2M6) Main",
             "connected_region": "Halls of the Damned (E2M6) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Halls of the Damned (E2M6) - Blue skull key"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Halls of the Damned (E2M6) - Red skull key"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Halls of the Damned (E2M6) - Yellow skull key"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Halls of the Damned (E2M6) - Blue skull key",
+                  "Halls of the Damned (E2M6) - Red skull key",
+                  "Halls of the Damned (E2M6) - Yellow skull key"
+                ]
+              }
             }
           }
         ],
@@ -4875,21 +4429,13 @@
             "name": "Spawning Vats (E2M7) Main -> Spawning Vats (E2M7) Entrance Secret",
             "connected_region": "Spawning Vats (E2M7) Entrance Secret",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spawning Vats (E2M7) - Blue keycard"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spawning Vats (E2M7) - Red keycard"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Spawning Vats (E2M7) - Blue keycard",
+                  "Spawning Vats (E2M7) - Red keycard"
+                ]
+              }
             }
           },
           {
@@ -5202,21 +4748,13 @@
             "name": "Spawning Vats (E2M7) Entrance Secret -> Spawning Vats (E2M7) Main",
             "connected_region": "Spawning Vats (E2M7) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spawning Vats (E2M7) - Blue keycard"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spawning Vats (E2M7) - Red keycard"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Spawning Vats (E2M7) - Blue keycard",
+                  "Spawning Vats (E2M7) - Red keycard"
+                ]
+              }
             }
           }
         ],
@@ -5322,44 +4860,23 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -5659,21 +5176,13 @@
             "name": "Hell Keep (E3M1) Main -> Hell Keep (E3M1) Narrow",
             "connected_region": "Hell Keep (E3M1) Narrow",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -6786,44 +6295,23 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }

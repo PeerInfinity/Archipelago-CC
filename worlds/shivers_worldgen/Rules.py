@@ -76,37 +76,37 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("To Lobby From Outside", player),
-        Has('Key for Front Door')
+        Has('Key for Front Door', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Underground Lake From Underground Tunnels", player),
-        Has('Key for Underground Lake')
+        Has('Key for Underground Lake', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Underground Tunnels From Underground Lake", player),
-        Has('Key for Underground Lake')
+        Has('Key for Underground Lake', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Office Elevator From Underground Blue Tunnels", player),
-        Has('Key for Office Elevator')
+        Has('Key for Office Elevator', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Office Elevator From Office", player),
-        Has('Key for Office Elevator')
+        Has('Key for Office Elevator', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Workshop", player),
-        Has('Key for Workshop')
+        Has('Key for Workshop', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Office", player),
-        Has('Key for Office')
+        Has('Key for Office', 1)
     )
 
     world.set_rule(
@@ -121,32 +121,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Bedroom", player),
-        Has('Key for Bedroom')
+        Has('Key for Bedroom', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Office From Lobby", player),
-        Has('Key for Office')
+        Has('Key for Office', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Library From Lobby", player),
-        Has('Key for Library')
+        Has('Key for Library', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Theater From Lobby", player),
-        Has('Viewed Egyptian Hieroglyphics Explained')
+        Has('Viewed Egyptian Hieroglyphics Explained', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Prehistoric From Lobby", player),
-        Has('Key for Prehistoric Room')
+        Has('Key for Prehistoric Room', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Egypt From Lobby", player),
-        Has('Key for Egypt Room')
+        Has('Key for Egypt Room', 1)
     )
 
     world.set_rule(
@@ -156,7 +156,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Outside From Lobby", player),
-        Has('Key for Front Door')
+        Has('Key for Front Door', 1)
     )
 
     world.set_rule(
@@ -166,17 +166,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Library", player),
-        Has('Key for Library')
+        Has('Key for Library', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Three Floor Elevator From Maintenance Tunnels", player),
-        Has('Key for Three Floor Elevator')
+        Has('Key for Three Floor Elevator', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Generator From Maintenance Tunnels", player),
-        Has('Key for Generator Room')
+        Has('Key for Generator Room', 1)
     )
 
     world.set_rule(
@@ -191,12 +191,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Maintenance Tunnels From Theater Back Hallway", player),
-        Has('Crawling')
+        Has('Crawling', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Projector Room", player),
-        Has('Key for Projector Room')
+        Has('Key for Projector Room', 1)
     )
 
     world.set_rule(
@@ -206,22 +206,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Prehistoric", player),
-        Has('Key for Prehistoric Room')
+        Has('Key for Prehistoric Room', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Greenhouse", player),
-        Has('Key for Greenhouse')
+        Has('Key for Greenhouse', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Ocean From Prehistoric", player),
-        Has('Key for Ocean Room')
+        Has('Key for Ocean Room', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Prehistoric From Ocean", player),
-        Has('Key for Ocean Room')
+        Has('Key for Ocean Room', 1)
     )
 
     world.set_rule(
@@ -236,7 +236,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Egypt", player),
-        Has('Key for Egypt Room')
+        Has('Key for Egypt Room', 1)
     )
 
     world.set_rule(
@@ -246,17 +246,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Blue Maze From Egypt", player),
-        Has('Crawling')
+        Has('Crawling', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Shaman From Burial", player),
-        Has('Key for Shaman Room')
+        Has('Key for Shaman Room', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Burial From Shaman", player),
-        Has('Key for Shaman Room')
+        Has('Key for Shaman Room', 1)
     )
 
     world.set_rule(
@@ -271,7 +271,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Norse Stone From Gods Room", player),
-        Has('Aligned Planets')
+        Has('Aligned Planets', 1)
     )
 
     world.set_rule(
@@ -281,7 +281,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Janitor Closet", player),
-        Has('Key for Janitor Closet')
+        Has('Key for Janitor Closet', 1)
     )
 
     world.set_rule(
@@ -291,57 +291,57 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Orrery From UFO", player),
-        Has('Viewed Fortune')
+        Has('Viewed Fortune', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Inventions From UFO", player),
-        Has('Key for UFO Room')
+        Has('Key for UFO Room', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Egypt From Blue Maze", player),
-        Has('Crawling')
+        Has('Crawling', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Three Floor Elevator From Blue Maze Bottom", player),
-        Has('Key for Three Floor Elevator')
+        Has('Key for Three Floor Elevator', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Three Floor Elevator From Blue Maze Top", player),
-        Has('Key for Three Floor Elevator')
+        Has('Key for Three Floor Elevator', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To UFO From Inventions", player),
-        Has('Key for UFO Room')
+        Has('Key for UFO Room', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Torture From Inventions", player),
-        Has('Key for Torture Room')
+        Has('Key for Torture Room', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Inventions From Torture", player),
-        Has('Key for Torture Room')
+        Has('Key for Torture Room', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Puzzle Room Mastermind From Torture", player),
-        Has('Key for Puzzle Room')
+        Has('Key for Puzzle Room', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Guillotine From Torture", player),
-        And(Conditional(test=True_(), if_true=Has('Viewed Egyptian Hieroglyphics Explained'), if_false=True_()), Has('Viewed Page 17'))
+        And(Conditional(test=True_(), if_true=Has('Viewed Egyptian Hieroglyphics Explained', 1), if_false=True_()), Has('Viewed Page 17'))
     )
 
     world.set_rule(
         multiworld.get_entrance("To Torture", player),
-        Has('Key for Puzzle Room')
+        Has('Key for Puzzle Room', 1)
     )
 
     world.set_rule(
@@ -351,7 +351,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Slide Room", player),
-        Has('Lost Your Head')
+        Has('Lost Your Head', 1)
     )
     # Location rules
     world.set_rule(
@@ -371,7 +371,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Theater Door", player),
-        Has('Viewed Egyptian Hieroglyphics Explained')
+        Has('Viewed Egyptian Hieroglyphics Explained', 1)
     )
 
     world.set_rule(
@@ -381,7 +381,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Storage: Theater", player),
-        Has('Viewed Theater Movie')
+        Has('Viewed Theater Movie', 1)
     )
 
     world.set_rule(
@@ -391,7 +391,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Storage: Clock Tower", player),
-        Has('Set Time')
+        Has('Set Time', 1)
     )
 
     world.set_rule(
@@ -406,7 +406,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Maze Door", player),
-        Has('Viewed Theater Movie')
+        Has('Viewed Theater Movie', 1)
     )
 
     world.set_rule(
@@ -416,7 +416,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Columns of RA", player),
-        Has('Viewed Egyptian Hieroglyphics Explained')
+        Has('Viewed Egyptian Hieroglyphics Explained', 1)
     )
 
     world.set_rule(
@@ -431,12 +431,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Anansi Music Box", player),
-        Has('Set Song')
+        Has('Set Song', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Storage: Anansi Music Box", player),
-        Has('Set Song')
+        Has('Set Song', 1)
     )
 
     world.set_rule(

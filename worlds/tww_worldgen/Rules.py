@@ -871,12 +871,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Windfall Island - Tott - Teach Rhythm", player),
-        Has('Wind Waker')
+        Has('Wind Waker', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Alcove With Water Jugs", player),
-        Has('DRC Small Key')
+        Has('DRC Small Key', 1)
     )
 
     world.set_rule(
@@ -891,7 +891,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dragon Roost Cavern - Boarded Up Chest", player),
-        Has('DRC Small Key')
+        Has('DRC Small Key', 1)
     )
 
     world.set_rule(
@@ -1006,7 +1006,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Chest Behind Bombable Walls", player),
-        Has('Bombs')
+        Has('Bombs', 1)
     )
 
     world.set_rule(
@@ -1021,7 +1021,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Light Two Torches", player),
-        Has('Bombs')
+        Has('Bombs', 1)
     )
 
     world.set_rule(
@@ -1036,7 +1036,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of the Gods - Skulls Room Chest", player),
-        Has('Bombs')
+        Has('Bombs', 1)
     )
 
     world.set_rule(
@@ -1226,7 +1226,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Private Oasis - Cabana Labyrinth - Lower Floor Chest", player),
-        Has('Skull Hammer')
+        Has('Skull Hammer', 1)
     )
 
     world.set_rule(
@@ -1261,7 +1261,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pawprint Isle - Chuchu Cave - Scale the Wall", player),
-        Has('Grappling Hook')
+        Has('Grappling Hook', 1)
     )
 
     world.set_rule(

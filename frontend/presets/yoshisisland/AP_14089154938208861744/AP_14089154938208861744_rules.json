@@ -4555,15 +4555,12 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Dashed Platform"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dashed Stairs"
+                        "items": [
+                          "Dashed Platform",
+                          "Dashed Stairs"
+                        ]
                       }
                     }
                   ]

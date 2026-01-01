@@ -22,57 +22,57 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Moving", player),
-        Has('Movement Pack')
+        Has('Movement Pack', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Tree", player),
-        Has('Time is Money Pack')
+        Has('Time is Money Pack', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Cloud", player),
-        Has('Psychological Warfare Pack')
+        Has('Psychological Warfare Pack', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Behind Tree Double Jump", player),
-        Has('Double Jump Pack')
+        Has('Double Jump Pack', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest Entrance", player),
-        Has('Map Pack')
+        Has('Map Pack', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Cloud Double Jump", player),
-        Has('Double Jump Pack')
+        Has('Double Jump Pack', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Cave Tree", player),
-        Has('Time is Money Pack')
+        Has('Time is Money Pack', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Cave Roof", player),
-        Has('Double Jump Pack')
+        Has('Double Jump Pack', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Behind Ogre", player),
-        Has('Gun Pack')
+        Has('Gun Pack', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest Double Jump", player),
-        Has('Double Jump Pack')
+        Has('Double Jump Pack', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest True Double Jump", player),
-        Has('Double Jump Pack')
+        Has('Double Jump Pack', 1)
     )
     # Location rules
     world.set_rule(
@@ -112,7 +112,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Shepherd Sheep", player),
-        Has('Time is Money Pack')
+        Has('Time is Money Pack', 1)
     )
 
     world.set_rule(
@@ -127,7 +127,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("West Cave Sheep", player),
-        Has('Time is Money Pack')
+        Has('Time is Money Pack', 1)
     )
 
     world.set_rule(
@@ -142,12 +142,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("North West Alcove Sheep", player),
-        Has('Time is Money Pack')
+        Has('Time is Money Pack', 1)
     )
 
     world.set_rule(
         multiworld.get_location("North West Ceiling Sheep", player),
-        Has('Time is Money Pack')
+        Has('Time is Money Pack', 1)
     )
 
     world.set_rule(

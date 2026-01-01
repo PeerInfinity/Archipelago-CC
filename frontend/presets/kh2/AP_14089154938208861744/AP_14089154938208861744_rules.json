@@ -16416,15 +16416,12 @@
                           "_converted_from_ast": true
                         },
                         {
-                          "rule": "Has",
+                          "rule": "HasAll",
                           "args": {
-                            "item_name": "Drive Converter"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Second Chance"
+                            "items": [
+                              "Drive Converter",
+                              "Second Chance"
+                            ]
                           }
                         }
                       ]
@@ -16751,15 +16748,12 @@
                           "_converted_from_ast": true
                         },
                         {
-                          "rule": "Has",
+                          "rule": "HasAll",
                           "args": {
-                            "item_name": "Drive Converter"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Second Chance"
+                            "items": [
+                              "Drive Converter",
+                              "Second Chance"
+                            ]
                           }
                         }
                       ]
@@ -17086,15 +17080,12 @@
                           "_converted_from_ast": true
                         },
                         {
-                          "rule": "Has",
+                          "rule": "HasAll",
                           "args": {
-                            "item_name": "Drive Converter"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Second Chance"
+                            "items": [
+                              "Drive Converter",
+                              "Second Chance"
+                            ]
                           }
                         }
                       ]
@@ -17421,15 +17412,12 @@
                           "_converted_from_ast": true
                         },
                         {
-                          "rule": "Has",
+                          "rule": "HasAll",
                           "args": {
-                            "item_name": "Drive Converter"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Second Chance"
+                            "items": [
+                              "Drive Converter",
+                              "Second Chance"
+                            ]
                           }
                         }
                       ]
@@ -17756,15 +17744,12 @@
                           "_converted_from_ast": true
                         },
                         {
-                          "rule": "Has",
+                          "rule": "HasAll",
                           "args": {
-                            "item_name": "Drive Converter"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Second Chance"
+                            "items": [
+                              "Drive Converter",
+                              "Second Chance"
+                            ]
                           }
                         }
                       ]
@@ -18091,15 +18076,12 @@
                           "_converted_from_ast": true
                         },
                         {
-                          "rule": "Has",
+                          "rule": "HasAll",
                           "args": {
-                            "item_name": "Drive Converter"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Second Chance"
+                            "items": [
+                              "Drive Converter",
+                              "Second Chance"
+                            ]
                           }
                         }
                       ]
@@ -32711,35 +32693,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(TT3) Underground Concourse Mythril Gem"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            }
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Roxas Event Location"
+                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
                   }
                 ]
               },
@@ -32795,7 +32749,7 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
+                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
                   }
                 ]
               },
@@ -32823,7 +32777,35 @@
                 "args": [
                   {
                     "type": "constant",
-                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
+                    "value": "(TT3) Underground Concourse Mythril Gem"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            }
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Roxas Event Location"
                   }
                 ]
               },

@@ -235,15 +235,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "1-4 Level Complete"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Yellow Ramp"
+                    "items": [
+                      "1-4 Level Complete",
+                      "Yellow Ramp"
+                    ]
                   }
                 }
               ]
@@ -293,15 +290,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "1-5 Level Complete"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Yellow Ramp"
+                    "items": [
+                      "1-5 Level Complete",
+                      "Yellow Ramp"
+                    ]
                   }
                 }
               ]
@@ -668,15 +662,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "3-1 Level Complete"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Ramp"
+                    "items": [
+                      "3-1 Level Complete",
+                      "Blue Ramp"
+                    ]
                   }
                 }
               ]
@@ -726,15 +717,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "3-2 Level Complete"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Ramp"
+                    "items": [
+                      "3-2 Level Complete",
+                      "Blue Ramp"
+                    ]
                   }
                 }
               ]
@@ -784,15 +772,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "3-3 Level Complete"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Ramp"
+                    "items": [
+                      "3-3 Level Complete",
+                      "Blue Ramp"
+                    ]
                   }
                 }
               ]
@@ -842,15 +827,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "3-4 Level Complete"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Ramp"
+                    "items": [
+                      "3-4 Level Complete",
+                      "Blue Ramp"
+                    ]
                   }
                 }
               ]
@@ -1788,15 +1770,12 @@
                       }
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "6-1 Level Complete"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Red Ramp"
+                        "items": [
+                          "6-1 Level Complete",
+                          "Red Ramp"
+                        ]
                       }
                     }
                   ]
@@ -1866,15 +1845,12 @@
                       }
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "6-1 Level Complete"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Red Ramp"
+                        "items": [
+                          "6-1 Level Complete",
+                          "Red Ramp"
+                        ]
                       }
                     }
                   ]
@@ -2042,15 +2018,12 @@
                       }
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "6-1 Level Complete"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Red Ramp"
+                        "items": [
+                          "6-1 Level Complete",
+                          "Red Ramp"
+                        ]
                       }
                     }
                   ]
@@ -2308,27 +2281,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -2585,27 +2545,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -2862,27 +2809,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -3153,27 +3087,14 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Larger Tip Jar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dash"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Throw/Catch"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spare Plate"
+                        "items": [
+                          "Larger Tip Jar",
+                          "Progressive Dash",
+                          "Progressive Throw/Catch",
+                          "Spare Plate"
+                        ]
                       }
                     }
                   ]
@@ -3438,27 +3359,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -3729,27 +3637,14 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Larger Tip Jar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dash"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Throw/Catch"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spare Plate"
+                        "items": [
+                          "Larger Tip Jar",
+                          "Progressive Dash",
+                          "Progressive Throw/Catch",
+                          "Spare Plate"
+                        ]
                       }
                     }
                   ]
@@ -4014,27 +3909,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -4291,27 +4173,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -4568,27 +4437,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -4845,27 +4701,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -5136,27 +4979,14 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Larger Tip Jar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dash"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Throw/Catch"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spare Plate"
+                        "items": [
+                          "Larger Tip Jar",
+                          "Progressive Dash",
+                          "Progressive Throw/Catch",
+                          "Spare Plate"
+                        ]
                       }
                     }
                   ]
@@ -5421,27 +5251,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -5712,27 +5529,14 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Larger Tip Jar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dash"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Throw/Catch"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spare Plate"
+                        "items": [
+                          "Larger Tip Jar",
+                          "Progressive Dash",
+                          "Progressive Throw/Catch",
+                          "Spare Plate"
+                        ]
                       }
                     }
                   ]
@@ -6020,27 +5824,14 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Larger Tip Jar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dash"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Throw/Catch"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spare Plate"
+                        "items": [
+                          "Larger Tip Jar",
+                          "Progressive Dash",
+                          "Progressive Throw/Catch",
+                          "Spare Plate"
+                        ]
                       }
                     }
                   ]
@@ -6328,27 +6119,14 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Larger Tip Jar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dash"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Throw/Catch"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spare Plate"
+                        "items": [
+                          "Larger Tip Jar",
+                          "Progressive Dash",
+                          "Progressive Throw/Catch",
+                          "Spare Plate"
+                        ]
                       }
                     }
                   ]
@@ -6636,27 +6414,14 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Larger Tip Jar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dash"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Throw/Catch"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spare Plate"
+                        "items": [
+                          "Larger Tip Jar",
+                          "Progressive Dash",
+                          "Progressive Throw/Catch",
+                          "Spare Plate"
+                        ]
                       }
                     }
                   ]
@@ -6921,27 +6686,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -7198,27 +6950,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -7475,27 +7214,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -7769,27 +7495,14 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Larger Tip Jar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dash"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Throw/Catch"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spare Plate"
+                        "items": [
+                          "Larger Tip Jar",
+                          "Progressive Dash",
+                          "Progressive Throw/Catch",
+                          "Spare Plate"
+                        ]
                       }
                     }
                   ]
@@ -8080,27 +7793,14 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Larger Tip Jar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dash"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Throw/Catch"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spare Plate"
+                        "items": [
+                          "Larger Tip Jar",
+                          "Progressive Dash",
+                          "Progressive Throw/Catch",
+                          "Spare Plate"
+                        ]
                       }
                     }
                   ]
@@ -8379,27 +8079,14 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Larger Tip Jar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dash"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Throw/Catch"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spare Plate"
+                        "items": [
+                          "Larger Tip Jar",
+                          "Progressive Dash",
+                          "Progressive Throw/Catch",
+                          "Spare Plate"
+                        ]
                       }
                     }
                   ]
@@ -8664,27 +8351,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -8964,27 +8638,14 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Larger Tip Jar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dash"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Throw/Catch"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spare Plate"
+                        "items": [
+                          "Larger Tip Jar",
+                          "Progressive Dash",
+                          "Progressive Throw/Catch",
+                          "Spare Plate"
+                        ]
                       }
                     }
                   ]
@@ -9249,27 +8910,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -9526,27 +9174,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -9803,27 +9438,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -10080,27 +9702,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -10357,27 +9966,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -10648,27 +10244,14 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Larger Tip Jar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dash"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Throw/Catch"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spare Plate"
+                        "items": [
+                          "Larger Tip Jar",
+                          "Progressive Dash",
+                          "Progressive Throw/Catch",
+                          "Spare Plate"
+                        ]
                       }
                     }
                   ]
@@ -10933,27 +10516,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -11233,27 +10803,14 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Larger Tip Jar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dash"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Throw/Catch"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spare Plate"
+                        "items": [
+                          "Larger Tip Jar",
+                          "Progressive Dash",
+                          "Progressive Throw/Catch",
+                          "Spare Plate"
+                        ]
                       }
                     }
                   ]
@@ -11354,15 +10911,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Calmer Unbread"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coin Purse"
+                    "items": [
+                      "Calmer Unbread",
+                      "Coin Purse"
+                    ]
                   }
                 }
               ]
@@ -11440,15 +10994,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Calmer Unbread"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coin Purse"
+                    "items": [
+                      "Calmer Unbread",
+                      "Coin Purse"
+                    ]
                   }
                 }
               ]
@@ -11527,15 +11078,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Calmer Unbread"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Coin Purse"
+                    "items": [
+                      "Calmer Unbread",
+                      "Coin Purse"
+                    ]
                   }
                 }
               ]
@@ -11792,27 +11340,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -12069,27 +11604,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -12364,27 +11886,14 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Larger Tip Jar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dash"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Throw/Catch"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spare Plate"
+                        "items": [
+                          "Larger Tip Jar",
+                          "Progressive Dash",
+                          "Progressive Throw/Catch",
+                          "Spare Plate"
+                        ]
                       }
                     }
                   ]
@@ -12653,27 +12162,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -12930,27 +12426,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -13207,27 +12690,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -13707,27 +13177,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -13984,27 +13441,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -14261,27 +13705,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Larger Tip Jar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Dash"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Throw/Catch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spare Plate"
+                    "items": [
+                      "Larger Tip Jar",
+                      "Progressive Dash",
+                      "Progressive Throw/Catch",
+                      "Spare Plate"
+                    ]
                   }
                 }
               ]
@@ -14552,27 +13983,14 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Larger Tip Jar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Dash"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Throw/Catch"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spare Plate"
+                        "items": [
+                          "Larger Tip Jar",
+                          "Progressive Dash",
+                          "Progressive Throw/Catch",
+                          "Spare Plate"
+                        ]
                       }
                     }
                   ]

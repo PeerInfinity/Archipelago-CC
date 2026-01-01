@@ -4526,45 +4526,17 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Ion Battery"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ion Power Cell"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Neptune Boosters"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Neptune Cockpit"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Neptune Fuel Reserve"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Neptune Gantry"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Neptune Launch Platform"
+                    "items": [
+                      "Ion Battery",
+                      "Ion Power Cell",
+                      "Neptune Boosters",
+                      "Neptune Cockpit",
+                      "Neptune Fuel Reserve",
+                      "Neptune Gantry",
+                      "Neptune Launch Platform"
+                    ]
                   }
                 }
               ]

@@ -24,14 +24,14 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Booster Bumper"
+                    "item_name": "Treasure Bumper",
+                    "count": 8
                   }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Treasure Bumper",
-                    "count": 8
+                    "item_name": "Booster Bumper"
                   }
                 }
               ]

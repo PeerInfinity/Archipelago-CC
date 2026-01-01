@@ -188,12 +188,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Bat Cave Drop Ledge", player),
-        Has('Hammer')
+        Has('Hammer', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Hobo Bridge", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -213,17 +213,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Lake Hylia Central Island Pier", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Bonk Rock Cave", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Palace Stairs", player),
-        Has('Book of Mudora')
+        Has('Book of Mudora', 1)
     )
 
     world.set_rule(
@@ -238,7 +238,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Flute Spot 1", player),
-        Has('Activated Flute')
+        Has('Activated Flute', 1)
     )
 
     world.set_rule(
@@ -248,12 +248,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("East Hyrule Teleporter", player),
-        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Has('Hammer'), Has('Moon Pearl'))
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), HasAll('Hammer', 'Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_entrance("South Hyrule Teleporter", player),
-        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Has('Hammer'), Has('Moon Pearl'))
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), HasAll('Hammer', 'Moon Pearl'))
     )
 
     world.set_rule(
@@ -273,17 +273,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Waterfall of Wishing", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Hyrule Castle Main Gate", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Bonk Fairy (Light)", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
@@ -298,7 +298,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Top of Pyramid", player),
-        Has('Beat Agahnim 1')
+        Has('Beat Agahnim 1', 1)
     )
 
     world.set_rule(
@@ -308,7 +308,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Kings Grave", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
@@ -348,12 +348,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Agahnims Tower", player),
-        Or(HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword"), Has('Beat Agahnim 1'), Has('Cape'))
+        Or(HelperCall(helper_func=_alinktothepastworldgen_has_beam_sword, helper_name="has_beam_sword"), HasAny('Beat Agahnim 1', 'Cape'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Throne Room", player),
-        Has('Lamp')
+        Has('Lamp', 1)
     )
 
     world.set_rule(
@@ -378,7 +378,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Old Man Cave Exit (East)", player),
-        Has('Lamp')
+        Has('Lamp', 1)
     )
 
     world.set_rule(
@@ -388,32 +388,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Old Man House Front to Back", player),
-        Has('Lamp')
+        Has('Lamp', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Old Man House Back to Front", player),
-        Has('Lamp')
+        Has('Lamp', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Broken Bridge (West)", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Death Mountain Return Cave Exit (West)", player),
-        Has('Lamp')
+        Has('Lamp', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Death Mountain Return Cave Exit (East)", player),
-        Has('Lamp')
+        Has('Lamp', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Broken Bridge (East)", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
@@ -443,7 +443,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Death Mountain (Top)", player),
-        Has('Hammer')
+        Has('Hammer', 1)
     )
 
     world.set_rule(
@@ -453,7 +453,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("East Death Mountain (Top)", player),
-        Has('Hammer')
+        Has('Hammer', 1)
     )
 
     world.set_rule(
@@ -463,12 +463,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Tower of Hera Big Key Door", player),
-        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_activate_crystal_switch, helper_name="can_activate_crystal_switch"), Has('Big Key (Tower of Hera)')), Or(And(HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), Has('Silver Bow')), HelperCall(helper_func=_alinktothepastworldgen_has_melee_weapon, helper_name="has_melee_weapon"), Has('Cane of Byrna'), Has('Cane of Somaria')))
+        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_activate_crystal_switch, helper_name="can_activate_crystal_switch"), Has('Big Key (Tower of Hera)')), Or(And(HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), Has('Silver Bow')), HelperCall(helper_func=_alinktothepastworldgen_has_melee_weapon, helper_name="has_melee_weapon"), HasAny('Cane of Byrna', 'Cane of Somaria')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Fairy", player),
-        And(And(CanReachRegion('Big Bomb Shop'), CanReachRegion('East Dark World'), Has('Crystal 5'), Has('Crystal 6')), Or(HasAll('Beat Agahnim 1', 'Magic Mirror'), HelperCall(helper_func=_alinktothepastworldgen_cross_peg_bridge, helper_name="cross_peg_bridge")))
+        And(And(CanReachRegion('Big Bomb Shop'), CanReachRegion('East Dark World'), HasAll('Crystal 5', 'Crystal 6')), Or(HasAll('Beat Agahnim 1', 'Magic Mirror'), HelperCall(helper_func=_alinktothepastworldgen_cross_peg_bridge, helper_name="cross_peg_bridge")))
     )
 
     world.set_rule(
@@ -478,7 +478,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -488,7 +488,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hyrule Castle Ledge Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
@@ -498,7 +498,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Northeast Dark World Broken Bridge Pass", player),
-        And(Or(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Has('Flippers'), Has('Hammer')), Has('Moon Pearl'))
+        And(Or(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), HasAny('Flippers', 'Hammer')), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -543,12 +543,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Maze Race Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Cave 45 Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
@@ -563,7 +563,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Bombos Tablet Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
@@ -573,7 +573,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Lake Hylia Central Island Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
@@ -603,7 +603,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Thieves Town", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -638,7 +638,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Bat Cave Drop Ledge Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
@@ -653,7 +653,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Bumper Cave Entrance Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
@@ -668,17 +668,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Bumper Cave Ledge Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section Hole (North)", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods Second Section Hole", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -693,27 +693,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Desert Ledge (Northeast) Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Ledge Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Palace Stairs Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Desert Palace Entrance (North) Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Spectacle Rock Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
@@ -728,7 +728,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("East Death Mountain (Top) Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
@@ -738,17 +738,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mimic Cave Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Spiral Cave Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Isolated Ledge Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
@@ -763,7 +763,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Cave Exit (South)", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -778,7 +778,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Floating Island Mirror Spot", player),
-        Has('Magic Mirror')
+        Has('Magic Mirror', 1)
     )
 
     world.set_rule(
@@ -788,7 +788,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Swamp Palace Small Key Door", player),
-        Has('Small Key (Swamp Palace)')
+        Has('Small Key (Swamp Palace)', 1)
     )
 
     world.set_rule(
@@ -808,7 +808,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Thieves Town Big Key Door", player),
-        Has('Big Key (Thieves Town)')
+        Has('Big Key (Thieves Town)', 1)
     )
 
     world.set_rule(
@@ -843,17 +843,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section (Left) Door to Right", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods First Section (Top) One-Way Path", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Skull Woods Second Section (Drop)", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -863,7 +863,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (Second Section)", player),
-        And(Has('Small Key (Ice Palace)'), HelperCall(helper_func=_alinktothepastworldgen_can_melt_things, helper_name="can_melt_things"), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"))
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_melt_things, helper_name="can_melt_things"), HelperCall(helper_func=_alinktothepastworldgen_can_use_bombs, helper_name="can_use_bombs"), Has('Small Key (Ice Palace)'))
     )
 
     world.set_rule(
@@ -873,12 +873,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (East)", player),
-        And(Or(Conditional(test=True_(), if_true=Has('Small Key (Ice Palace)', 4), if_false=Has('Small Key (Ice Palace)', 6)), Has('Hookshot')), Or(True_(), Has('Cane of Byrna'), Has('Cape'), Has('Hookshot')))
+        And(Or(Conditional(test=True_(), if_true=Has('Small Key (Ice Palace)', 4), if_false=Has('Small Key (Ice Palace)', 6)), Has('Hookshot')), Or(True_(), HasAny('Cane of Byrna', 'Cape', 'Hookshot')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Palace (Kholdstare)", player),
-        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Or(And(Has('Small Key (Ice Palace)', 5), Has('Cane of Somaria')), Has('Small Key (Ice Palace)', 6)), Has('Big Key (Ice Palace)'), Has('Hammer'))
+        And(HelperCall(helper_func=_alinktothepastworldgen_can_lift_rocks, helper_name="can_lift_rocks"), Or(And(Has('Small Key (Ice Palace)', 5), Has('Cane of Somaria')), Has('Small Key (Ice Palace)', 6)), HasAll('Big Key (Ice Palace)', 'Hammer'))
     )
 
     world.set_rule(
@@ -888,7 +888,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire Entrance Gap", player),
-        And(Or(HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=_alinktothepastworldgen_has_sword, helper_name="has_sword"), Has('Cane of Somaria'), Has('Fire Rod'), Has('Hammer'), Has('Ice Rod')), HasAny('Hookshot', 'Pegasus Boots'))
+        And(Or(HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), HelperCall(helper_func=_alinktothepastworldgen_has_sword, helper_name="has_sword"), HasAny('Cane of Somaria', 'Fire Rod', 'Hammer', 'Ice Rod')), HasAny('Hookshot', 'Pegasus Boots'))
     )
 
     world.set_rule(
@@ -898,7 +898,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire Big Key Door", player),
-        Has('Big Key (Misery Mire)')
+        Has('Big Key (Misery Mire)', 1)
     )
 
     world.set_rule(
@@ -913,17 +913,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Exit (Front)", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Entrance to Pokey Room", player),
-        Has('Small Key (Turtle Rock)')
+        Has('Small Key (Turtle Rock)', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Entrance Gap Reverse", player),
-        Has('Cane of Somaria')
+        Has('Cane of Somaria', 1)
     )
 
     world.set_rule(
@@ -948,7 +948,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Chain Chomp Staircase", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -973,7 +973,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Ledge Exit (East)", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -998,12 +998,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock Dark Room (South)", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Turtle Rock (Trinexx)", player),
-        And(And(Has('Small Key (Turtle Rock)', 6), Has('Big Key (Turtle Rock)'), Has('Cane of Somaria')), Has('Moon Pearl'))
+        And(And(Has('Small Key (Turtle Rock)', 6), HasAll('Big Key (Turtle Rock)', 'Cane of Somaria')), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -1013,7 +1013,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Bridge Room", player),
-        Has('Small Key (Palace of Darkness)')
+        Has('Small Key (Palace of Darkness)', 1)
     )
 
     world.set_rule(
@@ -1033,12 +1033,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Big Key Door", player),
-        And(And(Has('Small Key (Palace of Darkness)', 6), HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), Has('Big Key (Palace of Darkness)'), Has('Hammer')), Has('Lamp'))
+        And(And(Has('Small Key (Palace of Darkness)', 6), HelperCall(helper_func=_alinktothepastworldgen_can_shoot_arrows, helper_name="can_shoot_arrows"), HasAll('Big Key (Palace of Darkness)', 'Hammer')), Has('Lamp'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Hammer Peg Drop", player),
-        Has('Hammer')
+        Has('Hammer', 1)
     )
 
     world.set_rule(
@@ -1053,7 +1053,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Tile Room)", player),
-        Has('Cane of Somaria')
+        Has('Cane of Somaria', 1)
     )
 
     world.set_rule(
@@ -1113,22 +1113,22 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Flute Spot", player),
-        Has('Shovel')
+        Has('Shovel', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Sunken Treasure", player),
-        Has('Open Floodgate')
+        Has('Open Floodgate', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Purple Chest", player),
-        Has('Pick Up Purple Chest')
+        Has('Pick Up Purple Chest', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Flute Activation Spot", player),
-        Has('Flute')
+        Has('Flute', 1)
     )
 
     world.set_rule(
@@ -1138,7 +1138,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Zora's Ledge", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -1168,7 +1168,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Sahasrahla", player),
-        Has('Green Pendant')
+        Has('Green Pendant', 1)
     )
 
     world.set_rule(
@@ -1178,7 +1178,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Blacksmith", player),
-        Has('Return Smith')
+        Has('Return Smith', 1)
     )
 
     world.set_rule(
@@ -1188,7 +1188,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Magic Bat", player),
-        Has('Magic Powder')
+        Has('Magic Powder', 1)
     )
 
     world.set_rule(
@@ -1228,22 +1228,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Library", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Potion Shop", player),
-        Has('Mushroom')
+        Has('Mushroom', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Big Chest", player),
-        Has('Big Key (Desert Palace)')
+        Has('Big Key (Desert Palace)', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Desert Palace - Torch", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
@@ -1273,12 +1273,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Big Chest", player),
-        Has('Big Key (Eastern Palace)')
+        Has('Big Key (Eastern Palace)', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Eastern Palace - Dark Square Pot Key", player),
-        Has('Lamp')
+        Has('Lamp', 1)
     )
 
     world.set_rule(
@@ -1333,7 +1333,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Sewers - Dark Cross", player),
-        Has('Lamp')
+        Has('Lamp', 1)
     )
 
     world.set_rule(
@@ -1348,7 +1348,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Castle Tower - Dark Maze", player),
-        And(And(Has('Small Key (Agahnims Tower)'), HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,))), Has('Lamp'))
+        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_kill_most_things, helper_name="can_kill_most_things", args=(4,)), Has('Small Key (Agahnims Tower)')), Has('Lamp'))
     )
 
     world.set_rule(
@@ -1368,7 +1368,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Old Man", player),
-        Has('Lamp')
+        Has('Lamp', 1)
     )
 
     world.set_rule(
@@ -1428,7 +1428,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of Hera - Big Chest", player),
-        Has('Big Key (Tower of Hera)')
+        Has('Big Key (Tower of Hera)', 1)
     )
 
     world.set_rule(
@@ -1443,17 +1443,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Catfish", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Stumpy", player),
-        And(And(HasAll('Moon Pearl', 'Moon Pearl'), Has('Moon Pearl')), Has('Moon Pearl'))
+        And(HasAll('Moon Pearl', 'Moon Pearl'), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Digging Game", player),
-        And(And(HasAll('Moon Pearl', 'Moon Pearl'), Has('Moon Pearl')), Has('Moon Pearl'))
+        And(HasAll('Moon Pearl', 'Moon Pearl'), Has('Moon Pearl'))
     )
 
     world.set_rule(
@@ -1488,52 +1488,52 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dark Blacksmith Ruins", player),
-        Has('Return Smith')
+        Has('Return Smith', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Fairy - Left", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Fairy - Right", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Brewery", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("C-Shaped House", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Chest Game", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Mire Shed - Left", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Mire Shed - Right", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Superbunny Cave - Top", player),
-        HasAll('Moon Pearl', 'Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Superbunny Cave - Bottom", player),
-        HasAll('Moon Pearl', 'Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1568,7 +1568,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Entrance", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1578,7 +1578,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Pot Row Pot Key", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1593,7 +1593,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Compass Chest", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1603,37 +1603,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Trench 2 Pot Key", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Big Key Chest", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - West Chest", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Flooded Room - Left", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Flooded Room - Right", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Waterway Pot Key", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Waterfall Room", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1648,22 +1648,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Big Key Chest", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Map Chest", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Compass Chest", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Ambush Chest", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1678,7 +1678,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Hallway Pot Key", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1703,22 +1703,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Map Chest", player),
-        And(And(HasAll('Moon Pearl', 'Moon Pearl'), Has('Moon Pearl')), Has('Moon Pearl'))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Skull Woods - Pinball Room", player),
         And(HasAll('Moon Pearl', 'Moon Pearl'), Has('Moon Pearl'))
     )
 
     world.set_rule(
-        multiworld.get_location("Skull Woods - Compass Chest", player),
+        multiworld.get_location("Skull Woods - Pinball Room", player),
         HasAll('Moon Pearl', 'Moon Pearl')
     )
 
     world.set_rule(
+        multiworld.get_location("Skull Woods - Compass Chest", player),
+        Has('Moon Pearl', 1)
+    )
+
+    world.set_rule(
         multiworld.get_location("Skull Woods - Pot Prison", player),
-        HasAll('Moon Pearl', 'Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1728,22 +1728,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Big Key Chest", player),
-        And(HasAll('Moon Pearl', 'Moon Pearl'), Has('Moon Pearl'))
+        HasAll('Moon Pearl', 'Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - West Lobby Pot Key", player),
-        And(HasAll('Moon Pearl', 'Moon Pearl'), Has('Moon Pearl'))
+        HasAll('Moon Pearl', 'Moon Pearl')
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Bridge Room", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Spike Corner Key Drop", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1763,22 +1763,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Compass Chest", player),
-        And(And(Has('Small Key (Ice Palace)'), HelperCall(helper_func=_alinktothepastworldgen_can_melt_things, helper_name="can_melt_things")), Has('Moon Pearl'))
+        And(And(HelperCall(helper_func=_alinktothepastworldgen_can_melt_things, helper_name="can_melt_things"), Has('Small Key (Ice Palace)')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Conveyor Key Drop", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Freezor Chest", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Many Pots Pot Key", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1788,27 +1788,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Iced T Room", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Spike Room", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Big Key Chest", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Map Chest", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ice Palace - Hammer Block Key Drop", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1838,17 +1838,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Bridge Chest", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Spike Chest", player),
-        And(Or(And(True_(), HelperCall(helper_func=_alinktothepastworldgen_has_hearts, helper_name="has_hearts", args=(4,))), Has('Cane of Byrna'), Has('Cape')), Has('Moon Pearl'))
+        And(Or(And(True_(), HelperCall(helper_func=_alinktothepastworldgen_has_hearts, helper_name="has_hearts", args=(4,))), HasAny('Cane of Byrna', 'Cape')), Has('Moon Pearl'))
     )
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Spikes Pot Key", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1923,7 +1923,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Turtle Rock - Crystaroller Room", player),
-        HasAll('Moon Pearl', 'Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1958,22 +1958,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Shooter Room", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - The Arena - Bridge", player),
-        HasAll('Moon Pearl', 'Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Stalfos Basement", player),
-        HasAll('Moon Pearl', 'Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Big Key Chest", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -1983,12 +1983,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Map Chest", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Compass Chest", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -2003,12 +2003,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Dark Maze - Top", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Dark Maze - Bottom", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -2018,7 +2018,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Palace of Darkness - Harmless Hellway", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -2038,22 +2038,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Hope Room - Left", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Hope Room - Right", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Conveyor Cross Pot Key", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Tile Room", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -2108,7 +2108,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Map Chest", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -2138,7 +2138,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Bob's Chest", player),
-        HasAll('Moon Pearl', 'Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -2163,12 +2163,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Mini Helmasaur Room - Left", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Mini Helmasaur Room - Right", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(
@@ -2183,7 +2183,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - Validation Chest", player),
-        Has('Moon Pearl')
+        Has('Moon Pearl', 1)
     )
 
     world.set_rule(

@@ -22,7 +22,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Hub -> Hangar (E1M1) Main", player),
-        Has('Hangar (E1M1)')
+        Has('Hangar (E1M1)', 1)
     )
 
     world.set_rule(
@@ -32,12 +32,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Toxin Refinery (E1M3) Start", player),
-        Has('Toxin Refinery (E1M3)')
+        Has('Toxin Refinery (E1M3)', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Command Control (E1M4) Start", player),
-        Has('Command Control (E1M4)')
+        Has('Command Control (E1M4)', 1)
     )
 
     world.set_rule(
@@ -52,7 +52,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Computer Station (E1M7) Start", player),
-        Has('Computer Station (E1M7)')
+        Has('Computer Station (E1M7)', 1)
     )
 
     world.set_rule(
@@ -67,7 +67,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Deimos Anomaly (E2M1) Main", player),
-        Has('Deimos Anomaly (E2M1)')
+        Has('Deimos Anomaly (E2M1)', 1)
     )
 
     world.set_rule(
@@ -82,7 +82,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Deimos Lab (E2M4) Start", player),
-        Has('Deimos Lab (E2M4)')
+        Has('Deimos Lab (E2M4)', 1)
     )
 
     world.set_rule(
@@ -102,7 +102,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Tower of Babel (E2M8) Start", player),
-        Has('Tower of Babel (E2M8)')
+        Has('Tower of Babel (E2M8)', 1)
     )
 
     world.set_rule(
@@ -112,7 +112,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Hell Keep (E3M1) Main", player),
-        Has('Hell Keep (E3M1)')
+        Has('Hell Keep (E3M1)', 1)
     )
 
     world.set_rule(
@@ -132,7 +132,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Unholy Cathedral (E3M5) Start", player),
-        Has('Unholy Cathedral (E3M5)')
+        Has('Unholy Cathedral (E3M5)', 1)
     )
 
     world.set_rule(
@@ -157,32 +157,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Nuclear Plant (E1M2) Main -> Nuclear Plant (E1M2) Red", player),
-        Has('Nuclear Plant (E1M2) - Red keycard')
+        Has('Nuclear Plant (E1M2) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Nuclear Plant (E1M2) Red -> Nuclear Plant (E1M2) Main", player),
-        Has('Nuclear Plant (E1M2) - Red keycard')
+        Has('Nuclear Plant (E1M2) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Toxin Refinery (E1M3) Main -> Toxin Refinery (E1M3) Blue", player),
-        Has('Toxin Refinery (E1M3) - Blue keycard')
+        Has('Toxin Refinery (E1M3) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Toxin Refinery (E1M3) Blue -> Toxin Refinery (E1M3) Yellow", player),
-        Has('Toxin Refinery (E1M3) - Yellow keycard')
+        Has('Toxin Refinery (E1M3) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Toxin Refinery (E1M3) Blue -> Toxin Refinery (E1M3) Main", player),
-        Has('Toxin Refinery (E1M3) - Blue keycard')
+        Has('Toxin Refinery (E1M3) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Toxin Refinery (E1M3) Yellow -> Toxin Refinery (E1M3) Blue", player),
-        Has('Toxin Refinery (E1M3) - Yellow keycard')
+        Has('Toxin Refinery (E1M3) - Yellow keycard', 1)
     )
 
     world.set_rule(
@@ -212,72 +212,72 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Phobos Lab (E1M5) Main -> Phobos Lab (E1M5) Yellow", player),
-        Has('Phobos Lab (E1M5) - Yellow keycard')
+        Has('Phobos Lab (E1M5) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Phobos Lab (E1M5) Yellow -> Phobos Lab (E1M5) Blue", player),
-        Has('Phobos Lab (E1M5) - Blue keycard')
+        Has('Phobos Lab (E1M5) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Phobos Lab (E1M5) Blue -> Phobos Lab (E1M5) Green", player),
-        Has('Phobos Lab (E1M5) - Blue keycard')
+        Has('Phobos Lab (E1M5) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Phobos Lab (E1M5) Green -> Phobos Lab (E1M5) Blue", player),
-        Has('Phobos Lab (E1M5) - Blue keycard')
+        Has('Phobos Lab (E1M5) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Central Processing (E1M6) Main -> Central Processing (E1M6) Yellow", player),
-        Has('Central Processing (E1M6) - Yellow keycard')
+        Has('Central Processing (E1M6) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Central Processing (E1M6) Main -> Central Processing (E1M6) Red", player),
-        Has('Central Processing (E1M6) - Red keycard')
+        Has('Central Processing (E1M6) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Central Processing (E1M6) Main -> Central Processing (E1M6) Blue", player),
-        Has('Central Processing (E1M6) - Blue keycard')
+        Has('Central Processing (E1M6) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Central Processing (E1M6) Main -> Central Processing (E1M6) Nukage", player),
-        Has('Central Processing (E1M6) - Blue keycard')
+        Has('Central Processing (E1M6) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Central Processing (E1M6) Yellow -> Central Processing (E1M6) Main", player),
-        Has('Central Processing (E1M6) - Yellow keycard')
+        Has('Central Processing (E1M6) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Computer Station (E1M7) Main -> Computer Station (E1M7) Red", player),
-        Has('Computer Station (E1M7) - Red keycard')
+        Has('Computer Station (E1M7) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Computer Station (E1M7) Main -> Computer Station (E1M7) Yellow", player),
-        Has('Computer Station (E1M7) - Yellow keycard')
+        Has('Computer Station (E1M7) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Computer Station (E1M7) Blue -> Computer Station (E1M7) Yellow", player),
-        Has('Computer Station (E1M7) - Blue keycard')
+        Has('Computer Station (E1M7) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Computer Station (E1M7) Red -> Computer Station (E1M7) Main", player),
-        Has('Computer Station (E1M7) - Red keycard')
+        Has('Computer Station (E1M7) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Computer Station (E1M7) Yellow -> Computer Station (E1M7) Blue", player),
-        Has('Computer Station (E1M7) - Blue keycard')
+        Has('Computer Station (E1M7) - Blue keycard', 1)
     )
 
     world.set_rule(
@@ -287,7 +287,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Computer Station (E1M7) Courtyard -> Computer Station (E1M7) Yellow", player),
-        Has('Computer Station (E1M7) - Yellow keycard')
+        Has('Computer Station (E1M7) - Yellow keycard', 1)
     )
 
     world.set_rule(
@@ -297,92 +297,92 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Military Base (E1M9) Main -> Military Base (E1M9) Blue", player),
-        Has('Military Base (E1M9) - Blue keycard')
+        Has('Military Base (E1M9) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Military Base (E1M9) Main -> Military Base (E1M9) Yellow", player),
-        Has('Military Base (E1M9) - Yellow keycard')
+        Has('Military Base (E1M9) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Military Base (E1M9) Main -> Military Base (E1M9) Red", player),
-        Has('Military Base (E1M9) - Red keycard')
+        Has('Military Base (E1M9) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Military Base (E1M9) Blue -> Military Base (E1M9) Main", player),
-        Has('Military Base (E1M9) - Blue keycard')
+        Has('Military Base (E1M9) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Military Base (E1M9) Yellow -> Military Base (E1M9) Main", player),
-        Has('Military Base (E1M9) - Yellow keycard')
+        Has('Military Base (E1M9) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Deimos Anomaly (E2M1) Main -> Deimos Anomaly (E2M1) Red", player),
-        Has('Deimos Anomaly (E2M1) - Red keycard')
+        Has('Deimos Anomaly (E2M1) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Deimos Anomaly (E2M1) Main -> Deimos Anomaly (E2M1) Blue", player),
-        Has('Deimos Anomaly (E2M1) - Blue keycard')
+        Has('Deimos Anomaly (E2M1) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Deimos Anomaly (E2M1) Blue -> Deimos Anomaly (E2M1) Main", player),
-        Has('Deimos Anomaly (E2M1) - Blue keycard')
+        Has('Deimos Anomaly (E2M1) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Deimos Anomaly (E2M1) Red -> Deimos Anomaly (E2M1) Main", player),
-        Has('Deimos Anomaly (E2M1) - Red keycard')
+        Has('Deimos Anomaly (E2M1) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Containment Area (E2M2) Main -> Containment Area (E2M2) Yellow", player),
-        Has('Containment Area (E2M2) - Yellow keycard')
+        Has('Containment Area (E2M2) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Containment Area (E2M2) Main -> Containment Area (E2M2) Blue", player),
-        Has('Containment Area (E2M2) - Blue keycard')
+        Has('Containment Area (E2M2) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Containment Area (E2M2) Main -> Containment Area (E2M2) Red", player),
-        Has('Containment Area (E2M2) - Red keycard')
+        Has('Containment Area (E2M2) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Containment Area (E2M2) Blue -> Containment Area (E2M2) Main", player),
-        Has('Containment Area (E2M2) - Blue keycard')
+        Has('Containment Area (E2M2) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Containment Area (E2M2) Red -> Containment Area (E2M2) Main", player),
-        Has('Containment Area (E2M2) - Red keycard')
+        Has('Containment Area (E2M2) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Refinery (E2M3) Main -> Refinery (E2M3) Blue", player),
-        Has('Refinery (E2M3) - Blue keycard')
+        Has('Refinery (E2M3) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Refinery (E2M3) Blue -> Refinery (E2M3) Main", player),
-        Has('Refinery (E2M3) - Blue keycard')
+        Has('Refinery (E2M3) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Deimos Lab (E2M4) Main -> Deimos Lab (E2M4) Blue", player),
-        Has('Deimos Lab (E2M4) - Blue keycard')
+        Has('Deimos Lab (E2M4) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Deimos Lab (E2M4) Blue -> Deimos Lab (E2M4) Yellow", player),
-        Has('Deimos Lab (E2M4) - Yellow keycard')
+        Has('Deimos Lab (E2M4) - Yellow keycard', 1)
     )
 
     world.set_rule(
@@ -397,12 +397,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Halls of the Damned (E2M6) Main -> Halls of the Damned (E2M6) Yellow", player),
-        Has('Halls of the Damned (E2M6) - Yellow skull key')
+        Has('Halls of the Damned (E2M6) - Yellow skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Halls of the Damned (E2M6) Main -> Halls of the Damned (E2M6) One way Yellow", player),
-        Has('Halls of the Damned (E2M6) - Yellow skull key')
+        Has('Halls of the Damned (E2M6) - Yellow skull key', 1)
     )
 
     world.set_rule(
@@ -412,12 +412,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Halls of the Damned (E2M6) One way Yellow -> Halls of the Damned (E2M6) Main", player),
-        Has('Halls of the Damned (E2M6) - Yellow skull key')
+        Has('Halls of the Damned (E2M6) - Yellow skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Spawning Vats (E2M7) Main -> Spawning Vats (E2M7) Blue", player),
-        Has('Spawning Vats (E2M7) - Blue keycard')
+        Has('Spawning Vats (E2M7) - Blue keycard', 1)
     )
 
     world.set_rule(
@@ -427,22 +427,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Spawning Vats (E2M7) Main -> Spawning Vats (E2M7) Red", player),
-        Has('Spawning Vats (E2M7) - Red keycard')
+        Has('Spawning Vats (E2M7) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Spawning Vats (E2M7) Main -> Spawning Vats (E2M7) Yellow", player),
-        Has('Spawning Vats (E2M7) - Yellow keycard')
+        Has('Spawning Vats (E2M7) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Spawning Vats (E2M7) Yellow -> Spawning Vats (E2M7) Main", player),
-        Has('Spawning Vats (E2M7) - Yellow keycard')
+        Has('Spawning Vats (E2M7) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Spawning Vats (E2M7) Red -> Spawning Vats (E2M7) Main", player),
-        Has('Spawning Vats (E2M7) - Red keycard')
+        Has('Spawning Vats (E2M7) - Red keycard', 1)
     )
 
     world.set_rule(
@@ -457,32 +457,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Fortress of Mystery (E2M9) Main -> Fortress of Mystery (E2M9) Blue", player),
-        Has('Fortress of Mystery (E2M9) - Blue skull key')
+        Has('Fortress of Mystery (E2M9) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Fortress of Mystery (E2M9) Main -> Fortress of Mystery (E2M9) Red", player),
-        Has('Fortress of Mystery (E2M9) - Red skull key')
+        Has('Fortress of Mystery (E2M9) - Red skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Fortress of Mystery (E2M9) Main -> Fortress of Mystery (E2M9) Yellow", player),
-        Has('Fortress of Mystery (E2M9) - Yellow skull key')
+        Has('Fortress of Mystery (E2M9) - Yellow skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Fortress of Mystery (E2M9) Blue -> Fortress of Mystery (E2M9) Main", player),
-        Has('Fortress of Mystery (E2M9) - Blue skull key')
+        Has('Fortress of Mystery (E2M9) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Fortress of Mystery (E2M9) Red -> Fortress of Mystery (E2M9) Main", player),
-        Has('Fortress of Mystery (E2M9) - Red skull key')
+        Has('Fortress of Mystery (E2M9) - Red skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Fortress of Mystery (E2M9) Yellow -> Fortress of Mystery (E2M9) Main", player),
-        Has('Fortress of Mystery (E2M9) - Yellow skull key')
+        Has('Fortress of Mystery (E2M9) - Yellow skull key', 1)
     )
 
     world.set_rule(
@@ -492,72 +492,72 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Slough of Despair (E3M2) Main -> Slough of Despair (E3M2) Blue", player),
-        Has('Slough of Despair (E3M2) - Blue skull key')
+        Has('Slough of Despair (E3M2) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Slough of Despair (E3M2) Blue -> Slough of Despair (E3M2) Main", player),
-        Has('Slough of Despair (E3M2) - Blue skull key')
+        Has('Slough of Despair (E3M2) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Pandemonium (E3M3) Main -> Pandemonium (E3M3) Blue", player),
-        Has('Pandemonium (E3M3) - Blue skull key')
+        Has('Pandemonium (E3M3) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Pandemonium (E3M3) Blue -> Pandemonium (E3M3) Main", player),
-        Has('Pandemonium (E3M3) - Blue skull key')
+        Has('Pandemonium (E3M3) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("House of Pain (E3M4) Main -> House of Pain (E3M4) Blue", player),
-        Has('House of Pain (E3M4) - Blue skull key')
+        Has('House of Pain (E3M4) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("House of Pain (E3M4) Blue -> House of Pain (E3M4) Main", player),
-        Has('House of Pain (E3M4) - Blue skull key')
+        Has('House of Pain (E3M4) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("House of Pain (E3M4) Blue -> House of Pain (E3M4) Yellow", player),
-        Has('House of Pain (E3M4) - Yellow skull key')
+        Has('House of Pain (E3M4) - Yellow skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("House of Pain (E3M4) Blue -> House of Pain (E3M4) Red", player),
-        Has('House of Pain (E3M4) - Red skull key')
+        Has('House of Pain (E3M4) - Red skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("House of Pain (E3M4) Red -> House of Pain (E3M4) Blue", player),
-        Has('House of Pain (E3M4) - Red skull key')
+        Has('House of Pain (E3M4) - Red skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("House of Pain (E3M4) Yellow -> House of Pain (E3M4) Blue", player),
-        Has('House of Pain (E3M4) - Yellow skull key')
+        Has('House of Pain (E3M4) - Yellow skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Unholy Cathedral (E3M5) Main -> Unholy Cathedral (E3M5) Yellow", player),
-        Has('Unholy Cathedral (E3M5) - Yellow skull key')
+        Has('Unholy Cathedral (E3M5) - Yellow skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Unholy Cathedral (E3M5) Main -> Unholy Cathedral (E3M5) Blue", player),
-        Has('Unholy Cathedral (E3M5) - Blue skull key')
+        Has('Unholy Cathedral (E3M5) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Unholy Cathedral (E3M5) Blue -> Unholy Cathedral (E3M5) Main", player),
-        Has('Unholy Cathedral (E3M5) - Blue skull key')
+        Has('Unholy Cathedral (E3M5) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Unholy Cathedral (E3M5) Yellow -> Unholy Cathedral (E3M5) Main", player),
-        Has('Unholy Cathedral (E3M5) - Yellow skull key')
+        Has('Unholy Cathedral (E3M5) - Yellow skull key', 1)
     )
 
     world.set_rule(
@@ -567,55 +567,55 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mt. Erebus (E3M6) Main -> Mt. Erebus (E3M6) Blue", player),
-        Has('Mt. Erebus (E3M6) - Blue skull key')
+        Has('Mt. Erebus (E3M6) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Mt. Erebus (E3M6) Blue -> Mt. Erebus (E3M6) Main", player),
-        Has('Mt. Erebus (E3M6) - Blue skull key')
+        Has('Mt. Erebus (E3M6) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Limbo (E3M7) Main -> Limbo (E3M7) Red", player),
-        Has('Limbo (E3M7) - Red skull key')
+        Has('Limbo (E3M7) - Red skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Limbo (E3M7) Main -> Limbo (E3M7) Blue", player),
-        Has('Limbo (E3M7) - Blue skull key')
+        Has('Limbo (E3M7) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Limbo (E3M7) Main -> Limbo (E3M7) Pink", player),
-        Has('Limbo (E3M7) - Blue skull key')
+        Has('Limbo (E3M7) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Limbo (E3M7) Red -> Limbo (E3M7) Yellow", player),
-        Has('Limbo (E3M7) - Yellow skull key')
+        Has('Limbo (E3M7) - Yellow skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Limbo (E3M7) Pink -> Limbo (E3M7) Green", player),
-        Has('Limbo (E3M7) - Red skull key')
+        Has('Limbo (E3M7) - Red skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Warrens (E3M9) Main -> Warrens (E3M9) Blue", player),
-        Has('Warrens (E3M9) - Blue skull key')
+        Has('Warrens (E3M9) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Warrens (E3M9) Main -> Warrens (E3M9) Blue trigger", player),
-        Has('Warrens (E3M9) - Blue skull key')
+        Has('Warrens (E3M9) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Warrens (E3M9) Blue -> Warrens (E3M9) Main", player),
-        Has('Warrens (E3M9) - Blue skull key')
+        Has('Warrens (E3M9) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Warrens (E3M9) Blue -> Warrens (E3M9) Red", player),
-        Has('Warrens (E3M9) - Red skull key')
+        Has('Warrens (E3M9) - Red skull key', 1)
     )

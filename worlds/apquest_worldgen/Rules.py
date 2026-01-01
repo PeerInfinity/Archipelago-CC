@@ -22,22 +22,22 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Overworld to Bottom Right Room", player),
-        Has('Sword')
+        Has('Sword', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld to Top Left Room", player),
-        Has('Key')
+        Has('Key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Right Room to Final Boss Room", player),
-        Has('Top Left Room Button Pressed')
+        Has('Top Left Room Button Pressed', 1)
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Right Room Enemy Drop", player),
-        Has('Sword')
+        Has('Sword', 1)
     )
 
     world.set_rule(
