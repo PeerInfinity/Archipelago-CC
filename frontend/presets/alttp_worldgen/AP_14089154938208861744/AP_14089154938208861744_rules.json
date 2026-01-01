@@ -3258,27 +3258,13 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "StateMethod",
+                  "rule": "HasAll",
                   "args": {
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Big Key (Eastern Palace)"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Lamp"
-                          }
-                        ]
-                      }
-                    ],
-                    "_original_ast_type": "state_method"
-                  },
-                  "_converted_from_ast": true
+                    "items": [
+                      "Big Key (Eastern Palace)",
+                      "Lamp"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -3353,27 +3339,13 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "StateMethod",
+                  "rule": "HasAll",
                   "args": {
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Big Key (Eastern Palace)"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Lamp"
-                          }
-                        ]
-                      }
-                    ],
-                    "_original_ast_type": "state_method"
-                  },
-                  "_converted_from_ast": true
+                    "items": [
+                      "Big Key (Eastern Palace)",
+                      "Lamp"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -9075,27 +9047,13 @@
                   ]
                 },
                 {
-                  "rule": "StateMethod",
+                  "rule": "HasAll",
                   "args": {
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Hammer"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Moon Pearl"
-                          }
-                        ]
-                      }
-                    ],
-                    "_original_ast_type": "state_method"
-                  },
-                  "_converted_from_ast": true
+                    "items": [
+                      "Hammer",
+                      "Moon Pearl"
+                    ]
+                  }
                 }
               ]
             },
@@ -13430,27 +13388,13 @@
                   ]
                 },
                 {
-                  "rule": "StateMethod",
+                  "rule": "HasAll",
                   "args": {
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Fire Rod"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Moon Pearl"
-                          }
-                        ]
-                      }
-                    ],
-                    "_original_ast_type": "state_method"
-                  },
-                  "_converted_from_ast": true
+                    "items": [
+                      "Fire Rod",
+                      "Moon Pearl"
+                    ]
+                  }
                 }
               ]
             },
@@ -13492,27 +13436,13 @@
                   ]
                 },
                 {
-                  "rule": "StateMethod",
+                  "rule": "HasAll",
                   "args": {
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Fire Rod"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Moon Pearl"
-                          }
-                        ]
-                      }
-                    ],
-                    "_original_ast_type": "state_method"
-                  },
-                  "_converted_from_ast": true
+                    "items": [
+                      "Fire Rod",
+                      "Moon Pearl"
+                    ]
+                  }
                 }
               ]
             },
@@ -13554,27 +13484,13 @@
                   ]
                 },
                 {
-                  "rule": "StateMethod",
+                  "rule": "HasAll",
                   "args": {
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Fire Rod"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Moon Pearl"
-                          }
-                        ]
-                      }
-                    ],
-                    "_original_ast_type": "state_method"
-                  },
-                  "_converted_from_ast": true
+                    "items": [
+                      "Fire Rod",
+                      "Moon Pearl"
+                    ]
+                  }
                 }
               ]
             },
@@ -13616,27 +13532,13 @@
                   ]
                 },
                 {
-                  "rule": "StateMethod",
+                  "rule": "HasAll",
                   "args": {
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Fire Rod"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Moon Pearl"
-                          }
-                        ]
-                      }
-                    ],
-                    "_original_ast_type": "state_method"
-                  },
-                  "_converted_from_ast": true
+                    "items": [
+                      "Fire Rod",
+                      "Moon Pearl"
+                    ]
+                  }
                 }
               ]
             },
@@ -13678,27 +13580,13 @@
                   ]
                 },
                 {
-                  "rule": "StateMethod",
+                  "rule": "HasAll",
                   "args": {
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Fire Rod"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Moon Pearl"
-                          }
-                        ]
-                      }
-                    ],
-                    "_original_ast_type": "state_method"
-                  },
-                  "_converted_from_ast": true
+                    "items": [
+                      "Fire Rod",
+                      "Moon Pearl"
+                    ]
+                  }
                 }
               ]
             },
@@ -14994,27 +14882,13 @@
                   ]
                 },
                 {
-                  "rule": "StateMethod",
+                  "rule": "HasAll",
                   "args": {
-                    "method": "has_all",
-                    "args": [
-                      {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Beat Agahnim 2"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Moon Pearl"
-                          }
-                        ]
-                      }
-                    ],
-                    "_original_ast_type": "state_method"
-                  },
-                  "_converted_from_ast": true
+                    "items": [
+                      "Beat Agahnim 2",
+                      "Moon Pearl"
+                    ]
+                  }
                 }
               ]
             },
@@ -15123,35 +14997,15 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "StateMethod",
+                  "rule": "HasAny",
                   "args": {
-                    "method": "has_any",
-                    "args": [
-                      {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Cane of Byrna"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Cane of Somaria"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Fire Rod"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Ice Rod"
-                          }
-                        ]
-                      }
-                    ],
-                    "_original_ast_type": "state_method"
-                  },
-                  "_converted_from_ast": true
+                    "items": [
+                      "Cane of Byrna",
+                      "Cane of Somaria",
+                      "Fire Rod",
+                      "Ice Rod"
+                    ]
+                  }
                 }
               ]
             }
@@ -15281,27 +15135,13 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "StateMethod",
+                  "rule": "HasAny",
                   "args": {
-                    "method": "has_any",
-                    "args": [
-                      {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Blue Boomerang"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Red Boomerang"
-                          }
-                        ]
-                      }
-                    ],
-                    "_original_ast_type": "state_method"
-                  },
-                  "_converted_from_ast": true
+                    "items": [
+                      "Blue Boomerang",
+                      "Red Boomerang"
+                    ]
+                  }
                 }
               ]
             }
@@ -15338,27 +15178,13 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "StateMethod",
+                  "rule": "HasAny",
                   "args": {
-                    "method": "has_any",
-                    "args": [
-                      {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Bug Catching Net"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Hammer"
-                          }
-                        ]
-                      }
-                    ],
-                    "_original_ast_type": "state_method"
-                  },
-                  "_converted_from_ast": true
+                    "items": [
+                      "Bug Catching Net",
+                      "Hammer"
+                    ]
+                  }
                 }
               ]
             }
@@ -15532,27 +15358,13 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "StateMethod",
+                  "rule": "HasAny",
                   "args": {
-                    "method": "has_any",
-                    "args": [
-                      {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Cane of Byrna"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Cane of Somaria"
-                          }
-                        ]
-                      }
-                    ],
-                    "_original_ast_type": "state_method"
-                  },
-                  "_converted_from_ast": true
+                    "items": [
+                      "Cane of Byrna",
+                      "Cane of Somaria"
+                    ]
+                  }
                 }
               ]
             }
@@ -15714,27 +15526,13 @@
                           "_converted_from_ast": true
                         },
                         {
-                          "rule": "StateMethod",
+                          "rule": "HasAll",
                           "args": {
-                            "method": "has_all",
-                            "args": [
-                              {
-                                "type": "tuple",
-                                "elements": [
-                                  {
-                                    "type": "constant",
-                                    "value": "Bombos"
-                                  },
-                                  {
-                                    "type": "constant",
-                                    "value": "Fire Rod"
-                                  }
-                                ]
-                              }
-                            ],
-                            "_original_ast_type": "state_method"
-                          },
-                          "_converted_from_ast": true
+                            "items": [
+                              "Bombos",
+                              "Fire Rod"
+                            ]
+                          }
                         }
                       ]
                     },
@@ -15910,27 +15708,13 @@
                   "rule": "Not",
                   "args": {
                     "condition": {
-                      "rule": "StateMethod",
+                      "rule": "HasAll",
                       "args": {
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "tuple",
-                            "elements": [
-                              {
-                                "type": "constant",
-                                "value": "Fire Rod"
-                              },
-                              {
-                                "type": "constant",
-                                "value": "Ice Rod"
-                              }
-                            ]
-                          }
-                        ],
-                        "_original_ast_type": "state_method"
-                      },
-                      "_converted_from_ast": true
+                        "items": [
+                          "Fire Rod",
+                          "Ice Rod"
+                        ]
+                      }
                     }
                   }
                 },
@@ -15990,31 +15774,14 @@
                       ]
                     },
                     {
-                      "rule": "StateMethod",
+                      "rule": "HasAny",
                       "args": {
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "tuple",
-                            "elements": [
-                              {
-                                "type": "constant",
-                                "value": "Golden Sword"
-                              },
-                              {
-                                "type": "constant",
-                                "value": "Hammer"
-                              },
-                              {
-                                "type": "constant",
-                                "value": "Tempered Sword"
-                              }
-                            ]
-                          }
-                        ],
-                        "_original_ast_type": "state_method"
-                      },
-                      "_converted_from_ast": true
+                        "items": [
+                          "Golden Sword",
+                          "Hammer",
+                          "Tempered Sword"
+                        ]
+                      }
                     }
                   ]
                 },
@@ -16118,27 +15885,13 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "StateMethod",
+                  "rule": "HasAny",
                   "args": {
-                    "method": "has_any",
-                    "args": [
-                      {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Bug Catching Net"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Hammer"
-                          }
-                        ]
-                      }
-                    ],
-                    "_original_ast_type": "state_method"
-                  },
-                  "_converted_from_ast": true
+                    "items": [
+                      "Bug Catching Net",
+                      "Hammer"
+                    ]
+                  }
                 }
               ]
             }
@@ -16259,27 +16012,13 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "StateMethod",
+                  "rule": "HasAny",
                   "args": {
-                    "method": "has_any",
-                    "args": [
-                      {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Blue Boomerang"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Red Boomerang"
-                          }
-                        ]
-                      }
-                    ],
-                    "_original_ast_type": "state_method"
-                  },
-                  "_converted_from_ast": true
+                    "items": [
+                      "Blue Boomerang",
+                      "Red Boomerang"
+                    ]
+                  }
                 }
               ]
             }
@@ -16300,35 +16039,15 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "StateMethod",
+                  "rule": "HasAny",
                   "args": {
-                    "method": "has_any",
-                    "args": [
-                      {
-                        "type": "tuple",
-                        "elements": [
-                          {
-                            "type": "constant",
-                            "value": "Cane of Byrna"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Cane of Somaria"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Fire Rod"
-                          },
-                          {
-                            "type": "constant",
-                            "value": "Ice Rod"
-                          }
-                        ]
-                      }
-                    ],
-                    "_original_ast_type": "state_method"
-                  },
-                  "_converted_from_ast": true
+                    "items": [
+                      "Cane of Byrna",
+                      "Cane of Somaria",
+                      "Fire Rod",
+                      "Ice Rod"
+                    ]
+                  }
                 }
               ]
             }
@@ -22034,36 +21753,15 @@
             "method": "has_any",
             "args": [
               {
-                "type": "tuple",
-                "elements": [
-                  {
-                    "type": "constant",
-                    "value": "Blue Boomerang"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Cane of Byrna"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Cane of Somaria"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Fire Rod"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Hookshot"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Ice Rod"
-                  },
-                  {
-                    "type": "constant",
-                    "value": "Red Boomerang"
-                  }
+                "type": "constant",
+                "value": [
+                  "Blue Boomerang",
+                  "Cane of Byrna",
+                  "Cane of Somaria",
+                  "Fire Rod",
+                  "Hookshot",
+                  "Ice Rod",
+                  "Red Boomerang"
                 ]
               }
             ]

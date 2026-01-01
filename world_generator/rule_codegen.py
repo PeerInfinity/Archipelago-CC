@@ -4399,15 +4399,15 @@ class HelperCodeGenerator:
             if rule_type == 'HasAll':
                 args = expr.get('args', {})
                 items = args.get('items', [])
-                items_tuple = tuple(items)
-                return f"state.has_all({items_tuple!r}, player)"
+                # Use list literal to match original ALTTP style
+                return f"state.has_all({items!r}, player)"
 
             # Handle HasAny rules (Rule Builder format)
             if rule_type == 'HasAny':
                 args = expr.get('args', {})
                 items = args.get('items', [])
-                items_tuple = tuple(items)
-                return f"state.has_any({items_tuple!r}, player)"
+                # Use list literal to match original ALTTP style
+                return f"state.has_any({items!r}, player)"
 
             # Handle Not rules (Rule Builder format)
             if rule_type == 'Not':
@@ -5100,8 +5100,8 @@ class HelperCodeGenerator:
                 # First try to get a constant value
                 items = self._extract_constant(args[0], None)
                 if items is not None:
-                    # It's a constant list, use repr
-                    items_repr = repr(tuple(items)) if items else '()'
+                    # It's a constant list, use repr - use list to match original ALTTP style
+                    items_repr = repr(list(items)) if items else '[]'
                 else:
                     # It's a dynamic expression (parameter reference, helper call, etc.)
                     items_repr = self._generate_expression(args[0])
@@ -5113,8 +5113,8 @@ class HelperCodeGenerator:
                 # First try to get a constant value
                 items = self._extract_constant(args[0], None)
                 if items is not None:
-                    # It's a constant list, use repr
-                    items_repr = repr(tuple(items)) if items else '()'
+                    # It's a constant list, use repr - use list to match original ALTTP style
+                    items_repr = repr(list(items)) if items else '[]'
                 else:
                     # It's a dynamic expression (parameter reference, helper call, etc.)
                     items_repr = self._generate_expression(args[0])

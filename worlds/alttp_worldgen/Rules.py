@@ -308,7 +308,7 @@ def bottle_count(state: "CollectionState", player: int) -> bool:
 
 
 def can_activate_crystal_switch(state: "CollectionState", player: int) -> bool:
-    return (has_melee_weapon(state, player)) or (can_use_bombs(state, player)) or (can_shoot_arrows(state, player)) or (state.has_any(('Blue Boomerang', 'Cane of Byrna', 'Cane of Somaria', 'Fire Rod', 'Hookshot', 'Ice Rod', 'Red Boomerang'), player))
+    return (has_melee_weapon(state, player)) or (can_use_bombs(state, player)) or (can_shoot_arrows(state, player)) or (state.has_any(['Blue Boomerang', 'Cane of Byrna', 'Cane of Somaria', 'Fire Rod', 'Hookshot', 'Ice Rod', 'Red Boomerang'], player))
 
 
 def can_bomb_or_bonk(state: "CollectionState", player: int) -> bool:
@@ -441,19 +441,19 @@ def tr_big_key_chest_keys_needed(state: "CollectionState", player: int) -> bool:
 
 def _can_defeat_Desert_Palace_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Lanmolas in Desert Palace."""
-    return ((can_shoot_arrows(state, player)) or (has_melee_weapon(state, player)) or (state.has_any(('Cane of Byrna', 'Cane of Somaria', 'Fire Rod', 'Ice Rod'), player)))
+    return ((can_shoot_arrows(state, player)) or (has_melee_weapon(state, player)) or (state.has_any(['Cane of Byrna', 'Cane of Somaria', 'Fire Rod', 'Ice Rod'], player)))
 _can_defeat_Desert_Palace_default._internal_function = True
 
 
 def _can_defeat_Eastern_Palace_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Armos Knights in Eastern Palace."""
-    return ((((can_extend_magic(state, player, 10)) and (state.has('Cane of Somaria', player)))) or (((can_extend_magic(state, player, 16)) and (state.has('Cane of Byrna', player)))) or (((can_extend_magic(state, player, 32)) and (state.has('Fire Rod', player)))) or (((can_extend_magic(state, player, 32)) and (state.has('Ice Rod', player)))) or (can_shoot_arrows(state, player)) or (has_melee_weapon(state, player)) or (state.has_any(('Blue Boomerang', 'Red Boomerang'), player)))
+    return ((((can_extend_magic(state, player, 10)) and (state.has('Cane of Somaria', player)))) or (((can_extend_magic(state, player, 16)) and (state.has('Cane of Byrna', player)))) or (((can_extend_magic(state, player, 32)) and (state.has('Fire Rod', player)))) or (((can_extend_magic(state, player, 32)) and (state.has('Ice Rod', player)))) or (can_shoot_arrows(state, player)) or (has_melee_weapon(state, player)) or (state.has_any(['Blue Boomerang', 'Red Boomerang'], player)))
 _can_defeat_Eastern_Palace_default._internal_function = True
 
 
 def _can_defeat_Agahnims_Tower_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Agahnim in Agahnims Tower."""
-    return ((has_sword(state, player)) or (state.has_any(('Bug Catching Net', 'Hammer'), player)))
+    return ((has_sword(state, player)) or (state.has_any(['Bug Catching Net', 'Hammer'], player)))
 _can_defeat_Agahnims_Tower_default._internal_function = True
 
 
@@ -471,7 +471,7 @@ _can_defeat_Swamp_Palace_default._internal_function = True
 
 def _can_defeat_Thieves_Town_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Blind in Thieves Town."""
-    return ((has_melee_weapon(state, player)) or (state.has_any(('Cane of Byrna', 'Cane of Somaria'), player)))
+    return ((has_melee_weapon(state, player)) or (state.has_any(['Cane of Byrna', 'Cane of Somaria'], player)))
 _can_defeat_Thieves_Town_default._internal_function = True
 
 
@@ -483,7 +483,7 @@ _can_defeat_Skull_Woods_default._internal_function = True
 
 def _can_defeat_Ice_Palace_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Kholdstare in Ice Palace."""
-    return ((((((can_extend_magic(state, player, 16)) and (state.multiworld.worlds[player].options.swordless) and (state.has_all(('Bombos', 'Fire Rod'), player)))) or (((can_extend_magic(state, player, 20)) and (state.has('Fire Rod', player)))) or (has_melee_weapon(state, player)))) and (((((((has_sword(state, player)) or (state.multiworld.worlds[player].options.swordless))) and (state.has('Bombos', player)))) or (state.has('Fire Rod', player)))))
+    return ((((((can_extend_magic(state, player, 16)) and (state.multiworld.worlds[player].options.swordless) and (state.has_all(['Bombos', 'Fire Rod'], player)))) or (((can_extend_magic(state, player, 20)) and (state.has('Fire Rod', player)))) or (has_melee_weapon(state, player)))) and (((((((has_sword(state, player)) or (state.multiworld.worlds[player].options.swordless))) and (state.has('Bombos', player)))) or (state.has('Fire Rod', player)))))
 _can_defeat_Ice_Palace_default._internal_function = True
 
 
@@ -495,7 +495,7 @@ _can_defeat_Misery_Mire_default._internal_function = True
 
 def _can_defeat_Turtle_Rock_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Trinexx in Turtle Rock."""
-    return ((False) if (not (state.has_all(('Fire Rod', 'Ice Rod'), player))) else (((((can_extend_magic(state, player, 16)) and (state.has('Master Sword', player)))) or (((can_extend_magic(state, player, 32)) and (has_sword(state, player)))) or (state.has_any(('Golden Sword', 'Hammer', 'Tempered Sword'), player)))))
+    return ((False) if (not (state.has_all(['Fire Rod', 'Ice Rod'], player))) else (((((can_extend_magic(state, player, 16)) and (state.has('Master Sword', player)))) or (((can_extend_magic(state, player, 32)) and (has_sword(state, player)))) or (state.has_any(['Golden Sword', 'Hammer', 'Tempered Sword'], player)))))
 _can_defeat_Turtle_Rock_default._internal_function = True
 
 
@@ -507,19 +507,19 @@ _can_defeat_Palace_of_Darkness_default._internal_function = True
 
 def _can_defeat_Ganons_Tower_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Agahnim2 in Ganons Tower."""
-    return ((has_sword(state, player)) or (state.has_any(('Bug Catching Net', 'Hammer'), player)))
+    return ((has_sword(state, player)) or (state.has_any(['Bug Catching Net', 'Hammer'], player)))
 _can_defeat_Ganons_Tower_default._internal_function = True
 
 
 def _can_defeat_Ganons_Tower_bottom(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Armos Knights in Ganons Tower."""
-    return ((((can_extend_magic(state, player, 10)) and (state.has('Cane of Somaria', player)))) or (((can_extend_magic(state, player, 16)) and (state.has('Cane of Byrna', player)))) or (((can_extend_magic(state, player, 32)) and (state.has('Fire Rod', player)))) or (((can_extend_magic(state, player, 32)) and (state.has('Ice Rod', player)))) or (can_shoot_arrows(state, player)) or (has_melee_weapon(state, player)) or (state.has_any(('Blue Boomerang', 'Red Boomerang'), player)))
+    return ((((can_extend_magic(state, player, 10)) and (state.has('Cane of Somaria', player)))) or (((can_extend_magic(state, player, 16)) and (state.has('Cane of Byrna', player)))) or (((can_extend_magic(state, player, 32)) and (state.has('Fire Rod', player)))) or (((can_extend_magic(state, player, 32)) and (state.has('Ice Rod', player)))) or (can_shoot_arrows(state, player)) or (has_melee_weapon(state, player)) or (state.has_any(['Blue Boomerang', 'Red Boomerang'], player)))
 _can_defeat_Ganons_Tower_bottom._internal_function = True
 
 
 def _can_defeat_Ganons_Tower_middle(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Lanmolas in Ganons Tower."""
-    return ((can_shoot_arrows(state, player)) or (has_melee_weapon(state, player)) or (state.has_any(('Cane of Byrna', 'Cane of Somaria', 'Fire Rod', 'Ice Rod'), player)))
+    return ((can_shoot_arrows(state, player)) or (has_melee_weapon(state, player)) or (state.has_any(['Cane of Byrna', 'Cane of Somaria', 'Fire Rod', 'Ice Rod'], player)))
 _can_defeat_Ganons_Tower_middle._internal_function = True
 
 
@@ -1618,10 +1618,10 @@ def set_rules(world: "World") -> None:
         lambda state: ((can_kill_most_things(state, player, 5)) and ((((((('Big Key (Eastern Palace)', 1) == ('Big Key (Eastern Palace)', 1))) and (state.has('Small Key (Eastern Palace)', player)))) or (state.has('Small Key (Eastern Palace)', player, 2)))) and (state.has('Lamp', player)))
 
     multiworld.get_location("Eastern Palace - Boss", player).access_rule = \
-        lambda state: ((state.has('Small Key (Eastern Palace)', player, 2)) and (state.multiworld.get_location("Eastern Palace - Boss", player).parent_region.dungeon.boss.can_defeat(state)) and (can_shoot_arrows(state, player)) and (state.has_all(('Big Key (Eastern Palace)', 'Lamp'), player)))
+        lambda state: ((state.has('Small Key (Eastern Palace)', player, 2)) and (state.multiworld.get_location("Eastern Palace - Boss", player).parent_region.dungeon.boss.can_defeat(state)) and (can_shoot_arrows(state, player)) and (state.has_all(['Big Key (Eastern Palace)', 'Lamp'], player)))
 
     multiworld.get_location("Eastern Palace - Prize", player).access_rule = \
-        lambda state: ((state.has('Small Key (Eastern Palace)', player, 2)) and (state.multiworld.get_location("Eastern Palace - Prize", player).parent_region.dungeon.boss.can_defeat(state)) and (can_shoot_arrows(state, player)) and (state.has_all(('Big Key (Eastern Palace)', 'Lamp'), player)))
+        lambda state: ((state.has('Small Key (Eastern Palace)', player, 2)) and (state.multiworld.get_location("Eastern Palace - Prize", player).parent_region.dungeon.boss.can_defeat(state)) and (can_shoot_arrows(state, player)) and (state.has_all(['Big Key (Eastern Palace)', 'Lamp'], player)))
 
     world.set_rule(
         multiworld.get_location("Master Sword Pedestal", player),
@@ -1980,7 +1980,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Thieves' Town - Big Chest", player).access_rule = \
-        lambda state: (((((((('Compass (Thieves Town)', 1) == ('Small Key (Thieves Town)', 1))) and (state.has('Small Key (Thieves Town)', player, 2)))) or (state.has('Small Key (Thieves Town)', player, 3)))) and (state.has_all(('Hammer', 'Moon Pearl'), player)))
+        lambda state: (((((((('Compass (Thieves Town)', 1) == ('Small Key (Thieves Town)', 1))) and (state.has('Small Key (Thieves Town)', player, 2)))) or (state.has('Small Key (Thieves Town)', player, 3)))) and (state.has_all(['Hammer', 'Moon Pearl'], player)))
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Hallway Pot Key", player),
@@ -2335,19 +2335,19 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Ganons Tower - Compass Room - Top Left", player).access_rule = \
-        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (((can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has_all(('Fire Rod', 'Moon Pearl'), player)))
+        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (((can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has_all(['Fire Rod', 'Moon Pearl'], player)))
 
     multiworld.get_location("Ganons Tower - Compass Room - Top Right", player).access_rule = \
-        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (((can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has_all(('Fire Rod', 'Moon Pearl'), player)))
+        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (((can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has_all(['Fire Rod', 'Moon Pearl'], player)))
 
     multiworld.get_location("Ganons Tower - Compass Room - Bottom Left", player).access_rule = \
-        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (((can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has_all(('Fire Rod', 'Moon Pearl'), player)))
+        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (((can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has_all(['Fire Rod', 'Moon Pearl'], player)))
 
     multiworld.get_location("Ganons Tower - Compass Room - Bottom Right", player).access_rule = \
-        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (((can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has_all(('Fire Rod', 'Moon Pearl'), player)))
+        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (((can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has_all(['Fire Rod', 'Moon Pearl'], player)))
 
     multiworld.get_location("Ganons Tower - Conveyor Star Pits Pot Key", player).access_rule = \
-        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (((can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has_all(('Fire Rod', 'Moon Pearl'), player)))
+        lambda state: ((((((state.has('Small Key (Ganons Tower)', player, 5)) and (False))) or (state.has('Small Key (Ganons Tower)', player, 7)))) and (((can_use_bombs(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has_all(['Fire Rod', 'Moon Pearl'], player)))
 
     world.set_rule(
         multiworld.get_location("Ganons Tower - DMs Room - Top Left", player),
@@ -2442,7 +2442,7 @@ def set_rules(world: "World") -> None:
         lambda state: ((state.multiworld.get_location("Agahnim 2", player).parent_region.dungeon.boss.can_defeat(state)) and (state.has('Moon Pearl', player)))
 
     multiworld.get_location("Ganon", player).access_rule = \
-        lambda state: ((GanonDefeatRule(state, player)) and (has_crystals(state, player, state.multiworld.worlds[player].options.crystals_needed_for_ganon)) and (state.has_all(('Beat Agahnim 2', 'Moon Pearl'), player)))
+        lambda state: ((GanonDefeatRule(state, player)) and (has_crystals(state, player, state.multiworld.worlds[player].options.crystals_needed_for_ganon)) and (state.has_all(['Beat Agahnim 2', 'Moon Pearl'], player)))
 
     # Wire up boss defeat functions to dungeon objects
     _setup_dungeon_bosses(multiworld, player)

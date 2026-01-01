@@ -406,13 +406,20 @@ class ASTToRuleBuilder:
                 return arg
             return default
 
-        # Helper to extract item list from a set or list argument
+        # Helper to extract item list from a set, list, or tuple argument
         def get_items_from_arg(arg, default=None):
             if isinstance(arg, list):
                 return arg
             if isinstance(arg, dict):
                 if arg.get('type') == 'set':
                     # Extract item values from set elements
+                    elements = arg.get('elements', [])
+                    return [
+                        el.get('value') if isinstance(el, dict) and el.get('type') == 'constant' else el
+                        for el in elements
+                    ]
+                if arg.get('type') == 'tuple':
+                    # Extract item values from tuple elements
                     elements = arg.get('elements', [])
                     return [
                         el.get('value') if isinstance(el, dict) and el.get('type') == 'constant' else el
