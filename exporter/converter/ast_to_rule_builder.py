@@ -104,7 +104,10 @@ class ASTToRuleBuilder:
             'list': self._convert_list,
             'tuple': self._convert_tuple,
 
-            # ALTTP-specific types
+            # Function calls
+            'function_call': self._convert_function_call,
+
+            # Placement types
             'placement_search': self._convert_placement_search,
             'placement_lookup': self._convert_placement_lookup,
         }
@@ -587,26 +590,42 @@ class ASTToRuleBuilder:
         And(Has(A), Has(B), Has(C)) -> And(HasAll([A, B, C]))
         Or(Has(A), Has(B), Has(C)) -> Or(HasAny([A, B, C]))
 
+        Also merges simple Has rules with existing HasAll/HasAny:
+        And(Has(A), HasAll([B, C])) -> And(HasAll([A, B, C]))
+
         Only combines Has rules without count (or count=1).
         """
         target_rule = 'HasAll' if rule_name == 'And' else 'HasAny'
 
         simple_has_items = []
+        existing_items = []  # Items from existing HasAll/HasAny
         other_children = []
 
         for child in children:
-            if isinstance(child, dict) and child.get('rule') == 'Has':
-                args = child.get('args', {})
-                count = args.get('count', 1)
-                item_name = args.get('item_name')
-                # Only combine simple Has (count=1 or no count)
-                if count == 1 and item_name and isinstance(item_name, str):
-                    simple_has_items.append(item_name)
-                    continue
+            if isinstance(child, dict):
+                # Collect items from simple Has rules
+                if child.get('rule') == 'Has':
+                    args = child.get('args', {})
+                    count = args.get('count', 1)
+                    item_name = args.get('item_name')
+                    # Only combine simple Has (count=1 or no count)
+                    if count == 1 and item_name and isinstance(item_name, str):
+                        simple_has_items.append(item_name)
+                        continue
+                # Also collect items from existing HasAll/HasAny (matching target)
+                elif child.get('rule') == target_rule:
+                    args = child.get('args', {})
+                    items = args.get('items', [])
+                    if isinstance(items, list) and all(isinstance(i, str) for i in items):
+                        existing_items.extend(items)
+                        continue
             other_children.append(child)
 
+        # Combine all items from Has and existing HasAll/HasAny
+        all_items = simple_has_items + existing_items
+
         # Deduplicate while preserving order
-        unique_items = list(dict.fromkeys(simple_has_items))
+        unique_items = list(dict.fromkeys(all_items))
 
         if len(unique_items) >= 2:
             other_children.append(self._make_rule(target_rule, {'items': unique_items}))
@@ -1077,8 +1096,100 @@ class ASTToRuleBuilder:
             '_original_ast_type': 'tuple'
         })
 
+    def _convert_function_call(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert function call rule.
+
+        Handles common patterns:
+        - options.X.to_bool() → bool(SettingValue(X))
+        - self.options.X.to_bool() → bool(SettingValue(X))
+        - world.worlds[player].options.X.to_bool() → bool(SettingValue(X))
+        """
+        function = rule.get('function', {})
+        args = rule.get('args', [])
+
+        # Pattern: *.to_bool() or *.value with option access
+        if isinstance(function, dict) and function.get('type') == 'attribute':
+            func_attr = function.get('attr', '')
+            func_obj = function.get('object', {})
+
+            # Check for to_bool() method call on an option
+            if func_attr == 'to_bool':
+                # Extract the setting name from the option access chain
+                setting_name = self._extract_setting_name(func_obj)
+                if setting_name:
+                    # Create a bool helper with the setting value as argument
+                    result = {
+                        'rule': 'bool',
+                        '_original_ast_type': 'helper',
+                        '_converted_from_ast': True,
+                        'args': [
+                            self._make_custom_rule('AST_setting_value', {
+                                'setting': setting_name,
+                                '_original_ast_type': 'setting_value'
+                            })
+                        ]
+                    }
+                    return result
+
+        # Default: preserve as custom rule without converting nested structures
+        # This keeps the raw AST format for function calls that we don't handle
+        result_args = {
+            'function': function,
+            '_original_ast_type': 'function_call'
+        }
+        # Only include args if non-empty (matches WorldGen format)
+        if args:
+            result_args['args'] = args
+        return self._make_custom_rule('AST_function_call', result_args)
+
+    def _extract_setting_name(self, obj: Dict[str, Any]) -> Optional[str]:
+        """
+        Extract setting name from an option access chain.
+
+        Handles patterns like:
+        - options.X → 'X'
+        - self.options.X → 'X'
+        - world.worlds[player].options.X → 'X'
+        """
+        if not isinstance(obj, dict):
+            return None
+
+        obj_type = obj.get('type')
+
+        # Direct name reference
+        if obj_type == 'name':
+            return obj.get('name')
+
+        # Attribute access
+        if obj_type == 'attribute':
+            attr = obj.get('attr', '')
+            inner_obj = obj.get('object', {})
+
+            # Check if parent is 'options'
+            if isinstance(inner_obj, dict):
+                if inner_obj.get('type') == 'name' and inner_obj.get('name') == 'options':
+                    return attr
+                if inner_obj.get('type') == 'attribute' and inner_obj.get('attr') == 'options':
+                    return attr
+
+            # Recurse to find options.X pattern
+            if attr == 'options':
+                # We're at the 'options' attribute, so the setting is the parent's attr
+                return None
+
+            # Check if we've found the setting name (after options)
+            inner_attr = inner_obj.get('attr', '') if isinstance(inner_obj, dict) else ''
+            if inner_attr == 'options':
+                return attr
+
+            # Continue searching
+            return self._extract_setting_name(inner_obj)
+
+        return None
+
     # -------------------------------------------------------------------------
-    # Placement Converters (ALTTP-specific)
+    # Placement Converters
     # -------------------------------------------------------------------------
 
     def _flatten_locations(self, locations: Any) -> List[List[Any]]:

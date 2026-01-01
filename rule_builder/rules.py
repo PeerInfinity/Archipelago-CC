@@ -1051,26 +1051,42 @@ class Filtered(WrapperRule[TWorld], game="Archipelago"):
 
 @dataclasses.dataclass()
 class Has(Rule[TWorld], game="Archipelago"):
-    """A rule that checks if the player has at least `count` of a given item"""
+    """A rule that checks if the player has at least `count` of a given item.
+
+    The count can be a static integer or a Rule that evaluates to an integer at runtime.
+    """
 
     item_name: str
     """The item to check for"""
 
-    count: int = 1
-    """The count the player is required to have"""
+    count: "int | Rule[TWorld]" = 1
+    """The count the player is required to have. Can be a Rule for dynamic counts."""
 
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        # Resolve count if it's a Rule
+        resolved_count: "int | Rule.Resolved"
+        if isinstance(self.count, Rule):
+            resolved_count = self.count._instantiate(world)
+        else:
+            resolved_count = self.count
+
         return self.Resolved(
             self.item_name,
-            self.count,
+            resolved_count,
             player=world.player,
             caching_enabled=world.rule_caching_enabled,
         )
 
     @override
     def __str__(self) -> str:
-        count = f", count={self.count}" if self.count > 1 else ""
+        # Handle both static and Rule counts
+        if isinstance(self.count, Rule):
+            count = f", count={self.count}"
+        elif self.count > 1:
+            count = f", count={self.count}"
+        else:
+            count = ""
         options = f", options={self.options}" if self.options else ""
         return f"{self.__class__.__name__}({self.item_name}{count}{options})"
 
@@ -1081,20 +1097,36 @@ class Has(Rule[TWorld], game="Archipelago"):
         if self.options:
             result["options"] = [o.to_dict() for o in self.options]
         args = {"item_name": self.item_name}
-        if self.count != 1:
+        # Handle both static and Rule counts
+        if isinstance(self.count, Rule):
+            args["count"] = self.count.to_dict()
+        elif self.count != 1:
             args["count"] = self.count
         result["args"] = args
         return result
 
     class Resolved(Rule.Resolved):
         item_name: str
-        count: int = 1
+        count: "int | Rule.Resolved" = 1
         skip_cache: ClassVar[bool] = True
+
+        def _get_count_value(self, state: CollectionState) -> int:
+            """Get the count value, evaluating if it's a Rule.Resolved."""
+            if isinstance(self.count, Rule.Resolved):
+                # Check for get_value or get_count methods
+                if hasattr(self.count, 'get_value'):
+                    return self.count.get_value(state)
+                if hasattr(self.count, 'get_count'):
+                    return self.count.get_count(state)
+                # Otherwise evaluate as boolean and convert to int
+                return int(self.count(state))
+            return self.count
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
             # implementation based on state.has
-            return state.prog_items[self.player][self.item_name] >= self.count
+            count_val = self._get_count_value(state)
+            return state.prog_items[self.player][self.item_name] >= count_val
 
         @override
         def item_dependencies(self) -> dict[str, set[int]]:
@@ -1104,7 +1136,13 @@ class Has(Rule[TWorld], game="Archipelago"):
         def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
             verb = "Missing " if state and not self(state) else "Has "
             messages: list[JSONMessagePart] = [{"type": "text", "text": verb}]
-            if self.count > 1:
+            # Handle both static and dynamic counts
+            if isinstance(self.count, Rule.Resolved):
+                count_val = self._get_count_value(state) if state else None
+                if count_val is not None and count_val > 1:
+                    messages.append({"type": "color", "color": "cyan", "text": str(count_val)})
+                    messages.append({"type": "text", "text": "x "})
+            elif self.count > 1:
                 messages.append({"type": "color", "color": "cyan", "text": str(self.count)})
                 messages.append({"type": "text", "text": "x "})
             if state:
@@ -1119,19 +1157,34 @@ class Has(Rule[TWorld], game="Archipelago"):
             if state is None:
                 return str(self)
             prefix = "Has" if self(state) else "Missing"
-            count = f"{self.count}x " if self.count > 1 else ""
+            # Handle both static and dynamic counts
+            if isinstance(self.count, Rule.Resolved):
+                count_val = self._get_count_value(state)
+                count = f"{count_val}x " if count_val > 1 else ""
+            else:
+                count = f"{self.count}x " if self.count > 1 else ""
             return f"{prefix} {count}{self.item_name}"
 
         @override
         def __str__(self) -> str:
-            count = f"{self.count}x " if self.count > 1 else ""
+            # Handle both static and dynamic counts
+            if isinstance(self.count, Rule.Resolved):
+                count = f"({self.count})x "
+            elif self.count > 1:
+                count = f"{self.count}x "
+            else:
+                count = ""
             return f"Has {count}{self.item_name}"
 
         @override
         def _get_args_dict(self) -> dict[str, Any]:
             # Only include count if it's not the default (1)
             args = {"item_name": self.item_name}
-            if self.count != 1:
+            # Handle both static and dynamic counts
+            if isinstance(self.count, Rule.Resolved):
+                # Serialize the count rule as a dict for JSON export
+                args["count"] = self.count.to_dict()
+            elif self.count != 1:
                 args["count"] = self.count
             return args
 

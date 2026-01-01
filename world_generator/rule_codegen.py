@@ -718,18 +718,17 @@ class RuleCodeGenerator:
             item_name = args.get('item_name', '')
             count = args.get('count', 1)
 
-            # If count is a complex expression (dict), use Compare(CountItem(...), ">=", expr)
+            self.required_imports.add('Has')
+
+            # If count is a complex expression (dict), pass it as a rule reference
             if isinstance(count, dict):
-                # Use _convert_compare_operand to preserve numeric SettingValue values
-                # instead of _convert_rule which converts them to boolean True_/False_
+                # Convert the count expression to code
+                # Use _convert_compare_operand to preserve numeric values
                 count_expr = self._convert_compare_operand(count)
-                self.required_imports.add('Compare')
-                self.required_imports.add('CountItem')
-                return f'Compare(CountItem({repr(item_name)}), ">=", {count_expr})'
+                return f'Has({repr(item_name)}, {count_expr})'
 
             # Preserve the exact count from the original rule, including count=0
             # This ensures round-trip fidelity when comparing exports
-            self.required_imports.add('Has')
             # Always include count to preserve original rule structure
             return f'Has({repr(item_name)}, {count})'
 
@@ -1935,6 +1934,41 @@ class RuleCodeGenerator:
                 'right': rb_args.get('right', {})
             }
             return self._convert_binary_op(binary_op_rule)
+
+        # Handle Tuple operand (e.g., for 'in' operator: value in ('a', 'b', 'c'))
+        if rb_rule == 'Tuple':
+            args = operand.get('args', {})
+            value_list = args.get('value', args.get('elements', []))
+            items = []
+            for item in value_list:
+                if isinstance(item, dict):
+                    if item.get('rule') == 'Constant':
+                        items.append(repr(item.get('args', {}).get('value')))
+                    elif item.get('type') == 'constant':
+                        items.append(repr(item.get('value')))
+                    else:
+                        # Recursively convert complex items
+                        items.append(self._convert_compare_operand(item))
+                else:
+                    items.append(repr(item))
+            return f"({', '.join(items)})"
+
+        # Handle List operand (e.g., for 'in' operator: value in ['a', 'b', 'c'])
+        if rb_rule == 'List':
+            args = operand.get('args', {})
+            value_list = args.get('value', args.get('elements', []))
+            items = []
+            for item in value_list:
+                if isinstance(item, dict):
+                    if item.get('rule') == 'Constant':
+                        items.append(repr(item.get('args', {}).get('value')))
+                    elif item.get('type') == 'constant':
+                        items.append(repr(item.get('value')))
+                    else:
+                        items.append(self._convert_compare_operand(item))
+                else:
+                    items.append(repr(item))
+            return f"[{', '.join(items)}]"
 
         # Handle integer-returning helpers used as Compare operands
         # These are helpers that count items and return an integer (e.g., weapon_armor_upgrade_count)
@@ -4424,6 +4458,17 @@ class HelperCodeGenerator:
                 value = args.get('value', [])
                 elements = [self._generate_expression(v) if isinstance(v, dict) else repr(v) for v in value]
                 return f'[{", ".join(elements)}]'
+
+            # Handle Python built-in functions that may have _original_ast_type marker
+            # These should NOT be treated as helpers that take state/player args
+            builtin_funcs = ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list',
+                           'set', 'tuple', 'iter', 'next', 'bool', 'int', 'str', 'float')
+            if rule_type in builtin_funcs:
+                args = expr.get('args', [])
+                if args and isinstance(args, list):
+                    arg_exprs = [self._generate_expression(a) for a in args]
+                    return f'{rule_type}({", ".join(arg_exprs)})'
+                return f'{rule_type}()'
 
             # Handle helper calls with _original_ast_type marker
             if expr.get('_original_ast_type') == 'helper' or rule_type in self.known_helpers:
