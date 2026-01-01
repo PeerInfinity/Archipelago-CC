@@ -1670,7 +1670,10 @@ class {world_class}(RuleWorldMixin, World):
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
         data = item_table[name]
-        return {class_name}Item(name, data.classification, data.id, self.player)
+        item = {class_name}Item(name, data.classification, data.id, self.player)
+        if data.hint_text:
+            item._hint_text = data.hint_text
+        return item
 
 {collect_item_section}{fill_slot_data_section}'''
 

@@ -794,7 +794,10 @@ class ALinktothePastWorldGenWorld(RuleWorldMixin, World):
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
         data = item_table[name]
-        return ALinktothePastWorldGenItem(name, data.classification, data.id, self.player)
+        item = ALinktothePastWorldGenItem(name, data.classification, data.id, self.player)
+        if data.hint_text:
+            item._hint_text = data.hint_text
+        return item
 
 
     def collect_item(self, state, item, remove=False):

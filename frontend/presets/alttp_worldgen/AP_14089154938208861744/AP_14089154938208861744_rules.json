@@ -12783,10 +12783,10 @@
           "Progression Items",
           "Swords"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Golden Sword": {
         "name": "Golden Sword",
@@ -12796,10 +12796,10 @@
           "Progression Items",
           "Swords"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blue Shield": {
         "name": "Blue Shield",
@@ -12809,10 +12809,10 @@
           "Non Progression Items",
           "Shields"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Red Shield": {
         "name": "Red Shield",
@@ -12822,10 +12822,10 @@
           "Non Progression Items",
           "Shields"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mirror Shield": {
         "name": "Mirror Shield",
@@ -12835,10 +12835,10 @@
           "Progression Items",
           "Shields"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fire Rod": {
         "name": "Fire Rod",
@@ -12848,10 +12848,11 @@
           "Progression Items",
           "Rods"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Fire Rod"
       },
       "Ice Rod": {
         "name": "Ice Rod",
@@ -12861,10 +12862,11 @@
           "Progression Items",
           "Rods"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Ice Rod"
       },
       "Hammer": {
         "name": "Hammer",
@@ -12873,10 +12875,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Hammer"
       },
       "Hookshot": {
         "name": "Hookshot",
@@ -12885,10 +12888,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Hookshot"
       },
       "Bow": {
         "name": "Bow",
@@ -12898,10 +12902,10 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blue Boomerang": {
         "name": "Blue Boomerang",
@@ -12911,10 +12915,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Blue Boomerang"
       },
       "Magic Powder": {
         "name": "Magic Powder",
@@ -12923,10 +12928,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Powder"
       },
       "Bee": {
         "name": "Bee",
@@ -12935,10 +12941,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bombos": {
         "name": "Bombos",
@@ -12948,10 +12954,10 @@
           "Medallions",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ether": {
         "name": "Ether",
@@ -12961,10 +12967,10 @@
           "Medallions",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Quake": {
         "name": "Quake",
@@ -12974,10 +12980,10 @@
           "Medallions",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Lamp": {
         "name": "Lamp",
@@ -12986,10 +12992,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Lamp"
       },
       "Shovel": {
         "name": "Shovel",
@@ -12998,10 +13005,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Shovel"
       },
       "Flute": {
         "name": "Flute",
@@ -13010,10 +13018,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Flute"
       },
       "Cane of Somaria": {
         "name": "Cane of Somaria",
@@ -13023,10 +13032,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Red Cane"
       },
       "Bottle": {
         "name": "Bottle",
@@ -13036,10 +13046,10 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Piece of Heart": {
         "name": "Piece of Heart",
@@ -13048,10 +13058,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 24,
-        "classification": "useful"
+        "hint_text": "a heart piece"
       },
       "Cane of Byrna": {
         "name": "Cane of Byrna",
@@ -13061,10 +13072,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Blue Cane"
       },
       "Cape": {
         "name": "Cape",
@@ -13073,10 +13085,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Cape"
       },
       "Magic Mirror": {
         "name": "Magic Mirror",
@@ -13085,10 +13098,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Mirror"
       },
       "Power Glove": {
         "name": "Power Glove",
@@ -13098,10 +13112,10 @@
           "Gloves",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Titans Mitts": {
         "name": "Titans Mitts",
@@ -13111,10 +13125,10 @@
           "Gloves",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Book of Mudora": {
         "name": "Book of Mudora",
@@ -13123,10 +13137,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Book"
       },
       "Flippers": {
         "name": "Flippers",
@@ -13135,10 +13150,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Flippers"
       },
       "Moon Pearl": {
         "name": "Moon Pearl",
@@ -13147,10 +13163,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Moon Pearl"
       },
       "Bug Catching Net": {
         "name": "Bug Catching Net",
@@ -13159,10 +13176,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Bug Net"
       },
       "Blue Mail": {
         "name": "Blue Mail",
@@ -13172,10 +13190,10 @@
           "Mails",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Red Mail": {
         "name": "Red Mail",
@@ -13185,10 +13203,10 @@
           "Mails",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Single Bomb": {
         "name": "Single Bomb",
@@ -13197,10 +13215,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bombs (3)": {
         "name": "Bombs (3)",
@@ -13209,10 +13227,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 16,
-        "classification": "filler"
+        "hint_text": "three bombs"
       },
       "Mushroom": {
         "name": "Mushroom",
@@ -13221,10 +13240,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Mushroom"
       },
       "Red Boomerang": {
         "name": "Red Boomerang",
@@ -13234,10 +13254,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Red Boomerang"
       },
       "Bottle (Red Potion)": {
         "name": "Bottle (Red Potion)",
@@ -13248,10 +13269,11 @@
           "Potions",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a bottle"
       },
       "Bottle (Green Potion)": {
         "name": "Bottle (Green Potion)",
@@ -13262,10 +13284,10 @@
           "Potions",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bottle (Blue Potion)": {
         "name": "Bottle (Blue Potion)",
@@ -13276,10 +13298,11 @@
           "Potions",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "progression"
+        "hint_text": "a bottle"
       },
       "Red Potion": {
         "name": "Red Potion",
@@ -13289,10 +13312,10 @@
           "Non Progression Items",
           "Potions"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Green Potion": {
         "name": "Green Potion",
@@ -13302,10 +13325,10 @@
           "Non Progression Items",
           "Potions"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blue Potion": {
         "name": "Blue Potion",
@@ -13315,10 +13338,10 @@
           "Non Progression Items",
           "Potions"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bombs (10)": {
         "name": "Bombs (10)",
@@ -13327,10 +13350,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "ten bombs"
       },
       "Rupee (1)": {
         "name": "Rupee (1)",
@@ -13340,10 +13364,11 @@
           "Non Progression Items",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "filler"
+        "hint_text": "a green rupee"
       },
       "Rupees (5)": {
         "name": "Rupees (5)",
@@ -13353,10 +13378,11 @@
           "Non Progression Items",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 4,
-        "classification": "filler"
+        "hint_text": "a blue rupee"
       },
       "Rupees (20)": {
         "name": "Rupees (20)",
@@ -13366,10 +13392,11 @@
           "Non Progression Items",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 28,
-        "classification": "filler"
+        "hint_text": "a red rupee"
       },
       "Silver Bow": {
         "name": "Silver Bow",
@@ -13379,10 +13406,10 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bottle (Bee)": {
         "name": "Bottle (Bee)",
@@ -13392,10 +13419,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a bottle"
       },
       "Bottle (Fairy)": {
         "name": "Bottle (Fairy)",
@@ -13405,10 +13433,10 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Boss Heart Container": {
         "name": "Boss Heart Container",
@@ -13417,10 +13445,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 10,
-        "classification": "progression"
+        "hint_text": "a heart"
       },
       "Sanctuary Heart Container": {
         "name": "Sanctuary Heart Container",
@@ -13429,10 +13458,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "useful"
+        "hint_text": "a heart"
       },
       "Rupees (100)": {
         "name": "Rupees (100)",
@@ -13442,10 +13472,11 @@
           "Non Progression Items",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "one hundred rupees"
       },
       "Rupees (50)": {
         "name": "Rupees (50)",
@@ -13455,10 +13486,11 @@
           "Non Progression Items",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 7,
-        "classification": "filler"
+        "hint_text": "fifty rupees"
       },
       "Small Heart": {
         "name": "Small Heart",
@@ -13467,10 +13499,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Single Arrow": {
         "name": "Single Arrow",
@@ -13479,10 +13511,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "an arrow"
       },
       "Arrows (10)": {
         "name": "Arrows (10)",
@@ -13491,10 +13524,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 12,
-        "classification": "filler"
+        "hint_text": "ten arrows"
       },
       "Rupees (300)": {
         "name": "Rupees (300)",
@@ -13504,10 +13538,11 @@
           "Non Progression Items",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 5,
-        "classification": "filler"
+        "hint_text": "three hundred rupees"
       },
       "Bottle (Good Bee)": {
         "name": "Bottle (Good Bee)",
@@ -13517,10 +13552,10 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fighter Sword": {
         "name": "Fighter Sword",
@@ -13530,10 +13565,10 @@
           "Progression Items",
           "Swords"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Activated Flute": {
         "name": "Activated Flute",
@@ -13542,10 +13577,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Flute"
       },
       "Pegasus Boots": {
         "name": "Pegasus Boots",
@@ -13554,10 +13590,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Boots"
       },
       "Bomb Upgrade (50)": {
         "name": "Bomb Upgrade (50)",
@@ -13567,10 +13604,10 @@
           "Progression Items",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Arrow Upgrade (70)": {
         "name": "Arrow Upgrade (70)",
@@ -13580,10 +13617,10 @@
           "Progression Items",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Magic Upgrade (1/2)": {
         "name": "Magic Upgrade (1/2)",
@@ -13593,10 +13630,11 @@
           "Progression Items",
           "Upgrades"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "Half Magic"
       },
       "Magic Upgrade (1/4)": {
         "name": "Magic Upgrade (1/4)",
@@ -13606,10 +13644,10 @@
           "Progression Items",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Master Sword": {
         "name": "Master Sword",
@@ -13619,10 +13657,10 @@
           "Progression Items",
           "Swords"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bomb Upgrade (+5)": {
         "name": "Bomb Upgrade (+5)",
@@ -13632,10 +13670,10 @@
           "Progression Items",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bomb Upgrade (+10)": {
         "name": "Bomb Upgrade (+10)",
@@ -13645,10 +13683,10 @@
           "Progression Items",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Arrow Upgrade (+5)": {
         "name": "Arrow Upgrade (+5)",
@@ -13658,10 +13696,10 @@
           "Progression Items",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Arrow Upgrade (+10)": {
         "name": "Arrow Upgrade (+10)",
@@ -13671,10 +13709,10 @@
           "Progression Items",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Silver Arrows": {
         "name": "Silver Arrows",
@@ -13684,10 +13722,10 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rupoor": {
         "name": "Rupoor",
@@ -13696,10 +13734,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Nothing": {
         "name": "Nothing",
@@ -13708,10 +13746,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Red Clock": {
         "name": "Red Clock",
@@ -13721,10 +13759,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blue Clock": {
         "name": "Blue Clock",
@@ -13734,10 +13772,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Green Clock": {
         "name": "Green Clock",
@@ -13747,10 +13785,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
@@ -13760,10 +13798,11 @@
           "Progression Items",
           "Swords"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 4,
-        "classification": "progression"
+        "hint_text": "a Sword"
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
@@ -13773,10 +13812,11 @@
           "Progression Items",
           "Shields"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 3,
-        "classification": "progression"
+        "hint_text": "a shield"
       },
       "Progressive Mail": {
         "name": "Progressive Mail",
@@ -13786,10 +13826,11 @@
           "Mails",
           "Non Progression Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "hint_text": "some armor"
       },
       "Progressive Glove": {
         "name": "Progressive Glove",
@@ -13799,10 +13840,11 @@
           "Gloves",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "progression"
+        "hint_text": "a Glove"
       },
       "Single RNG": {
         "name": "Single RNG",
@@ -13811,10 +13853,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Multi RNG": {
         "name": "Multi RNG",
@@ -13823,10 +13865,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Bow": {
         "name": "Progressive Bow",
@@ -13836,10 +13878,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "progression"
+        "hint_text": "a Bow"
       },
       "Progressive Bow (Alt)": {
         "name": "Progressive Bow (Alt)",
@@ -13849,10 +13892,10 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Triforce": {
         "name": "Triforce",
@@ -13861,10 +13904,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the Triforce"
       },
       "Power Star": {
         "name": "Power Star",
@@ -13873,10 +13917,10 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Triforce Piece": {
         "name": "Triforce Piece",
@@ -13885,10 +13929,10 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Map (Ganons Tower)": {
         "name": "Map (Ganons Tower)",
@@ -13898,10 +13942,11 @@
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Ganon's Tower"
       },
       "Map (Turtle Rock)": {
         "name": "Map (Turtle Rock)",
@@ -13911,10 +13956,11 @@
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Turtle Rock"
       },
       "Map (Thieves Town)": {
         "name": "Map (Thieves Town)",
@@ -13924,10 +13970,11 @@
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Thieves' Town"
       },
       "Map (Tower of Hera)": {
         "name": "Map (Tower of Hera)",
@@ -13937,10 +13984,11 @@
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Tower of Hera"
       },
       "Map (Ice Palace)": {
         "name": "Map (Ice Palace)",
@@ -13950,10 +13998,11 @@
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Ice Palace"
       },
       "Map (Skull Woods)": {
         "name": "Map (Skull Woods)",
@@ -13963,10 +14012,11 @@
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Skull Woods"
       },
       "Map (Misery Mire)": {
         "name": "Map (Misery Mire)",
@@ -13976,10 +14026,11 @@
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Misery Mire"
       },
       "Map (Palace of Darkness)": {
         "name": "Map (Palace of Darkness)",
@@ -13989,10 +14040,11 @@
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Palace of Darkness"
       },
       "Map (Swamp Palace)": {
         "name": "Map (Swamp Palace)",
@@ -14002,10 +14054,11 @@
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Swamp Palace"
       },
       "Map (Agahnims Tower)": {
         "name": "Map (Agahnims Tower)",
@@ -14015,10 +14068,10 @@
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Map (Desert Palace)": {
         "name": "Map (Desert Palace)",
@@ -14028,10 +14081,11 @@
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Desert Palace"
       },
       "Map (Eastern Palace)": {
         "name": "Map (Eastern Palace)",
@@ -14041,10 +14095,11 @@
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Eastern Palace"
       },
       "Map (Hyrule Castle)": {
         "name": "Map (Hyrule Castle)",
@@ -14054,10 +14109,11 @@
           "Maps",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a map to Hyrule Castle"
       },
       "Compass (Ganons Tower)": {
         "name": "Compass (Ganons Tower)",
@@ -14067,10 +14123,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Ganon's Tower"
       },
       "Compass (Turtle Rock)": {
         "name": "Compass (Turtle Rock)",
@@ -14080,10 +14137,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Turtle Rock"
       },
       "Compass (Thieves Town)": {
         "name": "Compass (Thieves Town)",
@@ -14093,10 +14151,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Thieves' Town"
       },
       "Compass (Tower of Hera)": {
         "name": "Compass (Tower of Hera)",
@@ -14106,10 +14165,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Tower of Hera"
       },
       "Compass (Ice Palace)": {
         "name": "Compass (Ice Palace)",
@@ -14119,10 +14179,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Ice Palace"
       },
       "Compass (Skull Woods)": {
         "name": "Compass (Skull Woods)",
@@ -14132,10 +14193,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Skull Woods"
       },
       "Compass (Misery Mire)": {
         "name": "Compass (Misery Mire)",
@@ -14145,10 +14207,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Misery Mire"
       },
       "Compass (Palace of Darkness)": {
         "name": "Compass (Palace of Darkness)",
@@ -14158,10 +14221,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Palace of Darkness"
       },
       "Compass (Swamp Palace)": {
         "name": "Compass (Swamp Palace)",
@@ -14171,10 +14235,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Swamp Palace"
       },
       "Compass (Agahnims Tower)": {
         "name": "Compass (Agahnims Tower)",
@@ -14184,10 +14249,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Compass (Desert Palace)": {
         "name": "Compass (Desert Palace)",
@@ -14197,10 +14262,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Desert Palace"
       },
       "Compass (Eastern Palace)": {
         "name": "Compass (Eastern Palace)",
@@ -14210,10 +14276,11 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "filler"
+        "hint_text": "a compass to Eastern Palace"
       },
       "Compass (Hyrule Castle)": {
         "name": "Compass (Hyrule Castle)",
@@ -14223,10 +14290,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Big Key (Ganons Tower)": {
         "name": "Big Key (Ganons Tower)",
@@ -14236,10 +14303,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Ganon's Tower"
       },
       "Big Key (Turtle Rock)": {
         "name": "Big Key (Turtle Rock)",
@@ -14249,10 +14317,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Turtle Rock"
       },
       "Big Key (Thieves Town)": {
         "name": "Big Key (Thieves Town)",
@@ -14262,10 +14331,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Thieves' Town"
       },
       "Big Key (Tower of Hera)": {
         "name": "Big Key (Tower of Hera)",
@@ -14275,10 +14345,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Tower of Hera"
       },
       "Big Key (Ice Palace)": {
         "name": "Big Key (Ice Palace)",
@@ -14288,10 +14359,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Ice Palace"
       },
       "Big Key (Skull Woods)": {
         "name": "Big Key (Skull Woods)",
@@ -14301,10 +14373,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Skull Woods"
       },
       "Big Key (Misery Mire)": {
         "name": "Big Key (Misery Mire)",
@@ -14314,10 +14387,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Misery Mire"
       },
       "Big Key (Palace of Darkness)": {
         "name": "Big Key (Palace of Darkness)",
@@ -14327,10 +14401,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Palace of Darkness"
       },
       "Big Key (Swamp Palace)": {
         "name": "Big Key (Swamp Palace)",
@@ -14340,10 +14415,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Swamp Palace"
       },
       "Big Key (Agahnims Tower)": {
         "name": "Big Key (Agahnims Tower)",
@@ -14353,10 +14429,10 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Big Key (Desert Palace)": {
         "name": "Big Key (Desert Palace)",
@@ -14366,10 +14442,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Desert Palace"
       },
       "Big Key (Eastern Palace)": {
         "name": "Big Key (Eastern Palace)",
@@ -14379,10 +14456,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Eastern Palace"
       },
       "Big Key (Hyrule Castle)": {
         "name": "Big Key (Hyrule Castle)",
@@ -14392,10 +14470,11 @@
           "Everything",
           "Progression Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a big key to Hyrule Castle"
       },
       "Small Key (Hyrule Castle)": {
         "name": "Small Key (Hyrule Castle)",
@@ -14405,10 +14484,11 @@
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 4,
-        "classification": "progression"
+        "hint_text": "a small key to Hyrule Castle"
       },
       "Small Key (Eastern Palace)": {
         "name": "Small Key (Eastern Palace)",
@@ -14418,10 +14498,11 @@
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "progression"
+        "hint_text": "a small key to Eastern Palace"
       },
       "Small Key (Desert Palace)": {
         "name": "Small Key (Desert Palace)",
@@ -14431,10 +14512,11 @@
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 4,
-        "classification": "progression"
+        "hint_text": "a small key to Desert Palace"
       },
       "Small Key (Agahnims Tower)": {
         "name": "Small Key (Agahnims Tower)",
@@ -14444,10 +14526,11 @@
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 4,
-        "classification": "progression"
+        "hint_text": "a small key to Castle Tower"
       },
       "Small Key (Swamp Palace)": {
         "name": "Small Key (Swamp Palace)",
@@ -14457,10 +14540,11 @@
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 6,
-        "classification": "progression"
+        "hint_text": "a small key to Swamp Palace"
       },
       "Small Key (Palace of Darkness)": {
         "name": "Small Key (Palace of Darkness)",
@@ -14470,10 +14554,11 @@
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 6,
-        "classification": "progression"
+        "hint_text": "a small key to Palace of Darkness"
       },
       "Small Key (Misery Mire)": {
         "name": "Small Key (Misery Mire)",
@@ -14483,10 +14568,11 @@
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 6,
-        "classification": "progression"
+        "hint_text": "a small key to Misery Mire"
       },
       "Small Key (Skull Woods)": {
         "name": "Small Key (Skull Woods)",
@@ -14496,10 +14582,11 @@
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 5,
-        "classification": "progression"
+        "hint_text": "a small key to Skull Woods"
       },
       "Small Key (Ice Palace)": {
         "name": "Small Key (Ice Palace)",
@@ -14509,10 +14596,11 @@
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 6,
-        "classification": "progression"
+        "hint_text": "a small key to Ice Palace"
       },
       "Small Key (Tower of Hera)": {
         "name": "Small Key (Tower of Hera)",
@@ -14522,10 +14610,11 @@
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a small key to Tower of Hera"
       },
       "Small Key (Thieves Town)": {
         "name": "Small Key (Thieves Town)",
@@ -14535,10 +14624,11 @@
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 3,
-        "classification": "progression"
+        "hint_text": "a small key to Thieves' Town"
       },
       "Small Key (Turtle Rock)": {
         "name": "Small Key (Turtle Rock)",
@@ -14548,10 +14638,11 @@
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 6,
-        "classification": "progression"
+        "hint_text": "a small key to Turtle Rock"
       },
       "Small Key (Ganons Tower)": {
         "name": "Small Key (Ganons Tower)",
@@ -14561,10 +14652,11 @@
           "Progression Items",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 8,
-        "classification": "progression"
+        "hint_text": "a small key to Ganon's Tower"
       },
       "Small Key (Universal)": {
         "name": "Small Key (Universal)",
@@ -14574,10 +14666,10 @@
           "Non Progression Items",
           "Small Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bee Trap": {
         "name": "Bee Trap",
@@ -14586,10 +14678,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Faerie": {
         "name": "Faerie",
@@ -14598,10 +14690,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Good Bee": {
         "name": "Good Bee",
@@ -14610,10 +14702,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Magic Jar": {
         "name": "Magic Jar",
@@ -14622,10 +14714,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Apple": {
         "name": "Apple",
@@ -14634,10 +14726,10 @@
           "Everything",
           "Non Progression Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Open Floodgate": {
         "name": "Open Floodgate",
@@ -14645,10 +14737,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Return Smith": {
         "name": "Return Smith",
@@ -14656,10 +14748,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Capacity Upgrade Shop": {
         "name": "Capacity Upgrade Shop",
@@ -14667,10 +14759,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Red Pendant": {
         "name": "Red Pendant",
@@ -14679,10 +14771,11 @@
           "Event",
           "Pendants"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the red pendant"
       },
       "Crystal 2": {
         "name": "Crystal 2",
@@ -14691,10 +14784,11 @@
           "Crystals",
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a blue crystal"
       },
       "Beat Agahnim 1": {
         "name": "Beat Agahnim 1",
@@ -14702,10 +14796,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Crystal 7": {
         "name": "Crystal 7",
@@ -14714,10 +14808,11 @@
           "Crystals",
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a blue crystal"
       },
       "Get Frog": {
         "name": "Get Frog",
@@ -14725,10 +14820,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pick Up Purple Chest": {
         "name": "Pick Up Purple Chest",
@@ -14736,10 +14831,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Crystal 5": {
         "name": "Crystal 5",
@@ -14748,10 +14843,11 @@
           "Crystals",
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a red crystal"
       },
       "Crystal 4": {
         "name": "Crystal 4",
@@ -14760,10 +14856,11 @@
           "Crystals",
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a blue crystal"
       },
       "Green Pendant": {
         "name": "Green Pendant",
@@ -14772,10 +14869,11 @@
           "Event",
           "Pendants"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the green pendant"
       },
       "Crystal 1": {
         "name": "Crystal 1",
@@ -14784,10 +14882,11 @@
           "Crystals",
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a blue crystal"
       },
       "Crystal 6": {
         "name": "Crystal 6",
@@ -14796,10 +14895,11 @@
           "Crystals",
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a red crystal"
       },
       "Crystal 3": {
         "name": "Crystal 3",
@@ -14808,10 +14908,11 @@
           "Crystals",
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "a blue crystal"
       },
       "Blue Pendant": {
         "name": "Blue Pendant",
@@ -14820,10 +14921,11 @@
           "Event",
           "Pendants"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
         "max_count": 1,
-        "classification": "progression"
+        "hint_text": "the blue pendant"
       },
       "Beat Agahnim 2": {
         "name": "Beat Agahnim 2",
@@ -14831,10 +14933,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

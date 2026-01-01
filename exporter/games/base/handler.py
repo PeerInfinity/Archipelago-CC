@@ -1077,6 +1077,29 @@ class BaseGameExportHandler(
                                     item_data[item_name]['groups'].append('Event')
                                     item_data[item_name]['groups'].sort()
 
+        # Extract hint_text from item_table if available
+        # Many games (WorldGen or original) define hint_text in their item_table structure
+        # First try world-level item_table attribute
+        item_table = getattr(world, 'item_table', None)
+        # If not found, try importing from the world's module
+        if item_table is None:
+            try:
+                world_module = type(world).__module__
+                base_module = '.'.join(world_module.split('.')[:2])  # e.g., "worlds.alttp"
+                items_module = importlib.import_module(f"{base_module}.Items")
+                item_table = getattr(items_module, 'item_table', None)
+            except (ImportError, AttributeError):
+                pass
+
+        if item_table:
+            for item_name, item_entry in item_data.items():
+                if item_name in item_table:
+                    table_data = item_table[item_name]
+                    # Try to get hint_text from the table data
+                    hint_text = getattr(table_data, 'hint_text', None)
+                    if hint_text and hint_text != item_name and 'hint_text' not in item_entry:
+                        item_entry['hint_text'] = hint_text
+
         # Return sorted by item ID to ensure consistent ordering
         # Items with None ID (events) will be placed at the end
         return dict(sorted(item_data.items(), key=lambda x: (x[1].get('id') is None, x[1].get('id'))))
