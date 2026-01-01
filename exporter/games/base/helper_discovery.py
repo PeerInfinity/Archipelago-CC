@@ -172,12 +172,35 @@ class HelperDiscoveryMixin:
             A dictionary mapping helper names to their rule definitions.
             Example: {"can_cut_half": {"type": "item_check", "item": "Cutter"}}
         """
-        # Check for worldgen worlds first - analyze helper functions from their Rules.py module
+        # Check for worldgen worlds first - use stored helpers from _worldgen_settings.json
+        # These helpers are preserved in their original AST format from the source rules.json,
+        # avoiding the issue where analyzing Rules.py produces incorrect logic due to option
+        # values being resolved to constants during world generation.
         try:
             if self.is_worldgen_world(world):
-                # This is a worldgen world - analyze helper functions from Rules.py
-                # world_module is like 'worlds.ahit_worldgen' - we need 'worlds.ahit_worldgen.Rules'
                 world_module = type(world).__module__
+
+                # First, try to load stored helpers from _worldgen_settings.json
+                import json
+                from pathlib import Path
+
+                # Get the world's directory path
+                world_package = world_module.replace('.', '/')
+                settings_path = Path(world_package) / '_worldgen_settings.json'
+
+                if settings_path.exists():
+                    try:
+                        with open(settings_path) as f:
+                            worldgen_settings = json.load(f)
+                        stored_helpers = worldgen_settings.get('helpers', {})
+                        if stored_helpers:
+                            logger.debug(f"Loaded {len(stored_helpers)} helper definitions from worldgen settings")
+                            return stored_helpers
+                    except Exception as e:
+                        logger.debug(f"Could not load stored helpers from {settings_path}: {e}")
+
+                # Fallback: analyze helper functions from Rules.py (legacy behavior)
+                # Note: This produces incorrect results for helpers that depend on option values
                 rules_module_name = world_module + '.Rules'
                 try:
                     rules_module = importlib.import_module(rules_module_name)

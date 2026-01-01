@@ -192,6 +192,15 @@ class WorldGenerator:
             if legacy_world_attrs:
                 worldgen_data['world_attributes'] = legacy_world_attrs
 
+        # Extract and store helper definitions from the source rules.json
+        # These are preserved in their original AST format so the exporter can use them
+        # directly instead of re-analyzing the generated Python code (which has option
+        # values resolved to constants, causing incorrect logic).
+        source_helpers = source_json.get('helpers', {}).get(self.player_id, {})
+        if source_helpers:
+            worldgen_data['helpers'] = source_helpers
+            logger.info(f"Stored {len(source_helpers)} helper definitions in worldgen settings")
+
         if worldgen_data:
             settings_path = output_dir / '_worldgen_settings.json'
             if not dry_run:
