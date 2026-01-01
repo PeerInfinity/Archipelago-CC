@@ -17,6 +17,35 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 No
+Blue chest chance:               25
+Blue chest count:                25
+Boss:                            Master
+Capsule cravings JP style:       No
+Capsule monster starting form:   1
+Capsule monster starting level:  1
+Crowded floor chance:            16
+Death Link:                      No
+Default capsule monster:         Jelze
+Default party lineup:            M
+Enemy floor numbers:             Vanilla
+Enemy movement patterns:         Vanilla
+Enemy sprites:                   Vanilla
+EXP modifier:                    100
+Final floor:                     99
+Increase gear variety after B9:  No
+Goal:                            Boss
+Gold modifier:                   100
+Healing tile floor chance:       16
+Inactive character EXP gain:     Disabled
+Initial floor:                   1
+Iris treasure floor chance:      5
+Iris treasures required:         9
+Master HP:                       9980
+Party starting level:            1
+Run speed:                       Disabled
+Shop interval:                   0
+Shuffle capsule monsters:        No
+Shuffle party members:           No
 
 
 Locations:
