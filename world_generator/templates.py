@@ -886,12 +886,14 @@ def generate_rules_py(data: ExtractedData) -> str:
 def {func_name}(state: "CollectionState", player: int) -> bool:
     """Defeat rule for {boss_data.name} in {dungeon_name}."""
     return {rule_expr}
+{func_name}._internal_function = True
 ''')
                     except Exception as e:
                         defeat_rule_functions.append(f'''
 def {func_name}(state: "CollectionState", player: int) -> bool:
     """Defeat rule for {boss_data.name} in {dungeon_name} (fallback: {e})."""
     return True
+{func_name}._internal_function = True
 ''')
 
     # Build helper section

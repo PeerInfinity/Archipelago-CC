@@ -21041,6 +21041,55 @@
           }
         ]
       },
+      "basement_key_rule": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "list",
+            "value": [
+              {
+                "type": "constant",
+                "value": "Small Key (Hyrule Castle)"
+              },
+              {
+                "type": "constant",
+                "value": 1
+              }
+            ]
+          },
+          "op": "==",
+          "right": {
+            "type": "list",
+            "value": [
+              {
+                "type": "constant",
+                "value": "Small Key (Hyrule Castle)"
+              },
+              {
+                "type": "constant",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "if_true": {
+          "type": "item_check",
+          "item": "Small Key (Hyrule Castle)",
+          "count": {
+            "type": "constant",
+            "value": 2
+          }
+        },
+        "if_false": {
+          "type": "item_check",
+          "item": "Small Key (Hyrule Castle)",
+          "count": {
+            "type": "constant",
+            "value": 3
+          }
+        }
+      },
       "bottle_count": {
         "type": "min",
         "args": [
@@ -21086,6 +21135,19 @@
                 ]
               }
             ]
+          }
+        ]
+      },
+      "can_bomb_or_bonk": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Pegasus Boots"
+          },
+          {
+            "type": "helper",
+            "name": "can_use_bombs"
           }
         ]
       },
@@ -21147,9 +21209,6 @@
               "attr": "shops"
             }
           }
-        },
-        "defaults": {
-          "item": null
         }
       },
       "can_buy_unlimited": {
@@ -21210,9 +21269,6 @@
               "attr": "shops"
             }
           }
-        },
-        "defaults": {
-          "item": null
         }
       },
       "can_extend_magic": {
@@ -21733,9 +21789,6 @@
               }
             }
           ]
-        },
-        "defaults": {
-          "quantity": null
         }
       },
       "can_kill_most_things": {
@@ -21894,6 +21947,85 @@
         "defaults": {
           "enemies": 5
         }
+      },
+      "can_lift_heavy_rocks": {
+        "type": "item_check",
+        "item": "Titans Mitts"
+      },
+      "can_lift_rocks": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Power Glove"
+          },
+          {
+            "type": "item_check",
+            "item": "Titans Mitts"
+          }
+        ]
+      },
+      "can_melt_things": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Fire Rod"
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Bombos"
+              },
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "setting_value",
+                    "setting": "swordless"
+                  },
+                  {
+                    "type": "helper",
+                    "name": "has_sword"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_retrieve_tablet": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Book of Mudora"
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "has_beam_sword"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "setting_value",
+                    "setting": "swordless"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Hammer"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       "can_shoot_arrows": {
         "params": [
@@ -22159,6 +22291,19 @@
           "quantity": 1
         }
       },
+      "cross_peg_bridge": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Hammer"
+          },
+          {
+            "type": "item_check",
+            "item": "Moon Pearl"
+          }
+        ]
+      },
       "has_beam_sword": {
         "type": "or",
         "conditions": [
@@ -22207,9 +22352,6 @@
               }
             }
           ]
-        },
-        "defaults": {
-          "count": null
         }
       },
       "has_fire_source": {
@@ -22225,6 +22367,23 @@
           }
         ]
       },
+      "has_hearts": {
+        "params": [
+          "count"
+        ],
+        "body": {
+          "type": "compare",
+          "left": {
+            "type": "helper",
+            "name": "heart_count"
+          },
+          "op": ">=",
+          "right": {
+            "type": "name",
+            "name": "count"
+          }
+        }
+      },
       "has_melee_weapon": {
         "type": "or",
         "conditions": [
@@ -22237,6 +22396,14 @@
             "item": "Hammer"
           }
         ]
+      },
+      "has_misery_mire_medallion": {
+        "type": "item_check",
+        "item": {
+          "type": "setting_value",
+          "setting": "required_medallions",
+          "index": 0
+        }
       },
       "has_sword": {
         "type": "or",
@@ -22256,6 +22423,110 @@
           {
             "type": "item_check",
             "item": "Golden Sword"
+          }
+        ]
+      },
+      "has_turtle_rock_medallion": {
+        "type": "item_check",
+        "item": {
+          "type": "setting_value",
+          "setting": "required_medallions",
+          "index": 1
+        }
+      },
+      "heart_count": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "max_heart_pieces",
+            "value": {
+              "type": "constant",
+              "value": 24
+            }
+          },
+          {
+            "type": "assign",
+            "name": "max_heart_containers",
+            "value": {
+              "type": "constant",
+              "value": 10
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "binary_op",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "min",
+                    "args": [
+                      {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Boss Heart Container"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "name",
+                        "name": "max_heart_containers"
+                      }
+                    ]
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Sanctuary Heart Container"
+                      }
+                    ]
+                  }
+                },
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "min",
+                    "args": [
+                      {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Piece of Heart"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "name",
+                        "name": "max_heart_pieces"
+                      }
+                    ]
+                  },
+                  "op": "//",
+                  "right": {
+                    "type": "constant",
+                    "value": 4
+                  }
+                }
+              },
+              "op": "+",
+              "right": {
+                "type": "constant",
+                "value": 3
+              }
+            }
           }
         ]
       },
@@ -22296,10 +22567,112 @@
               "value": true
             }
           }
-        },
-        "defaults": {
-          "region": null
         }
+      },
+      "tr_big_key_chest_keys_needed": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "item",
+            "value": {
+              "type": "list",
+              "value": [
+                {
+                  "type": "constant",
+                  "value": "Small Key (Turtle Rock)"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "item"
+              },
+              "op": "in",
+              "right": {
+                "type": "list",
+                "value": [
+                  {
+                    "type": "list",
+                    "value": [
+                      {
+                        "type": "constant",
+                        "value": "Small Key (Turtle Rock)"
+                      },
+                      {
+                        "type": "constant",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "body": [
+              {
+                "type": "return",
+                "value": {
+                  "type": "constant",
+                  "value": 0
+                }
+              }
+            ]
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "item"
+              },
+              "op": "in",
+              "right": {
+                "type": "list",
+                "value": [
+                  {
+                    "type": "list",
+                    "value": [
+                      {
+                        "type": "constant",
+                        "value": "Big Key (Turtle Rock)"
+                      },
+                      {
+                        "type": "constant",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "body": [
+              {
+                "type": "return",
+                "value": {
+                  "type": "constant",
+                  "value": 4
+                }
+              }
+            ]
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "constant",
+              "value": 6
+            }
+          }
+        ]
       }
     }
   }

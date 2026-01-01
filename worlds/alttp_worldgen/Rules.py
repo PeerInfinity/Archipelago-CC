@@ -170,76 +170,91 @@ def tr_big_key_chest_keys_needed(state: "CollectionState", player: int) -> bool:
 def _can_defeat_Desert_Palace_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Lanmolas in Desert Palace."""
     return ((can_shoot_arrows(state, player)) or (has_melee_weapon(state, player)) or (state.has_any(('Cane of Byrna', 'Cane of Somaria', 'Fire Rod', 'Ice Rod'), player)))
+_can_defeat_Desert_Palace_default._internal_function = True
 
 
 def _can_defeat_Eastern_Palace_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Armos Knights in Eastern Palace."""
     return ((((can_extend_magic(state, player, 10)) and (state.has('Cane of Somaria', player)))) or (((can_extend_magic(state, player, 16)) and (state.has('Cane of Byrna', player)))) or (((can_extend_magic(state, player, 32)) and (state.has('Fire Rod', player)))) or (((can_extend_magic(state, player, 32)) and (state.has('Ice Rod', player)))) or (can_shoot_arrows(state, player)) or (has_melee_weapon(state, player)) or (state.has_any(('Blue Boomerang', 'Red Boomerang'), player)))
+_can_defeat_Eastern_Palace_default._internal_function = True
 
 
 def _can_defeat_Agahnims_Tower_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Agahnim in Agahnims Tower."""
     return ((has_sword(state, player)) or (state.has_any(('Bug Catching Net', 'Hammer'), player)))
+_can_defeat_Agahnims_Tower_default._internal_function = True
 
 
 def _can_defeat_Tower_of_Hera_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Moldorm in Tower of Hera."""
     return has_melee_weapon(state, player)
+_can_defeat_Tower_of_Hera_default._internal_function = True
 
 
 def _can_defeat_Swamp_Palace_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Arrghus in Swamp Palace."""
     return ((False) if (not (state.has('Hookshot', player))) else (((True) if (has_melee_weapon(state, player)) else (((((((can_extend_magic(state, player, 12)) or (can_shoot_arrows(state, player)))) and (state.has('Fire Rod', player)))) or (((((can_extend_magic(state, player, 16)) or (can_shoot_arrows(state, player)))) and (state.has('Ice Rod', player)))))))))
+_can_defeat_Swamp_Palace_default._internal_function = True
 
 
 def _can_defeat_Thieves_Town_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Blind in Thieves Town."""
     return ((has_melee_weapon(state, player)) or (state.has_any(('Cane of Byrna', 'Cane of Somaria'), player)))
+_can_defeat_Thieves_Town_default._internal_function = True
 
 
 def _can_defeat_Skull_Woods_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Mothula in Skull Woods."""
     return ((((can_extend_magic(state, player, 10)) and (state.has('Fire Rod', player)))) or (((can_extend_magic(state, player, 16)) and (state.has('Cane of Byrna', player)))) or (((can_extend_magic(state, player, 16)) and (state.has('Cane of Somaria', player)))) or (can_get_good_bee(state, player)) or (has_melee_weapon(state, player)))
+_can_defeat_Skull_Woods_default._internal_function = True
 
 
 def _can_defeat_Ice_Palace_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Kholdstare in Ice Palace."""
     return ((((((can_extend_magic(state, player, 16)) and (state.multiworld.worlds[player].options.swordless) and (state.has_all(('Bombos', 'Fire Rod'), player)))) or (((can_extend_magic(state, player, 20)) and (state.has('Fire Rod', player)))) or (has_melee_weapon(state, player)))) and (((((((has_sword(state, player)) or (state.multiworld.worlds[player].options.swordless))) and (state.has('Bombos', player)))) or (state.has('Fire Rod', player)))))
+_can_defeat_Ice_Palace_default._internal_function = True
 
 
 def _can_defeat_Misery_Mire_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Vitreous in Misery Mire."""
     return ((((can_shoot_arrows(state, player)) and (can_use_bombs(state, player, 10)))) or (can_shoot_arrows(state, player, 35)) or (has_melee_weapon(state, player)) or (state.has('Silver Bow', player)))
+_can_defeat_Misery_Mire_default._internal_function = True
 
 
 def _can_defeat_Turtle_Rock_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Trinexx in Turtle Rock."""
     return ((False) if (not (state.has_all(('Fire Rod', 'Ice Rod'), player))) else (((((can_extend_magic(state, player, 16)) and (state.has('Master Sword', player)))) or (((can_extend_magic(state, player, 32)) and (has_sword(state, player)))) or (state.has_any(('Golden Sword', 'Hammer', 'Tempered Sword'), player)))))
+_can_defeat_Turtle_Rock_default._internal_function = True
 
 
 def _can_defeat_Palace_of_Darkness_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Helmasaur King in Palace of Darkness."""
     return ((((can_shoot_arrows(state, player)) or (has_sword(state, player)))) and (((can_use_bombs(state, player, 5)) or (state.has('Hammer', player)))))
+_can_defeat_Palace_of_Darkness_default._internal_function = True
 
 
 def _can_defeat_Ganons_Tower_default(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Agahnim2 in Ganons Tower."""
     return ((has_sword(state, player)) or (state.has_any(('Bug Catching Net', 'Hammer'), player)))
+_can_defeat_Ganons_Tower_default._internal_function = True
 
 
 def _can_defeat_Ganons_Tower_bottom(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Armos Knights in Ganons Tower."""
     return ((((can_extend_magic(state, player, 10)) and (state.has('Cane of Somaria', player)))) or (((can_extend_magic(state, player, 16)) and (state.has('Cane of Byrna', player)))) or (((can_extend_magic(state, player, 32)) and (state.has('Fire Rod', player)))) or (((can_extend_magic(state, player, 32)) and (state.has('Ice Rod', player)))) or (can_shoot_arrows(state, player)) or (has_melee_weapon(state, player)) or (state.has_any(('Blue Boomerang', 'Red Boomerang'), player)))
+_can_defeat_Ganons_Tower_bottom._internal_function = True
 
 
 def _can_defeat_Ganons_Tower_middle(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Lanmolas in Ganons Tower."""
     return ((can_shoot_arrows(state, player)) or (has_melee_weapon(state, player)) or (state.has_any(('Cane of Byrna', 'Cane of Somaria', 'Fire Rod', 'Ice Rod'), player)))
+_can_defeat_Ganons_Tower_middle._internal_function = True
 
 
 def _can_defeat_Ganons_Tower_top(state: "CollectionState", player: int) -> bool:
     """Defeat rule for Moldorm in Ganons Tower."""
     return has_melee_weapon(state, player)
+_can_defeat_Ganons_Tower_top._internal_function = True
 
 
 def set_rules(world: "World") -> None:

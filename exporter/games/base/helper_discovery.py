@@ -48,18 +48,16 @@ class HelperDiscoveryMixin:
         helper_definitions = {}
 
         # Find all helper functions in the module
-        # Worldgen helper functions follow the pattern: _gamename_worldgen_helpername
-        # They take (state, player) or (state, player, *args) as parameters
+        # Helper functions take (state, player) or (state, player, *args) as parameters
         for name in dir(rules_module):
-            if not name.startswith('_') or name.startswith('__'):
-                continue
-
-            # Skip internal defeat rule functions - these are wired to Boss objects,
-            # not exported as helpers
-            if name.startswith('_can_defeat_'):
+            if name.startswith('__'):
                 continue
 
             obj = getattr(rules_module, name)
+
+            # Skip internal functions (e.g., defeat rules) marked with _internal_function attribute
+            if getattr(obj, '_internal_function', False):
+                continue
             if not callable(obj) or not hasattr(obj, '__code__'):
                 continue
 
