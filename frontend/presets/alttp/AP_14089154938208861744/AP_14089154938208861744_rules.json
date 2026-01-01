@@ -373,15 +373,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Hammer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
+                    "items": [
+                      "Hammer",
+                      "Moon Pearl"
+                    ]
                   }
                 }
               ]
@@ -399,15 +396,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Hammer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
+                    "items": [
+                      "Hammer",
+                      "Moon Pearl"
+                    ]
                   }
                 }
               ]
@@ -3633,15 +3627,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Beat Agahnim 1"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cape"
+                    "items": [
+                      "Beat Agahnim 1",
+                      "Cape"
+                    ]
                   }
                 }
               ]
@@ -5692,15 +5683,12 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Cane of Byrna"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Cane of Somaria"
+                        "items": [
+                          "Cane of Byrna",
+                          "Cane of Somaria"
+                        ]
                       }
                     }
                   ]
@@ -5927,15 +5915,12 @@
                       }
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Crystal 5"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Crystal 6"
+                        "items": [
+                          "Crystal 5",
+                          "Crystal 6"
+                        ]
                       }
                     }
                   ]
@@ -6093,15 +6078,12 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Flippers"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hammer"
+                        "items": [
+                          "Flippers",
+                          "Hammer"
+                        ]
                       }
                     }
                   ]
@@ -6427,12 +6409,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "HasAll",
+                      "rule": "Has",
                       "args": {
-                        "items": [
-                          "Moon Pearl",
-                          "Moon Pearl"
-                        ]
+                        "item_name": "Moon Pearl"
                       }
                     },
                     {
@@ -6469,12 +6448,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "HasAll",
+                      "rule": "Has",
                       "args": {
-                        "items": [
-                          "Moon Pearl",
-                          "Moon Pearl"
-                        ]
+                        "item_name": "Moon Pearl"
                       }
                     },
                     {
@@ -8236,12 +8212,9 @@
             "name": "Superbunny Cave - Top",
             "id": 60028,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Moon Pearl",
-                  "Moon Pearl"
-                ]
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -8256,12 +8229,9 @@
             "name": "Superbunny Cave - Bottom",
             "id": 60031,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Moon Pearl",
-                  "Moon Pearl"
-                ]
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -9950,12 +9920,9 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "HasAll",
+                      "rule": "Has",
                       "args": {
-                        "items": [
-                          "Moon Pearl",
-                          "Moon Pearl"
-                        ]
+                        "item_name": "Moon Pearl"
                       }
                     },
                     {
@@ -10023,12 +9990,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
+                  "rule": "Has",
                   "args": {
-                    "items": [
-                      "Moon Pearl",
-                      "Moon Pearl"
-                    ]
+                    "item_name": "Moon Pearl"
                   }
                 },
                 {
@@ -10095,12 +10059,9 @@
             "name": "Skull Woods - Compass Chest",
             "id": 59794,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Moon Pearl",
-                  "Moon Pearl"
-                ]
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -10115,12 +10076,9 @@
             "name": "Skull Woods - Pot Prison",
             "id": 59809,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Moon Pearl",
-                  "Moon Pearl"
-                ]
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -10300,12 +10258,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
+                  "rule": "Has",
                   "args": {
-                    "items": [
-                      "Moon Pearl",
-                      "Moon Pearl"
-                    ]
+                    "item_name": "Moon Pearl"
                   }
                 },
                 {
@@ -10331,12 +10286,9 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "HasAll",
+                  "rule": "Has",
                   "args": {
-                    "items": [
-                      "Moon Pearl",
-                      "Moon Pearl"
-                    ]
+                    "item_name": "Moon Pearl"
                   }
                 },
                 {
@@ -10802,21 +10754,13 @@
                       "rule": "True_"
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Cane of Byrna"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Cape"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot"
+                        "items": [
+                          "Cane of Byrna",
+                          "Cape",
+                          "Hookshot"
+                        ]
                       }
                     }
                   ]
@@ -10866,15 +10810,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Big Key (Ice Palace)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hammer"
+                    "items": [
+                      "Big Key (Ice Palace)",
+                      "Hammer"
+                    ]
                   }
                 }
               ]
@@ -11204,27 +11145,14 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Cane of Somaria"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Fire Rod"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hammer"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ice Rod"
+                        "items": [
+                          "Cane of Somaria",
+                          "Fire Rod",
+                          "Hammer",
+                          "Ice Rod"
+                        ]
                       }
                     }
                   ]
@@ -11568,15 +11496,12 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Cane of Byrna"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Cape"
+                        "items": [
+                          "Cane of Byrna",
+                          "Cape"
+                        ]
                       }
                     }
                   ]
@@ -12871,12 +12796,9 @@
             "name": "Turtle Rock - Crystaroller Room",
             "id": 59956,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Moon Pearl",
-                  "Moon Pearl"
-                ]
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -12987,15 +12909,12 @@
                       }
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Big Key (Turtle Rock)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Cane of Somaria"
+                        "items": [
+                          "Big Key (Turtle Rock)",
+                          "Cane of Somaria"
+                        ]
                       }
                     }
                   ]
@@ -13552,15 +13471,12 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Big Key (Palace of Darkness)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hammer"
+                        "items": [
+                          "Big Key (Palace of Darkness)",
+                          "Hammer"
+                        ]
                       }
                     }
                   ]
@@ -13580,12 +13496,9 @@
             "name": "Palace of Darkness - The Arena - Bridge",
             "id": 59965,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Moon Pearl",
-                  "Moon Pearl"
-                ]
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -13600,12 +13513,9 @@
             "name": "Palace of Darkness - Stalfos Basement",
             "id": 59977,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Moon Pearl",
-                  "Moon Pearl"
-                ]
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -15734,12 +15644,9 @@
             "name": "Ganons Tower - Bob's Chest",
             "id": 60127,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Moon Pearl",
-                  "Moon Pearl"
-                ]
+                "item_name": "Moon Pearl"
               }
             },
             "item": {
@@ -16635,27 +16542,14 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Cane of Byrna"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cane of Somaria"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire Rod"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ice Rod"
+                    "items": [
+                      "Cane of Byrna",
+                      "Cane of Somaria",
+                      "Fire Rod",
+                      "Ice Rod"
+                    ]
                   }
                 }
               ]
@@ -16786,15 +16680,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Blue Boomerang"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boomerang"
+                    "items": [
+                      "Blue Boomerang",
+                      "Red Boomerang"
+                    ]
                   }
                 }
               ]
@@ -16833,15 +16724,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Bug Catching Net"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hammer"
+                    "items": [
+                      "Bug Catching Net",
+                      "Hammer"
+                    ]
                   }
                 }
               ]
@@ -17018,15 +16906,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Cane of Byrna"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cane of Somaria"
+                    "items": [
+                      "Cane of Byrna",
+                      "Cane of Somaria"
+                    ]
                   }
                 }
               ]
@@ -17189,15 +17074,12 @@
                           "_converted_from_ast": true
                         },
                         {
-                          "rule": "Has",
+                          "rule": "HasAll",
                           "args": {
-                            "item_name": "Bombos"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Fire Rod"
+                            "items": [
+                              "Bombos",
+                              "Fire Rod"
+                            ]
                           }
                         }
                       ]
@@ -17442,21 +17324,13 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Golden Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hammer"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Tempered Sword"
+                        "items": [
+                          "Golden Sword",
+                          "Hammer",
+                          "Tempered Sword"
+                        ]
                       }
                     }
                   ]
@@ -17561,15 +17435,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Bug Catching Net"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hammer"
+                    "items": [
+                      "Bug Catching Net",
+                      "Hammer"
+                    ]
                   }
                 }
               ]
@@ -17691,15 +17562,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Blue Boomerang"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Boomerang"
+                    "items": [
+                      "Blue Boomerang",
+                      "Red Boomerang"
+                    ]
                   }
                 }
               ]
@@ -17721,27 +17589,14 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Cane of Byrna"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cane of Somaria"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire Rod"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ice Rod"
+                    "items": [
+                      "Cane of Byrna",
+                      "Cane of Somaria",
+                      "Fire Rod",
+                      "Ice Rod"
+                    ]
                   }
                 }
               ]

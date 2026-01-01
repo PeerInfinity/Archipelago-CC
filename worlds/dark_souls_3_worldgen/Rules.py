@@ -36,7 +36,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Go To Firelink Shrine Bell Tower", player),
-        Has('Tower Key')
+        Has('Tower Key', 1)
     )
 
     world.set_rule(
@@ -56,7 +56,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Go To Greirat's Shop", player),
-        Has('Cell Key')
+        Has('Cell Key', 1)
     )
 
     world.set_rule(
@@ -71,7 +71,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Go To Farron Keep", player),
-        Has('RS -> FK')
+        Has('RS -> FK', 1)
     )
 
     world.set_rule(
@@ -86,7 +86,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Go To Irithyll Dungeon", player),
-        Has('IBV -> ID')
+        Has('IBV -> ID', 1)
     )
 
     world.set_rule(
@@ -96,12 +96,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Go To Archdragon Peak", player),
-        Has('Path of the Dragon')
+        Has('Path of the Dragon', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Go To Karla's Shop", player),
-        Has("Jailer's Key Ring")
+        Has("Jailer's Key Ring", 1)
     )
 
     world.set_rule(
@@ -121,112 +121,112 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("FS: Lift Chamber Key - Leonhard", player),
-        Has('Pale Tongue')
+        Has('Pale Tongue', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Alluring Skull - Mortician's Ashes", player),
-        Has("Mortician's Ashes")
+        Has("Mortician's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Ember - Mortician's Ashes", player),
-        Has("Mortician's Ashes")
+        Has("Mortician's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Grave Key - Mortician's Ashes", player),
-        Has("Mortician's Ashes")
+        Has("Mortician's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Life Ring - Dreamchaser's Ashes", player),
-        Has("Dreamchaser's Ashes")
+        Has("Dreamchaser's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Hidden Blessing - Dreamchaser's Ashes", player),
-        Has("Dreamchaser's Ashes")
+        Has("Dreamchaser's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Lloyd's Shield Ring - Paladin's Ashes", player),
-        Has("Paladin's Ashes")
+        Has("Paladin's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Ember - Grave Warden's Ashes", player),
-        Has("Grave Warden's Ashes")
+        Has("Grave Warden's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Karla's Pointed Hat - Prisoner Chief's Ashes", player),
-        Has("Prisoner Chief's Ashes")
+        Has("Prisoner Chief's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Karla's Coat - Prisoner Chief's Ashes", player),
-        Has("Prisoner Chief's Ashes")
+        Has("Prisoner Chief's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Karla's Gloves - Prisoner Chief's Ashes", player),
-        Has("Prisoner Chief's Ashes")
+        Has("Prisoner Chief's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Karla's Trousers - Prisoner Chief's Ashes", player),
-        Has("Prisoner Chief's Ashes")
+        Has("Prisoner Chief's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Xanthous Overcoat - Xanthous Ashes", player),
-        Has('Xanthous Ashes')
+        Has('Xanthous Ashes', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Xanthous Gloves - Xanthous Ashes", player),
-        Has('Xanthous Ashes')
+        Has('Xanthous Ashes', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Xanthous Trousers - Xanthous Ashes", player),
-        Has('Xanthous Ashes')
+        Has('Xanthous Ashes', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Ember - Dragon Chaser's Ashes", player),
-        Has("Dragon Chaser's Ashes")
+        Has("Dragon Chaser's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Washing Pole - Easterner's Ashes", player),
-        Has("Easterner's Ashes")
+        Has("Easterner's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Eastern Helm - Easterner's Ashes", player),
-        Has("Easterner's Ashes")
+        Has("Easterner's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Eastern Armor - Easterner's Ashes", player),
-        Has("Easterner's Ashes")
+        Has("Easterner's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Eastern Gauntlets - Easterner's Ashes", player),
-        Has("Easterner's Ashes")
+        Has("Easterner's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Eastern Leggings - Easterner's Ashes", player),
-        Has("Easterner's Ashes")
+        Has("Easterner's Ashes", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Wood Grain Ring - Easterner's Ashes", player),
-        Has("Easterner's Ashes")
+        Has("Easterner's Ashes", 1)
     )
 
     world.set_rule(
@@ -431,72 +431,72 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("FSBT: Ring of Sacrifice - crow for Loretta's Bone", player),
-        Has("Loretta's Bone")
+        Has("Loretta's Bone", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FSBT: Sunlight Shield - crow for Mendicant's Staff", player),
-        Has("Mendicant's Staff")
+        Has("Mendicant's Staff", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FSBT: Hollow Gem - crow for Eleonora", player),
-        Has('Eleonora')
+        Has('Eleonora', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FSBT: Titanite Scale - crow for Blacksmith Hammer", player),
-        Has('Blacksmith Hammer')
+        Has('Blacksmith Hammer', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FSBT: Titanite Slab - crow for Coiled Sword Fragment", player),
-        Has('Coiled Sword Fragment')
+        Has('Coiled Sword Fragment', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FSBT: Armor of the Sun - crow for Siegbräu", player),
-        Has('Siegbräu')
+        Has('Siegbräu', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FSBT: Iron Leggings - crow for Seed of a Giant Tree", player),
-        Has('Seed of a Giant Tree')
+        Has('Seed of a Giant Tree', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FSBT: Lightning Gem - crow for Xanthous Crown", player),
-        Has('Xanthous Crown')
+        Has('Xanthous Crown', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FSBT: Twinkling Titanite - crow for Large Leather Shield", player),
-        Has('Large Leather Shield')
+        Has('Large Leather Shield', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FSBT: Blessed Gem - crow for Moaning Shield", player),
-        Has('Moaning Shield')
+        Has('Moaning Shield', 1)
     )
 
     world.set_rule(
         multiworld.get_location("HWL: Soul of Boreal Valley Vordt", player),
-        Has('Storm Ruler')
+        Has('Storm Ruler', 1)
     )
 
     world.set_rule(
         multiworld.get_location("HWL: Soul of the Dancer", player),
-        Has('Basin of Vows')
+        Has('Basin of Vows', 1)
     )
 
     world.set_rule(
         multiworld.get_location("HWL: Basin of Vows - Emma", player),
-        Has('Small Doll')
+        Has('Small Doll', 1)
     )
 
     world.set_rule(
         multiworld.get_location("HWL: Red Eye Orb - wall tower, miniboss", player),
-        Has('Lift Chamber Key')
+        Has('Lift Chamber Key', 1)
     )
 
     world.set_rule(
@@ -526,77 +526,77 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("FS: Poison Mist - Cornyx for Great Swamp Tome", player),
-        Has('Great Swamp Pyromancy Tome')
+        Has('Great Swamp Pyromancy Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Fire Orb - Cornyx for Great Swamp Tome", player),
-        Has('Great Swamp Pyromancy Tome')
+        Has('Great Swamp Pyromancy Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Profuse Sweat - Cornyx for Great Swamp Tome", player),
-        Has('Great Swamp Pyromancy Tome')
+        Has('Great Swamp Pyromancy Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Bursting Fireball - Cornyx for Great Swamp Tome", player),
-        Has('Great Swamp Pyromancy Tome')
+        Has('Great Swamp Pyromancy Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Acid Surge - Cornyx for Carthus Tome", player),
-        Has('Carthus Pyromancy Tome')
+        Has('Carthus Pyromancy Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Carthus Flame Arc - Cornyx for Carthus Tome", player),
-        Has('Carthus Pyromancy Tome')
+        Has('Carthus Pyromancy Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Carthus Beacon - Cornyx for Carthus Tome", player),
-        Has('Carthus Pyromancy Tome')
+        Has('Carthus Pyromancy Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Great Chaos Fire Orb - Cornyx for Izalith Tome", player),
-        Has('Izalith Pyromancy Tome')
+        Has('Izalith Pyromancy Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Chaos Storm - Cornyx for Izalith Tome", player),
-        Has('Izalith Pyromancy Tome')
+        Has('Izalith Pyromancy Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Med Heal - Irina for Tome of Carim", player),
-        Has('Braille Divine Tome of Carim')
+        Has('Braille Divine Tome of Carim', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Tears of Denial - Irina for Tome of Carim", player),
-        Has('Braille Divine Tome of Carim')
+        Has('Braille Divine Tome of Carim', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Force - Irina for Tome of Carim", player),
-        Has('Braille Divine Tome of Carim')
+        Has('Braille Divine Tome of Carim', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Bountiful Light - Irina for Tome of Lothric", player),
-        Has('Braille Divine Tome of Lothric')
+        Has('Braille Divine Tome of Lothric', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Magic Barrier - Irina for Tome of Lothric", player),
-        Has('Braille Divine Tome of Lothric')
+        Has('Braille Divine Tome of Lothric', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Blessed Weapon - Irina for Tome of Lothric", player),
-        Has('Braille Divine Tome of Lothric')
+        Has('Braille Divine Tome of Lothric', 1)
     )
 
     world.set_rule(
@@ -606,62 +606,62 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("FS: Great Farron Dart - Orbeck for Sage's Scroll", player),
-        Has("Sage's Scroll")
+        Has("Sage's Scroll", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Farron Hail - Orbeck for Sage's Scroll", player),
-        Has("Sage's Scroll")
+        Has("Sage's Scroll", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Homing Soulmass - Orbeck for Logan's Scroll", player),
-        Has("Logan's Scroll")
+        Has("Logan's Scroll", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Soul Spear - Orbeck for Logan's Scroll", player),
-        Has("Logan's Scroll")
+        Has("Logan's Scroll", 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Homing Crystal Soulmass - Orbeck for Crystal Scroll", player),
-        Has('Crystal Scroll')
+        Has('Crystal Scroll', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Crystal Soul Spear - Orbeck for Crystal Scroll", player),
-        Has('Crystal Scroll')
+        Has('Crystal Scroll', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Crystal Magic Weapon - Orbeck for Crystal Scroll", player),
-        Has('Crystal Scroll')
+        Has('Crystal Scroll', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Cast Light - Orbeck for Golden Scroll", player),
-        Has('Golden Scroll')
+        Has('Golden Scroll', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Twisted Wall of Light - Orbeck for Golden Scroll", player),
-        Has('Golden Scroll')
+        Has('Golden Scroll', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Hidden Weapon - Orbeck for Golden Scroll", player),
-        Has('Golden Scroll')
+        Has('Golden Scroll', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Hidden Body - Orbeck for Golden Scroll", player),
-        Has('Golden Scroll')
+        Has('Golden Scroll', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Repair - Orbeck for Golden Scroll", player),
-        Has('Golden Scroll')
+        Has('Golden Scroll', 1)
     )
 
     world.set_rule(
@@ -821,17 +821,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("ID: Bellowing Dragoncrest Ring - drop from B1 towards pit", player),
-        Has("Jailbreaker's Key")
+        Has("Jailbreaker's Key", 1)
     )
 
     world.set_rule(
         multiworld.get_location("ID: Covetous Gold Serpent Ring - Siegward's cell", player),
-        Has('Old Cell Key')
+        Has('Old Cell Key', 1)
     )
 
     world.set_rule(
         multiworld.get_location("ID: Prisoner Chief's Ashes - B2 near, locked cell by stairs", player),
-        Has("Jailer's Key Ring")
+        Has("Jailer's Key Ring", 1)
     )
 
     world.set_rule(
@@ -896,32 +896,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("FS: Leonhard's Garb - shop after killing Leonhard", player),
-        Has('Black Eye Orb')
+        Has('Black Eye Orb', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Leonhard's Gauntlets - shop after killing Leonhard", player),
-        Has('Black Eye Orb')
+        Has('Black Eye Orb', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Leonhard's Trousers - shop after killing Leonhard", player),
-        Has('Black Eye Orb')
+        Has('Black Eye Orb', 1)
     )
 
     world.set_rule(
         multiworld.get_location("AL: Crescent Moon Sword - Leonhard drop", player),
-        Has('Black Eye Orb')
+        Has('Black Eye Orb', 1)
     )
 
     world.set_rule(
         multiworld.get_location("AL: Silver Mask - Leonhard drop", player),
-        Has('Black Eye Orb')
+        Has('Black Eye Orb', 1)
     )
 
     world.set_rule(
         multiworld.get_location("AL: Soul of Rosaria - Leonhard drop", player),
-        Has('Black Eye Orb')
+        Has('Black Eye Orb', 1)
     )
 
     world.set_rule(
@@ -1086,52 +1086,52 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("FS: Firestorm - Karla for Quelana Tome", player),
-        Has('Quelana Pyromancy Tome')
+        Has('Quelana Pyromancy Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Rapport - Karla for Quelana Tome", player),
-        Has('Quelana Pyromancy Tome')
+        Has('Quelana Pyromancy Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Fire Whip - Karla for Quelana Tome", player),
-        Has('Quelana Pyromancy Tome')
+        Has('Quelana Pyromancy Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Black Flame - Karla for Grave Warden Tome", player),
-        Has('Grave Warden Pyromancy Tome')
+        Has('Grave Warden Pyromancy Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Black Fire Orb - Karla for Grave Warden Tome", player),
-        Has('Grave Warden Pyromancy Tome')
+        Has('Grave Warden Pyromancy Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Gnaw - Karla for Deep Braille Tome", player),
-        Has('Deep Braille Divine Tome')
+        Has('Deep Braille Divine Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Deep Protection - Karla for Deep Braille Tome", player),
-        Has('Deep Braille Divine Tome')
+        Has('Deep Braille Divine Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Vow of Silence - Karla for Londor Tome", player),
-        Has('Londor Braille Divine Tome')
+        Has('Londor Braille Divine Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Dark Blade - Karla for Londor Tome", player),
-        Has('Londor Braille Divine Tome')
+        Has('Londor Braille Divine Tome', 1)
     )
 
     world.set_rule(
         multiworld.get_location("FS: Dead Again - Karla for Londor Tome", player),
-        Has('Londor Braille Divine Tome')
+        Has('Londor Braille Divine Tome', 1)
     )
 
     world.set_rule(

@@ -444,15 +444,12 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Green Switch Palace"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Yoshi"
+                        "items": [
+                          "Green Switch Palace",
+                          "Yoshi"
+                        ]
                       }
                     }
                   ]
@@ -558,27 +555,14 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Climb"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Powerup"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Spin Jump"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Climb",
+                          "Progressive Powerup",
+                          "Spin Jump"
+                        ]
+                      }
                     },
                     {
                       "rule": "Has",
@@ -1109,15 +1093,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Carry"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "P-Switch"
+                    "items": [
+                      "Carry",
+                      "P-Switch"
+                    ]
                   }
                 }
               ]
@@ -1328,21 +1309,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Powerup"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Star Activate"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Progressive Powerup",
+                      "Super Star Activate"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -1515,21 +1488,13 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Carry"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "P-Switch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swim"
+                    "items": [
+                      "Carry",
+                      "P-Switch",
+                      "Swim"
+                    ]
                   }
                 }
               ]
@@ -2792,27 +2757,14 @@
             "name": "Forest of Illusion 3 -> Forest of Illusion 3 - Secret Exit",
             "connected_region": "Forest of Illusion 3 - Secret Exit",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Carry"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Powerup"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spin Jump"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carry",
+                  "Progressive Powerup",
+                  "Spin Jump"
+                ]
+              }
             }
           }
         ],
@@ -4558,27 +4510,14 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Climb"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Powerup"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Run"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Swim"
+                    "items": [
+                      "Climb",
+                      "Progressive Powerup",
+                      "Run",
+                      "Swim"
+                    ]
                   }
                 }
               ]
@@ -4870,48 +4809,27 @@
             "name": "Star Road 1 -> Star Road 1 - Normal Exit",
             "connected_region": "Star Road 1 - Normal Exit",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Powerup"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spin Jump"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Progressive Powerup",
+                  "Spin Jump"
+                ]
+              }
             }
           },
           {
             "name": "Star Road 1 -> Star Road 1 - Secret Exit",
             "connected_region": "Star Road 1 - Secret Exit",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Carry"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Powerup"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spin Jump"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Carry",
+                  "Progressive Powerup",
+                  "Spin Jump"
+                ]
+              }
             }
           }
         ],
@@ -5822,26 +5740,12 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Powerup"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spin Jump"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Carry"
+                    "items": [
+                      "Progressive Powerup",
+                      "Spin Jump"
+                    ]
                   }
                 },
                 {
@@ -5852,9 +5756,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Yoshi"
+                    "items": [
+                      "Carry",
+                      "Yoshi"
+                    ]
                   }
                 }
               ]

@@ -141,7 +141,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower right (upper) -> Varndagroth tower right (elevator)", player),
-        Has('Elevator Keycard')
+        Has('Elevator Keycard', 1)
     )
 
     world.set_rule(
@@ -151,7 +151,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Varndagroth tower right (lower) -> Varndagroth tower right (elevator)", player),
-        Has('Elevator Keycard')
+        Has('Elevator Keycard', 1)
     )
 
     world.set_rule(
@@ -171,12 +171,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Sealed Caves (Sirens) -> Varndagroth tower left", player),
-        Has('Elevator Keycard')
+        Has('Elevator Keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Sealed Caves (Sirens) -> Varndagroth tower right (lower)", player),
-        Has('Elevator Keycard')
+        Has('Elevator Keycard', 1)
     )
 
     world.set_rule(
@@ -241,7 +241,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Skeleton Shaft -> Sealed Caves (Xarion)", player),
-        Has('Security Keycard A')
+        Has('Security Keycard A', 1)
     )
 
     world.set_rule(
@@ -516,12 +516,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lake Desolation (Upper): Crash site chest 1", player),
-        Has('Killed Maw')
+        Has('Killed Maw', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Lake Desolation (Upper): Crash site chest 2", player),
-        Has('Killed Maw')
+        Has('Killed Maw', 1)
     )
 
     world.set_rule(
@@ -551,17 +551,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Library: Terminal 2 (Lachiem)", player),
-        Has('Tablet')
+        Has('Tablet', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Library: Terminal 1 (Windaria)", player),
-        Has('Tablet')
+        Has('Tablet', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Library: Terminal 3 (Emperor Nuvius)", player),
-        Has('Tablet')
+        Has('Tablet', 1)
     )
 
     world.set_rule(
@@ -581,7 +581,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Library: Backer room terminal (Vandagray Metropolis Map)", player),
-        Has('Tablet')
+        Has('Tablet', 1)
     )
 
     world.set_rule(
@@ -596,7 +596,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Left): Elevator chest", player),
-        Has('Elevator Keycard')
+        Has('Elevator Keycard', 1)
     )
 
     world.set_rule(
@@ -621,7 +621,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Varndagroth Towers (Right): Spider Hell", player),
-        Has('Security Keycard A')
+        Has('Security Keycard A', 1)
     )
 
     world.set_rule(
@@ -631,17 +631,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Sirens): Water hook", player),
-        Has('Water Mask')
+        Has('Water Mask', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Sirens): Siren room underwater right", player),
-        Has('Water Mask')
+        Has('Water Mask', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Sealed Caves (Sirens): Siren room underwater left", player),
-        Has('Water Mask')
+        Has('Water Mask', 1)
     )
 
     world.set_rule(
@@ -696,12 +696,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lab: Experiment 13 terminal (W.R.E.C Farewell)", player),
-        Has('Tablet')
+        Has('Tablet', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Left terminal (Biotechnology)", player),
-        Has('Tablet')
+        Has('Tablet', 1)
     )
 
     world.set_rule(
@@ -716,12 +716,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lab: Middle terminal (Amadeus Laboratory Map)", player),
-        Has('Tablet')
+        Has('Tablet', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Lab: Right terminal (Experiment #11)", player),
-        Has('Tablet')
+        Has('Tablet', 1)
     )
 
     world.set_rule(
@@ -731,7 +731,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lab: Download and chest room terminal (Experiment #13)", player),
-        Has('Tablet')
+        Has('Tablet', 1)
     )
 
     world.set_rule(
@@ -786,12 +786,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Forest: Waterfall chest 1", player),
-        Has('Water Mask')
+        Has('Water Mask', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Forest: Waterfall chest 2", player),
-        Has('Water Mask')
+        Has('Water Mask', 1)
     )
 
     world.set_rule(
@@ -801,12 +801,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lake Serene (Lower): Under the eels", player),
-        Has('Water Mask')
+        Has('Water Mask', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Lake Serene (Lower): Past the eels", player),
-        Has('Water Mask')
+        Has('Water Mask', 1)
     )
 
     world.set_rule(
@@ -886,7 +886,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Killed Maw", player),
-        Has('Gas Mask')
+        Has('Gas Mask', 1)
     )
 
     world.set_rule(
@@ -896,22 +896,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Sirens): Siren room underwater left chest", player),
-        Has('Water Mask')
+        Has('Water Mask', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Sirens): Siren room underwater right chest", player),
-        Has('Water Mask')
+        Has('Water Mask', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Sirens): Siren room underwater right ground", player),
-        Has('Water Mask')
+        Has('Water Mask', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Caves of Banishment (Sirens): Water hook", player),
-        Has('Water Mask')
+        Has('Water Mask', 1)
     )
 
     world.set_rule(

@@ -55,27 +55,14 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -93,27 +80,14 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -141,38 +115,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Crusher (MAP06)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Shotgun",
+                      "The Crusher (MAP06)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Plasma gun"
+                    ]
+                  }
                 }
               ]
             }
@@ -194,56 +152,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Tricks and Traps (MAP08)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun",
+                      "Tricks and Traps (MAP08)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -275,56 +202,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Circle of Death (MAP11)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Circle of Death (MAP11)",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -346,56 +242,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Downtown (MAP13)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Downtown (MAP13)",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -407,56 +272,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Inmost Dens (MAP14)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun",
+                      "The Inmost Dens (MAP14)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -468,56 +302,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Industrial Zone (MAP15)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Industrial Zone (MAP15)",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -529,56 +332,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Suburbs (MAP16)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Suburbs (MAP16)",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -590,56 +362,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Tenements (MAP17)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun",
+                      "Tenements (MAP17)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -651,56 +392,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Courtyard (MAP18)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun",
+                      "The Courtyard (MAP18)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -712,56 +422,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Citadel (MAP19)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun",
+                      "The Citadel (MAP19)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -773,56 +452,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gotcha! (MAP20)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Gotcha! (MAP20)",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -844,27 +492,14 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Plasma gun",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -882,56 +517,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Barrels o' Fun (MAP23)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Barrels o' Fun (MAP23)",
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -940,51 +544,18 @@
             "name": "Hub -> The Chasm (MAP24) Main",
             "connected_region": "The Chasm (MAP24) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "BFG9000"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Plasma gun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rocket launcher"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Super Shotgun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Chasm (MAP24)"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "BFG9000",
+                  "Chaingun",
+                  "Plasma gun",
+                  "Rocket launcher",
+                  "Shotgun",
+                  "Super Shotgun",
+                  "The Chasm (MAP24)"
+                ]
+              }
             }
           },
           {
@@ -1001,204 +572,72 @@
             "name": "Hub -> The Abandoned Mines (MAP26) Main",
             "connected_region": "The Abandoned Mines (MAP26) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "BFG9000"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Plasma gun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rocket launcher"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Super Shotgun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Abandoned Mines (MAP26)"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "BFG9000",
+                  "Chaingun",
+                  "Plasma gun",
+                  "Rocket launcher",
+                  "Shotgun",
+                  "Super Shotgun",
+                  "The Abandoned Mines (MAP26)"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> Monster Condo (MAP27) Main",
             "connected_region": "Monster Condo (MAP27) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "BFG9000"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Monster Condo (MAP27)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Plasma gun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rocket launcher"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Super Shotgun"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "BFG9000",
+                  "Chaingun",
+                  "Monster Condo (MAP27)",
+                  "Plasma gun",
+                  "Rocket launcher",
+                  "Shotgun",
+                  "Super Shotgun"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> The Spirit World (MAP28) Main",
             "connected_region": "The Spirit World (MAP28) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "BFG9000"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Plasma gun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rocket launcher"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Super Shotgun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Spirit World (MAP28)"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "BFG9000",
+                  "Chaingun",
+                  "Plasma gun",
+                  "Rocket launcher",
+                  "Shotgun",
+                  "Super Shotgun",
+                  "The Spirit World (MAP28)"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> The Living End (MAP29) Main",
             "connected_region": "The Living End (MAP29) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "BFG9000"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Plasma gun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rocket launcher"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Super Shotgun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Living End (MAP29)"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "BFG9000",
+                  "Chaingun",
+                  "Plasma gun",
+                  "Rocket launcher",
+                  "Shotgun",
+                  "Super Shotgun",
+                  "The Living End (MAP29)"
+                ]
+              }
             }
           },
           {
@@ -2051,38 +1490,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Plasma gun"
+                    ]
+                  }
                 }
               ]
             }
@@ -2126,21 +1549,13 @@
             "name": "The Crusher (MAP06) Main -> The Crusher (MAP06) Blue",
             "connected_region": "The Crusher (MAP06) Blue",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Super Shotgun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Crusher (MAP06) - Blue keycard"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Super Shotgun",
+                  "The Crusher (MAP06) - Blue keycard"
+                ]
+              }
             }
           }
         ],
@@ -2599,50 +2014,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -3347,50 +2736,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -3764,50 +3127,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -4317,21 +3654,13 @@
             "name": "The Factory (MAP12) Outdoors -> The Factory (MAP12) Main",
             "connected_region": "The Factory (MAP12) Main",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Plasma gun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Super Shotgun"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Plasma gun",
+                  "Super Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -4390,38 +3719,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun"
+                    ]
+                  }
                 }
               ]
             }
@@ -6520,21 +5833,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Citadel (MAP19) - Blue skull key"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Citadel (MAP19) - Yellow skull key"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "The Citadel (MAP19) - Blue skull key",
+                      "The Citadel (MAP19) - Yellow skull key"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -6769,21 +6074,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Citadel (MAP19) - Blue skull key"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Citadel (MAP19) - Yellow skull key"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "The Citadel (MAP19) - Blue skull key",
+                      "The Citadel (MAP19) - Yellow skull key"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -7038,44 +6335,23 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Nirvana (MAP21) - Yellow skull key"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Nirvana (MAP21) - Yellow skull key",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun"
+                    ]
+                  }
                 }
               ]
             }
@@ -7157,21 +6433,13 @@
             "name": "Nirvana (MAP21) Yellow -> Nirvana (MAP21) Magenta",
             "connected_region": "Nirvana (MAP21) Magenta",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Nirvana (MAP21) - Blue skull key"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Nirvana (MAP21) - Red skull key"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Nirvana (MAP21) - Blue skull key",
+                  "Nirvana (MAP21) - Red skull key"
+                ]
+              }
             }
           }
         ],
@@ -7262,21 +6530,13 @@
             "name": "Nirvana (MAP21) Start -> Nirvana (MAP21) Main",
             "connected_region": "Nirvana (MAP21) Main",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Plasma gun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Super Shotgun"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Plasma gun",
+                  "Super Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -7458,50 +6718,24 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Chaingun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Shotgun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Super Shotgun"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Chaingun",
+                      "Shotgun",
+                      "Super Shotgun"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 }
               ]
             }
@@ -8066,27 +7300,14 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "BFG9000"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Plasma gun"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Rocket launcher"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "BFG9000",
+                      "Plasma gun",
+                      "Rocket launcher"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -8286,27 +7507,14 @@
             "name": "Bloodfalls (MAP25) Start -> Bloodfalls (MAP25) Main",
             "connected_region": "Bloodfalls (MAP25) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Super Shotgun"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Chaingun",
+                  "Shotgun",
+                  "Super Shotgun"
+                ]
+              }
             }
           }
         ],
@@ -9814,45 +9022,17 @@
             "name": "Icon of Sin (MAP30) Start -> Icon of Sin (MAP30) Main",
             "connected_region": "Icon of Sin (MAP30) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "BFG9000"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chaingun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Plasma gun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rocket launcher"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shotgun"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Super Shotgun"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "BFG9000",
+                  "Chaingun",
+                  "Plasma gun",
+                  "Rocket launcher",
+                  "Shotgun",
+                  "Super Shotgun"
+                ]
+              }
             }
           }
         ],

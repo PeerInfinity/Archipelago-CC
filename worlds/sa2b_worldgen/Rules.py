@@ -57,7 +57,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Metal Harbor - 1", player),
-        Has('Sonic - Light Shoes')
+        Has('Sonic - Light Shoes', 1)
     )
 
     world.set_rule(
@@ -67,12 +67,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Metal Harbor - Chao Key 2", player),
-        Has('Sonic - Light Shoes')
+        Has('Sonic - Light Shoes', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Metal Harbor - Chao Key 3", player),
-        Has('Sonic - Light Shoes')
+        Has('Sonic - Light Shoes', 1)
     )
 
     world.set_rule(
@@ -82,7 +82,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pyramid Cave - 1", player),
-        Has('Sonic - Bounce Bracelet')
+        Has('Sonic - Bounce Bracelet', 1)
     )
 
     world.set_rule(
@@ -92,7 +92,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pyramid Cave - Chao Key 2", player),
-        Has('Sonic - Bounce Bracelet')
+        Has('Sonic - Bounce Bracelet', 1)
     )
 
     world.set_rule(
@@ -102,7 +102,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pyramid Cave - Gold Beetle", player),
-        Has('Sonic - Bounce Bracelet')
+        Has('Sonic - Bounce Bracelet', 1)
     )
 
     world.set_rule(
@@ -117,12 +117,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Crazy Gadget - Chao Key 1", player),
-        Has('Sonic - Bounce Bracelet')
+        Has('Sonic - Bounce Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Crazy Gadget - Chao Key 2", player),
-        Has('Sonic - Bounce Bracelet')
+        Has('Sonic - Bounce Bracelet', 1)
     )
 
     world.set_rule(
@@ -137,12 +137,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Crazy Gadget - Upgrade", player),
-        Has('Sonic - Bounce Bracelet')
+        Has('Sonic - Bounce Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Final Rush - 1", player),
-        Has('Sonic - Bounce Bracelet')
+        Has('Sonic - Bounce Bracelet', 1)
     )
 
     world.set_rule(
@@ -152,12 +152,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Final Rush - Chao Key 3", player),
-        Has('Sonic - Bounce Bracelet')
+        Has('Sonic - Bounce Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Final Rush - Upgrade", player),
-        Has('Sonic - Bounce Bracelet')
+        Has('Sonic - Bounce Bracelet', 1)
     )
 
     world.set_rule(
@@ -167,22 +167,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Prison Lane - Chao Key 1", player),
-        Has('Tails - Bazooka')
+        Has('Tails - Bazooka', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Prison Lane - Chao Key 2", player),
-        Has('Tails - Booster')
+        Has('Tails - Booster', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Prison Lane - Upgrade", player),
-        Has('Tails - Bazooka')
+        Has('Tails - Bazooka', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Mission Street - 1", player),
-        Has('Tails - Booster')
+        Has('Tails - Booster', 1)
     )
 
     world.set_rule(
@@ -192,22 +192,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mission Street - Chao Key 1", player),
-        Has('Tails - Booster')
+        Has('Tails - Booster', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Mission Street - Chao Key 2", player),
-        Has('Tails - Booster')
+        Has('Tails - Booster', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Mission Street - Chao Key 3", player),
-        Has('Tails - Booster')
+        Has('Tails - Booster', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Mission Street - Gold Beetle", player),
-        Has('Tails - Booster')
+        Has('Tails - Booster', 1)
     )
 
     world.set_rule(
@@ -217,7 +217,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hidden Base - 1", player),
-        Has('Tails - Booster')
+        Has('Tails - Booster', 1)
     )
 
     world.set_rule(
@@ -227,17 +227,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hidden Base - Chao Key 1", player),
-        Has('Tails - Booster')
+        Has('Tails - Booster', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Hidden Base - Chao Key 2", player),
-        Has('Tails - Booster')
+        Has('Tails - Booster', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Hidden Base - Gold Beetle", player),
-        Has('Tails - Booster')
+        Has('Tails - Booster', 1)
     )
 
     world.set_rule(
@@ -257,7 +257,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Eternal Engine - Chao Key 1", player),
-        Has('Tails - Booster')
+        Has('Tails - Booster', 1)
     )
 
     world.set_rule(
@@ -267,7 +267,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Eternal Engine - Chao Key 3", player),
-        Has('Tails - Booster')
+        Has('Tails - Booster', 1)
     )
 
     world.set_rule(
@@ -277,7 +277,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Eternal Engine - Upgrade", player),
-        Has('Tails - Booster')
+        Has('Tails - Booster', 1)
     )
 
     world.set_rule(
@@ -287,12 +287,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Wild Canyon - Upgrade", player),
-        Has('Knuckles - Shovel Claws')
+        Has('Knuckles - Shovel Claws', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Pumpkin Hill - 1", player),
-        Has('Knuckles - Shovel Claws')
+        Has('Knuckles - Shovel Claws', 1)
     )
 
     world.set_rule(
@@ -302,7 +302,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Aquatic Mine - 1", player),
-        Has('Knuckles - Shovel Claws')
+        Has('Knuckles - Shovel Claws', 1)
     )
 
     world.set_rule(
@@ -322,12 +322,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Death Chamber - Chao Key 1", player),
-        Has('Knuckles - Hammer Gloves')
+        Has('Knuckles - Hammer Gloves', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Death Chamber - Chao Key 2", player),
-        Has('Knuckles - Hammer Gloves')
+        Has('Knuckles - Hammer Gloves', 1)
     )
 
     world.set_rule(
@@ -352,7 +352,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Meteor Herd - Upgrade", player),
-        Has('Knuckles - Hammer Gloves')
+        Has('Knuckles - Hammer Gloves', 1)
     )
 
     world.set_rule(
@@ -362,12 +362,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Radical Highway - Upgrade", player),
-        Has('Shadow - Air Shoes')
+        Has('Shadow - Air Shoes', 1)
     )
 
     world.set_rule(
         multiworld.get_location("White Jungle - 1", player),
-        Has('Shadow - Air Shoes')
+        Has('Shadow - Air Shoes', 1)
     )
 
     world.set_rule(
@@ -377,17 +377,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("White Jungle - Chao Key 2", player),
-        Has('Shadow - Air Shoes')
+        Has('Shadow - Air Shoes', 1)
     )
 
     world.set_rule(
         multiworld.get_location("White Jungle - Chao Key 3", player),
-        Has('Shadow - Air Shoes')
+        Has('Shadow - Air Shoes', 1)
     )
 
     world.set_rule(
         multiworld.get_location("White Jungle - Gold Beetle", player),
-        Has('Shadow - Air Shoes')
+        Has('Shadow - Air Shoes', 1)
     )
 
     world.set_rule(
@@ -407,7 +407,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Iron Gate - Upgrade", player),
-        Has('Eggman - Large Cannon')
+        Has('Eggman - Large Cannon', 1)
     )
 
     world.set_rule(
@@ -417,12 +417,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Sand Ocean - Upgrade", player),
-        Has('Eggman - Jet Engine')
+        Has('Eggman - Jet Engine', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Lost Colony - 1", player),
-        Has('Eggman - Jet Engine')
+        Has('Eggman - Jet Engine', 1)
     )
 
     world.set_rule(
@@ -432,12 +432,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lost Colony - Chao Key 3", player),
-        Has('Eggman - Jet Engine')
+        Has('Eggman - Jet Engine', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Lost Colony - Gold Beetle", player),
-        Has('Eggman - Jet Engine')
+        Has('Eggman - Jet Engine', 1)
     )
 
     world.set_rule(
@@ -462,7 +462,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Cosmic Wall - 1", player),
-        Has('Eggman - Jet Engine')
+        Has('Eggman - Jet Engine', 1)
     )
 
     world.set_rule(
@@ -472,27 +472,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Cosmic Wall - Chao Key 1", player),
-        Has('Eggman - Jet Engine')
+        Has('Eggman - Jet Engine', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Cosmic Wall - Chao Key 2", player),
-        Has('Eggman - Jet Engine')
+        Has('Eggman - Jet Engine', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Cosmic Wall - Chao Key 3", player),
-        Has('Eggman - Jet Engine')
+        Has('Eggman - Jet Engine', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Cosmic Wall - Gold Beetle", player),
-        Has('Eggman - Jet Engine')
+        Has('Eggman - Jet Engine', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Cosmic Wall - Upgrade", player),
-        Has('Eggman - Jet Engine')
+        Has('Eggman - Jet Engine', 1)
     )
 
     world.set_rule(
@@ -507,12 +507,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dry Lagoon - Upgrade", player),
-        Has('Rouge - Pick Nails')
+        Has('Rouge - Pick Nails', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Egg Quarters - 1", player),
-        Has('Rouge - Pick Nails')
+        Has('Rouge - Pick Nails', 1)
     )
 
     world.set_rule(
@@ -522,12 +522,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Egg Quarters - Chao Key 3", player),
-        Has('Rouge - Mystic Melody')
+        Has('Rouge - Mystic Melody', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Security Hall - 1", player),
-        Has('Rouge - Pick Nails')
+        Has('Rouge - Pick Nails', 1)
     )
 
     world.set_rule(
@@ -537,7 +537,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Security Hall - Chao Key 3", player),
-        Has('Rouge - Pick Nails')
+        Has('Rouge - Pick Nails', 1)
     )
 
     world.set_rule(
@@ -562,17 +562,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mad Space - Chao Key 2", player),
-        Has('Rouge - Iron Boots')
+        Has('Rouge - Iron Boots', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Mad Space - Chao Key 3", player),
-        Has('Rouge - Iron Boots')
+        Has('Rouge - Iron Boots', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Mad Space - Gold Beetle", player),
-        Has('Rouge - Iron Boots')
+        Has('Rouge - Iron Boots', 1)
     )
 
     world.set_rule(

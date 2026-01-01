@@ -130,17 +130,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Wily Stage 2 - 1-Up 2", player),
-        Has('Crash Bomber')
+        Has('Crash Bomber', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Wily Stage 2 - E-Tank 2", player),
-        Has('Crash Bomber')
+        Has('Crash Bomber', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Wily Stage 3 - E-Tank", player),
-        Has('Crash Bomber')
+        Has('Crash Bomber', 1)
     )
 
     world.set_rule(

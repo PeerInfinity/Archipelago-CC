@@ -82,7 +82,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Audience to Machine Bottom", player),
-        Has('Tackle')
+        Has('Tackle', 1)
     )
 
     world.set_rule(
@@ -102,7 +102,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Audience to Warehouse", player),
-        Has('Heavy Ring')
+        Has('Heavy Ring', 1)
     )
 
     world.set_rule(
@@ -112,12 +112,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Audience to Observation", player),
-        Has('Roc Wing')
+        Has('Roc Wing', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Ceremonial Door", player),
-        Has('Last Key')
+        Has('Last Key', 1)
     )
 
     world.set_rule(
@@ -132,7 +132,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Dip Into Waterway End", player),
-        Has('Roc Wing')
+        Has('Roc Wing', 1)
     )
 
     world.set_rule(
@@ -147,17 +147,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Gallery Upper to Lower", player),
-        Has('Tackle')
+        Has('Tackle', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Gallery Lower to Upper", player),
-        Has('Tackle')
+        Has('Tackle', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Into Warehouse Main", player),
-        Has('Tackle')
+        Has('Tackle', 1)
     )
 
     world.set_rule(
@@ -167,12 +167,12 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Sealed Room: Main shaft left fake wall", player),
-        Has('Roc Wing')
+        Has('Roc Wing', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Catacomb: Push crate treasure room", player),
-        Has('Heavy Ring')
+        Has('Heavy Ring', 1)
     )
 
     world.set_rule(
@@ -187,7 +187,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Catacomb: Tackle block treasure room", player),
-        Has('Tackle')
+        Has('Tackle', 1)
     )
 
     world.set_rule(
@@ -207,22 +207,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Abyss Staircase: Roc ledge", player),
-        Has('Roc Wing')
+        Has('Roc Wing', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Push crate gallery", player),
-        Has('Heavy Ring')
+        Has('Heavy Ring', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Tackle block gallery", player),
-        Has('Tackle')
+        Has('Tackle', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Audience Room: Wicked roc chamber - Upper", player),
-        Has('Roc Wing')
+        Has('Roc Wing', 1)
     )
 
     world.set_rule(
@@ -257,7 +257,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Outer Wall: Left roc ledge", player),
-        Has('Roc Wing')
+        Has('Roc Wing', 1)
     )
 
     world.set_rule(
@@ -282,7 +282,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Machine Tower: Stone fox hallway", player),
-        Has('Tackle')
+        Has('Tackle', 1)
     )
 
     world.set_rule(
@@ -292,12 +292,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Lower chapel push crate room", player),
-        Has('Heavy Ring')
+        Has('Heavy Ring', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Middle chapel push crate room", player),
-        Has('Heavy Ring')
+        Has('Heavy Ring', 1)
     )
 
     world.set_rule(
@@ -322,12 +322,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Conveyor upper push crate room", player),
-        Has('Heavy Ring')
+        Has('Heavy Ring', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Conveyor lower push crate room", player),
-        Has('Heavy Ring')
+        Has('Heavy Ring', 1)
     )
 
     world.set_rule(
@@ -342,7 +342,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Underground Gallery: Harpy mantis tackle hallway", player),
-        Has('Tackle')
+        Has('Tackle', 1)
     )
 
     world.set_rule(
@@ -367,7 +367,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Roc fake ceiling", player),
-        Has('Roc Wing')
+        Has('Roc Wing', 1)
     )
 
     world.set_rule(
@@ -377,7 +377,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Roc exit shaft", player),
-        Has('Roc Wing')
+        Has('Roc Wing', 1)
     )
 
     world.set_rule(
@@ -387,7 +387,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Underground Waterway: Roc exit shaft fake wall", player),
-        Has('Roc Wing')
+        Has('Roc Wing', 1)
     )
 
     world.set_rule(
@@ -397,5 +397,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dracula", player),
-        Has('Roc Wing')
+        Has('Roc Wing', 1)
     )

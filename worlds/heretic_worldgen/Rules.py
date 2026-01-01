@@ -22,7 +22,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Hub -> The Docks (E1M1) Main", player),
-        Has('The Docks (E1M1)')
+        Has('The Docks (E1M1)', 1)
     )
 
     world.set_rule(
@@ -67,7 +67,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Crater (E2M1) Main", player),
-        Has('The Crater (E2M1)')
+        Has('The Crater (E2M1)', 1)
     )
 
     world.set_rule(
@@ -112,7 +112,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Storehouse (E3M1) Main", player),
-        Has('The Storehouse (E3M1)')
+        Has('The Storehouse (E3M1)', 1)
     )
 
     world.set_rule(
@@ -157,222 +157,222 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Docks (E1M1) Main -> The Docks (E1M1) Yellow", player),
-        Has('The Docks (E1M1) - Yellow key')
+        Has('The Docks (E1M1) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Dungeons (E1M2) Main -> The Dungeons (E1M2) Yellow", player),
-        Has('The Dungeons (E1M2) - Yellow key')
+        Has('The Dungeons (E1M2) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Dungeons (E1M2) Main -> The Dungeons (E1M2) Green", player),
-        Has('The Dungeons (E1M2) - Green key')
+        Has('The Dungeons (E1M2) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Dungeons (E1M2) Blue -> The Dungeons (E1M2) Yellow", player),
-        Has('The Dungeons (E1M2) - Blue key')
+        Has('The Dungeons (E1M2) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Dungeons (E1M2) Yellow -> The Dungeons (E1M2) Blue", player),
-        Has('The Dungeons (E1M2) - Blue key')
+        Has('The Dungeons (E1M2) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Gatehouse (E1M3) Main -> The Gatehouse (E1M3) Yellow", player),
-        Has('The Gatehouse (E1M3) - Yellow key')
+        Has('The Gatehouse (E1M3) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Gatehouse (E1M3) Main -> The Gatehouse (E1M3) Sea", player),
-        Has('The Gatehouse (E1M3) - Yellow key')
+        Has('The Gatehouse (E1M3) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Gatehouse (E1M3) Main -> The Gatehouse (E1M3) Green", player),
-        Has('The Gatehouse (E1M3) - Green key')
+        Has('The Gatehouse (E1M3) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Gatehouse (E1M3) Green -> The Gatehouse (E1M3) Main", player),
-        Has('The Gatehouse (E1M3) - Green key')
+        Has('The Gatehouse (E1M3) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Guard Tower (E1M4) Main -> The Guard Tower (E1M4) Yellow", player),
-        Has('The Guard Tower (E1M4) - Yellow key')
+        Has('The Guard Tower (E1M4) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Guard Tower (E1M4) Yellow -> The Guard Tower (E1M4) Green", player),
-        Has('The Guard Tower (E1M4) - Green key')
+        Has('The Guard Tower (E1M4) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Guard Tower (E1M4) Green -> The Guard Tower (E1M4) Yellow", player),
-        Has('The Guard Tower (E1M4) - Green key')
+        Has('The Guard Tower (E1M4) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Citadel (E1M5) Main -> The Citadel (E1M5) Yellow", player),
-        Has('The Citadel (E1M5) - Yellow key')
+        Has('The Citadel (E1M5) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Citadel (E1M5) Blue -> The Citadel (E1M5) Green", player),
-        Has('The Citadel (E1M5) - Blue key')
+        Has('The Citadel (E1M5) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Citadel (E1M5) Yellow -> The Citadel (E1M5) Green", player),
-        Has('The Citadel (E1M5) - Green key')
+        Has('The Citadel (E1M5) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Citadel (E1M5) Green -> The Citadel (E1M5) Blue", player),
-        Has('The Citadel (E1M5) - Blue key')
+        Has('The Citadel (E1M5) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Cathedral (E1M6) Main -> The Cathedral (E1M6) Yellow", player),
-        Has('The Cathedral (E1M6) - Yellow key')
+        Has('The Cathedral (E1M6) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Cathedral (E1M6) Yellow -> The Cathedral (E1M6) Green", player),
-        Has('The Cathedral (E1M6) - Green key')
+        Has('The Cathedral (E1M6) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Crypts (E1M7) Main -> The Crypts (E1M7) Yellow", player),
-        Has('The Crypts (E1M7) - Yellow key')
+        Has('The Crypts (E1M7) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Crypts (E1M7) Main -> The Crypts (E1M7) Green", player),
-        Has('The Crypts (E1M7) - Green key')
+        Has('The Crypts (E1M7) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Crypts (E1M7) Yellow -> The Crypts (E1M7) Green", player),
-        Has('The Crypts (E1M7) - Green key')
+        Has('The Crypts (E1M7) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Crypts (E1M7) Yellow -> The Crypts (E1M7) Blue", player),
-        Has('The Crypts (E1M7) - Blue key')
+        Has('The Crypts (E1M7) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Crypts (E1M7) Green -> The Crypts (E1M7) Main", player),
-        Has('The Crypts (E1M7) - Green key')
+        Has('The Crypts (E1M7) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Graveyard (E1M9) Main -> The Graveyard (E1M9) Yellow", player),
-        Has('The Graveyard (E1M9) - Yellow key')
+        Has('The Graveyard (E1M9) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Graveyard (E1M9) Main -> The Graveyard (E1M9) Green", player),
-        Has('The Graveyard (E1M9) - Green key')
+        Has('The Graveyard (E1M9) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Graveyard (E1M9) Main -> The Graveyard (E1M9) Blue", player),
-        Has('The Graveyard (E1M9) - Blue key')
+        Has('The Graveyard (E1M9) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Graveyard (E1M9) Yellow -> The Graveyard (E1M9) Main", player),
-        Has('The Graveyard (E1M9) - Yellow key')
+        Has('The Graveyard (E1M9) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Graveyard (E1M9) Green -> The Graveyard (E1M9) Main", player),
-        Has('The Graveyard (E1M9) - Green key')
+        Has('The Graveyard (E1M9) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Crater (E2M1) Main -> The Crater (E2M1) Yellow", player),
-        Has('The Crater (E2M1) - Yellow key')
+        Has('The Crater (E2M1) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Crater (E2M1) Yellow -> The Crater (E2M1) Green", player),
-        Has('The Crater (E2M1) - Green key')
+        Has('The Crater (E2M1) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Crater (E2M1) Green -> The Crater (E2M1) Yellow", player),
-        Has('The Crater (E2M1) - Green key')
+        Has('The Crater (E2M1) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Lava Pits (E2M2) Main -> The Lava Pits (E2M2) Yellow", player),
-        Has('The Lava Pits (E2M2) - Yellow key')
+        Has('The Lava Pits (E2M2) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Lava Pits (E2M2) Yellow -> The Lava Pits (E2M2) Green", player),
-        Has('The Lava Pits (E2M2) - Green key')
+        Has('The Lava Pits (E2M2) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Lava Pits (E2M2) Yellow -> The Lava Pits (E2M2) Main", player),
-        Has('The Lava Pits (E2M2) - Yellow key')
+        Has('The Lava Pits (E2M2) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Lava Pits (E2M2) Green -> The Lava Pits (E2M2) Yellow", player),
-        Has('The Lava Pits (E2M2) - Green key')
+        Has('The Lava Pits (E2M2) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The River of Fire (E2M3) Main -> The River of Fire (E2M3) Yellow", player),
-        Has('The River of Fire (E2M3) - Yellow key')
+        Has('The River of Fire (E2M3) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The River of Fire (E2M3) Main -> The River of Fire (E2M3) Blue", player),
-        Has('The River of Fire (E2M3) - Blue key')
+        Has('The River of Fire (E2M3) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The River of Fire (E2M3) Main -> The River of Fire (E2M3) Green", player),
-        Has('The River of Fire (E2M3) - Green key')
+        Has('The River of Fire (E2M3) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The River of Fire (E2M3) Blue -> The River of Fire (E2M3) Main", player),
-        Has('The River of Fire (E2M3) - Blue key')
+        Has('The River of Fire (E2M3) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The River of Fire (E2M3) Yellow -> The River of Fire (E2M3) Main", player),
-        Has('The River of Fire (E2M3) - Yellow key')
+        Has('The River of Fire (E2M3) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The River of Fire (E2M3) Green -> The River of Fire (E2M3) Main", player),
-        Has('The River of Fire (E2M3) - Green key')
+        Has('The River of Fire (E2M3) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Ice Grotto (E2M4) Main -> The Ice Grotto (E2M4) Green", player),
-        Has('The Ice Grotto (E2M4) - Green key')
+        Has('The Ice Grotto (E2M4) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Ice Grotto (E2M4) Main -> The Ice Grotto (E2M4) Yellow", player),
-        Has('The Ice Grotto (E2M4) - Yellow key')
+        Has('The Ice Grotto (E2M4) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Ice Grotto (E2M4) Blue -> The Ice Grotto (E2M4) Green", player),
-        Has('The Ice Grotto (E2M4) - Blue key')
+        Has('The Ice Grotto (E2M4) - Blue key', 1)
     )
 
     world.set_rule(
@@ -382,250 +382,250 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Ice Grotto (E2M4) Green -> The Ice Grotto (E2M4) Blue", player),
-        Has('The Ice Grotto (E2M4) - Blue key')
+        Has('The Ice Grotto (E2M4) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Catacombs (E2M5) Main -> The Catacombs (E2M5) Yellow", player),
-        Has('The Catacombs (E2M5) - Yellow key')
+        Has('The Catacombs (E2M5) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Catacombs (E2M5) Blue -> The Catacombs (E2M5) Green", player),
-        Has('The Catacombs (E2M5) - Blue key')
+        Has('The Catacombs (E2M5) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Catacombs (E2M5) Yellow -> The Catacombs (E2M5) Green", player),
-        Has('The Catacombs (E2M5) - Green key')
+        Has('The Catacombs (E2M5) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Catacombs (E2M5) Green -> The Catacombs (E2M5) Blue", player),
-        Has('The Catacombs (E2M5) - Blue key')
+        Has('The Catacombs (E2M5) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Labyrinth (E2M6) Main -> The Labyrinth (E2M6) Blue", player),
-        Has('The Labyrinth (E2M6) - Blue key')
+        Has('The Labyrinth (E2M6) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Labyrinth (E2M6) Main -> The Labyrinth (E2M6) Yellow", player),
-        Has('The Labyrinth (E2M6) - Yellow key')
+        Has('The Labyrinth (E2M6) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Labyrinth (E2M6) Main -> The Labyrinth (E2M6) Green", player),
-        Has('The Labyrinth (E2M6) - Green key')
+        Has('The Labyrinth (E2M6) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Labyrinth (E2M6) Blue -> The Labyrinth (E2M6) Main", player),
-        Has('The Labyrinth (E2M6) - Blue key')
+        Has('The Labyrinth (E2M6) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Great Hall (E2M7) Main -> The Great Hall (E2M7) Yellow", player),
-        Has('The Great Hall (E2M7) - Yellow key')
+        Has('The Great Hall (E2M7) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Great Hall (E2M7) Main -> The Great Hall (E2M7) Green", player),
-        Has('The Great Hall (E2M7) - Green key')
+        Has('The Great Hall (E2M7) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Great Hall (E2M7) Blue -> The Great Hall (E2M7) Yellow", player),
-        Has('The Great Hall (E2M7) - Blue key')
+        Has('The Great Hall (E2M7) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Great Hall (E2M7) Yellow -> The Great Hall (E2M7) Blue", player),
-        Has('The Great Hall (E2M7) - Blue key')
+        Has('The Great Hall (E2M7) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Great Hall (E2M7) Yellow -> The Great Hall (E2M7) Main", player),
-        Has('The Great Hall (E2M7) - Yellow key')
+        Has('The Great Hall (E2M7) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Glacier (E2M9) Main -> The Glacier (E2M9) Yellow", player),
-        Has('The Glacier (E2M9) - Yellow key')
+        Has('The Glacier (E2M9) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Glacier (E2M9) Main -> The Glacier (E2M9) Blue", player),
-        Has('The Glacier (E2M9) - Blue key')
+        Has('The Glacier (E2M9) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Glacier (E2M9) Main -> The Glacier (E2M9) Green", player),
-        Has('The Glacier (E2M9) - Green key')
+        Has('The Glacier (E2M9) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Glacier (E2M9) Blue -> The Glacier (E2M9) Main", player),
-        Has('The Glacier (E2M9) - Blue key')
+        Has('The Glacier (E2M9) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Glacier (E2M9) Yellow -> The Glacier (E2M9) Main", player),
-        Has('The Glacier (E2M9) - Yellow key')
+        Has('The Glacier (E2M9) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Storehouse (E3M1) Main -> The Storehouse (E3M1) Yellow", player),
-        Has('The Storehouse (E3M1) - Yellow key')
+        Has('The Storehouse (E3M1) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Storehouse (E3M1) Main -> The Storehouse (E3M1) Green", player),
-        Has('The Storehouse (E3M1) - Green key')
+        Has('The Storehouse (E3M1) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Storehouse (E3M1) Yellow -> The Storehouse (E3M1) Main", player),
-        Has('The Storehouse (E3M1) - Yellow key')
+        Has('The Storehouse (E3M1) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Storehouse (E3M1) Green -> The Storehouse (E3M1) Main", player),
-        Has('The Storehouse (E3M1) - Green key')
+        Has('The Storehouse (E3M1) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Cesspool (E3M2) Main -> The Cesspool (E3M2) Yellow", player),
-        Has('The Cesspool (E3M2) - Yellow key')
+        Has('The Cesspool (E3M2) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Cesspool (E3M2) Blue -> The Cesspool (E3M2) Green", player),
-        Has('The Cesspool (E3M2) - Blue key')
+        Has('The Cesspool (E3M2) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Cesspool (E3M2) Yellow -> The Cesspool (E3M2) Green", player),
-        Has('The Cesspool (E3M2) - Green key')
+        Has('The Cesspool (E3M2) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Cesspool (E3M2) Green -> The Cesspool (E3M2) Blue", player),
-        Has('The Cesspool (E3M2) - Blue key')
+        Has('The Cesspool (E3M2) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Cesspool (E3M2) Green -> The Cesspool (E3M2) Yellow", player),
-        Has('The Cesspool (E3M2) - Green key')
+        Has('The Cesspool (E3M2) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Confluence (E3M3) Main -> The Confluence (E3M3) Green", player),
-        Has('The Confluence (E3M3) - Green key')
+        Has('The Confluence (E3M3) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Confluence (E3M3) Main -> The Confluence (E3M3) Yellow", player),
-        Has('The Confluence (E3M3) - Yellow key')
+        Has('The Confluence (E3M3) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Confluence (E3M3) Blue -> The Confluence (E3M3) Green", player),
-        Has('The Confluence (E3M3) - Blue key')
+        Has('The Confluence (E3M3) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Confluence (E3M3) Green -> The Confluence (E3M3) Main", player),
-        Has('The Confluence (E3M3) - Green key')
+        Has('The Confluence (E3M3) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Confluence (E3M3) Green -> The Confluence (E3M3) Blue", player),
-        Has('The Confluence (E3M3) - Blue key')
+        Has('The Confluence (E3M3) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Azure Fortress (E3M4) Main -> The Azure Fortress (E3M4) Green", player),
-        Has('The Azure Fortress (E3M4) - Green key')
+        Has('The Azure Fortress (E3M4) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Azure Fortress (E3M4) Main -> The Azure Fortress (E3M4) Yellow", player),
-        Has('The Azure Fortress (E3M4) - Yellow key')
+        Has('The Azure Fortress (E3M4) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Ophidian Lair (E3M5) Main -> The Ophidian Lair (E3M5) Yellow", player),
-        Has('The Ophidian Lair (E3M5) - Yellow key')
+        Has('The Ophidian Lair (E3M5) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Ophidian Lair (E3M5) Main -> The Ophidian Lair (E3M5) Green", player),
-        Has('The Ophidian Lair (E3M5) - Green key')
+        Has('The Ophidian Lair (E3M5) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Halls of Fear (E3M6) Main -> The Halls of Fear (E3M6) Yellow", player),
-        Has('The Halls of Fear (E3M6) - Yellow key')
+        Has('The Halls of Fear (E3M6) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Halls of Fear (E3M6) Blue -> The Halls of Fear (E3M6) Yellow", player),
-        Has('The Halls of Fear (E3M6) - Blue key')
+        Has('The Halls of Fear (E3M6) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Halls of Fear (E3M6) Yellow -> The Halls of Fear (E3M6) Blue", player),
-        Has('The Halls of Fear (E3M6) - Blue key')
+        Has('The Halls of Fear (E3M6) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Halls of Fear (E3M6) Yellow -> The Halls of Fear (E3M6) Green", player),
-        Has('The Halls of Fear (E3M6) - Green key')
+        Has('The Halls of Fear (E3M6) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Chasm (E3M7) Main -> The Chasm (E3M7) Yellow", player),
-        Has('The Chasm (E3M7) - Yellow key')
+        Has('The Chasm (E3M7) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Chasm (E3M7) Yellow -> The Chasm (E3M7) Main", player),
-        Has('The Chasm (E3M7) - Yellow key')
+        Has('The Chasm (E3M7) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Chasm (E3M7) Yellow -> The Chasm (E3M7) Green", player),
-        Has('The Chasm (E3M7) - Green key')
+        Has('The Chasm (E3M7) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Chasm (E3M7) Yellow -> The Chasm (E3M7) Blue", player),
-        Has('The Chasm (E3M7) - Blue key')
+        Has('The Chasm (E3M7) - Blue key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Chasm (E3M7) Green -> The Chasm (E3M7) Yellow", player),
-        Has('The Chasm (E3M7) - Green key')
+        Has('The Chasm (E3M7) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Aquifer (E3M9) Main -> The Aquifer (E3M9) Yellow", player),
-        Has('The Aquifer (E3M9) - Yellow key')
+        Has('The Aquifer (E3M9) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Aquifer (E3M9) Yellow -> The Aquifer (E3M9) Green", player),
-        Has('The Aquifer (E3M9) - Green key')
+        Has('The Aquifer (E3M9) - Green key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Aquifer (E3M9) Yellow -> The Aquifer (E3M9) Main", player),
-        Has('The Aquifer (E3M9) - Yellow key')
+        Has('The Aquifer (E3M9) - Yellow key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Aquifer (E3M9) Green -> The Aquifer (E3M9) Yellow", player),
-        Has('The Aquifer (E3M9) - Green key')
+        Has('The Aquifer (E3M9) - Green key', 1)
     )

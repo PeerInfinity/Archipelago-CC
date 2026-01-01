@@ -27,7 +27,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Outside Crazy Tracy's House -> Forest", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -37,7 +37,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Forest -> Two Zol, Moblin Chest (Mysterious Woods)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -47,7 +47,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Forest -> Outside Crazy Tracy's House", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -62,17 +62,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Forest -> No Name 62", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest -> Hookshot Cave", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest -> Forest Mad Batter", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -92,12 +92,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mabe Village -> Outside D1 Tree Bonk (Toronbo Shores)", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Mabe Village -> Ballad of the Wind Fish (Mabe Village)", player),
-        Has('Ocarina')
+        Has('Ocarina', 1)
     )
 
     world.set_rule(
@@ -117,12 +117,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mabe Village -> No Name 4", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Mabe Village -> Dream Hut", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -137,7 +137,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mabe Village -> D1 Room", player),
-        Has('Tail Key')
+        Has('Tail Key', 1)
     )
 
     world.set_rule(
@@ -157,12 +157,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Outside D1 Tree Bonk (Toronbo Shores) -> Mabe Village", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Ballad of the Wind Fish (Mabe Village) -> Mabe Village", player),
-        Has('Ocarina')
+        Has('Ocarina', 1)
     )
 
     world.set_rule(
@@ -177,12 +177,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Sword Beach -> Sword Beach to Ghost House", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Sword Beach -> Boomerang Cave", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
@@ -192,17 +192,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Sword Beach to Ghost House -> Sword Beach", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Sword Beach to Ghost House -> Outside Ghost House", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Outside Ghost House -> Sword Beach to Ghost House", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -227,7 +227,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 2 -> No Name 3", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -247,12 +247,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 3 -> No Name 4", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 3 -> No Name 2", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -267,52 +267,52 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 3 -> No Name 73", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 3 -> In the Moat Heart Piece (Kanalet Castle)", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 3 -> No Name 21", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 3 -> No Name 20", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 3 -> No Name 74", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 3 -> Unset Room (None)", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 4 -> Mabe Village", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 4 -> Graveyard", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 4 -> Kiki (Ukuku Prairie)", player),
-        Has('Bananas')
+        Has('Bananas', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 4 -> Honeycomb (Ukuku Prairie)", player),
-        Has('Stick')
+        Has('Stick', 1)
     )
 
     world.set_rule(
@@ -332,22 +332,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 4 -> East of Mabe Tree Bonk (Ukuku Prairie)", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 4 -> Rock Seashell (Donut Plains)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 4 -> No Name 3", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 4 -> No Name 10", player),
-        Has('CASTLE_BUTTON')
+        Has('CASTLE_BUTTON', 1)
     )
 
     world.set_rule(
@@ -357,12 +357,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 4 -> Boots Pit (Kanalet Castle)", player),
-        Has('Rooster')
+        Has('Rooster', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 4 -> No Name 64", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
@@ -387,37 +387,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Graveyard -> No Name 4", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Graveyard -> No Name 5", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Graveyard -> D9 Room", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 5 -> Swamp", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 5 -> Unset Room (None)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 5 -> No Name 32", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 5 -> Nightmare", player),
-        And(HasAll('Ballad of the Wind Fish', 'Ocarina'), Has('Conch Horn'), Has('Coral Triangle'), Has('Full Moon Cello'), Has('Organ of Evening Calm'), Has("Sea Lily's Bell"), Has('Surf Harp'), Has('Thunder Drum'), Has('Wind Marimba'))
+        And(HasAll('Ballad of the Wind Fish', 'Ocarina'), HasAll('Conch Horn', 'Coral Triangle', 'Full Moon Cello', 'Organ of Evening Calm', "Sea Lily's Bell", 'Surf Harp', 'Thunder Drum', 'Wind Marimba'))
     )
 
     world.set_rule(
@@ -447,7 +447,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Swamp -> No Name 5", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -462,22 +462,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Forest Cave -> Cave Crystal Chest (Mysterious Woods)", player),
-        Has('Progressive Sword')
+        Has('Progressive Sword', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest Cave -> Cave Skull Heart Piece (Mysterious Woods)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Cave Crystal Chest (Mysterious Woods) -> Forest Cave", player),
-        Has('Progressive Sword')
+        Has('Progressive Sword', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Cave Skull Heart Piece (Mysterious Woods) -> Forest Cave", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -502,7 +502,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Write's Cave -> Write Cave East (Goponga Swamp)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -512,22 +512,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Write Cave East (Goponga Swamp) -> Write's Cave", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Write's House -> MrWrite (Goponga Swamp)", player),
-        Has('Letter')
+        Has('Letter', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("MrWrite (Goponga Swamp) -> Write's House", player),
-        Has('Letter')
+        Has('Letter', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D2 Room -> Entrance Chest (Bottle Grotto)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -547,7 +547,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Entrance Chest (Bottle Grotto) -> D2 Room", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -582,7 +582,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("First Switch Locked Chest (Bottle Grotto) -> Button Spawn Chest (Bottle Grotto)", player),
-        Has('Feather')
+        Has('Feather', 1)
     )
 
     world.set_rule(
@@ -592,7 +592,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Button Spawn Chest (Bottle Grotto) -> First Switch Locked Chest (Bottle Grotto)", player),
-        Has('Feather')
+        Has('Feather', 1)
     )
 
     world.set_rule(
@@ -617,7 +617,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D2 Room 4 -> Second Switch Locked Chest (Bottle Grotto)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -627,47 +627,47 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Second Switch Locked Chest (Bottle Grotto) -> D2 Room 4", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Second Switch Locked Chest (Bottle Grotto) -> Enemy Order Room Chest (Bottle Grotto)", player),
-        And(Or(HasAll('Ballad of the Wind Fish', 'Ocarina'), Has('Bomb'), Has('Bow'), Has('Magic Rod'), Has('Progressive Power Bracelet')), HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'))
+        And(Or(HasAll('Ballad of the Wind Fish', 'Ocarina'), HasAny('Bomb', 'Bow', 'Magic Rod', 'Progressive Power Bracelet')), HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Second Switch Locked Chest (Bottle Grotto) -> D2 Room 5", player),
-        And(Has('Progressive Power Bracelet'), Has('Small Key (Bottle Grotto)', 5), Has('Small Key (Bottle Grotto)'))
+        And(Has('Small Key (Bottle Grotto)', 5), HasAll('Progressive Power Bracelet', 'Small Key (Bottle Grotto)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Enemy Order Room Chest (Bottle Grotto) -> Second Switch Locked Chest (Bottle Grotto)", player),
-        And(Or(HasAll('Ballad of the Wind Fish', 'Ocarina'), Has('Bomb'), Has('Bow'), Has('Magic Rod'), Has('Progressive Power Bracelet')), HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'))
+        And(Or(HasAll('Ballad of the Wind Fish', 'Ocarina'), HasAny('Bomb', 'Bow', 'Magic Rod', 'Progressive Power Bracelet')), HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'))
     )
 
     world.set_rule(
         multiworld.get_entrance("D2 Room 5 -> D2 Room 6", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D2 Room 5 -> Second Switch Locked Chest (Bottle Grotto)", player),
-        And(Has('Progressive Power Bracelet'), Has('Small Key (Bottle Grotto)', 5), Has('Small Key (Bottle Grotto)'))
+        And(Has('Small Key (Bottle Grotto)', 5), HasAll('Progressive Power Bracelet', 'Small Key (Bottle Grotto)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("D2 Room 6 -> D2 Room 5", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D2 Room 6 -> D2 Room 7", player),
-        Has('Feather')
+        Has('Feather', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D2 Room 7 -> D2 Room 6", player),
-        Has('Feather')
+        Has('Feather', 1)
     )
 
     world.set_rule(
@@ -722,42 +722,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Unset Room (None) -> No Name 5", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Unset Room (None) -> No Name 3", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Unset Room (None) -> No Name 6", player),
-        Has('Rooster')
+        Has('Rooster', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Unset Room (None) -> No Name 14", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Unset Room (None) -> No Name 15", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Unset Room (None) -> No Name 17", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Unset Room (None) -> No Name 31", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 6 -> Unset Room (None)", player),
-        Has('Rooster')
+        Has('Rooster', 1)
     )
 
     world.set_rule(
@@ -767,12 +767,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 7 -> No Name 8", player),
-        Has('Feather')
+        Has('Feather', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 8 -> No Name 7", player),
-        Has('Feather')
+        Has('Feather', 1)
     )
 
     world.set_rule(
@@ -797,7 +797,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 10 -> No Name 4", player),
-        Has('CASTLE_BUTTON')
+        Has('CASTLE_BUTTON', 1)
     )
 
     world.set_rule(
@@ -837,32 +837,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 14 -> Unset Room (None)", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 15 -> Unset Room (None)", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 15 -> Outside Manbo", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 15 -> No Name 16", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 15 -> D4 Room", player),
-        Has('Angler Key')
+        Has('Angler Key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Outside Manbo -> No Name 15", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -872,7 +872,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 16 -> No Name 15", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -907,7 +907,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Two Spiked Beetle, Zol Chest (Angler's Tunnel) -> D4 Room 2", player),
-        Has("Small Key (Angler's Tunnel)")
+        Has("Small Key (Angler's Tunnel)", 1)
     )
 
     world.set_rule(
@@ -927,7 +927,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D4 Room 3 -> Flipper Locked Before Boots Pit Chest (Angler's Tunnel)", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -942,7 +942,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Flipper Locked Before Boots Pit Chest (Angler's Tunnel) -> D4 Room 3", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -962,7 +962,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D4 Room 5 -> Flipper Locked After Boots Pit Chest (Angler's Tunnel)", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -972,7 +972,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D4 Room 5 -> Flippers Chest (Angler's Tunnel)", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -982,12 +982,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D4 Room 5 -> D4 Room 7", player),
-        And(Has('Progressive Sword'), Has("Small Key (Angler's Tunnel)", 5), Has("Small Key (Angler's Tunnel)"))
+        And(Has("Small Key (Angler's Tunnel)", 5), HasAll('Progressive Sword', "Small Key (Angler's Tunnel)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("D4 Room 5 -> D4 Room 8", player),
-        And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'), Has('Flippers'), Has("Small Key (Angler's Tunnel)", 5), Has("Small Key (Angler's Tunnel)"))
+        And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'), Has("Small Key (Angler's Tunnel)", 5), HasAll('Flippers', "Small Key (Angler's Tunnel)"))
     )
 
     world.set_rule(
@@ -997,7 +997,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Flipper Locked After Boots Pit Chest (Angler's Tunnel) -> D4 Room 5", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -1017,7 +1017,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Flippers Chest (Angler's Tunnel) -> D4 Room 5", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -1027,7 +1027,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D4 Room 7 -> D4 Room 5", player),
-        And(Has('Progressive Sword'), Has("Small Key (Angler's Tunnel)", 5), Has("Small Key (Angler's Tunnel)"))
+        And(Has("Small Key (Angler's Tunnel)", 5), HasAll('Progressive Sword', "Small Key (Angler's Tunnel)"))
     )
 
     world.set_rule(
@@ -1037,7 +1037,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D4 Room 8 -> D4 Room 5", player),
-        And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'), Has('Flippers'), Has("Small Key (Angler's Tunnel)", 5), Has("Small Key (Angler's Tunnel)"))
+        And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'), Has("Small Key (Angler's Tunnel)", 5), HasAll('Flippers', "Small Key (Angler's Tunnel)"))
     )
 
     world.set_rule(
@@ -1052,7 +1052,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D4 Room 10 -> Lower Bomb Locked Watery Chest (Angler's Tunnel)", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
@@ -1062,7 +1062,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Lower Bomb Locked Watery Chest (Angler's Tunnel) -> D4 Room 10", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
@@ -1077,37 +1077,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 17 -> No Name 18", player),
-        Has('RAFT')
+        Has('RAFT', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 18 -> No Name 17", player),
-        Has('RAFT')
+        Has('RAFT', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 19 -> No Name 20", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 20 -> No Name 3", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 20 -> No Name 21", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 20 -> No Name 19", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 21 -> Grandma (Animal Village)", player),
-        Has('Broom')
+        Has('Broom', 1)
     )
 
     world.set_rule(
@@ -1117,7 +1117,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 21 -> No Name 3", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -1127,7 +1127,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 21 -> Peninsula Dig (Martha's Bay)", player),
-        Has('Shovel')
+        Has('Shovel', 1)
     )
 
     world.set_rule(
@@ -1137,17 +1137,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 21 -> Armos Maze", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 21 -> No Name 20", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Grandma (Animal Village) -> No Name 21", player),
-        Has('Broom')
+        Has('Broom', 1)
     )
 
     world.set_rule(
@@ -1157,7 +1157,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Peninsula Dig (Martha's Bay) -> No Name 21", player),
-        Has('Shovel')
+        Has('Shovel', 1)
     )
 
     world.set_rule(
@@ -1172,12 +1172,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 22 -> Rock Seashell (Yarna Desert)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 22 -> No Name 24", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
@@ -1187,17 +1187,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 23 -> Cave Under Lanmola (Yarna Desert)", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Cave Under Lanmola (Yarna Desert) -> No Name 23", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Rock Seashell (Yarna Desert) -> No Name 22", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -1212,7 +1212,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Armos Maze -> No Name 21", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -1247,32 +1247,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 25 -> No Name 26", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 26 -> No Name 25", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 27 -> Goat (Animal Village)", player),
-        Has('Hibiscus')
+        Has('Hibiscus', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Goat (Animal Village) -> No Name 27", player),
-        Has('Hibiscus')
+        Has('Hibiscus', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 28 -> Bear Cook (Animal Village)", player),
-        Has('Honeycomb')
+        Has('Honeycomb', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Bear Cook (Animal Village) -> No Name 28", player),
-        Has('Honeycomb')
+        Has('Honeycomb', 1)
     )
 
     world.set_rule(
@@ -1287,27 +1287,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 31 -> Damp Cave Heart Piece (Tal Tal Heights)", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 31 -> Unset Room (None)", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Damp Cave Heart Piece (Tal Tal Heights) -> No Name 31", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 32 -> No Name 33", player),
-        Has('Progressive Sword')
+        Has('Progressive Sword', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 32 -> No Name 5", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -1337,7 +1337,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 35 -> Unset Room (None)", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -1397,7 +1397,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 38 -> Access Tunnel Bombable Heart Piece (Tal Tal Mountains)", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
@@ -1407,12 +1407,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Outside Mad Batter (Tal Tal Mountains) -> No Name 44", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 40 -> No Name 41", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
@@ -1432,7 +1432,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D8 Room -> D8 Room 2", player),
-        Has('Feather')
+        Has('Feather', 1)
     )
 
     world.set_rule(
@@ -1452,7 +1452,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D8 Room 2 -> D8 Room", player),
-        Has('Feather')
+        Has('Feather', 1)
     )
 
     world.set_rule(
@@ -1472,22 +1472,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D8 Room 2 -> D8 Room 8", player),
-        Has('Small Key (Turtle Rock)')
+        Has('Small Key (Turtle Rock)', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Beamos Blocked Chest (Turtle Rock) -> Dodongo Chest (Turtle Rock)", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Beamos Blocked Chest (Turtle Rock) -> Lava Arrow Statue Key (Turtle Rock)", player),
-        Has('Bow')
+        Has('Bow', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Beamos Blocked Chest (Turtle Rock) -> West of Boss Door Ledge Chest (Turtle Rock)", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
@@ -1497,7 +1497,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Left of Hinox Zamboni Chest (Turtle Rock) -> Vacuum Mouth Chest (Turtle Rock)", player),
-        Or(Or(And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'), Has('Feather')), Has('Boomerang'), Has('Bow'), Has('Magic Rod')), HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'))
+        Or(Or(And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'), Has('Feather')), HasAny('Boomerang', 'Bow', 'Magic Rod')), HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'))
     )
 
     world.set_rule(
@@ -1512,12 +1512,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Left of Hinox Zamboni Chest (Turtle Rock) -> Two Torches Room Chest (Turtle Rock)", player),
-        Has('Magic Rod')
+        Has('Magic Rod', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Vacuum Mouth Chest (Turtle Rock) -> Left of Hinox Zamboni Chest (Turtle Rock)", player),
-        Or(Or(And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'), Has('Feather')), Has('Boomerang'), Has('Bow'), Has('Magic Rod')), HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'))
+        Or(Or(And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'), Has('Feather')), HasAny('Boomerang', 'Bow', 'Magic Rod')), HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'))
     )
 
     world.set_rule(
@@ -1532,27 +1532,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Two Torches Room Chest (Turtle Rock) -> Left of Hinox Zamboni Chest (Turtle Rock)", player),
-        Has('Magic Rod')
+        Has('Magic Rod', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dodongo Chest (Turtle Rock) -> Beamos Blocked Chest (Turtle Rock)", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Lava Arrow Statue Key (Turtle Rock) -> Beamos Blocked Chest (Turtle Rock)", player),
-        Has('Bow')
+        Has('Bow', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("West of Boss Door Ledge Chest (Turtle Rock) -> Beamos Blocked Chest (Turtle Rock)", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D8 Room 3 -> Gibdos on Cracked Floor Key (Turtle Rock)", player),
-        Or(HasAll('Hookshot', 'Magic Rod'), Has('Bomb'), Has('Boomerang'), Has('Bow'), Has('Progressive Sword'))
+        Or(HasAll('Hookshot', 'Magic Rod'), HasAny('Bomb', 'Boomerang', 'Bow', 'Progressive Sword'))
     )
 
     world.set_rule(
@@ -1562,7 +1562,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D8 Room 3 -> D8 Room 4", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
@@ -1577,7 +1577,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Gibdos on Cracked Floor Key (Turtle Rock) -> D8 Room 3", player),
-        Or(HasAll('Hookshot', 'Magic Rod'), Has('Bomb'), Has('Boomerang'), Has('Bow'), Has('Progressive Sword'))
+        Or(HasAll('Hookshot', 'Magic Rod'), HasAny('Bomb', 'Boomerang', 'Bow', 'Progressive Sword'))
     )
 
     world.set_rule(
@@ -1587,7 +1587,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D8 Room 4 -> D8 Room 3", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
@@ -1607,17 +1607,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D8 Room 5 -> D8 Room 6", player),
-        Has('Small Key (Turtle Rock)')
+        Has('Small Key (Turtle Rock)', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D8 Room 6 -> D8 Room 5", player),
-        Has('Small Key (Turtle Rock)')
+        Has('Small Key (Turtle Rock)', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D8 Room 6 -> D8 Room 7", player),
-        And(Has('Hookshot'), Has('Small Key (Turtle Rock)', 7), Has('Small Key (Turtle Rock)'))
+        And(Has('Small Key (Turtle Rock)', 7), HasAll('Hookshot', 'Small Key (Turtle Rock)'))
     )
 
     world.set_rule(
@@ -1627,7 +1627,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D8 Room 7 -> D8 Room 6", player),
-        And(Has('Hookshot'), Has('Small Key (Turtle Rock)', 7), Has('Small Key (Turtle Rock)'))
+        And(Has('Small Key (Turtle Rock)', 7), HasAll('Hookshot', 'Small Key (Turtle Rock)'))
     )
 
     world.set_rule(
@@ -1637,7 +1637,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D8 Room 8 -> D8 Room 2", player),
-        Has('Small Key (Turtle Rock)')
+        Has('Small Key (Turtle Rock)', 1)
     )
 
     world.set_rule(
@@ -1652,12 +1652,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D8 Room 9 -> Nightmare Key/Big Zamboni Chest (Turtle Rock)", player),
-        And(Has('Feather'), Has('Progressive Sword'), Has('Small Key (Turtle Rock)', 7), Has('Small Key (Turtle Rock)'))
+        And(Has('Small Key (Turtle Rock)', 7), HasAll('Feather', 'Progressive Sword', 'Small Key (Turtle Rock)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Nightmare Key/Big Zamboni Chest (Turtle Rock) -> D8 Room 9", player),
-        And(Has('Feather'), Has('Progressive Sword'), Has('Small Key (Turtle Rock)', 7), Has('Small Key (Turtle Rock)'))
+        And(Has('Small Key (Turtle Rock)', 7), HasAll('Feather', 'Progressive Sword', 'Small Key (Turtle Rock)'))
     )
 
     world.set_rule(
@@ -1687,32 +1687,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Zamboni, Two Zol Key (Turtle Rock) -> Four Ropes Pot Chest (Turtle Rock)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Four Ropes Pot Chest (Turtle Rock) -> Zamboni, Two Zol Key (Turtle Rock)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 44 -> Mad Batter (Tal Tal Mountains)", player),
-        Has('Magic Powder')
+        Has('Magic Powder', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Mad Batter (Tal Tal Mountains) -> No Name 44", player),
-        Has('Magic Powder')
+        Has('Magic Powder', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 45 -> Bird Key Cave (Tal Tal Mountains)", player),
-        Has('Rooster')
+        Has('Rooster', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Bird Key Cave (Tal Tal Mountains) -> No Name 45", player),
-        Has('Rooster')
+        Has('Rooster', 1)
     )
 
     world.set_rule(
@@ -1722,12 +1722,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 47 -> Papahl (Tal Tal Heights)", player),
-        Has('Pineapple')
+        Has('Pineapple', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 48 -> No Name 49", player),
-        HasAny('Bomb', 'Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
@@ -1737,12 +1737,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 49 -> No Name 48", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 50 -> No Name 31", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -1757,7 +1757,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 57 -> No Name 31", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -1767,7 +1767,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D7 Room -> Switch Wrapped Chest (Eagle's Tower)", player),
-        Has("Small Key (Eagle's Tower)")
+        Has("Small Key (Eagle's Tower)", 1)
     )
 
     world.set_rule(
@@ -1777,7 +1777,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Switch Wrapped Chest (Eagle's Tower) -> Horse Head, Bubble Chest (Eagle's Tower)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -1792,12 +1792,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Switch Wrapped Chest (Eagle's Tower) -> D7 Room", player),
-        Has("Small Key (Eagle's Tower)")
+        Has("Small Key (Eagle's Tower)", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Horse Head, Bubble Chest (Eagle's Tower) -> Switch Wrapped Chest (Eagle's Tower)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -1862,42 +1862,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Three of a Kind, Pit Chest (Eagle's Tower) -> D7 Room 3", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D7 Room 3 -> Three of a Kind, Pit Chest (Eagle's Tower)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D7 Room 3 -> D7 Room 4", player),
-        Has("Nightmare Key (Eagle's Tower)")
+        Has("Nightmare Key (Eagle's Tower)", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D7 Room 4 -> D7 Room 3", player),
-        Has("Nightmare Key (Eagle's Tower)")
+        Has("Nightmare Key (Eagle's Tower)", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D7 Room 4 -> Conveyor Beamos Chest (Eagle's Tower)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D7 Room 4 -> D7 Room 5", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Conveyor Beamos Chest (Eagle's Tower) -> D7 Room 4", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D7 Room 5 -> D7 Room 4", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
@@ -1912,17 +1912,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Nightmare -> Windfish", player),
-        And(HasAny('Boomerang', 'Bow'), Has('Magic Powder'), Has('Progressive Sword'))
+        And(HasAny('Boomerang', 'Bow'), HasAll('Magic Powder', 'Progressive Sword'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Nightmare -> No Name 5", player),
-        And(HasAll('Ballad of the Wind Fish', 'Ocarina'), Has('Conch Horn'), Has('Coral Triangle'), Has('Full Moon Cello'), Has('Organ of Evening Calm'), Has("Sea Lily's Bell"), Has('Surf Harp'), Has('Thunder Drum'), Has('Wind Marimba'))
+        And(HasAll('Ballad of the Wind Fish', 'Ocarina'), HasAll('Conch Horn', 'Coral Triangle', 'Full Moon Cello', 'Organ of Evening Calm', "Sea Lily's Bell", 'Surf Harp', 'Thunder Drum', 'Wind Marimba'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Windfish -> Nightmare", player),
-        And(HasAny('Boomerang', 'Bow'), Has('Magic Powder'), Has('Progressive Sword'))
+        And(HasAny('Boomerang', 'Bow'), HasAll('Magic Powder', 'Progressive Sword'))
     )
 
     world.set_rule(
@@ -1942,7 +1942,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 60 -> Graveyard Connector (Koholint Prairie)", player),
-        Or(And(HasAny('Hookshot', 'Pegasus Boots'), Has('Bomb'), Has('Feather')), Has('Rooster'))
+        Or(And(HasAny('Hookshot', 'Pegasus Boots'), HasAll('Bomb', 'Feather')), Has('Rooster'))
     )
 
     world.set_rule(
@@ -1952,12 +1952,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 61 -> No Name 62", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 62 -> Forest", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -1967,7 +1967,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 62 -> No Name 61", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -1977,7 +1977,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Graveyard Connector (Koholint Prairie) -> No Name 60", player),
-        Or(And(HasAny('Hookshot', 'Pegasus Boots'), Has('Bomb'), Has('Feather')), Has('Rooster'))
+        Or(And(HasAny('Hookshot', 'Pegasus Boots'), HasAll('Bomb', 'Feather')), Has('Rooster'))
     )
 
     world.set_rule(
@@ -2002,7 +2002,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Lower Small Key (Color Dungeon) -> Nightmare Key Chest (Color Dungeon)", player),
-        And(Has('Magic Powder'), Has('Small Key (Color Dungeon)', 3), Has('Small Key (Color Dungeon)'))
+        And(Has('Small Key (Color Dungeon)', 3), HasAll('Magic Powder', 'Small Key (Color Dungeon)'))
     )
 
     world.set_rule(
@@ -2022,12 +2022,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Nightmare Key Chest (Color Dungeon) -> Lower Small Key (Color Dungeon)", player),
-        And(Has('Magic Powder'), Has('Small Key (Color Dungeon)', 3), Has('Small Key (Color Dungeon)'))
+        And(Has('Small Key (Color Dungeon)', 3), HasAll('Magic Powder', 'Small Key (Color Dungeon)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("D9 Room 3 -> Zol Chest (Color Dungeon)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -2037,7 +2037,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Zol Chest (Color Dungeon) -> D9 Room 3", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -2092,47 +2092,47 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Kiki (Ukuku Prairie) -> No Name 4", player),
-        Has('Bananas')
+        Has('Bananas', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Honeycomb (Ukuku Prairie) -> No Name 4", player),
-        Has('Stick')
+        Has('Stick', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 63 -> Outside D3 Ledge Dig (Ukuku Prairie)", player),
-        Has('Shovel')
+        Has('Shovel', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 63 -> D3 Room", player),
-        Has('Slime Key')
+        Has('Slime Key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Outside D3 Ledge Dig (Ukuku Prairie) -> No Name 63", player),
-        Has('Shovel')
+        Has('Shovel', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D3 Room -> Vacuum Mouth Chest (Key Cavern)", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D3 Room -> Four Zol Chest (Key Cavern)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Vacuum Mouth Chest (Key Cavern) -> D3 Room", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Four Zol Chest (Key Cavern) -> D3 Room", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -2257,7 +2257,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D3 Room 6 -> Three Zol, Stalfos Chest (Key Cavern)", player),
-        Or(And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'), Has('Progressive Shield')), Has('Bomb'), Has('Progressive Sword'))
+        Or(And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'), Has('Progressive Shield')), HasAny('Bomb', 'Progressive Sword'))
     )
 
     world.set_rule(
@@ -2297,17 +2297,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Three Zol, Stalfos Chest (Key Cavern) -> D3 Room 6", player),
-        Or(And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'), Has('Progressive Shield')), Has('Bomb'), Has('Progressive Sword'))
+        Or(And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'), Has('Progressive Shield')), HasAny('Bomb', 'Progressive Sword'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Three Zol, Stalfos Chest (Key Cavern) -> Three Bombite Key (Key Cavern)", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Three Bombite Key (Key Cavern) -> Three Zol, Stalfos Chest (Key Cavern)", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
@@ -2352,7 +2352,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D3 Room 10 -> Nightmare Door Key (Key Cavern)", player),
-        And(HasAny('Bomb', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'), Has('Feather'), Has('Pegasus Boots'))
+        And(HasAny('Bomb', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'), HasAll('Feather', 'Pegasus Boots'))
     )
 
     world.set_rule(
@@ -2362,7 +2362,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Nightmare Door Key (Key Cavern) -> D3 Room 10", player),
-        And(HasAny('Bomb', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'), Has('Feather'), Has('Pegasus Boots'))
+        And(HasAny('Bomb', 'Bow', 'Hookshot', 'Magic Rod', 'Progressive Sword'), HasAll('Feather', 'Pegasus Boots'))
     )
 
     world.set_rule(
@@ -2387,22 +2387,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("East of Mabe Tree Bonk (Ukuku Prairie) -> No Name 4", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Rock Seashell (Donut Plains) -> No Name 4", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Boots Pit (Kanalet Castle) -> No Name 4", player),
-        Has('Rooster')
+        Has('Rooster', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 64 -> Boots 'n' Bomb Cave Chest (Ukuku Prairie)", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
@@ -2412,7 +2412,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Boots 'n' Bomb Cave Chest (Ukuku Prairie) -> No Name 64", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
@@ -2422,7 +2422,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 65 -> Mamu (Ukuku Prairie)", player),
-        And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'), Has('Ocarina'), Has('RUPEES', 1480))
+        And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'), Has('RUPEES', 1480), Has('Ocarina'))
     )
 
     world.set_rule(
@@ -2432,7 +2432,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mamu (Ukuku Prairie) -> No Name 65", player),
-        And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'), Has('Ocarina'), Has('RUPEES', 1480))
+        And(HasAny('Bomb', 'Boomerang', 'Bow', 'Hookshot', 'Magic Powder', 'Magic Rod', 'Progressive Sword'), Has('RUPEES', 1480), Has('Ocarina'))
     )
 
     world.set_rule(
@@ -2457,12 +2457,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 69 -> Donut Plains Ledge Dig (Donut Plains)", player),
-        Has('Shovel')
+        Has('Shovel', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Donut Plains Ledge Dig (Donut Plains) -> No Name 69", player),
-        Has('Shovel')
+        Has('Shovel', 1)
     )
 
     world.set_rule(
@@ -2502,12 +2502,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 73 -> No Name 3", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D5 Room -> Entrance Hookshottable Chest (Catfish's Maw)", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
@@ -2517,12 +2517,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D5 Room -> D5 Room 2", player),
-        Has("Small Key (Catfish's Maw)")
+        Has("Small Key (Catfish's Maw)", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Entrance Hookshottable Chest (Catfish's Maw) -> D5 Room", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
@@ -2547,7 +2547,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D5 Room 2 -> Three Iron Mask Chest (Catfish's Maw)", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
@@ -2557,12 +2557,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D5 Room 2 -> D5 Room", player),
-        Has("Small Key (Catfish's Maw)")
+        Has("Small Key (Catfish's Maw)", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D5 Room 2 -> D5 Room 4", player),
-        And(HasAny('Boomerang', 'Bow', 'Hookshot', 'Magic Rod'), Has('Hookshot'), Has("Small Key (Catfish's Maw)", 2), Has("Small Key (Catfish's Maw)"))
+        And(HasAny('Boomerang', 'Bow', 'Hookshot', 'Magic Rod'), Has("Small Key (Catfish's Maw)", 2), HasAll('Hookshot', "Small Key (Catfish's Maw)"))
     )
 
     world.set_rule(
@@ -2572,7 +2572,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Three Iron Mask Chest (Catfish's Maw) -> D5 Room 2", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
@@ -2587,7 +2587,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Note Chest (Catfish's Maw) -> D5 Room 8", player),
-        Has('Feather')
+        Has('Feather', 1)
     )
 
     world.set_rule(
@@ -2612,12 +2612,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D5 Room 4 -> D5 Room 2", player),
-        And(HasAny('Boomerang', 'Bow', 'Hookshot', 'Magic Rod'), Has('Hookshot'), Has("Small Key (Catfish's Maw)", 2), Has("Small Key (Catfish's Maw)"))
+        And(HasAny('Boomerang', 'Bow', 'Hookshot', 'Magic Rod'), Has("Small Key (Catfish's Maw)", 2), HasAll('Hookshot', "Small Key (Catfish's Maw)"))
     )
 
     world.set_rule(
         multiworld.get_entrance("D5 Room 5 -> D5 Room 6", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
@@ -2627,7 +2627,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D5 Room 6 -> D5 Room 5", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
@@ -2642,7 +2642,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D5 Room 8 -> Hookshot Note Chest (Catfish's Maw)", player),
-        Has('Feather')
+        Has('Feather', 1)
     )
 
     world.set_rule(
@@ -2652,12 +2652,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D5 Room 8 -> Swort Stalfos, Star, Bridge Chest (Catfish's Maw)", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D5 Room 8 -> Flying Bomb Chest East (Catfish's Maw)", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
@@ -2677,12 +2677,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Swort Stalfos, Star, Bridge Chest (Catfish's Maw) -> D5 Room 8", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Flying Bomb Chest East (Catfish's Maw) -> D5 Room 8", player),
-        Has('Hookshot')
+        Has('Hookshot', 1)
     )
 
     world.set_rule(
@@ -2712,12 +2712,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("In the Moat Heart Piece (Kanalet Castle) -> No Name 3", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 74 -> No Name 3", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -2732,12 +2732,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 77 -> No Name 3", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 77 -> D6 Room", player),
-        Has('Face Key')
+        Has('Face Key', 1)
     )
 
     world.set_rule(
@@ -2772,7 +2772,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D6 Room -> D6 Room 3", player),
-        Has('Small Key (Face Shrine)')
+        Has('Small Key (Face Shrine)', 1)
     )
 
     world.set_rule(
@@ -2822,12 +2822,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Top Left Horse Heads Chest (Face Shrine) -> Raft Chest (Face Shrine)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Raft Chest (Face Shrine) -> Top Left Horse Heads Chest (Face Shrine)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -2837,12 +2837,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Water Tektite Chest (Face Shrine) -> Four Wizzrobe Ledge Chest (Face Shrine)", player),
-        Has('Feather')
+        Has('Feather', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Four Wizzrobe Ledge Chest (Face Shrine) -> Water Tektite Chest (Face Shrine)", player),
-        Has('Feather')
+        Has('Feather', 1)
     )
 
     world.set_rule(
@@ -2852,7 +2852,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D6 Room 3 -> D6 Room", player),
-        Has('Small Key (Face Shrine)')
+        Has('Small Key (Face Shrine)', 1)
     )
 
     world.set_rule(
@@ -2862,12 +2862,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D6 Room 4 -> Tile Room Key (Face Shrine)", player),
-        And(Has('Feather'), Has('Progressive Power Bracelet', 2))
+        And(Has('Progressive Power Bracelet', 2), Has('Feather'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Tile Room Key (Face Shrine) -> D6 Room 4", player),
-        And(Has('Feather'), Has('Progressive Power Bracelet', 2))
+        And(Has('Progressive Power Bracelet', 2), Has('Feather'))
     )
 
     world.set_rule(
@@ -2877,7 +2877,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Tile Room Key (Face Shrine) -> Top Right Horse Heads Chest (Face Shrine)", player),
-        And(Or(HasAll('Ballad of the Wind Fish', 'Ocarina'), Has('Bomb'), Has('Magic Rod')), Has('Pegasus Boots'), Has('Progressive Power Bracelet', 2), Has('Small Key (Face Shrine)', 2), Has('Small Key (Face Shrine)'))
+        And(Or(HasAll('Ballad of the Wind Fish', 'Ocarina'), HasAny('Bomb', 'Magic Rod')), Has('Progressive Power Bracelet', 2), Has('Small Key (Face Shrine)', 2), HasAll('Pegasus Boots', 'Small Key (Face Shrine)'))
     )
 
     world.set_rule(
@@ -2887,22 +2887,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Top Right Horse Heads Chest (Face Shrine) -> Tile Room Key (Face Shrine)", player),
-        And(Or(HasAll('Ballad of the Wind Fish', 'Ocarina'), Has('Bomb'), Has('Magic Rod')), Has('Pegasus Boots'), Has('Progressive Power Bracelet', 2), Has('Small Key (Face Shrine)', 2), Has('Small Key (Face Shrine)'))
+        And(Or(HasAll('Ballad of the Wind Fish', 'Ocarina'), HasAny('Bomb', 'Magic Rod')), Has('Progressive Power Bracelet', 2), Has('Small Key (Face Shrine)', 2), HasAll('Pegasus Boots', 'Small Key (Face Shrine)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Top Right Horse Heads Chest (Face Shrine) -> Pot Locked Chest (Face Shrine)", player),
-        Or(And(Has('Hookshot'), Has('Progressive Power Bracelet'), Has('Small Key (Face Shrine)', 3), Has('Small Key (Face Shrine)')), And(Has('Hookshot'), Has('Small Key (Face Shrine)', 3), Has('Small Key (Face Shrine)')))
+        Or(And(Has('Small Key (Face Shrine)', 3), HasAll('Hookshot', 'Progressive Power Bracelet', 'Small Key (Face Shrine)')), And(Has('Small Key (Face Shrine)', 3), HasAll('Hookshot', 'Small Key (Face Shrine)')))
     )
 
     world.set_rule(
         multiworld.get_entrance("Pot Locked Chest (Face Shrine) -> Top Right Horse Heads Chest (Face Shrine)", player),
-        And(Has('Hookshot'), Has('Small Key (Face Shrine)', 3), Has('Small Key (Face Shrine)'))
+        And(Has('Small Key (Face Shrine)', 3), HasAll('Hookshot', 'Small Key (Face Shrine)'))
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 78 -> No Name 79", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
@@ -2912,32 +2912,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("No Name 79 -> No Name 78", player),
-        Has('Flippers')
+        Has('Flippers', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 81 -> Mad Batter (Martha's Bay)", player),
-        Has('Magic Powder')
+        Has('Magic Powder', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Mad Batter (Martha's Bay) -> No Name 81", player),
-        Has('Magic Powder')
+        Has('Magic Powder', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Ghost House -> Ghost House Barrel (Martha's Bay)", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Ghost House Barrel (Martha's Bay) -> Ghost House", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Banana Seller -> Banana Sale (Toronbo Shores)", player),
-        Has('Dog Food')
+        Has('Dog Food', 1)
     )
 
     world.set_rule(
@@ -2947,17 +2947,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Banana Sale (Toronbo Shores) -> Banana Seller", player),
-        Has('Dog Food')
+        Has('Dog Food', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Papahl House -> Papahl's Wife (Mabe Village)", player),
-        Has('Yoshi Doll')
+        Has('Yoshi Doll', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Papahl's Wife (Mabe Village) -> Papahl House", player),
-        Has('Yoshi Doll')
+        Has('Yoshi Doll', 1)
     )
 
     world.set_rule(
@@ -2967,7 +2967,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Dream Hut -> Mabe Village", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -2977,12 +2977,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Dream Hut East (Mabe Village) -> Dream Hut West (Mabe Village)", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dream Hut West (Mabe Village) -> Dream Hut East (Mabe Village)", player),
-        Has('Pegasus Boots')
+        Has('Pegasus Boots', 1)
     )
 
     world.set_rule(
@@ -3017,22 +3017,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Kennel -> Dog House Dig (Mabe Village)", player),
-        Has('Shovel')
+        Has('Shovel', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Kennel -> YipYip (Mabe Village)", player),
-        Has('Ribbon')
+        Has('Ribbon', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dog House Dig (Mabe Village) -> Kennel", player),
-        Has('Shovel')
+        Has('Shovel', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("YipYip (Mabe Village) -> Kennel", player),
-        Has('Ribbon')
+        Has('Ribbon', 1)
     )
 
     world.set_rule(
@@ -3067,7 +3067,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D1 Room -> Bombable Wall Seashell Chest (Tail Cave)", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
@@ -3077,7 +3077,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D1 Room -> Nightmare Key Chest (Tail Cave)", player),
-        And(Has('Feather'), Has('Small Key (Tail Cave)', 3), Has('Small Key (Tail Cave)'))
+        And(Has('Small Key (Tail Cave)', 3), HasAll('Feather', 'Small Key (Tail Cave)'))
     )
 
     world.set_rule(
@@ -3102,12 +3102,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Bombable Wall Seashell Chest (Tail Cave) -> D1 Room", player),
-        Has('Bomb')
+        Has('Bomb', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D1 Room 2 -> Feather Chest (Tail Cave)", player),
-        Has('Progressive Shield')
+        Has('Progressive Shield', 1)
     )
 
     world.set_rule(
@@ -3117,12 +3117,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Feather Chest (Tail Cave) -> D1 Room 2", player),
-        Has('Progressive Shield')
+        Has('Progressive Shield', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Nightmare Key Chest (Tail Cave) -> D1 Room", player),
-        And(Has('Feather'), Has('Small Key (Tail Cave)', 3), Has('Small Key (Tail Cave)'))
+        And(Has('Small Key (Tail Cave)', 3), HasAll('Feather', 'Small Key (Tail Cave)'))
     )
 
     world.set_rule(
@@ -3152,27 +3152,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("D1 Room 4 -> D1 Room 5", player),
-        Has('Nightmare Key (Tail Cave)')
+        Has('Nightmare Key (Tail Cave)', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D1 Room 5 -> D1 Room 4", player),
-        Has('Nightmare Key (Tail Cave)')
+        Has('Nightmare Key (Tail Cave)', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D1 Room 5 -> D1 Room 6", player),
-        Has('Progressive Sword')
+        Has('Progressive Sword', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("D1 Room 6 -> D1 Room 5", player),
-        Has('Progressive Sword')
+        Has('Progressive Sword', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Two Zol, Moblin Chest (Mysterious Woods) -> Forest", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -3182,7 +3182,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hookshot Cave -> Forest", player),
-        Has('Progressive Power Bracelet')
+        Has('Progressive Power Bracelet', 1)
     )
 
     world.set_rule(
@@ -3192,22 +3192,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Forest Mad Batter -> Mad Batter (Mysterious Woods)", player),
-        Has('Magic Powder')
+        Has('Magic Powder', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Mad Batter (Mysterious Woods) -> Forest Mad Batter", player),
-        Has('Magic Powder')
+        Has('Magic Powder', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("No Name 82 -> Witch Item (Koholint Prairie)", player),
-        Has('Toadstool')
+        Has('Toadstool', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Witch Item (Koholint Prairie) -> No Name 82", player),
-        Has('Toadstool')
+        Has('Toadstool', 1)
     )
 
     world.set_rule(

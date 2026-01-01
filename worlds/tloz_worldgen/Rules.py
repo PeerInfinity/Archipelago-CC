@@ -87,642 +87,642 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Level 2 Item (Magical Boomerang)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Map", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Compass", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Boss", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Triforce", player),
-        And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container'))), Has('Boss 2 Defeated'))
+        And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container'))), Has('Boss 2 Defeated'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Key Drop (Ropes West)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Key Drop (Moldorms)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Key Drop (Ropes Middle)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Key Drop (Ropes Entrance)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Bomb Drop (Keese)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Bomb Drop (Moblins)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Rupee Drop (Gels)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Boss Status", player),
-        And(And(HasGroup('weapons'), CanReachLocation('Level 2 Boss')), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
+        And(And(HasGroup('weapons'), CanReachLocation('Level 2 Boss')), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container')))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Item (Raft)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Map", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Compass", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Boss", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Triforce", player),
-        And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2))), Has('Boss 3 Defeated'))
+        And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2))), Has('Boss 3 Defeated'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Key Drop (Zols and Keese West)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Key Drop (Keese North)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Key Drop (Zols Central)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Key Drop (Zols South)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Key Drop (Zols Entrance)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Bomb Drop (Darknuts West)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Bomb Drop (Keese Corridor)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Bomb Drop (Darknuts Central)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Rupee Drop (Zols and Keese East)", player),
-        And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
+        And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Boss Status", player),
-        And(And(HasGroup('weapons'), CanReachLocation('Level 3 Boss')), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
+        And(And(HasGroup('weapons'), CanReachLocation('Level 3 Boss')), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 2)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 4 Item (Stepladder)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 4 Map", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder')), Has('Stepladder'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder')), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 4 Compass", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 4 Boss", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder')), Or(HasGroup('swords'), Has('Magical Rod'))), Has('Stepladder'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder')), Or(HasGroup('swords'), Has('Magical Rod'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 4 Triforce", player),
-        And(And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder')), Or(HasGroup('swords'), Has('Magical Rod'))), Has('Boss 4 Defeated')), Has('Stepladder'))
+        And(And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder')), Or(HasGroup('swords'), Has('Magical Rod'))), Has('Boss 4 Defeated')), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 4 Key Drop (Keese Entrance)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 4 Key Drop (Keese Central)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 4 Key Drop (Zols)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 4 Key Drop (Keese North)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder')), Has('Stepladder'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder')), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 4 Boss Status", player),
-        And(And(And(And(HasGroup('weapons'), CanReachLocation('Level 4 Boss')), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder'))
+        And(And(And(And(HasGroup('weapons'), CanReachLocation('Level 4 Boss')), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 3))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), HasAny('Raft', 'Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Item (Recorder)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Map", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Compass", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Boss", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Triforce", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Boss 5 Defeated'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Boss 5 Defeated'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Key Drop (Keese North)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Key Drop (Gibdos North)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Key Drop (Gibdos Central)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Key Drop (Pols Voice Entrance)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(And(HasGroup('arrows'), Has('Bow')), HasGroup('swords'))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(And(HasGroup('arrows'), Has('Bow')), HasGroup('swords'))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Key Drop (Gibdos Entrance)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Key Drop (Gibdos, Keese, and Pols Voice)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(And(HasGroup('arrows'), Has('Bow')), HasGroup('swords'))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(And(HasGroup('arrows'), Has('Bow')), HasGroup('swords'))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Key Drop (Zols)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Bomb Drop (Gibdos)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Bomb Drop (Dodongos)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Rupee Drop (Zols)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Boss Status", player),
-        And(And(And(And(HasGroup('weapons'), CanReachLocation('Level 5 Boss')), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(And(HasGroup('weapons'), CanReachLocation('Level 5 Boss')), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 4))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Item (Magical Rod)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Map", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Compass", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Boss", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('arrows'), Has('Bow')))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('arrows'), Has('Bow')))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Triforce", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('arrows'), Has('Bow'))), Has('Boss 6 Defeated'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('arrows'), Has('Bow'))), Has('Boss 6 Defeated'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Key Drop (Wizzrobes Entrance)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Key Drop (Keese)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Key Drop (Wizzrobes North Island)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Key Drop (Wizzrobes North Stream)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Key Drop (Vires)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Bomb Drop (Wizzrobes)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Rupee Drop (Wizzrobes)", player),
-        And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Boss Status", player),
-        And(And(And(And(HasGroup('weapons'), CanReachLocation('Level 6 Boss')), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
+        And(And(And(And(HasGroup('weapons'), CanReachLocation('Level 6 Boss')), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 5))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Item (Red Candle)", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Map", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Compass", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Boss", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Triforce", player),
-        And(And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food')), Has('Boss 7 Defeated'))
+        And(And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food')), Has('Boss 7 Defeated'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Key Drop (Ropes)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Key Drop (Goriyas)", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Key Drop (Stalfos)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Key Drop (Moldorms)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Bomb Drop (Goriyas South)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Bomb Drop (Keese and Spikes)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Bomb Drop (Moldorms South)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Bomb Drop (Moldorms North)", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Bomb Drop (Goriyas North)", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Bomb Drop (Dodongos)", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Bomb Drop (Digdogger)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Rupee Drop (Goriyas Central)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Rupee Drop (Dodongos)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Rupee Drop (Goriyas North)", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder')), Has('Food'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Boss Status", player),
-        And(And(And(And(And(HasGroup('weapons'), CanReachLocation('Level 7 Boss')), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
+        And(And(And(And(And(HasGroup('weapons'), CanReachLocation('Level 7 Boss')), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 6))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Has('Recorder'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Item (Magical Key)", player),
-        And(And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('arrows'), Has('Bow'))), HasGroup('candles')), And(HasGroup('arrows'), Has('Bow')))
+        And(And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('arrows'), Has('Bow'))), HasGroup('candles')), And(HasGroup('arrows'), Has('Bow')))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Map", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Compass", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Item (Book of Magic)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Boss", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Or(HasGroup('swords'), Has('Magical Rod'))), HasGroup('candles'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Or(HasGroup('swords'), Has('Magical Rod'))), HasGroup('candles'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Triforce", player),
-        And(And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Or(HasGroup('swords'), Has('Magical Rod'))), HasGroup('candles')), Has('Boss 8 Defeated'))
+        And(And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), Or(HasGroup('swords'), Has('Magical Rod'))), HasGroup('candles')), Has('Boss 8 Defeated'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Key Drop (Darknuts West)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Key Drop (Darknuts Far West)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Key Drop (Pols Voice South)", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(And(HasGroup('arrows'), Has('Bow')), HasGroup('swords'))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(And(HasGroup('arrows'), Has('Bow')), HasGroup('swords'))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Key Drop (Pols Voice and Keese)", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(And(HasGroup('arrows'), Has('Bow')), HasGroup('swords'))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(And(HasGroup('arrows'), Has('Bow')), HasGroup('swords'))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Key Drop (Darknuts Central)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Key Drop (Keese and Zols Entrance)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Bomb Drop (Darknuts North)", player),
-        And(And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('arrows'), Has('Bow'))), HasGroup('candles')), And(HasGroup('arrows'), Has('Bow')))
+        And(And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('arrows'), Has('Bow'))), HasGroup('candles')), And(HasGroup('arrows'), Has('Bow')))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Bomb Drop (Darknuts East)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Bomb Drop (Pols Voice North)", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(And(HasGroup('arrows'), Has('Bow')), HasGroup('swords'))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(And(HasGroup('arrows'), Has('Bow')), HasGroup('swords'))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Rupee Drop (Manhandla Entrance West)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Rupee Drop (Manhandla Entrance North)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Rupee Drop (Darknuts and Gibdos)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Boss Status", player),
-        And(And(And(And(And(HasGroup('weapons'), CanReachLocation('Level 8 Boss')), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
+        And(And(And(And(And(HasGroup('weapons'), CanReachLocation('Level 8 Boss')), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 7))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), HasGroup('candles'))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Item (Silver Arrow)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Item (Red Ring)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Map", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Compass", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Key Drop (Patra Southwest)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Key Drop (Like Likes and Zols East)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Key Drop (Wizzrobes and Bubbles East)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Key Drop (Wizzrobes East Island)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Bomb Drop (Blue Lanmolas)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Bomb Drop (Gels Lake)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Bomb Drop (Like Likes and Zols Corridor)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Bomb Drop (Patra Northeast)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Bomb Drop (Vires)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Rupee Drop (Wizzrobes West Island)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Rupee Drop (Red Lanmolas)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Rupee Drop (Keese Southwest)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Rupee Drop (Keese Central Island)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Rupee Drop (Wizzrobes Central)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Rupee Drop (Wizzrobes North Island)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Rupee Drop (Gels East)", player),
-        And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
+        And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8)))
     )
 
     world.set_rule(
         multiworld.get_location("Ganon", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8))), HasAll('Bow', 'Silver Arrow'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8))), HasAll('Bow', 'Silver Arrow'))
     )
 
     world.set_rule(
         multiworld.get_location("Zelda", player),
-        And(And(And(And(And(HasGroup('weapons'), Or(And(Has('Blue Ring'), Compare(CountItem('Heart Container'), ">=", True_())), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8))), Has('Triforce of Power'))
+        And(And(And(And(And(HasGroup('weapons'), Or(And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Blue Ring')), And(Compare(CountItem('Heart Container'), ">=", True_()), Has('Red Ring')), Has('Heart Container', 8))), Or(HasAll('Book of Magic', 'Magical Rod'), HasGroup('candles'))), Has('Stepladder')), And(HasGroup('swords'), Has('Triforce Fragment', 8))), Has('Triforce of Power'))
     )
 
     world.set_rule(
@@ -752,7 +752,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ocean Heart Container", player),
-        Has('Stepladder')
+        Has('Stepladder', 1)
     )
 
     world.set_rule(

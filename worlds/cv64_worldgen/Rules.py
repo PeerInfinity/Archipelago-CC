@@ -22,7 +22,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Warp 1", player),
-        Has('Special1')
+        Has('Special1', 1)
     )
 
     world.set_rule(
@@ -57,7 +57,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Left Tower door", player),
-        Has('Left Tower Key')
+        Has('Left Tower Key', 1)
     )
 
     world.set_rule(
@@ -72,22 +72,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To maze gate", player),
-        Has('Garden Key')
+        Has('Garden Key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("From Storeroom door", player),
-        Has('Storeroom Key')
+        Has('Storeroom Key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("From maze gate", player),
-        Has('Garden Key')
+        Has('Garden Key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Copper door", player),
-        Has('Copper Key')
+        Has('Copper Key', 1)
     )
 
     world.set_rule(
@@ -107,7 +107,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Execution gate", player),
-        Has('Execution Key')
+        Has('Execution Key', 1)
     )
 
     world.set_rule(
@@ -117,12 +117,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Science Door 2", player),
-        Has('Science Key2')
+        Has('Science Key2', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("From Science Door 2", player),
-        Has('Science Key2')
+        Has('Science Key2', 1)
     )
 
     world.set_rule(
@@ -132,27 +132,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Clocktower Door 1", player),
-        Has('Clocktower Key1')
+        Has('Clocktower Key1', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("From Clocktower Door 1", player),
-        Has('Clocktower Key1')
+        Has('Clocktower Key1', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("To Clocktower Door 2", player),
-        Has('Clocktower Key2')
+        Has('Clocktower Key2', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("From Clocktower Door 2", player),
-        Has('Clocktower Key2')
+        Has('Clocktower Key2', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Clocktower Door 3", player),
-        Has('Clocktower Key3')
+        Has('Clocktower Key3', 1)
     )
 
     world.set_rule(

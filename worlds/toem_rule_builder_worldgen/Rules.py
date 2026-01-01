@@ -22,7 +22,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Homelanda -> Oaklaville", player),
-        Has('Homelanda stamp')
+        Has('Homelanda stamp', 1)
     )
 
     world.set_rule(

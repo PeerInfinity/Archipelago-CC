@@ -28,27 +28,27 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Ruins Hub", player),
-        Has('Ruins Key')
+        Has('Ruins Key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Snowdin Hub", player),
-        Has('Snowdin Key')
+        Has('Snowdin Key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Waterfall Hub", player),
-        Has('Waterfall Key')
+        Has('Waterfall Key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Hotland Hub", player),
-        Has('Hotland Key')
+        Has('Hotland Key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Core Hub", player),
-        Has('Core Key')
+        Has('Core Key', 1)
     )
 
     world.set_rule(

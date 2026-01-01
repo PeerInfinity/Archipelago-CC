@@ -32,7 +32,11 @@
             "name": "Telescope -> Mafia Town",
             "connected_region": "Mafia Town",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Time Piece",
+                "count": 0
+              }
             }
           },
           {

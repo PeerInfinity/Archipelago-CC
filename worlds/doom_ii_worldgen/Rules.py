@@ -22,12 +22,12 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Hub -> Entryway (MAP01) Main", player),
-        Has('Entryway (MAP01)')
+        Has('Entryway (MAP01)', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Underhalls (MAP02) Main", player),
-        Has('Underhalls (MAP02)')
+        Has('Underhalls (MAP02)', 1)
     )
 
     world.set_rule(
@@ -42,7 +42,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Waste Tunnels (MAP05) Start", player),
-        Has('The Waste Tunnels (MAP05)')
+        Has('The Waste Tunnels (MAP05)', 1)
     )
 
     world.set_rule(
@@ -52,7 +52,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Dead Simple (MAP07) Start", player),
-        Has('Dead Simple (MAP07)')
+        Has('Dead Simple (MAP07)', 1)
     )
 
     world.set_rule(
@@ -62,12 +62,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Pit (MAP09) Start", player),
-        Has('The Pit (MAP09)')
+        Has('The Pit (MAP09)', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Refueling Base (MAP10) Start", player),
-        Has('Refueling Base (MAP10)')
+        Has('Refueling Base (MAP10)', 1)
     )
 
     world.set_rule(
@@ -77,7 +77,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> The Factory (MAP12) Outdoors", player),
-        Has('The Factory (MAP12)')
+        Has('The Factory (MAP12)', 1)
     )
 
     world.set_rule(
@@ -122,7 +122,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Nirvana (MAP21) Start", player),
-        Has('Nirvana (MAP21)')
+        Has('Nirvana (MAP21)', 1)
     )
 
     world.set_rule(
@@ -142,7 +142,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Bloodfalls (MAP25) Start", player),
-        Has('Bloodfalls (MAP25)')
+        Has('Bloodfalls (MAP25)', 1)
     )
 
     world.set_rule(
@@ -167,82 +167,82 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Hub -> Icon of Sin (MAP30) Start", player),
-        Has('Icon of Sin (MAP30)')
+        Has('Icon of Sin (MAP30)', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Underhalls (MAP02) Main -> Underhalls (MAP02) Red", player),
-        Has('Underhalls (MAP02) - Red keycard')
+        Has('Underhalls (MAP02) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Underhalls (MAP02) Blue -> Underhalls (MAP02) Red", player),
-        Has('Underhalls (MAP02) - Blue keycard')
+        Has('Underhalls (MAP02) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Underhalls (MAP02) Red -> Underhalls (MAP02) Blue", player),
-        Has('Underhalls (MAP02) - Blue keycard')
+        Has('Underhalls (MAP02) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Gantlet (MAP03) Main -> The Gantlet (MAP03) Blue", player),
-        Has('The Gantlet (MAP03) - Blue keycard')
+        Has('The Gantlet (MAP03) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Gantlet (MAP03) Blue -> The Gantlet (MAP03) Red", player),
-        Has('The Gantlet (MAP03) - Red keycard')
+        Has('The Gantlet (MAP03) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Focus (MAP04) Main -> The Focus (MAP04) Red", player),
-        Has('The Focus (MAP04) - Red keycard')
+        Has('The Focus (MAP04) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Focus (MAP04) Main -> The Focus (MAP04) Blue", player),
-        Has('The Focus (MAP04) - Blue keycard')
+        Has('The Focus (MAP04) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Focus (MAP04) Yellow -> The Focus (MAP04) Red", player),
-        Has('The Focus (MAP04) - Yellow keycard')
+        Has('The Focus (MAP04) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Focus (MAP04) Red -> The Focus (MAP04) Yellow", player),
-        Has('The Focus (MAP04) - Yellow keycard')
+        Has('The Focus (MAP04) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Focus (MAP04) Red -> The Focus (MAP04) Main", player),
-        Has('The Focus (MAP04) - Red keycard')
+        Has('The Focus (MAP04) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Waste Tunnels (MAP05) Main -> The Waste Tunnels (MAP05) Red", player),
-        Has('The Waste Tunnels (MAP05) - Red keycard')
+        Has('The Waste Tunnels (MAP05) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Waste Tunnels (MAP05) Main -> The Waste Tunnels (MAP05) Blue", player),
-        Has('The Waste Tunnels (MAP05) - Blue keycard')
+        Has('The Waste Tunnels (MAP05) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Waste Tunnels (MAP05) Blue -> The Waste Tunnels (MAP05) Yellow", player),
-        Has('The Waste Tunnels (MAP05) - Yellow keycard')
+        Has('The Waste Tunnels (MAP05) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Waste Tunnels (MAP05) Blue -> The Waste Tunnels (MAP05) Main", player),
-        Has('The Waste Tunnels (MAP05) - Blue keycard')
+        Has('The Waste Tunnels (MAP05) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Waste Tunnels (MAP05) Yellow -> The Waste Tunnels (MAP05) Blue", player),
-        Has('The Waste Tunnels (MAP05) - Yellow keycard')
+        Has('The Waste Tunnels (MAP05) - Yellow keycard', 1)
     )
 
     world.set_rule(
@@ -257,27 +257,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Crusher (MAP06) Blue -> The Crusher (MAP06) Red", player),
-        Has('The Crusher (MAP06) - Red keycard')
+        Has('The Crusher (MAP06) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Crusher (MAP06) Blue -> The Crusher (MAP06) Main", player),
-        Has('The Crusher (MAP06) - Blue keycard')
+        Has('The Crusher (MAP06) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Crusher (MAP06) Yellow -> The Crusher (MAP06) Red", player),
-        Has('The Crusher (MAP06) - Yellow keycard')
+        Has('The Crusher (MAP06) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Crusher (MAP06) Red -> The Crusher (MAP06) Yellow", player),
-        Has('The Crusher (MAP06) - Yellow keycard')
+        Has('The Crusher (MAP06) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Crusher (MAP06) Red -> The Crusher (MAP06) Blue", player),
-        Has('The Crusher (MAP06) - Red keycard')
+        Has('The Crusher (MAP06) - Red keycard', 1)
     )
 
     world.set_rule(
@@ -287,27 +287,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Tricks and Traps (MAP08) Main -> Tricks and Traps (MAP08) Red", player),
-        Has('Tricks and Traps (MAP08) - Red skull key')
+        Has('Tricks and Traps (MAP08) - Red skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Tricks and Traps (MAP08) Main -> Tricks and Traps (MAP08) Yellow", player),
-        Has('Tricks and Traps (MAP08) - Yellow skull key')
+        Has('Tricks and Traps (MAP08) - Yellow skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Pit (MAP09) Main -> The Pit (MAP09) Yellow", player),
-        Has('The Pit (MAP09) - Yellow keycard')
+        Has('The Pit (MAP09) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Pit (MAP09) Main -> The Pit (MAP09) Blue", player),
-        Has('The Pit (MAP09) - Blue keycard')
+        Has('The Pit (MAP09) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Pit (MAP09) Yellow -> The Pit (MAP09) Main", player),
-        Has('The Pit (MAP09) - Yellow keycard')
+        Has('The Pit (MAP09) - Yellow keycard', 1)
     )
 
     world.set_rule(
@@ -317,12 +317,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Refueling Base (MAP10) Main -> Refueling Base (MAP10) Yellow", player),
-        Has('Refueling Base (MAP10) - Yellow keycard')
+        Has('Refueling Base (MAP10) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Refueling Base (MAP10) Yellow -> Refueling Base (MAP10) Yellow Blue", player),
-        Has('Refueling Base (MAP10) - Blue keycard')
+        Has('Refueling Base (MAP10) - Blue keycard', 1)
     )
 
     world.set_rule(
@@ -332,22 +332,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Circle of Death (MAP11) Main -> Circle of Death (MAP11) Blue", player),
-        Has('Circle of Death (MAP11) - Blue keycard')
+        Has('Circle of Death (MAP11) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Circle of Death (MAP11) Main -> Circle of Death (MAP11) Red", player),
-        Has('Circle of Death (MAP11) - Red keycard')
+        Has('Circle of Death (MAP11) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Factory (MAP12) Indoors -> The Factory (MAP12) Yellow", player),
-        Has('The Factory (MAP12) - Yellow keycard')
+        Has('The Factory (MAP12) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Factory (MAP12) Indoors -> The Factory (MAP12) Blue", player),
-        Has('The Factory (MAP12) - Blue keycard')
+        Has('The Factory (MAP12) - Blue keycard', 1)
     )
 
     world.set_rule(
@@ -362,102 +362,102 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Downtown (MAP13) Main -> Downtown (MAP13) Yellow", player),
-        Has('Downtown (MAP13) - Yellow keycard')
+        Has('Downtown (MAP13) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Downtown (MAP13) Main -> Downtown (MAP13) Red", player),
-        Has('Downtown (MAP13) - Red keycard')
+        Has('Downtown (MAP13) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Downtown (MAP13) Main -> Downtown (MAP13) Blue", player),
-        Has('Downtown (MAP13) - Blue keycard')
+        Has('Downtown (MAP13) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Inmost Dens (MAP14) Main -> The Inmost Dens (MAP14) Red", player),
-        Has('The Inmost Dens (MAP14) - Red skull key')
+        Has('The Inmost Dens (MAP14) - Red skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Inmost Dens (MAP14) Blue -> The Inmost Dens (MAP14) Red East", player),
-        Has('The Inmost Dens (MAP14) - Blue skull key')
+        Has('The Inmost Dens (MAP14) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Inmost Dens (MAP14) Red -> The Inmost Dens (MAP14) Main", player),
-        Has('The Inmost Dens (MAP14) - Red skull key')
+        Has('The Inmost Dens (MAP14) - Red skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Inmost Dens (MAP14) Red East -> The Inmost Dens (MAP14) Blue", player),
-        Has('The Inmost Dens (MAP14) - Blue skull key')
+        Has('The Inmost Dens (MAP14) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Industrial Zone (MAP15) Main -> Industrial Zone (MAP15) Yellow East", player),
-        Has('Industrial Zone (MAP15) - Yellow keycard')
+        Has('Industrial Zone (MAP15) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Industrial Zone (MAP15) Main -> Industrial Zone (MAP15) Yellow West", player),
-        Has('Industrial Zone (MAP15) - Yellow keycard')
+        Has('Industrial Zone (MAP15) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Industrial Zone (MAP15) Blue -> Industrial Zone (MAP15) Yellow East", player),
-        Has('Industrial Zone (MAP15) - Blue keycard')
+        Has('Industrial Zone (MAP15) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Industrial Zone (MAP15) Yellow East -> Industrial Zone (MAP15) Blue", player),
-        Has('Industrial Zone (MAP15) - Blue keycard')
+        Has('Industrial Zone (MAP15) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Suburbs (MAP16) Main -> Suburbs (MAP16) Red", player),
-        Has('Suburbs (MAP16) - Red skull key')
+        Has('Suburbs (MAP16) - Red skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Suburbs (MAP16) Main -> Suburbs (MAP16) Blue", player),
-        Has('Suburbs (MAP16) - Blue skull key')
+        Has('Suburbs (MAP16) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Tenements (MAP17) Main -> Tenements (MAP17) Red", player),
-        Has('Tenements (MAP17) - Red keycard')
+        Has('Tenements (MAP17) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Tenements (MAP17) Red -> Tenements (MAP17) Yellow", player),
-        Has('Tenements (MAP17) - Yellow skull key')
+        Has('Tenements (MAP17) - Yellow skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Tenements (MAP17) Red -> Tenements (MAP17) Blue", player),
-        Has('Tenements (MAP17) - Blue keycard')
+        Has('Tenements (MAP17) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Courtyard (MAP18) Main -> The Courtyard (MAP18) Yellow", player),
-        Has('The Courtyard (MAP18) - Yellow skull key')
+        Has('The Courtyard (MAP18) - Yellow skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Courtyard (MAP18) Main -> The Courtyard (MAP18) Blue", player),
-        Has('The Courtyard (MAP18) - Blue skull key')
+        Has('The Courtyard (MAP18) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Courtyard (MAP18) Blue -> The Courtyard (MAP18) Main", player),
-        Has('The Courtyard (MAP18) - Blue skull key')
+        Has('The Courtyard (MAP18) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Courtyard (MAP18) Yellow -> The Courtyard (MAP18) Main", player),
-        Has('The Courtyard (MAP18) - Yellow skull key')
+        Has('The Courtyard (MAP18) - Yellow skull key', 1)
     )
 
     world.set_rule(
@@ -477,7 +477,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Nirvana (MAP21) Yellow -> Nirvana (MAP21) Main", player),
-        Has('Nirvana (MAP21) - Yellow skull key')
+        Has('Nirvana (MAP21) - Yellow skull key', 1)
     )
 
     world.set_rule(
@@ -492,22 +492,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Nirvana (MAP21) Pro Magenta -> Nirvana (MAP21) Magenta", player),
-        Has('Nirvana (MAP21) - Red skull key')
+        Has('Nirvana (MAP21) - Red skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Catacombs (MAP22) Main -> The Catacombs (MAP22) Blue", player),
-        Has('The Catacombs (MAP22) - Blue skull key')
+        Has('The Catacombs (MAP22) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Catacombs (MAP22) Main -> The Catacombs (MAP22) Red", player),
-        Has('The Catacombs (MAP22) - Red skull key')
+        Has('The Catacombs (MAP22) - Red skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Catacombs (MAP22) Red -> The Catacombs (MAP22) Main", player),
-        Has('The Catacombs (MAP22) - Red skull key')
+        Has('The Catacombs (MAP22) - Red skull key', 1)
     )
 
     world.set_rule(
@@ -517,27 +517,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Barrels o' Fun (MAP23) Main -> Barrels o' Fun (MAP23) Yellow", player),
-        Has("Barrels o' Fun (MAP23) - Yellow skull key")
+        Has("Barrels o' Fun (MAP23) - Yellow skull key", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Barrels o' Fun (MAP23) Yellow -> Barrels o' Fun (MAP23) Main", player),
-        Has("Barrels o' Fun (MAP23) - Yellow skull key")
+        Has("Barrels o' Fun (MAP23) - Yellow skull key", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Chasm (MAP24) Main -> The Chasm (MAP24) Blue", player),
-        Has('The Chasm (MAP24) - Blue keycard')
+        Has('The Chasm (MAP24) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Chasm (MAP24) Red -> The Chasm (MAP24) Blue", player),
-        Has('The Chasm (MAP24) - Red keycard')
+        Has('The Chasm (MAP24) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Chasm (MAP24) Blue -> The Chasm (MAP24) Red", player),
-        Has('The Chasm (MAP24) - Red keycard')
+        Has('The Chasm (MAP24) - Red keycard', 1)
     )
 
     world.set_rule(
@@ -547,7 +547,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Bloodfalls (MAP25) Blue -> Bloodfalls (MAP25) Main", player),
-        Has('Bloodfalls (MAP25) - Blue skull key')
+        Has('Bloodfalls (MAP25) - Blue skull key', 1)
     )
 
     world.set_rule(
@@ -557,67 +557,67 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Abandoned Mines (MAP26) Main -> The Abandoned Mines (MAP26) Yellow", player),
-        Has('The Abandoned Mines (MAP26) - Yellow keycard')
+        Has('The Abandoned Mines (MAP26) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Abandoned Mines (MAP26) Main -> The Abandoned Mines (MAP26) Red", player),
-        Has('The Abandoned Mines (MAP26) - Red keycard')
+        Has('The Abandoned Mines (MAP26) - Red keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Abandoned Mines (MAP26) Main -> The Abandoned Mines (MAP26) Blue", player),
-        Has('The Abandoned Mines (MAP26) - Blue keycard')
+        Has('The Abandoned Mines (MAP26) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Abandoned Mines (MAP26) Blue -> The Abandoned Mines (MAP26) Main", player),
-        Has('The Abandoned Mines (MAP26) - Blue keycard')
+        Has('The Abandoned Mines (MAP26) - Blue keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Abandoned Mines (MAP26) Yellow -> The Abandoned Mines (MAP26) Main", player),
-        Has('The Abandoned Mines (MAP26) - Yellow keycard')
+        Has('The Abandoned Mines (MAP26) - Yellow keycard', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Monster Condo (MAP27) Main -> Monster Condo (MAP27) Yellow", player),
-        Has('Monster Condo (MAP27) - Yellow skull key')
+        Has('Monster Condo (MAP27) - Yellow skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Monster Condo (MAP27) Main -> Monster Condo (MAP27) Red", player),
-        Has('Monster Condo (MAP27) - Red skull key')
+        Has('Monster Condo (MAP27) - Red skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Monster Condo (MAP27) Main -> Monster Condo (MAP27) Blue", player),
-        Has('Monster Condo (MAP27) - Blue skull key')
+        Has('Monster Condo (MAP27) - Blue skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Monster Condo (MAP27) Red -> Monster Condo (MAP27) Main", player),
-        Has('Monster Condo (MAP27) - Red skull key')
+        Has('Monster Condo (MAP27) - Red skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Spirit World (MAP28) Main -> The Spirit World (MAP28) Yellow", player),
-        Has('The Spirit World (MAP28) - Yellow skull key')
+        Has('The Spirit World (MAP28) - Yellow skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Spirit World (MAP28) Main -> The Spirit World (MAP28) Red", player),
-        Has('The Spirit World (MAP28) - Red skull key')
+        Has('The Spirit World (MAP28) - Red skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Spirit World (MAP28) Yellow -> The Spirit World (MAP28) Main", player),
-        Has('The Spirit World (MAP28) - Yellow skull key')
+        Has('The Spirit World (MAP28) - Yellow skull key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Spirit World (MAP28) Red -> The Spirit World (MAP28) Main", player),
-        Has('The Spirit World (MAP28) - Red skull key')
+        Has('The Spirit World (MAP28) - Red skull key', 1)
     )
 
     world.set_rule(

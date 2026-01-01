@@ -188,7 +188,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Focus Tower 1F - Sky Door", player),
-        Has('Sky Coin')
+        Has('Sky Coin', 1)
     )
 
     world.set_rule(

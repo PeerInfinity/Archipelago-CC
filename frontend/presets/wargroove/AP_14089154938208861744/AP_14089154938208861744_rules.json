@@ -580,12 +580,9 @@
             "name": "Tenri's Fall",
             "connected_region": "Tenri's Fall",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Spearman",
-                  "Spearman"
-                ]
+                "item_name": "Spearman"
               }
             }
           }
