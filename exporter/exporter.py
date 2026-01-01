@@ -1694,6 +1694,13 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                         except Exception as e:
                             logger.error(f"Error processing location {getattr(location, 'name', 'Unknown')}: {str(e)}")
 
+                # Auto-mark regions with no locations and no exits as dynamically_added
+                # These are structural regions that exist for navigation but have no content
+                if (not region_data.get('dynamically_added') and
+                    not region_data['locations'] and
+                    not region_data['exits']):
+                    region_data['dynamically_added'] = True
+
                 regions_data[region.name] = region_data
 
                 # Size check every 10 regions to catch runaway data growth
