@@ -301,7 +301,8 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if path.endswith('.rule') or path.endswith('.args') or path.endswith('.children'):
             return True
         # All .args.* differences - WorldGen represents rule arguments differently
-        if '.args.' in path:
+        # This includes both property access (.args.setting) and array access (.args[0])
+        if '.args.' in path or '.args[' in path:
             return True
         # Length differences in rule children
         if '[length]' in path:
