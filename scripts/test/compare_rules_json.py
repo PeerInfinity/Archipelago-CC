@@ -210,6 +210,7 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     - regions.*.is_light_world: WorldGen doesn't preserve this metadata
     - regions.*.type: WorldGen doesn't preserve region type
     - regions.*.dynamically_added: WorldGen adds this marker to regions
+    - regions.*.dungeon_index: WorldGen doesn't preserve dungeon index (LADX)
     - world.*.option_definitions: Option definitions may differ
     - world.*.options: Option values may differ based on defaults
     - start_inventory_from_pool: May be omitted in WorldGen
@@ -286,6 +287,9 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
             return True
         # dungeon property - WorldGen doesn't preserve this
         if path.endswith('.dungeon'):
+            return True
+        # dungeon_index property - WorldGen doesn't preserve this (used for dungeon item placement)
+        if path.endswith('.dungeon_index'):
             return True
         # shop property - WorldGen doesn't preserve shop data on regions
         if '.shop' in path:
