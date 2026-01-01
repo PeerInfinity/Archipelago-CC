@@ -1,18 +1,18 @@
 from typing import ClassVar, Dict, Any
 from BaseClasses import Region, Entrance, Location, Item, Tutorial
 from worlds.AutoWorld import World, WebWorld
-from .Items import ChocolateChipCookiesItem, base_item_id, item_table
-from .Locations import ChocolateChipCookiesLocation, base_location_id, location_table
+from .Items import BakingAdventureItem, base_item_id, item_table
+from .Locations import BakingAdventureLocation, base_location_id, location_table
 from .Regions import create_regions
 from .Rules import set_rules
-from .Options import ChocolateChipCookiesOptions
+from .Options import BakingAdventureOptions
 
 
-class ChocolateChipCookiesWeb(WebWorld):
+class BakingAdventureWeb(WebWorld):
     theme = "partyTime"
     tutorials = [Tutorial(
         "Multiworld Setup Guide",
-        "A guide to setting up the Archipelago ChocolateChipCookies randomizer on your computer.",
+        "A guide to setting up the Archipelago Baking Adventure randomizer on your computer.",
         "English",
         "setup_en.md",
         "setup/en",
@@ -20,17 +20,17 @@ class ChocolateChipCookiesWeb(WebWorld):
     )]
 
 
-class ChocolateChipCookiesWorld(World):
+class BakingAdventureWorld(World):
     """
-    Chocolate Chip Cookies is a game about baking the perfect chocolate chip cookies.
+    Baking Adventure is a game about baking the perfect chocolate chip cookies.
     Navigate through the kitchen regions, gather ingredients and tools, and follow the
     baking process step by step to create delicious cookies!
     """
 
-    game = "ChocolateChipCookies"
-    web = ChocolateChipCookiesWeb()
-    options_dataclass = ChocolateChipCookiesOptions
-    options: ChocolateChipCookiesOptions
+    game = "Baking Adventure"
+    web = BakingAdventureWeb()
+    options_dataclass = BakingAdventureOptions
+    options: BakingAdventureOptions
 
     base_id = base_location_id
     item_name_to_id = {name: data.code for name, data in item_table.items() if data.code is not None}
@@ -72,7 +72,7 @@ class ChocolateChipCookiesWorld(World):
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
         item_data = item_table[name]
-        return ChocolateChipCookiesItem(name, item_data.classification, item_data.code, self.player)
+        return BakingAdventureItem(name, item_data.classification, item_data.code, self.player)
     
     def create_regions(self) -> None:
         """Create regions for the world."""
@@ -101,7 +101,7 @@ class ChocolateChipCookiesWorld(World):
 
         # Only place if not already filled (e.g., by _place_original_items)
         if victory_location.item is None:
-            victory_item = ChocolateChipCookiesItem("Victory", item_table["Victory"].classification, None, self.player)
+            victory_item = BakingAdventureItem("Victory", item_table["Victory"].classification, None, self.player)
             victory_location.place_locked_item(victory_item)
 
         # Set completion condition

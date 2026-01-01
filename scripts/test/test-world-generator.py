@@ -16,6 +16,7 @@ import argparse
 import glob
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -374,6 +375,81 @@ def copy_sphere_log(source_path: str, dest_path: str) -> bool:
         return False
 
 
+def run_rules_comparison(
+    original_rules_path: str,
+    worldgen_rules_path: str,
+    project_root: str,
+    ignore_canonical: bool = False
+) -> Dict:
+    """
+    Compare original and worldgen rules.json files.
+
+    Uses compare_rules_json.py to detect differences between the original
+    export and the worldgen re-export.
+    """
+    result = {
+        'success': False,
+        'pass_fail': 'unknown',
+        'differences_count': 0,
+        'ignored_count': 0,
+        'error': None,
+        'processing_time_seconds': 0
+    }
+
+    if not os.path.exists(original_rules_path):
+        result['error'] = f"Original rules file not found: {original_rules_path}"
+        return result
+
+    if not os.path.exists(worldgen_rules_path):
+        result['error'] = f"WorldGen rules file not found: {worldgen_rules_path}"
+        return result
+
+    # Build command
+    cmd = [
+        sys.executable, 'scripts/test/compare_rules_json.py',
+        original_rules_path,
+        worldgen_rules_path
+    ]
+
+    if ignore_canonical:
+        cmd.insert(3, '--ignore-canonical')
+
+    start_time = time.time()
+    return_code, stdout, stderr = run_command(cmd, cwd=project_root, timeout=60)
+    result['processing_time_seconds'] = round(time.time() - start_time, 2)
+
+    full_output = stdout + '\n' + stderr
+
+    # Parse the output
+    if 'Files are identical' in full_output:
+        result['success'] = True
+        result['pass_fail'] = 'pass'
+        result['differences_count'] = 0
+
+        # Check for ignored differences count
+        ignored_match = re.search(r'\((\d+) canonical-seed1 differences ignored\)', full_output)
+        if ignored_match:
+            result['ignored_count'] = int(ignored_match.group(1))
+    elif 'Found' in full_output and 'difference' in full_output:
+        result['pass_fail'] = 'fail'
+        # Extract difference count
+        diff_match = re.search(r'Found (\d+) difference', full_output)
+        if diff_match:
+            result['differences_count'] = int(diff_match.group(1))
+
+        # Extract ignored count if present
+        ignored_match = re.search(r'\((\d+) canonical-seed1 differences ignored\)', full_output)
+        if ignored_match:
+            result['ignored_count'] = int(ignored_match.group(1))
+
+        # Get first few differences for context
+        result['error'] = f"Found {result['differences_count']} differences"
+    else:
+        result['error'] = f"Comparison failed: {full_output[:200]}"
+
+    return result
+
+
 def process_template(
     template_name: str,
     project_root: str,
@@ -406,6 +482,7 @@ def process_template(
         'test_world': {
             'world_generation': {'success': False},
             'seed_generation': {'success': False},
+            'rules_comparison': {'success': False, 'pass_fail': 'unknown'},
             'spoiler_test': {'success': False, 'pass_fail': 'unknown'},
             'cross_validation': {'success': False, 'pass_fail': 'unknown'}
         },
@@ -416,7 +493,7 @@ def process_template(
     }
 
     # Step 1: Generate original seed
-    print(f"\n[1/6] Generating original seed...")
+    print(f"\n[1/7] Generating original seed...")
     if not skip_generation:
         gen_result = run_generation(template_name, project_root, seed)
         template_result['original']['generation'] = gen_result
@@ -433,7 +510,7 @@ def process_template(
         template_result['original']['generation']['note'] = 'Skipped'
 
     # Step 2: Run spoiler test on original
-    print(f"\n[2/6] Running spoiler test on original...")
+    print(f"\n[2/7] Running spoiler test on original...")
     if not skip_spoiler_test:
         spoiler_result = run_spoiler_test(template_name, project_root, seed)
         template_result['original']['spoiler_test'] = spoiler_result
@@ -448,7 +525,7 @@ def process_template(
         template_result['original']['spoiler_test']['note'] = 'Skipped'
 
     # Step 3: Generate _worldgen world from rules.json
-    print(f"\n[3/6] Generating _worldgen world from rules.json...")
+    print(f"\n[3/7] Generating _worldgen world from rules.json...")
     rules_path = template_result['original']['generation'].get('rules_path')
 
     if not rules_path or not os.path.exists(rules_path):
@@ -492,7 +569,8 @@ def run_test_world_tests(
     template_results: Dict[str, Dict],
     project_root: str,
     seed: int,
-    skip_spoiler_test: bool = False
+    skip_spoiler_test: bool = False,
+    canonical_seed1: bool = False
 ) -> None:
     """
     Run generation and spoiler tests on all _worldgen worlds.
@@ -516,7 +594,7 @@ def run_test_world_tests(
         print('='*60)
 
         # Step 4: Generate seed for _worldgen world
-        print(f"\n[4/6] Generating seed for _worldgen world...")
+        print(f"\n[4/7] Generating seed for _worldgen world...")
         gen_result = run_generation(test_template_name, project_root, seed)
         result['test_world']['seed_generation'] = gen_result
 
@@ -527,8 +605,36 @@ def run_test_world_tests(
 
         print(f"  OK (seed_id: {gen_result['seed_id']})")
 
-        # Step 5: Run spoiler test on _worldgen world
-        print(f"\n[5/6] Running spoiler test on _worldgen world...")
+        # Step 5: Compare rules.json files
+        print(f"\n[5/7] Comparing rules.json files...")
+        seed_id = compute_seed_id(seed)
+        original_game_dir = get_world_directory_for_game(original_game_name, project_root)
+        test_game_dir = get_world_directory_for_template(test_template_name, project_root)
+
+        original_rules_path = os.path.join(
+            project_root, 'frontend', 'presets', original_game_dir,
+            seed_id, f'{seed_id}_rules.json'
+        )
+        worldgen_rules_path = os.path.join(
+            project_root, 'frontend', 'presets', test_game_dir,
+            seed_id, f'{seed_id}_rules.json'
+        )
+
+        comparison_result = run_rules_comparison(
+            original_rules_path, worldgen_rules_path, project_root,
+            ignore_canonical=canonical_seed1
+        )
+        result['test_world']['rules_comparison'] = comparison_result
+
+        if comparison_result['pass_fail'] == 'pass':
+            ignored_msg = f" ({comparison_result['ignored_count']} ignored)" if comparison_result['ignored_count'] > 0 else ""
+            print(f"  PASS - Files are identical{ignored_msg}")
+        else:
+            print(f"  FAIL: {comparison_result.get('error', 'Unknown error')}")
+            result['errors']['testing'].append(f"Rules comparison failed: {comparison_result.get('error', '')}")
+
+        # Step 6: Run spoiler test on _worldgen world
+        print(f"\n[6/7] Running spoiler test on _worldgen world...")
         if not skip_spoiler_test:
             spoiler_result = run_spoiler_test(test_template_name, project_root, seed)
             result['test_world']['spoiler_test'] = spoiler_result
@@ -543,7 +649,7 @@ def run_test_world_tests(
             result['test_world']['spoiler_test']['note'] = 'Skipped'
 
         # Step 6: Cross-validation - test with original sphere log
-        print(f"\n[6/6] Cross-validation with original sphere log...")
+        print(f"\n[7/7] Cross-validation with original sphere log...")
         if not skip_spoiler_test:
             # Get paths
             seed_id = compute_seed_id(seed)
@@ -736,6 +842,8 @@ def main():
             'failed_generations': 0,
             'successful_test_worlds': 0,
             'failed_test_worlds': 0,
+            'rules_comparison_passed': 0,
+            'rules_comparison_failed': 0,
             'cross_validation_passed': 0,
             'cross_validation_failed': 0
         },
@@ -1006,11 +1114,17 @@ def main():
             # Run tests on _worldgen worlds
             run_test_world_tests(
                 results['results'], project_root, args.seed,
-                skip_spoiler_test=args.skip_spoiler_test
+                skip_spoiler_test=args.skip_spoiler_test,
+                canonical_seed1=args.canonical_seed1
             )
 
-        # Update cross-validation counts
+        # Update rules comparison and cross-validation counts
         for game_name, result in results['results'].items():
+            if result['test_world']['rules_comparison'].get('pass_fail') == 'pass':
+                results['metadata']['rules_comparison_passed'] += 1
+            elif result['test_world']['rules_comparison'].get('pass_fail') == 'fail':
+                results['metadata']['rules_comparison_failed'] += 1
+
             if result['test_world']['cross_validation'].get('pass_fail') == 'pass':
                 results['metadata']['cross_validation_passed'] += 1
             elif result['test_world']['cross_validation'].get('pass_fail') == 'fail':
@@ -1054,6 +1168,8 @@ def main():
     print(f"Failed generations: {results['metadata']['failed_generations']}")
     print(f"Successful test worlds: {results['metadata']['successful_test_worlds']}")
     print(f"Failed test worlds: {results['metadata']['failed_test_worlds']}")
+    print(f"Rules comparison passed: {results['metadata']['rules_comparison_passed']}")
+    print(f"Rules comparison failed: {results['metadata']['rules_comparison_failed']}")
     print(f"Cross-validation passed: {results['metadata']['cross_validation_passed']}")
     print(f"Cross-validation failed: {results['metadata']['cross_validation_failed']}")
 

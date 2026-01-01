@@ -3,7 +3,7 @@
 Filling Algorithm:               balanced
 Players:                         1
 Plando Options:                  connections, texts, bosses
-Game:                            MathProof2p2e4 WorldGen
+Game:                            Math Adventure WorldGen
 Location Count:                  10
 Progression Balancing:           50
 Accessibility:                   Full

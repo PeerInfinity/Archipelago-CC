@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "game_name": "ChocolateChipCookies WorldGen",
+  "game_name": "Baking Adventure WorldGen",
   "game_directory": "bakingadventure_worldgen",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "ChocolateChipCookiesWorldGenWorld"
+    "1": "BakingAdventureWorldGenWorld"
   },
   "regions": {
     "1": {
@@ -210,8 +210,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Butter Sugar Base",
-                "count": 1
+                "item_name": "Butter Sugar Base"
               }
             },
             "item": {
@@ -228,8 +227,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Egg Mixture",
-                "count": 1
+                "item_name": "Egg Mixture"
               }
             },
             "item": {
@@ -260,8 +258,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Measuring Tools",
-                "count": 1
+                "item_name": "Measuring Tools"
               }
             },
             "item": {
@@ -278,8 +275,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Measured Flour",
-                "count": 1
+                "item_name": "Measured Flour"
               }
             },
             "item": {
@@ -308,8 +304,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Cookie Dough",
-                "count": 1
+                "item_name": "Cookie Dough"
               }
             }
           }
@@ -335,8 +330,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Basic Dough",
-                "count": 1
+                "item_name": "Basic Dough"
               }
             },
             "item": {
@@ -365,8 +359,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shaped Cookies",
-                "count": 1
+                "item_name": "Shaped Cookies"
               }
             }
           }
@@ -432,8 +425,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Baked Cookies",
-                "count": 1
+                "item_name": "Baked Cookies"
               }
             },
             "item": {
@@ -690,7 +682,7 @@
   },
   "world": {
     "1": {
-      "game": "ChocolateChipCookies WorldGen",
+      "game": "Baking Adventure WorldGen",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -724,18 +716,29 @@
         },
         "randomize_items": {
           "type": "toggle",
-          "default": 0,
+          "default": true,
           "display_name": "Randomize Items"
         }
       },
-      "shops": [],
       "base_id": 300000000,
-      "world_description": "ChocolateChipCookies WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Baking Adventure is a game about baking the perfect chocolate chip cookies.\nNavigate through the kitchen regions, gather ingredients and tools, and follow the\nbaking process step by step to create delicious cookies!",
       "slot_data": {
         "randomize_items": false
       },
       "web": {
-        "theme": "partyTime"
+        "theme": "partyTime",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Archipelago Baking Adventure randomizer on your computer.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Archipelago Team"
+            ]
+          }
+        ]
       },
       "world_directory": "bakingadventure_worldgen"
     }

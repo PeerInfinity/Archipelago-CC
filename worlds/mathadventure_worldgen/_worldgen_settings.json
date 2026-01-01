@@ -1,6 +1,6 @@
 {
   "settings": {
-    "game": "MathProof2p2e4",
+    "game": "Math Adventure",
     "options": {
       "accessibility": 0,
       "exclude_locations": [],
@@ -15,7 +15,8 @@
       "start_inventory": {},
       "start_location_hints": []
     },
-    "world_directory": "mathadventure"
+    "world_directory": "mathadventure",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "world_description": "Math Adventure: Proof that 2+2=4\n\nA logical adventure through mathematical proofs where you must collect\ndefinitions, axioms, and theorems to prove that 2+2=4.\nNavigate through the regions of mathematical logic, gathering the\nnecessary components to complete your proof.",

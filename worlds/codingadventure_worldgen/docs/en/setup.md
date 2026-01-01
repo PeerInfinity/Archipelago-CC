@@ -1,4 +1,4 @@
-# WebDevJourney WorldGen Setup Guide
+# Coding Adventure WorldGen Setup Guide
 
 ## Required Software
 
@@ -8,7 +8,7 @@
 
 1. Download the game's .apworld file
 2. Place it in your Archipelago/lib/worlds folder
-3. Generate a multiworld with WebDevJourney WorldGen
+3. Generate a multiworld with Coding Adventure WorldGen
 
 ## Joining a Game
 

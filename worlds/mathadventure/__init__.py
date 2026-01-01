@@ -1,16 +1,16 @@
 from typing import Any, ClassVar, Dict
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
-from .Items import item_table, MathProofItem
+from .Items import item_table, MathAdventureItem
 from .Locations import location_table
-from .Options import MathProof2p2e4Options
+from .Options import MathAdventureOptions
 from .Regions import create_regions
 from .Rules import set_rules
 
 
-class MathProof2p2e4Web(WebWorld):
+class MathAdventureWeb(WebWorld):
     theme = "ocean"
-    
+
     tutorials = [Tutorial(
         "Mathematical Proof Guide",
         "A guide to completing the proof that 2+2=4",
@@ -21,7 +21,7 @@ class MathProof2p2e4Web(WebWorld):
     )]
 
 
-class MathProof2p2e4World(World):
+class MathAdventureWorld(World):
     """
     Math Adventure: Proof that 2+2=4
     
@@ -31,11 +31,11 @@ class MathProof2p2e4World(World):
     necessary components to complete your proof.
     """
     
-    game: ClassVar[str] = "MathProof2p2e4"
-    web: ClassVar[WebWorld] = MathProof2p2e4Web()
-    
-    options_dataclass = MathProof2p2e4Options
-    options: MathProof2p2e4Options
+    game: ClassVar[str] = "Math Adventure"
+    web: ClassVar[WebWorld] = MathAdventureWeb()
+
+    options_dataclass = MathAdventureOptions
+    options: MathAdventureOptions
 
     item_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.id for name, data in item_table.items() if data.id is not None
@@ -81,7 +81,7 @@ class MathProof2p2e4World(World):
         item_pool = []
         for name, data in item_table.items():
             if name != "Victory":  # Victory is an event, not placed in pool
-                item = MathProofItem(name, data.classification, data.id, self.player)
+                item = MathAdventureItem(name, data.classification, data.id, self.player)
                 item_pool.append(item)
 
         self.multiworld.itempool += item_pool
@@ -101,7 +101,7 @@ class MathProof2p2e4World(World):
     
     def create_item(self, name: str) -> Item:
         data = item_table[name]
-        return MathProofItem(name, data.classification, data.id, self.player)
+        return MathAdventureItem(name, data.classification, data.id, self.player)
     
     def pre_fill(self) -> None:
         """Pre-fill items if not randomizing."""
@@ -114,7 +114,7 @@ class MathProof2p2e4World(World):
 
         # Only place if not already filled (e.g., by _place_original_items)
         if victory_location.item is None:
-            victory_item = MathProofItem("Victory", ItemClassification.progression, None, self.player)
+            victory_item = MathAdventureItem("Victory", ItemClassification.progression, None, self.player)
             victory_location.place_locked_item(victory_item)
 
         # Set completion condition

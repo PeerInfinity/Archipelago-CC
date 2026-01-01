@@ -762,6 +762,29 @@ class RuleCodeGenerator:
                 return self._make_bool_constant(True)
             if len(children) == 1:
                 return self._convert_rule(children[0])
+            # Optimization: If all children are simple Has rules with count=1,
+            # use HasAll instead of And(Has(...), Has(...), ...)
+            # This ensures round-trip consistency with original exports
+            simple_has_items = []
+            all_simple_has = True
+            for child in children:
+                child_rule = child.get('rule', '')
+                child_args = child.get('args', {})
+                if child_rule == 'Has' and child_args.get('count', 1) == 1:
+                    item_name = child_args.get('item_name', '')
+                    if item_name:
+                        simple_has_items.append(item_name)
+                    else:
+                        all_simple_has = False
+                        break
+                else:
+                    all_simple_has = False
+                    break
+            if all_simple_has and len(simple_has_items) >= 2:
+                # Generate HasAll instead of And(Has, Has, ...)
+                self.required_imports.add('HasAll')
+                items_str = ', '.join(repr(item) for item in simple_has_items)
+                return f'HasAll({items_str})'
             child_exprs = [self._convert_rule(child) for child in children]
             self.required_imports.add('And')
             return f'And({", ".join(child_exprs)})'
@@ -771,6 +794,29 @@ class RuleCodeGenerator:
                 return self._make_bool_constant(False)
             if len(children) == 1:
                 return self._convert_rule(children[0])
+            # Optimization: If all children are simple Has rules with count=1,
+            # use HasAny instead of Or(Has(...), Has(...), ...)
+            # This ensures round-trip consistency with original exports
+            simple_has_items = []
+            all_simple_has = True
+            for child in children:
+                child_rule = child.get('rule', '')
+                child_args = child.get('args', {})
+                if child_rule == 'Has' and child_args.get('count', 1) == 1:
+                    item_name = child_args.get('item_name', '')
+                    if item_name:
+                        simple_has_items.append(item_name)
+                    else:
+                        all_simple_has = False
+                        break
+                else:
+                    all_simple_has = False
+                    break
+            if all_simple_has and len(simple_has_items) >= 2:
+                # Generate HasAny instead of Or(Has, Has, ...)
+                self.required_imports.add('HasAny')
+                items_str = ', '.join(repr(item) for item in simple_has_items)
+                return f'HasAny({items_str})'
             child_exprs = [self._convert_rule(child) for child in children]
             self.required_imports.add('Or')
             return f'Or({", ".join(child_exprs)})'
@@ -1452,7 +1498,6 @@ class RuleCodeGenerator:
 
         location_rule_ref checks if a location's access rule is satisfied,
         which is equivalent to CanReachLocation (checking if the location is accessible).
-        This is used by AHIT's can_clear_required_act helper expansion.
         """
         self.required_imports.add('CanReachLocation')
 
@@ -4327,7 +4372,7 @@ class HelperCodeGenerator:
             if count_raw.get('type') == 'constant':
                 count_expr = str(count_raw.get('value', 1))
             else:
-                # Complex expression (e.g., get_hat_cost(hat))
+                # Complex expression (e.g., helper call or attribute lookup)
                 count_expr = self._generate_expression(count_raw)
         elif isinstance(count_raw, (int, float)):
             count_expr = str(int(count_raw))

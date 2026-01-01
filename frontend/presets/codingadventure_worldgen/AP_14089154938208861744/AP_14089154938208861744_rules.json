@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "game_name": "WebDevJourney WorldGen",
+  "game_name": "Coding Adventure WorldGen",
   "game_directory": "codingadventure_worldgen",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "WebDevJourneyWorldGenWorld"
+    "1": "CodingAdventureWorldGenWorld"
   },
   "regions": {
     "1": {
@@ -111,8 +111,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "HTML",
-                "count": 1
+                "item_name": "HTML"
               }
             },
             "item": {
@@ -129,8 +128,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "CSS",
-                "count": 1
+                "item_name": "CSS"
               }
             },
             "item": {
@@ -167,8 +165,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "JavaScript Basics",
-                "count": 1
+                "item_name": "JavaScript Basics"
               }
             },
             "item": {
@@ -185,8 +182,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "JavaScript Basics",
-                "count": 1
+                "item_name": "JavaScript Basics"
               }
             },
             "item": {
@@ -223,8 +219,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Server Basics",
-                "count": 1
+                "item_name": "Server Basics"
               }
             },
             "item": {
@@ -241,8 +236,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Server Basics",
-                "count": 1
+                "item_name": "Server Basics"
               }
             },
             "item": {
@@ -293,8 +287,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Command Line",
-                "count": 1
+                "item_name": "Command Line"
               }
             },
             "item": {
@@ -392,8 +385,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "DOM Manipulation",
-                "count": 1
+                "item_name": "DOM Manipulation"
               }
             }
           },
@@ -410,8 +402,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Algorithms",
-                "count": 1
+                "item_name": "Algorithms"
               }
             }
           }
@@ -442,8 +433,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "React",
-                "count": 1
+                "item_name": "React"
               }
             },
             "item": {
@@ -460,8 +450,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Frontend Framework",
-                "count": 1
+                "item_name": "Frontend Framework"
               }
             },
             "item": {
@@ -498,8 +487,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Vue",
-                "count": 1
+                "item_name": "Vue"
               }
             },
             "item": {
@@ -516,8 +504,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Frontend Framework",
-                "count": 1
+                "item_name": "Frontend Framework"
               }
             },
             "item": {
@@ -554,8 +541,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Frontend Framework",
-                "count": 1
+                "item_name": "Frontend Framework"
               }
             },
             "item": {
@@ -577,8 +563,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "JavaScript Basics",
-                "count": 1
+                "item_name": "JavaScript Basics"
               }
             }
           },
@@ -588,8 +573,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Server Basics",
-                "count": 1
+                "item_name": "Server Basics"
               }
             }
           },
@@ -599,8 +583,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Server Basics",
-                "count": 1
+                "item_name": "Server Basics"
               }
             }
           }
@@ -631,8 +614,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Express",
-                "count": 1
+                "item_name": "Express"
               }
             },
             "item": {
@@ -649,8 +631,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "REST APIs",
-                "count": 1
+                "item_name": "REST APIs"
               }
             },
             "item": {
@@ -687,8 +668,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Django",
-                "count": 1
+                "item_name": "Django"
               }
             },
             "item": {
@@ -705,8 +685,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "REST APIs",
-                "count": 1
+                "item_name": "REST APIs"
               }
             },
             "item": {
@@ -743,8 +722,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Flask",
-                "count": 1
+                "item_name": "Flask"
               }
             },
             "item": {
@@ -761,8 +739,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "REST APIs",
-                "count": 1
+                "item_name": "REST APIs"
               }
             },
             "item": {
@@ -785,8 +762,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Design Systems",
-                "count": 1
+                "item_name": "Design Systems"
               }
             },
             "item": {
@@ -803,8 +779,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "UI/UX",
-                "count": 1
+                "item_name": "UI/UX"
               }
             },
             "item": {
@@ -821,8 +796,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Responsive Design",
-                "count": 1
+                "item_name": "Responsive Design"
               }
             },
             "item": {
@@ -879,8 +853,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "SQL",
-                "count": 1
+                "item_name": "SQL"
               }
             },
             "item": {
@@ -897,8 +870,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Database Basics",
-                "count": 1
+                "item_name": "Database Basics"
               }
             },
             "item": {
@@ -935,8 +907,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "NoSQL",
-                "count": 1
+                "item_name": "NoSQL"
               }
             },
             "item": {
@@ -953,8 +924,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Database Basics",
-                "count": 1
+                "item_name": "Database Basics"
               }
             },
             "item": {
@@ -1039,8 +1009,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Authentication",
-                    "count": 1
+                    "item_name": "Authentication"
                   }
                 }
               ]
@@ -1074,8 +1043,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "HTTP Basics",
-                "count": 1
+                "item_name": "HTTP Basics"
               }
             },
             "item": {
@@ -1092,8 +1060,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sessions",
-                "count": 1
+                "item_name": "Sessions"
               }
             },
             "item": {
@@ -1110,8 +1077,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "JWT",
-                "count": 1
+                "item_name": "JWT"
               }
             },
             "item": {
@@ -1154,8 +1120,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Caching",
-                "count": 1
+                "item_name": "Caching"
               }
             },
             "item": {
@@ -1172,8 +1137,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "CDN",
-                "count": 1
+                "item_name": "CDN"
               }
             },
             "item": {
@@ -1210,8 +1174,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unit Tests",
-                "count": 1
+                "item_name": "Unit Tests"
               }
             },
             "item": {
@@ -1228,8 +1191,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Integration Tests",
-                "count": 1
+                "item_name": "Integration Tests"
               }
             },
             "item": {
@@ -1252,8 +1214,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Command Line",
-                "count": 1
+                "item_name": "Command Line"
               }
             },
             "item": {
@@ -1290,8 +1251,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "CI/CD",
-                "count": 1
+                "item_name": "CI/CD"
               }
             },
             "item": {
@@ -1384,8 +1344,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "HTTPS",
-                "count": 1
+                "item_name": "HTTPS"
               }
             },
             "item": {
@@ -1402,8 +1361,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "CORS",
-                "count": 1
+                "item_name": "CORS"
               }
             },
             "item": {
@@ -1426,8 +1384,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Performance",
-                "count": 1
+                "item_name": "Performance"
               }
             },
             "item": {
@@ -1444,8 +1401,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Horizontal Scaling",
-                "count": 1
+                "item_name": "Horizontal Scaling"
               }
             },
             "item": {
@@ -1468,8 +1424,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "DevOps",
-                "count": 1
+                "item_name": "DevOps"
               }
             },
             "item": {
@@ -1486,8 +1441,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Cloud Provider",
-                "count": 1
+                "item_name": "Cloud Provider"
               }
             },
             "item": {
@@ -2263,7 +2217,7 @@
   },
   "world": {
     "1": {
-      "game": "WebDevJourney WorldGen",
+      "game": "Coding Adventure WorldGen",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -2297,12 +2251,11 @@
         },
         "randomize_items": {
           "type": "toggle",
-          "default": 0,
+          "default": true,
           "display_name": "Randomize Items"
         }
       },
-      "shops": [],
-      "world_description": "WebDevJourney WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Coding Adventure is an educational game that takes you through the complete journey\nof becoming a web developer, from learning HTML/CSS basics to deploying\nproduction-ready full-stack applications.",
       "web": {
         "theme": "ocean"
       },

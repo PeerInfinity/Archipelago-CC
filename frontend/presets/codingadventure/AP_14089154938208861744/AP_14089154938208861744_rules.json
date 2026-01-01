@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "game_name": "WebDevJourney",
+  "game_name": "Coding Adventure",
   "game_directory": "codingadventure",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
@@ -8,7 +8,7 @@
     "1": "Player1"
   },
   "world_classes": {
-    "1": "WebDevJourneyWorld"
+    "1": "CodingAdventureWorld"
   },
   "regions": {
     "1": {
@@ -63,27 +63,14 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Git"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "JavaScript Basics"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Server Basics"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Git",
+                      "JavaScript Basics",
+                      "Server Basics"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -354,38 +341,22 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Database Basics"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "State Management"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Database Basics",
+                      "State Management"
+                    ]
+                  }
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Frontend Framework"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "REST APIs"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Frontend Framework",
+                      "REST APIs"
+                    ]
+                  }
                 }
               ]
             }
@@ -1010,55 +981,31 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "DevOps"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Performance"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "DevOps",
+                          "Performance"
+                        ]
+                      }
                     },
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "DevOps"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Testing"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "DevOps",
+                          "Testing"
+                        ]
+                      }
                     },
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Performance"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Testing"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Performance",
+                          "Testing"
+                        ]
+                      }
                     }
                   ]
                 },
@@ -1154,21 +1101,13 @@
             "name": "Caching",
             "id": 400000044,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Database Basics"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "REST APIs"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Database Basics",
+                  "REST APIs"
+                ]
+              }
             },
             "item": {
               "name": "Caching",
@@ -1293,21 +1232,13 @@
             "name": "CI/CD",
             "id": 400000051,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Docker"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Git"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Docker",
+                  "Git"
+                ]
+              }
             },
             "item": {
               "name": "CI/CD",
@@ -1364,27 +1295,14 @@
             "name": "ToProduction",
             "connected_region": "ProductionHub",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Deployment Complete"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Scaling Complete"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Security Complete"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Deployment Complete",
+                  "Scaling Complete",
+                  "Security Complete"
+                ]
+              }
             }
           }
         ],
@@ -1541,21 +1459,13 @@
             "name": "SSL Certificate",
             "id": 400000061,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Domain"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "HTTPS"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Domain",
+                  "HTTPS"
+                ]
+              }
             },
             "item": {
               "name": "Deployment Complete",
@@ -2310,7 +2220,7 @@
   },
   "world": {
     "1": {
-      "game": "WebDevJourney",
+      "game": "Coding Adventure",
       "options": {
         "accessibility": 0,
         "exclude_locations": [],
@@ -2348,7 +2258,7 @@
           "display_name": "Randomize Items"
         }
       },
-      "world_description": "WebDevJourney is an educational game that takes you through the complete journey\nof becoming a web developer, from learning HTML/CSS basics to deploying\nproduction-ready full-stack applications.",
+      "world_description": "Coding Adventure is an educational game that takes you through the complete journey\nof becoming a web developer, from learning HTML/CSS basics to deploying\nproduction-ready full-stack applications.",
       "web": {
         "theme": "ocean"
       },

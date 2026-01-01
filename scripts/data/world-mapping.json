@@ -116,6 +116,24 @@
     "has_custom_game_logic": true,
     "world_directory": "generic"
   },
+  "Baking Adventure": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "bakingadventure"
+  },
+  "Baking Adventure WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "bakingadventure_worldgen"
+  },
   "Blasphemous": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -242,24 +260,6 @@
     "has_custom_game_logic": false,
     "world_directory": "checksfinder_worldgen"
   },
-  "ChocolateChipCookies": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "world_directory": "bakingadventure"
-  },
-  "ChocolateChipCookies WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "world_directory": "bakingadventure_worldgen"
-  },
   "Choo-Choo Charles": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -295,6 +295,24 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "civ_6_worldgen"
+  },
+  "Coding Adventure": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "codingadventure"
+  },
+  "Coding Adventure WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "codingadventure_worldgen"
   },
   "DLCQuest": {
     "exporter_path": "exporter/games/dlcquest.py",
@@ -647,7 +665,7 @@
     "has_custom_game_logic": false,
     "world_directory": "mlss_worldgen"
   },
-  "MathProof2p2e4": {
+  "Math Adventure": {
     "exporter_path": null,
     "exporter_size": 0,
     "game_logic_path": null,
@@ -656,7 +674,7 @@
     "has_custom_game_logic": false,
     "world_directory": "mathadventure"
   },
-  "MathProof2p2e4 WorldGen": {
+  "Math Adventure WorldGen": {
     "exporter_path": null,
     "exporter_size": 0,
     "game_logic_path": null,
@@ -1357,24 +1375,6 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "wargroove_worldgen"
-  },
-  "WebDevJourney": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "world_directory": "codingadventure"
-  },
-  "WebDevJourney WorldGen": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "world_directory": "codingadventure_worldgen"
   },
   "Yacht Dice": {
     "exporter_path": "exporter/games/yachtdice.py",

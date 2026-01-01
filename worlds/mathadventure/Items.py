@@ -4,7 +4,9 @@ from BaseClasses import ItemClassification, Item
 base_math_proof_item_id = 200100000
 
 
-class MathProofItem(Item):
+class MathAdventureItem(Item):
+    game = "Math Adventure"
+
     def __init__(self, name: str, classification: ItemClassification, code: Optional[int], player: int):
         super().__init__(name, classification, code, player)
 

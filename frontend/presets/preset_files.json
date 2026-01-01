@@ -5617,7 +5617,7 @@
     }
   },
   "mathadventure": {
-    "name": "MathProof2p2e4",
+    "name": "Math Adventure",
     "folders": {
       "AP_14089154938208861744": {
         "seed": 1,
@@ -5625,7 +5625,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "MathProof2p2e4"
+            "game": "Math Adventure"
           }
         ],
         "files": [
@@ -5641,7 +5641,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "MathProof2p2e4"
+            "game": "Math Adventure"
           }
         ],
         "files": [
@@ -5657,7 +5657,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "MathProof2p2e4"
+            "game": "Math Adventure"
           }
         ],
         "files": [
@@ -5726,7 +5726,7 @@
     }
   },
   "bakingadventure": {
-    "name": "ChocolateChipCookies",
+    "name": "Baking Adventure",
     "folders": {
       "AP_14089154938208861744": {
         "seed": 1,
@@ -5734,7 +5734,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "ChocolateChipCookies"
+            "game": "Baking Adventure"
           }
         ],
         "files": [
@@ -5750,7 +5750,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "ChocolateChipCookies"
+            "game": "Baking Adventure"
           }
         ],
         "files": [
@@ -5766,7 +5766,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "ChocolateChipCookies"
+            "game": "Baking Adventure"
           }
         ],
         "files": [
@@ -5835,7 +5835,7 @@
     }
   },
   "codingadventure": {
-    "name": "WebDevJourney",
+    "name": "Coding Adventure",
     "folders": {
       "AP_14089154938208861744": {
         "seed": 1,
@@ -5843,7 +5843,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "WebDevJourney"
+            "game": "Coding Adventure"
           }
         ],
         "files": [
@@ -5859,7 +5859,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "WebDevJourney"
+            "game": "Coding Adventure"
           }
         ],
         "files": [
@@ -5875,7 +5875,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "WebDevJourney"
+            "game": "Coding Adventure"
           }
         ],
         "files": [
@@ -7272,7 +7272,7 @@
     }
   },
   "bakingadventure_worldgen": {
-    "name": "ChocolateChipCookies WorldGen",
+    "name": "Baking Adventure WorldGen",
     "folders": {
       "AP_14089154938208861744": {
         "seed": 1,
@@ -7280,7 +7280,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "ChocolateChipCookies WorldGen"
+            "game": "Baking Adventure WorldGen"
           }
         ],
         "files": [
@@ -7293,7 +7293,7 @@
     }
   },
   "mathadventure_worldgen": {
-    "name": "MathProof2p2e4 WorldGen",
+    "name": "Math Adventure WorldGen",
     "folders": {
       "AP_14089154938208861744": {
         "seed": 1,
@@ -7301,7 +7301,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "MathProof2p2e4 WorldGen"
+            "game": "Math Adventure WorldGen"
           }
         ],
         "files": [
@@ -7335,7 +7335,7 @@
     }
   },
   "codingadventure_worldgen": {
-    "name": "WebDevJourney WorldGen",
+    "name": "Coding Adventure WorldGen",
     "folders": {
       "AP_14089154938208861744": {
         "seed": 1,
@@ -7343,7 +7343,7 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "WebDevJourney WorldGen"
+            "game": "Coding Adventure WorldGen"
           }
         ],
         "files": [

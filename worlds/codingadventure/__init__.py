@@ -1,28 +1,29 @@
 from typing import Any, ClassVar, Dict
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
-from .Items import item_table, WebDevJourneyItem
+from .Items import item_table, CodingAdventureItem
 from .Locations import location_table
-from .Options import WebDevJourneyOptions
+from .Options import CodingAdventureOptions
 from .Regions import create_regions
 from .Rules import set_rules
 
-class WebDevJourneyWeb(WebWorld):
+class CodingAdventureWeb(WebWorld):
     theme = "ocean"
     tutorials = []
 
-class WebDevJourneyWorld(World):
+
+class CodingAdventureWorld(World):
     """
-    WebDevJourney is an educational game that takes you through the complete journey 
-    of becoming a web developer, from learning HTML/CSS basics to deploying 
+    Coding Adventure is an educational game that takes you through the complete journey
+    of becoming a web developer, from learning HTML/CSS basics to deploying
     production-ready full-stack applications.
     """
     
-    game: ClassVar[str] = "WebDevJourney"
-    web: ClassVar[WebWorld] = WebDevJourneyWeb()
-    
-    options_dataclass = WebDevJourneyOptions
-    options: WebDevJourneyOptions
+    game: ClassVar[str] = "Coding Adventure"
+    web: ClassVar[WebWorld] = CodingAdventureWeb()
+
+    options_dataclass = CodingAdventureOptions
+    options: CodingAdventureOptions
 
     item_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.id for name, data in item_table.items() if data.id is not None
@@ -174,7 +175,7 @@ class WebDevJourneyWorld(World):
         for name, count in items_to_create.items():
             data = item_table[name]
             for _ in range(count):
-                item = WebDevJourneyItem(name, data.classification, data.id, self.player)
+                item = CodingAdventureItem(name, data.classification, data.id, self.player)
                 item_pool.append(item)
 
         self.multiworld.itempool += item_pool
@@ -199,7 +200,7 @@ class WebDevJourneyWorld(World):
     
     def create_item(self, name: str) -> Item:
         data = item_table[name]
-        return WebDevJourneyItem(name, data.classification, data.id, self.player)
+        return CodingAdventureItem(name, data.classification, data.id, self.player)
     
     def generate_basic(self) -> None:
         """Place Victory event at the Victory location."""
@@ -207,7 +208,7 @@ class WebDevJourneyWorld(World):
 
         # Only place if not already filled (e.g., by _place_original_items)
         if victory_location.item is None:
-            victory_item = WebDevJourneyItem("Victory", item_table["Victory"].classification, None, self.player)
+            victory_item = CodingAdventureItem("Victory", item_table["Victory"].classification, None, self.player)
             victory_location.place_locked_item(victory_item)
 
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)

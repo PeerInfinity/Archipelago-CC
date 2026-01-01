@@ -872,10 +872,12 @@ def generate_options_py(data: ExtractedData) -> str:
     option_fields = []
 
     # Skip options that are part of PerGameCommonOptions (already inherited)
+    # Also skip 'randomize_items' since it's defined in the hardcoded template below
     skip_options = {
         'accessibility', 'progression_balancing', 'local_items', 'non_local_items',
         'start_inventory', 'start_hints', 'start_location_hints', 'exclude_locations',
-        'priority_locations', 'item_links', 'plando_items'
+        'priority_locations', 'item_links', 'plando_items',
+        'randomize_items',  # Defined in hardcoded template with default=True
     }
 
     # Generate option classes from definitions
@@ -1212,8 +1214,7 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
             # Format the value appropriately
             if isinstance(attr_value, dict):
                 # Check if this dict has string keys that suggest attribute access
-                # (e.g., difficulty_requirements with progressive_bottle_limit)
-                # vs integer keys that suggest dict access (e.g., hat_yarn_costs)
+                # (e.g., difficulty_requirements) vs integer keys that suggest dict access
                 has_string_keys = all(isinstance(k, str) for k in attr_value.keys())
                 has_nested_values = not any(isinstance(v, dict) for v in attr_value.values())
 
