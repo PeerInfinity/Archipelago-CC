@@ -80,14 +80,12 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "has_timestop",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Talaria Attachment"
+                    "items": [
+                      "Talaria Attachment",
+                      "Timestop"
+                    ]
                   }
                 }
               ]
@@ -100,14 +98,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "has_fire",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "CanReachRegion",
                   "args": {
                     "region_name": "Upper Lake Serene"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire"
                   }
                 }
               ]
@@ -123,9 +122,10 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Doublejump"
+                  }
                 }
               ]
             }
@@ -218,14 +218,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "has_fire",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "CanReachRegion",
                   "args": {
                     "region_name": "Upper Lake Serene"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire"
                   }
                 }
               ]
@@ -554,14 +555,15 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "has_fire",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "CanReachRegion",
                   "args": {
                     "region_name": "Upper Lake Serene"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire"
                   }
                 }
               ]
@@ -599,20 +601,13 @@
             "name": "Library -> Library top",
             "connected_region": "Library top",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Talaria Attachment"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Doublejump",
+                  "Talaria Attachment"
+                ]
+              }
             }
           },
           {
@@ -1158,20 +1153,13 @@
             "name": "Varndagroth tower left -> Sealed Caves (Sirens)",
             "connected_region": "Sealed Caves (Sirens)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_keycard_B",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Elevator Keycard"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Elevator Keycard",
+                  "Keycard_B"
+                ]
+              }
             }
           },
           {
@@ -1353,20 +1341,13 @@
             "name": "Varndagroth Towers (Right): Elevator card chest",
             "id": 1337038,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Elevator Keycard"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Doublejump",
+                  "Elevator Keycard"
+                ]
+              }
             },
             "item": {
               "name": "Max HP",
@@ -1380,20 +1361,13 @@
             "name": "Varndagroth Towers (Right): Air vents right chest",
             "id": 1337039,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Elevator Keycard"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Doublejump",
+                  "Elevator Keycard"
+                ]
+              }
             },
             "item": {
               "name": "Max Sand",
@@ -1407,20 +1381,13 @@
             "name": "Varndagroth Towers (Right): Air vents left chest",
             "id": 1337040,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Elevator Keycard"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Doublejump",
+                  "Elevator Keycard"
+                ]
+              }
             },
             "item": {
               "name": "Plasma Orb",
@@ -1483,20 +1450,13 @@
             "name": "Varndagroth tower right (lower) -> Sealed Caves (Sirens)",
             "connected_region": "Sealed Caves (Sirens)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_keycard_B",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Elevator Keycard"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Elevator Keycard",
+                  "Keycard_B"
+                ]
+              }
             }
           },
           {
@@ -1675,20 +1635,13 @@
             "name": "Varndagroth Towers (Right): Medbay terminal (Bleakness Research)",
             "id": 1337164,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_keycard_B",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tablet"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Keycard_B",
+                  "Tablet"
+                ]
+              }
             },
             "item": {
               "name": "Max Sand",
@@ -1878,8 +1831,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_kill_all_3_bosses",
-                  "_original_ast_type": "helper",
+                  "rule": "AST_capability",
+                  "args": {
+                    "capability": "kill_all_3_bosses",
+                    "inferred": true,
+                    "description": "Requires ability to kill all 3 bosses",
+                    "_original_ast_type": "capability"
+                  },
                   "_converted_from_ast": true
                 },
                 {
@@ -1911,20 +1869,13 @@
             "name": "Military Fortress: Bomber chest",
             "id": 1337058,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_doublejump_of_npc",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Timespinner Wheel"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Doublejump_Of_Npc",
+                  "Timespinner Wheel"
+                ]
+              }
             },
             "item": {
               "name": "Empire Orb",
@@ -1964,9 +1915,10 @@
             "name": "Military Fortress (hangar) -> Lab Entrance",
             "connected_region": "Lab Entrance",
             "access_rule": {
-              "rule": "has_doublejump",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
+              "rule": "Has",
+              "args": {
+                "item_name": "Doublejump"
+              }
             }
           }
         ],
@@ -2017,19 +1969,13 @@
             "name": "Military Fortress: B door chest 2",
             "id": 1337063,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "has_keycard_B",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Doublejump",
+                  "Keycard_B"
+                ]
+              }
             },
             "item": {
               "name": "Icicle Ring",
@@ -2043,19 +1989,13 @@
             "name": "Military Fortress: B door chest 1",
             "id": 1337064,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "has_keycard_B",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Doublejump",
+                  "Keycard_B"
+                ]
+              }
             },
             "item": {
               "name": "Bombardment",
@@ -2069,19 +2009,13 @@
             "name": "Military Fortress: Pedestal",
             "id": 1337065,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_doublejump_of_npc",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Doublejump_Of_Npc",
+                  "Forwarddash_Doublejump"
+                ]
+              }
             },
             "item": {
               "name": "Dark Flames",
@@ -2100,9 +2034,10 @@
             "name": "Lab Entrance -> Main Lab",
             "connected_region": "Main Lab",
             "access_rule": {
-              "rule": "has_keycard_B",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
+              "rule": "Has",
+              "args": {
+                "item_name": "Keycard_B"
+              }
             }
           },
           {
@@ -2129,9 +2064,10 @@
             "name": "Main Lab -> Lab Research",
             "connected_region": "Lab Research",
             "access_rule": {
-              "rule": "has_doublejump_of_npc",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
+              "rule": "Has",
+              "args": {
+                "item_name": "Doublejump_Of_Npc"
+              }
             }
           },
           {
@@ -2140,11 +2076,6 @@
             "access_rule": {
               "rule": "And",
               "children": [
-                {
-                  "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
                 {
                   "rule": "Or",
                   "children": [
@@ -2169,6 +2100,12 @@
                       }
                     }
                   ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Forwarddash_Doublejump"
+                  }
                 }
               ]
             }
@@ -2214,9 +2151,10 @@
             "name": "Lab: Lower trash left",
             "id": 1337068,
             "access_rule": {
-              "rule": "has_upwarddash",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
+              "rule": "Has",
+              "args": {
+                "item_name": "Upwarddash"
+              }
             },
             "item": {
               "name": "Shiny Rock",
@@ -2254,11 +2192,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "has_doublejump_of_npc",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "Not",
                   "args": {
                     "condition": {
@@ -2271,6 +2204,12 @@
                     "_original_ast_type": "not"
                   },
                   "_converted_from_ast": true
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Doublejump_Of_Npc"
+                  }
                 }
               ]
             },
@@ -2328,25 +2267,14 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "can_teleport_to",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true,
-                      "args": [
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "Time"
-                          },
-                          "_converted_from_ast": true
-                        },
-                        {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "GateDadsTower"
-                          },
-                          "_converted_from_ast": true
-                        }
-                      ]
+                      "rule": "AST_capability",
+                      "args": {
+                        "capability": "teleport_to",
+                        "inferred": true,
+                        "description": "Requires ability to teleport to",
+                        "_original_ast_type": "capability"
+                      },
+                      "_converted_from_ast": true
                     },
                     {
                       "rule": "Not",
@@ -2433,20 +2361,13 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_upwarddash",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Lab Access Dynamo"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Lab Access Dynamo",
+                      "Upwarddash"
+                    ]
+                  }
                 },
                 {
                   "rule": "Not",
@@ -2476,9 +2397,10 @@
             "name": "Lab: Spider Hell",
             "id": 1337076,
             "access_rule": {
-              "rule": "has_keycard_A",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
+              "rule": "Has",
+              "args": {
+                "item_name": "Keycard_A"
+              }
             },
             "item": {
               "name": "Goddess Brooch",
@@ -2556,25 +2478,19 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_doublejump",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Talaria Attachment"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Doublejump",
+                      "Talaria Attachment"
+                    ]
+                  }
                 },
                 {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Upwarddash"
+                  }
                 }
               ]
             }
@@ -2740,14 +2656,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_break_walls",
-                  "_original_ast_type": "helper",
+                  "rule": "AST_capability",
+                  "args": {
+                    "capability": "break_walls",
+                    "inferred": true,
+                    "description": "Requires ability to break walls",
+                    "_original_ast_type": "capability"
+                  },
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Upwarddash"
+                  }
                 }
               ]
             },
@@ -2763,9 +2685,10 @@
             "name": "Emperor's Tower: Courtyard upper chest",
             "id": 1337079,
             "access_rule": {
-              "rule": "has_upwarddash",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
+              "rule": "Has",
+              "args": {
+                "item_name": "Upwarddash"
+              }
             },
             "item": {
               "name": "Empire Crown",
@@ -2810,25 +2733,19 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_doublejump",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Timespinner Wheel"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Doublejump",
+                      "Timespinner Wheel"
+                    ]
+                  }
                 },
                 {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Upwarddash"
+                  }
                 }
               ]
             },
@@ -3038,25 +2955,19 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_doublejump",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Talaria Attachment"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Doublejump",
+                      "Talaria Attachment"
+                    ]
+                  }
                 },
                 {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Upwarddash"
+                  }
                 }
               ]
             },
@@ -3336,14 +3247,12 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "has_timestop",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Talaria Attachment"
+                    "items": [
+                      "Talaria Attachment",
+                      "Timestop"
+                    ]
                   }
                 }
               ]
@@ -3363,11 +3272,6 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "Not",
                   "args": {
                     "condition": {
@@ -3382,9 +3286,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Drawbridge Key"
+                    "items": [
+                      "Drawbridge Key",
+                      "Upwarddash"
+                    ]
                   }
                 }
               ]
@@ -3410,24 +3317,14 @@
             "name": "Forest: Bat jump ledge",
             "id": 1337091,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_doublejump_of_npc",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "has_fastjump_on_npc",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Doublejump_Of_Npc",
+                  "Fastjump_On_Npc",
+                  "Forwarddash_Doublejump"
+                ]
+              }
             },
             "item": {
               "name": "Buckle Hat",
@@ -3878,9 +3775,10 @@
                   "rule": "True_"
                 },
                 {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Doublejump"
+                  }
                 }
               ]
             }
@@ -3960,9 +3858,10 @@
                   "rule": "True_"
                 },
                 {
-                  "rule": "has_doublejump_of_npc",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Doublejump_Of_Npc"
+                  }
                 }
               ]
             },
@@ -3984,9 +3883,10 @@
                   "rule": "True_"
                 },
                 {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Doublejump"
+                  }
                 }
               ]
             },
@@ -4074,9 +3974,10 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Doublejump"
+                  }
                 }
               ]
             },
@@ -4095,8 +3996,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_break_walls",
-                  "_original_ast_type": "helper",
+                  "rule": "AST_capability",
+                  "args": {
+                    "capability": "break_walls",
+                    "inferred": true,
+                    "description": "Requires ability to break walls",
+                    "_original_ast_type": "capability"
+                  },
                   "_converted_from_ast": true
                 },
                 {
@@ -4172,9 +4078,10 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Forwarddash_Doublejump"
+                  }
                 }
               ]
             },
@@ -4196,9 +4103,10 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Forwarddash_Doublejump"
+                  }
                 }
               ]
             },
@@ -4220,9 +4128,10 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Forwarddash_Doublejump"
+                  }
                 }
               ]
             },
@@ -4244,9 +4153,10 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Forwarddash_Doublejump"
+                  }
                 }
               ]
             },
@@ -4292,9 +4202,10 @@
             "name": "Caves of Banishment (Maw) -> Caves of Banishment (upper)",
             "connected_region": "Caves of Banishment (upper)",
             "access_rule": {
-              "rule": "has_doublejump",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true
+              "rule": "Has",
+              "args": {
+                "item_name": "Doublejump"
+              }
             }
           },
           {
@@ -4363,9 +4274,10 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Doublejump"
+                  }
                 }
               ]
             },
@@ -4598,20 +4510,13 @@
             "name": "Castle Ramparts: Bomber chest",
             "id": 1337128,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Timespinner Wheel"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Timespinner Wheel",
+                  "Upwarddash"
+                ]
+              }
             },
             "item": {
               "name": "Berry Pick-Mi-Up+",
@@ -4625,20 +4530,13 @@
             "name": "Castle Ramparts: Freeze the engineer",
             "id": 1337129,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_timestop",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Talaria Attachment"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Talaria Attachment",
+                  "Timestop"
+                ]
+              }
             },
             "item": {
               "name": "Empress Robe",
@@ -4727,18 +4625,8 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
                   "rule": "Or",
                   "children": [
-                    {
-                      "rule": "has_pink",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
                     {
                       "rule": "Not",
                       "args": {
@@ -4752,8 +4640,20 @@
                         "_original_ast_type": "not"
                       },
                       "_converted_from_ast": true
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Pink"
+                      }
                     }
                   ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Doublejump"
+                  }
                 }
               ]
             }
@@ -4868,19 +4768,13 @@
             "name": "Castle Keep: Royal guard tiny room",
             "id": 1337141,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "has_fastjump_on_npc",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Doublejump",
+                  "Fastjump_On_Npc"
+                ]
+              }
             },
             "item": {
               "name": "Max Sand",
@@ -5003,20 +4897,13 @@
             "name": "Royal towers (lower) -> Royal towers",
             "connected_region": "Royal towers",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "has_forwarddash_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Timespinner Wheel"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Forwarddash_Doublejump",
+                  "Timespinner Wheel"
+                ]
+              }
             }
           },
           {
@@ -5072,14 +4959,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_break_walls",
-                  "_original_ast_type": "helper",
+                  "rule": "AST_capability",
+                  "args": {
+                    "capability": "break_walls",
+                    "inferred": true,
+                    "description": "Requires ability to break walls",
+                    "_original_ast_type": "capability"
+                  },
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Doublejump"
+                  }
                 }
               ]
             },
@@ -5168,9 +5061,10 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "has_doublejump_of_npc",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Doublejump_Of_Npc"
+                  }
                 }
               ]
             },
@@ -5189,25 +5083,19 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_doublejump",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Timespinner Wheel"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Doublejump",
+                      "Timespinner Wheel"
+                    ]
+                  }
                 },
                 {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Upwarddash"
+                  }
                 }
               ]
             },
@@ -5254,25 +5142,19 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "has_doublejump",
-                      "_original_ast_type": "helper",
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Timespinner Wheel"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Doublejump",
+                      "Timespinner Wheel"
+                    ]
+                  }
                 },
                 {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Upwarddash"
+                  }
                 }
               ]
             },
@@ -5496,9 +5378,10 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Upwarddash"
+                  }
                 }
               ]
             }
@@ -5549,8 +5432,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_break_walls",
-                  "_original_ast_type": "helper",
+                  "rule": "AST_capability",
+                  "args": {
+                    "capability": "break_walls",
+                    "inferred": true,
+                    "description": "Requires ability to break walls",
+                    "_original_ast_type": "capability"
+                  },
                   "_converted_from_ast": true
                 },
                 {
@@ -5584,14 +5472,20 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "can_break_walls",
-                  "_original_ast_type": "helper",
+                  "rule": "AST_capability",
+                  "args": {
+                    "capability": "break_walls",
+                    "inferred": true,
+                    "description": "Requires ability to break walls",
+                    "_original_ast_type": "capability"
+                  },
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "has_doublejump",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Doublejump"
+                  }
                 }
               ]
             },
@@ -5618,9 +5512,10 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "has_upwarddash",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Upwarddash"
+                  }
                 }
               ]
             }
@@ -5734,425 +5629,238 @@
             "name": "Space time continuum -> Lake desolation",
             "connected_region": "Lake desolation",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Present"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateLakeDesolation"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Space time continuum -> Lower lake desolation",
             "connected_region": "Lower lake desolation",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Present"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateKittyBoss"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Space time continuum -> Library",
             "connected_region": "Library",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Present"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateLeftLibrary"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Space time continuum -> Varndagroth tower right (lower)",
             "connected_region": "Varndagroth tower right (lower)",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Present"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateMilitaryGate"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Space time continuum -> Skeleton Shaft",
             "connected_region": "Skeleton Shaft",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Present"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateSealedCaves"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Space time continuum -> Sealed Caves (Sirens)",
             "connected_region": "Sealed Caves (Sirens)",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Present"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateSealedSirensCave"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Space time continuum -> Sealed Caves (Xarion)",
             "connected_region": "Sealed Caves (Xarion)",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Present"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateXarion"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Space time continuum -> Upper Lake Serene",
             "connected_region": "Upper Lake Serene",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Past"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateLakeSereneLeft"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Space time continuum -> Left Side forest Caves",
             "connected_region": "Left Side forest Caves",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Past"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateLakeSereneRight"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Space time continuum -> Refugee Camp",
             "connected_region": "Refugee Camp",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Past"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateAccessToPast"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Space time continuum -> Forest",
             "connected_region": "Forest",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Past"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateCastleRamparts"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Space time continuum -> Castle Keep",
             "connected_region": "Castle Keep",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Past"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateCastleKeep"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Space time continuum -> Royal towers (lower)",
             "connected_region": "Royal towers (lower)",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Past"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateRoyalTowers"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Space time continuum -> Caves of Banishment (Maw)",
             "connected_region": "Caves of Banishment (Maw)",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Past"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateMaw"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Space time continuum -> Caves of Banishment (upper)",
             "connected_region": "Caves of Banishment (upper)",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Past"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateCavesOfBanishment"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Space time continuum -> Military Fortress (hangar)",
             "connected_region": "Military Fortress (hangar)",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Present"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateLabEntrance"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
             "name": "Space time continuum -> The lab (upper)",
             "connected_region": "The lab (upper)",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Present"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateDadsTower"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           },
           {
@@ -6188,46 +5896,24 @@
                   ]
                 },
                 {
-                  "rule": "can_teleport_to",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "Time"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "GateGyre"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "AST_capability",
+                  "args": {
+                    "capability": "teleport_to",
+                    "inferred": true,
+                    "description": "Requires ability to teleport to",
+                    "_original_ast_type": "capability"
+                  },
+                  "_converted_from_ast": true
                 },
                 {
-                  "rule": "can_teleport_to",
-                  "_original_ast_type": "helper",
-                  "_converted_from_ast": true,
-                  "args": [
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "Time"
-                      },
-                      "_converted_from_ast": true
-                    },
-                    {
-                      "rule": "Constant",
-                      "args": {
-                        "value": "GateLeftPyramid"
-                      },
-                      "_converted_from_ast": true
-                    }
-                  ]
+                  "rule": "AST_capability",
+                  "args": {
+                    "capability": "teleport_to",
+                    "inferred": true,
+                    "description": "Requires ability to teleport to",
+                    "_original_ast_type": "capability"
+                  },
+                  "_converted_from_ast": true
                 }
               ]
             }
@@ -6236,25 +5922,14 @@
             "name": "Space time continuum -> Ancient Pyramid (right)",
             "connected_region": "Ancient Pyramid (right)",
             "access_rule": {
-              "rule": "can_teleport_to",
-              "_original_ast_type": "helper",
-              "_converted_from_ast": true,
-              "args": [
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "Time"
-                  },
-                  "_converted_from_ast": true
-                },
-                {
-                  "rule": "Constant",
-                  "args": {
-                    "value": "GateRightPyramid"
-                  },
-                  "_converted_from_ast": true
-                }
-              ]
+              "rule": "AST_capability",
+              "args": {
+                "capability": "teleport_to",
+                "inferred": true,
+                "description": "Requires ability to teleport to",
+                "_original_ast_type": "capability"
+              },
+              "_converted_from_ast": true
             }
           }
         ],
@@ -6279,10 +5954,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Security Visor": {
         "name": "Security Visor",
@@ -6291,10 +5966,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Engineer Goggles": {
         "name": "Engineer Goggles",
@@ -6303,10 +5978,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Leather Helmet": {
         "name": "Leather Helmet",
@@ -6315,10 +5990,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Copper Helmet": {
         "name": "Copper Helmet",
@@ -6327,10 +6002,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pointy Hat": {
         "name": "Pointy Hat",
@@ -6339,10 +6014,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dragoon Helmet": {
         "name": "Dragoon Helmet",
@@ -6351,10 +6026,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Buckle Hat": {
         "name": "Buckle Hat",
@@ -6363,10 +6038,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Advisor Hat": {
         "name": "Advisor Hat",
@@ -6375,10 +6050,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Librarian Hat": {
         "name": "Librarian Hat",
@@ -6387,10 +6062,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Combat Helmet": {
         "name": "Combat Helmet",
@@ -6399,10 +6074,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Captain's Cap": {
         "name": "Captain's Cap",
@@ -6411,10 +6086,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lab Glasses": {
         "name": "Lab Glasses",
@@ -6423,10 +6098,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Empire Crown": {
         "name": "Empire Crown",
@@ -6435,10 +6110,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Viletian Crown": {
         "name": "Viletian Crown",
@@ -6447,10 +6122,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sunglasses": {
         "name": "Sunglasses",
@@ -6459,10 +6134,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Old Coat": {
         "name": "Old Coat",
@@ -6471,10 +6146,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Trendy Jacket": {
         "name": "Trendy Jacket",
@@ -6483,10 +6158,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Security Vest": {
         "name": "Security Vest",
@@ -6495,10 +6170,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Leather Jerkin": {
         "name": "Leather Jerkin",
@@ -6507,10 +6182,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Copper Breastplate": {
         "name": "Copper Breastplate",
@@ -6519,10 +6194,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Traveler's Cloak": {
         "name": "Traveler's Cloak",
@@ -6531,10 +6206,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dragoon Armor": {
         "name": "Dragoon Armor",
@@ -6543,10 +6218,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Midnight Cloak": {
         "name": "Midnight Cloak",
@@ -6555,10 +6230,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Advisor Robe": {
         "name": "Advisor Robe",
@@ -6567,10 +6242,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Librarian Robe": {
         "name": "Librarian Robe",
@@ -6579,10 +6254,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Military Armor": {
         "name": "Military Armor",
@@ -6591,10 +6266,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Captain's Uniform": {
         "name": "Captain's Uniform",
@@ -6603,10 +6278,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lab Coat": {
         "name": "Lab Coat",
@@ -6615,10 +6290,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Empress Robe": {
         "name": "Empress Robe",
@@ -6627,10 +6302,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Princess Dress": {
         "name": "Princess Dress",
@@ -6639,10 +6314,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Eternal Coat": {
         "name": "Eternal Coat",
@@ -6651,10 +6326,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Synthetic Plume": {
         "name": "Synthetic Plume",
@@ -6663,10 +6338,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Cheveur Plume": {
         "name": "Cheveur Plume",
@@ -6675,10 +6350,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Metal Wristband": {
         "name": "Metal Wristband",
@@ -6687,10 +6362,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Nymph Hairband": {
         "name": "Nymph Hairband",
@@ -6699,10 +6374,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mother o' Pearl": {
         "name": "Mother o' Pearl",
@@ -6711,10 +6386,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bird Statue": {
         "name": "Bird Statue",
@@ -6723,10 +6398,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Chaos Stole": {
         "name": "Chaos Stole",
@@ -6735,10 +6410,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pendulum": {
         "name": "Pendulum",
@@ -6747,10 +6422,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Chaos Horn": {
         "name": "Chaos Horn",
@@ -6759,10 +6434,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Filigree Clasp": {
         "name": "Filigree Clasp",
@@ -6771,10 +6446,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Azure Stole": {
         "name": "Azure Stole",
@@ -6783,10 +6458,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ancient Coin": {
         "name": "Ancient Coin",
@@ -6795,10 +6470,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Shiny Rock": {
         "name": "Shiny Rock",
@@ -6807,10 +6482,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Galaxy Earrings": {
         "name": "Galaxy Earrings",
@@ -6819,10 +6494,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Selen's Bangle": {
         "name": "Selen's Bangle",
@@ -6831,10 +6506,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Glass Pumpkin": {
         "name": "Glass Pumpkin",
@@ -6843,10 +6518,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Gilded Egg": {
         "name": "Gilded Egg",
@@ -6855,10 +6530,10 @@
           "Equipment",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Meyef": {
         "name": "Meyef",
@@ -6867,10 +6542,10 @@
           "Everything",
           "Familiar"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Griffin": {
         "name": "Griffin",
@@ -6879,10 +6554,10 @@
           "Everything",
           "Familiar"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Merchant Crow": {
         "name": "Merchant Crow",
@@ -6891,10 +6566,10 @@
           "Everything",
           "Familiar"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Kobo": {
         "name": "Kobo",
@@ -6903,10 +6578,10 @@
           "Everything",
           "Familiar"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sprite": {
         "name": "Sprite",
@@ -6915,10 +6590,10 @@
           "Everything",
           "Familiar"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Demon": {
         "name": "Demon",
@@ -6927,10 +6602,10 @@
           "Everything",
           "Familiar"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Potion": {
         "name": "Potion",
@@ -6939,10 +6614,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Ether": {
         "name": "Ether",
@@ -6951,10 +6626,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "Sand Vial": {
         "name": "Sand Vial",
@@ -6963,10 +6638,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hi-Potion": {
         "name": "Hi-Potion",
@@ -6976,10 +6651,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Hi-Ether": {
         "name": "Hi-Ether",
@@ -6989,10 +6664,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Sand Bottle": {
         "name": "Sand Bottle",
@@ -7001,10 +6676,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Berry Pick-Mi-Up": {
         "name": "Berry Pick-Mi-Up",
@@ -7014,10 +6689,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Berry Pick-Mi-Up+": {
         "name": "Berry Pick-Mi-Up+",
@@ -7027,10 +6702,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Mind Refresh": {
         "name": "Mind Refresh",
@@ -7039,10 +6714,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mind Refresh ULTRA": {
         "name": "Mind Refresh ULTRA",
@@ -7051,10 +6726,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Antidote": {
         "name": "Antidote",
@@ -7063,10 +6738,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Chaos Rose": {
         "name": "Chaos Rose",
@@ -7075,10 +6750,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Warp Shard": {
         "name": "Warp Shard",
@@ -7087,10 +6762,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dream Wisp": {
         "name": "Dream Wisp",
@@ -7099,10 +6774,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "PlaceHolderItem1": {
         "name": "PlaceHolderItem1",
@@ -7111,10 +6786,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lachiemi Sun": {
         "name": "Lachiemi Sun",
@@ -7123,10 +6798,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Jerky": {
         "name": "Jerky",
@@ -7135,10 +6810,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Biscuit": {
         "name": "Biscuit",
@@ -7147,10 +6822,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fried Cheveur": {
         "name": "Fried Cheveur",
@@ -7159,10 +6834,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Saut\u00e9ed Wyvern Tail": {
         "name": "Saut\u00e9ed Wyvern Tail",
@@ -7171,10 +6846,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Unagi Roll": {
         "name": "Unagi Roll",
@@ -7183,10 +6858,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Cheveur au Vin": {
         "name": "Cheveur au Vin",
@@ -7195,10 +6870,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Royal Casserole": {
         "name": "Royal Casserole",
@@ -7207,10 +6882,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Spaghetti": {
         "name": "Spaghetti",
@@ -7219,10 +6894,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Plump Maggot": {
         "name": "Plump Maggot",
@@ -7231,10 +6906,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Juice": {
         "name": "Orange Juice",
@@ -7243,10 +6918,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Filigree Tea": {
         "name": "Filigree Tea",
@@ -7255,10 +6930,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Empress Cake": {
         "name": "Empress Cake",
@@ -7267,10 +6942,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rotten Tail": {
         "name": "Rotten Tail",
@@ -7279,10 +6954,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Alchemy Tools": {
         "name": "Alchemy Tools",
@@ -7291,10 +6966,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Galaxy Stone": {
         "name": "Galaxy Stone",
@@ -7303,10 +6978,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Essence Crystal": {
         "name": "Essence Crystal",
@@ -7315,10 +6990,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Gold Ring": {
         "name": "Gold Ring",
@@ -7327,10 +7002,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Gold Necklace": {
         "name": "Gold Necklace",
@@ -7339,10 +7014,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Herb": {
         "name": "Herb",
@@ -7351,10 +7026,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mushroom": {
         "name": "Mushroom",
@@ -7363,10 +7038,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Plasma Crystal": {
         "name": "Plasma Crystal",
@@ -7375,10 +7050,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Plasma IV Bag": {
         "name": "Plasma IV Bag",
@@ -7387,10 +7062,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Cheveur Drumstick": {
         "name": "Cheveur Drumstick",
@@ -7399,10 +7074,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Wyvern Tail": {
         "name": "Wyvern Tail",
@@ -7411,10 +7086,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Eel Meat": {
         "name": "Eel Meat",
@@ -7423,10 +7098,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Cheveux Breast": {
         "name": "Cheveux Breast",
@@ -7435,10 +7110,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Food Synthesizer": {
         "name": "Food Synthesizer",
@@ -7447,10 +7122,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Cheveux Feather": {
         "name": "Cheveux Feather",
@@ -7459,10 +7134,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Siren Ink": {
         "name": "Siren Ink",
@@ -7471,10 +7146,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Plasma Core": {
         "name": "Plasma Core",
@@ -7483,10 +7158,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Silver Ore": {
         "name": "Silver Ore",
@@ -7495,10 +7170,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Historical Documents": {
         "name": "Historical Documents",
@@ -7507,10 +7182,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "MapReveal 0": {
         "name": "MapReveal 0",
@@ -7519,10 +7194,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "MapReveal 1": {
         "name": "MapReveal 1",
@@ -7531,10 +7206,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "MapReveal 2": {
         "name": "MapReveal 2",
@@ -7543,10 +7218,10 @@
           "Everything",
           "UseItem"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Timespinner Wheel": {
         "name": "Timespinner Wheel",
@@ -7555,10 +7230,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Timespinner Spindle": {
         "name": "Timespinner Spindle",
@@ -7567,10 +7242,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Timespinner Gear 1": {
         "name": "Timespinner Gear 1",
@@ -7579,10 +7254,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Timespinner Gear 2": {
         "name": "Timespinner Gear 2",
@@ -7591,10 +7266,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Timespinner Gear 3": {
         "name": "Timespinner Gear 3",
@@ -7603,10 +7278,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Twin Pyramid Key": {
         "name": "Twin Pyramid Key",
@@ -7615,10 +7290,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Celestial Sash": {
         "name": "Celestial Sash",
@@ -7627,10 +7302,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Succubus Hairpin": {
         "name": "Succubus Hairpin",
@@ -7639,10 +7314,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Talaria Attachment": {
         "name": "Talaria Attachment",
@@ -7651,10 +7326,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Water Mask": {
         "name": "Water Mask",
@@ -7663,10 +7338,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Gas Mask": {
         "name": "Gas Mask",
@@ -7675,10 +7350,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Soul Scanner": {
         "name": "Soul Scanner",
@@ -7687,10 +7362,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Security Keycard A": {
         "name": "Security Keycard A",
@@ -7699,10 +7374,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Security Keycard B": {
         "name": "Security Keycard B",
@@ -7711,10 +7386,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Security Keycard C": {
         "name": "Security Keycard C",
@@ -7723,10 +7398,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Security Keycard D": {
         "name": "Security Keycard D",
@@ -7735,10 +7410,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Library Keycard V": {
         "name": "Library Keycard V",
@@ -7747,10 +7422,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tablet": {
         "name": "Tablet",
@@ -7759,10 +7434,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Elevator Keycard": {
         "name": "Elevator Keycard",
@@ -7771,10 +7446,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Jewelry Box": {
         "name": "Jewelry Box",
@@ -7783,10 +7458,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Goddess Brooch": {
         "name": "Goddess Brooch",
@@ -7795,10 +7470,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Wyrm Brooch": {
         "name": "Wyrm Brooch",
@@ -7807,10 +7482,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Greed Brooch": {
         "name": "Greed Brooch",
@@ -7819,10 +7494,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Eternal Brooch": {
         "name": "Eternal Brooch",
@@ -7831,10 +7506,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blue Orb": {
         "name": "Blue Orb",
@@ -7843,10 +7518,10 @@
           "Everything",
           "Orb Melee"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blade Orb": {
         "name": "Blade Orb",
@@ -7855,10 +7530,10 @@
           "Everything",
           "Orb Melee"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fire Orb": {
         "name": "Fire Orb",
@@ -7867,10 +7542,10 @@
           "Everything",
           "Orb Melee"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Plasma Orb": {
         "name": "Plasma Orb",
@@ -7879,10 +7554,10 @@
           "Everything",
           "Orb Melee"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Iron Orb": {
         "name": "Iron Orb",
@@ -7891,10 +7566,10 @@
           "Everything",
           "Orb Melee"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ice Orb": {
         "name": "Ice Orb",
@@ -7903,10 +7578,10 @@
           "Everything",
           "Orb Melee"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Wind Orb": {
         "name": "Wind Orb",
@@ -7915,10 +7590,10 @@
           "Everything",
           "Orb Melee"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Gun Orb": {
         "name": "Gun Orb",
@@ -7927,10 +7602,10 @@
           "Everything",
           "Orb Melee"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Umbra Orb": {
         "name": "Umbra Orb",
@@ -7939,10 +7614,10 @@
           "Everything",
           "Orb Melee"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Empire Orb": {
         "name": "Empire Orb",
@@ -7951,10 +7626,10 @@
           "Everything",
           "Orb Melee"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Eye Orb": {
         "name": "Eye Orb",
@@ -7963,10 +7638,10 @@
           "Everything",
           "Orb Melee"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blood Orb": {
         "name": "Blood Orb",
@@ -7975,10 +7650,10 @@
           "Everything",
           "Orb Melee"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Forbidden Tome": {
         "name": "Forbidden Tome",
@@ -7987,10 +7662,10 @@
           "Everything",
           "Orb Melee"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Shattered Orb": {
         "name": "Shattered Orb",
@@ -7999,10 +7674,10 @@
           "Everything",
           "Orb Melee"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Nether Orb": {
         "name": "Nether Orb",
@@ -8011,10 +7686,10 @@
           "Everything",
           "Orb Melee"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Radiant Orb": {
         "name": "Radiant Orb",
@@ -8023,10 +7698,10 @@
           "Everything",
           "Orb Melee"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Aura Blast": {
         "name": "Aura Blast",
@@ -8035,10 +7710,10 @@
           "Everything",
           "Orb Spell"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Colossal Blade": {
         "name": "Colossal Blade",
@@ -8047,10 +7722,10 @@
           "Everything",
           "Orb Spell"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Infernal Flames": {
         "name": "Infernal Flames",
@@ -8059,10 +7734,10 @@
           "Everything",
           "Orb Spell"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Plasma Geyser": {
         "name": "Plasma Geyser",
@@ -8071,10 +7746,10 @@
           "Everything",
           "Orb Spell"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Colossal Hammer": {
         "name": "Colossal Hammer",
@@ -8083,10 +7758,10 @@
           "Everything",
           "Orb Spell"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Frozen Spires": {
         "name": "Frozen Spires",
@@ -8095,10 +7770,10 @@
           "Everything",
           "Orb Spell"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Storm Eye": {
         "name": "Storm Eye",
@@ -8107,10 +7782,10 @@
           "Everything",
           "Orb Spell"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Arm Cannon": {
         "name": "Arm Cannon",
@@ -8119,10 +7794,10 @@
           "Everything",
           "Orb Spell"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dark Flames": {
         "name": "Dark Flames",
@@ -8131,10 +7806,10 @@
           "Everything",
           "Orb Spell"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Aura Serpent": {
         "name": "Aura Serpent",
@@ -8143,10 +7818,10 @@
           "Everything",
           "Orb Spell"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Chaos Blades": {
         "name": "Chaos Blades",
@@ -8155,10 +7830,10 @@
           "Everything",
           "Orb Spell"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crimson Vortex": {
         "name": "Crimson Vortex",
@@ -8167,10 +7842,10 @@
           "Everything",
           "Orb Spell"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Djinn Inferno": {
         "name": "Djinn Inferno",
@@ -8179,10 +7854,10 @@
           "Everything",
           "Orb Spell"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bombardment": {
         "name": "Bombardment",
@@ -8191,10 +7866,10 @@
           "Everything",
           "Orb Spell"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Corruption": {
         "name": "Corruption",
@@ -8203,10 +7878,10 @@
           "Everything",
           "Orb Spell"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lightwall": {
         "name": "Lightwall",
@@ -8215,10 +7890,10 @@
           "Everything",
           "Orb Spell"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bleak Ring": {
         "name": "Bleak Ring",
@@ -8227,10 +7902,10 @@
           "Everything",
           "Orb Passive"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Scythe Ring": {
         "name": "Scythe Ring",
@@ -8239,10 +7914,10 @@
           "Everything",
           "Orb Passive"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Pyro Ring": {
         "name": "Pyro Ring",
@@ -8251,10 +7926,10 @@
           "Everything",
           "Orb Passive"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Royal Ring": {
         "name": "Royal Ring",
@@ -8263,10 +7938,10 @@
           "Everything",
           "Orb Passive"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Shield Ring": {
         "name": "Shield Ring",
@@ -8275,10 +7950,10 @@
           "Everything",
           "Orb Passive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Icicle Ring": {
         "name": "Icicle Ring",
@@ -8287,10 +7962,10 @@
           "Everything",
           "Orb Passive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Tailwind Ring": {
         "name": "Tailwind Ring",
@@ -8299,10 +7974,10 @@
           "Everything",
           "Orb Passive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Economizer Ring": {
         "name": "Economizer Ring",
@@ -8311,10 +7986,10 @@
           "Everything",
           "Orb Passive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dusk Ring": {
         "name": "Dusk Ring",
@@ -8323,10 +7998,10 @@
           "Everything",
           "Orb Passive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Star of Lachiem": {
         "name": "Star of Lachiem",
@@ -8335,10 +8010,10 @@
           "Everything",
           "Orb Passive"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Oculus Ring": {
         "name": "Oculus Ring",
@@ -8347,10 +8022,10 @@
           "Everything",
           "Orb Passive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sanguine Ring": {
         "name": "Sanguine Ring",
@@ -8359,10 +8034,10 @@
           "Everything",
           "Orb Passive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sun Ring": {
         "name": "Sun Ring",
@@ -8371,10 +8046,10 @@
           "Everything",
           "Orb Passive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Silence Ring": {
         "name": "Silence Ring",
@@ -8383,10 +8058,10 @@
           "Everything",
           "Orb Passive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Shadow Seal": {
         "name": "Shadow Seal",
@@ -8395,10 +8070,10 @@
           "Everything",
           "Orb Passive"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Hope Ring": {
         "name": "Hope Ring",
@@ -8407,10 +8082,10 @@
           "Everything",
           "Orb Passive"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Max HP": {
         "name": "Max HP",
@@ -8419,10 +8094,10 @@
           "Everything",
           "Stat"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 12,
-        "classification": "filler"
+        "max_count": 12
       },
       "Max Aura": {
         "name": "Max Aura",
@@ -8431,10 +8106,10 @@
           "Everything",
           "Stat"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 13,
-        "classification": "filler"
+        "max_count": 13
       },
       "Timeworn Warp Beacon": {
         "name": "Timeworn Warp Beacon",
@@ -8443,10 +8118,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Modern Warp Beacon": {
         "name": "Modern Warp Beacon",
@@ -8455,10 +8130,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mysterious Warp Beacon": {
         "name": "Mysterious Warp Beacon",
@@ -8467,10 +8142,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Meteor Sparrow Trap": {
         "name": "Meteor Sparrow Trap",
@@ -8479,10 +8154,10 @@
           "Everything",
           "Trap"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "trap"
+        "max_count": 1
       },
       "Poison Trap": {
         "name": "Poison Trap",
@@ -8491,10 +8166,10 @@
           "Everything",
           "Trap"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Chaos Trap": {
         "name": "Chaos Trap",
@@ -8503,10 +8178,10 @@
           "Everything",
           "Trap"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "trap"
+        "max_count": 1
       },
       "Neurotoxin Trap": {
         "name": "Neurotoxin Trap",
@@ -8515,10 +8190,10 @@
           "Everything",
           "Trap"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bee Trap": {
         "name": "Bee Trap",
@@ -8527,10 +8202,10 @@
           "Everything",
           "Trap"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Laser Access A": {
         "name": "Laser Access A",
@@ -8539,10 +8214,10 @@
           "Everything",
           "Laser Access"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Laser Access I": {
         "name": "Laser Access I",
@@ -8551,10 +8226,10 @@
           "Everything",
           "Laser Access"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Laser Access M": {
         "name": "Laser Access M",
@@ -8563,10 +8238,10 @@
           "Everything",
           "Laser Access"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Throw Stun Trap": {
         "name": "Throw Stun Trap",
@@ -8575,10 +8250,10 @@
           "Everything",
           "Trap"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lab Access Genza": {
         "name": "Lab Access Genza",
@@ -8587,10 +8262,10 @@
           "Everything",
           "Lab Access"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lab Access Experiment": {
         "name": "Lab Access Experiment",
@@ -8599,10 +8274,10 @@
           "Everything",
           "Lab Access"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lab Access Research": {
         "name": "Lab Access Research",
@@ -8611,10 +8286,10 @@
           "Everything",
           "Lab Access"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lab Access Dynamo": {
         "name": "Lab Access Dynamo",
@@ -8623,10 +8298,10 @@
           "Everything",
           "Lab Access"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Drawbridge Key": {
         "name": "Drawbridge Key",
@@ -8635,10 +8310,10 @@
           "Everything",
           "Key"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Cube of Bodie": {
         "name": "Cube of Bodie",
@@ -8647,10 +8322,10 @@
           "Everything",
           "Relic"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Spider Trap": {
         "name": "Spider Trap",
@@ -8659,10 +8334,10 @@
           "Everything",
           "Trap"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lights Out Trap": {
         "name": "Lights Out Trap",
@@ -8671,10 +8346,10 @@
           "Everything",
           "Trap"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Palm Punch Trap": {
         "name": "Palm Punch Trap",
@@ -8683,10 +8358,10 @@
           "Everything",
           "Trap"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Max Sand": {
         "name": "Max Sand",
@@ -8695,10 +8370,10 @@
           "Everything",
           "Stat"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 14,
-        "classification": "filler"
+        "max_count": 14
       },
       "Killed Emperor": {
         "name": "Killed Emperor",
@@ -8706,10 +8381,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Killed Maw": {
         "name": "Killed Maw",
@@ -8717,10 +8392,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Killed Twins": {
         "name": "Killed Twins",
@@ -8728,10 +8403,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Killed Aelana": {
         "name": "Killed Aelana",
@@ -8739,10 +8414,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Killed Nightmare": {
         "name": "Killed Nightmare",
@@ -8750,10 +8425,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },
@@ -10498,8 +10173,10 @@
         "type": "or",
         "conditions": [
           {
-            "type": "helper",
-            "name": "has_upwarddash"
+            "type": "item_check",
+            "item": "Upwarddash",
+            "inferred": true,
+            "description": "Requires having Upwarddash"
           },
           {
             "type": "and",
@@ -10509,8 +10186,10 @@
                 "item": "Timespinner Wheel"
               },
               {
-                "type": "helper",
-                "name": "has_doublejump"
+                "type": "item_check",
+                "item": "Doublejump",
+                "inferred": true,
+                "description": "Requires having Doublejump"
               }
             ]
           }
@@ -10554,8 +10233,10 @@
         "type": "or",
         "conditions": [
           {
-            "type": "helper",
-            "name": "has_upwarddash"
+            "type": "item_check",
+            "item": "Upwarddash",
+            "inferred": true,
+            "description": "Requires having Upwarddash"
           },
           {
             "type": "and",
@@ -10565,8 +10246,10 @@
                 "item": "Talaria Attachment"
               },
               {
-                "type": "helper",
-                "name": "has_doublejump"
+                "type": "item_check",
+                "item": "Doublejump",
+                "inferred": true,
+                "description": "Requires having Doublejump"
               }
             ]
           }

@@ -15736,10 +15736,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Bow": {
         "name": "Bow",
@@ -15747,10 +15747,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Magical Boomerang": {
         "name": "Magical Boomerang",
@@ -15758,10 +15758,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Raft": {
         "name": "Raft",
@@ -15769,10 +15769,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Stepladder": {
         "name": "Stepladder",
@@ -15780,10 +15780,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Recorder": {
         "name": "Recorder",
@@ -15791,10 +15791,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Magical Rod": {
         "name": "Magical Rod",
@@ -15803,10 +15803,10 @@
           "Everything",
           "weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Red Candle": {
         "name": "Red Candle",
@@ -15816,10 +15816,10 @@
           "candles",
           "weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Book of Magic": {
         "name": "Book of Magic",
@@ -15827,10 +15827,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Magical Key": {
         "name": "Magical Key",
@@ -15838,10 +15838,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Red Ring": {
         "name": "Red Ring",
@@ -15849,10 +15849,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Silver Arrow": {
         "name": "Silver Arrow",
@@ -15861,10 +15861,10 @@
           "Everything",
           "arrows"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sword": {
         "name": "Sword",
@@ -15874,10 +15874,10 @@
           "swords",
           "weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "White Sword": {
         "name": "White Sword",
@@ -15887,10 +15887,10 @@
           "swords",
           "weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Magical Sword": {
         "name": "Magical Sword",
@@ -15900,10 +15900,10 @@
           "swords",
           "weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Heart Container": {
         "name": "Heart Container",
@@ -15911,10 +15911,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 13,
-        "classification": "progression"
+        "max_count": 13
       },
       "Letter": {
         "name": "Letter",
@@ -15922,10 +15922,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Magical Shield": {
         "name": "Magical Shield",
@@ -15933,10 +15933,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "useful"
+        "max_count": 3
       },
       "Candle": {
         "name": "Candle",
@@ -15945,10 +15945,10 @@
           "Everything",
           "candles"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Arrow": {
         "name": "Arrow",
@@ -15957,10 +15957,10 @@
           "Everything",
           "arrows"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Food": {
         "name": "Food",
@@ -15968,10 +15968,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Water of Life (Blue)": {
         "name": "Water of Life (Blue)",
@@ -15979,10 +15979,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "useful"
+        "max_count": 3
       },
       "Water of Life (Red)": {
         "name": "Water of Life (Red)",
@@ -15990,10 +15990,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "Blue Ring": {
         "name": "Blue Ring",
@@ -16001,10 +16001,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Triforce Fragment": {
         "name": "Triforce Fragment",
@@ -16012,10 +16012,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 8,
-        "classification": "progression"
+        "max_count": 8
       },
       "Power Bracelet": {
         "name": "Power Bracelet",
@@ -16023,10 +16023,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Small Key": {
         "name": "Small Key",
@@ -16034,10 +16034,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 49,
-        "classification": "filler"
+        "max_count": 49
       },
       "Bomb": {
         "name": "Bomb",
@@ -16045,10 +16045,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 26,
-        "classification": "progression"
+        "max_count": 26
       },
       "Recovery Heart": {
         "name": "Recovery Heart",
@@ -16056,10 +16056,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Five Rupees": {
         "name": "Five Rupees",
@@ -16067,10 +16067,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 18,
-        "classification": "filler"
+        "max_count": 18
       },
       "Rupee": {
         "name": "Rupee",
@@ -16078,10 +16078,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Clock": {
         "name": "Clock",
@@ -16089,10 +16089,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Fairy": {
         "name": "Fairy",
@@ -16100,10 +16100,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "filler"
+        "max_count": 6
       },
       "Boss 1 Defeated": {
         "name": "Boss 1 Defeated",
@@ -16111,10 +16111,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Boss 2 Defeated": {
         "name": "Boss 2 Defeated",
@@ -16122,10 +16122,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Boss 3 Defeated": {
         "name": "Boss 3 Defeated",
@@ -16133,10 +16133,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Boss 4 Defeated": {
         "name": "Boss 4 Defeated",
@@ -16144,10 +16144,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Boss 5 Defeated": {
         "name": "Boss 5 Defeated",
@@ -16155,10 +16155,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Boss 6 Defeated": {
         "name": "Boss 6 Defeated",
@@ -16166,10 +16166,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Boss 7 Defeated": {
         "name": "Boss 7 Defeated",
@@ -16177,10 +16177,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Boss 8 Defeated": {
         "name": "Boss 8 Defeated",
@@ -16188,10 +16188,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Triforce of Power": {
         "name": "Triforce of Power",
@@ -16199,10 +16199,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rescued Zelda!": {
         "name": "Rescued Zelda!",
@@ -16210,10 +16210,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

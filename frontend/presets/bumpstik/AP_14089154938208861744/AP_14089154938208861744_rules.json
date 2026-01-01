@@ -1705,10 +1705,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Score Bonus": {
         "name": "Score Bonus",
@@ -1716,10 +1716,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 22,
-        "classification": "filler"
+        "max_count": 22
       },
       "Task Advance": {
         "name": "Task Advance",
@@ -1728,10 +1728,10 @@
           "Everything",
           "Helpers"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "useful"
+        "max_count": 4
       },
       "Starting Turner": {
         "name": "Starting Turner",
@@ -1740,10 +1740,10 @@
           "Everything",
           "Helpers"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "useful"
+        "max_count": 3
       },
       "Reserved": {
         "name": "Reserved",
@@ -1751,10 +1751,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Starting Paint Can": {
         "name": "Starting Paint Can",
@@ -1763,10 +1763,10 @@
           "Everything",
           "Helpers"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "useful"
+        "max_count": 3
       },
       "Booster Bumper": {
         "name": "Booster Bumper",
@@ -1775,10 +1775,10 @@
           "Everything",
           "Targets"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "progression"
+        "max_count": 5
       },
       "Hazard Bumper": {
         "name": "Hazard Bumper",
@@ -1787,10 +1787,10 @@
           "Everything",
           "Targets"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 25,
-        "classification": "progression"
+        "max_count": 25
       },
       "Treasure Bumper": {
         "name": "Treasure Bumper",
@@ -1799,10 +1799,10 @@
           "Everything",
           "Targets"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 33,
-        "classification": "progression"
+        "max_count": 33
       },
       "Rainbow Trap": {
         "name": "Rainbow Trap",
@@ -1811,10 +1811,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "trap"
+        "max_count": 3
       },
       "Spinner Trap": {
         "name": "Spinner Trap",
@@ -1823,10 +1823,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "trap"
+        "max_count": 2
       },
       "Killer Trap": {
         "name": "Killer Trap",
@@ -1835,10 +1835,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       }
     }
   },

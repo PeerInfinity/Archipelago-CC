@@ -4652,10 +4652,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Lightweight High Capacity Tank": {
         "name": "Lightweight High Capacity Tank",
@@ -4663,10 +4663,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Vehicle Upgrade Console": {
         "name": "Vehicle Upgrade Console",
@@ -4674,10 +4674,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ultra Glide Fins": {
         "name": "Ultra Glide Fins",
@@ -4685,10 +4685,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cyclops Sonar Upgrade": {
         "name": "Cyclops Sonar Upgrade",
@@ -4696,10 +4696,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Reinforced Dive Suit": {
         "name": "Reinforced Dive Suit",
@@ -4707,10 +4707,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Cyclops Thermal Reactor Module": {
         "name": "Cyclops Thermal Reactor Module",
@@ -4718,10 +4718,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Water Filtration Suit": {
         "name": "Water Filtration Suit",
@@ -4729,10 +4729,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Alien Containment": {
         "name": "Alien Containment",
@@ -4740,10 +4740,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Creature Decoy": {
         "name": "Creature Decoy",
@@ -4751,10 +4751,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Cyclops Fire Suppression System": {
         "name": "Cyclops Fire Suppression System",
@@ -4762,10 +4762,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Swim Charge Fins": {
         "name": "Swim Charge Fins",
@@ -4773,10 +4773,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Repulsion Cannon": {
         "name": "Repulsion Cannon",
@@ -4784,10 +4784,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Cyclops Decoy Tube Upgrade": {
         "name": "Cyclops Decoy Tube Upgrade",
@@ -4795,10 +4795,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Cyclops Shield Generator": {
         "name": "Cyclops Shield Generator",
@@ -4806,10 +4806,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cyclops Depth Module MK1": {
         "name": "Cyclops Depth Module MK1",
@@ -4817,10 +4817,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cyclops Docking Bay Repair Module": {
         "name": "Cyclops Docking Bay Repair Module",
@@ -4828,10 +4828,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Battery Charger fragment": {
         "name": "Battery Charger fragment",
@@ -4839,10 +4839,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "Beacon Fragment": {
         "name": "Beacon Fragment",
@@ -4850,10 +4850,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Bioreactor Fragment": {
         "name": "Bioreactor Fragment",
@@ -4861,10 +4861,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "Cyclops Bridge Fragment": {
         "name": "Cyclops Bridge Fragment",
@@ -4872,10 +4872,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "progression"
+        "max_count": 5
       },
       "Cyclops Engine Fragment": {
         "name": "Cyclops Engine Fragment",
@@ -4883,10 +4883,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "progression"
+        "max_count": 5
       },
       "Cyclops Hull Fragment": {
         "name": "Cyclops Hull Fragment",
@@ -4894,10 +4894,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "progression"
+        "max_count": 5
       },
       "Grav Trap Fragment": {
         "name": "Grav Trap Fragment",
@@ -4905,10 +4905,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Laser Cutter Fragment": {
         "name": "Laser Cutter Fragment",
@@ -4916,10 +4916,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "progression"
+        "max_count": 4
       },
       "Light Stick Fragment": {
         "name": "Light Stick Fragment",
@@ -4927,10 +4927,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mobile Vehicle Bay Fragment": {
         "name": "Mobile Vehicle Bay Fragment",
@@ -4938,10 +4938,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "progression"
+        "max_count": 6
       },
       "Modification Station Fragment": {
         "name": "Modification Station Fragment",
@@ -4949,10 +4949,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "progression"
+        "max_count": 4
       },
       "Moonpool Fragment": {
         "name": "Moonpool Fragment",
@@ -4960,10 +4960,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "Nuclear Reactor Fragment": {
         "name": "Nuclear Reactor Fragment",
@@ -4971,10 +4971,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "useful"
+        "max_count": 3
       },
       "Power Cell Charger Fragment": {
         "name": "Power Cell Charger Fragment",
@@ -4982,10 +4982,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "Power Transmitter Fragment": {
         "name": "Power Transmitter Fragment",
@@ -4993,10 +4993,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Prawn Suit Fragment": {
         "name": "Prawn Suit Fragment",
@@ -5004,10 +5004,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "progression"
+        "max_count": 7
       },
       "Prawn Suit Drill Arm Fragment": {
         "name": "Prawn Suit Drill Arm Fragment",
@@ -5015,10 +5015,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "Prawn Suit Grappling Arm Fragment": {
         "name": "Prawn Suit Grappling Arm Fragment",
@@ -5026,10 +5026,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "Prawn Suit Propulsion Cannon Fragment": {
         "name": "Prawn Suit Propulsion Cannon Fragment",
@@ -5037,10 +5037,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "Prawn Suit Torpedo Arm Fragment": {
         "name": "Prawn Suit Torpedo Arm Fragment",
@@ -5048,10 +5048,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "Scanner Room Fragment": {
         "name": "Scanner Room Fragment",
@@ -5059,10 +5059,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "useful"
+        "max_count": 3
       },
       "Seamoth Fragment": {
         "name": "Seamoth Fragment",
@@ -5070,10 +5070,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "progression"
+        "max_count": 6
       },
       "Stasis Rifle Fragment": {
         "name": "Stasis Rifle Fragment",
@@ -5081,10 +5081,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Thermal Plant Fragment": {
         "name": "Thermal Plant Fragment",
@@ -5092,10 +5092,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "Seaglide Fragment": {
         "name": "Seaglide Fragment",
@@ -5103,10 +5103,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "progression"
+        "max_count": 4
       },
       "Radiation Suit": {
         "name": "Radiation Suit",
@@ -5114,10 +5114,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Propulsion Cannon Fragment": {
         "name": "Propulsion Cannon Fragment",
@@ -5125,10 +5125,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Neptune Launch Platform": {
         "name": "Neptune Launch Platform",
@@ -5136,10 +5136,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "max_count": 1
       },
       "Ion Power Cell": {
         "name": "Ion Power Cell",
@@ -5147,10 +5147,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Exterior Growbed": {
         "name": "Exterior Growbed",
@@ -5158,10 +5158,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Picture Frame": {
         "name": "Picture Frame",
@@ -5169,10 +5169,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bench": {
         "name": "Bench",
@@ -5180,10 +5180,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Basic Plant Pot": {
         "name": "Basic Plant Pot",
@@ -5191,10 +5191,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Interior Growbed": {
         "name": "Interior Growbed",
@@ -5202,10 +5202,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Plant Shelf": {
         "name": "Plant Shelf",
@@ -5213,10 +5213,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Observatory": {
         "name": "Observatory",
@@ -5224,10 +5224,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Multipurpose Room": {
         "name": "Multipurpose Room",
@@ -5235,10 +5235,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bulkhead": {
         "name": "Bulkhead",
@@ -5246,10 +5246,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Spotlight": {
         "name": "Spotlight",
@@ -5257,10 +5257,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Desk": {
         "name": "Desk",
@@ -5268,10 +5268,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Swivel Chair": {
         "name": "Swivel Chair",
@@ -5279,10 +5279,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Office Chair": {
         "name": "Office Chair",
@@ -5290,10 +5290,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Command Chair": {
         "name": "Command Chair",
@@ -5301,10 +5301,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Counter": {
         "name": "Counter",
@@ -5312,10 +5312,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Single Bed": {
         "name": "Single Bed",
@@ -5323,10 +5323,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Basic Double Bed": {
         "name": "Basic Double Bed",
@@ -5334,10 +5334,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Quilted Double Bed": {
         "name": "Quilted Double Bed",
@@ -5345,10 +5345,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Coffee Vending Machine": {
         "name": "Coffee Vending Machine",
@@ -5356,10 +5356,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Trash Can": {
         "name": "Trash Can",
@@ -5367,10 +5367,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Floodlight": {
         "name": "Floodlight",
@@ -5378,10 +5378,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bar Table": {
         "name": "Bar Table",
@@ -5389,10 +5389,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Vending Machine": {
         "name": "Vending Machine",
@@ -5400,10 +5400,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Single Wall Shelf": {
         "name": "Single Wall Shelf",
@@ -5411,10 +5411,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Wall Shelves": {
         "name": "Wall Shelves",
@@ -5422,10 +5422,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Round Plant Pot": {
         "name": "Round Plant Pot",
@@ -5433,10 +5433,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Chic Plant Pot": {
         "name": "Chic Plant Pot",
@@ -5444,10 +5444,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Nuclear Waste Disposal": {
         "name": "Nuclear Waste Disposal",
@@ -5455,10 +5455,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Wall Planter": {
         "name": "Wall Planter",
@@ -5466,10 +5466,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ion Battery": {
         "name": "Ion Battery",
@@ -5477,10 +5477,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Neptune Gantry": {
         "name": "Neptune Gantry",
@@ -5488,10 +5488,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "max_count": 1
       },
       "Neptune Boosters": {
         "name": "Neptune Boosters",
@@ -5499,10 +5499,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "max_count": 1
       },
       "Neptune Fuel Reserve": {
         "name": "Neptune Fuel Reserve",
@@ -5510,10 +5510,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "max_count": 1
       },
       "Neptune Cockpit": {
         "name": "Neptune Cockpit",
@@ -5521,10 +5521,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "max_count": 1
       },
       "Water Filtration Machine": {
         "name": "Water Filtration Machine",
@@ -5532,10 +5532,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ultra High Capacity Tank": {
         "name": "Ultra High Capacity Tank",
@@ -5543,10 +5543,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Large Room": {
         "name": "Large Room",
@@ -5554,10 +5554,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Large Room Glass Dome": {
         "name": "Large Room Glass Dome",
@@ -5565,10 +5565,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Multipurpose Room Glass Dome": {
         "name": "Multipurpose Room Glass Dome",
@@ -5576,10 +5576,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Partition": {
         "name": "Partition",
@@ -5587,10 +5587,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Partition Door": {
         "name": "Partition Door",
@@ -5598,10 +5598,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Furniture": {
         "name": "Furniture",
@@ -5609,10 +5609,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Farming": {
         "name": "Farming",
@@ -5620,10 +5620,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Resources Bundle": {
         "name": "Resources Bundle",
@@ -5631,10 +5631,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Titanium": {
         "name": "Titanium",
@@ -5642,10 +5642,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Copper Ore": {
         "name": "Copper Ore",
@@ -5653,10 +5653,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Silver Ore": {
         "name": "Silver Ore",
@@ -5664,10 +5664,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Gold": {
         "name": "Gold",
@@ -5675,10 +5675,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lead": {
         "name": "Lead",
@@ -5686,10 +5686,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Diamond": {
         "name": "Diamond",
@@ -5697,10 +5697,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lithium": {
         "name": "Lithium",
@@ -5708,10 +5708,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ruby": {
         "name": "Ruby",
@@ -5719,10 +5719,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Nickel Ore": {
         "name": "Nickel Ore",
@@ -5730,10 +5730,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystalline Sulfur": {
         "name": "Crystalline Sulfur",
@@ -5741,10 +5741,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Salt Deposit": {
         "name": "Salt Deposit",
@@ -5752,10 +5752,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Kyanite": {
         "name": "Kyanite",
@@ -5763,10 +5763,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Magnetite": {
         "name": "Magnetite",
@@ -5774,10 +5774,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reactor Rod": {
         "name": "Reactor Rod",
@@ -5785,10 +5785,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Victory": {
         "name": "Victory",
@@ -5796,10 +5796,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Disable Quarantine": {
         "name": "Disable Quarantine",
@@ -5807,10 +5807,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Full Infection": {
         "name": "Full Infection",
@@ -5818,10 +5818,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Repair Aurora Drive": {
         "name": "Repair Aurora Drive",
@@ -5829,10 +5829,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

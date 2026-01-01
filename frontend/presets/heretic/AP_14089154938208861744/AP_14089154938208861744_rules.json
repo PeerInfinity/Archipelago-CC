@@ -9681,10 +9681,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ethereal Crossbow": {
         "name": "Ethereal Crossbow",
@@ -9693,10 +9693,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dragon Claw": {
         "name": "Dragon Claw",
@@ -9705,10 +9705,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Phoenix Rod": {
         "name": "Phoenix Rod",
@@ -9717,10 +9717,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Firemace": {
         "name": "Firemace",
@@ -9729,10 +9729,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hellstaff": {
         "name": "Hellstaff",
@@ -9741,10 +9741,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bag of Holding": {
         "name": "Bag of Holding",
@@ -9752,10 +9752,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Chaos Device": {
         "name": "Chaos Device",
@@ -9764,10 +9764,10 @@
           "Artifacts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Morph Ovum": {
         "name": "Morph Ovum",
@@ -9776,10 +9776,10 @@
           "Artifacts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 9,
-        "classification": "filler"
+        "max_count": 9
       },
       "Mystic Urn": {
         "name": "Mystic Urn",
@@ -9788,10 +9788,10 @@
           "Artifacts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "filler"
+        "max_count": 6
       },
       "Quartz Flask": {
         "name": "Quartz Flask",
@@ -9800,10 +9800,10 @@
           "Artifacts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 22,
-        "classification": "filler"
+        "max_count": 22
       },
       "Ring of Invincibility": {
         "name": "Ring of Invincibility",
@@ -9812,10 +9812,10 @@
           "Artifacts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Shadowsphere": {
         "name": "Shadowsphere",
@@ -9824,10 +9824,10 @@
           "Artifacts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Timebomb of the Ancients": {
         "name": "Timebomb of the Ancients",
@@ -9836,10 +9836,10 @@
           "Artifacts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 48,
-        "classification": "filler"
+        "max_count": 48
       },
       "Tome of Power": {
         "name": "Tome of Power",
@@ -9848,10 +9848,10 @@
           "Artifacts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 48,
-        "classification": "filler"
+        "max_count": 48
       },
       "Torch": {
         "name": "Torch",
@@ -9860,10 +9860,10 @@
           "Artifacts",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 15,
-        "classification": "filler"
+        "max_count": 15
       },
       "Silver Shield": {
         "name": "Silver Shield",
@@ -9872,10 +9872,10 @@
           "Armors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 30,
-        "classification": "filler"
+        "max_count": 30
       },
       "Enchanted Shield": {
         "name": "Enchanted Shield",
@@ -9884,10 +9884,10 @@
           "Armors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 15,
-        "classification": "filler"
+        "max_count": 15
       },
       "Crystal Geode": {
         "name": "Crystal Geode",
@@ -9896,10 +9896,10 @@
           "Ammos",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 20,
-        "classification": "filler"
+        "max_count": 20
       },
       "Energy Orb": {
         "name": "Energy Orb",
@@ -9908,10 +9908,10 @@
           "Ammos",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 17,
-        "classification": "filler"
+        "max_count": 17
       },
       "Greater Runes": {
         "name": "Greater Runes",
@@ -9920,10 +9920,10 @@
           "Ammos",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 30,
-        "classification": "filler"
+        "max_count": 30
       },
       "Inferno Orb": {
         "name": "Inferno Orb",
@@ -9932,10 +9932,10 @@
           "Ammos",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 30,
-        "classification": "filler"
+        "max_count": 30
       },
       "Pile of Mace Spheres": {
         "name": "Pile of Mace Spheres",
@@ -9944,10 +9944,10 @@
           "Ammos",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 26,
-        "classification": "filler"
+        "max_count": 26
       },
       "Quiver of Ethereal Arrows": {
         "name": "Quiver of Ethereal Arrows",
@@ -9956,10 +9956,10 @@
           "Ammos",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 30,
-        "classification": "filler"
+        "max_count": 30
       },
       "The Docks (E1M1) - Yellow key": {
         "name": "The Docks (E1M1) - Yellow key",
@@ -9969,10 +9969,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Dungeons (E1M2) - Yellow key": {
         "name": "The Dungeons (E1M2) - Yellow key",
@@ -9982,10 +9982,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Dungeons (E1M2) - Green key": {
         "name": "The Dungeons (E1M2) - Green key",
@@ -9995,10 +9995,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Dungeons (E1M2) - Blue key": {
         "name": "The Dungeons (E1M2) - Blue key",
@@ -10008,10 +10008,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Gatehouse (E1M3) - Yellow key": {
         "name": "The Gatehouse (E1M3) - Yellow key",
@@ -10021,10 +10021,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Gatehouse (E1M3) - Green key": {
         "name": "The Gatehouse (E1M3) - Green key",
@@ -10034,10 +10034,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Guard Tower (E1M4) - Yellow key": {
         "name": "The Guard Tower (E1M4) - Yellow key",
@@ -10047,10 +10047,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Guard Tower (E1M4) - Green key": {
         "name": "The Guard Tower (E1M4) - Green key",
@@ -10060,10 +10060,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Citadel (E1M5) - Green key": {
         "name": "The Citadel (E1M5) - Green key",
@@ -10073,10 +10073,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Citadel (E1M5) - Yellow key": {
         "name": "The Citadel (E1M5) - Yellow key",
@@ -10086,10 +10086,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Citadel (E1M5) - Blue key": {
         "name": "The Citadel (E1M5) - Blue key",
@@ -10099,10 +10099,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Cathedral (E1M6) - Yellow key": {
         "name": "The Cathedral (E1M6) - Yellow key",
@@ -10112,10 +10112,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Cathedral (E1M6) - Green key": {
         "name": "The Cathedral (E1M6) - Green key",
@@ -10125,10 +10125,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Crypts (E1M7) - Yellow key": {
         "name": "The Crypts (E1M7) - Yellow key",
@@ -10138,10 +10138,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Crypts (E1M7) - Green key": {
         "name": "The Crypts (E1M7) - Green key",
@@ -10151,10 +10151,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Crypts (E1M7) - Blue key": {
         "name": "The Crypts (E1M7) - Blue key",
@@ -10164,10 +10164,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Graveyard (E1M9) - Yellow key": {
         "name": "The Graveyard (E1M9) - Yellow key",
@@ -10177,10 +10177,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Graveyard (E1M9) - Green key": {
         "name": "The Graveyard (E1M9) - Green key",
@@ -10190,10 +10190,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Graveyard (E1M9) - Blue key": {
         "name": "The Graveyard (E1M9) - Blue key",
@@ -10203,10 +10203,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Crater (E2M1) - Yellow key": {
         "name": "The Crater (E2M1) - Yellow key",
@@ -10216,10 +10216,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Crater (E2M1) - Green key": {
         "name": "The Crater (E2M1) - Green key",
@@ -10229,10 +10229,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Lava Pits (E2M2) - Green key": {
         "name": "The Lava Pits (E2M2) - Green key",
@@ -10242,10 +10242,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Lava Pits (E2M2) - Yellow key": {
         "name": "The Lava Pits (E2M2) - Yellow key",
@@ -10255,10 +10255,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The River of Fire (E2M3) - Yellow key": {
         "name": "The River of Fire (E2M3) - Yellow key",
@@ -10268,10 +10268,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The River of Fire (E2M3) - Blue key": {
         "name": "The River of Fire (E2M3) - Blue key",
@@ -10281,10 +10281,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The River of Fire (E2M3) - Green key": {
         "name": "The River of Fire (E2M3) - Green key",
@@ -10294,10 +10294,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Ice Grotto (E2M4) - Yellow key": {
         "name": "The Ice Grotto (E2M4) - Yellow key",
@@ -10307,10 +10307,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Ice Grotto (E2M4) - Blue key": {
         "name": "The Ice Grotto (E2M4) - Blue key",
@@ -10320,10 +10320,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Ice Grotto (E2M4) - Green key": {
         "name": "The Ice Grotto (E2M4) - Green key",
@@ -10333,10 +10333,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Catacombs (E2M5) - Yellow key": {
         "name": "The Catacombs (E2M5) - Yellow key",
@@ -10346,10 +10346,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Catacombs (E2M5) - Blue key": {
         "name": "The Catacombs (E2M5) - Blue key",
@@ -10359,10 +10359,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Catacombs (E2M5) - Green key": {
         "name": "The Catacombs (E2M5) - Green key",
@@ -10372,10 +10372,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Labyrinth (E2M6) - Yellow key": {
         "name": "The Labyrinth (E2M6) - Yellow key",
@@ -10385,10 +10385,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Labyrinth (E2M6) - Blue key": {
         "name": "The Labyrinth (E2M6) - Blue key",
@@ -10398,10 +10398,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Labyrinth (E2M6) - Green key": {
         "name": "The Labyrinth (E2M6) - Green key",
@@ -10411,10 +10411,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Great Hall (E2M7) - Green key": {
         "name": "The Great Hall (E2M7) - Green key",
@@ -10424,10 +10424,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Great Hall (E2M7) - Yellow key": {
         "name": "The Great Hall (E2M7) - Yellow key",
@@ -10437,10 +10437,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Great Hall (E2M7) - Blue key": {
         "name": "The Great Hall (E2M7) - Blue key",
@@ -10450,10 +10450,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Glacier (E2M9) - Yellow key": {
         "name": "The Glacier (E2M9) - Yellow key",
@@ -10463,10 +10463,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Glacier (E2M9) - Blue key": {
         "name": "The Glacier (E2M9) - Blue key",
@@ -10476,10 +10476,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Glacier (E2M9) - Green key": {
         "name": "The Glacier (E2M9) - Green key",
@@ -10489,10 +10489,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Storehouse (E3M1) - Yellow key": {
         "name": "The Storehouse (E3M1) - Yellow key",
@@ -10502,10 +10502,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Storehouse (E3M1) - Green key": {
         "name": "The Storehouse (E3M1) - Green key",
@@ -10515,10 +10515,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Cesspool (E3M2) - Yellow key": {
         "name": "The Cesspool (E3M2) - Yellow key",
@@ -10528,10 +10528,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Cesspool (E3M2) - Green key": {
         "name": "The Cesspool (E3M2) - Green key",
@@ -10541,10 +10541,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Cesspool (E3M2) - Blue key": {
         "name": "The Cesspool (E3M2) - Blue key",
@@ -10554,10 +10554,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Confluence (E3M3) - Yellow key": {
         "name": "The Confluence (E3M3) - Yellow key",
@@ -10567,10 +10567,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Confluence (E3M3) - Green key": {
         "name": "The Confluence (E3M3) - Green key",
@@ -10580,10 +10580,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Confluence (E3M3) - Blue key": {
         "name": "The Confluence (E3M3) - Blue key",
@@ -10593,10 +10593,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Azure Fortress (E3M4) - Yellow key": {
         "name": "The Azure Fortress (E3M4) - Yellow key",
@@ -10606,10 +10606,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Azure Fortress (E3M4) - Green key": {
         "name": "The Azure Fortress (E3M4) - Green key",
@@ -10619,10 +10619,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Ophidian Lair (E3M5) - Yellow key": {
         "name": "The Ophidian Lair (E3M5) - Yellow key",
@@ -10632,10 +10632,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Ophidian Lair (E3M5) - Green key": {
         "name": "The Ophidian Lair (E3M5) - Green key",
@@ -10645,10 +10645,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Halls of Fear (E3M6) - Yellow key": {
         "name": "The Halls of Fear (E3M6) - Yellow key",
@@ -10658,10 +10658,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Halls of Fear (E3M6) - Green key": {
         "name": "The Halls of Fear (E3M6) - Green key",
@@ -10671,10 +10671,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Halls of Fear (E3M6) - Blue key": {
         "name": "The Halls of Fear (E3M6) - Blue key",
@@ -10684,10 +10684,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Chasm (E3M7) - Blue key": {
         "name": "The Chasm (E3M7) - Blue key",
@@ -10697,10 +10697,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Chasm (E3M7) - Green key": {
         "name": "The Chasm (E3M7) - Green key",
@@ -10710,10 +10710,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Chasm (E3M7) - Yellow key": {
         "name": "The Chasm (E3M7) - Yellow key",
@@ -10723,10 +10723,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Aquifer (E3M9) - Blue key": {
         "name": "The Aquifer (E3M9) - Blue key",
@@ -10736,10 +10736,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Aquifer (E3M9) - Green key": {
         "name": "The Aquifer (E3M9) - Green key",
@@ -10749,10 +10749,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Aquifer (E3M9) - Yellow key": {
         "name": "The Aquifer (E3M9) - Yellow key",
@@ -10762,10 +10762,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Catafalque (E4M1) - Yellow key": {
         "name": "Catafalque (E4M1) - Yellow key",
@@ -10774,10 +10774,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Catafalque (E4M1) - Green key": {
         "name": "Catafalque (E4M1) - Green key",
@@ -10786,10 +10786,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blockhouse (E4M2) - Green key": {
         "name": "Blockhouse (E4M2) - Green key",
@@ -10798,10 +10798,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blockhouse (E4M2) - Yellow key": {
         "name": "Blockhouse (E4M2) - Yellow key",
@@ -10810,10 +10810,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blockhouse (E4M2) - Blue key": {
         "name": "Blockhouse (E4M2) - Blue key",
@@ -10822,10 +10822,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ambulatory (E4M3) - Yellow key": {
         "name": "Ambulatory (E4M3) - Yellow key",
@@ -10834,10 +10834,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ambulatory (E4M3) - Green key": {
         "name": "Ambulatory (E4M3) - Green key",
@@ -10846,10 +10846,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ambulatory (E4M3) - Blue key": {
         "name": "Ambulatory (E4M3) - Blue key",
@@ -10858,10 +10858,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Great Stair (E4M5) - Yellow key": {
         "name": "Great Stair (E4M5) - Yellow key",
@@ -10870,10 +10870,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Great Stair (E4M5) - Green key": {
         "name": "Great Stair (E4M5) - Green key",
@@ -10882,10 +10882,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Great Stair (E4M5) - Blue key": {
         "name": "Great Stair (E4M5) - Blue key",
@@ -10894,10 +10894,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Halls of the Apostate (E4M6) - Green key": {
         "name": "Halls of the Apostate (E4M6) - Green key",
@@ -10906,10 +10906,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Halls of the Apostate (E4M6) - Blue key": {
         "name": "Halls of the Apostate (E4M6) - Blue key",
@@ -10918,10 +10918,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Halls of the Apostate (E4M6) - Yellow key": {
         "name": "Halls of the Apostate (E4M6) - Yellow key",
@@ -10930,10 +10930,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ramparts of Perdition (E4M7) - Yellow key": {
         "name": "Ramparts of Perdition (E4M7) - Yellow key",
@@ -10942,10 +10942,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ramparts of Perdition (E4M7) - Green key": {
         "name": "Ramparts of Perdition (E4M7) - Green key",
@@ -10954,10 +10954,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ramparts of Perdition (E4M7) - Blue key": {
         "name": "Ramparts of Perdition (E4M7) - Blue key",
@@ -10966,10 +10966,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Shattered Bridge (E4M8) - Yellow key": {
         "name": "Shattered Bridge (E4M8) - Yellow key",
@@ -10978,10 +10978,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mausoleum (E4M9) - Yellow key": {
         "name": "Mausoleum (E4M9) - Yellow key",
@@ -10990,10 +10990,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ochre Cliffs (E5M1) - Yellow key": {
         "name": "Ochre Cliffs (E5M1) - Yellow key",
@@ -11002,10 +11002,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ochre Cliffs (E5M1) - Blue key": {
         "name": "Ochre Cliffs (E5M1) - Blue key",
@@ -11014,10 +11014,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ochre Cliffs (E5M1) - Green key": {
         "name": "Ochre Cliffs (E5M1) - Green key",
@@ -11026,10 +11026,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rapids (E5M2) - Green key": {
         "name": "Rapids (E5M2) - Green key",
@@ -11038,10 +11038,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rapids (E5M2) - Yellow key": {
         "name": "Rapids (E5M2) - Yellow key",
@@ -11050,10 +11050,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Quay (E5M3) - Green key": {
         "name": "Quay (E5M3) - Green key",
@@ -11062,10 +11062,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Quay (E5M3) - Blue key": {
         "name": "Quay (E5M3) - Blue key",
@@ -11074,10 +11074,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Quay (E5M3) - Yellow key": {
         "name": "Quay (E5M3) - Yellow key",
@@ -11086,10 +11086,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Courtyard (E5M4) - Blue key": {
         "name": "Courtyard (E5M4) - Blue key",
@@ -11098,10 +11098,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Courtyard (E5M4) - Yellow key": {
         "name": "Courtyard (E5M4) - Yellow key",
@@ -11110,10 +11110,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Courtyard (E5M4) - Green key": {
         "name": "Courtyard (E5M4) - Green key",
@@ -11122,10 +11122,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hydratyr (E5M5) - Yellow key": {
         "name": "Hydratyr (E5M5) - Yellow key",
@@ -11134,10 +11134,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hydratyr (E5M5) - Green key": {
         "name": "Hydratyr (E5M5) - Green key",
@@ -11146,10 +11146,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hydratyr (E5M5) - Blue key": {
         "name": "Hydratyr (E5M5) - Blue key",
@@ -11158,10 +11158,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Colonnade (E5M6) - Yellow key": {
         "name": "Colonnade (E5M6) - Yellow key",
@@ -11170,10 +11170,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Colonnade (E5M6) - Green key": {
         "name": "Colonnade (E5M6) - Green key",
@@ -11182,10 +11182,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Colonnade (E5M6) - Blue key": {
         "name": "Colonnade (E5M6) - Blue key",
@@ -11194,10 +11194,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Foetid Manse (E5M7) - Blue key": {
         "name": "Foetid Manse (E5M7) - Blue key",
@@ -11206,10 +11206,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Foetid Manse (E5M7) - Green key": {
         "name": "Foetid Manse (E5M7) - Green key",
@@ -11218,10 +11218,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Foetid Manse (E5M7) - Yellow key": {
         "name": "Foetid Manse (E5M7) - Yellow key",
@@ -11230,10 +11230,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skein of D'Sparil (E5M9) - Blue key": {
         "name": "Skein of D'Sparil (E5M9) - Blue key",
@@ -11242,10 +11242,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skein of D'Sparil (E5M9) - Green key": {
         "name": "Skein of D'Sparil (E5M9) - Green key",
@@ -11254,10 +11254,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skein of D'Sparil (E5M9) - Yellow key": {
         "name": "Skein of D'Sparil (E5M9) - Yellow key",
@@ -11266,10 +11266,10 @@
           "Everything",
           "Keys"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Docks (E1M1)": {
         "name": "The Docks (E1M1)",
@@ -11278,10 +11278,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Docks (E1M1) - Complete": {
         "name": "The Docks (E1M1) - Complete",
@@ -11290,10 +11290,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Docks (E1M1) - Map Scroll": {
         "name": "The Docks (E1M1) - Map Scroll",
@@ -11303,10 +11303,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Dungeons (E1M2)": {
         "name": "The Dungeons (E1M2)",
@@ -11315,10 +11315,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Dungeons (E1M2) - Complete": {
         "name": "The Dungeons (E1M2) - Complete",
@@ -11327,10 +11327,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Dungeons (E1M2) - Map Scroll": {
         "name": "The Dungeons (E1M2) - Map Scroll",
@@ -11340,10 +11340,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Gatehouse (E1M3)": {
         "name": "The Gatehouse (E1M3)",
@@ -11352,10 +11352,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Gatehouse (E1M3) - Complete": {
         "name": "The Gatehouse (E1M3) - Complete",
@@ -11364,10 +11364,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Gatehouse (E1M3) - Map Scroll": {
         "name": "The Gatehouse (E1M3) - Map Scroll",
@@ -11377,10 +11377,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Guard Tower (E1M4)": {
         "name": "The Guard Tower (E1M4)",
@@ -11389,10 +11389,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Guard Tower (E1M4) - Complete": {
         "name": "The Guard Tower (E1M4) - Complete",
@@ -11401,10 +11401,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Guard Tower (E1M4) - Map Scroll": {
         "name": "The Guard Tower (E1M4) - Map Scroll",
@@ -11414,10 +11414,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Citadel (E1M5)": {
         "name": "The Citadel (E1M5)",
@@ -11426,10 +11426,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Citadel (E1M5) - Complete": {
         "name": "The Citadel (E1M5) - Complete",
@@ -11438,10 +11438,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Citadel (E1M5) - Map Scroll": {
         "name": "The Citadel (E1M5) - Map Scroll",
@@ -11451,10 +11451,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Cathedral (E1M6)": {
         "name": "The Cathedral (E1M6)",
@@ -11463,10 +11463,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Cathedral (E1M6) - Complete": {
         "name": "The Cathedral (E1M6) - Complete",
@@ -11475,10 +11475,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Cathedral (E1M6) - Map Scroll": {
         "name": "The Cathedral (E1M6) - Map Scroll",
@@ -11488,10 +11488,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Crypts (E1M7)": {
         "name": "The Crypts (E1M7)",
@@ -11500,10 +11500,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Crypts (E1M7) - Complete": {
         "name": "The Crypts (E1M7) - Complete",
@@ -11512,10 +11512,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Crypts (E1M7) - Map Scroll": {
         "name": "The Crypts (E1M7) - Map Scroll",
@@ -11525,10 +11525,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hell's Maw (E1M8)": {
         "name": "Hell's Maw (E1M8)",
@@ -11537,10 +11537,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hell's Maw (E1M8) - Complete": {
         "name": "Hell's Maw (E1M8) - Complete",
@@ -11549,10 +11549,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hell's Maw (E1M8) - Map Scroll": {
         "name": "Hell's Maw (E1M8) - Map Scroll",
@@ -11562,10 +11562,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Graveyard (E1M9)": {
         "name": "The Graveyard (E1M9)",
@@ -11574,10 +11574,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Graveyard (E1M9) - Complete": {
         "name": "The Graveyard (E1M9) - Complete",
@@ -11586,10 +11586,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Graveyard (E1M9) - Map Scroll": {
         "name": "The Graveyard (E1M9) - Map Scroll",
@@ -11599,10 +11599,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Crater (E2M1)": {
         "name": "The Crater (E2M1)",
@@ -11611,10 +11611,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Crater (E2M1) - Complete": {
         "name": "The Crater (E2M1) - Complete",
@@ -11623,10 +11623,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Crater (E2M1) - Map Scroll": {
         "name": "The Crater (E2M1) - Map Scroll",
@@ -11636,10 +11636,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Lava Pits (E2M2)": {
         "name": "The Lava Pits (E2M2)",
@@ -11648,10 +11648,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Lava Pits (E2M2) - Complete": {
         "name": "The Lava Pits (E2M2) - Complete",
@@ -11660,10 +11660,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Lava Pits (E2M2) - Map Scroll": {
         "name": "The Lava Pits (E2M2) - Map Scroll",
@@ -11673,10 +11673,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The River of Fire (E2M3)": {
         "name": "The River of Fire (E2M3)",
@@ -11685,10 +11685,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The River of Fire (E2M3) - Complete": {
         "name": "The River of Fire (E2M3) - Complete",
@@ -11697,10 +11697,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The River of Fire (E2M3) - Map Scroll": {
         "name": "The River of Fire (E2M3) - Map Scroll",
@@ -11710,10 +11710,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Ice Grotto (E2M4)": {
         "name": "The Ice Grotto (E2M4)",
@@ -11722,10 +11722,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Ice Grotto (E2M4) - Complete": {
         "name": "The Ice Grotto (E2M4) - Complete",
@@ -11734,10 +11734,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Ice Grotto (E2M4) - Map Scroll": {
         "name": "The Ice Grotto (E2M4) - Map Scroll",
@@ -11747,10 +11747,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Catacombs (E2M5)": {
         "name": "The Catacombs (E2M5)",
@@ -11759,10 +11759,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Catacombs (E2M5) - Complete": {
         "name": "The Catacombs (E2M5) - Complete",
@@ -11771,10 +11771,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Catacombs (E2M5) - Map Scroll": {
         "name": "The Catacombs (E2M5) - Map Scroll",
@@ -11784,10 +11784,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Labyrinth (E2M6)": {
         "name": "The Labyrinth (E2M6)",
@@ -11796,10 +11796,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Labyrinth (E2M6) - Complete": {
         "name": "The Labyrinth (E2M6) - Complete",
@@ -11808,10 +11808,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Labyrinth (E2M6) - Map Scroll": {
         "name": "The Labyrinth (E2M6) - Map Scroll",
@@ -11821,10 +11821,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Great Hall (E2M7)": {
         "name": "The Great Hall (E2M7)",
@@ -11833,10 +11833,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Great Hall (E2M7) - Complete": {
         "name": "The Great Hall (E2M7) - Complete",
@@ -11845,10 +11845,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Great Hall (E2M7) - Map Scroll": {
         "name": "The Great Hall (E2M7) - Map Scroll",
@@ -11858,10 +11858,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Portals of Chaos (E2M8)": {
         "name": "The Portals of Chaos (E2M8)",
@@ -11870,10 +11870,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Portals of Chaos (E2M8) - Complete": {
         "name": "The Portals of Chaos (E2M8) - Complete",
@@ -11882,10 +11882,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Portals of Chaos (E2M8) - Map Scroll": {
         "name": "The Portals of Chaos (E2M8) - Map Scroll",
@@ -11895,10 +11895,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Glacier (E2M9)": {
         "name": "The Glacier (E2M9)",
@@ -11907,10 +11907,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Glacier (E2M9) - Complete": {
         "name": "The Glacier (E2M9) - Complete",
@@ -11919,10 +11919,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Glacier (E2M9) - Map Scroll": {
         "name": "The Glacier (E2M9) - Map Scroll",
@@ -11932,10 +11932,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Storehouse (E3M1)": {
         "name": "The Storehouse (E3M1)",
@@ -11944,10 +11944,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Storehouse (E3M1) - Complete": {
         "name": "The Storehouse (E3M1) - Complete",
@@ -11956,10 +11956,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Storehouse (E3M1) - Map Scroll": {
         "name": "The Storehouse (E3M1) - Map Scroll",
@@ -11969,10 +11969,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Cesspool (E3M2)": {
         "name": "The Cesspool (E3M2)",
@@ -11981,10 +11981,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Cesspool (E3M2) - Complete": {
         "name": "The Cesspool (E3M2) - Complete",
@@ -11993,10 +11993,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Cesspool (E3M2) - Map Scroll": {
         "name": "The Cesspool (E3M2) - Map Scroll",
@@ -12006,10 +12006,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Confluence (E3M3)": {
         "name": "The Confluence (E3M3)",
@@ -12018,10 +12018,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Confluence (E3M3) - Complete": {
         "name": "The Confluence (E3M3) - Complete",
@@ -12030,10 +12030,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Confluence (E3M3) - Map Scroll": {
         "name": "The Confluence (E3M3) - Map Scroll",
@@ -12043,10 +12043,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Azure Fortress (E3M4)": {
         "name": "The Azure Fortress (E3M4)",
@@ -12055,10 +12055,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Azure Fortress (E3M4) - Complete": {
         "name": "The Azure Fortress (E3M4) - Complete",
@@ -12067,10 +12067,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Azure Fortress (E3M4) - Map Scroll": {
         "name": "The Azure Fortress (E3M4) - Map Scroll",
@@ -12080,10 +12080,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Ophidian Lair (E3M5)": {
         "name": "The Ophidian Lair (E3M5)",
@@ -12092,10 +12092,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Ophidian Lair (E3M5) - Complete": {
         "name": "The Ophidian Lair (E3M5) - Complete",
@@ -12104,10 +12104,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Ophidian Lair (E3M5) - Map Scroll": {
         "name": "The Ophidian Lair (E3M5) - Map Scroll",
@@ -12117,10 +12117,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Halls of Fear (E3M6)": {
         "name": "The Halls of Fear (E3M6)",
@@ -12129,10 +12129,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Halls of Fear (E3M6) - Complete": {
         "name": "The Halls of Fear (E3M6) - Complete",
@@ -12141,10 +12141,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Halls of Fear (E3M6) - Map Scroll": {
         "name": "The Halls of Fear (E3M6) - Map Scroll",
@@ -12154,10 +12154,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Chasm (E3M7)": {
         "name": "The Chasm (E3M7)",
@@ -12166,10 +12166,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Chasm (E3M7) - Complete": {
         "name": "The Chasm (E3M7) - Complete",
@@ -12178,10 +12178,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Chasm (E3M7) - Map Scroll": {
         "name": "The Chasm (E3M7) - Map Scroll",
@@ -12191,10 +12191,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "D'Sparil's Keep (E3M8)": {
         "name": "D'Sparil's Keep (E3M8)",
@@ -12203,10 +12203,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "D'Sparil's Keep (E3M8) - Complete": {
         "name": "D'Sparil's Keep (E3M8) - Complete",
@@ -12215,10 +12215,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "D'Sparil's Keep (E3M8) - Map Scroll": {
         "name": "D'Sparil's Keep (E3M8) - Map Scroll",
@@ -12228,10 +12228,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "The Aquifer (E3M9)": {
         "name": "The Aquifer (E3M9)",
@@ -12240,10 +12240,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Aquifer (E3M9) - Complete": {
         "name": "The Aquifer (E3M9) - Complete",
@@ -12252,10 +12252,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Aquifer (E3M9) - Map Scroll": {
         "name": "The Aquifer (E3M9) - Map Scroll",
@@ -12265,10 +12265,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Catafalque (E4M1)": {
         "name": "Catafalque (E4M1)",
@@ -12277,10 +12277,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Catafalque (E4M1) - Complete": {
         "name": "Catafalque (E4M1) - Complete",
@@ -12288,10 +12288,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Catafalque (E4M1) - Map Scroll": {
         "name": "Catafalque (E4M1) - Map Scroll",
@@ -12300,10 +12300,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blockhouse (E4M2)": {
         "name": "Blockhouse (E4M2)",
@@ -12312,10 +12312,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blockhouse (E4M2) - Complete": {
         "name": "Blockhouse (E4M2) - Complete",
@@ -12323,10 +12323,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blockhouse (E4M2) - Map Scroll": {
         "name": "Blockhouse (E4M2) - Map Scroll",
@@ -12335,10 +12335,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ambulatory (E4M3)": {
         "name": "Ambulatory (E4M3)",
@@ -12347,10 +12347,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ambulatory (E4M3) - Complete": {
         "name": "Ambulatory (E4M3) - Complete",
@@ -12358,10 +12358,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ambulatory (E4M3) - Map Scroll": {
         "name": "Ambulatory (E4M3) - Map Scroll",
@@ -12370,10 +12370,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sepulcher (E4M4)": {
         "name": "Sepulcher (E4M4)",
@@ -12382,10 +12382,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sepulcher (E4M4) - Complete": {
         "name": "Sepulcher (E4M4) - Complete",
@@ -12393,10 +12393,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sepulcher (E4M4) - Map Scroll": {
         "name": "Sepulcher (E4M4) - Map Scroll",
@@ -12405,10 +12405,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Great Stair (E4M5)": {
         "name": "Great Stair (E4M5)",
@@ -12417,10 +12417,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Great Stair (E4M5) - Complete": {
         "name": "Great Stair (E4M5) - Complete",
@@ -12428,10 +12428,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Great Stair (E4M5) - Map Scroll": {
         "name": "Great Stair (E4M5) - Map Scroll",
@@ -12440,10 +12440,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Halls of the Apostate (E4M6)": {
         "name": "Halls of the Apostate (E4M6)",
@@ -12452,10 +12452,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Halls of the Apostate (E4M6) - Complete": {
         "name": "Halls of the Apostate (E4M6) - Complete",
@@ -12463,10 +12463,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Halls of the Apostate (E4M6) - Map Scroll": {
         "name": "Halls of the Apostate (E4M6) - Map Scroll",
@@ -12475,10 +12475,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ramparts of Perdition (E4M7)": {
         "name": "Ramparts of Perdition (E4M7)",
@@ -12487,10 +12487,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ramparts of Perdition (E4M7) - Complete": {
         "name": "Ramparts of Perdition (E4M7) - Complete",
@@ -12498,10 +12498,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ramparts of Perdition (E4M7) - Map Scroll": {
         "name": "Ramparts of Perdition (E4M7) - Map Scroll",
@@ -12510,10 +12510,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Shattered Bridge (E4M8)": {
         "name": "Shattered Bridge (E4M8)",
@@ -12522,10 +12522,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Shattered Bridge (E4M8) - Complete": {
         "name": "Shattered Bridge (E4M8) - Complete",
@@ -12533,10 +12533,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Shattered Bridge (E4M8) - Map Scroll": {
         "name": "Shattered Bridge (E4M8) - Map Scroll",
@@ -12545,10 +12545,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mausoleum (E4M9)": {
         "name": "Mausoleum (E4M9)",
@@ -12557,10 +12557,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mausoleum (E4M9) - Complete": {
         "name": "Mausoleum (E4M9) - Complete",
@@ -12568,10 +12568,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mausoleum (E4M9) - Map Scroll": {
         "name": "Mausoleum (E4M9) - Map Scroll",
@@ -12580,10 +12580,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ochre Cliffs (E5M1)": {
         "name": "Ochre Cliffs (E5M1)",
@@ -12592,10 +12592,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ochre Cliffs (E5M1) - Complete": {
         "name": "Ochre Cliffs (E5M1) - Complete",
@@ -12603,10 +12603,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ochre Cliffs (E5M1) - Map Scroll": {
         "name": "Ochre Cliffs (E5M1) - Map Scroll",
@@ -12615,10 +12615,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rapids (E5M2)": {
         "name": "Rapids (E5M2)",
@@ -12627,10 +12627,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rapids (E5M2) - Complete": {
         "name": "Rapids (E5M2) - Complete",
@@ -12638,10 +12638,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rapids (E5M2) - Map Scroll": {
         "name": "Rapids (E5M2) - Map Scroll",
@@ -12650,10 +12650,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Quay (E5M3)": {
         "name": "Quay (E5M3)",
@@ -12662,10 +12662,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Quay (E5M3) - Complete": {
         "name": "Quay (E5M3) - Complete",
@@ -12673,10 +12673,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Quay (E5M3) - Map Scroll": {
         "name": "Quay (E5M3) - Map Scroll",
@@ -12685,10 +12685,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Courtyard (E5M4)": {
         "name": "Courtyard (E5M4)",
@@ -12697,10 +12697,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Courtyard (E5M4) - Complete": {
         "name": "Courtyard (E5M4) - Complete",
@@ -12708,10 +12708,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Courtyard (E5M4) - Map Scroll": {
         "name": "Courtyard (E5M4) - Map Scroll",
@@ -12720,10 +12720,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hydratyr (E5M5)": {
         "name": "Hydratyr (E5M5)",
@@ -12732,10 +12732,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hydratyr (E5M5) - Complete": {
         "name": "Hydratyr (E5M5) - Complete",
@@ -12743,10 +12743,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hydratyr (E5M5) - Map Scroll": {
         "name": "Hydratyr (E5M5) - Map Scroll",
@@ -12755,10 +12755,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Colonnade (E5M6)": {
         "name": "Colonnade (E5M6)",
@@ -12767,10 +12767,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Colonnade (E5M6) - Complete": {
         "name": "Colonnade (E5M6) - Complete",
@@ -12778,10 +12778,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Colonnade (E5M6) - Map Scroll": {
         "name": "Colonnade (E5M6) - Map Scroll",
@@ -12790,10 +12790,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Foetid Manse (E5M7)": {
         "name": "Foetid Manse (E5M7)",
@@ -12802,10 +12802,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Foetid Manse (E5M7) - Complete": {
         "name": "Foetid Manse (E5M7) - Complete",
@@ -12813,10 +12813,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Foetid Manse (E5M7) - Map Scroll": {
         "name": "Foetid Manse (E5M7) - Map Scroll",
@@ -12825,10 +12825,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Field of Judgement (E5M8)": {
         "name": "Field of Judgement (E5M8)",
@@ -12837,10 +12837,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Field of Judgement (E5M8) - Complete": {
         "name": "Field of Judgement (E5M8) - Complete",
@@ -12848,10 +12848,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Field of Judgement (E5M8) - Map Scroll": {
         "name": "Field of Judgement (E5M8) - Map Scroll",
@@ -12860,10 +12860,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skein of D'Sparil (E5M9)": {
         "name": "Skein of D'Sparil (E5M9)",
@@ -12872,10 +12872,10 @@
           "Everything",
           "Levels"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skein of D'Sparil (E5M9) - Complete": {
         "name": "Skein of D'Sparil (E5M9) - Complete",
@@ -12883,10 +12883,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skein of D'Sparil (E5M9) - Map Scroll": {
         "name": "Skein of D'Sparil (E5M9) - Map Scroll",
@@ -12895,10 +12895,10 @@
           "Everything",
           "Map Scrolls"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal Capacity": {
         "name": "Crystal Capacity",
@@ -12906,10 +12906,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ethereal Arrow Capacity": {
         "name": "Ethereal Arrow Capacity",
@@ -12917,10 +12917,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Claw Orb Capacity": {
         "name": "Claw Orb Capacity",
@@ -12928,10 +12928,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rune Capacity": {
         "name": "Rune Capacity",
@@ -12939,10 +12939,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Flame Orb Capacity": {
         "name": "Flame Orb Capacity",
@@ -12950,10 +12950,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mace Sphere Capacity": {
         "name": "Mace Sphere Capacity",
@@ -12961,10 +12961,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       }
     }
   },

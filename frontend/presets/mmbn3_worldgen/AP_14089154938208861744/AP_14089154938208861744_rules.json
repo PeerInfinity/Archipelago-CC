@@ -5077,10 +5077,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 8,
-        "classification": "progression"
+        "max_count": 8
       },
       "CACDCPas": {
         "name": "CACDCPas",
@@ -5089,10 +5089,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "CSciPass": {
         "name": "CSciPass",
@@ -5101,10 +5101,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "CYokaPas": {
         "name": "CYokaPas",
@@ -5113,10 +5113,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "CBeacPas": {
         "name": "CBeacPas",
@@ -5125,10 +5125,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "WWW ID": {
         "name": "WWW ID",
@@ -5137,10 +5137,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "OrderSys": {
         "name": "OrderSys",
@@ -5149,10 +5149,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "ModTools": {
         "name": "ModTools",
@@ -5161,10 +5161,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "ExpMem": {
         "name": "ExpMem",
@@ -5173,10 +5173,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "SpinWht": {
         "name": "SpinWht",
@@ -5185,10 +5185,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "SpinPink": {
         "name": "SpinPink",
@@ -5197,10 +5197,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "SpinYllw": {
         "name": "SpinYllw",
@@ -5209,10 +5209,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "SpinRed": {
         "name": "SpinRed",
@@ -5221,10 +5221,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "SpinBlue": {
         "name": "SpinBlue",
@@ -5233,10 +5233,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "SpinGrn": {
         "name": "SpinGrn",
@@ -5245,10 +5245,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "SpinOrange": {
         "name": "SpinOrange",
@@ -5257,10 +5257,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "SpinPurple": {
         "name": "SpinPurple",
@@ -5269,10 +5269,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "SpinDark": {
         "name": "SpinDark",
@@ -5281,10 +5281,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "HPMemory": {
         "name": "HPMemory",
@@ -5293,10 +5293,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 23,
-        "classification": "useful"
+        "max_count": 23
       },
       "RegUP1": {
         "name": "RegUP1",
@@ -5305,10 +5305,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "RegUP2": {
         "name": "RegUP2",
@@ -5317,10 +5317,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 13,
-        "classification": "useful"
+        "max_count": 13
       },
       "RegUP3": {
         "name": "RegUP3",
@@ -5329,10 +5329,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "useful"
+        "max_count": 4
       },
       "Mr Famous' Wristband": {
         "name": "Mr Famous' Wristband",
@@ -5341,10 +5341,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "SubMem": {
         "name": "SubMem",
@@ -5353,10 +5353,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Unlocker": {
         "name": "Unlocker",
@@ -5365,10 +5365,10 @@
           "Everything",
           "Subchips"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 10,
-        "classification": "progression"
+        "max_count": 10
       },
       "Untrap": {
         "name": "Untrap",
@@ -5377,10 +5377,10 @@
           "Everything",
           "Subchips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "LockEnmy": {
         "name": "LockEnmy",
@@ -5389,10 +5389,10 @@
           "Everything",
           "Subchips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "MiniEnrg": {
         "name": "MiniEnrg",
@@ -5401,10 +5401,10 @@
           "Everything",
           "Subchips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "FullEnrg": {
         "name": "FullEnrg",
@@ -5413,10 +5413,10 @@
           "Everything",
           "Subchips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "AirShoes *": {
         "name": "AirShoes *",
@@ -5425,10 +5425,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "AirShot3 *": {
         "name": "AirShot3 *",
@@ -5437,10 +5437,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "AntiNavi M": {
         "name": "AntiNavi M",
@@ -5449,10 +5449,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "AntiRecv B": {
         "name": "AntiRecv B",
@@ -5461,10 +5461,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "AntiSword Y": {
         "name": "AntiSword Y",
@@ -5473,10 +5473,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Aqua+30 *": {
         "name": "Aqua+30 *",
@@ -5485,10 +5485,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Aura F": {
         "name": "Aura F",
@@ -5497,10 +5497,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "BambooSword N": {
         "name": "BambooSword N",
@@ -5509,10 +5509,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Barr100 E": {
         "name": "Barr100 E",
@@ -5521,10 +5521,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Barr200 E": {
         "name": "Barr200 E",
@@ -5533,10 +5533,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Barrier E": {
         "name": "Barrier E",
@@ -5545,10 +5545,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Barrier L": {
         "name": "Barrier L",
@@ -5557,10 +5557,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "BlkBomb1 P": {
         "name": "BlkBomb1 P",
@@ -5569,10 +5569,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "BlkBomb2 S": {
         "name": "BlkBomb2 S",
@@ -5581,10 +5581,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Cannon C": {
         "name": "Cannon C",
@@ -5593,10 +5593,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "CopyDmg *": {
         "name": "CopyDmg *",
@@ -5605,10 +5605,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "CustSwrd Z": {
         "name": "CustSwrd Z",
@@ -5617,10 +5617,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "DynaWave V": {
         "name": "DynaWave V",
@@ -5629,10 +5629,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "ElecSwrd P": {
         "name": "ElecSwrd P",
@@ -5641,10 +5641,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Fire+30 *": {
         "name": "Fire+30 *",
@@ -5653,10 +5653,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "FireRat H": {
         "name": "FireRat H",
@@ -5665,10 +5665,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "FireSwrd P": {
         "name": "FireSwrd P",
@@ -5677,10 +5677,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "FstGauge *": {
         "name": "FstGauge *",
@@ -5689,10 +5689,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "GaiaBlde *": {
         "name": "GaiaBlde *",
@@ -5701,10 +5701,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Geddon1 *": {
         "name": "Geddon1 *",
@@ -5713,10 +5713,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Geddon1 D": {
         "name": "Geddon1 D",
@@ -5725,10 +5725,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Geddon3 U": {
         "name": "Geddon3 U",
@@ -5737,10 +5737,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Geyser B": {
         "name": "Geyser B",
@@ -5749,10 +5749,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "GrabBack K": {
         "name": "GrabBack K",
@@ -5761,10 +5761,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "GrabRvng A": {
         "name": "GrabRvng A",
@@ -5773,10 +5773,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "GrabRvng Y": {
         "name": "GrabRvng Y",
@@ -5785,10 +5785,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "GtStrght S": {
         "name": "GtStrght S",
@@ -5797,10 +5797,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Guardian O": {
         "name": "Guardian O",
@@ -5809,10 +5809,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "GutImpact H": {
         "name": "GutImpact H",
@@ -5821,10 +5821,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "GutImpct J": {
         "name": "GutImpct J",
@@ -5833,10 +5833,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "GutPunch E": {
         "name": "GutPunch E",
@@ -5845,10 +5845,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "GutPunch B": {
         "name": "GutPunch B",
@@ -5857,10 +5857,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "GutStrgt Q": {
         "name": "GutStrgt Q",
@@ -5869,10 +5869,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Hammer T": {
         "name": "Hammer T",
@@ -5881,10 +5881,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "HeatSide T": {
         "name": "HeatSide T",
@@ -5893,10 +5893,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "HeroSwrd P": {
         "name": "HeroSwrd P",
@@ -5905,10 +5905,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "HiCannon *": {
         "name": "HiCannon *",
@@ -5917,10 +5917,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hole *": {
         "name": "Hole *",
@@ -5929,10 +5929,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "IceStage *": {
         "name": "IceStage *",
@@ -5941,10 +5941,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Invis *": {
         "name": "Invis *",
@@ -5953,10 +5953,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Jealousy J": {
         "name": "Jealousy J",
@@ -5965,10 +5965,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lance S": {
         "name": "Lance S",
@@ -5977,10 +5977,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "LongSwrd E": {
         "name": "LongSwrd E",
@@ -5989,10 +5989,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Magnum1 A": {
         "name": "Magnum1 A",
@@ -6001,10 +6001,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Muramasa M": {
         "name": "Muramasa M",
@@ -6013,10 +6013,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Navi+40 *": {
         "name": "Navi+40 *",
@@ -6025,10 +6025,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Panic C": {
         "name": "Panic C",
@@ -6037,10 +6037,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "PanlOut3 *": {
         "name": "PanlOut3 *",
@@ -6049,10 +6049,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Poltergeist G": {
         "name": "Poltergeist G",
@@ -6061,10 +6061,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Prism Q": {
         "name": "Prism Q",
@@ -6073,10 +6073,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Recov10 *": {
         "name": "Recov10 *",
@@ -6085,10 +6085,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Recov120 *": {
         "name": "Recov120 *",
@@ -6097,10 +6097,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Recov120 O": {
         "name": "Recov120 O",
@@ -6109,10 +6109,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Recov120 S": {
         "name": "Recov120 S",
@@ -6121,10 +6121,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Recov150 P": {
         "name": "Recov150 P",
@@ -6133,10 +6133,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Recov200 N": {
         "name": "Recov200 N",
@@ -6145,10 +6145,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Recov30 *": {
         "name": "Recov30 *",
@@ -6157,10 +6157,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Recov300 R": {
         "name": "Recov300 R",
@@ -6169,10 +6169,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Recov50 G": {
         "name": "Recov50 G",
@@ -6181,10 +6181,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Repair *": {
         "name": "Repair *",
@@ -6193,10 +6193,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Repair A": {
         "name": "Repair A",
@@ -6205,10 +6205,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rockcube *": {
         "name": "Rockcube *",
@@ -6217,10 +6217,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rook F": {
         "name": "Rook F",
@@ -6229,10 +6229,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Salamndr *": {
         "name": "Salamndr *",
@@ -6241,10 +6241,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "SandStage C": {
         "name": "SandStage C",
@@ -6253,10 +6253,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "SideGun S": {
         "name": "SideGun S",
@@ -6265,10 +6265,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Slasher B": {
         "name": "Slasher B",
@@ -6277,10 +6277,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "SloGauge *": {
         "name": "SloGauge *",
@@ -6289,10 +6289,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Snake D": {
         "name": "Snake D",
@@ -6301,10 +6301,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Snctuary C": {
         "name": "Snctuary C",
@@ -6313,10 +6313,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Spreader *": {
         "name": "Spreader *",
@@ -6325,10 +6325,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Spreader N": {
         "name": "Spreader N",
@@ -6337,10 +6337,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Spreader P": {
         "name": "Spreader P",
@@ -6349,10 +6349,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "StepCross Q": {
         "name": "StepCross Q",
@@ -6361,10 +6361,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "StepCross R": {
         "name": "StepCross R",
@@ -6373,10 +6373,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "StepSwrd M": {
         "name": "StepSwrd M",
@@ -6385,10 +6385,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "StepSwrd N": {
         "name": "StepSwrd N",
@@ -6397,10 +6397,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "StepSwrd O": {
         "name": "StepSwrd O",
@@ -6409,10 +6409,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "StpCross S": {
         "name": "StpCross S",
@@ -6421,10 +6421,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Sword E": {
         "name": "Sword E",
@@ -6433,10 +6433,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Team1 *": {
         "name": "Team1 *",
@@ -6445,10 +6445,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Team2 *": {
         "name": "Team2 *",
@@ -6457,10 +6457,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Thndrblt *": {
         "name": "Thndrblt *",
@@ -6469,10 +6469,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Tornado L": {
         "name": "Tornado L",
@@ -6481,10 +6481,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fountain *": {
         "name": "Fountain *",
@@ -6493,10 +6493,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "VarSword B": {
         "name": "VarSword B",
@@ -6505,10 +6505,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "VarSword F": {
         "name": "VarSword F",
@@ -6517,10 +6517,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "WideSwrd C": {
         "name": "WideSwrd C",
@@ -6529,10 +6529,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "WideSwrd E": {
         "name": "WideSwrd E",
@@ -6541,10 +6541,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "WideSwrd L": {
         "name": "WideSwrd L",
@@ -6553,10 +6553,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Yo-Yo1 D": {
         "name": "Yo-Yo1 D",
@@ -6565,10 +6565,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "ZeusHammer Z": {
         "name": "ZeusHammer Z",
@@ -6577,10 +6577,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Bass+ X": {
         "name": "Bass+ X",
@@ -6589,10 +6589,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "DeltaRay Z": {
         "name": "DeltaRay Z",
@@ -6601,10 +6601,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Punk P": {
         "name": "Punk P",
@@ -6613,10 +6613,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "DarkAura A": {
         "name": "DarkAura A",
@@ -6625,10 +6625,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "AlphaArm\u03a9 V": {
         "name": "AlphaArm\u03a9 V",
@@ -6637,10 +6637,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Airshoes": {
         "name": "Airshoes",
@@ -6649,10 +6649,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Attack+1 (White)": {
         "name": "Attack+1 (White)",
@@ -6661,10 +6661,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Attack+1 (Pink)": {
         "name": "Attack+1 (Pink)",
@@ -6673,10 +6673,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "BrkChrg": {
         "name": "BrkChrg",
@@ -6685,10 +6685,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Charge+1 (Pink)": {
         "name": "Charge+1 (Pink)",
@@ -6697,10 +6697,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Charge+1 (White)": {
         "name": "Charge+1 (White)",
@@ -6709,10 +6709,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Collect": {
         "name": "Collect",
@@ -6721,10 +6721,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "GigFldr1": {
         "name": "GigFldr1",
@@ -6733,10 +6733,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "HP+100 (Pink)": {
         "name": "HP+100 (Pink)",
@@ -6745,10 +6745,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "HP+100 (Yellow)": {
         "name": "HP+100 (Yellow)",
@@ -6757,10 +6757,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "HP+200 (Yellow)": {
         "name": "HP+200 (Yellow)",
@@ -6769,10 +6769,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "HP+500 (Yellow)": {
         "name": "HP+500 (Yellow)",
@@ -6781,10 +6781,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "HubBatc": {
         "name": "HubBatc",
@@ -6793,10 +6793,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Jungle": {
         "name": "Jungle",
@@ -6805,10 +6805,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "OilBody": {
         "name": "OilBody",
@@ -6817,10 +6817,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "QuickGge": {
         "name": "QuickGge",
@@ -6829,10 +6829,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "SetSand": {
         "name": "SetSand",
@@ -6841,10 +6841,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "SneakRun": {
         "name": "SneakRun",
@@ -6854,10 +6854,10 @@
           "Programs",
           "Subchips"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Speed+1 (Yellow)": {
         "name": "Speed+1 (Yellow)",
@@ -6866,10 +6866,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "WpnLV+1 (White)": {
         "name": "WpnLV+1 (White)",
@@ -6878,10 +6878,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "WpnLV+1 (Pink)": {
         "name": "WpnLV+1 (Pink)",
@@ -6890,10 +6890,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "WpnLV+1 (Yellow)": {
         "name": "WpnLV+1 (Yellow)",
@@ -6902,10 +6902,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Press": {
         "name": "Press",
@@ -6914,10 +6914,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "200z": {
         "name": "200z",
@@ -6926,10 +6926,10 @@
           "Everything",
           "Zenny"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "500z": {
         "name": "500z",
@@ -6938,10 +6938,10 @@
           "Everything",
           "Zenny"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "600z": {
         "name": "600z",
@@ -6950,10 +6950,10 @@
           "Everything",
           "Zenny"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "800z": {
         "name": "800z",
@@ -6962,10 +6962,10 @@
           "Everything",
           "Zenny"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "900z": {
         "name": "900z",
@@ -6974,10 +6974,10 @@
           "Everything",
           "Zenny"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "1000z": {
         "name": "1000z",
@@ -6986,10 +6986,10 @@
           "Everything",
           "Zenny"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "1200z": {
         "name": "1200z",
@@ -6998,10 +6998,10 @@
           "Everything",
           "Zenny"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "1400z": {
         "name": "1400z",
@@ -7010,10 +7010,10 @@
           "Everything",
           "Zenny"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "1600z": {
         "name": "1600z",
@@ -7022,10 +7022,10 @@
           "Everything",
           "Zenny"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "1800z": {
         "name": "1800z",
@@ -7034,10 +7034,10 @@
           "Everything",
           "Zenny"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "2000z": {
         "name": "2000z",
@@ -7046,10 +7046,10 @@
           "Everything",
           "Zenny"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "3000z": {
         "name": "3000z",
@@ -7058,10 +7058,10 @@
           "Everything",
           "Zenny"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "9000z": {
         "name": "9000z",
@@ -7070,10 +7070,10 @@
           "Everything",
           "Zenny"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "10000z": {
         "name": "10000z",
@@ -7082,10 +7082,10 @@
           "Everything",
           "Zenny"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "30000z": {
         "name": "30000z",
@@ -7094,10 +7094,10 @@
           "Everything",
           "Zenny"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "50000z": {
         "name": "50000z",
@@ -7106,10 +7106,10 @@
           "Everything",
           "Zenny"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "30 BugFrags": {
         "name": "30 BugFrags",
@@ -7118,10 +7118,10 @@
           "BugFrags",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "SonicWav W": {
         "name": "SonicWav W",
@@ -7130,10 +7130,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bubbler C": {
         "name": "Bubbler C",
@@ -7142,10 +7142,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Shake1 S": {
         "name": "Shake1 S",
@@ -7154,10 +7154,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "HoleMetr H": {
         "name": "HoleMetr H",
@@ -7166,10 +7166,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Shadow J": {
         "name": "Shadow J",
@@ -7178,10 +7178,10 @@
           "BattleChips",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "SubPET": {
         "name": "SubPET",
@@ -7190,10 +7190,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Needle": {
         "name": "Needle",
@@ -7202,10 +7202,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "PETCase": {
         "name": "PETCase",
@@ -7214,10 +7214,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "10 BugFrags": {
         "name": "10 BugFrags",
@@ -7226,10 +7226,10 @@
           "BugFrags",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "1 BugFrag": {
         "name": "1 BugFrag",
@@ -7238,10 +7238,10 @@
           "BugFrags",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "filler"
+        "max_count": 6
       },
       "UnderSht": {
         "name": "UnderSht",
@@ -7250,10 +7250,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Roll R": {
         "name": "Roll R",
@@ -7263,10 +7263,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Roll V2 R": {
         "name": "Roll V2 R",
@@ -7276,10 +7276,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Roll V3 R": {
         "name": "Roll V3 R",
@@ -7289,10 +7289,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "GutsMan G": {
         "name": "GutsMan G",
@@ -7302,10 +7302,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "GutsMan V2 G": {
         "name": "GutsMan V2 G",
@@ -7315,10 +7315,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "GutsMan V3 G": {
         "name": "GutsMan V3 G",
@@ -7328,10 +7328,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "ProtoMan B": {
         "name": "ProtoMan B",
@@ -7341,10 +7341,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "ProtoMan V2 B": {
         "name": "ProtoMan V2 B",
@@ -7354,10 +7354,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "ProtoMan V3 B": {
         "name": "ProtoMan V3 B",
@@ -7367,10 +7367,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "FlashMan F": {
         "name": "FlashMan F",
@@ -7380,10 +7380,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "FlashMan V2 F": {
         "name": "FlashMan V2 F",
@@ -7393,10 +7393,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "FlashMan V3 F": {
         "name": "FlashMan V3 F",
@@ -7406,10 +7406,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "BeastMan B": {
         "name": "BeastMan B",
@@ -7419,10 +7419,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "BeastMan V2 B": {
         "name": "BeastMan V2 B",
@@ -7432,10 +7432,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "BeastMan V3 B": {
         "name": "BeastMan V3 B",
@@ -7445,10 +7445,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "BubblMan B": {
         "name": "BubblMan B",
@@ -7458,10 +7458,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "BubblMan V2 B": {
         "name": "BubblMan V2 B",
@@ -7471,10 +7471,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "BubblMan V3 B": {
         "name": "BubblMan V3 B",
@@ -7484,10 +7484,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "DesertMan D": {
         "name": "DesertMan D",
@@ -7497,10 +7497,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "DesertMan V2 D": {
         "name": "DesertMan V2 D",
@@ -7510,10 +7510,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "DesertMan V3 D": {
         "name": "DesertMan V3 D",
@@ -7523,10 +7523,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "PlantMan P": {
         "name": "PlantMan P",
@@ -7536,10 +7536,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "PlantMan V2 P": {
         "name": "PlantMan V2 P",
@@ -7549,10 +7549,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "PlantMan V3 P": {
         "name": "PlantMan V3 P",
@@ -7562,10 +7562,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "FlamMan F": {
         "name": "FlamMan F",
@@ -7575,10 +7575,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "FlamMan V2 F": {
         "name": "FlamMan V2 F",
@@ -7588,10 +7588,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "FlamMan V3 F": {
         "name": "FlamMan V3 F",
@@ -7601,10 +7601,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "DrillMan D": {
         "name": "DrillMan D",
@@ -7614,10 +7614,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "DrillMan V2 D": {
         "name": "DrillMan V2 D",
@@ -7627,10 +7627,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "DrillMan V3 D": {
         "name": "DrillMan V3 D",
@@ -7640,10 +7640,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "MetalMan M": {
         "name": "MetalMan M",
@@ -7653,10 +7653,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "MetalMan V2 M": {
         "name": "MetalMan V2 M",
@@ -7666,10 +7666,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "MetalMan V3 M": {
         "name": "MetalMan V3 M",
@@ -7679,10 +7679,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "KingMan K": {
         "name": "KingMan K",
@@ -7692,10 +7692,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "KingMan V2 K": {
         "name": "KingMan V2 K",
@@ -7705,10 +7705,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "KingMan V3 K": {
         "name": "KingMan V3 K",
@@ -7718,10 +7718,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "BowlMan B": {
         "name": "BowlMan B",
@@ -7731,10 +7731,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "BowlMan V2 B": {
         "name": "BowlMan V2 B",
@@ -7744,10 +7744,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "BowlMan V3 B": {
         "name": "BowlMan V3 B",
@@ -7757,10 +7757,10 @@
           "Everything",
           "Navi Chips"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Hammer": {
         "name": "Hammer",
@@ -7769,10 +7769,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Humor": {
         "name": "Humor",
@@ -7781,10 +7781,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "BlckMnd": {
         "name": "BlckMnd",
@@ -7793,10 +7793,10 @@
           "Everything",
           "Programs"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Victory": {
         "name": "Victory",
@@ -7804,10 +7804,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

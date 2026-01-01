@@ -4148,10 +4148,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 138,
-        "classification": "progression_skip_balancing"
+        "max_count": 138
       },
       "Sonic - Magic Gloves": {
         "name": "Sonic - Magic Gloves",
@@ -4160,10 +4160,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sonic - Light Shoes": {
         "name": "Sonic - Light Shoes",
@@ -4172,10 +4172,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sonic - Ancient Light": {
         "name": "Sonic - Ancient Light",
@@ -4184,10 +4184,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sonic - Bounce Bracelet": {
         "name": "Sonic - Bounce Bracelet",
@@ -4196,10 +4196,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sonic - Flame Ring": {
         "name": "Sonic - Flame Ring",
@@ -4208,10 +4208,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sonic - Mystic Melody": {
         "name": "Sonic - Mystic Melody",
@@ -4220,10 +4220,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tails - Laser Blaster": {
         "name": "Tails - Laser Blaster",
@@ -4232,10 +4232,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Tails - Booster": {
         "name": "Tails - Booster",
@@ -4244,10 +4244,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tails - Mystic Melody": {
         "name": "Tails - Mystic Melody",
@@ -4256,10 +4256,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tails - Bazooka": {
         "name": "Tails - Bazooka",
@@ -4268,10 +4268,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Knuckles - Mystic Melody": {
         "name": "Knuckles - Mystic Melody",
@@ -4280,10 +4280,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Knuckles - Shovel Claws": {
         "name": "Knuckles - Shovel Claws",
@@ -4292,10 +4292,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Knuckles - Air Necklace": {
         "name": "Knuckles - Air Necklace",
@@ -4304,10 +4304,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Knuckles - Hammer Gloves": {
         "name": "Knuckles - Hammer Gloves",
@@ -4316,10 +4316,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Knuckles - Sunglasses": {
         "name": "Knuckles - Sunglasses",
@@ -4328,10 +4328,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Shadow - Flame Ring": {
         "name": "Shadow - Flame Ring",
@@ -4340,10 +4340,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Shadow - Air Shoes": {
         "name": "Shadow - Air Shoes",
@@ -4352,10 +4352,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Shadow - Ancient Light": {
         "name": "Shadow - Ancient Light",
@@ -4364,10 +4364,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Shadow - Mystic Melody": {
         "name": "Shadow - Mystic Melody",
@@ -4376,10 +4376,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Eggman - Laser Blaster": {
         "name": "Eggman - Laser Blaster",
@@ -4388,10 +4388,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Eggman - Mystic Melody": {
         "name": "Eggman - Mystic Melody",
@@ -4400,10 +4400,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Eggman - Jet Engine": {
         "name": "Eggman - Jet Engine",
@@ -4412,10 +4412,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Eggman - Large Cannon": {
         "name": "Eggman - Large Cannon",
@@ -4424,10 +4424,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Eggman - Protective Armor": {
         "name": "Eggman - Protective Armor",
@@ -4436,10 +4436,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rouge - Mystic Melody": {
         "name": "Rouge - Mystic Melody",
@@ -4448,10 +4448,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rouge - Pick Nails": {
         "name": "Rouge - Pick Nails",
@@ -4460,10 +4460,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rouge - Treasure Scope": {
         "name": "Rouge - Treasure Scope",
@@ -4472,10 +4472,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rouge - Iron Boots": {
         "name": "Rouge - Iron Boots",
@@ -4484,10 +4484,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Chao Coin": {
         "name": "Chao Coin",
@@ -4495,10 +4495,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Five Rings": {
         "name": "Five Rings",
@@ -4506,10 +4506,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "filler"
+        "max_count": 7
       },
       "Ten Rings": {
         "name": "Ten Rings",
@@ -4517,10 +4517,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "filler"
+        "max_count": 6
       },
       "Twenty Rings": {
         "name": "Twenty Rings",
@@ -4528,10 +4528,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "Extra Life": {
         "name": "Extra Life",
@@ -4539,10 +4539,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "filler"
+        "max_count": 6
       },
       "Shield": {
         "name": "Shield",
@@ -4550,10 +4550,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "Magnetic Shield": {
         "name": "Magnetic Shield",
@@ -4561,10 +4561,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 9,
-        "classification": "filler"
+        "max_count": 9
       },
       "Invincibility": {
         "name": "Invincibility",
@@ -4572,10 +4572,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "OmoTrap": {
         "name": "OmoTrap",
@@ -4584,10 +4584,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Chaos Control Trap": {
         "name": "Chaos Control Trap",
@@ -4596,10 +4596,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Confusion Trap": {
         "name": "Confusion Trap",
@@ -4608,10 +4608,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Tiny Trap": {
         "name": "Tiny Trap",
@@ -4620,10 +4620,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Gravity Trap": {
         "name": "Gravity Trap",
@@ -4632,10 +4632,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Exposition Trap": {
         "name": "Exposition Trap",
@@ -4644,10 +4644,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ice Trap": {
         "name": "Ice Trap",
@@ -4656,10 +4656,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Slow Trap": {
         "name": "Slow Trap",
@@ -4668,10 +4668,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Cutscene Trap": {
         "name": "Cutscene Trap",
@@ -4680,10 +4680,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reverse Trap": {
         "name": "Reverse Trap",
@@ -4692,10 +4692,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Literature Trap": {
         "name": "Literature Trap",
@@ -4704,10 +4704,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Controller Drift Trap": {
         "name": "Controller Drift Trap",
@@ -4716,10 +4716,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Poison Trap": {
         "name": "Poison Trap",
@@ -4728,10 +4728,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bee Trap": {
         "name": "Bee Trap",
@@ -4740,10 +4740,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "White Chaos Emerald": {
         "name": "White Chaos Emerald",
@@ -4752,10 +4752,10 @@
           "Chaos Emeralds",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Red Chaos Emerald": {
         "name": "Red Chaos Emerald",
@@ -4764,10 +4764,10 @@
           "Chaos Emeralds",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Cyan Chaos Emerald": {
         "name": "Cyan Chaos Emerald",
@@ -4776,10 +4776,10 @@
           "Chaos Emeralds",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Purple Chaos Emerald": {
         "name": "Purple Chaos Emerald",
@@ -4788,10 +4788,10 @@
           "Chaos Emeralds",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Green Chaos Emerald": {
         "name": "Green Chaos Emerald",
@@ -4800,10 +4800,10 @@
           "Chaos Emeralds",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Yellow Chaos Emerald": {
         "name": "Yellow Chaos Emerald",
@@ -4812,10 +4812,10 @@
           "Chaos Emeralds",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blue Chaos Emerald": {
         "name": "Blue Chaos Emerald",
@@ -4824,10 +4824,10 @@
           "Chaos Emeralds",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pong Trap": {
         "name": "Pong Trap",
@@ -4836,10 +4836,10 @@
           "Everything",
           "Minigames"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Breakout Trap": {
         "name": "Breakout Trap",
@@ -4848,10 +4848,10 @@
           "Everything",
           "Minigames"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Fishing Trap": {
         "name": "Fishing Trap",
@@ -4860,10 +4860,10 @@
           "Everything",
           "Minigames"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Trivia Trap": {
         "name": "Trivia Trap",
@@ -4872,10 +4872,10 @@
           "Everything",
           "Minigames"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pokemon Trivia Trap": {
         "name": "Pokemon Trivia Trap",
@@ -4884,10 +4884,10 @@
           "Everything",
           "Minigames"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pokemon Count Trap": {
         "name": "Pokemon Count Trap",
@@ -4896,10 +4896,10 @@
           "Everything",
           "Minigames"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Number Sequence Trap": {
         "name": "Number Sequence Trap",
@@ -4908,10 +4908,10 @@
           "Everything",
           "Minigames"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Light Up Path Trap": {
         "name": "Light Up Path Trap",
@@ -4920,10 +4920,10 @@
           "Everything",
           "Minigames"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pinball Trap": {
         "name": "Pinball Trap",
@@ -4932,10 +4932,10 @@
           "Everything",
           "Minigames"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Math Quiz Trap": {
         "name": "Math Quiz Trap",
@@ -4944,10 +4944,10 @@
           "Everything",
           "Minigames"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Snake Trap": {
         "name": "Snake Trap",
@@ -4956,10 +4956,10 @@
           "Everything",
           "Minigames"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Input Sequence Trap": {
         "name": "Input Sequence Trap",
@@ -4968,10 +4968,10 @@
           "Everything",
           "Minigames"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Normal Egg": {
         "name": "Normal Egg",
@@ -4980,10 +4980,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Yellow Mono-Tone Egg": {
         "name": "Yellow Mono-Tone Egg",
@@ -4992,10 +4992,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "White Mono-Tone Egg": {
         "name": "White Mono-Tone Egg",
@@ -5004,10 +5004,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Brown Mono-Tone Egg": {
         "name": "Brown Mono-Tone Egg",
@@ -5016,10 +5016,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sky Blue Mono-Tone Egg": {
         "name": "Sky Blue Mono-Tone Egg",
@@ -5028,10 +5028,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pink Mono-Tone Egg": {
         "name": "Pink Mono-Tone Egg",
@@ -5040,10 +5040,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blue Mono-Tone Egg": {
         "name": "Blue Mono-Tone Egg",
@@ -5052,10 +5052,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Grey Mono-Tone Egg": {
         "name": "Grey Mono-Tone Egg",
@@ -5064,10 +5064,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Green Mono-Tone Egg": {
         "name": "Green Mono-Tone Egg",
@@ -5076,10 +5076,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Red Mono-Tone Egg": {
         "name": "Red Mono-Tone Egg",
@@ -5088,10 +5088,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lime Green Mono-Tone Egg": {
         "name": "Lime Green Mono-Tone Egg",
@@ -5100,10 +5100,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Purple Mono-Tone Egg": {
         "name": "Purple Mono-Tone Egg",
@@ -5112,10 +5112,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Mono-Tone Egg": {
         "name": "Orange Mono-Tone Egg",
@@ -5124,10 +5124,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Black Mono-Tone Egg": {
         "name": "Black Mono-Tone Egg",
@@ -5136,10 +5136,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Yellow Two-Tone Egg": {
         "name": "Yellow Two-Tone Egg",
@@ -5148,10 +5148,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "White Two-Tone Egg": {
         "name": "White Two-Tone Egg",
@@ -5160,10 +5160,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Brown Two-Tone Egg": {
         "name": "Brown Two-Tone Egg",
@@ -5172,10 +5172,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sky Blue Two-Tone Egg": {
         "name": "Sky Blue Two-Tone Egg",
@@ -5184,10 +5184,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pink Two-Tone Egg": {
         "name": "Pink Two-Tone Egg",
@@ -5196,10 +5196,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blue Two-Tone Egg": {
         "name": "Blue Two-Tone Egg",
@@ -5208,10 +5208,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Grey Two-Tone Egg": {
         "name": "Grey Two-Tone Egg",
@@ -5220,10 +5220,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Green Two-Tone Egg": {
         "name": "Green Two-Tone Egg",
@@ -5232,10 +5232,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Red Two-Tone Egg": {
         "name": "Red Two-Tone Egg",
@@ -5244,10 +5244,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lime Green Two-Tone Egg": {
         "name": "Lime Green Two-Tone Egg",
@@ -5256,10 +5256,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Purple Two-Tone Egg": {
         "name": "Purple Two-Tone Egg",
@@ -5268,10 +5268,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Two-Tone Egg": {
         "name": "Orange Two-Tone Egg",
@@ -5280,10 +5280,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Black Two-Tone Egg": {
         "name": "Black Two-Tone Egg",
@@ -5292,10 +5292,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Normal Shiny Egg": {
         "name": "Normal Shiny Egg",
@@ -5304,10 +5304,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Yellow Shiny Egg": {
         "name": "Yellow Shiny Egg",
@@ -5316,10 +5316,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "White Shiny Egg": {
         "name": "White Shiny Egg",
@@ -5328,10 +5328,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Brown Shiny Egg": {
         "name": "Brown Shiny Egg",
@@ -5340,10 +5340,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sky Blue Shiny Egg": {
         "name": "Sky Blue Shiny Egg",
@@ -5352,10 +5352,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pink Shiny Egg": {
         "name": "Pink Shiny Egg",
@@ -5364,10 +5364,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blue Shiny Egg": {
         "name": "Blue Shiny Egg",
@@ -5376,10 +5376,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Grey Shiny Egg": {
         "name": "Grey Shiny Egg",
@@ -5388,10 +5388,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Green Shiny Egg": {
         "name": "Green Shiny Egg",
@@ -5400,10 +5400,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Red Shiny Egg": {
         "name": "Red Shiny Egg",
@@ -5412,10 +5412,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lime Green Shiny Egg": {
         "name": "Lime Green Shiny Egg",
@@ -5424,10 +5424,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Purple Shiny Egg": {
         "name": "Purple Shiny Egg",
@@ -5436,10 +5436,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Shiny Egg": {
         "name": "Orange Shiny Egg",
@@ -5448,10 +5448,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Black Shiny Egg": {
         "name": "Black Shiny Egg",
@@ -5460,10 +5460,10 @@
           "Eggs",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Chao Garden Fruit": {
         "name": "Chao Garden Fruit",
@@ -5472,10 +5472,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hero Garden Fruit": {
         "name": "Hero Garden Fruit",
@@ -5484,10 +5484,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dark Garden Fruit": {
         "name": "Dark Garden Fruit",
@@ -5496,10 +5496,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Strong Fruit": {
         "name": "Strong Fruit",
@@ -5508,10 +5508,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Tasty Fruit": {
         "name": "Tasty Fruit",
@@ -5520,10 +5520,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hero Fruit": {
         "name": "Hero Fruit",
@@ -5532,10 +5532,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dark Fruit": {
         "name": "Dark Fruit",
@@ -5544,10 +5544,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Round Fruit": {
         "name": "Round Fruit",
@@ -5556,10 +5556,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Triangle Fruit": {
         "name": "Triangle Fruit",
@@ -5568,10 +5568,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Square Fruit": {
         "name": "Square Fruit",
@@ -5580,10 +5580,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Heart Fruit": {
         "name": "Heart Fruit",
@@ -5592,10 +5592,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Chao Fruit": {
         "name": "Chao Fruit",
@@ -5604,10 +5604,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Smart Fruit": {
         "name": "Smart Fruit",
@@ -5616,10 +5616,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Fruit": {
         "name": "Orange Fruit",
@@ -5628,10 +5628,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blue Fruit": {
         "name": "Blue Fruit",
@@ -5640,10 +5640,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pink Fruit": {
         "name": "Pink Fruit",
@@ -5652,10 +5652,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Green Fruit": {
         "name": "Green Fruit",
@@ -5664,10 +5664,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Purple Fruit": {
         "name": "Purple Fruit",
@@ -5676,10 +5676,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Yellow Fruit": {
         "name": "Yellow Fruit",
@@ -5688,10 +5688,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Red Fruit": {
         "name": "Red Fruit",
@@ -5700,10 +5700,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mushroom": {
         "name": "Mushroom",
@@ -5712,10 +5712,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Super Mushroom": {
         "name": "Super Mushroom",
@@ -5724,10 +5724,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mint Candy": {
         "name": "Mint Candy",
@@ -5736,10 +5736,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Grapes": {
         "name": "Grapes",
@@ -5748,10 +5748,10 @@
           "Everything",
           "Fruits"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Strong Seed": {
         "name": "Strong Seed",
@@ -5760,10 +5760,10 @@
           "Everything",
           "Seeds"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Tasty Seed": {
         "name": "Tasty Seed",
@@ -5772,10 +5772,10 @@
           "Everything",
           "Seeds"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hero Seed": {
         "name": "Hero Seed",
@@ -5784,10 +5784,10 @@
           "Everything",
           "Seeds"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dark Seed": {
         "name": "Dark Seed",
@@ -5796,10 +5796,10 @@
           "Everything",
           "Seeds"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Round Seed": {
         "name": "Round Seed",
@@ -5808,10 +5808,10 @@
           "Everything",
           "Seeds"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Triangle Seed": {
         "name": "Triangle Seed",
@@ -5820,10 +5820,10 @@
           "Everything",
           "Seeds"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Square Seed": {
         "name": "Square Seed",
@@ -5832,10 +5832,10 @@
           "Everything",
           "Seeds"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pumpkin": {
         "name": "Pumpkin",
@@ -5844,10 +5844,10 @@
           "Everything",
           "Hats"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skull": {
         "name": "Skull",
@@ -5856,10 +5856,10 @@
           "Everything",
           "Hats"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Apple": {
         "name": "Apple",
@@ -5868,10 +5868,10 @@
           "Everything",
           "Hats"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bucket": {
         "name": "Bucket",
@@ -5880,10 +5880,10 @@
           "Everything",
           "Hats"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Empty Can": {
         "name": "Empty Can",
@@ -5892,10 +5892,10 @@
           "Everything",
           "Hats"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Cardboard Box": {
         "name": "Cardboard Box",
@@ -5904,10 +5904,10 @@
           "Everything",
           "Hats"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Flower Pot": {
         "name": "Flower Pot",
@@ -5916,10 +5916,10 @@
           "Everything",
           "Hats"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Paper Bag": {
         "name": "Paper Bag",
@@ -5928,10 +5928,10 @@
           "Everything",
           "Hats"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pan": {
         "name": "Pan",
@@ -5940,10 +5940,10 @@
           "Everything",
           "Hats"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Stump": {
         "name": "Stump",
@@ -5952,10 +5952,10 @@
           "Everything",
           "Hats"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Watermelon": {
         "name": "Watermelon",
@@ -5964,10 +5964,10 @@
           "Everything",
           "Hats"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Red Wool Beanie": {
         "name": "Red Wool Beanie",
@@ -5976,10 +5976,10 @@
           "Everything",
           "Hats"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blue Wool Beanie": {
         "name": "Blue Wool Beanie",
@@ -5988,10 +5988,10 @@
           "Everything",
           "Hats"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Black Wool Beanie": {
         "name": "Black Wool Beanie",
@@ -6000,10 +6000,10 @@
           "Everything",
           "Hats"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Pacifier": {
         "name": "Pacifier",
@@ -6012,10 +6012,10 @@
           "Everything",
           "Hats"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Penguin": {
         "name": "Penguin",
@@ -6023,10 +6023,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Seal": {
         "name": "Seal",
@@ -6034,10 +6034,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Otter": {
         "name": "Otter",
@@ -6045,10 +6045,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rabbit": {
         "name": "Rabbit",
@@ -6056,10 +6056,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Cheetah": {
         "name": "Cheetah",
@@ -6067,10 +6067,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Warthog": {
         "name": "Warthog",
@@ -6078,10 +6078,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bear": {
         "name": "Bear",
@@ -6089,10 +6089,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Tiger": {
         "name": "Tiger",
@@ -6100,10 +6100,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Gorilla": {
         "name": "Gorilla",
@@ -6111,10 +6111,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Peacock": {
         "name": "Peacock",
@@ -6122,10 +6122,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Parrot": {
         "name": "Parrot",
@@ -6133,10 +6133,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Condor": {
         "name": "Condor",
@@ -6144,10 +6144,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skunk": {
         "name": "Skunk",
@@ -6155,10 +6155,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sheep": {
         "name": "Sheep",
@@ -6166,10 +6166,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Raccoon": {
         "name": "Raccoon",
@@ -6177,10 +6177,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "HalfFish": {
         "name": "HalfFish",
@@ -6188,10 +6188,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Skeleton Dog": {
         "name": "Skeleton Dog",
@@ -6199,10 +6199,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bat": {
         "name": "Bat",
@@ -6210,10 +6210,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dragon": {
         "name": "Dragon",
@@ -6221,10 +6221,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Unicorn": {
         "name": "Unicorn",
@@ -6232,10 +6232,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Phoenix": {
         "name": "Phoenix",
@@ -6243,10 +6243,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Yellow Chaos Drive": {
         "name": "Yellow Chaos Drive",
@@ -6254,10 +6254,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Green Chaos Drive": {
         "name": "Green Chaos Drive",
@@ -6265,10 +6265,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Red Chaos Drive": {
         "name": "Red Chaos Drive",
@@ -6276,10 +6276,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Purple Chaos Drive": {
         "name": "Purple Chaos Drive",
@@ -6287,10 +6287,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "What Maria Wanted": {
         "name": "What Maria Wanted",
@@ -6298,10 +6298,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

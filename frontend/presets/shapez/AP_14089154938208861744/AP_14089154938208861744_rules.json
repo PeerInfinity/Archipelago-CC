@@ -3345,10 +3345,10 @@
           "Main Buildings",
           "Processing Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Quad Cutter": {
         "name": "Quad Cutter",
@@ -3358,10 +3358,10 @@
           "Goal Buildings",
           "Processing Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rotator": {
         "name": "Rotator",
@@ -3372,10 +3372,10 @@
           "Main Buildings",
           "Processing Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rotator (CCW)": {
         "name": "Rotator (CCW)",
@@ -3385,10 +3385,10 @@
           "Goal Buildings",
           "Processing Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rotator (180\u00b0)": {
         "name": "Rotator (180\u00b0)",
@@ -3397,10 +3397,10 @@
           "Everything",
           "Processing Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Stacker": {
         "name": "Stacker",
@@ -3411,10 +3411,10 @@
           "Main Buildings",
           "Processing Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Painter": {
         "name": "Painter",
@@ -3425,10 +3425,10 @@
           "Main Buildings",
           "Processing Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Double Painter": {
         "name": "Double Painter",
@@ -3438,10 +3438,10 @@
           "Goal Buildings",
           "Processing Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Quad Painter": {
         "name": "Quad Painter",
@@ -3451,10 +3451,10 @@
           "Goal Buildings",
           "Processing Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Color Mixer": {
         "name": "Color Mixer",
@@ -3465,10 +3465,10 @@
           "Main Buildings",
           "Processing Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Balancer": {
         "name": "Balancer",
@@ -3477,10 +3477,10 @@
           "Everything",
           "Most Useful Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Compact Merger": {
         "name": "Compact Merger",
@@ -3489,10 +3489,10 @@
           "Everything",
           "Most Useful Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Compact Splitter": {
         "name": "Compact Splitter",
@@ -3501,10 +3501,10 @@
           "Everything",
           "Most Useful Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tunnel": {
         "name": "Tunnel",
@@ -3513,10 +3513,10 @@
           "Everything",
           "Most Useful Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tunnel Tier II": {
         "name": "Tunnel Tier II",
@@ -3525,10 +3525,10 @@
           "Everything",
           "Most Useful Buildings"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Trash": {
         "name": "Trash",
@@ -3537,10 +3537,10 @@
           "Everything",
           "Most Useful Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Chaining Extractor": {
         "name": "Chaining Extractor",
@@ -3549,10 +3549,10 @@
           "Everything",
           "Most Useful Buildings"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Belt Reader": {
         "name": "Belt Reader",
@@ -3561,10 +3561,10 @@
           "Everything",
           "Top Row Buildings"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Storage": {
         "name": "Storage",
@@ -3573,10 +3573,10 @@
           "Everything",
           "Top Row Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Switch": {
         "name": "Switch",
@@ -3586,10 +3586,10 @@
           "Goal Buildings",
           "Top Row Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Item Filter": {
         "name": "Item Filter",
@@ -3598,10 +3598,10 @@
           "Everything",
           "Top Row Buildings"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Display": {
         "name": "Display",
@@ -3610,10 +3610,10 @@
           "Everything",
           "Top Row Buildings"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Wires": {
         "name": "Wires",
@@ -3624,10 +3624,10 @@
           "Goal Buildings",
           "Wires Layer Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Constant Signal": {
         "name": "Constant Signal",
@@ -3637,10 +3637,10 @@
           "Goal Buildings",
           "Wires Layer Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Logic Gates": {
         "name": "Logic Gates",
@@ -3649,10 +3649,10 @@
           "Everything",
           "Wires Layer Buildings"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Virtual Processing": {
         "name": "Virtual Processing",
@@ -3661,10 +3661,10 @@
           "Everything",
           "Wires Layer Buildings"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Blueprints": {
         "name": "Blueprints",
@@ -3673,10 +3673,10 @@
           "Everything",
           "Gameplay Mechanics"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Big Belt Upgrade": {
         "name": "Big Belt Upgrade",
@@ -3686,10 +3686,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 9,
-        "classification": "progression"
+        "max_count": 9
       },
       "Big Miner Upgrade": {
         "name": "Big Miner Upgrade",
@@ -3699,10 +3699,10 @@
           "Miner Upgrades",
           "Upgrades"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 12,
-        "classification": "useful"
+        "max_count": 12
       },
       "Big Processors Upgrade": {
         "name": "Big Processors Upgrade",
@@ -3712,10 +3712,10 @@
           "Processors Upgrades",
           "Upgrades"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 12,
-        "classification": "useful"
+        "max_count": 12
       },
       "Big Painting Upgrade": {
         "name": "Big Painting Upgrade",
@@ -3725,10 +3725,10 @@
           "Painting Upgrades",
           "Upgrades"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 10,
-        "classification": "useful"
+        "max_count": 10
       },
       "Small Belt Upgrade": {
         "name": "Small Belt Upgrade",
@@ -3738,10 +3738,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 13,
-        "classification": "filler"
+        "max_count": 13
       },
       "Small Miner Upgrade": {
         "name": "Small Miner Upgrade",
@@ -3751,10 +3751,10 @@
           "Miner Upgrades",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 13,
-        "classification": "filler"
+        "max_count": 13
       },
       "Small Processors Upgrade": {
         "name": "Small Processors Upgrade",
@@ -3764,10 +3764,10 @@
           "Processors Upgrades",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 10,
-        "classification": "filler"
+        "max_count": 10
       },
       "Small Painting Upgrade": {
         "name": "Small Painting Upgrade",
@@ -3777,10 +3777,10 @@
           "Painting Upgrades",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "filler"
+        "max_count": 7
       },
       "Gigantic Belt Upgrade": {
         "name": "Gigantic Belt Upgrade",
@@ -3790,10 +3790,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Gigantic Miner Upgrade": {
         "name": "Gigantic Miner Upgrade",
@@ -3803,10 +3803,10 @@
           "Miner Upgrades",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Gigantic Processors Upgrade": {
         "name": "Gigantic Processors Upgrade",
@@ -3816,10 +3816,10 @@
           "Processors Upgrades",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Gigantic Painting Upgrade": {
         "name": "Gigantic Painting Upgrade",
@@ -3829,10 +3829,10 @@
           "Painting Upgrades",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rising Belt Upgrade": {
         "name": "Rising Belt Upgrade",
@@ -3842,10 +3842,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rising Miner Upgrade": {
         "name": "Rising Miner Upgrade",
@@ -3855,10 +3855,10 @@
           "Miner Upgrades",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rising Processors Upgrade": {
         "name": "Rising Processors Upgrade",
@@ -3868,10 +3868,10 @@
           "Processors Upgrades",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Rising Painting Upgrade": {
         "name": "Rising Painting Upgrade",
@@ -3881,10 +3881,10 @@
           "Painting Upgrades",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Big Random Upgrade": {
         "name": "Big Random Upgrade",
@@ -3893,10 +3893,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Small Random Upgrade": {
         "name": "Small Random Upgrade",
@@ -3905,10 +3905,10 @@
           "Everything",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Belt Upgrade Trap": {
         "name": "Belt Upgrade Trap",
@@ -3919,10 +3919,10 @@
           "Traps",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Miner Upgrade Trap": {
         "name": "Miner Upgrade Trap",
@@ -3933,10 +3933,10 @@
           "Traps",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Processors Upgrade Trap": {
         "name": "Processors Upgrade Trap",
@@ -3947,10 +3947,10 @@
           "Traps",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Painting Upgrade Trap": {
         "name": "Painting Upgrade Trap",
@@ -3961,10 +3961,10 @@
           "Traps",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Demonic Belt Upgrade Trap": {
         "name": "Demonic Belt Upgrade Trap",
@@ -3975,10 +3975,10 @@
           "Traps",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Demonic Miner Upgrade Trap": {
         "name": "Demonic Miner Upgrade Trap",
@@ -3989,10 +3989,10 @@
           "Traps",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Demonic Processors Upgrade Trap": {
         "name": "Demonic Processors Upgrade Trap",
@@ -4003,10 +4003,10 @@
           "Traps",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Demonic Painting Upgrade Trap": {
         "name": "Demonic Painting Upgrade Trap",
@@ -4017,10 +4017,10 @@
           "Traps",
           "Upgrades"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blueprint Shapes Bundle": {
         "name": "Blueprint Shapes Bundle",
@@ -4029,10 +4029,10 @@
           "Bundles",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 10,
-        "classification": "filler"
+        "max_count": 10
       },
       "Level Shapes Bundle": {
         "name": "Level Shapes Bundle",
@@ -4041,10 +4041,10 @@
           "Bundles",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 8,
-        "classification": "filler"
+        "max_count": 8
       },
       "Upgrade Shapes Bundle": {
         "name": "Upgrade Shapes Bundle",
@@ -4053,10 +4053,10 @@
           "Bundles",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 8,
-        "classification": "filler"
+        "max_count": 8
       },
       "Locked Building Trap": {
         "name": "Locked Building Trap",
@@ -4065,10 +4065,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Throttled Building Trap": {
         "name": "Throttled Building Trap",
@@ -4077,10 +4077,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Malfunctioning Trap": {
         "name": "Malfunctioning Trap",
@@ -4089,10 +4089,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Inflation Trap": {
         "name": "Inflation Trap",
@@ -4101,10 +4101,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Belts Clearing Trap": {
         "name": "Belts Clearing Trap",
@@ -4113,10 +4113,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Inventory Draining Trap": {
         "name": "Inventory Draining Trap",
@@ -4125,10 +4125,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blueprint Shapes Draining Trap": {
         "name": "Blueprint Shapes Draining Trap",
@@ -4137,10 +4137,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Level Shapes Draining Trap": {
         "name": "Level Shapes Draining Trap",
@@ -4149,10 +4149,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Upgrade Shapes Draining Trap": {
         "name": "Upgrade Shapes Draining Trap",
@@ -4161,10 +4161,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Belt": {
         "name": "Belt",
@@ -4173,10 +4173,10 @@
           "Everything",
           "Most Important Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Extractor": {
         "name": "Extractor",
@@ -4185,10 +4185,10 @@
           "Everything",
           "Most Important Buildings"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Goal": {
         "name": "Goal",
@@ -4196,10 +4196,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression_skip_balancing",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

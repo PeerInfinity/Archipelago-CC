@@ -4849,10 +4849,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-King Slime": {
         "name": "Post-King Slime",
@@ -4861,10 +4861,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Desert Scourge": {
         "name": "Post-Desert Scourge",
@@ -4872,10 +4872,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Giant Clam": {
         "name": "Post-Giant Clam",
@@ -4883,10 +4883,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Eye of Cthulhu": {
         "name": "Post-Eye of Cthulhu",
@@ -4895,10 +4895,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Post-Acid Rain Tier 1": {
         "name": "Post-Acid Rain Tier 1",
@@ -4906,10 +4906,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Crabulon": {
         "name": "Post-Crabulon",
@@ -4917,10 +4917,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Evil Boss": {
         "name": "Post-Evil Boss",
@@ -4929,10 +4929,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Post-Old One's Army Tier 1": {
         "name": "Post-Old One's Army Tier 1",
@@ -4941,10 +4941,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Goblin Army": {
         "name": "Post-Goblin Army",
@@ -4953,10 +4953,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Post-Queen Bee": {
         "name": "Post-Queen Bee",
@@ -4965,10 +4965,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Post-The Hive Mind": {
         "name": "Post-The Hive Mind",
@@ -4976,10 +4976,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-The Perforators": {
         "name": "Post-The Perforators",
@@ -4987,10 +4987,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Skeletron": {
         "name": "Post-Skeletron",
@@ -4999,10 +4999,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Post-Deerclops": {
         "name": "Post-Deerclops",
@@ -5011,10 +5011,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-The Slime God": {
         "name": "Post-The Slime God",
@@ -5022,10 +5022,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hardmode": {
         "name": "Hardmode",
@@ -5033,10 +5033,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Post-Dreadnautilus": {
         "name": "Post-Dreadnautilus",
@@ -5044,10 +5044,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Hardmode Giant Clam": {
         "name": "Post-Hardmode Giant Clam",
@@ -5055,10 +5055,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Pirate Invasion": {
         "name": "Post-Pirate Invasion",
@@ -5067,10 +5067,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Post-Queen Slime": {
         "name": "Post-Queen Slime",
@@ -5079,10 +5079,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Aquatic Scourge": {
         "name": "Post-Aquatic Scourge",
@@ -5090,10 +5090,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Cragmaw Mire": {
         "name": "Post-Cragmaw Mire",
@@ -5101,10 +5101,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Acid Rain Tier 2": {
         "name": "Post-Acid Rain Tier 2",
@@ -5112,10 +5112,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-The Twins": {
         "name": "Post-The Twins",
@@ -5124,10 +5124,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Post-Brimstone Elemental": {
         "name": "Post-Brimstone Elemental",
@@ -5135,10 +5135,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-The Destroyer": {
         "name": "Post-The Destroyer",
@@ -5147,10 +5147,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Post-Cryogen": {
         "name": "Post-Cryogen",
@@ -5158,10 +5158,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Skeletron Prime": {
         "name": "Post-Skeletron Prime",
@@ -5170,10 +5170,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Post-Old One's Army Tier 2": {
         "name": "Post-Old One's Army Tier 2",
@@ -5181,10 +5181,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Calamitas Clone": {
         "name": "Post-Calamitas Clone",
@@ -5192,10 +5192,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Plantera": {
         "name": "Post-Plantera",
@@ -5203,10 +5203,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Great Sand Shark": {
         "name": "Post-Great Sand Shark",
@@ -5214,10 +5214,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Leviathan and Anahita": {
         "name": "Post-Leviathan and Anahita",
@@ -5225,10 +5225,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Astrum Aureus": {
         "name": "Post-Astrum Aureus",
@@ -5236,10 +5236,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Golem": {
         "name": "Post-Golem",
@@ -5247,10 +5247,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Old One's Army Tier 3": {
         "name": "Post-Old One's Army Tier 3",
@@ -5258,10 +5258,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Martian Madness": {
         "name": "Post-Martian Madness",
@@ -5269,10 +5269,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-The Plaguebringer Goliath": {
         "name": "Post-The Plaguebringer Goliath",
@@ -5280,10 +5280,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Duke Fishron": {
         "name": "Post-Duke Fishron",
@@ -5291,10 +5291,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Mourning Wood": {
         "name": "Post-Mourning Wood",
@@ -5302,10 +5302,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Pumpking": {
         "name": "Post-Pumpking",
@@ -5313,10 +5313,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Everscream": {
         "name": "Post-Everscream",
@@ -5324,10 +5324,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Santa-NK1": {
         "name": "Post-Santa-NK1",
@@ -5335,10 +5335,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Ice Queen": {
         "name": "Post-Ice Queen",
@@ -5346,10 +5346,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Frost Legion": {
         "name": "Post-Frost Legion",
@@ -5357,10 +5357,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Ravager": {
         "name": "Post-Ravager",
@@ -5368,10 +5368,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Empress of Light": {
         "name": "Post-Empress of Light",
@@ -5379,10 +5379,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Lunatic Cultist": {
         "name": "Post-Lunatic Cultist",
@@ -5390,10 +5390,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Astrum Deus": {
         "name": "Post-Astrum Deus",
@@ -5401,10 +5401,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Lunar Events": {
         "name": "Post-Lunar Events",
@@ -5412,10 +5412,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Moon Lord": {
         "name": "Post-Moon Lord",
@@ -5423,10 +5423,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Profaned Guardians": {
         "name": "Post-Profaned Guardians",
@@ -5434,10 +5434,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-The Dragonfolly": {
         "name": "Post-The Dragonfolly",
@@ -5445,10 +5445,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Providence, the Profaned Goddess": {
         "name": "Post-Providence, the Profaned Goddess",
@@ -5456,10 +5456,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Storm Weaver": {
         "name": "Post-Storm Weaver",
@@ -5467,10 +5467,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Ceaseless Void": {
         "name": "Post-Ceaseless Void",
@@ -5478,10 +5478,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Signus, Envoy of the Devourer": {
         "name": "Post-Signus, Envoy of the Devourer",
@@ -5489,10 +5489,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Polterghast": {
         "name": "Post-Polterghast",
@@ -5500,10 +5500,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Mauler": {
         "name": "Post-Mauler",
@@ -5511,10 +5511,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Nuclear Terror": {
         "name": "Post-Nuclear Terror",
@@ -5522,10 +5522,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-The Old Duke": {
         "name": "Post-The Old Duke",
@@ -5533,10 +5533,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-The Devourer of Gods": {
         "name": "Post-The Devourer of Gods",
@@ -5544,10 +5544,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Yharon, Dragon of Rebirth": {
         "name": "Post-Yharon, Dragon of Rebirth",
@@ -5555,10 +5555,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Has Zenith": {
         "name": "Has Zenith",
@@ -5566,10 +5566,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Exo Mechs": {
         "name": "Post-Exo Mechs",
@@ -5577,10 +5577,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Supreme Witch, Calamitas": {
         "name": "Post-Supreme Witch, Calamitas",
@@ -5588,10 +5588,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Primordial Wyrm": {
         "name": "Post-Primordial Wyrm",
@@ -5599,10 +5599,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Post-Boss Rush": {
         "name": "Post-Boss Rush",
@@ -5610,10 +5610,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Hermes Boots": {
         "name": "Reward: Hermes Boots",
@@ -5621,10 +5621,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Magic Mirror": {
         "name": "Reward: Magic Mirror",
@@ -5632,10 +5632,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Demon Conch": {
         "name": "Reward: Demon Conch",
@@ -5643,10 +5643,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Magic Conch": {
         "name": "Reward: Magic Conch",
@@ -5654,10 +5654,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Cosmolight": {
         "name": "Reward: Cosmolight",
@@ -5665,10 +5665,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Grappling Hook": {
         "name": "Reward: Grappling Hook",
@@ -5676,10 +5676,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Cloud in a Bottle": {
         "name": "Reward: Cloud in a Bottle",
@@ -5687,10 +5687,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Climbing Claws": {
         "name": "Reward: Climbing Claws",
@@ -5698,10 +5698,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Ancient Chisel": {
         "name": "Reward: Ancient Chisel",
@@ -5709,10 +5709,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Fledgling Wings": {
         "name": "Reward: Fledgling Wings",
@@ -5720,10 +5720,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Rod of Discord": {
         "name": "Reward: Rod of Discord",
@@ -5731,10 +5731,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Aglet": {
         "name": "Reward: Aglet",
@@ -5742,10 +5742,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Anklet of the Wind": {
         "name": "Reward: Anklet of the Wind",
@@ -5753,10 +5753,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Ice Skates": {
         "name": "Reward: Ice Skates",
@@ -5764,10 +5764,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Lava Charm": {
         "name": "Reward: Lava Charm",
@@ -5775,10 +5775,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Water Walking Boots": {
         "name": "Reward: Water Walking Boots",
@@ -5786,10 +5786,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Flipper": {
         "name": "Reward: Flipper",
@@ -5797,10 +5797,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Frog Leg": {
         "name": "Reward: Frog Leg",
@@ -5808,10 +5808,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Shoe Spikes": {
         "name": "Reward: Shoe Spikes",
@@ -5819,10 +5819,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Tabi": {
         "name": "Reward: Tabi",
@@ -5830,10 +5830,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Black Belt": {
         "name": "Reward: Black Belt",
@@ -5841,10 +5841,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Flying Carpet": {
         "name": "Reward: Flying Carpet",
@@ -5852,10 +5852,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Moon Charm": {
         "name": "Reward: Moon Charm",
@@ -5863,10 +5863,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Neptune's Shell": {
         "name": "Reward: Neptune's Shell",
@@ -5874,10 +5874,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Compass": {
         "name": "Reward: Compass",
@@ -5885,10 +5885,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Depth Meter": {
         "name": "Reward: Depth Meter",
@@ -5896,10 +5896,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Radar": {
         "name": "Reward: Radar",
@@ -5907,10 +5907,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Tally Counter": {
         "name": "Reward: Tally Counter",
@@ -5918,10 +5918,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Lifeform Analyzer": {
         "name": "Reward: Lifeform Analyzer",
@@ -5929,10 +5929,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: DPS Meter": {
         "name": "Reward: DPS Meter",
@@ -5940,10 +5940,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Stopwatch": {
         "name": "Reward: Stopwatch",
@@ -5951,10 +5951,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Metal Detector": {
         "name": "Reward: Metal Detector",
@@ -5962,10 +5962,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Fisherman's Pocket Guide": {
         "name": "Reward: Fisherman's Pocket Guide",
@@ -5973,10 +5973,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Weather Radio": {
         "name": "Reward: Weather Radio",
@@ -5984,10 +5984,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Sextant": {
         "name": "Reward: Sextant",
@@ -5995,10 +5995,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Band of Regeneration": {
         "name": "Reward: Band of Regeneration",
@@ -6006,10 +6006,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Celestial Magnet": {
         "name": "Reward: Celestial Magnet",
@@ -6017,10 +6017,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Nature's Gift": {
         "name": "Reward: Nature's Gift",
@@ -6028,10 +6028,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Philosopher's Stone": {
         "name": "Reward: Philosopher's Stone",
@@ -6039,10 +6039,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Cobalt Shield": {
         "name": "Reward: Cobalt Shield",
@@ -6050,10 +6050,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Armor Polish": {
         "name": "Reward: Armor Polish",
@@ -6061,10 +6061,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Vitamins": {
         "name": "Reward: Vitamins",
@@ -6072,10 +6072,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Bezoar": {
         "name": "Reward: Bezoar",
@@ -6083,10 +6083,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Adhesive Bandage": {
         "name": "Reward: Adhesive Bandage",
@@ -6094,10 +6094,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Megaphone": {
         "name": "Reward: Megaphone",
@@ -6105,10 +6105,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Nazar": {
         "name": "Reward: Nazar",
@@ -6116,10 +6116,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Fast Clock": {
         "name": "Reward: Fast Clock",
@@ -6127,10 +6127,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Trifold Map": {
         "name": "Reward: Trifold Map",
@@ -6138,10 +6138,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Blindfold": {
         "name": "Reward: Blindfold",
@@ -6149,10 +6149,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Pocket Mirror": {
         "name": "Reward: Pocket Mirror",
@@ -6160,10 +6160,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Paladin's Shield": {
         "name": "Reward: Paladin's Shield",
@@ -6171,10 +6171,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Frozen Turtle Shell": {
         "name": "Reward: Frozen Turtle Shell",
@@ -6182,10 +6182,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Flesh Knuckles": {
         "name": "Reward: Flesh Knuckles",
@@ -6193,10 +6193,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Putrid Scent": {
         "name": "Reward: Putrid Scent",
@@ -6204,10 +6204,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Feral Claws": {
         "name": "Reward: Feral Claws",
@@ -6215,10 +6215,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Cross Necklace": {
         "name": "Reward: Cross Necklace",
@@ -6226,10 +6226,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Star Cloak": {
         "name": "Reward: Star Cloak",
@@ -6237,10 +6237,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Titan Glove": {
         "name": "Reward: Titan Glove",
@@ -6248,10 +6248,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Obsidian Rose": {
         "name": "Reward: Obsidian Rose",
@@ -6259,10 +6259,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Magma Stone": {
         "name": "Reward: Magma Stone",
@@ -6270,10 +6270,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Shark Tooth Necklace": {
         "name": "Reward: Shark Tooth Necklace",
@@ -6281,10 +6281,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Magic Quiver": {
         "name": "Reward: Magic Quiver",
@@ -6292,10 +6292,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Rifle Scope": {
         "name": "Reward: Rifle Scope",
@@ -6303,10 +6303,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Brick Layer": {
         "name": "Reward: Brick Layer",
@@ -6314,10 +6314,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Extendo Grip": {
         "name": "Reward: Extendo Grip",
@@ -6325,10 +6325,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Paint Sprayer": {
         "name": "Reward: Paint Sprayer",
@@ -6336,10 +6336,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Portable Cement Mixer": {
         "name": "Reward: Portable Cement Mixer",
@@ -6347,10 +6347,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Treasure Magnet": {
         "name": "Reward: Treasure Magnet",
@@ -6358,10 +6358,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Step Stool": {
         "name": "Reward: Step Stool",
@@ -6369,10 +6369,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Discount Card": {
         "name": "Reward: Discount Card",
@@ -6380,10 +6380,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Gold Ring": {
         "name": "Reward: Gold Ring",
@@ -6391,10 +6391,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Lucky Coin": {
         "name": "Reward: Lucky Coin",
@@ -6402,10 +6402,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: High Test Fishing Line": {
         "name": "Reward: High Test Fishing Line",
@@ -6413,10 +6413,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Angler Earring": {
         "name": "Reward: Angler Earring",
@@ -6424,10 +6424,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Tackle Box": {
         "name": "Reward: Tackle Box",
@@ -6435,10 +6435,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Lavaproof Fishing Hook": {
         "name": "Reward: Lavaproof Fishing Hook",
@@ -6446,10 +6446,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Red Counterweight": {
         "name": "Reward: Red Counterweight",
@@ -6457,10 +6457,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Yoyo Glove": {
         "name": "Reward: Yoyo Glove",
@@ -6468,10 +6468,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Diving Helmet": {
         "name": "Reward: Diving Helmet",
@@ -6479,10 +6479,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Jellyfish Necklace": {
         "name": "Reward: Jellyfish Necklace",
@@ -6490,10 +6490,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Corrupt Flask": {
         "name": "Reward: Corrupt Flask",
@@ -6501,10 +6501,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Crimson Flask": {
         "name": "Reward: Crimson Flask",
@@ -6512,10 +6512,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Craw Carapace": {
         "name": "Reward: Craw Carapace",
@@ -6523,10 +6523,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Giant Shell": {
         "name": "Reward: Giant Shell",
@@ -6534,10 +6534,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Life Jelly": {
         "name": "Reward: Life Jelly",
@@ -6545,10 +6545,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Vital Jelly": {
         "name": "Reward: Vital Jelly",
@@ -6556,10 +6556,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Cleansing Jelly": {
         "name": "Reward: Cleansing Jelly",
@@ -6567,10 +6567,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Giant Tortoise Shell": {
         "name": "Reward: Giant Tortoise Shell",
@@ -6578,10 +6578,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Coin of Deceit": {
         "name": "Reward: Coin of Deceit",
@@ -6589,10 +6589,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Ink Bomb": {
         "name": "Reward: Ink Bomb",
@@ -6600,10 +6600,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Voltaic Jelly": {
         "name": "Reward: Voltaic Jelly",
@@ -6611,10 +6611,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Wulfrum Battery": {
         "name": "Reward: Wulfrum Battery",
@@ -6622,10 +6622,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Luxor's Gift": {
         "name": "Reward: Luxor's Gift",
@@ -6633,10 +6633,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Raider's Talisman": {
         "name": "Reward: Raider's Talisman",
@@ -6644,10 +6644,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Rotten Dogtooth": {
         "name": "Reward: Rotten Dogtooth",
@@ -6655,10 +6655,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Scuttler's Jewel": {
         "name": "Reward: Scuttler's Jewel",
@@ -6666,10 +6666,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Unstable Granite Core": {
         "name": "Reward: Unstable Granite Core",
@@ -6677,10 +6677,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Amidias' Spark": {
         "name": "Reward: Amidias' Spark",
@@ -6688,10 +6688,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Ursa Sergeant": {
         "name": "Reward: Ursa Sergeant",
@@ -6699,10 +6699,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Trinket of Chi": {
         "name": "Reward: Trinket of Chi",
@@ -6710,10 +6710,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: The Transformer": {
         "name": "Reward: The Transformer",
@@ -6721,10 +6721,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Rover Drive": {
         "name": "Reward: Rover Drive",
@@ -6732,10 +6732,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Marnite Repulsion Shield": {
         "name": "Reward: Marnite Repulsion Shield",
@@ -6743,10 +6743,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Frost Barrier": {
         "name": "Reward: Frost Barrier",
@@ -6754,10 +6754,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Ancient Fossil": {
         "name": "Reward: Ancient Fossil",
@@ -6765,10 +6765,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Spelunker's Amulet": {
         "name": "Reward: Spelunker's Amulet",
@@ -6776,10 +6776,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Fungal Symbiote": {
         "name": "Reward: Fungal Symbiote",
@@ -6787,10 +6787,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Gladiator's Locket": {
         "name": "Reward: Gladiator's Locket",
@@ -6798,10 +6798,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Wulfrum Acrobatics Pack": {
         "name": "Reward: Wulfrum Acrobatics Pack",
@@ -6809,10 +6809,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Depths Charm": {
         "name": "Reward: Depths Charm",
@@ -6820,10 +6820,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Anechoic Plating": {
         "name": "Reward: Anechoic Plating",
@@ -6831,10 +6831,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Iron Boots": {
         "name": "Reward: Iron Boots",
@@ -6842,10 +6842,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Sprit Glyph": {
         "name": "Reward: Sprit Glyph",
@@ -6853,10 +6853,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Abyssal Amulet": {
         "name": "Reward: Abyssal Amulet",
@@ -6864,10 +6864,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Life Crystal": {
         "name": "Reward: Life Crystal",
@@ -6875,10 +6875,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Enchanted Sword": {
         "name": "Reward: Enchanted Sword",
@@ -6886,10 +6886,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Starfury": {
         "name": "Reward: Starfury",
@@ -6897,10 +6897,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Defender Medal": {
         "name": "Reward: Defender Medal",
@@ -6908,10 +6908,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reward: Coins": {
         "name": "Reward: Coins",
@@ -6919,10 +6919,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Copper Shortsword": {
         "name": "Copper Shortsword",
@@ -6930,10 +6930,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Guide": {
         "name": "Guide",
@@ -6941,10 +6941,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Squire Slime": {
         "name": "Squire Slime",
@@ -6952,10 +6952,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Traveling Merchant": {
         "name": "Traveling Merchant",
@@ -6963,10 +6963,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Lifeform Analyzer": {
         "name": "Lifeform Analyzer",
@@ -6974,10 +6974,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "DPS Meter": {
         "name": "DPS Meter",
@@ -6985,10 +6985,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Stopwatch": {
         "name": "Stopwatch",
@@ -6996,10 +6996,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Merchant": {
         "name": "Merchant",
@@ -7007,10 +7007,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bug Net": {
         "name": "Bug Net",
@@ -7018,10 +7018,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dye Trader": {
         "name": "Dye Trader",
@@ -7029,10 +7029,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Demolitionist": {
         "name": "Demolitionist",
@@ -7040,10 +7040,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cactus": {
         "name": "Cactus",
@@ -7051,10 +7051,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Aglet": {
         "name": "Aglet",
@@ -7062,10 +7062,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Radar": {
         "name": "Radar",
@@ -7073,10 +7073,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Wand of Sparking": {
         "name": "Wand of Sparking",
@@ -7084,10 +7084,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Evil Powder": {
         "name": "Evil Powder",
@@ -7095,10 +7095,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Zoologist": {
         "name": "Zoologist",
@@ -7106,10 +7106,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cat": {
         "name": "Cat",
@@ -7117,10 +7117,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dog": {
         "name": "Dog",
@@ -7128,10 +7128,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Painter": {
         "name": "Painter",
@@ -7139,10 +7139,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Enchanted Sword": {
         "name": "Enchanted Sword",
@@ -7150,10 +7150,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Angler": {
         "name": "Angler",
@@ -7161,10 +7161,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Fisherman's Pocket Guide": {
         "name": "Fisherman's Pocket Guide",
@@ -7172,10 +7172,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Weather Radio": {
         "name": "Weather Radio",
@@ -7183,10 +7183,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sextant": {
         "name": "Sextant",
@@ -7194,10 +7194,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Water Walking Boots": {
         "name": "Water Walking Boots",
@@ -7205,10 +7205,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Starfury": {
         "name": "Starfury",
@@ -7216,10 +7216,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Celestial Magnet": {
         "name": "Celestial Magnet",
@@ -7227,10 +7227,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Clumsy Slime": {
         "name": "Clumsy Slime",
@@ -7238,10 +7238,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Depth Meter": {
         "name": "Depth Meter",
@@ -7249,10 +7249,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Compass": {
         "name": "Compass",
@@ -7260,10 +7260,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Magic Mirror": {
         "name": "Magic Mirror",
@@ -7271,10 +7271,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nurse": {
         "name": "Nurse",
@@ -7282,10 +7282,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Gold Hammer": {
         "name": "Gold Hammer",
@@ -7293,10 +7293,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Gold Pickaxe": {
         "name": "Gold Pickaxe",
@@ -7304,10 +7304,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Gold Watch": {
         "name": "Gold Watch",
@@ -7315,10 +7315,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hermes Boots": {
         "name": "Hermes Boots",
@@ -7326,10 +7326,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Stylist": {
         "name": "Stylist",
@@ -7337,10 +7337,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Metal Detector": {
         "name": "Metal Detector",
@@ -7348,10 +7348,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Obsidian": {
         "name": "Obsidian",
@@ -7359,10 +7359,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Obsidian Skull": {
         "name": "Obsidian Skull",
@@ -7370,10 +7370,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Lava Charm": {
         "name": "Lava Charm",
@@ -7381,10 +7381,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Demonite Ore": {
         "name": "Demonite Ore",
@@ -7392,10 +7392,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Demonite Bar": {
         "name": "Demonite Bar",
@@ -7403,10 +7403,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Evil Sword": {
         "name": "Evil Sword",
@@ -7414,10 +7414,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice Skates": {
         "name": "Ice Skates",
@@ -7425,10 +7425,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Flinx Fur Coat": {
         "name": "Flinx Fur Coat",
@@ -7436,10 +7436,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Golfer": {
         "name": "Golfer",
@@ -7447,10 +7447,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Party Girl": {
         "name": "Party Girl",
@@ -7458,10 +7458,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cool Slime": {
         "name": "Cool Slime",
@@ -7469,10 +7469,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Anklet of the Wind": {
         "name": "Anklet of the Wind",
@@ -7480,10 +7480,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Feral Claws": {
         "name": "Feral Claws",
@@ -7491,10 +7491,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Stinger": {
         "name": "Stinger",
@@ -7502,10 +7502,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Jungle Spores": {
         "name": "Jungle Spores",
@@ -7513,10 +7513,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Vine": {
         "name": "Vine",
@@ -7524,10 +7524,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Blade of Grass": {
         "name": "Blade of Grass",
@@ -7535,10 +7535,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nature's Gift": {
         "name": "Nature's Gift",
@@ -7546,10 +7546,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bezoar": {
         "name": "Bezoar",
@@ -7557,10 +7557,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Summoning Potion": {
         "name": "Summoning Potion",
@@ -7568,10 +7568,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Obsidian Rose": {
         "name": "Obsidian Rose",
@@ -7579,10 +7579,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Magma Stone": {
         "name": "Magma Stone",
@@ -7590,10 +7590,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Arms Dealer": {
         "name": "Arms Dealer",
@@ -7601,10 +7601,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Illegal Gun Parts": {
         "name": "Illegal Gun Parts",
@@ -7612,10 +7612,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Solidifier": {
         "name": "Solidifier",
@@ -7623,10 +7623,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nerdy Slime": {
         "name": "Nerdy Slime",
@@ -7634,10 +7634,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sandstorm": {
         "name": "Sandstorm",
@@ -7645,10 +7645,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Shark Tooth Necklace": {
         "name": "Shark Tooth Necklace",
@@ -7656,10 +7656,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Surly Slime": {
         "name": "Surly Slime",
@@ -7667,10 +7667,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dryad": {
         "name": "Dryad",
@@ -7678,10 +7678,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pumpkin Seeds": {
         "name": "Pumpkin Seeds",
@@ -7689,10 +7689,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pumpkin": {
         "name": "Pumpkin",
@@ -7700,10 +7700,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Purification Powder": {
         "name": "Purification Powder",
@@ -7711,10 +7711,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mystic Slime": {
         "name": "Mystic Slime",
@@ -7722,10 +7722,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Evil Boss Part": {
         "name": "Evil Boss Part",
@@ -7733,10 +7733,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Evil Pickaxe": {
         "name": "Evil Pickaxe",
@@ -7744,10 +7744,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Obsidian Armor": {
         "name": "Obsidian Armor",
@@ -7755,10 +7755,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tavernkeep": {
         "name": "Tavernkeep",
@@ -7766,10 +7766,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Meteorite": {
         "name": "Meteorite",
@@ -7777,10 +7777,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Meteorite Bar": {
         "name": "Meteorite Bar",
@@ -7788,10 +7788,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Meteor Hamaxe": {
         "name": "Meteor Hamaxe",
@@ -7799,10 +7799,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hellforge": {
         "name": "Hellforge",
@@ -7810,10 +7810,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hellstone": {
         "name": "Hellstone",
@@ -7821,10 +7821,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hellstone Bar": {
         "name": "Hellstone Bar",
@@ -7832,10 +7832,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Fiery Greatsword": {
         "name": "Fiery Greatsword",
@@ -7843,10 +7843,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Molten Hamaxe": {
         "name": "Molten Hamaxe",
@@ -7854,10 +7854,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Molten Pickaxe": {
         "name": "Molten Pickaxe",
@@ -7865,10 +7865,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Goblin Tinkerer": {
         "name": "Goblin Tinkerer",
@@ -7876,10 +7876,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tinkerer's Workshop": {
         "name": "Tinkerer's Workshop",
@@ -7887,10 +7887,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mana Flower": {
         "name": "Mana Flower",
@@ -7898,10 +7898,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rocket Boots": {
         "name": "Rocket Boots",
@@ -7909,10 +7909,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spectre Boots": {
         "name": "Spectre Boots",
@@ -7920,10 +7920,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Lightning Boots": {
         "name": "Lightning Boots",
@@ -7931,10 +7931,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Frostspark Boots": {
         "name": "Frostspark Boots",
@@ -7942,10 +7942,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Lava Waders": {
         "name": "Lava Waders",
@@ -7953,10 +7953,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Terraspark Boots": {
         "name": "Terraspark Boots",
@@ -7964,10 +7964,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "GPS": {
         "name": "GPS",
@@ -7975,10 +7975,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Goblin Tech": {
         "name": "Goblin Tech",
@@ -7986,10 +7986,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Fish Finder": {
         "name": "Fish Finder",
@@ -7997,10 +7997,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Diving Gear": {
         "name": "Diving Gear",
@@ -8008,10 +8008,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bee Keeper": {
         "name": "Bee Keeper",
@@ -8019,10 +8019,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bee Wax": {
         "name": "Bee Wax",
@@ -8030,10 +8030,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bee Armor": {
         "name": "Bee Armor",
@@ -8041,10 +8041,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Witch Doctor": {
         "name": "Witch Doctor",
@@ -8052,10 +8052,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pygmy Necklace": {
         "name": "Pygmy Necklace",
@@ -8063,10 +8063,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Clothier": {
         "name": "Clothier",
@@ -8074,10 +8074,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dungeon": {
         "name": "Dungeon",
@@ -8085,10 +8085,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bone": {
         "name": "Bone",
@@ -8096,10 +8096,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tally Counter": {
         "name": "Tally Counter",
@@ -8107,10 +8107,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "R.E.K. 3000": {
         "name": "R.E.K. 3000",
@@ -8118,10 +8118,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "PDA": {
         "name": "PDA",
@@ -8129,10 +8129,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cell Phone": {
         "name": "Cell Phone",
@@ -8140,10 +8140,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bewitching Table": {
         "name": "Bewitching Table",
@@ -8151,10 +8151,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Alchemy Table": {
         "name": "Alchemy Table",
@@ -8162,10 +8162,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mechanic": {
         "name": "Mechanic",
@@ -8173,10 +8173,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Wire": {
         "name": "Wire",
@@ -8184,10 +8184,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Actuator": {
         "name": "Actuator",
@@ -8195,10 +8195,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Muramasa": {
         "name": "Muramasa",
@@ -8206,10 +8206,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cobalt Shield": {
         "name": "Cobalt Shield",
@@ -8217,10 +8217,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Obsidian Shield": {
         "name": "Obsidian Shield",
@@ -8228,10 +8228,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Elder Slime": {
         "name": "Elder Slime",
@@ -8239,10 +8239,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Night's Edge": {
         "name": "Night's Edge",
@@ -8250,10 +8250,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pwnhammer": {
         "name": "Pwnhammer",
@@ -8261,10 +8261,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Emblem": {
         "name": "Emblem",
@@ -8272,10 +8272,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Fast Clock": {
         "name": "Fast Clock",
@@ -8283,10 +8283,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Wizard": {
         "name": "Wizard",
@@ -8294,10 +8294,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Titan Glove": {
         "name": "Titan Glove",
@@ -8305,10 +8305,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Power Glove": {
         "name": "Power Glove",
@@ -8316,10 +8316,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Magic Quiver": {
         "name": "Magic Quiver",
@@ -8327,10 +8327,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hallowed Seeds": {
         "name": "Hallowed Seeds",
@@ -8338,10 +8338,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Armor Polish": {
         "name": "Armor Polish",
@@ -8349,10 +8349,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Adhesive Bandage": {
         "name": "Adhesive Bandage",
@@ -8360,10 +8360,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Medicated Bandage": {
         "name": "Medicated Bandage",
@@ -8371,10 +8371,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Megaphone": {
         "name": "Megaphone",
@@ -8382,10 +8382,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pocket Mirror": {
         "name": "Pocket Mirror",
@@ -8393,10 +8393,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Trifold Map": {
         "name": "Trifold Map",
@@ -8404,10 +8404,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "The Plan": {
         "name": "The Plan",
@@ -8415,10 +8415,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tax Collector": {
         "name": "Tax Collector",
@@ -8426,10 +8426,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spider Fangs": {
         "name": "Spider Fangs",
@@ -8437,10 +8437,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spider Armor": {
         "name": "Spider Armor",
@@ -8448,10 +8448,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cross Necklace": {
         "name": "Cross Necklace",
@@ -8459,10 +8459,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Altar": {
         "name": "Altar",
@@ -8470,10 +8470,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cobalt Ore": {
         "name": "Cobalt Ore",
@@ -8481,10 +8481,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cobalt Bar": {
         "name": "Cobalt Bar",
@@ -8492,10 +8492,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cobalt Pickaxe": {
         "name": "Cobalt Pickaxe",
@@ -8503,10 +8503,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Blindfold": {
         "name": "Blindfold",
@@ -8514,10 +8514,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Reflective Shades": {
         "name": "Reflective Shades",
@@ -8525,10 +8525,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Vitamins": {
         "name": "Vitamins",
@@ -8536,10 +8536,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Armor Bracing": {
         "name": "Armor Bracing",
@@ -8547,10 +8547,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nazar": {
         "name": "Nazar",
@@ -8558,10 +8558,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Countercurse Mantra": {
         "name": "Countercurse Mantra",
@@ -8569,10 +8569,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ankh Charm": {
         "name": "Ankh Charm",
@@ -8580,10 +8580,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ankh Shield": {
         "name": "Ankh Shield",
@@ -8591,10 +8591,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Soul of Night": {
         "name": "Soul of Night",
@@ -8602,10 +8602,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hallow": {
         "name": "Hallow",
@@ -8613,10 +8613,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pixie Dust": {
         "name": "Pixie Dust",
@@ -8624,10 +8624,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Holy Water": {
         "name": "Holy Water",
@@ -8635,10 +8635,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Unicorn Horn": {
         "name": "Unicorn Horn",
@@ -8646,10 +8646,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Crystal Shard": {
         "name": "Crystal Shard",
@@ -8657,10 +8657,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Soul of Light": {
         "name": "Soul of Light",
@@ -8668,10 +8668,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Meteor Staff": {
         "name": "Meteor Staff",
@@ -8679,10 +8679,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Blessed Apple": {
         "name": "Blessed Apple",
@@ -8690,10 +8690,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rod of Discord": {
         "name": "Rod of Discord",
@@ -8701,10 +8701,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Soul of Flight": {
         "name": "Soul of Flight",
@@ -8712,10 +8712,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bunny": {
         "name": "Bunny",
@@ -8723,10 +8723,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Forbidden Fragment": {
         "name": "Forbidden Fragment",
@@ -8734,10 +8734,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Truffle": {
         "name": "Truffle",
@@ -8745,10 +8745,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pirate": {
         "name": "Pirate",
@@ -8756,10 +8756,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sparkle Slime Balloon": {
         "name": "Sparkle Slime Balloon",
@@ -8767,10 +8767,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Diva Slime": {
         "name": "Diva Slime",
@@ -8778,10 +8778,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mythril Ore": {
         "name": "Mythril Ore",
@@ -8789,10 +8789,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mythril Bar": {
         "name": "Mythril Bar",
@@ -8800,10 +8800,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hardmode Anvil": {
         "name": "Hardmode Anvil",
@@ -8811,10 +8811,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mythril Pickaxe": {
         "name": "Mythril Pickaxe",
@@ -8822,10 +8822,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Adamantite Ore": {
         "name": "Adamantite Ore",
@@ -8833,10 +8833,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hardmode Forge": {
         "name": "Hardmode Forge",
@@ -8844,10 +8844,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Adamantite Bar": {
         "name": "Adamantite Bar",
@@ -8855,10 +8855,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Adamantite Pickaxe": {
         "name": "Adamantite Pickaxe",
@@ -8866,10 +8866,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Forbidden Armor": {
         "name": "Forbidden Armor",
@@ -8877,10 +8877,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mechanical Eye": {
         "name": "Mechanical Eye",
@@ -8888,10 +8888,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mechanical Worm": {
         "name": "Mechanical Worm",
@@ -8899,10 +8899,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mechanical Skull": {
         "name": "Mechanical Skull",
@@ -8910,10 +8910,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

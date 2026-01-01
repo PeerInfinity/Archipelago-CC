@@ -3505,10 +3505,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Wind Waker": {
         "name": "Wind Waker",
@@ -3516,10 +3516,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Grappling Hook": {
         "name": "Grappling Hook",
@@ -3527,10 +3527,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spoils Bag": {
         "name": "Spoils Bag",
@@ -3538,10 +3538,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Boomerang": {
         "name": "Boomerang",
@@ -3549,10 +3549,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Deku Leaf": {
         "name": "Deku Leaf",
@@ -3560,10 +3560,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tingle Tuner": {
         "name": "Tingle Tuner",
@@ -3571,10 +3571,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Iron Boots": {
         "name": "Iron Boots",
@@ -3582,10 +3582,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Magic Armor": {
         "name": "Magic Armor",
@@ -3593,10 +3593,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bait Bag": {
         "name": "Bait Bag",
@@ -3604,10 +3604,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bombs": {
         "name": "Bombs",
@@ -3615,10 +3615,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Delivery Bag": {
         "name": "Delivery Bag",
@@ -3626,10 +3626,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hookshot": {
         "name": "Hookshot",
@@ -3637,10 +3637,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Skull Hammer": {
         "name": "Skull Hammer",
@@ -3648,10 +3648,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Power Bracelets": {
         "name": "Power Bracelets",
@@ -3659,10 +3659,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Hero's Charm": {
         "name": "Hero's Charm",
@@ -3670,10 +3670,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Hurricane Spin": {
         "name": "Hurricane Spin",
@@ -3681,10 +3681,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Dragon Tingle Statue": {
         "name": "Dragon Tingle Statue",
@@ -3693,10 +3693,10 @@
           "Everything",
           "Tingle Statues"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Forbidden Tingle Statue": {
         "name": "Forbidden Tingle Statue",
@@ -3705,10 +3705,10 @@
           "Everything",
           "Tingle Statues"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Goddess Tingle Statue": {
         "name": "Goddess Tingle Statue",
@@ -3717,10 +3717,10 @@
           "Everything",
           "Tingle Statues"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Earth Tingle Statue": {
         "name": "Earth Tingle Statue",
@@ -3729,10 +3729,10 @@
           "Everything",
           "Tingle Statues"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Wind Tingle Statue": {
         "name": "Wind Tingle Statue",
@@ -3741,10 +3741,10 @@
           "Everything",
           "Tingle Statues"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Wind's Requiem": {
         "name": "Wind's Requiem",
@@ -3753,10 +3753,10 @@
           "Everything",
           "Songs"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ballad of Gales": {
         "name": "Ballad of Gales",
@@ -3765,10 +3765,10 @@
           "Everything",
           "Songs"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Command Melody": {
         "name": "Command Melody",
@@ -3777,10 +3777,10 @@
           "Everything",
           "Songs"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Earth God's Lyric": {
         "name": "Earth God's Lyric",
@@ -3789,10 +3789,10 @@
           "Everything",
           "Songs"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Wind God's Aria": {
         "name": "Wind God's Aria",
@@ -3801,10 +3801,10 @@
           "Everything",
           "Songs"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Song of Passing": {
         "name": "Song of Passing",
@@ -3813,10 +3813,10 @@
           "Everything",
           "Songs"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Triforce Shard 1": {
         "name": "Triforce Shard 1",
@@ -3825,10 +3825,10 @@
           "Everything",
           "Shards"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Triforce Shard 2": {
         "name": "Triforce Shard 2",
@@ -3837,10 +3837,10 @@
           "Everything",
           "Shards"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Triforce Shard 3": {
         "name": "Triforce Shard 3",
@@ -3849,10 +3849,10 @@
           "Everything",
           "Shards"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Triforce Shard 4": {
         "name": "Triforce Shard 4",
@@ -3861,10 +3861,10 @@
           "Everything",
           "Shards"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Triforce Shard 5": {
         "name": "Triforce Shard 5",
@@ -3873,10 +3873,10 @@
           "Everything",
           "Shards"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Triforce Shard 6": {
         "name": "Triforce Shard 6",
@@ -3885,10 +3885,10 @@
           "Everything",
           "Shards"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Triforce Shard 7": {
         "name": "Triforce Shard 7",
@@ -3897,10 +3897,10 @@
           "Everything",
           "Shards"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Triforce Shard 8": {
         "name": "Triforce Shard 8",
@@ -3909,10 +3909,10 @@
           "Everything",
           "Shards"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Skull Necklace": {
         "name": "Skull Necklace",
@@ -3920,10 +3920,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Boko Baba Seed": {
         "name": "Boko Baba Seed",
@@ -3931,10 +3931,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Golden Feather": {
         "name": "Golden Feather",
@@ -3942,10 +3942,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Knight's Crest": {
         "name": "Knight's Crest",
@@ -3953,10 +3953,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Red Chu Jelly": {
         "name": "Red Chu Jelly",
@@ -3964,10 +3964,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Green Chu Jelly": {
         "name": "Green Chu Jelly",
@@ -3975,10 +3975,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Joy Pendant": {
         "name": "Joy Pendant",
@@ -3986,10 +3986,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "All-Purpose Bait": {
         "name": "All-Purpose Bait",
@@ -3997,10 +3997,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hyoi Pear": {
         "name": "Hyoi Pear",
@@ -4008,10 +4008,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Note to Mom": {
         "name": "Note to Mom",
@@ -4020,10 +4020,10 @@
           "Everything",
           "Mail"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Maggie's Letter": {
         "name": "Maggie's Letter",
@@ -4032,10 +4032,10 @@
           "Everything",
           "Mail"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Moblin's Letter": {
         "name": "Moblin's Letter",
@@ -4044,10 +4044,10 @@
           "Everything",
           "Mail"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Cabana Deed": {
         "name": "Cabana Deed",
@@ -4055,10 +4055,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Fill-Up Coupon": {
         "name": "Fill-Up Coupon",
@@ -4066,10 +4066,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Nayru's Pearl": {
         "name": "Nayru's Pearl",
@@ -4078,10 +4078,10 @@
           "Everything",
           "Pearls"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Din's Pearl": {
         "name": "Din's Pearl",
@@ -4090,10 +4090,10 @@
           "Everything",
           "Pearls"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Farore's Pearl": {
         "name": "Farore's Pearl",
@@ -4102,10 +4102,10 @@
           "Everything",
           "Pearls"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
@@ -4113,10 +4113,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "progression"
+        "max_count": 4
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
@@ -4124,10 +4124,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Progressive Picto Box": {
         "name": "Progressive Picto Box",
@@ -4135,10 +4135,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Bow": {
         "name": "Progressive Bow",
@@ -4146,10 +4146,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "Progressive Magic Meter": {
         "name": "Progressive Magic Meter",
@@ -4157,10 +4157,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Quiver Capacity Upgrade": {
         "name": "Quiver Capacity Upgrade",
@@ -4168,10 +4168,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bomb Bag Capacity Upgrade": {
         "name": "Bomb Bag Capacity Upgrade",
@@ -4179,10 +4179,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Wallet Capacity Upgrade": {
         "name": "Wallet Capacity Upgrade",
@@ -4190,10 +4190,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "Empty Bottle": {
         "name": "Empty Bottle",
@@ -4201,10 +4201,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "progression"
+        "max_count": 4
       },
       "Triforce Chart 1": {
         "name": "Triforce Chart 1",
@@ -4213,10 +4213,10 @@
           "Everything",
           "Triforce Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Triforce Chart 2": {
         "name": "Triforce Chart 2",
@@ -4225,10 +4225,10 @@
           "Everything",
           "Triforce Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Triforce Chart 3": {
         "name": "Triforce Chart 3",
@@ -4237,10 +4237,10 @@
           "Everything",
           "Triforce Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Triforce Chart 4": {
         "name": "Triforce Chart 4",
@@ -4249,10 +4249,10 @@
           "Everything",
           "Triforce Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Triforce Chart 5": {
         "name": "Triforce Chart 5",
@@ -4261,10 +4261,10 @@
           "Everything",
           "Triforce Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Triforce Chart 6": {
         "name": "Triforce Chart 6",
@@ -4273,10 +4273,10 @@
           "Everything",
           "Triforce Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Triforce Chart 7": {
         "name": "Triforce Chart 7",
@@ -4285,10 +4285,10 @@
           "Everything",
           "Triforce Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Triforce Chart 8": {
         "name": "Triforce Chart 8",
@@ -4297,10 +4297,10 @@
           "Everything",
           "Triforce Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 1": {
         "name": "Treasure Chart 1",
@@ -4309,10 +4309,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 2": {
         "name": "Treasure Chart 2",
@@ -4321,10 +4321,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 3": {
         "name": "Treasure Chart 3",
@@ -4333,10 +4333,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 4": {
         "name": "Treasure Chart 4",
@@ -4345,10 +4345,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 5": {
         "name": "Treasure Chart 5",
@@ -4357,10 +4357,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 6": {
         "name": "Treasure Chart 6",
@@ -4369,10 +4369,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 7": {
         "name": "Treasure Chart 7",
@@ -4381,10 +4381,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 8": {
         "name": "Treasure Chart 8",
@@ -4393,10 +4393,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 9": {
         "name": "Treasure Chart 9",
@@ -4405,10 +4405,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 10": {
         "name": "Treasure Chart 10",
@@ -4417,10 +4417,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 11": {
         "name": "Treasure Chart 11",
@@ -4429,10 +4429,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 12": {
         "name": "Treasure Chart 12",
@@ -4441,10 +4441,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 13": {
         "name": "Treasure Chart 13",
@@ -4453,10 +4453,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 14": {
         "name": "Treasure Chart 14",
@@ -4465,10 +4465,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 15": {
         "name": "Treasure Chart 15",
@@ -4477,10 +4477,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 16": {
         "name": "Treasure Chart 16",
@@ -4489,10 +4489,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 17": {
         "name": "Treasure Chart 17",
@@ -4501,10 +4501,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 18": {
         "name": "Treasure Chart 18",
@@ -4513,10 +4513,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 19": {
         "name": "Treasure Chart 19",
@@ -4525,10 +4525,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 20": {
         "name": "Treasure Chart 20",
@@ -4537,10 +4537,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 21": {
         "name": "Treasure Chart 21",
@@ -4549,10 +4549,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 22": {
         "name": "Treasure Chart 22",
@@ -4561,10 +4561,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 23": {
         "name": "Treasure Chart 23",
@@ -4573,10 +4573,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 24": {
         "name": "Treasure Chart 24",
@@ -4585,10 +4585,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 25": {
         "name": "Treasure Chart 25",
@@ -4597,10 +4597,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 26": {
         "name": "Treasure Chart 26",
@@ -4609,10 +4609,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 27": {
         "name": "Treasure Chart 27",
@@ -4621,10 +4621,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 28": {
         "name": "Treasure Chart 28",
@@ -4633,10 +4633,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 29": {
         "name": "Treasure Chart 29",
@@ -4645,10 +4645,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 30": {
         "name": "Treasure Chart 30",
@@ -4657,10 +4657,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 31": {
         "name": "Treasure Chart 31",
@@ -4669,10 +4669,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 32": {
         "name": "Treasure Chart 32",
@@ -4681,10 +4681,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 33": {
         "name": "Treasure Chart 33",
@@ -4693,10 +4693,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 34": {
         "name": "Treasure Chart 34",
@@ -4705,10 +4705,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 35": {
         "name": "Treasure Chart 35",
@@ -4717,10 +4717,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 36": {
         "name": "Treasure Chart 36",
@@ -4729,10 +4729,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 37": {
         "name": "Treasure Chart 37",
@@ -4741,10 +4741,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 38": {
         "name": "Treasure Chart 38",
@@ -4753,10 +4753,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 39": {
         "name": "Treasure Chart 39",
@@ -4765,10 +4765,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 40": {
         "name": "Treasure Chart 40",
@@ -4777,10 +4777,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Treasure Chart 41": {
         "name": "Treasure Chart 41",
@@ -4789,10 +4789,10 @@
           "Everything",
           "Treasure Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Tingle's Chart": {
         "name": "Tingle's Chart",
@@ -4801,10 +4801,10 @@
           "Everything",
           "Special Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ghost Ship Chart": {
         "name": "Ghost Ship Chart",
@@ -4813,10 +4813,10 @@
           "Everything",
           "Special Charts"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Octo Chart": {
         "name": "Octo Chart",
@@ -4825,10 +4825,10 @@
           "Everything",
           "Special Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Great Fairy Chart": {
         "name": "Great Fairy Chart",
@@ -4837,10 +4837,10 @@
           "Everything",
           "Special Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Secret Cave Chart": {
         "name": "Secret Cave Chart",
@@ -4849,10 +4849,10 @@
           "Everything",
           "Special Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Light Ring Chart": {
         "name": "Light Ring Chart",
@@ -4861,10 +4861,10 @@
           "Everything",
           "Special Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Platform Chart": {
         "name": "Platform Chart",
@@ -4873,10 +4873,10 @@
           "Everything",
           "Special Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Beedle's Chart": {
         "name": "Beedle's Chart",
@@ -4885,10 +4885,10 @@
           "Everything",
           "Special Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Submarine Chart": {
         "name": "Submarine Chart",
@@ -4897,10 +4897,10 @@
           "Everything",
           "Special Charts"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Green Rupee": {
         "name": "Green Rupee",
@@ -4909,10 +4909,10 @@
           "Everything",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Blue Rupee": {
         "name": "Blue Rupee",
@@ -4921,10 +4921,10 @@
           "Everything",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Yellow Rupee": {
         "name": "Yellow Rupee",
@@ -4933,10 +4933,10 @@
           "Everything",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Red Rupee": {
         "name": "Red Rupee",
@@ -4945,10 +4945,10 @@
           "Everything",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Purple Rupee": {
         "name": "Purple Rupee",
@@ -4957,10 +4957,10 @@
           "Everything",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Orange Rupee": {
         "name": "Orange Rupee",
@@ -4969,10 +4969,10 @@
           "Everything",
           "Rupees"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 7,
-        "classification": "useful"
+        "max_count": 7
       },
       "Silver Rupee": {
         "name": "Silver Rupee",
@@ -4981,10 +4981,10 @@
           "Everything",
           "Rupees"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 8,
-        "classification": "useful"
+        "max_count": 8
       },
       "Rainbow Rupee": {
         "name": "Rainbow Rupee",
@@ -4993,10 +4993,10 @@
           "Everything",
           "Rupees"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Piece of Heart": {
         "name": "Piece of Heart",
@@ -5004,10 +5004,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 10,
-        "classification": "useful"
+        "max_count": 10
       },
       "Heart Container": {
         "name": "Heart Container",
@@ -5015,10 +5015,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "DRC Big Key": {
         "name": "DRC Big Key",
@@ -5027,10 +5027,10 @@
           "Big Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "DRC Small Key": {
         "name": "DRC Small Key",
@@ -5039,10 +5039,10 @@
           "Everything",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "progression"
+        "max_count": 4
       },
       "FW Big Key": {
         "name": "FW Big Key",
@@ -5051,10 +5051,10 @@
           "Big Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "FW Small Key": {
         "name": "FW Small Key",
@@ -5063,10 +5063,10 @@
           "Everything",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "TotG Big Key": {
         "name": "TotG Big Key",
@@ -5075,10 +5075,10 @@
           "Big Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "TotG Small Key": {
         "name": "TotG Small Key",
@@ -5087,10 +5087,10 @@
           "Everything",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "ET Big Key": {
         "name": "ET Big Key",
@@ -5099,10 +5099,10 @@
           "Big Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "ET Small Key": {
         "name": "ET Small Key",
@@ -5111,10 +5111,10 @@
           "Everything",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "progression"
+        "max_count": 3
       },
       "WT Big Key": {
         "name": "WT Big Key",
@@ -5123,10 +5123,10 @@
           "Big Keys",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "WT Small Key": {
         "name": "WT Small Key",
@@ -5135,10 +5135,10 @@
           "Everything",
           "Small Keys"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "progression"
+        "max_count": 2
       },
       "DRC Dungeon Map": {
         "name": "DRC Dungeon Map",
@@ -5147,10 +5147,10 @@
           "Dungeon Items",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "DRC Compass": {
         "name": "DRC Compass",
@@ -5159,10 +5159,10 @@
           "Dungeon Items",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "FW Dungeon Map": {
         "name": "FW Dungeon Map",
@@ -5171,10 +5171,10 @@
           "Dungeon Items",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "FW Compass": {
         "name": "FW Compass",
@@ -5183,10 +5183,10 @@
           "Dungeon Items",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "TotG Dungeon Map": {
         "name": "TotG Dungeon Map",
@@ -5195,10 +5195,10 @@
           "Dungeon Items",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "TotG Compass": {
         "name": "TotG Compass",
@@ -5207,10 +5207,10 @@
           "Dungeon Items",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "FF Dungeon Map": {
         "name": "FF Dungeon Map",
@@ -5219,10 +5219,10 @@
           "Dungeon Items",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "FF Compass": {
         "name": "FF Compass",
@@ -5231,10 +5231,10 @@
           "Dungeon Items",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "ET Dungeon Map": {
         "name": "ET Dungeon Map",
@@ -5243,10 +5243,10 @@
           "Dungeon Items",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "ET Compass": {
         "name": "ET Compass",
@@ -5255,10 +5255,10 @@
           "Dungeon Items",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "WT Dungeon Map": {
         "name": "WT Dungeon Map",
@@ -5267,10 +5267,10 @@
           "Dungeon Items",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "WT Compass": {
         "name": "WT Compass",
@@ -5279,10 +5279,10 @@
           "Dungeon Items",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Victory": {
         "name": "Victory",
@@ -5290,10 +5290,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },

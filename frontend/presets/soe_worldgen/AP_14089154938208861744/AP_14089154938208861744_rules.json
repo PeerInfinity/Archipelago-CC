@@ -12414,10 +12414,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Atlas": {
         "name": "Atlas",
@@ -12426,6 +12426,7 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12435,8 +12436,7 @@
             "progress_id": 21,
             "progress_name": "P_21"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "Barrier": {
         "name": "Barrier",
@@ -12445,6 +12445,7 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12454,8 +12455,7 @@
             "progress_id": 46,
             "progress_name": "P_46"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "Call Up": {
         "name": "Call Up",
@@ -12464,6 +12464,7 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12473,8 +12474,7 @@
             "progress_id": 46,
             "progress_name": "P_46"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "Corrosion": {
         "name": "Corrosion",
@@ -12483,10 +12483,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crush": {
         "name": "Crush",
@@ -12495,6 +12495,7 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12504,8 +12505,7 @@
             "progress_id": 45,
             "progress_name": "P_45"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "Cure": {
         "name": "Cure",
@@ -12514,10 +12514,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Defend": {
         "name": "Defend",
@@ -12526,10 +12526,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Double Drain": {
         "name": "Double Drain",
@@ -12538,6 +12538,7 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12547,8 +12548,7 @@
             "progress_id": 45,
             "progress_name": "P_45"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "Drain": {
         "name": "Drain",
@@ -12557,10 +12557,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Energize": {
         "name": "Energize",
@@ -12569,6 +12569,7 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12578,8 +12579,7 @@
             "progress_id": 46,
             "progress_name": "P_46"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "Escape": {
         "name": "Escape",
@@ -12588,10 +12588,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Explosion": {
         "name": "Explosion",
@@ -12600,6 +12600,7 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12609,8 +12610,7 @@
             "progress_id": 45,
             "progress_name": "P_45"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "Fireball": {
         "name": "Fireball",
@@ -12619,6 +12619,7 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12628,8 +12629,7 @@
             "progress_id": 45,
             "progress_name": "P_45"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "Fire Power": {
         "name": "Fire Power",
@@ -12638,6 +12638,7 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12647,8 +12648,7 @@
             "progress_id": 45,
             "progress_name": "P_45"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "Flash": {
         "name": "Flash",
@@ -12657,10 +12657,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Force Field": {
         "name": "Force Field",
@@ -12669,10 +12669,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Hard Ball": {
         "name": "Hard Ball",
@@ -12681,10 +12681,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Heal": {
         "name": "Heal",
@@ -12693,10 +12693,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Lance": {
         "name": "Lance",
@@ -12705,6 +12705,7 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12714,8 +12715,7 @@
             "progress_id": 45,
             "progress_name": "P_45"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "Levitate": {
         "name": "Levitate",
@@ -12724,6 +12724,7 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12738,8 +12739,7 @@
             "progress_id": 30,
             "progress_name": "P_30"
           }
-        ],
-        "classification": "progression"
+        ]
       },
       "Lightning Storm": {
         "name": "Lightning Storm",
@@ -12748,6 +12748,7 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12757,8 +12758,7 @@
             "progress_id": 45,
             "progress_name": "P_45"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "Miracle Cure": {
         "name": "Miracle Cure",
@@ -12767,10 +12767,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Nitro": {
         "name": "Nitro",
@@ -12779,6 +12779,7 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12788,8 +12789,7 @@
             "progress_id": 45,
             "progress_name": "P_45"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "One Up": {
         "name": "One Up",
@@ -12798,10 +12798,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Reflect": {
         "name": "Reflect",
@@ -12810,10 +12810,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Regrowth": {
         "name": "Regrowth",
@@ -12822,10 +12822,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Revealer": {
         "name": "Revealer",
@@ -12834,6 +12834,7 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12848,8 +12849,7 @@
             "progress_id": 24,
             "progress_name": "P_24"
           }
-        ],
-        "classification": "progression"
+        ]
       },
       "Revive": {
         "name": "Revive",
@@ -12858,10 +12858,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Slow Burn": {
         "name": "Slow Burn",
@@ -12870,10 +12870,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Speed": {
         "name": "Speed",
@@ -12882,10 +12882,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Sting": {
         "name": "Sting",
@@ -12894,6 +12894,7 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12903,8 +12904,7 @@
             "progress_id": 45,
             "progress_name": "P_45"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "Stop": {
         "name": "Stop",
@@ -12913,10 +12913,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Super Heal": {
         "name": "Super Heal",
@@ -12925,10 +12925,10 @@
           "Alchemy",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Nothing": {
         "name": "Nothing",
@@ -12936,10 +12936,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Wheel": {
         "name": "Wheel",
@@ -12947,6 +12947,7 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12956,8 +12957,7 @@
             "progress_id": 14,
             "progress_name": "P_14"
           }
-        ],
-        "classification": "progression"
+        ]
       },
       "Gladiator Sword": {
         "name": "Gladiator Sword",
@@ -12966,6 +12966,7 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -12980,8 +12981,7 @@
             "progress_id": 36,
             "progress_name": "P_36"
           }
-        ],
-        "classification": "progression"
+        ]
       },
       "Crusader Sword": {
         "name": "Crusader Sword",
@@ -12990,6 +12990,7 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -13004,8 +13005,7 @@
             "progress_id": 37,
             "progress_name": "P_37"
           }
-        ],
-        "classification": "progression"
+        ]
       },
       "Spider Claw": {
         "name": "Spider Claw",
@@ -13014,6 +13014,7 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -13033,8 +13034,7 @@
             "progress_id": 35,
             "progress_name": "P_35"
           }
-        ],
-        "classification": "progression"
+        ]
       },
       "Bronze Axe": {
         "name": "Bronze Axe",
@@ -13043,6 +13043,7 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -13072,8 +13073,7 @@
             "progress_id": 36,
             "progress_name": "P_36"
           }
-        ],
-        "classification": "progression"
+        ]
       },
       "Horn Spear": {
         "name": "Horn Spear",
@@ -13082,6 +13082,7 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -13101,8 +13102,7 @@
             "progress_id": 35,
             "progress_name": "P_35"
           }
-        ],
-        "classification": "progression"
+        ]
       },
       "Bronze Spear": {
         "name": "Bronze Spear",
@@ -13111,6 +13111,7 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -13135,8 +13136,7 @@
             "progress_id": 36,
             "progress_name": "P_36"
           }
-        ],
-        "classification": "progression"
+        ]
       },
       "Lance (Weapon)": {
         "name": "Lance (Weapon)",
@@ -13145,6 +13145,7 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -13169,8 +13170,7 @@
             "progress_id": 37,
             "progress_name": "P_37"
           }
-        ],
-        "classification": "progression"
+        ]
       },
       "Bazooka": {
         "name": "Bazooka",
@@ -13178,6 +13178,7 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -13187,8 +13188,7 @@
             "progress_id": 42,
             "progress_name": "P_42"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "10,000 Gold Coins": {
         "name": "10,000 Gold Coins",
@@ -13196,10 +13196,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Diamond Eye": {
         "name": "Diamond Eye",
@@ -13207,6 +13207,7 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 3,
@@ -13216,8 +13217,7 @@
             "progress_id": 12,
             "progress_name": "P_12"
           }
-        ],
-        "classification": "progression"
+        ]
       },
       "15 Moniez": {
         "name": "15 Moniez",
@@ -13226,10 +13226,10 @@
           "Any Moniez",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Petal": {
         "name": "Petal",
@@ -13238,10 +13238,10 @@
           "Any Petal",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 12,
-        "classification": "filler"
+        "max_count": 12
       },
       "Nectar": {
         "name": "Nectar",
@@ -13250,10 +13250,10 @@
           "Any Nectar",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 11,
-        "classification": "filler"
+        "max_count": 11
       },
       "Oil": {
         "name": "Oil",
@@ -13263,10 +13263,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "filler"
+        "max_count": 5
       },
       "Progressive helmet": {
         "name": "Progressive helmet",
@@ -13274,6 +13274,7 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 3,
@@ -13283,8 +13284,7 @@
             "progress_id": 39,
             "progress_name": "P_39"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "Wax": {
         "name": "Wax",
@@ -13294,10 +13294,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 11,
-        "classification": "filler"
+        "max_count": 11
       },
       "2 Wax": {
         "name": "2 Wax",
@@ -13307,10 +13307,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "Water": {
         "name": "Water",
@@ -13320,10 +13320,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 23,
-        "classification": "filler"
+        "max_count": 23
       },
       "4 Water": {
         "name": "4 Water",
@@ -13333,10 +13333,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "filler"
+        "max_count": 5
       },
       "2 Clay": {
         "name": "2 Clay",
@@ -13346,10 +13346,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Call bead": {
         "name": "Call bead",
@@ -13358,6 +13358,7 @@
           "Any Call bead",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 12,
@@ -13367,8 +13368,7 @@
             "progress_id": 43,
             "progress_name": "P_43"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "2 Water": {
         "name": "2 Water",
@@ -13378,10 +13378,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Roots": {
         "name": "Roots",
@@ -13391,10 +13391,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 8,
-        "classification": "filler"
+        "max_count": 8
       },
       "2 Roots": {
         "name": "2 Roots",
@@ -13404,10 +13404,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "3 Clay": {
         "name": "3 Clay",
@@ -13417,10 +13417,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "18 Moniez": {
         "name": "18 Moniez",
@@ -13429,10 +13429,10 @@
           "Any Moniez",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Clay": {
         "name": "Clay",
@@ -13442,10 +13442,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 13,
-        "classification": "filler"
+        "max_count": 13
       },
       "30 Moniez": {
         "name": "30 Moniez",
@@ -13454,10 +13454,10 @@
           "Any Moniez",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "3 Water": {
         "name": "3 Water",
@@ -13467,10 +13467,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "filler"
+        "max_count": 5
       },
       "4 Clay": {
         "name": "4 Clay",
@@ -13480,10 +13480,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "5 Ash": {
         "name": "5 Ash",
@@ -13493,10 +13493,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "4 Crystal": {
         "name": "4 Crystal",
@@ -13506,10 +13506,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Biscuit": {
         "name": "Biscuit",
@@ -13518,10 +13518,10 @@
           "Any Biscuit",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 10,
-        "classification": "filler"
+        "max_count": 10
       },
       "4 Wax": {
         "name": "4 Wax",
@@ -13531,10 +13531,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "2 Crystal": {
         "name": "2 Crystal",
@@ -13544,10 +13544,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Progressive gloves": {
         "name": "Progressive gloves",
@@ -13555,6 +13555,7 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 3,
@@ -13564,8 +13565,7 @@
             "progress_id": 39,
             "progress_name": "P_39"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "4 Ash": {
         "name": "4 Ash",
@@ -13575,10 +13575,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Gauge": {
         "name": "Gauge",
@@ -13586,6 +13586,7 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -13595,8 +13596,7 @@
             "progress_id": 13,
             "progress_name": "P_13"
           }
-        ],
-        "classification": "progression"
+        ]
       },
       "3 Wax": {
         "name": "3 Wax",
@@ -13606,10 +13606,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "3 Ash": {
         "name": "3 Ash",
@@ -13619,10 +13619,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "5 Wax": {
         "name": "5 Wax",
@@ -13632,10 +13632,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "6 Water": {
         "name": "6 Water",
@@ -13645,10 +13645,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "Mud Pepper": {
         "name": "Mud Pepper",
@@ -13658,10 +13658,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "100 Moniez": {
         "name": "100 Moniez",
@@ -13670,10 +13670,10 @@
           "Any Moniez",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Progressive vest": {
         "name": "Progressive vest",
@@ -13681,6 +13681,7 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 4,
@@ -13690,8 +13691,7 @@
             "progress_id": 39,
             "progress_name": "P_39"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "3 Limestone": {
         "name": "3 Limestone",
@@ -13701,10 +13701,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "200 Moniez": {
         "name": "200 Moniez",
@@ -13713,10 +13713,10 @@
           "Any Moniez",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Ash": {
         "name": "Ash",
@@ -13726,10 +13726,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "3 Bone": {
         "name": "3 Bone",
@@ -13739,10 +13739,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Regenerate": {
         "name": "Regenerate",
@@ -13750,10 +13750,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Herbal Essence": {
         "name": "Herbal Essence",
@@ -13761,10 +13761,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "Honey": {
         "name": "Honey",
@@ -13773,10 +13773,10 @@
           "Any Honey",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 8,
-        "classification": "filler"
+        "max_count": 8
       },
       "2 Limestone": {
         "name": "2 Limestone",
@@ -13786,10 +13786,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "3 Vinegar": {
         "name": "3 Vinegar",
@@ -13799,10 +13799,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Pixie Dust": {
         "name": "Pixie Dust",
@@ -13811,10 +13811,10 @@
           "Any Pixie Dust",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "Wings": {
         "name": "Wings",
@@ -13822,6 +13822,7 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 5,
@@ -13831,8 +13832,7 @@
             "progress_id": 44,
             "progress_name": "P_44"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "3 Dry Ice": {
         "name": "3 Dry Ice",
@@ -13842,10 +13842,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Mushroom": {
         "name": "Mushroom",
@@ -13855,10 +13855,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "2 Call beads": {
         "name": "2 Call beads",
@@ -13867,6 +13867,7 @@
           "Any Call bead",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 2,
@@ -13876,8 +13877,7 @@
             "progress_id": 43,
             "progress_name": "P_43"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "2 Iron": {
         "name": "2 Iron",
@@ -13887,10 +13887,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "4 Feathers": {
         "name": "4 Feathers",
@@ -13900,10 +13900,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Acorns": {
         "name": "Acorns",
@@ -13913,10 +13913,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "2 Meteorite": {
         "name": "2 Meteorite",
@@ -13926,10 +13926,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "2 Gunpowder": {
         "name": "2 Gunpowder",
@@ -13939,10 +13939,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Grease": {
         "name": "Grease",
@@ -13952,10 +13952,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "3 Ethanol": {
         "name": "3 Ethanol",
@@ -13965,10 +13965,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6,
-        "classification": "filler"
+        "max_count": 6
       },
       "2 Dry Ice": {
         "name": "2 Dry Ice",
@@ -13978,10 +13978,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "2 Vinegar": {
         "name": "2 Vinegar",
@@ -13991,10 +13991,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Brimstone": {
         "name": "Brimstone",
@@ -14004,10 +14004,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "3 Nectar": {
         "name": "3 Nectar",
@@ -14016,10 +14016,10 @@
           "Any Nectar",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "3 Brimstone": {
         "name": "3 Brimstone",
@@ -14029,10 +14029,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "2 Ash": {
         "name": "2 Ash",
@@ -14042,10 +14042,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "6 Ash": {
         "name": "6 Ash",
@@ -14055,10 +14055,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "4 Brimstone": {
         "name": "4 Brimstone",
@@ -14068,10 +14068,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "3 Honey": {
         "name": "3 Honey",
@@ -14080,10 +14080,10 @@
           "Any Honey",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "3 Call beads": {
         "name": "3 Call beads",
@@ -14092,6 +14092,7 @@
           "Any Call bead",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -14101,8 +14102,7 @@
             "progress_id": 43,
             "progress_name": "P_43"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "Ethanol": {
         "name": "Ethanol",
@@ -14112,10 +14112,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "2 Acorns": {
         "name": "2 Acorns",
@@ -14125,10 +14125,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "4 Ethanol": {
         "name": "4 Ethanol",
@@ -14138,10 +14138,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Feather": {
         "name": "Feather",
@@ -14151,10 +14151,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Aura": {
         "name": "Aura",
@@ -14162,10 +14162,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Amulet of Annihilation": {
         "name": "Amulet of Annihilation",
@@ -14173,10 +14173,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4,
-        "classification": "filler"
+        "max_count": 4
       },
       "Atlas Medallion": {
         "name": "Atlas Medallion",
@@ -14186,10 +14186,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "3 Acorns": {
         "name": "3 Acorns",
@@ -14199,10 +14199,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "5 Iron": {
         "name": "5 Iron",
@@ -14212,10 +14212,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "2 Petal": {
         "name": "2 Petal",
@@ -14224,10 +14224,10 @@
           "Any Petal",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "4 Nectar": {
         "name": "4 Nectar",
@@ -14236,10 +14236,10 @@
           "Any Nectar",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Crystal": {
         "name": "Crystal",
@@ -14249,10 +14249,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Limestone": {
         "name": "Limestone",
@@ -14262,10 +14262,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "2 Brimstone": {
         "name": "2 Brimstone",
@@ -14275,10 +14275,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "6 Vinegar": {
         "name": "6 Vinegar",
@@ -14288,10 +14288,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "8 Ash": {
         "name": "8 Ash",
@@ -14301,10 +14301,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "4 Vinegar": {
         "name": "4 Vinegar",
@@ -14314,10 +14314,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "2 Bone": {
         "name": "2 Bone",
@@ -14327,10 +14327,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "20 Moniez": {
         "name": "20 Moniez",
@@ -14339,10 +14339,10 @@
           "Any Moniez",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "2 Ethanol": {
         "name": "2 Ethanol",
@@ -14352,10 +14352,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "10 Crystal": {
         "name": "10 Crystal",
@@ -14365,10 +14365,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "7 Roots": {
         "name": "7 Roots",
@@ -14378,10 +14378,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "2 Honey": {
         "name": "2 Honey",
@@ -14390,10 +14390,10 @@
           "Any Honey",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "5 Oil": {
         "name": "5 Oil",
@@ -14403,10 +14403,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "500 Moniez": {
         "name": "500 Moniez",
@@ -14415,10 +14415,10 @@
           "Any Moniez",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Knight Basher": {
         "name": "Knight Basher",
@@ -14427,6 +14427,7 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -14461,8 +14462,7 @@
             "progress_id": 37,
             "progress_name": "P_37"
           }
-        ],
-        "classification": "progression"
+        ]
       },
       "3 Mushroom": {
         "name": "3 Mushroom",
@@ -14472,10 +14472,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "4 Iron": {
         "name": "4 Iron",
@@ -14485,10 +14485,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "3 Oil": {
         "name": "3 Oil",
@@ -14498,10 +14498,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "3 Feathers": {
         "name": "3 Feathers",
@@ -14511,10 +14511,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Laser Lance": {
         "name": "Laser Lance",
@@ -14523,6 +14523,7 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -14547,8 +14548,7 @@
             "progress_id": 38,
             "progress_name": "P_38"
           }
-        ],
-        "classification": "progression"
+        ]
       },
       "30 Cryo Blast": {
         "name": "30 Cryo Blast",
@@ -14556,6 +14556,7 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -14570,8 +14571,7 @@
             "progress_id": 41,
             "progress_name": "P_41"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "3 Meteorite": {
         "name": "3 Meteorite",
@@ -14581,10 +14581,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "30 Particle Bombs": {
         "name": "30 Particle Bombs",
@@ -14592,6 +14592,7 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -14606,8 +14607,7 @@
             "progress_id": 41,
             "progress_name": "P_41"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "30 Thunderballs": {
         "name": "30 Thunderballs",
@@ -14615,6 +14615,7 @@
         "groups": [
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -14624,8 +14625,7 @@
             "progress_id": 40,
             "progress_name": "P_40"
           }
-        ],
-        "classification": "useful"
+        ]
       },
       "Atom Smasher": {
         "name": "Atom Smasher",
@@ -14634,6 +14634,7 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -14663,8 +14664,7 @@
             "progress_id": 38,
             "progress_name": "P_38"
           }
-        ],
-        "classification": "progression"
+        ]
       },
       "4 Dry Ice": {
         "name": "4 Dry Ice",
@@ -14674,10 +14674,10 @@
           "Everything",
           "Ingredients"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Energy Core": {
         "name": "Energy Core",
@@ -14685,6 +14685,7 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -14694,8 +14695,7 @@
             "progress_id": 9,
             "progress_name": "P_ENERGY_CORE"
           }
-        ],
-        "classification": "progression"
+        ]
       },
       "Energy Core Fragment": {
         "name": "Energy Core Fragment",
@@ -14703,6 +14703,7 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1,
@@ -14712,8 +14713,7 @@
             "progress_id": 10,
             "progress_name": "P_CORE_FRAGMENT"
           }
-        ],
-        "classification": "filler"
+        ]
       },
       "Quake Trap": {
         "name": "Quake Trap",
@@ -14722,10 +14722,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Poison Trap": {
         "name": "Poison Trap",
@@ -14734,10 +14734,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Confound Trap": {
         "name": "Confound Trap",
@@ -14746,10 +14746,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "HUD Trap": {
         "name": "HUD Trap",
@@ -14758,10 +14758,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "OHKO Trap": {
         "name": "OHKO Trap",
@@ -14770,10 +14770,10 @@
           "Everything",
           "Traps"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Iron Bracer": {
         "name": "Iron Bracer",
@@ -14781,10 +14781,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Vinegar": {
         "name": "Vinegar",
@@ -14792,10 +14792,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Root": {
         "name": "Root",
@@ -14803,10 +14803,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Meteorite": {
         "name": "Meteorite",
@@ -14814,10 +14814,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Iron": {
         "name": "Iron",
@@ -14825,10 +14825,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Gunpowder": {
         "name": "Gunpowder",
@@ -14836,10 +14836,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Dry Ice": {
         "name": "Dry Ice",
@@ -14847,10 +14847,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Bone": {
         "name": "Bone",
@@ -14858,10 +14858,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Acorn": {
         "name": "Acorn",
@@ -14869,10 +14869,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Victory": {
         "name": "Victory",
@@ -14880,10 +14880,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "__soe_logic_rules__": {
         "name": "__soe_logic_rules__",
