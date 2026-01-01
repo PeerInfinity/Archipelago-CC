@@ -20,7 +20,8 @@
       "start_inventory": {},
       "start_location_hints": []
     },
-    "world_directory": "v6"
+    "world_directory": "v6",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "area_connections": {

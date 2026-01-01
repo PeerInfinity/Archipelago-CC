@@ -118,8 +118,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive chest access",
-                "count": 1
+                "item_name": "Progressive chest access"
               }
             },
             "item": {
@@ -136,8 +135,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive chest access",
-                "count": 1
+                "item_name": "Progressive chest access"
               }
             },
             "item": {
@@ -154,8 +152,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive chest access",
-                "count": 1
+                "item_name": "Progressive chest access"
               }
             },
             "item": {
@@ -172,8 +169,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive chest access",
-                "count": 1
+                "item_name": "Progressive chest access"
               }
             },
             "item": {
@@ -190,8 +186,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive chest access",
-                "count": 1
+                "item_name": "Progressive chest access"
               }
             },
             "item": {
@@ -485,8 +480,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Chest access 11-15",
@@ -494,8 +489,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive chest access",
-                "count": 1
+                "item_name": "Progressive chest access"
               }
             },
             "item": {
@@ -505,8 +499,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Chest access 16-20",
@@ -525,8 +519,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Chest access 21-25",
@@ -545,8 +539,8 @@
               "type": "None"
             },
             "locked": true,
-            "show_in_spoiler": false,
-            "event": true
+            "event": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iris treasure 4",
@@ -5614,8 +5608,8 @@
             "38": "master",
             "39": "random_low",
             "40": "random_middle",
-            "41": "random_high",
-            "42": "random_sinistral"
+            "41": "random_sinistral",
+            "42": "random_high"
           },
           "default": 38,
           "display_name": "Boss"
@@ -5835,10 +5829,21 @@
           "display_name": "Shuffle party members"
         }
       },
-      "shops": [],
-      "world_description": "Lufia II Ancient Cave WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "The Ancient Cave is a roguelike dungeon crawling game built into\nthe RGP Lufia II. Face 99 floors of ever harder to beat monsters,\nrandom items and find new companions on the way to face the Royal\nJelly in the end. Can you beat it?",
       "web": {
-        "theme": "dirt"
+        "theme": "dirt",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up Lufia II Ancient Cave for MultiWorld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "word_fcuk"
+            ]
+          }
+        ]
       },
       "world_directory": "lufia2ac_worldgen"
     }

@@ -184,15 +184,23 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class MarioLuigiSuperstarSagaWorldGenWeb(WebWorld):
     """Web interface for Mario & Luigi Superstar Saga WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "partyTime"
+    tutorials = [
+        Tutorial(
+            "Setup Guide",
+            "A guide to setting up Mario & Luigi: Superstar Saga for Archipelago.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["jamesbrq"]
+        )
+    ]
 
 
 class MarioLuigiSuperstarSagaWorldGenWorld(RuleWorldMixin, World):
     """
-    Mario & Luigi Superstar Saga WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Adventure with Mario and Luigi together in the Beanbean Kingdom
+    to stop the evil Cackletta and retrieve the Beanstar.
     """
 
     game: ClassVar[str] = "Mario & Luigi Superstar Saga WorldGen"
@@ -787,10 +795,8 @@ class MarioLuigiSuperstarSagaWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.world_description = 'Adventure with Mario and Luigi together in the Beanbean Kingdom\nto stop the evil Cackletta and retrieve the Beanstar.'
         self.slot_data = types.SimpleNamespace(CastleSkip=0, SkipMinecart=0, DisableSurf=0, HarhallsPants=0, ChuckleBeans=2, DifficultLogic=0, Coins=0)
-        self.web = types.SimpleNamespace(theme='partyTime', tutorials=[{'name': 'Setup Guide', 'description': 'A guide to setting up Mario & Luigi: Superstar Saga for Archipelago.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['jamesbrq']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -902,4 +908,12 @@ class MarioLuigiSuperstarSagaWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "CastleSkip": 0,
+            "SkipMinecart": 0,
+            "DisableSurf": 0,
+            "HarhallsPants": 0,
+            "ChuckleBeans": 2,
+            "DifficultLogic": 0,
+            "Coins": 0,
+        }

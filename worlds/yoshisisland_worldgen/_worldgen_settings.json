@@ -41,7 +41,8 @@
       "yoshi_colors": 0,
       "yoshi_singularity_color": 0
     },
-    "world_directory": "yoshisisland"
+    "world_directory": "yoshisisland",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "game_logic": "Easy",

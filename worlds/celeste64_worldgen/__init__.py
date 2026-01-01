@@ -59,15 +59,23 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class Celeste64WorldGenWeb(WebWorld):
     """Web interface for Celeste 64 WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "ice"
+    tutorials = [
+        Tutorial(
+            "Start Guide",
+            "A guide to playing Celeste 64 in Archipelago.",
+            "English",
+            "guide_en.md",
+            "guide/en",
+            ["PoryGone"]
+        )
+    ]
 
 
 class Celeste64WorldGenWorld(RuleWorldMixin, World):
     """
-    Celeste 64 WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Relive the magic of Celeste Mountain alongside Madeline in this small, heartfelt 3D platformer.
+    Created in a week(ish) by the Celeste team to celebrate the game’s sixth anniversary 🍓✨
     """
 
     game: ClassVar[str] = "Celeste 64 WorldGen"
@@ -140,7 +148,6 @@ class Celeste64WorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.madeline_one_dash_hair_color = 14363648
         self.madeline_two_dash_hair_color = 16421375
         self.madeline_no_dash_hair_color = 7258367
@@ -150,7 +157,6 @@ class Celeste64WorldGenWorld(RuleWorldMixin, World):
         self.prog_strawberries = 16
         self.world_description = 'Relive the magic of Celeste Mountain alongside Madeline in this small, heartfelt 3D platformer.\nCreated in a week(ish) by the Celeste team to celebrate the game’s sixth anniversary 🍓✨'
         self.slot_data = types.SimpleNamespace(death_link=0, death_link_amnesty=10, strawberries_required=16, move_shuffle=0, friendsanity=0, signsanity=0, carsanity=0, checkpointsanity=0, madeline_one_dash_hair_color=14363648, madeline_two_dash_hair_color=16421375, madeline_no_dash_hair_color=7258367, madeline_feather_hair_color=15914064, badeline_chaser_source=0, badeline_chaser_frequency=0, badeline_chaser_speed=3)
-        self.web = types.SimpleNamespace(theme='ice', tutorials=[{'name': 'Start Guide', 'description': 'A guide to playing Celeste 64 in Archipelago.', 'language': 'English', 'file_name': 'guide_en.md', 'link': 'guide/en', 'authors': ['PoryGone']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -244,4 +250,20 @@ class Celeste64WorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "death_link": 0,
+            "death_link_amnesty": 10,
+            "strawberries_required": 16,
+            "move_shuffle": 0,
+            "friendsanity": 0,
+            "signsanity": 0,
+            "carsanity": 0,
+            "checkpointsanity": 0,
+            "madeline_one_dash_hair_color": 14363648,
+            "madeline_two_dash_hair_color": 16421375,
+            "madeline_no_dash_hair_color": 7258367,
+            "madeline_feather_hair_color": 15914064,
+            "badeline_chaser_source": 0,
+            "badeline_chaser_frequency": 0,
+            "badeline_chaser_speed": 3,
+        }

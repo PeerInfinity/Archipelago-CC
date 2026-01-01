@@ -6337,7 +6337,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Automate automation-science-pack",
@@ -7051,7 +7052,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Automate chemical-science-pack",
@@ -7765,7 +7767,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Automate logistic-science-pack",
@@ -8479,7 +8482,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Automate military-science-pack",
@@ -9193,7 +9197,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Automate production-science-pack",
@@ -9907,7 +9912,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Automate utility-science-pack",
@@ -10621,7 +10627,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       }

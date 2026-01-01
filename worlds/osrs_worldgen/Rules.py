@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Compare, False_, Has, HelperCall, Or, True_
+from rule_builder import True_, False_, And, CanReachLocation, CanReachRegion, Compare, False_, Has, HasAll, HelperCall, Or, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -474,7 +474,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Ice Mountain->Camdozaal", player),
-        And(Has('1 QP (Below Ice Mountain)'), Has('Area: Ice Mountain'))
+        HasAll('1 QP (Below Ice Mountain)', 'Area: Ice Mountain')
     )
 
     world.set_rule(

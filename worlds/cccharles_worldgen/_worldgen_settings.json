@@ -15,7 +15,8 @@
       "start_inventory_from_pool": {},
       "start_location_hints": []
     },
-    "world_directory": "cccharles"
+    "world_directory": "cccharles",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "world_description": "An independent 3D horror game, taking place on an island.\nThe main gameplay consists of traveling and fighting a monster on board a train.\nUpgrading the train requires leaving the train to gather resources with the threat of encountering the monster.",

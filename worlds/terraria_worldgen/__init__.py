@@ -280,15 +280,23 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class TerrariaWorldGenWeb(WebWorld):
     """Web interface for Terraria WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "grass"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Terraria randomizer connected to an Archipelago Multiworld.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["Seldom"]
+        )
+    ]
 
 
 class TerrariaWorldGenWorld(RuleWorldMixin, World):
     """
-    Terraria WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Terraria is a 2D multiplayer sandbox game featuring mining, building, exploration, and combat.
+    Features 18 bosses and 4 classes.
     """
 
     game: ClassVar[str] = "Terraria WorldGen"
@@ -566,15 +574,13 @@ class TerrariaWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.armor_minions = {'Wulfrum Armor': 1, 'Flinx Fur Coat': 1, 'Victide Armor': 1, 'Obsidian Armor': 1, 'Bee Armor': 2, 'Aerospec Armor': 1, 'Statigel Armor': 1, 'Spider Armor': 3, 'Forbidden Armor': 2, 'Daedalus Armor': 2, 'Hallowed Armor': 3, 'Fathom Swarmer Armor': 2, 'Tiki Armor': 4, 'Hydrothermic Armor': 2, 'Plaguebringer Armor': 3, 'Spooky Armor': 4, 'Astral Armor': 3, 'Stardust Armor': 5, 'Tarragon Armor': 3, 'Bloodflare Armor': 3, 'Omega Blue Armor': 2, 'Fearmonger Armor': 2, 'Silva Armor': 5, 'Auric Tesla Armor': 6, 'Demonshade Armor': 10}
         self.accessory_minions = {'Summoning Potion': 1, 'Voltaic Jelly': 1, 'Pygmy Necklace': 1, 'Bewitching Table': 1, 'The First Shadowflame': 1, 'Nuclear Fuel Rod': 1, 'Starbuster Core': 1, 'Necromantic Scroll': 1, 'Papyrus Scarab': 1, 'Eldritch Soul Artifact': 1, 'Profaned Soul Artifact': 1, 'Angelic Alliance': 2}
         self.ter_items = ['Copper Shortsword', 'Guide', 'Squire Slime', 'Traveling Merchant', 'Lifeform Analyzer', 'DPS Meter', 'Stopwatch', 'Merchant', 'Bug Net', 'Dye Trader', 'Demolitionist', 'Cactus', 'Aglet', 'Radar', 'Wand of Sparking', 'Evil Powder', 'Zoologist', 'Cat', 'Dog', 'Painter', 'Enchanted Sword', 'Angler', "Fisherman's Pocket Guide", 'Weather Radio', 'Sextant', 'Water Walking Boots', 'Starfury', 'Celestial Magnet', 'Clumsy Slime', 'Torch God', 'Depth Meter', 'Compass', 'Magic Mirror', 'Nurse', 'Gold Hammer', 'Gold Pickaxe', 'Gold Watch', 'Hermes Boots', 'Stylist', 'Metal Detector', 'Obsidian', 'Obsidian Skull', 'Lava Charm', 'Demonite Ore', 'Demonite Bar', 'Evil Sword', 'Ice Skates', 'Flinx Fur Coat', 'Golfer', 'Party Girl', 'Cool Slime', 'Anklet of the Wind', 'Feral Claws', 'Stinger', 'Jungle Spores', 'Vine', 'Blade of Grass', "Nature's Gift", 'Bezoar', 'Summoning Potion', 'Obsidian Rose', 'Magma Stone', 'Arms Dealer', 'Illegal Gun Parts', 'King Slime', 'Solidifier', 'Nerdy Slime', 'Sandstorm', 'Shark Tooth Necklace', 'Surly Slime', 'Eye of Cthulhu', 'Dryad', 'Pumpkin Seeds', 'Pumpkin', 'Purification Powder', 'Mystic Slime', 'Evil Boss', 'Evil Boss Part', 'Evil Pickaxe', 'Obsidian Armor', 'Tavernkeep', "Old One's Army Tier 1", 'Meteorite', 'Meteorite Bar', 'Meteor Hamaxe', 'Hellforge', 'Hellstone', 'Hellstone Bar', 'Fiery Greatsword', 'Molten Hamaxe', 'Molten Pickaxe', 'Goblin Army', 'Goblin Tinkerer', "Tinkerer's Workshop", 'Mana Flower', 'Rocket Boots', 'Spectre Boots', 'Lightning Boots', 'Frostspark Boots', 'Lava Waders', 'Terraspark Boots', 'GPS', 'Goblin Tech', 'Fish Finder', 'Diving Gear', 'Queen Bee', 'Bee Keeper', 'Bee Wax', 'Bee Armor', 'Witch Doctor', 'Pygmy Necklace', 'Skeletron', 'Clothier', 'Dungeon', 'Bone', 'Tally Counter', 'R.E.K. 3000', 'PDA', 'Cell Phone', 'Bewitching Table', 'Alchemy Table', 'Mechanic', 'Wire', 'Actuator', 'Muramasa', 'Cobalt Shield', 'Obsidian Shield', 'Elder Slime', 'Deerclops', "Night's Edge", 'Wall of Flesh', 'Pwnhammer', 'Emblem', 'Fast Clock', 'Wizard', 'Titan Glove', 'Power Glove', 'Magic Quiver', 'Hallowed Seeds', 'Armor Polish', 'Adhesive Bandage', 'Medicated Bandage', 'Megaphone', 'Pocket Mirror', 'Trifold Map', 'The Plan', 'Tax Collector', 'Spider Fangs', 'Spider Armor', 'Cross Necklace', 'Altar', 'Cobalt Ore', 'Cobalt Bar', 'Cobalt Pickaxe', 'Blindfold', 'Reflective Shades', 'Vitamins', 'Armor Bracing', 'Nazar', 'Countercurse Mantra', 'Ankh Charm', 'Ankh Shield', 'Soul of Night', 'Hallow', 'Pixie Dust', 'Holy Water', 'Unicorn Horn', 'Crystal Shard', 'Soul of Light', 'Meteor Staff', 'Blessed Apple', 'Rod of Discord', 'Soul of Flight', 'Bunny', 'Forbidden Fragment', 'Truffle', 'Pirate Invasion', 'Pirate', 'Queen Slime', 'Sparkle Slime Balloon', 'Diva Slime', 'Mythril Ore', 'Mythril Bar', 'Hardmode Anvil', 'Mythril Pickaxe', 'Adamantite Ore', 'Hardmode Forge', 'Adamantite Bar', 'Adamantite Pickaxe', 'Forbidden Armor', 'Mechanical Eye', 'Mechanical Worm', 'Mechanical Skull', 'Reward: Hermes Boots', 'Reward: Magic Mirror', 'Reward: Demon Conch', 'Reward: Magic Conch', 'Reward: Grappling Hook', 'Reward: Cloud in a Bottle', 'Reward: Climbing Claws', 'Reward: Ancient Chisel', 'Reward: Fledgling Wings', 'Reward: Rod of Discord', 'Reward: Stopwatch', 'Reward: DPS Meter', 'Reward: Sextant', 'Reward: Weather Radio', "Reward: Neptune's Shell", 'Reward: Gold Ring', 'Reward: Ice Skates', 'Reward: Tally Counter', 'Reward: Putrid Scent', 'Reward: Yoyo Glove', 'Reward: Titan Glove', 'Reward: Red Counterweight', 'Reward: Water Walking Boots', 'Reward: Celestial Magnet', 'Reward: Flying Carpet', 'Reward: Flipper', 'Reward: Lava Charm', 'Reward: Megaphone', 'Reward: Feral Claws', 'Reward: Trifold Map', 'Reward: Black Belt', 'Reward: Armor Polish', 'Reward: Lucky Coin', "Reward: Fisherman's Pocket Guide", "Reward: Nature's Gift", 'Reward: Moon Charm', 'Reward: Shoe Spikes', 'Reward: Star Cloak', 'Reward: Lavaproof Fishing Hook', 'Reward: Paint Sprayer', 'Reward: Fast Clock', 'Reward: Obsidian Rose', 'Reward: Step Stool', 'Reward: Rifle Scope', 'Reward: Treasure Magnet', 'Reward: Brick Layer', 'Reward: Shark Tooth Necklace', 'Reward: Nazar']
         self.ter_locations = ['Copper Shortsword', 'Guide', 'Squire Slime', 'Traveling Merchant', 'Lifeform Analyzer', 'DPS Meter', 'Stopwatch', 'Timber!!', 'Benched', 'Stop! Hammer Time!', 'Matching Attire', 'Fashion Statement', 'Ooo! Shiny!', 'No Hobo', 'Merchant', 'Bug Net', 'Heavy Metal', 'Dye Trader', 'Dye Hard', 'Demolitionist', 'Lucky Break', 'Star Power', 'You Can Do It!', 'Cactus', 'Unusual Survival Strategies', 'Aglet', 'Radar', 'Wand of Sparking', 'Heliophobia', 'Evil Powder', 'Zoologist', 'Cat', 'Feeling Petty', 'Dog', 'Painter', 'Enchanted Sword', 'Angler', "Fisherman's Pocket Guide", 'Weather Radio', 'Sextant', 'Water Walking Boots', 'Into Orbit', 'Starfury', 'Celestial Magnet', 'Clumsy Slime', 'Watch Your Step!', 'Throwing Lines', 'Torch God', 'Vehicular Manslaughter', 'Depth Meter', 'Compass', 'Hey! Listen!', 'I Am Loot!', 'Magic Mirror', 'Heart Breaker', 'Nurse', 'The Frequent Flyer', 'Feast of Midas', 'Hold on Tight!', 'Gold Hammer', 'Gold Pickaxe', 'Gold Watch', 'Like a Boss', 'Hermes Boots', 'Jeepers Creepers', 'Stylist', 'Funkytown', 'Metal Detector', 'Dead Men Tell No Tales', 'Obsidian', 'Obsidian Skull', 'Lava Charm', 'Demonite Ore', 'Demonite Bar', 'Evil Sword', 'Ice Skates', 'Flinx Fur Coat', 'Golfer', 'Party Girl', 'Cool Slime', 'Anklet of the Wind', 'Feral Claws', 'Stinger', 'Jungle Spores', 'Vine', 'Blade of Grass', "Nature's Gift", 'Bezoar', 'Summoning Potion', 'A Shimmer In The Dark', "It's Getting Hot in Here", 'Rock Bottom', 'Obsidian Rose', 'Magma Stone', 'Smashing, Poppet!', 'Arms Dealer', 'Leading Landlord', 'Completely Awesome', 'Illegal Gun Parts', 'King Slime', 'The Cavalry', 'Solidifier', 'Nerdy Slime', 'Sandstorm', 'Shark Tooth Necklace', 'Quiet Neighborhood', 'Surly Slime', 'Eye of Cthulhu', 'Dryad', 'Pumpkin Seeds', 'Pumpkin', 'Purification Powder', 'Mystic Slime', 'Evil Boss', 'Evil Boss Part', 'Evil Pickaxe', 'Obsidian Armor', 'Tavernkeep', "Old One's Army Tier 1", 'Meteorite', 'Meteorite Bar', 'Meteor Hamaxe', 'Hellforge', 'Hellstone', 'Hellstone Bar', 'Fiery Greatsword', 'Molten Hamaxe', 'Molten Pickaxe', 'Miner for Fire', 'Hot Reels!', 'Goblin Army', 'Goblin Tinkerer', "Tinkerer's Workshop", 'Mana Flower', 'Rocket Boots', 'Spectre Boots', 'Lightning Boots', 'Frostspark Boots', 'Lava Waders', 'Terraspark Boots', 'GPS', 'Goblin Tech', 'Fish Finder', 'Diving Gear', "Where's My Honey?", 'Queen Bee', 'Bee Keeper', 'Bee Wax', 'Bee Armor', 'Not the Bees!', 'Witch Doctor', 'Pygmy Necklace', 'Skeletron', 'Clothier', 'Dungeon', 'Dungeon Heist', 'Bone', 'Tally Counter', 'R.E.K. 3000', 'PDA', 'Cell Phone', 'Bewitching Table', 'Alchemy Table', 'Mechanic', 'Wire', 'Actuator', 'Muramasa', 'Cobalt Shield', 'Obsidian Shield', 'Elder Slime', 'Deerclops', "Night's Edge", 'Wall of Flesh', 'Pwnhammer', 'Emblem', 'Fast Clock', 'Wizard', 'Titan Glove', 'Power Glove', 'Magic Quiver', 'Hallowed Seeds', 'Armor Polish', 'Adhesive Bandage', 'Medicated Bandage', 'Megaphone', 'Pocket Mirror', 'Trifold Map', 'The Plan', 'Tax Collector', 'Spider Fangs', 'Spider Armor', 'Cross Necklace', 'Altar', 'Begone, Evil!', 'Cobalt Ore', 'Extra Shiny!', 'Cobalt Bar', 'Cobalt Pickaxe', 'Blindfold', 'Reflective Shades', 'Vitamins', 'Armor Bracing', 'Nazar', 'Countercurse Mantra', 'Ankh Charm', 'Ankh Shield', 'Soul of Night', 'Hallow', 'Pixie Dust', 'Holy Water', 'Unicorn Horn', 'Crystal Shard', 'Soul of Light', 'Meteor Staff', 'Blessed Apple', 'Rod of Discord', 'Soul of Flight', 'Head in the Clouds', 'Bunny', 'Forbidden Fragment', "Don't Dread on Me", 'Truffle', 'It Can Talk?!', 'Pirate Invasion', 'Pirate', 'Queen Slime', 'Sparkle Slime Balloon', 'Diva Slime', 'The Great Slime Mitosis', 'Mythril Ore', 'Mythril Bar', 'Hardmode Anvil', 'Mythril Pickaxe', 'Adamantite Ore', 'Hardmode Forge', 'Adamantite Bar', 'Adamantite Pickaxe', 'Forbidden Armor', 'Mechanical Eye', 'Mechanical Worm', 'Mechanical Skull', 'The Twins', 'The Destroyer', 'Skeletron Prime']
-        self.ter_goals = {'Post-The Twins': 'The Twins', 'Post-The Destroyer': 'The Destroyer', 'Post-Skeletron Prime': 'Skeletron Prime'}
+        self.ter_goals = {'Post-The Destroyer': 'The Destroyer', 'Post-The Twins': 'The Twins', 'Post-Skeletron Prime': 'Skeletron Prime'}
         self.world_description = 'Terraria is a 2D multiplayer sandbox game featuring mining, building, exploration, and combat.\nFeatures 18 bosses and 4 classes.'
         self.slot_data = types.SimpleNamespace(goal=['Skeletron Prime', 'The Destroyer', 'The Twins'], deathlink=False, calamity=0, getfixedboi=0, early_achievements=1, normal_achievements=1, grindy_achievements=0, fishing_achievements=0)
-        self.web = types.SimpleNamespace(theme='grass', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Terraria randomizer connected to an Archipelago Multiworld.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['Seldom']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -668,4 +674,13 @@ class TerrariaWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "goal": ['Skeletron Prime', 'The Destroyer', 'The Twins'],
+            "deathlink": False,
+            "calamity": 0,
+            "getfixedboi": 0,
+            "early_achievements": 1,
+            "normal_achievements": 1,
+            "grindy_achievements": 0,
+            "fishing_achievements": 0,
+        }

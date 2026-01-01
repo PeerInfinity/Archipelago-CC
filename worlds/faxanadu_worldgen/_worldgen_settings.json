@@ -24,7 +24,8 @@
       "start_inventory_from_pool": {},
       "start_location_hints": []
     },
-    "world_directory": "faxanadu"
+    "world_directory": "faxanadu",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "filler_ratios": {

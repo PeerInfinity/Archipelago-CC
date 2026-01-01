@@ -214,21 +214,13 @@
             "name": "Lumberjack Tree Tree",
             "connected_region": "Lumberjack Tree (top)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Beat Agahnim 1"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pegasus Boots"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Beat Agahnim 1",
+                  "Pegasus Boots"
+                ]
+              }
             }
           },
           {
@@ -774,7 +766,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": false,
@@ -1125,7 +1118,8 @@
               "advancement": true,
               "type": "Event"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Floodgate Chest",
@@ -1716,7 +1710,8 @@
               "advancement": true,
               "type": "Event"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": false,
@@ -2468,7 +2463,8 @@
               "advancement": true,
               "type": "Event"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": false,
@@ -3142,7 +3138,8 @@
               "advancement": true,
               "type": "Crystal"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": false,
@@ -3540,7 +3537,8 @@
               "advancement": true,
               "type": "Crystal"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": false,
@@ -3557,27 +3555,14 @@
             "name": "Master Sword Pedestal",
             "id": 166320,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Blue Pendant"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Green Pendant"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Red Pendant"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Blue Pendant",
+                  "Green Pendant",
+                  "Red Pendant"
+                ]
+              }
             },
             "item": {
               "name": "Random Cosmetic",
@@ -4502,7 +4487,8 @@
               "advancement": true,
               "type": "Event"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": false,
@@ -5913,7 +5899,8 @@
               "advancement": true,
               "type": "Crystal"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": false,
@@ -5964,21 +5951,13 @@
                   "rule": "Or",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Beat Agahnim 1"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Magic Mirror"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Beat Agahnim 1",
+                          "Magic Mirror"
+                        ]
+                      }
                     },
                     {
                       "rule": "cross_peg_bridge",
@@ -5994,21 +5973,13 @@
             "name": "South Dark World Bridge",
             "connected_region": "South Dark World",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hammer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hammer",
+                  "Moon Pearl"
+                ]
+              }
             }
           },
           {
@@ -6025,21 +5996,13 @@
             "name": "Dark Lake Hylia Drop (East)",
             "connected_region": "Dark Lake Hylia",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Flippers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Flippers",
+                  "Moon Pearl"
+                ]
+              }
             }
           },
           {
@@ -6225,21 +6188,13 @@
             "name": "West Dark World Gap",
             "connected_region": "West Dark World",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hookshot",
+                  "Moon Pearl"
+                ]
+              }
             }
           },
           {
@@ -6293,21 +6248,13 @@
             "name": "Dark Lake Hylia Teleporter",
             "connected_region": "Dark Lake Hylia",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Flippers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Flippers",
+                  "Moon Pearl"
+                ]
+              }
             }
           }
         ],
@@ -6342,21 +6289,13 @@
             "name": "Dark Lake Hylia Drop (South)",
             "connected_region": "Dark Lake Hylia",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Flippers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Flippers",
+                  "Moon Pearl"
+                ]
+              }
             }
           },
           {
@@ -6430,21 +6369,13 @@
             "name": "East Dark World Bridge",
             "connected_region": "East Dark World",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hammer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hammer",
+                  "Moon Pearl"
+                ]
+              }
             }
           },
           {
@@ -6465,21 +6396,13 @@
             "name": "Bonk Fairy (Dark)",
             "connected_region": "Bonk Fairy (Dark)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pegasus Boots"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Pegasus Boots"
+                ]
+              }
             }
           },
           {
@@ -6511,21 +6434,13 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Moon Pearl"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Moon Pearl"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Moon Pearl",
+                          "Moon Pearl"
+                        ]
+                      }
                     },
                     {
                       "rule": "Has",
@@ -6561,21 +6476,13 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Moon Pearl"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Moon Pearl"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Moon Pearl",
+                          "Moon Pearl"
+                        ]
+                      }
                     },
                     {
                       "rule": "Has",
@@ -6658,27 +6565,14 @@
             "name": "Lake Hylia Island Mirror Spot",
             "connected_region": "Lake Hylia Island",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Flippers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Magic Mirror"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Flippers",
+                  "Magic Mirror",
+                  "Moon Pearl"
+                ]
+              }
             }
           },
           {
@@ -6736,21 +6630,13 @@
             "name": "Dark Lake Hylia Ledge Drop",
             "connected_region": "Dark Lake Hylia",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Flippers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Flippers",
+                  "Moon Pearl"
+                ]
+              }
             }
           },
           {
@@ -6971,21 +6857,13 @@
             "name": "East Dark World River Pier",
             "connected_region": "East Dark World",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Flippers"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Flippers",
+                  "Moon Pearl"
+                ]
+              }
             }
           },
           {
@@ -7036,42 +6914,26 @@
             "name": "Graveyard Ledge Mirror Spot",
             "connected_region": "Graveyard Ledge",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Magic Mirror"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Magic Mirror",
+                  "Moon Pearl"
+                ]
+              }
             }
           },
           {
             "name": "Kings Grave Mirror Spot",
             "connected_region": "Kings Grave Area",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Magic Mirror"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Magic Mirror",
+                  "Moon Pearl"
+                ]
+              }
             }
           },
           {
@@ -7105,21 +6967,13 @@
             "name": "Village of Outcasts Pegs",
             "connected_region": "Dark Grassy Lawn",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hammer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hammer",
+                  "Moon Pearl"
+                ]
+              }
             }
           },
           {
@@ -7285,7 +7139,8 @@
               "advancement": true,
               "type": "Event"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": true,
@@ -7300,21 +7155,13 @@
             "name": "Grassy Lawn Pegs",
             "connected_region": "West Dark World",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hammer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hammer",
+                  "Moon Pearl"
+                ]
+              }
             }
           },
           {
@@ -7348,21 +7195,13 @@
             "name": "Dark World Hammer Peg Cave",
             "connected_region": "Dark World Hammer Peg Cave",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hammer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hammer",
+                  "Moon Pearl"
+                ]
+              }
             }
           },
           {
@@ -7402,7 +7241,8 @@
               "advancement": true,
               "type": "Event"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": true,
@@ -7811,21 +7651,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Cape"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Cape",
+                      "Hookshot"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -7840,21 +7672,13 @@
             "name": "Bumper Cave Exit (Top)",
             "connected_region": "Bumper Cave Ledge",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cape"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Cape",
+                  "Moon Pearl"
+                ]
+              }
             }
           }
         ],
@@ -7985,21 +7809,13 @@
             "name": "Skull Woods Final Section",
             "connected_region": "Skull Woods Final Section (Entrance)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fire Rod"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Fire Rod",
+                  "Moon Pearl"
+                ]
+              }
             }
           }
         ],
@@ -8395,21 +8211,13 @@
             "name": "Fairy Ascension Mirror Spot",
             "connected_region": "Fairy Ascension Plateau",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Magic Mirror"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Magic Mirror",
+                  "Moon Pearl"
+                ]
+              }
             }
           }
         ],
@@ -8435,21 +8243,13 @@
             "name": "Superbunny Cave - Top",
             "id": 60028,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "13 Coins",
@@ -8463,21 +8263,13 @@
             "name": "Superbunny Cave - Bottom",
             "id": 60031,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "50 Pons",
@@ -8705,21 +8497,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Moon Pearl"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Hookshot",
+                      "Moon Pearl"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -8744,21 +8528,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Moon Pearl"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Hookshot",
+                      "Moon Pearl"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -8786,21 +8562,13 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Hookshot"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Pegasus Boots"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Hookshot",
+                          "Pegasus Boots"
+                        ]
+                      }
                     },
                     {
                       "rule": "Has",
@@ -8833,21 +8601,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Moon Pearl"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Hookshot",
+                      "Moon Pearl"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -9109,21 +8869,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Flippers"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Open Floodgate"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Flippers",
+                      "Open Floodgate"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -9427,21 +9179,13 @@
             "name": "Swamp Palace - Hookshot Pot Key",
             "id": 1310739,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hookshot",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "Arrows (10)",
@@ -9712,7 +9456,8 @@
               "advancement": true,
               "type": "Crystal"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": true,
@@ -10151,7 +9896,8 @@
               "advancement": true,
               "type": "Crystal"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": true,
@@ -10211,21 +9957,13 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Moon Pearl"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Moon Pearl"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Moon Pearl",
+                          "Moon Pearl"
+                        ]
+                      }
                     },
                     {
                       "rule": "Has",
@@ -10292,21 +10030,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Moon Pearl"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Moon Pearl"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Moon Pearl",
+                      "Moon Pearl"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -10372,21 +10102,13 @@
             "name": "Skull Woods - Compass Chest",
             "id": 59794,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "Small Key (Skull Woods)",
@@ -10400,21 +10122,13 @@
             "name": "Skull Woods - Pot Prison",
             "id": 59809,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "Left Difficulty Switch",
@@ -10593,21 +10307,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Moon Pearl"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Moon Pearl"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Moon Pearl",
+                      "Moon Pearl"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -10632,21 +10338,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Moon Pearl"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Moon Pearl"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Moon Pearl",
+                      "Moon Pearl"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -10875,7 +10573,8 @@
               "advancement": true,
               "type": "Crystal"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": true,
@@ -11228,21 +10927,13 @@
             "name": "Ice Palace - Big Chest",
             "id": 59818,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Big Key (Ice Palace)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Big Key (Ice Palace)",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "Compass (Ice Palace)",
@@ -11487,7 +11178,8 @@
               "advancement": true,
               "type": "Crystal"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": true,
@@ -11545,21 +11237,13 @@
                   ]
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Pegasus Boots"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Hookshot",
+                      "Pegasus Boots"
+                    ]
+                  }
                 }
               ]
             }
@@ -11724,21 +11408,13 @@
             "name": "Misery Mire - Big Chest",
             "id": 60007,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Big Key (Misery Mire)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Big Key (Misery Mire)",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "Magic Upgrade (1/2)",
@@ -12364,7 +12040,8 @@
               "advancement": true,
               "type": "Crystal"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": true,
@@ -12380,21 +12057,13 @@
             "name": "Turtle Rock Entrance Gap",
             "connected_region": "Turtle Rock (First Section)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cane of Somaria"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Cane of Somaria",
+                  "Moon Pearl"
+                ]
+              }
             }
           },
           {
@@ -12448,21 +12117,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Cane of Somaria"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Moon Pearl"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Cane of Somaria",
+                      "Moon Pearl"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -12490,21 +12151,13 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Cane of Somaria"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Fire Rod"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Cane of Somaria",
+                          "Fire Rod"
+                        ]
+                      }
                     },
                     {
                       "rule": "Has",
@@ -12540,21 +12193,13 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Cane of Somaria"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Fire Rod"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Cane of Somaria",
+                          "Fire Rod"
+                        ]
+                      }
                     },
                     {
                       "rule": "Has",
@@ -13128,21 +12773,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Cane of Somaria"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Cane of Somaria",
+                      "Hookshot"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -13175,21 +12812,13 @@
                   "rule": "And",
                   "children": [
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Cane of Somaria"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Hookshot"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Cane of Somaria",
+                          "Hookshot"
+                        ]
+                      }
                     },
                     {
                       "rule": "Has",
@@ -13249,21 +12878,13 @@
             "name": "Turtle Rock - Crystaroller Room",
             "id": 59956,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "Small Key (Turtle Rock)",
@@ -13287,42 +12908,26 @@
             "name": "Turtle Rock (Dark Room) (North)",
             "connected_region": "Turtle Rock (Crystaroller Room)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cane of Somaria"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Lamp"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Cane of Somaria",
+                  "Lamp"
+                ]
+              }
             }
           },
           {
             "name": "Turtle Rock (Dark Room) (South)",
             "connected_region": "Turtle Rock (Eye Bridge)",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Cane of Somaria"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Lamp"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Cane of Somaria",
+                  "Lamp"
+                ]
+              }
             }
           }
         ],
@@ -13446,27 +13051,14 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Cane of Byrna"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Cape"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Mirror Shield"
-                              }
-                            }
-                          ]
+                          "rule": "HasAny",
+                          "args": {
+                            "items": [
+                              "Cane of Byrna",
+                              "Cape",
+                              "Mirror Shield"
+                            ]
+                          }
                         },
                         {
                           "rule": "Has",
@@ -13513,27 +13105,14 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Cane of Byrna"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Cape"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Mirror Shield"
-                              }
-                            }
-                          ]
+                          "rule": "HasAny",
+                          "args": {
+                            "items": [
+                              "Cane of Byrna",
+                              "Cape",
+                              "Mirror Shield"
+                            ]
+                          }
                         },
                         {
                           "rule": "Has",
@@ -13580,27 +13159,14 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Cane of Byrna"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Cape"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Mirror Shield"
-                              }
-                            }
-                          ]
+                          "rule": "HasAny",
+                          "args": {
+                            "items": [
+                              "Cane of Byrna",
+                              "Cape",
+                              "Mirror Shield"
+                            ]
+                          }
                         },
                         {
                           "rule": "Has",
@@ -13647,27 +13213,14 @@
                       "rule": "And",
                       "children": [
                         {
-                          "rule": "Or",
-                          "children": [
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Cane of Byrna"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Cape"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
-                                "item_name": "Mirror Shield"
-                              }
-                            }
-                          ]
+                          "rule": "HasAny",
+                          "args": {
+                            "items": [
+                              "Cane of Byrna",
+                              "Cape",
+                              "Mirror Shield"
+                            ]
+                          }
                         },
                         {
                           "rule": "Has",
@@ -13808,7 +13361,8 @@
               "advancement": true,
               "type": "Crystal"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": true,
@@ -14033,21 +13587,13 @@
             "name": "Palace of Darkness - The Arena - Bridge",
             "id": 59965,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "Rupees (20)",
@@ -14061,21 +13607,13 @@
             "name": "Palace of Darkness - Stalfos Basement",
             "id": 59977,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "Small Key (Palace of Darkness)",
@@ -14310,21 +13848,13 @@
             "name": "Palace of Darkness - Dark Basement - Left",
             "id": 59980,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Lamp"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Lamp",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "Progressive Shield",
@@ -14338,21 +13868,13 @@
             "name": "Palace of Darkness - Dark Basement - Right",
             "id": 59983,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Lamp"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Lamp",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "Golden Feather",
@@ -14580,7 +14102,8 @@
               "advancement": true,
               "type": "Crystal"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": true,
@@ -14609,21 +14132,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hookshot"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Pegasus Boots"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Hookshot",
+                      "Pegasus Boots"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -14667,21 +14182,13 @@
             "name": "Ganons Tower - Bob's Torch",
             "id": 1573217,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pegasus Boots"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Pegasus Boots"
+                ]
+              }
             },
             "item": {
               "name": "25 Pons",
@@ -15546,21 +15053,13 @@
             "name": "Ganons Tower - DMs Room - Top Left",
             "id": 60088,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hookshot",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "Small Key (Ganons Tower)",
@@ -15574,21 +15073,13 @@
             "name": "Ganons Tower - DMs Room - Top Right",
             "id": 60091,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hookshot",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "Freeincarnate",
@@ -15602,21 +15093,13 @@
             "name": "Ganons Tower - DMs Room - Bottom Left",
             "id": 60094,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hookshot",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "Time Piece",
@@ -15630,21 +15113,13 @@
             "name": "Ganons Tower - DMs Room - Bottom Right",
             "id": 60097,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hookshot"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Hookshot",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "Yarn",
@@ -16266,21 +15741,13 @@
             "name": "Ganons Tower - Bob's Chest",
             "id": 60127,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Moon Pearl"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Moon Pearl",
+                  "Moon Pearl"
+                ]
+              }
             },
             "item": {
               "name": "25 Coins",
@@ -16297,21 +15764,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Big Key (Ganons Tower)"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Moon Pearl"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Big Key (Ganons Tower)",
+                      "Moon Pearl"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -16995,7 +16454,8 @@
               "advancement": true,
               "type": "Event"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": true,
@@ -17085,7 +16545,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ],
         "is_dark_world": true,
@@ -17920,21 +17381,13 @@
                   "rule": "Not",
                   "args": {
                     "condition": {
-                      "rule": "And",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Fire Rod"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Ice Rod"
-                          }
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "args": {
+                        "items": [
+                          "Fire Rod",
+                          "Ice Rod"
+                        ]
+                      }
                     },
                     "_original_ast_type": "not"
                   },

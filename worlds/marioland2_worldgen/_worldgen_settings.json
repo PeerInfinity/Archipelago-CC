@@ -30,7 +30,8 @@
       "start_inventory": {},
       "start_location_hints": []
     },
-    "world_directory": "marioland2"
+    "world_directory": "marioland2",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "auto_scroll_levels": [

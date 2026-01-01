@@ -44,15 +44,24 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class DonkeyKongCountry3WorldGenWeb(WebWorld):
     """Web interface for Donkey Kong Country 3 WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "jungle"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Donkey Kong Country 3 randomizer connected to an Archipelago Multiworld.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["PoryGone"]
+        )
+    ]
 
 
 class DonkeyKongCountry3WorldGenWorld(RuleWorldMixin, World):
     """
-    Donkey Kong Country 3 WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Donkey Kong Country 3 is an action platforming game.
+    Play as Dixie Kong and her baby cousin Kiddy as they try to solve the
+    mystery of why Donkey Kong and Diddy disappeared while on vacation.
     """
 
     game: ClassVar[str] = "Donkey Kong Country 3 WorldGen"
@@ -265,12 +274,10 @@ class DonkeyKongCountry3WorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.active_level_list = ['Lakeside Limbo', 'Doorstop Dash', 'Tidal Trouble', "Skidda's Row", 'Murky Mill', 'Barrel Shield Bust-Up', 'Riverside Race', 'Squeals On Wheels', "Springin' Spiders", 'Bobbing Barrel Brawl', "Bazza's Blockade", 'Rocket Barrel Ride', 'Kreeping Klasps', 'Tracker Barrel Trek', 'Fish Food Frenzy', 'Fire-Ball Frenzy', 'Demolition Drain-Pipe', 'Ripsaw Rage', 'Blazing Bazukas', 'Low-G Labyrinth', 'Krevice Kreepers', 'Tearaway Toboggan', 'Barrel Drop Bounce', 'Krack-Shot Kroc', 'Lemguin Lunge', 'Buzzer Barrage', 'Kong-Fused Cliffs', 'Floodlit Fish', 'Pothole Panic', 'Ropey Rumpus', 'Konveyor Rope Klash', 'Creepy Caverns', 'Lightning Lookout', 'Koindozer Klamber', 'Poisonous Pipeline', 'Stampede Sprint', 'Criss Kross Cliffs', 'Tyrant Twin Tussle', 'Swoopy Salvo']
         self.rom_name = 'DKC3_ROM_NOT_GENERATED'
         self.world_description = 'Donkey Kong Country 3 is an action platforming game.\nPlay as Dixie Kong and her baby cousin Kiddy as they try to solve the\nmystery of why Donkey Kong and Diddy disappeared while on vacation.'
         self.slot_data = types.SimpleNamespace(active_levels=['Lakeside Limbo', 'Doorstop Dash', 'Tidal Trouble', "Skidda's Row", 'Murky Mill', 'Barrel Shield Bust-Up', 'Riverside Race', 'Squeals On Wheels', "Springin' Spiders", 'Bobbing Barrel Brawl', "Bazza's Blockade", 'Rocket Barrel Ride', 'Kreeping Klasps', 'Tracker Barrel Trek', 'Fish Food Frenzy', 'Fire-Ball Frenzy', 'Demolition Drain-Pipe', 'Ripsaw Rage', 'Blazing Bazukas', 'Low-G Labyrinth', 'Krevice Kreepers', 'Tearaway Toboggan', 'Barrel Drop Bounce', 'Krack-Shot Kroc', 'Lemguin Lunge', 'Buzzer Barrage', 'Kong-Fused Cliffs', 'Floodlit Fish', 'Pothole Panic', 'Ropey Rumpus', 'Konveyor Rope Klash', 'Creepy Caverns', 'Lightning Lookout', 'Koindozer Klamber', 'Poisonous Pipeline', 'Stampede Sprint', 'Criss Kross Cliffs', 'Tyrant Twin Tussle', 'Swoopy Salvo'], goal=0, krematoa_bonus_coin_cost=15, percentage_of_extra_bonus_coins=100, number_of_banana_birds=15, percentage_of_banana_birds=100, dk_coins_for_gyrocopter=30, kongsanity=0, level_shuffle=0, difficulty=0, autosave=1, merry=0, music_shuffle=0, kong_palette_swap=0, starting_life_count=5)
-        self.web = types.SimpleNamespace(theme='jungle', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Donkey Kong Country 3 randomizer connected to an Archipelago Multiworld.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['PoryGone']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -364,4 +371,20 @@ class DonkeyKongCountry3WorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "active_levels": ['Lakeside Limbo', 'Doorstop Dash', 'Tidal Trouble', "Skidda's Row", 'Murky Mill', 'Barrel Shield Bust-Up', 'Riverside Race', 'Squeals On Wheels', "Springin' Spiders", 'Bobbing Barrel Brawl', "Bazza's Blockade", 'Rocket Barrel Ride', 'Kreeping Klasps', 'Tracker Barrel Trek', 'Fish Food Frenzy', 'Fire-Ball Frenzy', 'Demolition Drain-Pipe', 'Ripsaw Rage', 'Blazing Bazukas', 'Low-G Labyrinth', 'Krevice Kreepers', 'Tearaway Toboggan', 'Barrel Drop Bounce', 'Krack-Shot Kroc', 'Lemguin Lunge', 'Buzzer Barrage', 'Kong-Fused Cliffs', 'Floodlit Fish', 'Pothole Panic', 'Ropey Rumpus', 'Konveyor Rope Klash', 'Creepy Caverns', 'Lightning Lookout', 'Koindozer Klamber', 'Poisonous Pipeline', 'Stampede Sprint', 'Criss Kross Cliffs', 'Tyrant Twin Tussle', 'Swoopy Salvo'],
+            "goal": 0,
+            "krematoa_bonus_coin_cost": 15,
+            "percentage_of_extra_bonus_coins": 100,
+            "number_of_banana_birds": 15,
+            "percentage_of_banana_birds": 100,
+            "dk_coins_for_gyrocopter": 30,
+            "kongsanity": 0,
+            "level_shuffle": 0,
+            "difficulty": 0,
+            "autosave": 1,
+            "merry": 0,
+            "music_shuffle": 0,
+            "kong_palette_swap": 0,
+            "starting_life_count": 5,
+        }

@@ -43,15 +43,31 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class APQuestWorldGenWeb(WebWorld):
     """Web interface for APQuest WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "grassFlowers"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up APQuest for MultiWorld.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["NewSoupVi"]
+        ),
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up APQuest for MultiWorld.",
+            "German",
+            "setup_de.md",
+            "setup/de",
+            ["NewSoupVi"]
+        )
+    ]
 
 
 class APQuestWorldGenWorld(RuleWorldMixin, World):
     """
-    APQuest WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    APQuest is a minimal 8bit-era inspired adventure game with grid-like movement.
+    Good games don't need more than six checks.
     """
 
     game: ClassVar[str] = "APQuest WorldGen"
@@ -94,10 +110,8 @@ class APQuestWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.world_description = "APQuest is a minimal 8bit-era inspired adventure game with grid-like movement.\nGood games don't need more than six checks."
         self.slot_data = types.SimpleNamespace(hard_mode=0, hammer=0, extra_starting_chest=0, confetti_explosiveness=3, player_sprite=0)
-        self.web = types.SimpleNamespace(theme='grassFlowers', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up APQuest for MultiWorld.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['NewSoupVi']}, {'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up APQuest for MultiWorld.', 'language': 'German', 'file_name': 'setup_de.md', 'link': 'setup/de', 'authors': ['NewSoupVi']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -209,4 +223,10 @@ class APQuestWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "hard_mode": 0,
+            "hammer": 0,
+            "extra_starting_chest": 0,
+            "confetti_explosiveness": 3,
+            "player_sprite": 0,
+        }

@@ -69,21 +69,13 @@
             "name": "CreditsWall",
             "connected_region": "CreditsRoom",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Black Key"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bridge"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Black Key",
+                  "Bridge"
+                ]
+              }
             }
           }
         ],
@@ -232,21 +224,13 @@
             "name": "Slay Grundle",
             "id": 118000210,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Right Difficulty Switch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sword"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Right Difficulty Switch",
+                  "Sword"
+                ]
+              }
             },
             "item": {
               "name": "Golden Feather",
@@ -289,21 +273,13 @@
             "name": "Chalice Home",
             "id": null,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Chalice"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Yellow Key"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Chalice",
+                  "Yellow Key"
+                ]
+              }
             },
             "item": {
               "name": "Victory",
@@ -311,7 +287,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -340,21 +317,13 @@
             "name": "WhiteCastlePeekPassage",
             "connected_region": "WhiteCastlePreVaultPeek",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bridge"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Magnet"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Bridge",
+                  "Magnet"
+                ]
+              }
             }
           }
         ],
@@ -449,21 +418,13 @@
             "name": "Slay Rhindle",
             "id": 118000208,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Right Difficulty Switch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sword"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Right Difficulty Switch",
+                  "Sword"
+                ]
+              }
             },
             "item": {
               "name": "Boss Heart Container",
@@ -490,21 +451,13 @@
             "name": "BlackCastleVaultEntrance",
             "connected_region": "BlackCastleVault",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bridge"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Magnet"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "Bridge",
+                  "Magnet"
+                ]
+              }
             }
           }
         ],
@@ -555,21 +508,13 @@
             "name": "Slay Yorgle",
             "id": 118000209,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Right Difficulty Switch"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sword"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Right Difficulty Switch",
+                  "Sword"
+                ]
+              }
             },
             "item": {
               "name": "Bombs (3)",

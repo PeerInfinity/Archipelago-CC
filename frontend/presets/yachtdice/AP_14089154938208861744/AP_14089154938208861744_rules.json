@@ -6505,6 +6505,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "yacht_dice_score": 777
           },
           {

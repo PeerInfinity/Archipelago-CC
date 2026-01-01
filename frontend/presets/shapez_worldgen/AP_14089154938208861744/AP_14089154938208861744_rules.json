@@ -21,8 +21,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Belt",
-                "count": 1
+                "item_name": "Belt"
               }
             }
           },
@@ -45,8 +44,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Wires",
-                "count": 1
+                "item_name": "Wires"
               }
             }
           },
@@ -183,8 +181,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rotator",
-                "count": 1
+                "item_name": "Rotator"
               }
             }
           },
@@ -202,8 +199,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Storage",
-                "count": 1
+                "item_name": "Storage"
               }
             }
           },
@@ -213,8 +209,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Trash",
-                "count": 1
+                "item_name": "Trash"
               }
             }
           }
@@ -263,8 +258,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Blueprints",
-                    "count": 1
+                    "item_name": "Blueprints"
                   }
                 }
               ]
@@ -404,8 +398,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Quad Cutter",
-                    "count": 1
+                    "item_name": "Quad Cutter"
                   }
                 }
               ]
@@ -4509,7 +4502,6 @@
           "display_name": "Traps Percentage"
         }
       },
-      "shops": [],
       "location_count": 139,
       "level_logic": [
         "Cutter",
@@ -5158,7 +5150,7 @@
       },
       "ut_active": false,
       "base_id": 20010707,
-      "world_description": "shapez WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "shapez is an automation game about cutting, rotating, stacking, and painting shapes, that you extract from randomly\ngenerated patches on an infinite canvas, without the need to manage your infinite resources or to pay for building\nyour factories.",
       "slot_data": {
         "Level building 1": "Cutter",
         "Level building 2": "Rotator",
@@ -5247,7 +5239,49 @@
         ]
       },
       "web": {
-        "theme": "stone"
+        "theme": "stone",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to playing shapez with Archipelago:",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "BlastSlimey"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to playing shapez with Archipelago:",
+            "language": "Deutsch",
+            "file_name": "setup_de.md",
+            "link": "setup/de",
+            "authors": [
+              "BlastSlimey"
+            ]
+          },
+          {
+            "name": "Changing datapackage settings",
+            "description": "3000 locations are too many or not enough? Here's how you can change that:",
+            "language": "English",
+            "file_name": "datapackage_settings_en.md",
+            "link": "datapackage_settings/en",
+            "authors": [
+              "BlastSlimey"
+            ]
+          },
+          {
+            "name": "Changing datapackage settings",
+            "description": "3000 locations are too many or not enough? Here's how you can change that:",
+            "language": "Deutsch",
+            "file_name": "datapackage_settings_de.md",
+            "link": "datapackage_settings/de",
+            "authors": [
+              "BlastSlimey"
+            ]
+          }
+        ]
       },
       "world_directory": "shapez_worldgen"
     }

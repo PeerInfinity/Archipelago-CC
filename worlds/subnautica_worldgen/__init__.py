@@ -112,15 +112,24 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class SubnauticaWorldGenWeb(WebWorld):
     """Web interface for Subnautica WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "grass"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Subnautica randomizer connected to an Archipelago Multiworld",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["Berserker"]
+        )
+    ]
 
 
 class SubnauticaWorldGenWorld(RuleWorldMixin, World):
     """
-    Subnautica WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Subnautica is an undersea exploration game. Stranded on an alien world, you become infected by
+    an unknown bacteria. The planet's automatic quarantine will shoot you down if you try to leave.
+    You must find a cure for yourself, build an escape rocket, and leave the planet.
     """
 
     game: ClassVar[str] = "Subnautica WorldGen"
@@ -290,11 +299,9 @@ class SubnauticaWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.creatures_to_scan = []
         self.world_description = "Subnautica is an undersea exploration game. Stranded on an alien world, you become infected by\nan unknown bacteria. The planet's automatic quarantine will shoot you down if you try to leave.\nYou must find a cure for yourself, build an escape rocket, and leave the planet."
         self.slot_data = types.SimpleNamespace(goal='launch', swim_rule='easy', vanilla_tech=[], creatures_to_scan=[], death_link=0, free_samples=0, empty_tanks=1)
-        self.web = types.SimpleNamespace(theme='grass', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Subnautica randomizer connected to an Archipelago Multiworld', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['Berserker']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -406,4 +413,12 @@ class SubnauticaWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "goal": "launch",
+            "swim_rule": "easy",
+            "vanilla_tech": [],
+            "creatures_to_scan": [],
+            "death_link": 0,
+            "free_samples": 0,
+            "empty_tanks": 1,
+        }

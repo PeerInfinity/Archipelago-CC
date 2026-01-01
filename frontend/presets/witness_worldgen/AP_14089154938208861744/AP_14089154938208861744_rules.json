@@ -300,8 +300,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Dots",
-                    "count": 1
+                    "item_name": "Progressive Dots"
                   }
                 }
               ]
@@ -348,8 +347,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Sound Dots",
-                    "count": 1
+                    "item_name": "Sound Dots"
                   }
                 }
               ]
@@ -567,8 +565,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Dots",
-                "count": 1
+                "item_name": "Progressive Dots"
               }
             },
             "item": {
@@ -585,8 +582,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Black/White Squares",
-                "count": 1
+                "item_name": "Black/White Squares"
               }
             },
             "item": {
@@ -886,8 +882,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Symmetry",
-                "count": 1
+                "item_name": "Progressive Symmetry"
               }
             },
             "item": {
@@ -926,8 +921,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Symmetry",
-                "count": 1
+                "item_name": "Progressive Symmetry"
               }
             },
             "item": {
@@ -944,8 +938,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Symmetry",
-                "count": 1
+                "item_name": "Progressive Symmetry"
               }
             },
             "item": {
@@ -962,8 +955,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Symmetry",
-                "count": 1
+                "item_name": "Progressive Symmetry"
               }
             },
             "item": {
@@ -1132,8 +1124,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Symmetry",
-                "count": 1
+                "item_name": "Progressive Symmetry"
               }
             },
             "item": {
@@ -1505,8 +1496,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Black/White Squares",
-                "count": 1
+                "item_name": "Black/White Squares"
               }
             },
             "item": {
@@ -1604,8 +1594,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shapers",
-                "count": 1
+                "item_name": "Shapers"
               }
             },
             "item": {
@@ -1658,8 +1647,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Black/White Squares",
-                "count": 1
+                "item_name": "Black/White Squares"
               }
             },
             "item": {
@@ -1676,8 +1664,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Dots",
-                "count": 1
+                "item_name": "Progressive Dots"
               }
             },
             "item": {
@@ -1970,8 +1957,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Stars",
-                "count": 1
+                "item_name": "Progressive Stars"
               }
             },
             "item": {
@@ -2342,8 +2328,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Dots",
-                "count": 1
+                "item_name": "Progressive Dots"
               }
             },
             "item": {
@@ -2698,8 +2683,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Dots",
-                "count": 1
+                "item_name": "Progressive Dots"
               }
             },
             "item": {
@@ -2716,8 +2700,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Dots",
-                "count": 1
+                "item_name": "Progressive Dots"
               }
             },
             "item": {
@@ -2756,8 +2739,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Dots",
-                "count": 1
+                "item_name": "Progressive Dots"
               }
             },
             "item": {
@@ -3051,8 +3033,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Symmetry",
-                "count": 1
+                "item_name": "Progressive Symmetry"
               }
             },
             "item": {
@@ -3153,8 +3134,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sound Dots",
-                "count": 1
+                "item_name": "Sound Dots"
               }
             },
             "item": {
@@ -3420,8 +3400,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Dots",
-                "count": 1
+                "item_name": "Progressive Dots"
               }
             },
             "item": {
@@ -3460,8 +3439,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Black/White Squares",
-                "count": 1
+                "item_name": "Black/White Squares"
               }
             },
             "item": {
@@ -3617,8 +3595,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sound Dots",
-                "count": 1
+                "item_name": "Sound Dots"
               }
             },
             "item": {
@@ -3635,8 +3612,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sound Dots",
-                "count": 1
+                "item_name": "Sound Dots"
               }
             },
             "item": {
@@ -3715,8 +3691,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Black/White Squares",
-                "count": 1
+                "item_name": "Black/White Squares"
               }
             },
             "item": {
@@ -4092,8 +4067,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shapers",
-                "count": 1
+                "item_name": "Shapers"
               }
             },
             "item": {
@@ -4124,8 +4098,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shapers",
-                "count": 1
+                "item_name": "Shapers"
               }
             },
             "item": {
@@ -4142,8 +4115,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shapers",
-                "count": 1
+                "item_name": "Shapers"
               }
             },
             "item": {
@@ -4255,8 +4227,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shapers",
-                "count": 1
+                "item_name": "Shapers"
               }
             },
             "item": {
@@ -4273,8 +4244,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shapers",
-                "count": 1
+                "item_name": "Shapers"
               }
             },
             "item": {
@@ -4355,8 +4325,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shapers",
-                "count": 1
+                "item_name": "Shapers"
               }
             },
             "item": {
@@ -4663,8 +4632,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shapers",
-                "count": 1
+                "item_name": "Shapers"
               }
             },
             "item": {
@@ -4848,8 +4816,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Stars",
-                "count": 1
+                "item_name": "Progressive Stars"
               }
             },
             "item": {
@@ -4888,8 +4855,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Stars",
-                "count": 1
+                "item_name": "Progressive Stars"
               }
             },
             "item": {
@@ -4928,8 +4894,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Stars",
-                "count": 1
+                "item_name": "Progressive Stars"
               }
             },
             "item": {
@@ -4968,8 +4933,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Stars",
-                "count": 1
+                "item_name": "Progressive Stars"
               }
             },
             "item": {
@@ -5091,8 +5055,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Stars",
-                "count": 1
+                "item_name": "Progressive Stars"
               }
             },
             "item": {
@@ -5131,8 +5094,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Stars",
-                "count": 1
+                "item_name": "Progressive Stars"
               }
             },
             "item": {

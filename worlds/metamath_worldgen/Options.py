@@ -28,10 +28,6 @@ class Complexity(Choice):
     option_complex = 2
     default = 1
 
-class RandomizeItems(Toggle):
-    """Option for Randomize Items."""
-    display_name = "Randomize Items"
-
 class StartingStatements(Range):
     """Option for Starting Statements %."""
     display_name = "Starting Statements %"
@@ -52,6 +48,5 @@ class MetamathWorldGenOptions(PerGameCommonOptions):
     randomize_items: RandomizeItems
     auto_download_database: AutoDownloadDatabase
     complexity: Complexity
-    randomize_items: RandomizeItems
     starting_statements: StartingStatements
     theorem: Theorem

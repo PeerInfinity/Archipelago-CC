@@ -480,6 +480,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           },
           {
@@ -498,6 +499,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           },
           {
@@ -517,6 +519,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           },
           {
@@ -536,6 +539,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "show_in_spoiler": false
           },
           {
@@ -719,7 +723,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           },
           {
             "name": "Boss",
@@ -5566,8 +5571,8 @@
             "38": "master",
             "39": "random-low",
             "40": "random-middle",
-            "41": "random-high",
-            "42": "random-sinistral"
+            "41": "random-sinistral",
+            "42": "random-high"
           },
           "default": 38,
           "display_name": "Boss"

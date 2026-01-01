@@ -21,7 +21,8 @@
       "trap_count": 5,
       "turners": 3
     },
-    "world_directory": "bumpstik"
+    "world_directory": "bumpstik",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "task_advances": 4,

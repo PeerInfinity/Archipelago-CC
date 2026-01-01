@@ -1698,21 +1698,13 @@
             "name": "Act 3 - Boss Archivist",
             "id": 147070,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Inspectometer Battery"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Quill"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Inspectometer Battery",
+                  "Quill"
+                ]
+              }
             },
             "item": {
               "name": "Bone Lord Femur",
@@ -1726,21 +1718,13 @@
             "name": "Act 3 - Boss Unfinished",
             "id": 147071,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gems Module"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Inspectometer Battery"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Gems Module",
+                  "Inspectometer Battery"
+                ]
+              }
             },
             "item": {
               "name": "Card Pack",
@@ -1754,21 +1738,13 @@
             "name": "Act 3 - Boss G0lly",
             "id": 147072,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gems Module"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Inspectometer Battery"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Gems Module",
+                  "Inspectometer Battery"
+                ]
+              }
             },
             "item": {
               "name": "Currency",
@@ -1814,21 +1790,13 @@
             "name": "Act 3 - Bone Lord Room",
             "id": 147074,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Bone Lord Holo Key"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Inspectometer Battery"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Bone Lord Holo Key",
+                  "Inspectometer Battery"
+                ]
+              }
             },
             "item": {
               "name": "Currency",
@@ -1842,21 +1810,13 @@
             "name": "Act 3 - Shop Holo Pelt",
             "id": 147075,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gems Module"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Inspectometer Battery"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Gems Module",
+                  "Inspectometer Battery"
+                ]
+              }
             },
             "item": {
               "name": "Currency",
@@ -1921,21 +1881,13 @@
             "name": "Act 3 - Tower Holo Pelt",
             "id": 147079,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gems Module"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Inspectometer Battery"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Gems Module",
+                  "Inspectometer Battery"
+                ]
+              }
             },
             "item": {
               "name": "Ant Cards",
@@ -2136,21 +2088,13 @@
             "name": "Act 3 - Clock",
             "id": 147087,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gems Module"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Inspectometer Battery"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Gems Module",
+                  "Inspectometer Battery"
+                ]
+              }
             },
             "item": {
               "name": "Card Pack",
@@ -2181,21 +2125,13 @@
             "name": "Act 3 - Nano Armor Generator",
             "id": 147089,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gems Module"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Inspectometer Battery"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Gems Module",
+                  "Inspectometer Battery"
+                ]
+              }
             },
             "item": {
               "name": "Currency",
@@ -2223,21 +2159,13 @@
             "name": "Act 3 - Goobert's Painting",
             "id": 147091,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gems Module"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Inspectometer Battery"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Gems Module",
+                  "Inspectometer Battery"
+                ]
+              }
             },
             "item": {
               "name": "Currency",
@@ -2251,21 +2179,13 @@
             "name": "Act 3 - Luke's File Entry 1",
             "id": 147092,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Inspectometer Battery"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Quill"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Inspectometer Battery",
+                  "Quill"
+                ]
+              }
             },
             "item": {
               "name": "Dagger",
@@ -2279,21 +2199,13 @@
             "name": "Act 3 - Luke's File Entry 2",
             "id": 147093,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Inspectometer Battery"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Quill"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Inspectometer Battery",
+                  "Quill"
+                ]
+              }
             },
             "item": {
               "name": "Extra Battery",
@@ -2307,21 +2219,13 @@
             "name": "Act 3 - Luke's File Entry 3",
             "id": 147094,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Inspectometer Battery"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Quill"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Inspectometer Battery",
+                  "Quill"
+                ]
+              }
             },
             "item": {
               "name": "Card Pack",

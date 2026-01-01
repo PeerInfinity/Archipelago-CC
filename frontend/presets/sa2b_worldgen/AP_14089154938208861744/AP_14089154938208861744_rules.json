@@ -148,8 +148,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sonic - Light Shoes",
-                "count": 1
+                "item_name": "Sonic - Light Shoes"
               }
             },
             "item": {
@@ -175,8 +174,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Sonic - Light Shoes",
-                    "count": 1
+                    "item_name": "Sonic - Light Shoes"
                   }
                 }
               ]
@@ -209,8 +207,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sonic - Light Shoes",
-                "count": 1
+                "item_name": "Sonic - Light Shoes"
               }
             },
             "item": {
@@ -227,8 +224,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sonic - Light Shoes",
-                "count": 1
+                "item_name": "Sonic - Light Shoes"
               }
             },
             "item": {
@@ -386,8 +382,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sonic - Bounce Bracelet",
-                "count": 1
+                "item_name": "Sonic - Bounce Bracelet"
               }
             },
             "item": {
@@ -435,8 +430,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sonic - Bounce Bracelet",
-                "count": 1
+                "item_name": "Sonic - Bounce Bracelet"
               }
             },
             "item": {
@@ -474,8 +468,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sonic - Bounce Bracelet",
-                "count": 1
+                "item_name": "Sonic - Bounce Bracelet"
               }
             },
             "item": {
@@ -542,8 +535,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Sonic - Bounce Bracelet",
-                    "count": 1
+                    "item_name": "Sonic - Bounce Bracelet"
                   }
                 }
               ]
@@ -562,8 +554,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sonic - Bounce Bracelet",
-                "count": 1
+                "item_name": "Sonic - Bounce Bracelet"
               }
             },
             "item": {
@@ -580,8 +571,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sonic - Bounce Bracelet",
-                "count": 1
+                "item_name": "Sonic - Bounce Bracelet"
               }
             },
             "item": {
@@ -640,8 +630,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sonic - Bounce Bracelet",
-                "count": 1
+                "item_name": "Sonic - Bounce Bracelet"
               }
             },
             "item": {
@@ -664,8 +653,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sonic - Bounce Bracelet",
-                "count": 1
+                "item_name": "Sonic - Bounce Bracelet"
               }
             },
             "item": {
@@ -727,8 +715,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sonic - Bounce Bracelet",
-                "count": 1
+                "item_name": "Sonic - Bounce Bracelet"
               }
             },
             "item": {
@@ -759,8 +746,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sonic - Bounce Bracelet",
-                "count": 1
+                "item_name": "Sonic - Bounce Bracelet"
               }
             },
             "item": {
@@ -814,8 +800,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tails - Bazooka",
-                "count": 1
+                "item_name": "Tails - Bazooka"
               }
             },
             "item": {
@@ -832,8 +817,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tails - Booster",
-                "count": 1
+                "item_name": "Tails - Booster"
               }
             },
             "item": {
@@ -878,8 +862,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tails - Bazooka",
-                "count": 1
+                "item_name": "Tails - Bazooka"
               }
             },
             "item": {
@@ -902,8 +885,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tails - Booster",
-                "count": 1
+                "item_name": "Tails - Booster"
               }
             },
             "item": {
@@ -929,8 +911,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Tails - Booster",
-                    "count": 1
+                    "item_name": "Tails - Booster"
                   }
                 }
               ]
@@ -949,8 +930,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tails - Booster",
-                "count": 1
+                "item_name": "Tails - Booster"
               }
             },
             "item": {
@@ -967,8 +947,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tails - Booster",
-                "count": 1
+                "item_name": "Tails - Booster"
               }
             },
             "item": {
@@ -985,8 +964,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tails - Booster",
-                "count": 1
+                "item_name": "Tails - Booster"
               }
             },
             "item": {
@@ -1003,8 +981,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tails - Booster",
-                "count": 1
+                "item_name": "Tails - Booster"
               }
             },
             "item": {
@@ -1078,8 +1055,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tails - Booster",
-                "count": 1
+                "item_name": "Tails - Booster"
               }
             },
             "item": {
@@ -1105,8 +1081,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Tails - Booster",
-                    "count": 1
+                    "item_name": "Tails - Booster"
                   }
                 }
               ]
@@ -1125,8 +1100,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tails - Booster",
-                "count": 1
+                "item_name": "Tails - Booster"
               }
             },
             "item": {
@@ -1143,8 +1117,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tails - Booster",
-                "count": 1
+                "item_name": "Tails - Booster"
               }
             },
             "item": {
@@ -1161,8 +1134,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tails - Booster",
-                "count": 1
+                "item_name": "Tails - Booster"
               }
             },
             "item": {
@@ -1234,8 +1206,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Tails - Booster",
-                    "count": 1
+                    "item_name": "Tails - Booster"
                   }
                 }
               ]
@@ -1254,8 +1225,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tails - Booster",
-                "count": 1
+                "item_name": "Tails - Booster"
               }
             },
             "item": {
@@ -1292,8 +1262,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tails - Booster",
-                "count": 1
+                "item_name": "Tails - Booster"
               }
             },
             "item": {
@@ -1330,8 +1299,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tails - Booster",
-                "count": 1
+                "item_name": "Tails - Booster"
               }
             },
             "item": {
@@ -1441,8 +1409,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Knuckles - Shovel Claws",
-                "count": 1
+                "item_name": "Knuckles - Shovel Claws"
               }
             },
             "item": {
@@ -1465,8 +1432,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Knuckles - Shovel Claws",
-                "count": 1
+                "item_name": "Knuckles - Shovel Claws"
               }
             },
             "item": {
@@ -1562,8 +1528,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Knuckles - Shovel Claws",
-                "count": 1
+                "item_name": "Knuckles - Shovel Claws"
               }
             },
             "item": {
@@ -1724,8 +1689,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Knuckles - Hammer Gloves",
-                "count": 1
+                "item_name": "Knuckles - Hammer Gloves"
               }
             },
             "item": {
@@ -1742,8 +1706,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Knuckles - Hammer Gloves",
-                "count": 1
+                "item_name": "Knuckles - Hammer Gloves"
               }
             },
             "item": {
@@ -1913,8 +1876,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Knuckles - Hammer Gloves",
-                "count": 1
+                "item_name": "Knuckles - Hammer Gloves"
               }
             },
             "item": {
@@ -2024,8 +1986,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shadow - Air Shoes",
-                "count": 1
+                "item_name": "Shadow - Air Shoes"
               }
             },
             "item": {
@@ -2048,8 +2009,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shadow - Air Shoes",
-                "count": 1
+                "item_name": "Shadow - Air Shoes"
               }
             },
             "item": {
@@ -2097,8 +2057,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shadow - Air Shoes",
-                "count": 1
+                "item_name": "Shadow - Air Shoes"
               }
             },
             "item": {
@@ -2115,8 +2074,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shadow - Air Shoes",
-                "count": 1
+                "item_name": "Shadow - Air Shoes"
               }
             },
             "item": {
@@ -2133,8 +2091,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Shadow - Air Shoes",
-                "count": 1
+                "item_name": "Shadow - Air Shoes"
               }
             },
             "item": {
@@ -2472,8 +2429,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Eggman - Large Cannon",
-                "count": 1
+                "item_name": "Eggman - Large Cannon"
               }
             },
             "item": {
@@ -2583,8 +2539,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Eggman - Jet Engine",
-                "count": 1
+                "item_name": "Eggman - Jet Engine"
               }
             },
             "item": {
@@ -2607,8 +2562,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Eggman - Jet Engine",
-                "count": 1
+                "item_name": "Eggman - Jet Engine"
               }
             },
             "item": {
@@ -2634,8 +2588,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Eggman - Jet Engine",
-                    "count": 1
+                    "item_name": "Eggman - Jet Engine"
                   }
                 }
               ]
@@ -2682,8 +2635,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Eggman - Jet Engine",
-                "count": 1
+                "item_name": "Eggman - Jet Engine"
               }
             },
             "item": {
@@ -2700,8 +2652,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Eggman - Jet Engine",
-                "count": 1
+                "item_name": "Eggman - Jet Engine"
               }
             },
             "item": {
@@ -2863,8 +2814,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Eggman - Jet Engine",
-                "count": 1
+                "item_name": "Eggman - Jet Engine"
               }
             },
             "item": {
@@ -2890,8 +2840,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Eggman - Jet Engine",
-                    "count": 1
+                    "item_name": "Eggman - Jet Engine"
                   }
                 }
               ]
@@ -2910,8 +2859,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Eggman - Jet Engine",
-                "count": 1
+                "item_name": "Eggman - Jet Engine"
               }
             },
             "item": {
@@ -2928,8 +2876,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Eggman - Jet Engine",
-                "count": 1
+                "item_name": "Eggman - Jet Engine"
               }
             },
             "item": {
@@ -2946,8 +2893,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Eggman - Jet Engine",
-                "count": 1
+                "item_name": "Eggman - Jet Engine"
               }
             },
             "item": {
@@ -2964,8 +2910,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Eggman - Jet Engine",
-                "count": 1
+                "item_name": "Eggman - Jet Engine"
               }
             },
             "item": {
@@ -2982,8 +2927,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Eggman - Jet Engine",
-                "count": 1
+                "item_name": "Eggman - Jet Engine"
               }
             },
             "item": {
@@ -3100,8 +3044,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rouge - Pick Nails",
-                "count": 1
+                "item_name": "Rouge - Pick Nails"
               }
             },
             "item": {
@@ -3124,8 +3067,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rouge - Pick Nails",
-                "count": 1
+                "item_name": "Rouge - Pick Nails"
               }
             },
             "item": {
@@ -3187,8 +3129,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rouge - Mystic Melody",
-                "count": 1
+                "item_name": "Rouge - Mystic Melody"
               }
             },
             "item": {
@@ -3239,8 +3180,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rouge - Pick Nails",
-                "count": 1
+                "item_name": "Rouge - Pick Nails"
               }
             },
             "item": {
@@ -3266,8 +3206,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Rouge - Pick Nails",
-                    "count": 1
+                    "item_name": "Rouge - Pick Nails"
                   }
                 }
               ]
@@ -3314,8 +3253,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rouge - Pick Nails",
-                "count": 1
+                "item_name": "Rouge - Pick Nails"
               }
             },
             "item": {
@@ -3438,8 +3376,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Rouge - Iron Boots",
-                    "count": 1
+                    "item_name": "Rouge - Iron Boots"
                   }
                 }
               ]
@@ -3472,8 +3409,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rouge - Iron Boots",
-                "count": 1
+                "item_name": "Rouge - Iron Boots"
               }
             },
             "item": {
@@ -3490,8 +3426,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rouge - Iron Boots",
-                "count": 1
+                "item_name": "Rouge - Iron Boots"
               }
             },
             "item": {
@@ -3508,8 +3443,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rouge - Iron Boots",
-                "count": 1
+                "item_name": "Rouge - Iron Boots"
               }
             },
             "item": {
@@ -7707,7 +7641,6 @@
           "display_name": "Whistlesanity"
         }
       },
-      "shops": [],
       "gate_bosses": {
         "1": 5,
         "2": 8,
@@ -8082,7 +8015,7 @@
         "25": 68,
         "27": 68
       },
-      "world_description": "Sonic Adventure 2 Battle WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Sonic Adventure 2 Battle is an action platforming game. Play as Sonic, Tails, Knuckles, Shadow, Rouge, and Eggman across 31 stages and prevent the destruction of the earth.",
       "slot_data": {
         "ModVersion": 204,
         "Goal": 0,
@@ -11205,7 +11138,21 @@
         "PlayerNum": 1
       },
       "web": {
-        "theme": "partyTime"
+        "theme": "partyTime",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Sonic Adventure 2: Battle randomizer connected to an Archipelago Multiworld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "RaspberrySpaceJam",
+              "PoryGone",
+              "Entiss"
+            ]
+          }
+        ]
       },
       "world_directory": "sa2b_worldgen"
     }

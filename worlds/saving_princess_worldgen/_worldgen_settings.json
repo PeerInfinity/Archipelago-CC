@@ -25,7 +25,8 @@
       "start_location_hints": [],
       "trap_chance": 50
     },
-    "world_directory": "saving_princess"
+    "world_directory": "saving_princess",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "is_pool_expanded": true,

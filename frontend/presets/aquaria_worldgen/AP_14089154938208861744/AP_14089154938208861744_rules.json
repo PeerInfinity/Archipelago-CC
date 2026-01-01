@@ -366,8 +366,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Veil top left",
-                "count": 1
+                "item_name": "Transturtle Veil top left"
               }
             }
           },
@@ -377,8 +376,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Veil top right",
-                "count": 1
+                "item_name": "Transturtle Veil top right"
               }
             }
           },
@@ -388,8 +386,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Open Waters top right",
-                "count": 1
+                "item_name": "Transturtle Open Waters top right"
               }
             }
           },
@@ -399,8 +396,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Kelp Forest bottom left",
-                "count": 1
+                "item_name": "Transturtle Kelp Forest bottom left"
               }
             }
           },
@@ -410,8 +406,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Abyss right",
-                "count": 1
+                "item_name": "Transturtle Abyss right"
               }
             }
           },
@@ -421,8 +416,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Final Boss",
-                "count": 1
+                "item_name": "Transturtle Final Boss"
               }
             }
           },
@@ -432,8 +426,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Simon Says",
-                "count": 1
+                "item_name": "Transturtle Simon Says"
               }
             }
           },
@@ -443,8 +436,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Arnassi Ruins",
-                "count": 1
+                "item_name": "Transturtle Arnassi Ruins"
               }
             }
           }
@@ -1181,8 +1173,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Veil top left",
-                "count": 1
+                "item_name": "Transturtle Veil top left"
               }
             }
           },
@@ -1192,8 +1183,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Veil top right",
-                "count": 1
+                "item_name": "Transturtle Veil top right"
               }
             }
           },
@@ -1203,8 +1193,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Kelp Forest bottom left",
-                "count": 1
+                "item_name": "Transturtle Kelp Forest bottom left"
               }
             }
           },
@@ -1214,8 +1203,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Home Waters",
-                "count": 1
+                "item_name": "Transturtle Home Waters"
               }
             }
           },
@@ -1225,8 +1213,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Abyss right",
-                "count": 1
+                "item_name": "Transturtle Abyss right"
               }
             }
           },
@@ -1236,8 +1223,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Final Boss",
-                "count": 1
+                "item_name": "Transturtle Final Boss"
               }
             }
           },
@@ -1247,8 +1233,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Simon Says",
-                "count": 1
+                "item_name": "Transturtle Simon Says"
               }
             }
           },
@@ -1258,8 +1243,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Arnassi Ruins",
-                "count": 1
+                "item_name": "Transturtle Arnassi Ruins"
               }
             }
           }
@@ -1656,8 +1640,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Veil top left",
-                "count": 1
+                "item_name": "Transturtle Veil top left"
               }
             }
           },
@@ -1667,8 +1650,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Veil top right",
-                "count": 1
+                "item_name": "Transturtle Veil top right"
               }
             }
           },
@@ -1678,8 +1660,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Open Waters top right",
-                "count": 1
+                "item_name": "Transturtle Open Waters top right"
               }
             }
           },
@@ -1689,8 +1670,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Kelp Forest bottom left",
-                "count": 1
+                "item_name": "Transturtle Kelp Forest bottom left"
               }
             }
           },
@@ -1700,8 +1680,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Home Waters",
-                "count": 1
+                "item_name": "Transturtle Home Waters"
               }
             }
           },
@@ -1711,8 +1690,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Abyss right",
-                "count": 1
+                "item_name": "Transturtle Abyss right"
               }
             }
           },
@@ -1722,8 +1700,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Final Boss",
-                "count": 1
+                "item_name": "Transturtle Final Boss"
               }
             }
           },
@@ -1733,8 +1710,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Simon Says",
-                "count": 1
+                "item_name": "Transturtle Simon Says"
               }
             }
           }
@@ -1808,8 +1784,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Veil top left",
-                "count": 1
+                "item_name": "Transturtle Veil top left"
               }
             }
           },
@@ -1819,8 +1794,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Veil top right",
-                "count": 1
+                "item_name": "Transturtle Veil top right"
               }
             }
           },
@@ -1830,8 +1804,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Open Waters top right",
-                "count": 1
+                "item_name": "Transturtle Open Waters top right"
               }
             }
           },
@@ -1841,8 +1814,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Kelp Forest bottom left",
-                "count": 1
+                "item_name": "Transturtle Kelp Forest bottom left"
               }
             }
           },
@@ -1852,8 +1824,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Home Waters",
-                "count": 1
+                "item_name": "Transturtle Home Waters"
               }
             }
           },
@@ -1863,8 +1834,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Abyss right",
-                "count": 1
+                "item_name": "Transturtle Abyss right"
               }
             }
           },
@@ -1874,8 +1844,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Final Boss",
-                "count": 1
+                "item_name": "Transturtle Final Boss"
               }
             }
           },
@@ -1885,8 +1854,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Arnassi Ruins",
-                "count": 1
+                "item_name": "Transturtle Arnassi Ruins"
               }
             }
           }
@@ -3245,8 +3213,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Veil top left",
-                "count": 1
+                "item_name": "Transturtle Veil top left"
               }
             }
           },
@@ -3256,8 +3223,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Veil top right",
-                "count": 1
+                "item_name": "Transturtle Veil top right"
               }
             }
           },
@@ -3267,8 +3233,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Open Waters top right",
-                "count": 1
+                "item_name": "Transturtle Open Waters top right"
               }
             }
           },
@@ -3278,8 +3243,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Home Waters",
-                "count": 1
+                "item_name": "Transturtle Home Waters"
               }
             }
           },
@@ -3289,8 +3253,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Abyss right",
-                "count": 1
+                "item_name": "Transturtle Abyss right"
               }
             }
           },
@@ -3300,8 +3263,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Final Boss",
-                "count": 1
+                "item_name": "Transturtle Final Boss"
               }
             }
           },
@@ -3311,8 +3273,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Simon Says",
-                "count": 1
+                "item_name": "Transturtle Simon Says"
               }
             }
           },
@@ -3322,8 +3283,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Arnassi Ruins",
-                "count": 1
+                "item_name": "Transturtle Arnassi Ruins"
               }
             }
           }
@@ -3768,8 +3728,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Veil top right",
-                "count": 1
+                "item_name": "Transturtle Veil top right"
               }
             }
           },
@@ -3779,8 +3738,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Open Waters top right",
-                "count": 1
+                "item_name": "Transturtle Open Waters top right"
               }
             }
           },
@@ -3790,8 +3748,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Kelp Forest bottom left",
-                "count": 1
+                "item_name": "Transturtle Kelp Forest bottom left"
               }
             }
           },
@@ -3801,8 +3758,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Home Waters",
-                "count": 1
+                "item_name": "Transturtle Home Waters"
               }
             }
           },
@@ -3812,8 +3768,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Abyss right",
-                "count": 1
+                "item_name": "Transturtle Abyss right"
               }
             }
           },
@@ -3823,8 +3778,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Final Boss",
-                "count": 1
+                "item_name": "Transturtle Final Boss"
               }
             }
           },
@@ -3834,8 +3788,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Simon Says",
-                "count": 1
+                "item_name": "Transturtle Simon Says"
               }
             }
           },
@@ -3845,8 +3798,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Arnassi Ruins",
-                "count": 1
+                "item_name": "Transturtle Arnassi Ruins"
               }
             }
           }
@@ -3974,8 +3926,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Veil top left",
-                "count": 1
+                "item_name": "Transturtle Veil top left"
               }
             }
           },
@@ -3985,8 +3936,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Open Waters top right",
-                "count": 1
+                "item_name": "Transturtle Open Waters top right"
               }
             }
           },
@@ -3996,8 +3946,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Kelp Forest bottom left",
-                "count": 1
+                "item_name": "Transturtle Kelp Forest bottom left"
               }
             }
           },
@@ -4007,8 +3956,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Home Waters",
-                "count": 1
+                "item_name": "Transturtle Home Waters"
               }
             }
           },
@@ -4018,8 +3966,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Abyss right",
-                "count": 1
+                "item_name": "Transturtle Abyss right"
               }
             }
           },
@@ -4029,8 +3976,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Final Boss",
-                "count": 1
+                "item_name": "Transturtle Final Boss"
               }
             }
           },
@@ -4040,8 +3986,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Simon Says",
-                "count": 1
+                "item_name": "Transturtle Simon Says"
               }
             }
           },
@@ -4051,8 +3996,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Arnassi Ruins",
-                "count": 1
+                "item_name": "Transturtle Arnassi Ruins"
               }
             }
           }
@@ -5251,8 +5195,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Veil top left",
-                "count": 1
+                "item_name": "Transturtle Veil top left"
               }
             }
           },
@@ -5262,8 +5205,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Veil top right",
-                "count": 1
+                "item_name": "Transturtle Veil top right"
               }
             }
           },
@@ -5273,8 +5215,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Open Waters top right",
-                "count": 1
+                "item_name": "Transturtle Open Waters top right"
               }
             }
           },
@@ -5284,8 +5225,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Kelp Forest bottom left",
-                "count": 1
+                "item_name": "Transturtle Kelp Forest bottom left"
               }
             }
           },
@@ -5295,8 +5235,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Home Waters",
-                "count": 1
+                "item_name": "Transturtle Home Waters"
               }
             }
           },
@@ -5306,8 +5245,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Final Boss",
-                "count": 1
+                "item_name": "Transturtle Final Boss"
               }
             }
           },
@@ -5317,8 +5255,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Simon Says",
-                "count": 1
+                "item_name": "Transturtle Simon Says"
               }
             }
           },
@@ -5328,8 +5265,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Arnassi Ruins",
-                "count": 1
+                "item_name": "Transturtle Arnassi Ruins"
               }
             }
           }
@@ -6176,8 +6112,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Veil top left",
-                "count": 1
+                "item_name": "Transturtle Veil top left"
               }
             }
           },
@@ -6187,8 +6122,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Veil top right",
-                "count": 1
+                "item_name": "Transturtle Veil top right"
               }
             }
           },
@@ -6198,8 +6132,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Open Waters top right",
-                "count": 1
+                "item_name": "Transturtle Open Waters top right"
               }
             }
           },
@@ -6209,8 +6142,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Kelp Forest bottom left",
-                "count": 1
+                "item_name": "Transturtle Kelp Forest bottom left"
               }
             }
           },
@@ -6220,8 +6152,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Home Waters",
-                "count": 1
+                "item_name": "Transturtle Home Waters"
               }
             }
           },
@@ -6231,8 +6162,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Abyss right",
-                "count": 1
+                "item_name": "Transturtle Abyss right"
               }
             }
           },
@@ -6242,8 +6172,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Simon Says",
-                "count": 1
+                "item_name": "Transturtle Simon Says"
               }
             }
           },
@@ -6253,8 +6182,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Transturtle Arnassi Ruins",
-                "count": 1
+                "item_name": "Transturtle Arnassi Ruins"
               }
             }
           }
@@ -9197,7 +9125,6 @@
           "display_name": "Unconfine Home Waters Area"
         }
       },
-      "shops": [],
       "regions": {
         "player": 1,
         "menu": "Menu",
@@ -9386,7 +9313,7 @@
         "Transturtle Final Boss"
       ],
       "base_id": 698000,
-      "world_description": "Aquaria WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Aquaria is a side-scrolling action-adventure game. It follows Naija, an\naquatic humanoid woman, as she explores the underwater world of Aquaria.\nAlong her journey, she learns about the history of the world she inhabits\nas well as her own past. The gameplay focuses on a combination of swimming,\nsinging, and combat, through which Naija can interact with the world. Her\nsongs can move items, affect plants and animals, and change her physical\nappearance into other forms that have different abilities, like firing\nprojectiles at hostile creatures, or passing through barriers inaccessible\nto her in her natural form.\nFrom: https://en.wikipedia.org/wiki/Aquaria_(video_game)",
       "slot_data": {
         "ingredientReplacement": [
           0,
@@ -9480,7 +9407,29 @@
         "turtle_randomizer": 2
       },
       "web": {
-        "theme": "ocean"
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up Aquaria for MultiWorld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Tioui"
+            ]
+          },
+          {
+            "name": "Guide de configuration Multimonde",
+            "description": "Un guide pour configurer Aquaria MultiWorld",
+            "language": "Fran\u00e7ais",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "Tioui"
+            ]
+          }
+        ]
       },
       "world_directory": "aquaria_worldgen"
     }

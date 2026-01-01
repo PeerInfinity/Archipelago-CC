@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Has, HelperCall, Or
+from rule_builder import True_, False_, And, HasAll, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -558,5 +558,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Defeat Gibby", player),
-        And(Has('UPPER CHAMBER KEY'), Has('VESSEL ROOM KEY'))
+        HasAll('UPPER CHAMBER KEY', 'VESSEL ROOM KEY')
     )

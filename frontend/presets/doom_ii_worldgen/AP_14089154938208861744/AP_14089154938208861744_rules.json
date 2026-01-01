@@ -34,8 +34,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Entryway (MAP01)",
-                "count": 1
+                "item_name": "Entryway (MAP01)"
               }
             }
           },
@@ -45,8 +44,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Underhalls (MAP02)",
-                "count": 1
+                "item_name": "Underhalls (MAP02)"
               }
             }
           },
@@ -69,8 +67,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "The Gantlet (MAP03)",
-                    "count": 1
+                    "item_name": "The Gantlet (MAP03)"
                   }
                 }
               ]
@@ -95,8 +92,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "The Focus (MAP04)",
-                    "count": 1
+                    "item_name": "The Focus (MAP04)"
                   }
                 }
               ]
@@ -108,8 +104,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Waste Tunnels (MAP05)",
-                "count": 1
+                "item_name": "The Waste Tunnels (MAP05)"
               }
             }
           },
@@ -146,8 +141,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dead Simple (MAP07)",
-                "count": 1
+                "item_name": "Dead Simple (MAP07)"
               }
             }
           },
@@ -187,8 +181,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Pit (MAP09)",
-                "count": 1
+                "item_name": "The Pit (MAP09)"
               }
             }
           },
@@ -198,8 +191,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Refueling Base (MAP10)",
-                "count": 1
+                "item_name": "Refueling Base (MAP10)"
               }
             }
           },
@@ -239,8 +231,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Factory (MAP12)",
-                "count": 1
+                "item_name": "The Factory (MAP12)"
               }
             }
           },
@@ -490,8 +481,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Nirvana (MAP21)",
-                "count": 1
+                "item_name": "Nirvana (MAP21)"
               }
             }
           },
@@ -514,8 +504,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "The Catacombs (MAP22)",
-                    "count": 1
+                    "item_name": "The Catacombs (MAP22)"
                   }
                 }
               ]
@@ -575,8 +564,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bloodfalls (MAP25)",
-                "count": 1
+                "item_name": "Bloodfalls (MAP25)"
               }
             }
           },
@@ -658,8 +646,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Icon of Sin (MAP30)",
-                "count": 1
+                "item_name": "Icon of Sin (MAP30)"
               }
             }
           }
@@ -752,8 +739,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Underhalls (MAP02) - Red keycard",
-                "count": 1
+                "item_name": "Underhalls (MAP02) - Red keycard"
               }
             }
           }
@@ -812,8 +798,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Underhalls (MAP02) - Blue keycard",
-                "count": 1
+                "item_name": "Underhalls (MAP02) - Blue keycard"
               }
             }
           }
@@ -844,8 +829,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Underhalls (MAP02) - Blue keycard",
-                "count": 1
+                "item_name": "Underhalls (MAP02) - Blue keycard"
               }
             }
           },
@@ -883,8 +867,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Gantlet (MAP03) - Blue keycard",
-                "count": 1
+                "item_name": "The Gantlet (MAP03) - Blue keycard"
               }
             }
           }
@@ -1020,8 +1003,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Gantlet (MAP03) - Red keycard",
-                "count": 1
+                "item_name": "The Gantlet (MAP03) - Red keycard"
               }
             }
           },
@@ -1106,8 +1088,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Focus (MAP04) - Red keycard",
-                "count": 1
+                "item_name": "The Focus (MAP04) - Red keycard"
               }
             }
           },
@@ -1117,8 +1098,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Focus (MAP04) - Blue keycard",
-                "count": 1
+                "item_name": "The Focus (MAP04) - Blue keycard"
               }
             }
           }
@@ -1191,8 +1171,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Focus (MAP04) - Yellow keycard",
-                "count": 1
+                "item_name": "The Focus (MAP04) - Yellow keycard"
               }
             }
           }
@@ -1223,8 +1202,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Focus (MAP04) - Yellow keycard",
-                "count": 1
+                "item_name": "The Focus (MAP04) - Yellow keycard"
               }
             }
           },
@@ -1234,8 +1212,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Focus (MAP04) - Red keycard",
-                "count": 1
+                "item_name": "The Focus (MAP04) - Red keycard"
               }
             }
           }
@@ -1266,8 +1243,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Waste Tunnels (MAP05) - Red keycard",
-                "count": 1
+                "item_name": "The Waste Tunnels (MAP05) - Red keycard"
               }
             }
           },
@@ -1277,8 +1253,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Waste Tunnels (MAP05) - Blue keycard",
-                "count": 1
+                "item_name": "The Waste Tunnels (MAP05) - Blue keycard"
               }
             }
           },
@@ -1414,8 +1389,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Waste Tunnels (MAP05) - Yellow keycard",
-                "count": 1
+                "item_name": "The Waste Tunnels (MAP05) - Yellow keycard"
               }
             }
           },
@@ -1425,8 +1399,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Waste Tunnels (MAP05) - Blue keycard",
-                "count": 1
+                "item_name": "The Waste Tunnels (MAP05) - Blue keycard"
               }
             }
           }
@@ -1457,8 +1430,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Waste Tunnels (MAP05) - Yellow keycard",
-                "count": 1
+                "item_name": "The Waste Tunnels (MAP05) - Yellow keycard"
               }
             }
           }
@@ -1697,8 +1669,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Crusher (MAP06) - Red keycard",
-                "count": 1
+                "item_name": "The Crusher (MAP06) - Red keycard"
               }
             }
           },
@@ -1708,8 +1679,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Crusher (MAP06) - Blue keycard",
-                "count": 1
+                "item_name": "The Crusher (MAP06) - Blue keycard"
               }
             }
           }
@@ -1810,8 +1780,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Crusher (MAP06) - Yellow keycard",
-                "count": 1
+                "item_name": "The Crusher (MAP06) - Yellow keycard"
               }
             }
           }
@@ -1842,8 +1811,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Crusher (MAP06) - Yellow keycard",
-                "count": 1
+                "item_name": "The Crusher (MAP06) - Yellow keycard"
               }
             }
           },
@@ -1853,8 +1821,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Crusher (MAP06) - Red keycard",
-                "count": 1
+                "item_name": "The Crusher (MAP06) - Red keycard"
               }
             }
           },
@@ -2110,8 +2077,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tricks and Traps (MAP08) - Red skull key",
-                "count": 1
+                "item_name": "Tricks and Traps (MAP08) - Red skull key"
               }
             }
           },
@@ -2121,8 +2087,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tricks and Traps (MAP08) - Yellow skull key",
-                "count": 1
+                "item_name": "Tricks and Traps (MAP08) - Yellow skull key"
               }
             }
           }
@@ -2503,8 +2468,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Pit (MAP09) - Yellow keycard",
-                "count": 1
+                "item_name": "The Pit (MAP09) - Yellow keycard"
               }
             }
           },
@@ -2514,8 +2478,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Pit (MAP09) - Blue keycard",
-                "count": 1
+                "item_name": "The Pit (MAP09) - Blue keycard"
               }
             }
           },
@@ -2741,8 +2704,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Pit (MAP09) - Yellow keycard",
-                "count": 1
+                "item_name": "The Pit (MAP09) - Yellow keycard"
               }
             }
           }
@@ -2823,8 +2785,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Refueling Base (MAP10) - Yellow keycard",
-                "count": 1
+                "item_name": "Refueling Base (MAP10) - Yellow keycard"
               }
             }
           },
@@ -3121,8 +3082,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Refueling Base (MAP10) - Blue keycard",
-                "count": 1
+                "item_name": "Refueling Base (MAP10) - Blue keycard"
               }
             }
           }
@@ -3216,8 +3176,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Circle of Death (MAP11) - Blue keycard",
-                "count": 1
+                "item_name": "Circle of Death (MAP11) - Blue keycard"
               }
             }
           },
@@ -3227,8 +3186,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Circle of Death (MAP11) - Red keycard",
-                "count": 1
+                "item_name": "Circle of Death (MAP11) - Red keycard"
               }
             }
           }
@@ -3504,8 +3462,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Factory (MAP12) - Yellow keycard",
-                "count": 1
+                "item_name": "The Factory (MAP12) - Yellow keycard"
               }
             }
           },
@@ -3515,8 +3472,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Factory (MAP12) - Blue keycard",
-                "count": 1
+                "item_name": "The Factory (MAP12) - Blue keycard"
               }
             }
           },
@@ -3845,8 +3801,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Downtown (MAP13) - Yellow keycard",
-                "count": 1
+                "item_name": "Downtown (MAP13) - Yellow keycard"
               }
             }
           },
@@ -3856,8 +3811,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Downtown (MAP13) - Red keycard",
-                "count": 1
+                "item_name": "Downtown (MAP13) - Red keycard"
               }
             }
           },
@@ -3867,8 +3821,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Downtown (MAP13) - Blue keycard",
-                "count": 1
+                "item_name": "Downtown (MAP13) - Blue keycard"
               }
             }
           }
@@ -4235,8 +4188,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Inmost Dens (MAP14) - Red skull key",
-                "count": 1
+                "item_name": "The Inmost Dens (MAP14) - Red skull key"
               }
             }
           }
@@ -4372,8 +4324,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Inmost Dens (MAP14) - Blue skull key",
-                "count": 1
+                "item_name": "The Inmost Dens (MAP14) - Blue skull key"
               }
             }
           }
@@ -4404,8 +4355,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Inmost Dens (MAP14) - Red skull key",
-                "count": 1
+                "item_name": "The Inmost Dens (MAP14) - Red skull key"
               }
             }
           },
@@ -4435,8 +4385,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Inmost Dens (MAP14) - Blue skull key",
-                "count": 1
+                "item_name": "The Inmost Dens (MAP14) - Blue skull key"
               }
             }
           },
@@ -4501,8 +4450,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Industrial Zone (MAP15) - Yellow keycard",
-                "count": 1
+                "item_name": "Industrial Zone (MAP15) - Yellow keycard"
               }
             }
           },
@@ -4512,8 +4460,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Industrial Zone (MAP15) - Yellow keycard",
-                "count": 1
+                "item_name": "Industrial Zone (MAP15) - Yellow keycard"
               }
             }
           }
@@ -4726,8 +4673,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Industrial Zone (MAP15) - Blue keycard",
-                "count": 1
+                "item_name": "Industrial Zone (MAP15) - Blue keycard"
               }
             }
           }
@@ -4758,8 +4704,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Industrial Zone (MAP15) - Blue keycard",
-                "count": 1
+                "item_name": "Industrial Zone (MAP15) - Blue keycard"
               }
             }
           },
@@ -4909,8 +4854,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Suburbs (MAP16) - Red skull key",
-                "count": 1
+                "item_name": "Suburbs (MAP16) - Red skull key"
               }
             }
           },
@@ -4920,8 +4864,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Suburbs (MAP16) - Blue skull key",
-                "count": 1
+                "item_name": "Suburbs (MAP16) - Blue skull key"
               }
             }
           }
@@ -5238,8 +5181,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tenements (MAP17) - Red keycard",
-                "count": 1
+                "item_name": "Tenements (MAP17) - Red keycard"
               }
             }
           }
@@ -5459,8 +5401,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tenements (MAP17) - Yellow skull key",
-                "count": 1
+                "item_name": "Tenements (MAP17) - Yellow skull key"
               }
             }
           },
@@ -5470,8 +5411,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tenements (MAP17) - Blue keycard",
-                "count": 1
+                "item_name": "Tenements (MAP17) - Blue keycard"
               }
             }
           },
@@ -5579,8 +5519,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Courtyard (MAP18) - Yellow skull key",
-                "count": 1
+                "item_name": "The Courtyard (MAP18) - Yellow skull key"
               }
             }
           },
@@ -5590,8 +5529,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Courtyard (MAP18) - Blue skull key",
-                "count": 1
+                "item_name": "The Courtyard (MAP18) - Blue skull key"
               }
             }
           }
@@ -5832,8 +5770,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Courtyard (MAP18) - Blue skull key",
-                "count": 1
+                "item_name": "The Courtyard (MAP18) - Blue skull key"
               }
             }
           }
@@ -5864,8 +5801,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Courtyard (MAP18) - Yellow skull key",
-                "count": 1
+                "item_name": "The Courtyard (MAP18) - Yellow skull key"
               }
             }
           }
@@ -5908,8 +5844,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "The Citadel (MAP19) - Red skull key",
-                    "count": 1
+                    "item_name": "The Citadel (MAP19) - Red skull key"
                   }
                 }
               ]
@@ -6150,8 +6085,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "The Citadel (MAP19) - Red skull key",
-                    "count": 1
+                    "item_name": "The Citadel (MAP19) - Red skull key"
                   }
                 }
               ]
@@ -6491,8 +6425,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Nirvana (MAP21) - Yellow skull key",
-                "count": 1
+                "item_name": "Nirvana (MAP21) - Yellow skull key"
               }
             }
           },
@@ -6633,8 +6566,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Nirvana (MAP21) - Red skull key",
-                "count": 1
+                "item_name": "Nirvana (MAP21) - Red skull key"
               }
             }
           }
@@ -6650,8 +6582,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Catacombs (MAP22) - Blue skull key",
-                "count": 1
+                "item_name": "The Catacombs (MAP22) - Blue skull key"
               }
             }
           },
@@ -6661,8 +6592,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Catacombs (MAP22) - Red skull key",
-                "count": 1
+                "item_name": "The Catacombs (MAP22) - Red skull key"
               }
             }
           },
@@ -6756,8 +6686,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Catacombs (MAP22) - Red skull key",
-                "count": 1
+                "item_name": "The Catacombs (MAP22) - Red skull key"
               }
             }
           }
@@ -6880,8 +6809,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Barrels o' Fun (MAP23) - Yellow skull key",
-                "count": 1
+                "item_name": "Barrels o' Fun (MAP23) - Yellow skull key"
               }
             }
           }
@@ -7052,8 +6980,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Barrels o' Fun (MAP23) - Yellow skull key",
-                "count": 1
+                "item_name": "Barrels o' Fun (MAP23) - Yellow skull key"
               }
             }
           }
@@ -7084,8 +7011,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Chasm (MAP24) - Blue keycard",
-                "count": 1
+                "item_name": "The Chasm (MAP24) - Blue keycard"
               }
             }
           }
@@ -7200,8 +7126,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Chasm (MAP24) - Red keycard",
-                "count": 1
+                "item_name": "The Chasm (MAP24) - Red keycard"
               }
             }
           }
@@ -7232,8 +7157,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Chasm (MAP24) - Red keycard",
-                "count": 1
+                "item_name": "The Chasm (MAP24) - Red keycard"
               }
             }
           },
@@ -7388,8 +7312,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Bloodfalls (MAP25) - Blue skull key",
-                    "count": 1
+                    "item_name": "Bloodfalls (MAP25) - Blue skull key"
                   }
                 }
               ]
@@ -7527,8 +7450,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Bloodfalls (MAP25) - Blue skull key",
-                "count": 1
+                "item_name": "Bloodfalls (MAP25) - Blue skull key"
               }
             }
           }
@@ -7622,8 +7544,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Abandoned Mines (MAP26) - Yellow keycard",
-                "count": 1
+                "item_name": "The Abandoned Mines (MAP26) - Yellow keycard"
               }
             }
           },
@@ -7633,8 +7554,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Abandoned Mines (MAP26) - Red keycard",
-                "count": 1
+                "item_name": "The Abandoned Mines (MAP26) - Red keycard"
               }
             }
           },
@@ -7644,8 +7564,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Abandoned Mines (MAP26) - Blue keycard",
-                "count": 1
+                "item_name": "The Abandoned Mines (MAP26) - Blue keycard"
               }
             }
           }
@@ -7774,8 +7693,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Abandoned Mines (MAP26) - Blue keycard",
-                "count": 1
+                "item_name": "The Abandoned Mines (MAP26) - Blue keycard"
               }
             }
           }
@@ -7806,8 +7724,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Abandoned Mines (MAP26) - Yellow keycard",
-                "count": 1
+                "item_name": "The Abandoned Mines (MAP26) - Yellow keycard"
               }
             }
           }
@@ -7894,8 +7811,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Monster Condo (MAP27) - Yellow skull key",
-                "count": 1
+                "item_name": "Monster Condo (MAP27) - Yellow skull key"
               }
             }
           },
@@ -7905,8 +7821,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Monster Condo (MAP27) - Red skull key",
-                "count": 1
+                "item_name": "Monster Condo (MAP27) - Red skull key"
               }
             }
           },
@@ -7916,8 +7831,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Monster Condo (MAP27) - Blue skull key",
-                "count": 1
+                "item_name": "Monster Condo (MAP27) - Blue skull key"
               }
             }
           }
@@ -8382,8 +8296,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Monster Condo (MAP27) - Red skull key",
-                "count": 1
+                "item_name": "Monster Condo (MAP27) - Red skull key"
               }
             }
           }
@@ -8414,8 +8327,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Spirit World (MAP28) - Yellow skull key",
-                "count": 1
+                "item_name": "The Spirit World (MAP28) - Yellow skull key"
               }
             }
           },
@@ -8425,8 +8337,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Spirit World (MAP28) - Red skull key",
-                "count": 1
+                "item_name": "The Spirit World (MAP28) - Red skull key"
               }
             }
           }
@@ -8737,8 +8648,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Spirit World (MAP28) - Yellow skull key",
-                "count": 1
+                "item_name": "The Spirit World (MAP28) - Yellow skull key"
               }
             }
           }
@@ -8769,8 +8679,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "The Spirit World (MAP28) - Red skull key",
-                "count": 1
+                "item_name": "The Spirit World (MAP28) - Red skull key"
               }
             }
           }
@@ -12366,7 +12275,6 @@
           "display_name": "Start With Computer Area Maps"
         }
       },
-      "shops": [],
       "included_episodes": [
         1,
         1,
@@ -12379,7 +12287,7 @@
         "The Factory (MAP12)",
         "Nirvana (MAP21)"
       ],
-      "world_description": "DOOM II WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Doom II, also known as Doom II: Hell on Earth, is a first-person shooter game by id Software.\nIt was released for MS-DOS in 1994.\nCompared to its predecessor, Doom II features larger levels, new enemies, a new \"super shotgun\" weapon",
       "slot_data": {
         "difficulty": 2,
         "random_monsters": 2,
@@ -12404,7 +12312,19 @@
         "ammo4add": 50
       },
       "web": {
-        "theme": "dirt"
+        "theme": "dirt",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the DOOM II randomizer connected to an Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Daivuk"
+            ]
+          }
+        ]
       },
       "world_directory": "doom_ii_worldgen"
     }

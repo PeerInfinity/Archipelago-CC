@@ -75,7 +75,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Autumn Hills - Portal -> Autumn Hills - Dimension Climb Shop", player),
-        And(Has('Rope Dart'), Has('Wingsuit'))
+        HasAll('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
@@ -90,7 +90,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Autumn Hills - Hope Path Shop -> Autumn Hills - Climbing Claws Shop", player),
-        And(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Has('Rope Dart'))
+        And(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Rope Dart'))
     )
 
     world.set_rule(
@@ -100,12 +100,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Autumn Hills - Hope Path Shop -> Autumn Hills - Lakeside Checkpoint", player),
-        And(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Has('Rope Dart'))
+        And(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Rope Dart'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Autumn Hills - Dimension Climb Shop -> Autumn Hills - Portal", player),
-        Or(Has('Rope Dart'), Has('Wingsuit'))
+        HasAny('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
@@ -115,7 +115,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Autumn Hills - Hope Latch Checkpoint -> Autumn Hills - Key of Hope Checkpoint", player),
-        And(Has('Rope Dart'), Has('Wingsuit'))
+        HasAll('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
@@ -130,27 +130,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Forlorn Temple - Entrance Shop -> Forlorn Temple - Sunny Day Checkpoint", player),
-        And(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Or(Has('Rope Dart'), Has('Wingsuit')))
+        And(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), HasAny('Rope Dart', 'Wingsuit'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Forlorn Temple - Rocket Sunset Shop -> Forlorn Temple - Descent Shop", player),
-        And(Or(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Has('Wingsuit')), Has('Rope Dart'))
+        And(Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Wingsuit')), Has('Rope Dart'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Forlorn Temple - Saw Gauntlet Shop -> Forlorn Temple - Demon King Shop", player),
-        Or(Has('Rope Dart'), Has('Wingsuit'))
+        HasAny('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
         multiworld.get_entrance("Forlorn Temple - Demon King Shop -> Forlorn Temple - Saw Gauntlet Shop", player),
-        Or(Has('Rope Dart'), Has('Wingsuit'))
+        HasAny('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
         multiworld.get_entrance("Forlorn Temple - Sunny Day Checkpoint -> Forlorn Temple - Rocket Maze Checkpoint", player),
-        Or(Has('Rope Dart'), Has('Wingsuit'))
+        HasAny('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
@@ -170,7 +170,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Howling Grotto - Crushing Pits Shop -> Howling Grotto - Portal", player),
-        Or(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Has('Wingsuit'))
+        Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Wingsuit'))
     )
 
     world.set_rule(
@@ -185,7 +185,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Howling Grotto - Breezy Crushers Checkpoint -> Howling Grotto - Crushing Pits Shop", player),
-        And(True_(), Or(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Has('Strike of the Ninja'), Has('Wingsuit')))
+        And(True_(), Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Strike of the Ninja'), Has('Wingsuit')))
     )
 
     world.set_rule(
@@ -200,7 +200,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Searing Crags - Right -> Searing Crags - Portal", player),
-        And(Has('Lightfoot Tabi'), Has('Wingsuit'))
+        HasAll('Lightfoot Tabi', 'Wingsuit')
     )
 
     world.set_rule(
@@ -220,7 +220,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Searing Crags - Rope Dart Shop -> Searing Crags - Triple Ball Spinner Checkpoint", player),
-        Or(Has('Rope Dart'), Has('Wingsuit'))
+        HasAny('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
@@ -235,7 +235,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Searing Crags - Searing Mega Shard Shop -> Searing Crags - Before Final Climb Shop", player),
-        Or(Has('Rope Dart'), Has('Strike of the Ninja'))
+        HasAny('Rope Dart', 'Strike of the Ninja')
     )
 
     world.set_rule(
@@ -250,7 +250,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Searing Crags - Colossuses Shop -> Searing Crags - Key of Strength Shop", player),
-        And(Or(And(Has('Strike of the Ninja'), Has('Wingsuit')), Has('Rope Dart')), Has('Power Thistle'))
+        And(Or(HasAll('Strike of the Ninja', 'Wingsuit'), Has('Rope Dart')), Has('Power Thistle'))
     )
 
     world.set_rule(
@@ -260,7 +260,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Glacial Peak - Portal -> Glacial Peak - Tower Entrance Shop", player),
-        Or(Has('Rope Dart'), Has('Wingsuit'))
+        HasAny('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
@@ -270,7 +270,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Glacial Peak - Projectile Spike Pit Checkpoint -> Glacial Peak - Left", player),
-        Or(And(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Has('Wingsuit')), Has('Rope Dart'))
+        Or(And(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Wingsuit')), Has('Rope Dart'))
     )
 
     world.set_rule(
@@ -280,17 +280,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Tower of Time - Second Checkpoint -> Tower of Time - Third Checkpoint", player),
-        And(Or(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Has('Rope Dart')), Has('Wingsuit'))
+        And(Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Rope Dart')), Has('Wingsuit'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Tower of Time - Third Checkpoint -> Tower of Time - Fourth Checkpoint", player),
-        Or(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Has('Wingsuit'))
+        Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Wingsuit'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Tower of Time - Fourth Checkpoint -> Tower of Time - Fifth Checkpoint", player),
-        And(Has('Rope Dart'), Has('Wingsuit'))
+        HasAll('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
@@ -305,17 +305,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Cloud Ruins - Pillar Glide Shop -> Cloud Ruins - Spike Float Checkpoint", player),
-        And(And(Has('Meditation'), Has('Path of Resilience'), Has('Second Wind')), Or(Has('Rope Dart'), Has('Wingsuit')))
+        And(HasAll('Meditation', 'Path of Resilience', 'Second Wind'), HasAny('Rope Dart', 'Wingsuit'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Cloud Ruins - Pillar Glide Shop -> Cloud Ruins - Ghost Pit Checkpoint", player),
-        And(Has('Rope Dart'), Has('Wingsuit'))
+        HasAll('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
         multiworld.get_entrance("Cloud Ruins - Pillar Glide Shop -> Cloud Ruins - Crushers' Descent Shop", player),
-        And(Or(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Has('Rope Dart')), Has('Wingsuit'))
+        And(Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Rope Dart')), Has('Wingsuit'))
     )
 
     world.set_rule(
@@ -330,32 +330,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Cloud Ruins - Sliding Spikes Shop -> Cloud Ruins - Saw Pit Checkpoint", player),
-        Or(Has('Rope Dart'), Has('Wingsuit'))
+        HasAny('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
         multiworld.get_entrance("Cloud Ruins - Final Flight Shop -> Cloud Ruins - Manfred's Shop", player),
-        And(Has('Rope Dart'), Has('Wingsuit'))
+        HasAll('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
         multiworld.get_entrance("Cloud Ruins - Manfred's Shop -> Cloud Ruins - Final Flight Shop", player),
-        And(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Has('Wingsuit'))
+        And(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Wingsuit'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Cloud Ruins - Spike Float Checkpoint -> Cloud Ruins - Cloud Entrance Shop", player),
-        Or(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Or(Has('Rope Dart'), Has('Wingsuit')))
+        Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), HasAny('Rope Dart', 'Wingsuit'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Cloud Ruins - Spike Float Checkpoint -> Cloud Ruins - Pillar Glide Shop", player),
-        Or(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Or(Has('Rope Dart'), Has('Wingsuit')))
+        Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), HasAny('Rope Dart', 'Wingsuit'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Cloud Ruins - Toothbrush Alley Checkpoint -> Cloud Ruins - Seeing Spikes Shop", player),
-        Or(Has('Rope Dart'), Has('Wingsuit'))
+        HasAny('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
@@ -370,12 +370,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Underworld - Fireball Wave Shop -> Underworld - Long Climb Shop", player),
-        Or(Or(Has('Rope Dart'), Has('Wingsuit')), Has('Lightfoot Tabi'), Has('Strike of the Ninja'))
+        Or(HasAny('Rope Dart', 'Wingsuit'), Has('Lightfoot Tabi'), Has('Strike of the Ninja'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Underworld - Long Climb Shop -> Underworld - Hot Tub Checkpoint", player),
-        Or(And(Or(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Has('Rope Dart'), Has('Strike of the Ninja')), Has('Wingsuit')), And(Or(Has('Strike of the Ninja'), Has('Wingsuit')), Has('Lightfoot Tabi')))
+        Or(And(Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Rope Dart'), Has('Strike of the Ninja')), Has('Wingsuit')), And(HasAny('Strike of the Ninja', 'Wingsuit'), Has('Lightfoot Tabi')))
     )
 
     world.set_rule(
@@ -385,22 +385,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Underworld - Hot Tub Checkpoint -> Underworld - Long Climb Shop", player),
-        Or(And(Has('Rope Dart'), Has('Wingsuit')), Has('Lightfoot Tabi'), Has('Strike of the Ninja'))
+        Or(HasAll('Rope Dart', 'Wingsuit'), Has('Lightfoot Tabi'), Has('Strike of the Ninja'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Dark Cave - Right -> Dark Cave - Left", player),
-        And(Has('Candle'), Has('Rope Dart'))
+        HasAll('Candle', 'Rope Dart')
     )
 
     world.set_rule(
         multiworld.get_entrance("Riviere Turquoise - Waterfall Shop -> Riviere Turquoise - Flower Flight Checkpoint", player),
-        Or(And(Has('Strike of the Ninja'), Has('Wingsuit')), Has('Rope Dart'))
+        Or(HasAll('Strike of the Ninja', 'Wingsuit'), Has('Rope Dart'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Riviere Turquoise - Launch of Faith Shop -> Riviere Turquoise - Flower Flight Checkpoint", player),
-        And(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Has('Rope Dart'))
+        And(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Rope Dart'))
     )
 
     world.set_rule(
@@ -430,7 +430,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Sunken Shrine - Tabi Gauntlet Shop -> Sunken Shrine - Sun Path Shop", player),
-        Or(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Has('Rope Dart'))
+        Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Rope Dart'))
     )
 
     world.set_rule(
@@ -565,22 +565,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Autumn Hills Seal - Double Swing Saws", player),
-        Or(Has('Rope Dart'), Has('Wingsuit'))
+        HasAny('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
         multiworld.get_location("Autumn Hills Seal - Spike Ball Darts", player),
-        And(Has('Aerobatics Warrior'), Has('Wingsuit'))
+        HasAll('Aerobatics Warrior', 'Wingsuit')
     )
 
     world.set_rule(
         multiworld.get_location("Forlorn Temple Seal - Rocket Maze", player),
-        Or(Has('Rope Dart'), Has('Wingsuit'))
+        HasAny('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
         multiworld.get_location("Bamboo Creek - Claustro", player),
-        And(Or(And(Or(Has('Meditation'), Has('Path of Resilience')), Has('Second Wind')), Has('Rope Dart')), Has('Wingsuit'))
+        And(Or(And(HasAny('Meditation', 'Path of Resilience'), Has('Second Wind')), Has('Rope Dart')), Has('Wingsuit'))
     )
 
     world.set_rule(
@@ -595,7 +595,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Howling Grotto Seal - Crushing Pits", player),
-        And(Has('Rope Dart'), Has('Wingsuit'))
+        HasAll('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
@@ -635,7 +635,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Cloud Ruins Seal - Ghost Pit", player),
-        Or(Has('Rope Dart'), Has('Wingsuit'))
+        HasAny('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
@@ -645,7 +645,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Cloud Ruins Seal - Saw Pit", player),
-        Or(Has('Rope Dart'), Has('Wingsuit'))
+        HasAny('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
@@ -655,7 +655,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Underworld Seal - Fireball Wave", player),
-        And(Has('Aerobatics Warrior'), Has('Wingsuit'))
+        HasAll('Aerobatics Warrior', 'Wingsuit')
     )
 
     world.set_rule(
@@ -670,7 +670,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Riviere Turquoise Seal - Launch of Faith", player),
-        Or(Has('Rope Dart'), Has('Wingsuit'))
+        HasAny('Rope Dart', 'Wingsuit')
     )
 
     world.set_rule(
@@ -680,12 +680,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Elemental Skylands Seal - Water", player),
-        And(Has('Currents Master'), Has('Rope Dart'))
+        HasAll('Currents Master', 'Rope Dart')
     )
 
     world.set_rule(
         multiworld.get_location("Elemental Skylands Seal - Fire", player),
-        And(And(Has('Aerobatics Warrior'), Has('Wingsuit')), Has('Rope Dart'), Has('Strike of the Ninja'))
+        And(HasAll('Aerobatics Warrior', 'Wingsuit'), Has('Rope Dart'), Has('Strike of the Ninja'))
     )
 
     world.set_rule(

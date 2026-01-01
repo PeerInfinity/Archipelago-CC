@@ -104,14 +104,22 @@ STARTING_ITEMS: Dict[str, int] = {
 class Hylics2WorldGenWeb(WebWorld):
     """Web interface for Hylics 2 WorldGen."""
     theme = "ocean"
-    tutorials = []
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to settings up the Hylics 2 randomizer connected to an Archipelago Multiworld",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["TRPG"]
+        )
+    ]
 
 
 class Hylics2WorldGenWorld(RuleWorldMixin, World):
     """
-    Hylics 2 WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Hylics 2 is a surreal and unusual RPG, with a bizarre yet unique visual style. Play as Wayne,
+    travel the world, and gather your allies to defeat the nefarious Gibby in his Hylemxylem!
     """
 
     game: ClassVar[str] = "Hylics 2 WorldGen"
@@ -290,10 +298,8 @@ class Hylics2WorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.world_description = 'Hylics 2 is a surreal and unusual RPG, with a bizarre yet unique visual style. Play as Wayne,\ntravel the world, and gather your allies to defeat the nefarious Gibby in his Hylemxylem!'
         self.slot_data = types.SimpleNamespace(party_shuffle=0, medallion_shuffle=0, random_start=0, start_location='Waynehouse', death_link=0)
-        self.web = types.SimpleNamespace(theme='ocean', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to settings up the Hylics 2 randomizer connected to an Archipelago Multiworld', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['TRPG']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -437,4 +443,10 @@ class Hylics2WorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "party_shuffle": 0,
+            "medallion_shuffle": 0,
+            "random_start": 0,
+            "start_location": "Waynehouse",
+            "death_link": 0,
+        }

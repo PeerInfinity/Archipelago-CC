@@ -120,21 +120,13 @@
             "name": "City Escape - Upgrade",
             "id": 16711840,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Bounce Bracelet"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Flame Ring"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Sonic - Bounce Bracelet",
+                  "Sonic - Flame Ring"
+                ]
+              }
             },
             "item": {
               "name": "Emblem",
@@ -453,27 +445,14 @@
             "name": "Pyramid Cave - Chao Key 3",
             "id": 16712778,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Bounce Bracelet"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Light Shoes"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Mystic Melody"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Sonic - Bounce Bracelet",
+                  "Sonic - Light Shoes",
+                  "Sonic - Mystic Melody"
+                ]
+              }
             },
             "item": {
               "name": "Emblem",
@@ -524,27 +503,14 @@
             "name": "Crazy Gadget - 1",
             "id": 16711694,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Bounce Bracelet"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Flame Ring"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Light Shoes"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Sonic - Bounce Bracelet",
+                  "Sonic - Flame Ring",
+                  "Sonic - Light Shoes"
+                ]
+              }
             },
             "item": {
               "name": "Extra Life",
@@ -620,27 +586,14 @@
             "name": "Crazy Gadget - Chao Key 3",
             "id": 16712782,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Bounce Bracelet"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Flame Ring"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Light Shoes"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Sonic - Bounce Bracelet",
+                  "Sonic - Flame Ring",
+                  "Sonic - Light Shoes"
+                ]
+              }
             },
             "item": {
               "name": "Emblem",
@@ -654,27 +607,14 @@
             "name": "Crazy Gadget - Gold Beetle",
             "id": 16713230,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Bounce Bracelet"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Flame Ring"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Light Shoes"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Sonic - Bounce Bracelet",
+                  "Sonic - Flame Ring",
+                  "Sonic - Light Shoes"
+                ]
+              }
             },
             "item": {
               "name": "Magnetic Shield",
@@ -1209,21 +1149,13 @@
             "name": "Hidden Base - Upgrade",
             "id": 16711849,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tails - Bazooka"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tails - Booster"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Tails - Bazooka",
+                  "Tails - Booster"
+                ]
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1243,21 +1175,13 @@
             "name": "Eternal Engine - 1",
             "id": 16711692,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tails - Bazooka"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tails - Booster"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Tails - Bazooka",
+                  "Tails - Booster"
+                ]
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1316,21 +1240,13 @@
             "name": "Eternal Engine - Chao Key 2",
             "id": 16712748,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tails - Bazooka"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tails - Booster"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Tails - Bazooka",
+                  "Tails - Booster"
+                ]
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1361,21 +1277,13 @@
             "name": "Eternal Engine - Gold Beetle",
             "id": 16713228,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tails - Bazooka"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tails - Booster"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Tails - Bazooka",
+                  "Tails - Booster"
+                ]
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1728,21 +1636,13 @@
             "name": "Death Chamber - 1",
             "id": 16711691,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knuckles - Hammer Gloves"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knuckles - Shovel Claws"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Knuckles - Hammer Gloves",
+                  "Knuckles - Shovel Claws"
+                ]
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1759,21 +1659,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Knuckles - Hammer Gloves"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Knuckles - Shovel Claws"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Knuckles - Hammer Gloves",
+                      "Knuckles - Shovel Claws"
+                    ]
+                  }
                 },
                 {
                   "rule": "CanReachLocation",
@@ -1829,21 +1721,13 @@
             "name": "Death Chamber - Chao Key 3",
             "id": 16712779,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knuckles - Hammer Gloves"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knuckles - Shovel Claws"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Knuckles - Hammer Gloves",
+                  "Knuckles - Shovel Claws"
+                ]
+              }
             },
             "item": {
               "name": "Tails - Mystic Melody",
@@ -1857,21 +1741,13 @@
             "name": "Death Chamber - Gold Beetle",
             "id": 16713227,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knuckles - Hammer Gloves"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knuckles - Shovel Claws"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Knuckles - Hammer Gloves",
+                  "Knuckles - Shovel Claws"
+                ]
+              }
             },
             "item": {
               "name": "Emblem",
@@ -1905,21 +1781,13 @@
             "name": "Meteor Herd - 1",
             "id": 16711693,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knuckles - Hammer Gloves"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knuckles - Shovel Claws"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Knuckles - Hammer Gloves",
+                  "Knuckles - Shovel Claws"
+                ]
+              }
             },
             "item": {
               "name": "Five Rings",
@@ -2819,21 +2687,13 @@
             "name": "Weapons Bed - 1",
             "id": 16711702,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Eggman - Jet Engine"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Eggman - Large Cannon"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Eggman - Jet Engine",
+                  "Eggman - Large Cannon"
+                ]
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2850,21 +2710,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Eggman - Jet Engine"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Eggman - Large Cannon"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Eggman - Jet Engine",
+                      "Eggman - Large Cannon"
+                    ]
+                  }
                 },
                 {
                   "rule": "CanReachLocation",
@@ -2900,21 +2752,13 @@
             "name": "Weapons Bed - Chao Key 2",
             "id": 16712758,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Eggman - Jet Engine"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Eggman - Large Cannon"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Eggman - Jet Engine",
+                  "Eggman - Large Cannon"
+                ]
+              }
             },
             "item": {
               "name": "Emblem",
@@ -2928,21 +2772,13 @@
             "name": "Weapons Bed - Chao Key 3",
             "id": 16712790,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Eggman - Jet Engine"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Eggman - Large Cannon"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Eggman - Jet Engine",
+                  "Eggman - Large Cannon"
+                ]
+              }
             },
             "item": {
               "name": "Emblem",
@@ -3185,27 +3021,14 @@
             "name": "Dry Lagoon - Gold Beetle",
             "id": 16713233,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rouge - Iron Boots"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rouge - Mystic Melody"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rouge - Pick Nails"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Rouge - Iron Boots",
+                  "Rouge - Mystic Melody",
+                  "Rouge - Pick Nails"
+                ]
+              }
             },
             "item": {
               "name": "Emblem",
@@ -3459,21 +3282,13 @@
             "name": "Security Hall - Upgrade",
             "id": 16711863,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rouge - Iron Boots"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rouge - Mystic Melody"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Rouge - Iron Boots",
+                  "Rouge - Mystic Melody"
+                ]
+              }
             },
             "item": {
               "name": "Knuckles - Mystic Melody",
@@ -3530,21 +3345,13 @@
             "name": "Mad Space - 1",
             "id": 16711707,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rouge - Iron Boots"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Rouge - Pick Nails"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Rouge - Iron Boots",
+                  "Rouge - Pick Nails"
+                ]
+              }
             },
             "item": {
               "name": "Eggman - Laser Blaster",
@@ -3682,39 +3489,16 @@
             "name": "Cannon's Core - 1",
             "id": 16711710,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Eggman - Jet Engine"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knuckles - Air Necklace"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knuckles - Hammer Gloves"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Bounce Bracelet"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tails - Booster"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Eggman - Jet Engine",
+                  "Knuckles - Air Necklace",
+                  "Knuckles - Hammer Gloves",
+                  "Sonic - Bounce Bracelet",
+                  "Tails - Booster"
+                ]
+              }
             },
             "item": {
               "name": "Emblem",
@@ -3731,21 +3515,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Eggman - Jet Engine"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Tails - Booster"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Eggman - Jet Engine",
+                      "Tails - Booster"
+                    ]
+                  }
                 },
                 {
                   "rule": "CanReachLocation",
@@ -3767,27 +3543,14 @@
             "name": "Cannon's Core - Chao Key 1",
             "id": 16712734,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Eggman - Jet Engine"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Eggman - Large Cannon"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tails - Booster"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Eggman - Jet Engine",
+                  "Eggman - Large Cannon",
+                  "Tails - Booster"
+                ]
+              }
             },
             "item": {
               "name": "Five Rings",
@@ -3801,21 +3564,13 @@
             "name": "Cannon's Core - Chao Key 2",
             "id": 16712766,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Eggman - Jet Engine"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tails - Booster"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Eggman - Jet Engine",
+                  "Tails - Booster"
+                ]
+              }
             },
             "item": {
               "name": "Emblem",
@@ -3829,39 +3584,16 @@
             "name": "Cannon's Core - Chao Key 3",
             "id": 16712798,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Eggman - Jet Engine"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knuckles - Air Necklace"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knuckles - Hammer Gloves"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Sonic - Flame Ring"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tails - Booster"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Eggman - Jet Engine",
+                  "Knuckles - Air Necklace",
+                  "Knuckles - Hammer Gloves",
+                  "Sonic - Flame Ring",
+                  "Tails - Booster"
+                ]
+              }
             },
             "item": {
               "name": "Sonic - Magic Gloves",
@@ -3875,33 +3607,15 @@
             "name": "Cannon's Core - Gold Beetle",
             "id": 16713246,
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Eggman - Jet Engine"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knuckles - Air Necklace"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Knuckles - Hammer Gloves"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Tails - Booster"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Eggman - Jet Engine",
+                  "Knuckles - Air Necklace",
+                  "Knuckles - Hammer Gloves",
+                  "Tails - Booster"
+                ]
+              }
             },
             "item": {
               "name": "Eggman - Mystic Melody",
@@ -4411,7 +4125,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       }

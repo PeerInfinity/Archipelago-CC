@@ -41,8 +41,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "World 1 Gate",
-                "count": 1
+                "item_name": "World 1 Gate"
               }
             }
           },
@@ -52,8 +51,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "World 2 Gate",
-                "count": 1
+                "item_name": "World 2 Gate"
               }
             }
           },
@@ -63,8 +61,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "World 3 Gate",
-                "count": 1
+                "item_name": "World 3 Gate"
               }
             }
           },
@@ -74,8 +71,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "World 4 Gate",
-                "count": 1
+                "item_name": "World 4 Gate"
               }
             }
           },
@@ -85,8 +81,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "World 5 Gate",
-                "count": 1
+                "item_name": "World 5 Gate"
               }
             }
           },
@@ -96,8 +91,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "World 6 Gate",
-                "count": 1
+                "item_name": "World 6 Gate"
               }
             }
           }
@@ -548,8 +542,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Beanstalk",
-                "count": 1
+                "item_name": "Beanstalk"
               }
             },
             "item": {
@@ -619,8 +612,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Large Spring Ball",
-                    "count": 1
+                    "item_name": "Large Spring Ball"
                   }
                 }
               ]
@@ -639,8 +631,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Large Spring Ball",
-                "count": 1
+                "item_name": "Large Spring Ball"
               }
             },
             "item": {
@@ -663,8 +654,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Chomp Rock",
-                "count": 1
+                "item_name": "Chomp Rock"
               }
             },
             "item": {
@@ -681,8 +671,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Chomp Rock",
-                "count": 1
+                "item_name": "Chomp Rock"
               }
             },
             "item": {
@@ -742,8 +731,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Spring Ball",
-                "count": 1
+                "item_name": "Spring Ball"
               }
             },
             "item": {
@@ -811,8 +799,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Key",
-                        "count": 1
+                        "item_name": "Key"
                       }
                     }
                   ]
@@ -820,8 +807,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Spring Ball",
-                    "count": 1
+                    "item_name": "Spring Ball"
                   }
                 }
               ]
@@ -977,8 +963,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Large Spring Ball",
-                "count": 1
+                "item_name": "Large Spring Ball"
               }
             },
             "item": {
@@ -1008,8 +993,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Beanstalk",
-                            "count": 1
+                            "item_name": "Beanstalk"
                           }
                         }
                       ]
@@ -1024,8 +1008,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Tulip",
-                            "count": 1
+                            "item_name": "Tulip"
                           }
                         }
                       ]
@@ -1035,8 +1018,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Large Spring Ball",
-                    "count": 1
+                    "item_name": "Large Spring Ball"
                   }
                 }
               ]
@@ -1201,8 +1183,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Platform Ghost",
-                "count": 1
+                "item_name": "Platform Ghost"
               }
             },
             "item": {
@@ -1219,8 +1200,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Platform Ghost",
-                "count": 1
+                "item_name": "Platform Ghost"
               }
             },
             "item": {
@@ -1256,8 +1236,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Platform Ghost",
-                        "count": 1
+                        "item_name": "Platform Ghost"
                       }
                     }
                   ]
@@ -1369,8 +1348,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Large Spring Ball",
-                    "count": 1
+                    "item_name": "Large Spring Ball"
                   }
                 }
               ]
@@ -1389,8 +1367,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Large Spring Ball",
-                "count": 1
+                "item_name": "Large Spring Ball"
               }
             },
             "item": {
@@ -1519,8 +1496,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "! Switch",
-                "count": 1
+                "item_name": "! Switch"
               }
             },
             "item": {
@@ -1721,8 +1697,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Chomp Rock",
-                "count": 1
+                "item_name": "Chomp Rock"
               }
             },
             "item": {
@@ -1774,8 +1749,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Chomp Rock",
-                "count": 1
+                "item_name": "Chomp Rock"
               }
             },
             "item": {
@@ -1798,8 +1772,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Large Spring Ball",
-                "count": 1
+                "item_name": "Large Spring Ball"
               }
             },
             "item": {
@@ -1843,8 +1816,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Large Spring Ball",
-                    "count": 1
+                    "item_name": "Large Spring Ball"
                   }
                 }
               ]
@@ -1863,8 +1835,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Large Spring Ball",
-                "count": 1
+                "item_name": "Large Spring Ball"
               }
             },
             "item": {
@@ -1924,8 +1895,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Large Spring Ball",
-                    "count": 1
+                    "item_name": "Large Spring Ball"
                   }
                 }
               ]
@@ -1954,8 +1924,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Giant Eggs",
-                        "count": 1
+                        "item_name": "Giant Eggs"
                       }
                     }
                   ]
@@ -1992,8 +1961,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Giant Eggs",
-                    "count": 1
+                    "item_name": "Giant Eggs"
                   }
                 }
               ]
@@ -2289,8 +2257,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Tulip",
-                    "count": 1
+                    "item_name": "Tulip"
                   }
                 }
               ]
@@ -2439,8 +2406,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Submarine Morph",
-                "count": 1
+                "item_name": "Submarine Morph"
               }
             },
             "item": {
@@ -2476,8 +2442,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Dashed Platform",
-                    "count": 1
+                    "item_name": "Dashed Platform"
                   }
                 }
               ]
@@ -2575,8 +2540,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Watermelon",
-                    "count": 1
+                    "item_name": "Watermelon"
                   }
                 }
               ]
@@ -2612,8 +2576,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Tulip",
-                            "count": 1
+                            "item_name": "Tulip"
                           }
                         }
                       ]
@@ -2630,8 +2593,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Tulip",
-                        "count": 1
+                        "item_name": "Tulip"
                       }
                     }
                   ]
@@ -2819,8 +2781,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Large Spring Ball",
-                "count": 1
+                "item_name": "Large Spring Ball"
               }
             },
             "item": {
@@ -2837,8 +2798,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Large Spring Ball",
-                "count": 1
+                "item_name": "Large Spring Ball"
               }
             },
             "item": {
@@ -2931,8 +2891,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Tulip",
-                    "count": 1
+                    "item_name": "Tulip"
                   }
                 }
               ]
@@ -2994,8 +2953,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Super Star",
-                "count": 1
+                "item_name": "Super Star"
               }
             },
             "item": {
@@ -3012,8 +2970,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Super Star",
-                "count": 1
+                "item_name": "Super Star"
               }
             },
             "item": {
@@ -3040,8 +2997,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Tulip",
-                        "count": 1
+                        "item_name": "Tulip"
                       }
                     }
                   ]
@@ -3066,8 +3022,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Super Star",
-                "count": 1
+                "item_name": "Super Star"
               }
             },
             "item": {
@@ -3151,8 +3106,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Large Spring Ball",
-                "count": 1
+                "item_name": "Large Spring Ball"
               }
             },
             "item": {
@@ -3245,8 +3199,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "! Switch",
-                "count": 1
+                "item_name": "! Switch"
               }
             },
             "item": {
@@ -3288,8 +3241,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Egg Capacity Upgrade",
-                        "count": 1
+                        "item_name": "Egg Capacity Upgrade"
                       }
                     }
                   ]
@@ -3332,8 +3284,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Egg Capacity Upgrade",
-                        "count": 1
+                        "item_name": "Egg Capacity Upgrade"
                       }
                     }
                   ]
@@ -3379,8 +3330,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Vanishing Arrow Wheel",
-                        "count": 1
+                        "item_name": "Vanishing Arrow Wheel"
                       }
                     }
                   ]
@@ -3388,8 +3338,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Dashed Stairs",
-                    "count": 1
+                    "item_name": "Dashed Stairs"
                   }
                 }
               ]
@@ -3545,8 +3494,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Egg Plant",
-                        "count": 1
+                        "item_name": "Egg Plant"
                       }
                     }
                   ]
@@ -3586,8 +3534,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Egg Plant",
-                        "count": 1
+                        "item_name": "Egg Plant"
                       }
                     }
                   ]
@@ -3630,8 +3577,7 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Tulip",
-                            "count": 1
+                            "item_name": "Tulip"
                           }
                         }
                       ]
@@ -3652,8 +3598,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Egg Plant",
-                        "count": 1
+                        "item_name": "Egg Plant"
                       }
                     }
                   ]
@@ -3681,8 +3626,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Egg Plant",
-                    "count": 1
+                    "item_name": "Egg Plant"
                   }
                 }
               ]
@@ -3707,8 +3651,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Large Spring Ball",
-                "count": 1
+                "item_name": "Large Spring Ball"
               }
             },
             "item": {
@@ -3725,8 +3668,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Large Spring Ball",
-                "count": 1
+                "item_name": "Large Spring Ball"
               }
             },
             "item": {
@@ -3772,8 +3714,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Large Spring Ball",
-                "count": 1
+                "item_name": "Large Spring Ball"
               }
             },
             "item": {
@@ -3983,8 +3924,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Dashed Stairs",
-                        "count": 1
+                        "item_name": "Dashed Stairs"
                       }
                     }
                   ]
@@ -3992,8 +3932,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Tulip",
-                    "count": 1
+                    "item_name": "Tulip"
                   }
                 }
               ]
@@ -4067,8 +4006,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Super Star",
-                    "count": 1
+                    "item_name": "Super Star"
                   }
                 }
               ]
@@ -4117,8 +4055,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Fire Melon",
-                        "count": 1
+                        "item_name": "Fire Melon"
                       }
                     }
                   ]
@@ -4161,8 +4098,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Fire Melon",
-                        "count": 1
+                        "item_name": "Fire Melon"
                       }
                     }
                   ]
@@ -4207,8 +4143,7 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Fire Melon",
-                        "count": 1
+                        "item_name": "Fire Melon"
                       }
                     }
                   ]
@@ -4216,8 +4151,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Spring Ball",
-                    "count": 1
+                    "item_name": "Spring Ball"
                   }
                 }
               ]
@@ -4525,8 +4459,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Tulip",
-                    "count": 1
+                    "item_name": "Tulip"
                   }
                 }
               ]
@@ -4572,8 +4505,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Egg Capacity Upgrade",
-                    "count": 1
+                    "item_name": "Egg Capacity Upgrade"
                   }
                 }
               ]
@@ -4599,8 +4531,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Egg Capacity Upgrade",
-                    "count": 1
+                    "item_name": "Egg Capacity Upgrade"
                   }
                 }
               ]
@@ -4710,8 +4641,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Arrow Wheel",
-                    "count": 1
+                    "item_name": "Arrow Wheel"
                   }
                 }
               ]
@@ -4820,8 +4750,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Dashed Platform",
-                    "count": 1
+                    "item_name": "Dashed Platform"
                   }
                 }
               ]
@@ -4866,8 +4795,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Super Star",
-                "count": 1
+                "item_name": "Super Star"
               }
             },
             "item": {
@@ -4884,8 +4812,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Super Star",
-                "count": 1
+                "item_name": "Super Star"
               }
             },
             "item": {
@@ -4926,8 +4853,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Super Star",
-                "count": 1
+                "item_name": "Super Star"
               }
             },
             "item": {
@@ -5200,8 +5126,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Chomp Rock",
-                    "count": 1
+                    "item_name": "Chomp Rock"
                   }
                 }
               ]
@@ -5239,8 +5164,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Chomp Rock",
-                    "count": 1
+                    "item_name": "Chomp Rock"
                   }
                 }
               ]
@@ -5282,8 +5206,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Chomp Rock",
-                    "count": 1
+                    "item_name": "Chomp Rock"
                   }
                 }
               ]
@@ -5444,8 +5367,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Egg Capacity Upgrade",
-                    "count": 1
+                    "item_name": "Egg Capacity Upgrade"
                   }
                 }
               ]
@@ -5464,8 +5386,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Egg Plant",
-                "count": 1
+                "item_name": "Egg Plant"
               }
             },
             "item": {
@@ -7105,7 +7026,6 @@
       ],
       "castle_unlock": 5,
       "boss_unlock": 0,
-      "shops": [],
       "locked_locations": [],
       "level_colors": [
         0,
@@ -7972,7 +7892,7 @@
       ],
       "luigi_count": 0,
       "rom_name": "YOSHI_ROM_NOT_GENERATED",
-      "world_description": "Yoshi's Island WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Yoshi's Island is a 2D platforming game.\nDuring a delivery, Bowser's evil ward, Kamek, attacked the stork, kidnapping Luigi and dropping Mario onto Yoshi's Island.\nAs Yoshi, you must run, jump, and throw eggs to escort the baby Mario across the island to defeat Bowser and reunite the two brothers with their parents.",
       "slot_data": {
         "world_1": [
           0,
@@ -8048,7 +7968,19 @@
         ]
       },
       "web": {
-        "theme": "ocean"
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Yoshi's Island randomizer and connecting to an Archipelago server.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Pink Switch"
+            ]
+          }
+        ]
       },
       "world_directory": "yoshisisland_worldgen"
     }

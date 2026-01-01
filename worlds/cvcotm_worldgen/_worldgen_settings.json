@@ -39,7 +39,8 @@
       "start_location_hints": [],
       "sub_weapon_shuffle": false
     },
-    "world_directory": "cvcotm"
+    "world_directory": "cvcotm",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "total_last_keys": 1,

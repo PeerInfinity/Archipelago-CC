@@ -86,21 +86,13 @@
                   ]
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Blue Trinity"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Blue Trinity",
+                      "Progressive Glide"
+                    ]
+                  }
                 }
               ]
             },
@@ -7071,21 +7063,13 @@
                       "rule": "True_"
                     },
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Glide"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "High Jump",
+                          "Progressive Glide"
+                        ]
+                      }
                     }
                   ]
                 },
@@ -8876,27 +8860,14 @@
                       "rule": "False_"
                     },
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Combo Master"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Glide"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Combo Master",
+                          "High Jump",
+                          "Progressive Glide"
+                        ]
+                      }
                     }
                   ]
                 },
@@ -8960,27 +8931,14 @@
                       "rule": "False_"
                     },
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Combo Master"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Glide"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Combo Master",
+                          "High Jump",
+                          "Progressive Glide"
+                        ]
+                      }
                     }
                   ]
                 },
@@ -10635,21 +10593,13 @@
                       "rule": "True_"
                     },
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Progressive Glide"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "High Jump",
+                          "Progressive Glide"
+                        ]
+                      }
                     }
                   ]
                 },
@@ -14579,27 +14529,14 @@
             "name": "Hollow Bastion Rising Falls Floating Platform Near Bubble Chest",
             "id": 2654094,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Blizzard"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Glide"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "High Jump",
+                  "Progressive Blizzard",
+                  "Progressive Glide"
+                ]
+              }
             },
             "item": {
               "name": "Guard",
@@ -14613,27 +14550,14 @@
             "name": "Hollow Bastion Rising Falls Floating Platform Near Save Chest",
             "id": 2654093,
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "High Jump"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Blizzard"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Glide"
-                  }
-                }
-              ]
+              "rule": "HasAny",
+              "args": {
+                "items": [
+                  "High Jump",
+                  "Progressive Blizzard",
+                  "Progressive Glide"
+                ]
+              }
             },
             "item": {
               "name": "Gravity Break",
@@ -14656,21 +14580,13 @@
                       "rule": "False_"
                     },
                     {
-                      "rule": "Or",
-                      "children": [
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Combo Master"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump"
-                          }
-                        }
-                      ]
+                      "rule": "HasAny",
+                      "args": {
+                        "items": [
+                          "Combo Master",
+                          "High Jump"
+                        ]
+                      }
                     }
                   ]
                 },
@@ -15048,21 +14964,13 @@
                   ]
                 },
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "High Jump"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Blizzard"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "High Jump",
+                      "Progressive Blizzard"
+                    ]
+                  }
                 }
               ]
             },
@@ -22910,7 +22818,8 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },

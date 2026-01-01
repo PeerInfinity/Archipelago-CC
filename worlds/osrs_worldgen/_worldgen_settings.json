@@ -55,7 +55,8 @@
       "starting_area": 0,
       "woodcutting_task_weight": 50
     },
-    "world_directory": "osrs"
+    "world_directory": "osrs",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "qp_items": {

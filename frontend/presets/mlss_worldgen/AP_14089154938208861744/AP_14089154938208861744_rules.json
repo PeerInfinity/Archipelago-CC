@@ -13698,8 +13698,7 @@
           "display_name": "XP Multiplier"
         }
       },
-      "shops": [],
-      "world_description": "Mario & Luigi Superstar Saga WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Adventure with Mario and Luigi together in the Beanbean Kingdom\nto stop the evil Cackletta and retrieve the Beanstar.",
       "slot_data": {
         "CastleSkip": 0,
         "SkipMinecart": 0,
@@ -13710,7 +13709,19 @@
         "Coins": 0
       },
       "web": {
-        "theme": "partyTime"
+        "theme": "partyTime",
+        "tutorials": [
+          {
+            "name": "Setup Guide",
+            "description": "A guide to setting up Mario & Luigi: Superstar Saga for Archipelago.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "jamesbrq"
+            ]
+          }
+        ]
       },
       "world_directory": "mlss_worldgen"
     }

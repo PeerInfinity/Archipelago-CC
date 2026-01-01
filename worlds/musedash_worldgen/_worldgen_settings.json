@@ -32,7 +32,8 @@
       "streamer_mode_enabled": false,
       "trap_count_percentage": 15
     },
-    "world_directory": "musedash"
+    "world_directory": "musedash",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "starting_songs": [

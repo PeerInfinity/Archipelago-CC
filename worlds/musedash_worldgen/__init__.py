@@ -85,15 +85,32 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class MuseDashWorldGenWeb(WebWorld):
     """Web interface for Muse Dash WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "partyTime"
+    tutorials = [
+        Tutorial(
+            "Mod Setup and Use Guide",
+            "A guide to setting up the Muse Dash Archipelago Mod on your computer.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["DeamonHunter"]
+        ),
+        Tutorial(
+            "Mod Setup and Use Guide",
+            "A guide to setting up the Muse Dash Archipelago Mod on your computer.",
+            "Español",
+            "setup_es.md",
+            "setup/es",
+            ["Shiny"]
+        )
+    ]
 
 
 class MuseDashWorldGenWorld(RuleWorldMixin, World):
     """
-    Muse Dash WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Muse Dash is a rhythm game where you hit objects to the beat of one of 400+ songs.
+    Play through a selection of randomly chosen songs, collecting music sheets
+    until you have enough to play and complete the goal song!
     """
 
     game: ClassVar[str] = "Muse Dash WorldGen"
@@ -219,14 +236,12 @@ class MuseDashWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.starting_songs = ['Breaking Dawn', 'Best One feat.tooko', "I don't care about Christmas though", 'Koi no Moonlight', 'Yuki no Shizuku Ame no Oto']
         self.included_songs = ['Medicine of Sing', 'Frost Land', 'Bass Telekinesis', 'Stargazer', 'Lys Tourbillon', 'MilK', 'Dolphin and Broadcast', 'Mujinku-Vacuum', 'Pancake is Love', 'Clock Room & Spiritual World', 'Evolution', 'Dohna Dohna no Uta', 'Confession', 'Night Wander', 'DISCO NIGHT', 'Lights of Muse', 'irregulyze', 'Latitude', 'Out of Sense', 'Candy-coloured Love Theory', 'Iyaiya', 'Mezame Eurythmics', 'Say! Fanfare!', 'Heart Message feat. Aoi Tokimori', 'Aqua Stars', 'Yume Ou Mono Yo', 'Funkotsu Saishin Casino', 'umpopoff', 'Mopemope', 'Goodbye Boss', 'EXIST', 'Ira', 'Blackest Luxury Car', 'From the New World', 'Lian Ai Audio Navigation', 'Departure Road', 'Shenri Kuaira -repeat-', 'Heart-Pounding Flight', 'Etude -Sunset-', 'Galaxy Striker']
         self.victory_song_name = 'Magical Wonderland'
         self.location_count = 90
         self.world_description = 'Muse Dash is a rhythm game where you hit objects to the beat of one of 400+ songs.\nPlay through a selection of randomly chosen songs, collecting music sheets\nuntil you have enough to play and complete the goal song!'
         self.slot_data = types.SimpleNamespace(victoryLocation='Magical Wonderland', deathLink=0, musicSheetWinCount=7, gradeNeeded=0)
-        self.web = types.SimpleNamespace(theme='partyTime', tutorials=[{'name': 'Mod Setup and Use Guide', 'description': 'A guide to setting up the Muse Dash Archipelago Mod on your computer.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['DeamonHunter']}, {'name': 'Mod Setup and Use Guide', 'description': 'A guide to setting up the Muse Dash Archipelago Mod on your computer.', 'language': 'Español', 'file_name': 'setup_es.md', 'link': 'setup/es', 'authors': ['Shiny']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -320,4 +335,9 @@ class MuseDashWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "victoryLocation": "Magical Wonderland",
+            "deathLink": 0,
+            "musicSheetWinCount": 7,
+            "gradeNeeded": 0,
+        }

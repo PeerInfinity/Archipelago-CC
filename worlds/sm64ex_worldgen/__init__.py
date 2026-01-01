@@ -80,15 +80,23 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class SuperMario64WorldGenWeb(WebWorld):
     """Web interface for Super Mario 64 WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "grass"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up SM64EX for MultiWorld.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["N00byKing"]
+        )
+    ]
 
 
 class SuperMario64WorldGenWorld(RuleWorldMixin, World):
     """
-    Super Mario 64 WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    The first Super Mario game to feature 3D gameplay, it features freedom of movement within a large open world based on polygons,
+    combined with traditional Mario gameplay, visual style, and characters.
     """
 
     game: ClassVar[str] = "Super Mario 64 WorldGen"
@@ -270,7 +278,6 @@ class SuperMario64WorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.move_rando_bitvec = 0
         self.number_of_stars = 105
         self.filler_count = 0
@@ -278,7 +285,6 @@ class SuperMario64WorldGenWorld(RuleWorldMixin, World):
         self.area_connections = {'91': 91, '241': 241, '121': 121, '51': 51, '41': 41, '71': 71, '221': 221, '81': 81, '231': 231, '101': 101, '111': 111, '361': 361, '132': 132, '131': 131, '141': 141, '151': 151, '271': 271, '201': 201, '171': 171, '291': 291, '281': 281, '181': 181, '191': 191, '311': 311}
         self.world_description = 'The first Super Mario game to feature 3D gameplay, it features freedom of movement within a large open world based on polygons,\ncombined with traditional Mario gameplay, visual style, and characters.'
         self.slot_data = {'AreaRando': {'91': 91, '241': 241, '121': 121, '51': 51, '41': 41, '71': 71, '221': 221, '81': 81, '231': 231, '101': 101, '111': 111, '361': 361, '132': 132, '131': 131, '141': 141, '151': 151, '271': 271, '201': 201, '171': 171, '291': 291, '281': 281, '181': 181, '191': 191, '311': 311}, 'MoveRandoVec': 0, 'DeathLink': 0, 'CompletionType': 0, 'FirstBowserDoorCost': 7, 'BasementDoorCost': 26, 'SecondFloorDoorCost': 44, 'MIPS1Cost': 13, 'MIPS2Cost': 44, 'StarsToFinish': 61}
-        self.web = types.SimpleNamespace(theme='grass', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up SM64EX for MultiWorld.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['N00byKing']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -372,4 +378,15 @@ class SuperMario64WorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "AreaRando": {'91': 91, '241': 241, '121': 121, '51': 51, '41': 41, '71': 71, '221': 221, '81': 81, '231': 231, '101': 101, '111': 111, '361': 361, '132': 132, '131': 131, '141': 141, '151': 151, '271': 271, '201': 201, '171': 171, '291': 291, '281': 281, '181': 181, '191': 191, '311': 311},
+            "MoveRandoVec": 0,
+            "DeathLink": 0,
+            "CompletionType": 0,
+            "FirstBowserDoorCost": 7,
+            "BasementDoorCost": 26,
+            "SecondFloorDoorCost": 44,
+            "MIPS1Cost": 13,
+            "MIPS2Cost": 44,
+            "StarsToFinish": 61,
+        }

@@ -68,7 +68,8 @@
       "swift_sail": true,
       "sword_mode": 0
     },
-    "world_directory": "tww"
+    "world_directory": "tww",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "dungeons": {

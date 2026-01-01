@@ -82,8 +82,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sand Coin",
-                "count": 1
+                "item_name": "Sand Coin"
               }
             }
           },
@@ -93,8 +92,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "River Coin",
-                "count": 1
+                "item_name": "River Coin"
               }
             }
           },
@@ -104,8 +102,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sun Coin",
-                "count": 1
+                "item_name": "Sun Coin"
               }
             }
           }
@@ -178,8 +175,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sand Coin",
-                "count": 1
+                "item_name": "Sand Coin"
               }
             }
           },
@@ -215,8 +211,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Summer Aquaria",
-                "count": 1
+                "item_name": "Summer Aquaria"
               }
             }
           }
@@ -357,8 +352,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "River Coin",
-                "count": 1
+                "item_name": "River Coin"
               }
             }
           },
@@ -394,8 +388,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dualhead Hydra",
-                "count": 1
+                "item_name": "Dualhead Hydra"
               }
             }
           }
@@ -440,8 +433,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dualhead Hydra",
-                "count": 1
+                "item_name": "Dualhead Hydra"
               }
             }
           },
@@ -451,8 +443,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Summer Aquaria",
-                "count": 1
+                "item_name": "Summer Aquaria"
               }
             }
           }
@@ -489,8 +480,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Barred",
-                "count": 1
+                "item_name": "Barred"
               }
             }
           },
@@ -535,8 +525,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sun Coin",
-                "count": 1
+                "item_name": "Sun Coin"
               }
             }
           },
@@ -572,8 +561,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rainbow Bridge",
-                "count": 1
+                "item_name": "Rainbow Bridge"
               }
             }
           }
@@ -596,8 +584,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Rainbow Bridge",
-                "count": 1
+                "item_name": "Rainbow Bridge"
               }
             }
           }
@@ -699,8 +686,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Barred",
-                "count": 1
+                "item_name": "Barred"
               }
             }
           },
@@ -788,8 +774,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             },
             "item": {
@@ -906,8 +891,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sand Coin",
-                "count": 1
+                "item_name": "Sand Coin"
               }
             }
           },
@@ -917,8 +901,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "River Coin",
-                "count": 1
+                "item_name": "River Coin"
               }
             }
           },
@@ -928,8 +911,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sun Coin",
-                "count": 1
+                "item_name": "Sun Coin"
               }
             }
           }
@@ -960,8 +942,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sand Coin",
-                "count": 1
+                "item_name": "Sand Coin"
               }
             }
           },
@@ -984,8 +965,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "River Coin",
-                "count": 1
+                "item_name": "River Coin"
               }
             }
           },
@@ -1008,8 +988,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sun Coin",
-                "count": 1
+                "item_name": "Sun Coin"
               }
             }
           },
@@ -1039,8 +1018,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sky Coin",
-                "count": 1
+                "item_name": "Sky Coin"
               }
             }
           },
@@ -1155,8 +1133,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Venus Key",
-                    "count": 1
+                    "item_name": "Venus Key"
                   }
                 }
               ]
@@ -1350,8 +1327,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Kaeli 1",
-                "count": 1
+                "item_name": "Kaeli 1"
               }
             },
             "item": {
@@ -1496,8 +1472,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tree Wither",
-                "count": 1
+                "item_name": "Tree Wither"
               }
             },
             "item": {
@@ -1542,8 +1517,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Barrel Pushed",
-                "count": 1
+                "item_name": "Barrel Pushed"
               }
             }
           },
@@ -1566,8 +1540,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Barrel Pushed",
-                "count": 1
+                "item_name": "Barrel Pushed"
               }
             }
           },
@@ -1648,8 +1621,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Libra Crest",
-                "count": 1
+                "item_name": "Libra Crest"
               }
             }
           }
@@ -1680,8 +1652,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Gemini Crest",
-                "count": 1
+                "item_name": "Gemini Crest"
               }
             }
           }
@@ -1712,8 +1683,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mobius Crest",
-                "count": 1
+                "item_name": "Mobius Crest"
               }
             }
           }
@@ -1896,8 +1866,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tristam",
-                "count": 1
+                "item_name": "Tristam"
               }
             },
             "item": {
@@ -1914,8 +1883,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tristam",
-                "count": 1
+                "item_name": "Tristam"
               }
             },
             "item": {
@@ -2016,8 +1984,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Long Spine Bombed",
-                "count": 1
+                "item_name": "Long Spine Bombed"
               }
             }
           }
@@ -2071,8 +2038,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Long Spine Bombed",
-                "count": 1
+                "item_name": "Long Spine Bombed"
               }
             }
           },
@@ -2082,8 +2048,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Short Spine Bombed",
-                "count": 1
+                "item_name": "Short Spine Bombed"
               }
             }
           },
@@ -2093,8 +2058,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Long Spine Bombed",
-                "count": 1
+                "item_name": "Long Spine Bombed"
               }
             }
           }
@@ -2155,8 +2119,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Short Spine Bombed",
-                "count": 1
+                "item_name": "Short Spine Bombed"
               }
             }
           }
@@ -2235,8 +2198,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Skull 1 Bombed",
-                "count": 1
+                "item_name": "Skull 1 Bombed"
               }
             }
           }
@@ -2297,8 +2259,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Skull 2 Bombed",
-                "count": 1
+                "item_name": "Skull 2 Bombed"
               }
             }
           },
@@ -2308,8 +2269,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Skull 1 Bombed",
-                "count": 1
+                "item_name": "Skull 1 Bombed"
               }
             }
           }
@@ -2371,8 +2331,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Skull 2 Bombed",
-                "count": 1
+                "item_name": "Skull 2 Bombed"
               }
             }
           }
@@ -2480,8 +2439,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Libra Crest",
-                "count": 1
+                "item_name": "Libra Crest"
               }
             }
           }
@@ -2555,8 +2513,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Summer Aquaria",
-                "count": 1
+                "item_name": "Summer Aquaria"
               }
             }
           },
@@ -2566,8 +2523,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Summer Aquaria",
-                "count": 1
+                "item_name": "Summer Aquaria"
               }
             }
           }
@@ -2579,8 +2535,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Wakewater",
-                "count": 1
+                "item_name": "Wakewater"
               }
             },
             "item": {
@@ -2800,8 +2755,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Phoebe 1",
-                "count": 1
+                "item_name": "Phoebe 1"
               }
             },
             "item": {
@@ -3042,8 +2996,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Phanquid",
-                "count": 1
+                "item_name": "Phanquid"
               }
             },
             "item": {
@@ -3101,8 +3054,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Libra Crest",
-                "count": 1
+                "item_name": "Libra Crest"
               }
             }
           }
@@ -3156,8 +3108,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Freezer Crab",
-                "count": 1
+                "item_name": "Freezer Crab"
               }
             },
             "item": {
@@ -3285,8 +3236,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ice Pyramid 1F Statue",
-                "count": 1
+                "item_name": "Ice Pyramid 1F Statue"
               }
             }
           }
@@ -3361,8 +3311,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ice Pyramid 1F Statue",
-                "count": 1
+                "item_name": "Ice Pyramid 1F Statue"
               }
             }
           }
@@ -3676,8 +3625,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ice Pyramid 3F Statue",
-                "count": 1
+                "item_name": "Ice Pyramid 3F Statue"
               }
             }
           }
@@ -3780,8 +3728,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ice Pyramid 3F Statue",
-                "count": 1
+                "item_name": "Ice Pyramid 3F Statue"
               }
             }
           }
@@ -3811,8 +3758,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ice Pyramid 4F Statue",
-                "count": 1
+                "item_name": "Ice Pyramid 4F Statue"
               }
             }
           }
@@ -3828,8 +3774,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ice Pyramid 4F Statue",
-                "count": 1
+                "item_name": "Ice Pyramid 4F Statue"
               }
             }
           }
@@ -4038,8 +3983,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ice Pyramid 5F Statue",
-                "count": 1
+                "item_name": "Ice Pyramid 5F Statue"
               }
             },
             "item": {
@@ -4098,8 +4042,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ice Pyramid 5F Statue",
-                "count": 1
+                "item_name": "Ice Pyramid 5F Statue"
               }
             },
             "item": {
@@ -4256,8 +4199,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ice Golem",
-                "count": 1
+                "item_name": "Ice Golem"
               }
             },
             "item": {
@@ -4365,8 +4307,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Venus Key",
-                "count": 1
+                "item_name": "Venus Key"
               }
             },
             "item": {
@@ -4395,8 +4336,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mega Grenade",
-                "count": 1
+                "item_name": "Mega Grenade"
               }
             }
           }
@@ -4408,8 +4348,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mega Grenade",
-                "count": 1
+                "item_name": "Mega Grenade"
               }
             },
             "item": {
@@ -4439,8 +4378,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mobius Crest",
-                "count": 1
+                "item_name": "Mobius Crest"
               }
             }
           },
@@ -4514,8 +4452,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Mega Grenade",
-                    "count": 1
+                    "item_name": "Mega Grenade"
                   }
                 }
               ]
@@ -4540,8 +4477,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Libra Crest",
-                "count": 1
+                "item_name": "Libra Crest"
               }
             }
           }
@@ -4557,8 +4493,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Libra Crest",
-                "count": 1
+                "item_name": "Libra Crest"
               }
             }
           },
@@ -4568,8 +4503,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Spencer Cave Libra Block Bombed",
-                "count": 1
+                "item_name": "Spencer Cave Libra Block Bombed"
               }
             }
           }
@@ -4585,8 +4519,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mobius Crest",
-                "count": 1
+                "item_name": "Mobius Crest"
               }
             }
           },
@@ -4645,8 +4578,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Gemini Crest",
-                "count": 1
+                "item_name": "Gemini Crest"
               }
             }
           }
@@ -4753,8 +4685,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Multi Key",
-                "count": 1
+                "item_name": "Multi Key"
               }
             }
           }
@@ -4794,8 +4725,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Reuben Dad Saved",
-                "count": 1
+                "item_name": "Reuben Dad Saved"
               }
             },
             "item": {
@@ -4846,8 +4776,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Multi Key",
-                "count": 1
+                "item_name": "Multi Key"
               }
             }
           },
@@ -5154,8 +5083,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Jinn",
-                "count": 1
+                "item_name": "Jinn"
               }
             }
           },
@@ -5392,8 +5320,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Reuben 1",
-                "count": 1
+                "item_name": "Reuben 1"
               }
             },
             "item": {
@@ -5410,8 +5337,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mega Grenade",
-                "count": 1
+                "item_name": "Mega Grenade"
               }
             },
             "item": {
@@ -5441,8 +5367,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Gemini Crest",
-                "count": 1
+                "item_name": "Gemini Crest"
               }
             }
           }
@@ -5580,8 +5505,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Medusa",
-                "count": 1
+                "item_name": "Medusa"
               }
             },
             "item": {
@@ -6022,8 +5946,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Lava Dome Plate",
-                "count": 1
+                "item_name": "Lava Dome Plate"
               }
             }
           }
@@ -6431,8 +6354,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mega Grenade",
-                "count": 1
+                "item_name": "Mega Grenade"
               }
             },
             "item": {
@@ -6524,8 +6446,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mega Grenade",
-                "count": 1
+                "item_name": "Mega Grenade"
               }
             }
           }
@@ -6751,8 +6672,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dualhead Hydra",
-                "count": 1
+                "item_name": "Dualhead Hydra"
               }
             }
           }
@@ -6764,8 +6684,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dualhead Hydra",
-                "count": 1
+                "item_name": "Dualhead Hydra"
               }
             },
             "item": {
@@ -6916,8 +6835,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Libra Crest",
-                    "count": 1
+                    "item_name": "Libra Crest"
                   }
                 }
               ]
@@ -6944,8 +6862,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Gemini Crest",
-                    "count": 1
+                    "item_name": "Gemini Crest"
                   }
                 }
               ]
@@ -6972,8 +6889,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Mobius Crest",
-                    "count": 1
+                    "item_name": "Mobius Crest"
                   }
                 }
               ]
@@ -7107,8 +7023,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           }
@@ -7188,8 +7103,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           }
@@ -7205,8 +7119,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           }
@@ -7222,8 +7135,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           },
@@ -7247,8 +7159,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           }
@@ -7294,8 +7205,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           }
@@ -7424,8 +7334,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           }
@@ -7500,8 +7409,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Gidrah",
-                    "count": 1
+                    "item_name": "Gidrah"
                   }
                 }
               ]
@@ -7587,8 +7495,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           }
@@ -7682,8 +7589,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           },
@@ -8035,8 +7941,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           }
@@ -8116,8 +8021,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           }
@@ -8470,8 +8374,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mobius Crest",
-                "count": 1
+                "item_name": "Mobius Crest"
               }
             }
           },
@@ -8580,8 +8483,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Dragon Claw",
-                    "count": 1
+                    "item_name": "Dragon Claw"
                   }
                 }
               ]
@@ -8601,8 +8503,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             },
             "item": {
@@ -8702,8 +8603,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Thunder Rock",
-                "count": 1
+                "item_name": "Thunder Rock"
               }
             },
             "item": {
@@ -8821,8 +8721,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mobius Crest",
-                "count": 1
+                "item_name": "Mobius Crest"
               }
             }
           }
@@ -8924,8 +8823,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Kaeli 2",
-                "count": 1
+                "item_name": "Kaeli 2"
               }
             },
             "item": {
@@ -9118,8 +9016,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           }
@@ -9316,8 +9213,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           },
@@ -9327,8 +9223,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           }
@@ -9351,8 +9246,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           }
@@ -9741,8 +9635,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           }
@@ -9758,8 +9651,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           },
@@ -9810,8 +9702,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             }
           }
@@ -9977,8 +9868,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mobius Crest",
-                "count": 1
+                "item_name": "Mobius Crest"
               }
             }
           }
@@ -10016,8 +9906,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mobius Crest",
-                "count": 1
+                "item_name": "Mobius Crest"
               }
             }
           }
@@ -10185,8 +10074,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             },
             "item": {
@@ -10203,8 +10091,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             },
             "item": {
@@ -10421,8 +10308,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Captain's Cap",
-                "count": 1
+                "item_name": "Captain's Cap"
               }
             },
             "item": {
@@ -10459,8 +10345,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Stone Golem",
-                "count": 1
+                "item_name": "Stone Golem"
               }
             }
           },
@@ -10526,8 +10411,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Dragon Claw",
-                    "count": 1
+                    "item_name": "Dragon Claw"
                   }
                 }
               ]
@@ -10560,8 +10444,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Dragon Claw",
-                    "count": 1
+                    "item_name": "Dragon Claw"
                   }
                 }
               ]
@@ -10616,8 +10499,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Dragon Claw",
-                    "count": 1
+                    "item_name": "Dragon Claw"
                   }
                 }
               ]
@@ -10650,8 +10532,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Dragon Claw",
-                    "count": 1
+                    "item_name": "Dragon Claw"
                   }
                 }
               ]
@@ -10685,8 +10566,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             },
             "item": {
@@ -10703,8 +10583,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             },
             "item": {
@@ -10721,8 +10600,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             },
             "item": {
@@ -10739,8 +10617,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             },
             "item": {
@@ -10757,8 +10634,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             },
             "item": {
@@ -10825,8 +10701,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Dragon Claw",
-                "count": 1
+                "item_name": "Dragon Claw"
               }
             },
             "item": {
@@ -13075,7 +12950,6 @@
           "display_name": "Tweak Frustrating Dungeons"
         }
       },
-      "shops": [],
       "rooms": [
         {
           "name": "Overworld",
@@ -21269,9 +21143,31 @@
           ]
         }
       ],
-      "world_description": "Final Fantasy Mystic Quest WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Final Fantasy: Mystic Quest is a simple, humorous RPG for the Super Nintendo. You travel across four continents,\nlinked in the middle of the world by the Focus Tower, which has been locked by four magical coins. Make your way to\nthe bottom of the Focus Tower, then straight up through the top!",
       "web": {
-        "theme": "grass"
+        "theme": "grass",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to playing Final Fantasy Mystic Quest with Archipelago.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Alchav"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to playing Final Fantasy Mystic Quest with Archipelago.",
+            "language": "Fran\u00e7ais",
+            "file_name": "setup_fr.md",
+            "link": "setup/fr",
+            "authors": [
+              "Artea"
+            ]
+          }
+        ]
       },
       "world_directory": "ffmq_worldgen"
     }

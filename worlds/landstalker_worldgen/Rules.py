@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Has, HelperCall, True_
+from rule_builder import True_, False_, And, Has, HasAll, HelperCall, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -32,7 +32,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("massan -> massan_cave", player),
-        And(And(Has('Axe Magic'), Has('Lantern')), True_())
+        And(HasAll('Axe Magic', 'Lantern'), True_())
     )
 
     world.set_rule(
@@ -42,7 +42,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("massan_cave -> massan", player),
-        And(And(Has('Axe Magic'), Has('Lantern')), True_())
+        And(HasAll('Axe Magic', 'Lantern'), True_())
     )
 
     world.set_rule(
@@ -62,7 +62,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("route_gumi_ryuma -> helga_hut", player),
-        And(Has('Einstein Whistle'), Has('event_visited_massan'))
+        HasAll('Einstein Whistle', 'event_visited_massan')
     )
 
     world.set_rule(
@@ -92,7 +92,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("helga_hut -> route_gumi_ryuma", player),
-        And(Has('Einstein Whistle'), Has('event_visited_massan'))
+        HasAll('Einstein Whistle', 'event_visited_massan')
     )
 
     world.set_rule(
@@ -247,7 +247,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("king_nole_cave -> kazalt", player),
-        And(And(Has('Blue Jewel'), Has('Green Jewel'), Has('Purple Jewel'), Has('Red Jewel'), Has('Yellow Jewel')), True_())
+        And(HasAll('Blue Jewel', 'Green Jewel', 'Purple Jewel', 'Red Jewel', 'Yellow Jewel'), True_())
     )
 
     world.set_rule(
@@ -272,7 +272,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("king_nole_labyrinth_post_door -> king_nole_labyrinth_sacred_tree", player),
-        And(Has('Axe Magic'), Has('event_visited_king_nole_labyrinth_raft_entrance'))
+        HasAll('Axe Magic', 'event_visited_king_nole_labyrinth_raft_entrance')
     )
 
     world.set_rule(
@@ -287,7 +287,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("king_nole_palace -> end", player),
-        And(And(Has("Gola's Fang"), Has("Gola's Horn"), Has("Gola's Nail")), True_())
+        And(HasAll("Gola's Fang", "Gola's Horn", "Gola's Nail"), True_())
     )
     # Location rules
     world.set_rule(

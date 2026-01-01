@@ -1161,8 +1161,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Cursed Seal",
-                "count": 1
+                "item_name": "Cursed Seal"
               }
             }
           },
@@ -1580,8 +1579,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Meridian Defeated",
-                "count": 1
+                "item_name": "Meridian Defeated"
               }
             }
           }
@@ -1627,8 +1625,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ataraxia Defeated",
-                "count": 1
+                "item_name": "Ataraxia Defeated"
               }
             }
           }
@@ -1674,8 +1671,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Merodach Defeated",
-                "count": 1
+                "item_name": "Merodach Defeated"
               }
             }
           }
@@ -2338,13 +2334,12 @@
           "display_name": "Randomize Items"
         }
       },
-      "shops": [],
       "goal": 0,
       "include_evolution_traps": 0,
       "include_psi_keys": 1,
       "item_cache_cost": 0,
       "death_link": 0,
-      "world_description": "Meritous WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Meritous Gaiden is a procedurally generated bullet-hell dungeon crawl game.\nFive generations after the Orcus Dome incident, strange experiments conducted in a new\nstructure on the moon are tearing at the very fabric of reality...",
       "slot_data": {
         "goal": 0,
         "cost_scale": [
@@ -2355,7 +2350,19 @@
         "death_link": 0
       },
       "web": {
-        "theme": "ice"
+        "theme": "ice",
+        "tutorials": [
+          {
+            "name": "Meritous Setup Guide",
+            "description": "A guide to setting up the Archipelago Meritous software on your computer.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "KewlioMZX"
+            ]
+          }
+        ]
       },
       "world_directory": "meritous_worldgen"
     }

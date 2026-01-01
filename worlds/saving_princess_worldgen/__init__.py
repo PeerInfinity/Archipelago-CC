@@ -54,15 +54,25 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class SavingPrincessWorldGenWeb(WebWorld):
     """Web interface for Saving Princess WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "partyTime"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up Saving Princess for Archipelago multiworld.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["LeonarthCG"]
+        )
+    ]
 
 
 class SavingPrincessWorldGenWorld(RuleWorldMixin, World):
     """
-    Saving Princess WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Explore a space station crawling with rogue machines and even rival bounty hunters
+    with the same objective as you - but with far, far different intentions!
+    
+    Expand your arsenal as you collect upgrades to your trusty arm cannon and armor!
     """
 
     game: ClassVar[str] = "Saving Princess WorldGen"
@@ -138,11 +148,9 @@ class SavingPrincessWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.is_pool_expanded = True
         self.world_description = 'Explore a space station crawling with rogue machines and even rival bounty hunters\nwith the same objective as you - but with far, far different intentions!\n\nExpand your arsenal as you collect upgrades to your trusty arm cannon and armor!'
         self.slot_data = types.SimpleNamespace(death_link=0, expanded_pool=1, instant_saving=1, sprint_availability=2, cliff_weapon_upgrade=1, ace_weapon_upgrade=1, shake_intensity=50, iframes_duration=100, music_table=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
-        self.web = types.SimpleNamespace(theme='partyTime', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up Saving Princess for Archipelago multiworld.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['LeonarthCG']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -236,4 +244,14 @@ class SavingPrincessWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "death_link": 0,
+            "expanded_pool": 1,
+            "instant_saving": 1,
+            "sprint_availability": 2,
+            "cliff_weapon_upgrade": 1,
+            "ace_weapon_upgrade": 1,
+            "shake_intensity": 50,
+            "iframes_duration": 100,
+            "music_table": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+        }

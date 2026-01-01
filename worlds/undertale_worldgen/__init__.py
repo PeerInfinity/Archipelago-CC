@@ -84,15 +84,24 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class UndertaleWorldGenWeb(WebWorld):
     """Web interface for Undertale WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "grass"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up the Archipelago Undertale software on your computer. This guide covers single-player, multiworld, and related software.",
+            "English",
+            "setup_en.md",
+            "setup/en",
+            ["Mewlif"]
+        )
+    ]
 
 
 class UndertaleWorldGenWorld(RuleWorldMixin, World):
     """
-    Undertale WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Undertale is an RPG where every choice you make matters. You could choose to hurt all the enemies, eventually
+    causing genocide of the monster species. Or you can spare all the enemies, befriending them and freeing them
+    from their underground prison.
     """
 
     game: ClassVar[str] = "Undertale WorldGen"
@@ -177,10 +186,8 @@ class UndertaleWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.world_description = 'Undertale is an RPG where every choice you make matters. You could choose to hurt all the enemies, eventually\ncausing genocide of the monster species. Or you can spare all the enemies, befriending them and freeing them\nfrom their underground prison.'
         self.slot_data = types.SimpleNamespace(world_seed=3777206549, seed_name='14089154938208861744', player_name='Player1', player_id=1, client_version=[0, 1, 6], race=False, route='neutral', starting_area='ruins', temy_armor_include=True, only_flakes=False, no_equips=False, key_hunt=False, key_pieces=5, rando_love=False, rando_stats=False, prog_armor=False, prog_weapons=False, rando_item_button=False, route_required=0, temy_include=1)
-        self.web = types.SimpleNamespace(theme='grass', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up the Archipelago Undertale software on your computer. This guide covers single-player, multiworld, and related software.', 'language': 'English', 'file_name': 'setup_en.md', 'link': 'setup/en', 'authors': ['Mewlif']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -274,4 +281,25 @@ class UndertaleWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "world_seed": 3777206549,
+            "seed_name": "14089154938208861744",
+            "player_name": "Player1",
+            "player_id": 1,
+            "client_version": [0, 1, 6],
+            "race": False,
+            "route": "neutral",
+            "starting_area": "ruins",
+            "temy_armor_include": True,
+            "only_flakes": False,
+            "no_equips": False,
+            "key_hunt": False,
+            "key_pieces": 5,
+            "rando_love": False,
+            "rando_stats": False,
+            "prog_armor": False,
+            "prog_weapons": False,
+            "rando_item_button": False,
+            "route_required": 0,
+            "temy_include": 1,
+        }

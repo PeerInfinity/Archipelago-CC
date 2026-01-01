@@ -19,7 +19,8 @@
       "start_inventory": {},
       "start_location_hints": []
     },
-    "world_directory": "meritous"
+    "world_directory": "meritous",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "goal": 0,

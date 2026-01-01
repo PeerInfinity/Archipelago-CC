@@ -62,15 +62,22 @@ STARTING_ITEMS: Dict[str, int] = {
 
 class WargrooveWorldGenWeb(WebWorld):
     """Web interface for Wargroove WorldGen."""
-    theme = "ocean"
-    tutorials = []
+    theme = "grass"
+    tutorials = [
+        Tutorial(
+            "Multiworld Setup Guide",
+            "A guide to setting up Wargroove for Archipelago.",
+            "English",
+            "wargroove_en.md",
+            "wargroove/en",
+            ["Fly Sniper"]
+        )
+    ]
 
 
 class WargrooveWorldGenWorld(RuleWorldMixin, World):
     """
-    Wargroove WorldGen for Archipelago.
-
-    Auto-generated world implementation.
+    Command an army, in this retro style turn based strategy game!
     """
 
     game: ClassVar[str] = "Wargroove WorldGen"
@@ -143,10 +150,8 @@ class WargrooveWorldGenWorld(RuleWorldMixin, World):
     def __init__(self, multiworld: "MultiWorld", player: int):
         super().__init__(multiworld, player)
         # Game-specific world attributes
-        self.shops = []
         self.world_description = 'Command an army, in this retro style turn based strategy game!'
         self.slot_data = types.SimpleNamespace(seed='jpYxoraZuFulnbuu', income_boost=25, commander_defense_boost=2, can_choose_commander=False, commander_choice=0, player_sacrifice_limit=0, player_summon_limit=0, ai_sacrifice_limit=0, ai_summon_limit=0, death_link=0, starting_groove_multiplier=20)
-        self.web = types.SimpleNamespace(theme='grass', tutorials=[{'name': 'Multiworld Setup Guide', 'description': 'A guide to setting up Wargroove for Archipelago.', 'language': 'English', 'file_name': 'wargroove_en.md', 'link': 'wargroove/en', 'authors': ['Fly Sniper']}])
 
     def generate_early(self) -> None:
         """Push starting items and disable randomization for seed 1."""
@@ -258,4 +263,16 @@ class WargrooveWorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "seed": "jpYxoraZuFulnbuu",
+            "income_boost": 25,
+            "commander_defense_boost": 2,
+            "can_choose_commander": False,
+            "commander_choice": 0,
+            "player_sacrifice_limit": 0,
+            "player_summon_limit": 0,
+            "ai_sacrifice_limit": 0,
+            "ai_summon_limit": 0,
+            "death_link": 0,
+            "starting_groove_multiplier": 20,
+        }

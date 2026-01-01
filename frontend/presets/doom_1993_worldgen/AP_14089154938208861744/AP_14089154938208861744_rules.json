@@ -34,8 +34,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hangar (E1M1)",
-                "count": 1
+                "item_name": "Hangar (E1M1)"
               }
             }
           },
@@ -57,8 +56,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Nuclear Plant (E1M2)",
-                    "count": 1
+                    "item_name": "Nuclear Plant (E1M2)"
                   }
                 }
               ]
@@ -70,8 +68,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Toxin Refinery (E1M3)",
-                "count": 1
+                "item_name": "Toxin Refinery (E1M3)"
               }
             }
           },
@@ -81,8 +78,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Command Control (E1M4)",
-                "count": 1
+                "item_name": "Command Control (E1M4)"
               }
             }
           },
@@ -121,8 +117,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Computer Station (E1M7)",
-                "count": 1
+                "item_name": "Computer Station (E1M7)"
               }
             }
           },
@@ -175,8 +170,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Deimos Anomaly (E2M1)",
-                "count": 1
+                "item_name": "Deimos Anomaly (E2M1)"
               }
             }
           },
@@ -240,8 +234,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Deimos Lab (E2M4)",
-                "count": 1
+                "item_name": "Deimos Lab (E2M4)"
               }
             }
           },
@@ -297,8 +290,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Tower of Babel (E2M8)",
-                "count": 1
+                "item_name": "Tower of Babel (E2M8)"
               }
             }
           },
@@ -337,8 +329,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Hell Keep (E3M1)",
-                "count": 1
+                "item_name": "Hell Keep (E3M1)"
               }
             }
           },
@@ -360,8 +351,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Slough of Despair (E3M2)",
-                    "count": 1
+                    "item_name": "Slough of Despair (E3M2)"
                   }
                 }
               ]
@@ -431,8 +421,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unholy Cathedral (E3M5)",
-                "count": 1
+                "item_name": "Unholy Cathedral (E3M5)"
               }
             }
           },
@@ -611,8 +600,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Nuclear Plant (E1M2) - Red keycard",
-                "count": 1
+                "item_name": "Nuclear Plant (E1M2) - Red keycard"
               }
             }
           }
@@ -727,8 +715,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Nuclear Plant (E1M2) - Red keycard",
-                "count": 1
+                "item_name": "Nuclear Plant (E1M2) - Red keycard"
               }
             }
           }
@@ -815,8 +802,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Toxin Refinery (E1M3) - Blue keycard",
-                "count": 1
+                "item_name": "Toxin Refinery (E1M3) - Blue keycard"
               }
             }
           },
@@ -966,8 +952,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Toxin Refinery (E1M3) - Yellow keycard",
-                "count": 1
+                "item_name": "Toxin Refinery (E1M3) - Yellow keycard"
               }
             }
           },
@@ -977,8 +962,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Toxin Refinery (E1M3) - Blue keycard",
-                "count": 1
+                "item_name": "Toxin Refinery (E1M3) - Blue keycard"
               }
             }
           }
@@ -1037,8 +1021,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Toxin Refinery (E1M3) - Yellow keycard",
-                "count": 1
+                "item_name": "Toxin Refinery (E1M3) - Yellow keycard"
               }
             }
           }
@@ -1401,8 +1384,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Phobos Lab (E1M5) - Yellow keycard",
-                "count": 1
+                "item_name": "Phobos Lab (E1M5) - Yellow keycard"
               }
             }
           }
@@ -1524,8 +1506,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Phobos Lab (E1M5) - Blue keycard",
-                "count": 1
+                "item_name": "Phobos Lab (E1M5) - Blue keycard"
               }
             }
           },
@@ -1605,8 +1586,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Phobos Lab (E1M5) - Blue keycard",
-                "count": 1
+                "item_name": "Phobos Lab (E1M5) - Blue keycard"
               }
             }
           },
@@ -1651,8 +1631,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Phobos Lab (E1M5) - Blue keycard",
-                "count": 1
+                "item_name": "Phobos Lab (E1M5) - Blue keycard"
               }
             }
           }
@@ -1739,8 +1718,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Central Processing (E1M6) - Yellow keycard",
-                "count": 1
+                "item_name": "Central Processing (E1M6) - Yellow keycard"
               }
             }
           },
@@ -1750,8 +1728,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Central Processing (E1M6) - Red keycard",
-                "count": 1
+                "item_name": "Central Processing (E1M6) - Red keycard"
               }
             }
           },
@@ -1761,8 +1738,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Central Processing (E1M6) - Blue keycard",
-                "count": 1
+                "item_name": "Central Processing (E1M6) - Blue keycard"
               }
             }
           },
@@ -1772,8 +1748,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Central Processing (E1M6) - Blue keycard",
-                "count": 1
+                "item_name": "Central Processing (E1M6) - Blue keycard"
               }
             }
           }
@@ -2042,8 +2017,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Central Processing (E1M6) - Yellow keycard",
-                "count": 1
+                "item_name": "Central Processing (E1M6) - Yellow keycard"
               }
             }
           }
@@ -2130,8 +2104,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Computer Station (E1M7) - Red keycard",
-                "count": 1
+                "item_name": "Computer Station (E1M7) - Red keycard"
               }
             }
           },
@@ -2141,8 +2114,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Computer Station (E1M7) - Yellow keycard",
-                "count": 1
+                "item_name": "Computer Station (E1M7) - Yellow keycard"
               }
             }
           },
@@ -2194,8 +2166,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Computer Station (E1M7) - Blue keycard",
-                "count": 1
+                "item_name": "Computer Station (E1M7) - Blue keycard"
               }
             }
           }
@@ -2240,8 +2211,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Computer Station (E1M7) - Red keycard",
-                "count": 1
+                "item_name": "Computer Station (E1M7) - Red keycard"
               }
             }
           }
@@ -2272,8 +2242,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Computer Station (E1M7) - Blue keycard",
-                "count": 1
+                "item_name": "Computer Station (E1M7) - Blue keycard"
               }
             }
           },
@@ -2436,8 +2405,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Computer Station (E1M7) - Yellow keycard",
-                "count": 1
+                "item_name": "Computer Station (E1M7) - Yellow keycard"
               }
             }
           }
@@ -2634,8 +2602,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Military Base (E1M9) - Blue keycard",
-                "count": 1
+                "item_name": "Military Base (E1M9) - Blue keycard"
               }
             }
           },
@@ -2645,8 +2612,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Military Base (E1M9) - Yellow keycard",
-                "count": 1
+                "item_name": "Military Base (E1M9) - Yellow keycard"
               }
             }
           },
@@ -2656,8 +2622,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Military Base (E1M9) - Red keycard",
-                "count": 1
+                "item_name": "Military Base (E1M9) - Red keycard"
               }
             }
           }
@@ -2730,8 +2695,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Military Base (E1M9) - Blue keycard",
-                "count": 1
+                "item_name": "Military Base (E1M9) - Blue keycard"
               }
             }
           }
@@ -2832,8 +2796,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Military Base (E1M9) - Yellow keycard",
-                "count": 1
+                "item_name": "Military Base (E1M9) - Yellow keycard"
               }
             }
           }
@@ -2864,8 +2827,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Deimos Anomaly (E2M1) - Red keycard",
-                "count": 1
+                "item_name": "Deimos Anomaly (E2M1) - Red keycard"
               }
             }
           },
@@ -2875,8 +2837,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Deimos Anomaly (E2M1) - Blue keycard",
-                "count": 1
+                "item_name": "Deimos Anomaly (E2M1) - Blue keycard"
               }
             }
           }
@@ -2977,8 +2938,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Deimos Anomaly (E2M1) - Blue keycard",
-                "count": 1
+                "item_name": "Deimos Anomaly (E2M1) - Blue keycard"
               }
             }
           }
@@ -3009,8 +2969,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Deimos Anomaly (E2M1) - Red keycard",
-                "count": 1
+                "item_name": "Deimos Anomaly (E2M1) - Red keycard"
               }
             }
           }
@@ -3055,8 +3014,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Containment Area (E2M2) - Yellow keycard",
-                "count": 1
+                "item_name": "Containment Area (E2M2) - Yellow keycard"
               }
             }
           },
@@ -3066,8 +3024,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Containment Area (E2M2) - Blue keycard",
-                "count": 1
+                "item_name": "Containment Area (E2M2) - Blue keycard"
               }
             }
           },
@@ -3077,8 +3034,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Containment Area (E2M2) - Red keycard",
-                "count": 1
+                "item_name": "Containment Area (E2M2) - Red keycard"
               }
             }
           }
@@ -3307,8 +3263,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Containment Area (E2M2) - Blue keycard",
-                "count": 1
+                "item_name": "Containment Area (E2M2) - Blue keycard"
               }
             }
           }
@@ -3339,8 +3294,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Containment Area (E2M2) - Red keycard",
-                "count": 1
+                "item_name": "Containment Area (E2M2) - Red keycard"
               }
             }
           },
@@ -3439,8 +3393,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Refinery (E2M3) - Blue keycard",
-                "count": 1
+                "item_name": "Refinery (E2M3) - Blue keycard"
               }
             }
           }
@@ -3583,8 +3536,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Refinery (E2M3) - Blue keycard",
-                "count": 1
+                "item_name": "Refinery (E2M3) - Blue keycard"
               }
             }
           }
@@ -3643,8 +3595,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Deimos Lab (E2M4) - Blue keycard",
-                "count": 1
+                "item_name": "Deimos Lab (E2M4) - Blue keycard"
               }
             }
           },
@@ -3829,8 +3780,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Deimos Lab (E2M4) - Yellow keycard",
-                "count": 1
+                "item_name": "Deimos Lab (E2M4) - Yellow keycard"
               }
             }
           }
@@ -4140,8 +4090,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Halls of the Damned (E2M6) - Yellow skull key",
-                "count": 1
+                "item_name": "Halls of the Damned (E2M6) - Yellow skull key"
               }
             }
           },
@@ -4151,8 +4100,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Halls of the Damned (E2M6) - Yellow skull key",
-                "count": 1
+                "item_name": "Halls of the Damned (E2M6) - Yellow skull key"
               }
             }
           }
@@ -4428,8 +4376,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Halls of the Damned (E2M6) - Yellow skull key",
-                "count": 1
+                "item_name": "Halls of the Damned (E2M6) - Yellow skull key"
               }
             }
           }
@@ -4474,8 +4421,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Spawning Vats (E2M7) - Blue keycard",
-                "count": 1
+                "item_name": "Spawning Vats (E2M7) - Blue keycard"
               }
             }
           },
@@ -4498,8 +4444,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Spawning Vats (E2M7) - Red keycard",
-                "count": 1
+                "item_name": "Spawning Vats (E2M7) - Red keycard"
               }
             }
           },
@@ -4509,8 +4454,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Spawning Vats (E2M7) - Yellow keycard",
-                "count": 1
+                "item_name": "Spawning Vats (E2M7) - Yellow keycard"
               }
             }
           }
@@ -4737,8 +4681,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Spawning Vats (E2M7) - Yellow keycard",
-                "count": 1
+                "item_name": "Spawning Vats (E2M7) - Yellow keycard"
               }
             }
           }
@@ -4769,8 +4712,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Spawning Vats (E2M7) - Red keycard",
-                "count": 1
+                "item_name": "Spawning Vats (E2M7) - Red keycard"
               }
             }
           },
@@ -4967,8 +4909,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Fortress of Mystery (E2M9) - Blue skull key",
-                "count": 1
+                "item_name": "Fortress of Mystery (E2M9) - Blue skull key"
               }
             }
           },
@@ -4978,8 +4919,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Fortress of Mystery (E2M9) - Red skull key",
-                "count": 1
+                "item_name": "Fortress of Mystery (E2M9) - Red skull key"
               }
             }
           },
@@ -4989,8 +4929,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Fortress of Mystery (E2M9) - Yellow skull key",
-                "count": 1
+                "item_name": "Fortress of Mystery (E2M9) - Yellow skull key"
               }
             }
           }
@@ -5147,8 +5086,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Fortress of Mystery (E2M9) - Blue skull key",
-                "count": 1
+                "item_name": "Fortress of Mystery (E2M9) - Blue skull key"
               }
             }
           }
@@ -5179,8 +5117,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Fortress of Mystery (E2M9) - Red skull key",
-                "count": 1
+                "item_name": "Fortress of Mystery (E2M9) - Red skull key"
               }
             }
           }
@@ -5211,8 +5148,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Fortress of Mystery (E2M9) - Yellow skull key",
-                "count": 1
+                "item_name": "Fortress of Mystery (E2M9) - Yellow skull key"
               }
             }
           }
@@ -5319,8 +5255,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Slough of Despair (E3M2) - Blue skull key",
-                "count": 1
+                "item_name": "Slough of Despair (E3M2) - Blue skull key"
               }
             }
           }
@@ -5463,8 +5398,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Slough of Despair (E3M2) - Blue skull key",
-                "count": 1
+                "item_name": "Slough of Despair (E3M2) - Blue skull key"
               }
             }
           }
@@ -5495,8 +5429,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pandemonium (E3M3) - Blue skull key",
-                "count": 1
+                "item_name": "Pandemonium (E3M3) - Blue skull key"
               }
             }
           }
@@ -5710,8 +5643,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Pandemonium (E3M3) - Blue skull key",
-                "count": 1
+                "item_name": "Pandemonium (E3M3) - Blue skull key"
               }
             }
           }
@@ -5742,8 +5674,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "House of Pain (E3M4) - Blue skull key",
-                "count": 1
+                "item_name": "House of Pain (E3M4) - Blue skull key"
               }
             }
           }
@@ -5888,8 +5819,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "House of Pain (E3M4) - Blue skull key",
-                "count": 1
+                "item_name": "House of Pain (E3M4) - Blue skull key"
               }
             }
           },
@@ -5899,8 +5829,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "House of Pain (E3M4) - Yellow skull key",
-                "count": 1
+                "item_name": "House of Pain (E3M4) - Yellow skull key"
               }
             }
           },
@@ -5910,8 +5839,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "House of Pain (E3M4) - Red skull key",
-                "count": 1
+                "item_name": "House of Pain (E3M4) - Red skull key"
               }
             }
           }
@@ -6012,8 +5940,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "House of Pain (E3M4) - Red skull key",
-                "count": 1
+                "item_name": "House of Pain (E3M4) - Red skull key"
               }
             }
           }
@@ -6072,8 +5999,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "House of Pain (E3M4) - Yellow skull key",
-                "count": 1
+                "item_name": "House of Pain (E3M4) - Yellow skull key"
               }
             }
           }
@@ -6104,8 +6030,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unholy Cathedral (E3M5) - Yellow skull key",
-                "count": 1
+                "item_name": "Unholy Cathedral (E3M5) - Yellow skull key"
               }
             }
           },
@@ -6115,8 +6040,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unholy Cathedral (E3M5) - Blue skull key",
-                "count": 1
+                "item_name": "Unholy Cathedral (E3M5) - Blue skull key"
               }
             }
           },
@@ -6280,8 +6204,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unholy Cathedral (E3M5) - Blue skull key",
-                "count": 1
+                "item_name": "Unholy Cathedral (E3M5) - Blue skull key"
               }
             }
           }
@@ -6327,8 +6250,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unholy Cathedral (E3M5) - Yellow skull key",
-                "count": 1
+                "item_name": "Unholy Cathedral (E3M5) - Yellow skull key"
               }
             }
           }
@@ -6422,8 +6344,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mt. Erebus (E3M6) - Blue skull key",
-                "count": 1
+                "item_name": "Mt. Erebus (E3M6) - Blue skull key"
               }
             }
           }
@@ -6679,8 +6600,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mt. Erebus (E3M6) - Blue skull key",
-                "count": 1
+                "item_name": "Mt. Erebus (E3M6) - Blue skull key"
               }
             }
           }
@@ -6711,8 +6631,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Limbo (E3M7) - Red skull key",
-                "count": 1
+                "item_name": "Limbo (E3M7) - Red skull key"
               }
             }
           },
@@ -6722,8 +6641,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Limbo (E3M7) - Blue skull key",
-                "count": 1
+                "item_name": "Limbo (E3M7) - Blue skull key"
               }
             }
           },
@@ -6733,8 +6651,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Limbo (E3M7) - Blue skull key",
-                "count": 1
+                "item_name": "Limbo (E3M7) - Blue skull key"
               }
             }
           }
@@ -6884,8 +6801,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Limbo (E3M7) - Yellow skull key",
-                "count": 1
+                "item_name": "Limbo (E3M7) - Yellow skull key"
               }
             }
           },
@@ -6951,8 +6867,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Limbo (E3M7) - Red skull key",
-                "count": 1
+                "item_name": "Limbo (E3M7) - Red skull key"
               }
             }
           },
@@ -7086,8 +7001,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Warrens (E3M9) - Blue skull key",
-                "count": 1
+                "item_name": "Warrens (E3M9) - Blue skull key"
               }
             }
           },
@@ -7097,8 +7011,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Warrens (E3M9) - Blue skull key",
-                "count": 1
+                "item_name": "Warrens (E3M9) - Blue skull key"
               }
             }
           }
@@ -7149,8 +7062,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Warrens (E3M9) - Blue skull key",
-                "count": 1
+                "item_name": "Warrens (E3M9) - Blue skull key"
               }
             }
           },
@@ -7160,8 +7072,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Warrens (E3M9) - Red skull key",
-                "count": 1
+                "item_name": "Warrens (E3M9) - Red skull key"
               }
             }
           }
@@ -10559,7 +10470,6 @@
           "display_name": "Start With Computer Area Maps"
         }
       },
-      "shops": [],
       "included_episodes": [
         1,
         1,
@@ -10572,7 +10482,7 @@
         "Deimos Anomaly (E2M1)",
         "Hell Keep (E3M1)"
       ],
-      "world_description": "DOOM 1993 WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Developed by id Software, and originally released in 1993, DOOM pioneered and popularized the first-person shooter,\nsetting a standard for all FPS games.",
       "slot_data": {
         "goal": 0,
         "difficulty": 2,
@@ -10600,7 +10510,19 @@
         "ammo4add": 50
       },
       "web": {
-        "theme": "dirt"
+        "theme": "dirt",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the DOOM 1993 randomizer connected to an Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Daivuk"
+            ]
+          }
+        ]
       },
       "world_directory": "doom_1993_worldgen"
     }

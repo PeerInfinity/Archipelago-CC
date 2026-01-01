@@ -152,8 +152,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key King",
-                "count": 1
+                "item_name": "Key King"
               }
             },
             "item": {
@@ -170,8 +169,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key Ace",
-                "count": 1
+                "item_name": "Key Ace"
               }
             },
             "item": {
@@ -193,8 +191,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key Jack",
-                "count": 1
+                "item_name": "Key Jack"
               }
             }
           },
@@ -204,8 +201,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Mattock",
-                "count": 1
+                "item_name": "Mattock"
               }
             }
           }
@@ -273,8 +269,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unlock Wingboots",
-                "count": 1
+                "item_name": "Unlock Wingboots"
               }
             },
             "item": {
@@ -307,8 +302,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Deluge",
-                    "count": 1
+                    "item_name": "Deluge"
                   }
                 }
               ]
@@ -520,8 +514,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key Joker",
-                "count": 1
+                "item_name": "Key Joker"
               }
             }
           },
@@ -531,8 +524,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key Jack",
-                "count": 1
+                "item_name": "Key Jack"
               }
             }
           },
@@ -600,8 +592,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unlock Wingboots",
-                "count": 1
+                "item_name": "Unlock Wingboots"
               }
             },
             "item": {
@@ -618,8 +609,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unlock Wingboots",
-                "count": 1
+                "item_name": "Unlock Wingboots"
               }
             },
             "item": {
@@ -762,8 +752,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sky Spring Flow",
-                "count": 1
+                "item_name": "Sky Spring Flow"
               }
             },
             "item": {
@@ -780,8 +769,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Spring Elixir",
-                "count": 1
+                "item_name": "Spring Elixir"
               }
             },
             "item": {
@@ -814,8 +802,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Key Queen",
-                    "count": 1
+                    "item_name": "Key Queen"
                   }
                 }
               ]
@@ -973,8 +960,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key Queen",
-                "count": 1
+                "item_name": "Key Queen"
               }
             }
           },
@@ -984,8 +970,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unlock Wingboots",
-                "count": 1
+                "item_name": "Unlock Wingboots"
               }
             }
           }
@@ -997,8 +982,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unlock Wingboots",
-                "count": 1
+                "item_name": "Unlock Wingboots"
               }
             },
             "item": {
@@ -1088,8 +1072,7 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Deluge",
-                    "count": 1
+                    "item_name": "Deluge"
                   }
                 }
               ]
@@ -1164,8 +1147,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unlock Wingboots",
-                "count": 1
+                "item_name": "Unlock Wingboots"
               }
             },
             "item": {
@@ -1242,8 +1224,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key King",
-                "count": 1
+                "item_name": "Key King"
               }
             }
           },
@@ -1253,8 +1234,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key Ace",
-                "count": 1
+                "item_name": "Key Ace"
               }
             }
           }
@@ -1336,8 +1316,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Black Onyx",
-                "count": 1
+                "item_name": "Black Onyx"
               }
             },
             "item": {
@@ -1427,8 +1406,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key King",
-                "count": 1
+                "item_name": "Key King"
               }
             }
           },
@@ -1445,8 +1423,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key King",
-                "count": 1
+                "item_name": "Key King"
               }
             }
           }
@@ -1642,8 +1619,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unlock Wingboots",
-                "count": 1
+                "item_name": "Unlock Wingboots"
               }
             },
             "item": {
@@ -1744,8 +1720,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unlock Wingboots",
-                "count": 1
+                "item_name": "Unlock Wingboots"
               }
             },
             "item": {
@@ -1781,8 +1756,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Ring of Dworf",
-                "count": 1
+                "item_name": "Ring of Dworf"
               }
             }
           }
@@ -1883,8 +1857,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Demons Ring",
-                "count": 1
+                "item_name": "Demons Ring"
               }
             }
           }
@@ -1896,8 +1869,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Unlock Wingboots",
-                "count": 1
+                "item_name": "Unlock Wingboots"
               }
             },
             "item": {
@@ -2858,7 +2830,6 @@
           "display_name": "Require Dragon Slayer"
         }
       },
-      "shops": [],
       "filler_ratios": {
         "Hourglass": 6,
         "Red Potion": 15,
@@ -2867,7 +2838,7 @@
         "Ointment": 8,
         "Poison": 13
       },
-      "world_description": "Faxanadu WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Faxanadu is an action role-playing platform video game developed by Hudson Soft for the Nintendo Entertainment System",
       "slot_data": {
         "keep_shop_red_potions": 0,
         "random_musics": 0,
@@ -2878,7 +2849,19 @@
         "daxanadu_version": "0.3.0"
       },
       "web": {
-        "theme": "dirt"
+        "theme": "dirt",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Faxanadu randomizer connected to an Archipelago Multiworld",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Daivuk"
+            ]
+          }
+        ]
       },
       "world_directory": "faxanadu_worldgen"
     }

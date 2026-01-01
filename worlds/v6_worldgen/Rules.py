@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachRegion, Has, Or
+from rule_builder import True_, False_, And, CanReachRegion, HasAll, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -31,22 +31,22 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Menu -> Laboratory", player),
-        And(Has('Trinket 01'), Has('Trinket 02'), Has('Trinket 03'))
+        HasAll('Trinket 01', 'Trinket 02', 'Trinket 03')
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> The Tower", player),
-        And(Has('Trinket 04'), Has('Trinket 05'), Has('Trinket 06'))
+        HasAll('Trinket 04', 'Trinket 05', 'Trinket 06')
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Space Station 2", player),
-        And(Has('Trinket 07'), Has('Trinket 08'), Has('Trinket 09'))
+        HasAll('Trinket 07', 'Trinket 08', 'Trinket 09')
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Warp Zone", player),
-        And(Has('Trinket 10'), Has('Trinket 11'), Has('Trinket 12'))
+        HasAll('Trinket 10', 'Trinket 11', 'Trinket 12')
     )
     # Location rules
     world.set_rule(

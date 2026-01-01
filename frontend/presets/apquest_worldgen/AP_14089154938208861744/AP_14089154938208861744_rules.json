@@ -21,8 +21,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sword",
-                "count": 1
+                "item_name": "Sword"
               }
             }
           },
@@ -39,8 +38,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Key",
-                "count": 1
+                "item_name": "Key"
               }
             }
           }
@@ -154,8 +152,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Top Left Room Button Pressed",
-                "count": 1
+                "item_name": "Top Left Room Button Pressed"
               }
             }
           }
@@ -167,8 +164,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Sword",
-                "count": 1
+                "item_name": "Sword"
               }
             },
             "item": {
@@ -448,8 +444,7 @@
           "display_name": "Trap Chance"
         }
       },
-      "shops": [],
-      "world_description": "APQuest WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "APQuest is a minimal 8bit-era inspired adventure game with grid-like movement.\nGood games don't need more than six checks.",
       "slot_data": {
         "hard_mode": 0,
         "hammer": 0,
@@ -458,7 +453,29 @@
         "player_sprite": 0
       },
       "web": {
-        "theme": "grassFlowers"
+        "theme": "grassFlowers",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up APQuest for MultiWorld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "NewSoupVi"
+            ]
+          },
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up APQuest for MultiWorld.",
+            "language": "German",
+            "file_name": "setup_de.md",
+            "link": "setup/de",
+            "authors": [
+              "NewSoupVi"
+            ]
+          }
+        ]
       },
       "world_directory": "apquest_worldgen"
     }

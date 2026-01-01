@@ -128,7 +128,8 @@
       "voice_shuffle": 0,
       "whistlesanity": 0
     },
-    "world_directory": "sa2b"
+    "world_directory": "sa2b",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "gate_bosses": {

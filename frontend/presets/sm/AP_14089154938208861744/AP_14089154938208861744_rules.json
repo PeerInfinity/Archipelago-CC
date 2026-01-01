@@ -7697,7 +7697,8 @@
               "advancement": true,
               "type": "Kraid"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -9050,7 +9051,8 @@
               "advancement": true,
               "type": "Ridley"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -9662,7 +9664,8 @@
               "advancement": true,
               "type": "Phantoon"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -10689,7 +10692,8 @@
               "advancement": true,
               "type": "Draygon"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -10841,7 +10845,8 @@
               "advancement": true,
               "type": "MotherBrain"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -10924,7 +10929,8 @@
               "advancement": true,
               "type": "SporeSpawn"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -10981,7 +10987,8 @@
               "advancement": true,
               "type": "Botwoon"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -11043,7 +11050,8 @@
               "advancement": true,
               "type": "Crocomire"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -11105,7 +11113,8 @@
               "advancement": true,
               "type": "GoldenTorizo"
             },
-            "locked": true
+            "locked": true,
+            "event": true
           }
         ]
       },

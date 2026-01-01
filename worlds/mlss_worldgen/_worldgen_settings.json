@@ -40,7 +40,8 @@
       "tattle_hp": false,
       "xp_multiplier": 1
     },
-    "world_directory": "mlss"
+    "world_directory": "mlss",
+    "use_resolved_items": false
   },
   "world_attributes": {
     "world_description": "Adventure with Mario and Luigi together in the Beanbean Kingdom\nto stop the evil Cackletta and retrieve the Beanstar.",

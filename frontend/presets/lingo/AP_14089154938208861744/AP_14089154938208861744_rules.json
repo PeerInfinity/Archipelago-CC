@@ -6352,6 +6352,7 @@
               "type": "None"
             },
             "locked": true,
+            "event": true,
             "access": {
               "rooms": [],
               "doors": [],

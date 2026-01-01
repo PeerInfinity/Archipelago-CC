@@ -34,8 +34,7 @@
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Progressive Boat Upgrade",
-                "count": 1
+                "item_name": "Progressive Boat Upgrade"
               }
             }
           },
@@ -4203,7 +4202,6 @@
           "display_name": "Starting Life Count"
         }
       },
-      "shops": [],
       "active_level_list": [
         "Lakeside Limbo",
         "Doorstop Dash",
@@ -4246,7 +4244,7 @@
         "Swoopy Salvo"
       ],
       "rom_name": "DKC3_ROM_NOT_GENERATED",
-      "world_description": "Donkey Kong Country 3 WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "world_description": "Donkey Kong Country 3 is an action platforming game.\nPlay as Dixie Kong and her baby cousin Kiddy as they try to solve the\nmystery of why Donkey Kong and Diddy disappeared while on vacation.",
       "slot_data": {
         "active_levels": [
           "Lakeside Limbo",
@@ -4305,7 +4303,19 @@
         "starting_life_count": 5
       },
       "web": {
-        "theme": "jungle"
+        "theme": "jungle",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Donkey Kong Country 3 randomizer connected to an Archipelago Multiworld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "PoryGone"
+            ]
+          }
+        ]
       },
       "world_directory": "dkc3_worldgen"
     }

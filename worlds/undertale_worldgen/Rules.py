@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachEntrance, CanReachRegion, Compare, CountItem, Has, HelperCall, Or
+from rule_builder import True_, False_, And, CanReachEntrance, CanReachRegion, Compare, CountItem, Has, HasAll, HelperCall, Or
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -58,7 +58,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("New Home Exit", player),
-        Or(And(Has('Left Home Key'), Has('Right Home Key')), Compare(CountItem('Key Piece'), ">=", 5))
+        Or(HasAll('Left Home Key', 'Right Home Key'), Compare(CountItem('Key Piece'), ">=", 5))
     )
     # Location rules
     world.set_rule(
