@@ -6,11 +6,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-31 06:02:04
+**Generated:** 2026-01-01 01:24:34
 
-**Source Data Created:** 2025-12-31T05:38:10.374898
+**Source Data Created:** 2026-01-01T00:58:20.487449
 
-**Source Data Last Updated:** 2025-12-31T05:38:10.374905
+**Source Data Last Updated:** 2026-01-01T00:58:20.487454
 
 ## Summary
 
@@ -36,6 +36,7 @@
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Aquaria | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 1.8KB | ✅ |
+| Baking Adventure | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.18 | 10.18 | 🟢 Complete | 1.4KB | 40.3KB |
 | Bumper Stickers | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.41 | 4.41 | 🟢 Complete | 4.0KB | ✅ |
@@ -43,9 +44,9 @@
 | Celeste (Open World) | ✅ Passed | 0 | 16.5 | 16.5 | 🟢 Complete | ✅ | ✅ |
 | Celeste 64 | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 4.1KB | ✅ |
 | ChecksFinder | ✅ Passed | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
-| ChocolateChipCookies | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
 | Civilization VI | ✅ Passed | 0 | 8.15 | 8.15 | 🟢 Complete | ✅ | ✅ |
+| Coding Adventure | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | DLCQuest | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 1.0KB | ✅ |
 | DOOM 1993 | ✅ Passed | 0 | 18.5 | 18.5 | 🟢 Complete | ✅ | ✅ |
 | DOOM II | ✅ Passed | 0 | 21.4 | 21.4 | 🟢 Complete | ✅ | ✅ |
@@ -65,7 +66,7 @@
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 7.4KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.16 | 4.16 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 8.8 | 8.8 | 🟢 Complete | ✅ | ✅ |
-| MathProof2p2e4 | ✅ Passed | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
+| Math Adventure | ✅ Passed | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
 | Mega Man 2 | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | MegaMan Battle Network 3 | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Meritous | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
@@ -100,7 +101,6 @@
 | Undertale | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | 3.4 | 3.4 | 🟢 Complete | 2.3KB | ✅ |
 | Wargroove | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
-| WebDevJourney | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 3.8KB | ✅ |
 | shapez | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
 
