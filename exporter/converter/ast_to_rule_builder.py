@@ -1128,6 +1128,13 @@ class ASTToRuleBuilder:
                         flattened = self._flatten_inner_list(inner)
                         if flattened:
                             result.append(flattened)
+                    elif item.get('type') == 'tuple':
+                        # Handle tuple format: {"type": "tuple", "elements": [...]}
+                        elements = item.get('elements', [])
+                        if len(elements) >= 2:
+                            loc_name = elements[0].get('value') if isinstance(elements[0], dict) and elements[0].get('type') == 'constant' else elements[0]
+                            player = elements[1].get('value') if isinstance(elements[1], dict) and elements[1].get('type') == 'constant' else elements[1]
+                            result.append([loc_name, player])
                     elif item.get('type') == 'constant':
                         # Constant value
                         inner_val = item.get('value')
@@ -1161,6 +1168,14 @@ class ASTToRuleBuilder:
         """Flatten a single location entry."""
         if item.get('type') == 'list':
             return self._flatten_inner_list(item.get('value', []))
+        elif item.get('type') == 'tuple':
+            # Handle tuple format: {"type": "tuple", "elements": [...]}
+            elements = item.get('elements', [])
+            if len(elements) >= 2:
+                # Extract values from constant elements
+                loc_name = elements[0].get('value') if isinstance(elements[0], dict) and elements[0].get('type') == 'constant' else elements[0]
+                player = elements[1].get('value') if isinstance(elements[1], dict) and elements[1].get('type') == 'constant' else elements[1]
+                return [loc_name, player]
         elif item.get('type') == 'constant':
             val = item.get('value')
             if isinstance(val, list) and len(val) >= 2:

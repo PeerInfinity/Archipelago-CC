@@ -180,26 +180,8 @@ class RuleCodeGenerator:
                 if attr in self.settings:
                     return {'type': 'constant', 'value': self.settings[attr]}
 
-        # If this is a placement_lookup, resolve it using the known placements
-        # This is critical because worldgen presets don't have item data in locations
-        if rule_type == 'placement_lookup':
-            location_rule = rule.get('location', {})
-            # Evaluate the location name if it's a constant
-            if isinstance(location_rule, dict) and location_rule.get('type') == 'constant':
-                location_name = location_rule.get('value', '')
-                if location_name and location_name in self.placements:
-                    item_name = self.placements[location_name]
-                    # Return the placement as [item_name, player] tuple (player is always 1 for worldgen)
-                    return {
-                        'type': 'list',
-                        'value': [
-                            {'type': 'constant', 'value': item_name},
-                            {'type': 'constant', 'value': 1}
-                        ]
-                    }
-            # Location not found in placements - return null constant
-            # This allows the conditional to properly branch to if_false
-            return {'type': 'constant', 'value': None}
+        # Note: placement_lookup rules are preserved as-is for runtime evaluation
+        # via location_item_name() calls. We don't resolve them statically anymore.
 
         # For conditional rules, try to statically evaluate the test after expansion
         # ONLY if the test is a placement_lookup comparison (to avoid JavaScript array comparison issues)
@@ -660,22 +642,18 @@ class RuleCodeGenerator:
                     args = rule.get('args', {})
                     item_name = args.get('item', '')
                     locations = args.get('locations', [])
-                    # Extract location names from the [location, player] pairs
-                    location_names = []
+                    # Build location pairs list for item_name_in_location_names
+                    loc_pairs = []
                     for loc in locations:
                         if isinstance(loc, list) and loc:
-                            location_names.append(loc[0])
+                            loc_name = loc[0]
+                            loc_player = loc[1] if len(loc) > 1 else 1
+                            loc_pairs.append(f'({repr(loc_name)}, {loc_player})')
                         elif isinstance(loc, str):
-                            location_names.append(loc)
-                    # Check if the item is at any of these locations using known placements
-                    for loc_name in location_names:
-                        if loc_name in self.placements and self.placements[loc_name] == item_name:
-                            # Item is at one of the locations - return True
-                            self.required_imports.add('True_')
-                            return 'True_()'
-                    # Item is not at any of the locations - return False
-                    self.required_imports.add('False_')
-                    return 'False_()'
+                            loc_pairs.append(f'({repr(loc)}, player)')
+                    # Generate call to item_name_in_location_names for runtime lookup
+                    locs_str = f'[{", ".join(loc_pairs)}]'
+                    return f'item_name_in_location_names(state, {repr(item_name)}, player, {locs_str})'
 
                 # Check if this is an AST_function_call rule (option.to_bool() style calls)
                 if rb_rule == 'AST_function_call':
@@ -1793,25 +1771,17 @@ class RuleCodeGenerator:
             return tuple(result)
 
         if op_type == 'placement_lookup':
-            # Resolve placement lookup to tuple value
-            location_rule = operand.get('location', {})
-            if isinstance(location_rule, dict) and location_rule.get('type') == 'constant':
-                location_name = location_rule.get('value', '')
-                if location_name and location_name in self.placements:
-                    item_name = self.placements[location_name]
-                    return (item_name, 1)  # (item_name, player)
-            return None  # Unknown location
+            # Don't resolve placement_lookup statically - we want runtime lookup
+            # via location_item_name() calls
+            return None
 
         # Handle Rule Builder format
         rb_rule = operand.get('rule', '')
 
         if rb_rule == 'AST_placement_lookup':
-            args = operand.get('args', {})
-            location_name = args.get('location', '')
-            if location_name and location_name in self.placements:
-                item_name = self.placements[location_name]
-                return (item_name, 1)  # (item_name, player)
-            return None  # Unknown location
+            # Don't resolve placement_lookup statically - we want runtime lookup
+            # via location_item_name() calls
+            return None
 
         # Handle Rule Builder format Tuple (e.g., {"rule": "Tuple", "args": {"value": [...]}})
         if rb_rule == 'Tuple':
@@ -3699,24 +3669,21 @@ class RuleCodeGenerator:
         return 'True_()'
 
     def _convert_placement_lookup(self, rule: Dict[str, Any]) -> str:
-        """Convert placement_lookup to resolved placement data.
+        """Convert placement_lookup to a location_item_name() call.
 
         Placement lookups check what item is at a specific location.
-        We resolve these at code generation time using the known placements.
-        Returns a tuple (item_name, player) to match the format used by Tuple rules.
+        We generate a call to location_item_name(state, location, player) which
+        preserves the original pattern and allows proper re-export.
         """
         location_rule = rule.get('location', {})
 
-        # Get the location name
+        # Get the location name expression
         if isinstance(location_rule, dict) and location_rule.get('type') == 'constant':
             location_name = location_rule.get('value', '')
-            if location_name and location_name in self.placements:
-                item_name = self.placements[location_name]
-                # Return as a Python tuple (item_name, player) - player is always 1 for worldgen
-                # Must use tuple to match Tuple rule format for correct == comparisons
-                return f'({repr(item_name)}, 1)'
+            # Generate call to location_item_name for runtime lookup
+            return f'location_item_name(state, {repr(location_name)}, player)'
 
-        # Location not found - return None which will make comparisons fail correctly
+        # For non-constant locations, generate the expression
         return 'None'
 
     def _convert_ast_function_call(self, rule: Dict[str, Any]) -> str:
@@ -4474,20 +4441,19 @@ class HelperCodeGenerator:
                 args = expr.get('args', {})
                 item_name = args.get('item', '')
                 locations = args.get('locations', [])
-                # Extract location names from the [location, player] pairs
-                location_names = []
+                # Build location pairs list for item_name_in_location_names
+                self.uses_placement_lookup = True  # Also need this import
+                loc_pairs = []
                 for loc in locations:
                     if isinstance(loc, list) and loc:
-                        location_names.append(loc[0])
+                        loc_name = loc[0]
+                        loc_player = loc[1] if len(loc) > 1 else 1
+                        loc_pairs.append(f'({repr(loc_name)}, {loc_player})')
                     elif isinstance(loc, str):
-                        location_names.append(loc)
-                # Check if the item is at any of these locations using known placements
-                for loc_name in location_names:
-                    if loc_name in self.placements and self.placements[loc_name] == item_name:
-                        # Item is at one of the locations
-                        return 'True'
-                # Item is not at any of the locations
-                return 'False'
+                        loc_pairs.append(f'({repr(loc)}, player)')
+                # Generate call to item_name_in_location_names for runtime lookup
+                locs_str = f'[{", ".join(loc_pairs)}]'
+                return f'item_name_in_location_names(state, {repr(item_name)}, player, {locs_str})'
 
             # Handle AST_setting_value (Rule Builder format for setting_value)
             if rule_type == 'AST_setting_value':
@@ -4504,11 +4470,9 @@ class HelperCodeGenerator:
             if rule_type == 'AST_placement_lookup':
                 args = expr.get('args', {})
                 location = args.get('location', '')
-                if location and location in self.placements:
-                    item_name = self.placements[location]
-                    # Return tuple to match Tuple rule format for correct == comparisons
-                    return f'({repr(item_name)}, 1)'
-                return 'None'
+                # Generate call to location_item_name for runtime lookup
+                self.uses_placement_lookup = True
+                return f'location_item_name(state, {repr(location)}, player)'
 
             # Handle AST_function_call - try to simplify or preserve structure
             if rule_type == 'AST_function_call':
@@ -4586,13 +4550,13 @@ class HelperCodeGenerator:
     def _expr_placement_lookup(self, expr: Dict[str, Any]) -> str:
         """Generate code to look up what item is placed at a location.
 
-        For canonical seeds, we read from the CANONICAL_PLACEMENTS dict which is
-        generated at WorldGen time. This works correctly during fill because it
-        reads from static data rather than the actual location.item.
+        Generates a call to location_item_name(state, location, player) which is
+        the standard Archipelago function for checking placements at runtime.
+        This preserves the original code pattern and allows proper re-export.
 
-        The return format is (item_name, player) tuple to match location_item_name().
+        The return format is (item_name, player) tuple or None if not placed.
         """
-        # Flag that we need the CANONICAL_PLACEMENTS dict
+        # Flag that we need to import location_item_name
         self.uses_placement_lookup = True
 
         location_rule = expr.get('location', {})
@@ -4609,9 +4573,9 @@ class HelperCodeGenerator:
         else:
             location_expr = repr(str(location_rule))
 
-        # Generate code that reads from CANONICAL_PLACEMENTS dict
-        # Returns (item_name, player) tuple or None if not found
-        return f'CANONICAL_PLACEMENTS.get({location_expr})'
+        # Generate call to location_item_name(state, location, player)
+        # This is the standard Archipelago function from worlds.generic.Rules
+        return f'location_item_name(state, {location_expr}, player)'
 
     def _expr_constant(self, expr: Dict[str, Any]) -> str:
         """Generate constant expression."""
