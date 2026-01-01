@@ -496,7 +496,7 @@ class SC2GameExportHandler(GenericGameExportHandler):
             # Export computed boolean properties that are referenced in access rules
             logic_properties = [
                 'advanced_tactics',
-                'story_tech_granted',
+                'grant_story_tech',  # Used by helpers as story_tech_granted check
                 'story_levels_granted',
                 'take_over_ai_allies',
                 'kerrigan_unit_available'
@@ -525,6 +525,32 @@ class SC2GameExportHandler(GenericGameExportHandler):
                         settings_dict[prop_name] = sorted(list(prop_value))
                     elif isinstance(prop_value, (list, tuple)):
                         settings_dict[prop_name] = list(prop_value)
+
+            # Export option values that JS helpers access directly
+            # These are accessed via settings?.option_name in the helpers
+            option_exports = [
+                'all_in_map',  # Used by terran_all_in_requirement
+                'spear_of_adun_presence',  # Used by SoA helpers
+                'spear_of_adun_passive_presence',  # Used by SoA helpers
+                'mission_order',  # Used by the_escape_stuff_granted
+                'enabled_campaigns',  # Used by the_escape_stuff_granted
+            ]
+
+            for option_name in option_exports:
+                if hasattr(logic, option_name):
+                    option_value = getattr(logic, option_name)
+                    if isinstance(option_value, (bool, int, str, float)):
+                        settings_dict[option_name] = option_value
+                    elif isinstance(option_value, (set, frozenset)):
+                        # Convert sets/frozensets to sorted lists for JSON
+                        settings_dict[option_name] = sorted(list(option_value))
+
+            # Also export story_tech_granted as a boolean for JS helpers
+            # JS helpers check: settings?.story_tech_granted as a boolean
+            # Python has: grant_story_tech as an enum (0=no_grant, 1=grant, 2=allow_substitutes)
+            if hasattr(logic, 'grant_story_tech'):
+                # story_tech_granted is True when grant_story_tech == 1 (option_grant)
+                settings_dict['story_tech_granted'] = (logic.grant_story_tech == 1)
         except Exception as e:
             logger.warning(f"Could not export SC2 logic properties: {e}")
 
