@@ -8524,10 +8524,10 @@
           "display_name": "Unchained Keys"
         }
       },
-      "pyramid_keys_unlock": null,
-      "present_keys_unlock": null,
-      "past_keys_unlock": null,
-      "time_keys_unlock": null,
+      "pyramid_keys_unlock": "GateLakeSereneRight",
+      "present_keys_unlock": "GateSealedSirensCave",
+      "past_keys_unlock": "GateLakeSereneRight",
+      "time_keys_unlock": "GateRightPyramid",
       "precalculated_weights": {
         "flood_basement": false,
         "flood_basement_high": false,
