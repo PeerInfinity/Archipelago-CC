@@ -135,6 +135,10 @@ def is_canonical_difference(path: str) -> bool:
     if 'world_classes' in path:
         return True
 
+    # start_inventory_from_pool (empty dict {} in original, may not be exported by WorldGen)
+    if 'start_inventory_from_pool' in path:
+        return True
+
     return False
 
 

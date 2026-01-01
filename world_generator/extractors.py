@@ -741,10 +741,11 @@ def compute_state_counter_accumulator_rules(
 
     # Pattern 3: Find items like "50 Rupees", "100 Rupees" that should accumulate
     # These are detected by finding items matching "N <Suffix>" pattern where:
-    # - The suffix is title case (e.g., "Rupees")
+    # - The suffix is a SINGLE title case word (e.g., "Rupees", not "Scraps Reward")
     # - Multiple items share the same suffix with different numbers
     # - Look for patterns like "50 Rupees" -> accumulate to "RUPEES"
-    mixed_case_pattern = regex_module.compile(r'^(\d+)\s+([A-Z][a-z]+(?:\s+[A-Za-z]+)*)$')
+    # Note: Multi-word suffixes like "Scraps Reward" are excluded to avoid false positives
+    mixed_case_pattern = regex_module.compile(r'^(\d+)\s+([A-Z][a-z]+)$')
     mixed_suffix_candidates = {}  # suffix -> (uppercase_target, list of items)
 
     for item_name in items.keys():
