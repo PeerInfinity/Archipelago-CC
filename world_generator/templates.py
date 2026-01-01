@@ -1211,14 +1211,52 @@ def generate_options_py(data: ExtractedData) -> str:
     option_classes = []
     option_fields = []
 
-    # Skip options that are part of PerGameCommonOptions (already inherited)
-    # Also skip 'randomize_items' since it's defined in the hardcoded template below
-    skip_options = {
-        'accessibility', 'progression_balancing', 'local_items', 'non_local_items',
+    # These options are always inherited from PerGameCommonOptions and should not be regenerated
+    # unless they have non-standard defaults
+    always_skip_options = {
+        'progression_balancing', 'local_items', 'non_local_items',
         'start_inventory', 'start_hints', 'start_location_hints', 'exclude_locations',
         'priority_locations', 'item_links', 'plando_items',
         'randomize_items',  # Defined in hardcoded template with default=True
     }
+
+    # Standard defaults for common options - if the game uses different defaults,
+    # we need to generate a custom class
+    common_option_defaults = {
+        'accessibility': 0,  # Standard Accessibility default is 0 (full)
+    }
+
+    # Check if accessibility needs a custom class (different default than standard)
+    custom_accessibility = False
+    accessibility_def = option_definitions.get('accessibility', {})
+    if accessibility_def.get('default', 0) != common_option_defaults.get('accessibility', 0):
+        custom_accessibility = True
+        # Generate custom accessibility class
+        acc_default = accessibility_def.get('default', 0)
+        name_lookup = accessibility_def.get('name_lookup', {})
+
+        # Build the options
+        option_lines = []
+        for value, name in sorted(name_lookup.items(), key=lambda x: int(x[0])):
+            option_lines.append(f"    option_{name} = {value}")
+
+        acc_class = f'''
+class Accessibility(Choice):
+    """Accessibility option with game-specific default."""
+    display_name = "Accessibility"
+{chr(10).join(option_lines)}
+    default = {acc_default}
+'''
+        option_classes.append(acc_class)
+        option_fields.append('    accessibility: Accessibility')
+        imports_needed.add('Choice')
+
+    skip_options = always_skip_options.copy()
+    if not custom_accessibility:
+        skip_options.add('accessibility')
+    else:
+        # Already handled above
+        skip_options.add('accessibility')
 
     # Generate option classes from definitions
     for setting_name in sorted(option_definitions.keys()):

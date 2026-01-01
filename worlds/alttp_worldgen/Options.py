@@ -16,6 +16,14 @@ class RandomizeItems(Toggle):
     display_name = "Randomize Items"
     default = True
 
+class Accessibility(Choice):
+    """Accessibility option with game-specific default."""
+    display_name = "Accessibility"
+    option_full = 0
+    option_items = 1
+    option_minimal = 2
+    default = 1
+
 class AllowCollect(DefaultOnToggle):
     """Option for Allow Collection of checks for other players."""
     display_name = "Allow Collection of checks for other players"
@@ -559,6 +567,7 @@ class UwPalettes(Choice):
 class ALinktothePastWorldGenOptions(PerGameCommonOptions):
     """Options for A Link to the Past WorldGen."""
     randomize_items: RandomizeItems
+    accessibility: Accessibility
     allow_collect: AllowCollect
     beemizer_total_chance: BeemizerTotalChance
     beemizer_trap_chance: BeemizerTrapChance

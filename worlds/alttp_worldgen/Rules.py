@@ -548,7 +548,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_entrance("Tower of Hera Small Key Door", player).access_rule = \
-        lambda state: ((can_activate_crystal_switch(state, player)) and ((((location_item_name(state, 'Tower of Hera - Big Key Chest', player) == ('Small Key (Tower of Hera)', 1))) or (state.has('Small Key (Tower of Hera)', player)))))
+        lambda state: ((can_activate_crystal_switch(state, player)) and ((((location_item_name(state, 'Tower of Hera - Big Key Chest', player) == ['Small Key (Tower of Hera)', 1])) or (state.has('Small Key (Tower of Hera)', player)))))
 
     world.set_rule(
         multiworld.get_entrance("Tower of Hera Big Key Door", player),
@@ -975,7 +975,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_entrance("Misery Mire (West)", player).access_rule = \
-        lambda state: ((state.has('Small Key (Misery Mire)', player, 5)) if ((((location_item_name(state, 'Misery Mire - Big Key Chest', player) in [('Big Key (Misery Mire)', 1)])) or ((location_item_name(state, 'Misery Mire - Compass Chest', player) in [('Big Key (Misery Mire)', 1)])))) else (state.has('Small Key (Misery Mire)', player, 6)))
+        lambda state: ((state.has('Small Key (Misery Mire)', player, 5)) if ((((location_item_name(state, 'Misery Mire - Big Key Chest', player) in [['Big Key (Misery Mire)', 1]])) or ((location_item_name(state, 'Misery Mire - Compass Chest', player) in [['Big Key (Misery Mire)', 1]])))) else (state.has('Small Key (Misery Mire)', player, 6)))
 
     world.set_rule(
         multiworld.get_entrance("Misery Mire Big Key Door", player),
@@ -1099,7 +1099,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_entrance("Palace of Darkness Big Key Chest Staircase", player).access_rule = \
-        lambda state: ((can_use_bombs(state, player)) and ((((((location_item_name(state, 'Palace of Darkness - Big Key Chest', player) in [('Small Key (Palace of Darkness)', 1)])) and (state.has('Small Key (Palace of Darkness)', player, 3)))) or (state.has('Small Key (Palace of Darkness)', player, 6)))))
+        lambda state: ((can_use_bombs(state, player)) and ((((((location_item_name(state, 'Palace of Darkness - Big Key Chest', player) in [['Small Key (Palace of Darkness)', 1]])) and (state.has('Small Key (Palace of Darkness)', player, 3)))) or (state.has('Small Key (Palace of Darkness)', player, 6)))))
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness (North)", player),
@@ -1117,7 +1117,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_entrance("Palace of Darkness Spike Statue Room Door", player).access_rule = \
-        lambda state: (((((location_item_name(state, 'Palace of Darkness - Harmless Hellway', player) in [('Small Key (Palace of Darkness)', 1)])) and (state.has('Small Key (Palace of Darkness)', player, 4)))) or (state.has('Small Key (Palace of Darkness)', player, 6)))
+        lambda state: (((((location_item_name(state, 'Palace of Darkness - Harmless Hellway', player) in [['Small Key (Palace of Darkness)', 1]])) and (state.has('Small Key (Palace of Darkness)', player, 4)))) or (state.has('Small Key (Palace of Darkness)', player, 6)))
 
     world.set_rule(
         multiworld.get_entrance("Palace of Darkness Maze Door", player),
@@ -1146,7 +1146,7 @@ def set_rules(world: "World") -> None:
         lambda state: ((((state.has('Small Key (Ganons Tower)', player, 5)) and (item_name_in_location_names(state, 'Big Key (Ganons Tower)', player, [("Ganons Tower - Bob's Chest", 1), ('Ganons Tower - Big Chest', 1), ('Ganons Tower - Big Key Room - Left', 1), ('Ganons Tower - Big Key Room - Right', 1), ('Ganons Tower - Big Key Chest', 1)])))) or (state.has('Small Key (Ganons Tower)', player, 7)))
 
     multiworld.get_entrance("Ganons Tower (Map Room)", player).access_rule = \
-        lambda state: (((((location_item_name(state, 'Ganons Tower - Map Chest', player) in [('Big Key (Ganons Tower)', 1)])) and (state.has('Small Key (Ganons Tower)', player, 6)))) or (state.has('Small Key (Ganons Tower)', player, 8)))
+        lambda state: (((((location_item_name(state, 'Ganons Tower - Map Chest', player) in [['Big Key (Ganons Tower)', 1]])) and (state.has('Small Key (Ganons Tower)', player, 6)))) or (state.has('Small Key (Ganons Tower)', player, 8)))
 
     world.set_rule(
         multiworld.get_entrance("Ganons Tower (Double Switch Room)", player),
@@ -1344,7 +1344,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Eastern Palace - Big Key Chest", player).access_rule = \
-        lambda state: ((can_kill_most_things(state, player, 5)) and ((((((location_item_name(state, 'Eastern Palace - Big Key Chest', player) == ('Big Key (Eastern Palace)', 1))) and (state.has('Small Key (Eastern Palace)', player)))) or (state.has('Small Key (Eastern Palace)', player, 2)))) and (state.has('Lamp', player)))
+        lambda state: ((can_kill_most_things(state, player, 5)) and ((((((location_item_name(state, 'Eastern Palace - Big Key Chest', player) == ['Big Key (Eastern Palace)', 1])) and (state.has('Small Key (Eastern Palace)', player)))) or (state.has('Small Key (Eastern Palace)', player, 2)))) and (state.has('Lamp', player)))
 
     multiworld.get_location("Eastern Palace - Boss", player).access_rule = \
         lambda state: ((state.has('Small Key (Eastern Palace)', player, 2)) and (state.multiworld.get_location("Eastern Palace - Boss", player).parent_region.dungeon.boss.can_defeat(state)) and (can_shoot_arrows(state, player)) and (state.has_all(['Big Key (Eastern Palace)', 'Lamp'], player)))
@@ -1364,7 +1364,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hyrule Castle - Zelda's Chest", player),
-        And(Has('Small Key (Hyrule Castle)', 4), Or(Compare(1, "in", ('easy', 'default')), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(1,))), Has('Big Key (Hyrule Castle)'))
+        And(Has('Small Key (Hyrule Castle)', 4), Or(Compare(1, "in", ['easy', 'default']), HelperCall(helper_func=can_kill_most_things, helper_name="can_kill_most_things", args=(1,))), Has('Big Key (Hyrule Castle)'))
     )
 
     world.set_rule(
@@ -1607,7 +1607,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Mimic Cave", player).access_rule = \
-        lambda state: (((((((state.multiworld.worlds[player].options.enemy_health in ('easy', 'default'))) and (can_use_bombs(state, player, 4)))) or (can_shoot_arrows(state, player)) or (has_beam_sword(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has('Hammer', player)))
+        lambda state: (((((((state.multiworld.worlds[player].options.enemy_health in ['easy', 'default'])) and (can_use_bombs(state, player, 4)))) or (can_shoot_arrows(state, player)) or (has_beam_sword(state, player)) or (state.has('Cane of Somaria', player)))) and (state.has('Hammer', player)))
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Entrance", player),
@@ -1630,7 +1630,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Swamp Palace - Big Chest", player).access_rule = \
-        lambda state: (((((location_item_name(state, 'Swamp Palace - Big Chest', player) == ('Big Key (Swamp Palace)', 1))) or (state.has('Big Key (Swamp Palace)', player)))) and (state.has('Moon Pearl', player)))
+        lambda state: (((((location_item_name(state, 'Swamp Palace - Big Chest', player) == ['Big Key (Swamp Palace)', 1])) or (state.has('Big Key (Swamp Palace)', player)))) and (state.has('Moon Pearl', player)))
 
     world.set_rule(
         multiworld.get_location("Swamp Palace - Compass Chest", player),
@@ -1709,7 +1709,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Thieves' Town - Big Chest", player).access_rule = \
-        lambda state: (((((((location_item_name(state, "Thieves' Town - Big Chest", player) == ('Small Key (Thieves Town)', 1))) and (state.has('Small Key (Thieves Town)', player, 2)))) or (state.has('Small Key (Thieves Town)', player, 3)))) and (state.has_all(['Hammer', 'Moon Pearl'], player)))
+        lambda state: (((((((location_item_name(state, "Thieves' Town - Big Chest", player) == ['Small Key (Thieves Town)', 1])) and (state.has('Small Key (Thieves Town)', player, 2)))) or (state.has('Small Key (Thieves Town)', player, 3)))) and (state.has_all(['Hammer', 'Moon Pearl'], player)))
 
     world.set_rule(
         multiworld.get_location("Thieves' Town - Hallway Pot Key", player),
@@ -1753,7 +1753,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Skull Woods - Big Chest", player).access_rule = \
-        lambda state: ((((((can_use_bombs(state, player)) and (state.has('Big Key (Skull Woods)', player)))) or ((location_item_name(state, 'Skull Woods - Big Chest', player) == ('Big Key (Skull Woods)', 1))))) and (state.has('Moon Pearl', player)))
+        lambda state: ((((((can_use_bombs(state, player)) and (state.has('Big Key (Skull Woods)', player)))) or ((location_item_name(state, 'Skull Woods - Big Chest', player) == ['Big Key (Skull Woods)', 1])))) and (state.has('Moon Pearl', player)))
 
     world.set_rule(
         multiworld.get_location("Skull Woods - Big Key Chest", player),
@@ -1878,7 +1878,7 @@ def set_rules(world: "World") -> None:
     )
 
     multiworld.get_location("Misery Mire - Conveyor Crystal Key Drop", player).access_rule = \
-        lambda state: ((((state.has('Small Key (Misery Mire)', player, 4)) if ((((location_item_name(state, 'Misery Mire - Big Key Chest', player) == ('Big Key (Misery Mire)', 1))) or ((location_item_name(state, 'Misery Mire - Compass Chest', player) == ('Big Key (Misery Mire)', 1))) or ((location_item_name(state, 'Misery Mire - Conveyor Crystal Key Drop', player) == ('Big Key (Misery Mire)', 1))))) else (state.has('Small Key (Misery Mire)', player, 5)))) and (state.has('Moon Pearl', player)))
+        lambda state: ((((state.has('Small Key (Misery Mire)', player, 4)) if ((((location_item_name(state, 'Misery Mire - Big Key Chest', player) == ['Big Key (Misery Mire)', 1])) or ((location_item_name(state, 'Misery Mire - Compass Chest', player) == ['Big Key (Misery Mire)', 1])) or ((location_item_name(state, 'Misery Mire - Conveyor Crystal Key Drop', player) == ['Big Key (Misery Mire)', 1])))) else (state.has('Small Key (Misery Mire)', player, 5)))) and (state.has('Moon Pearl', player)))
 
     world.set_rule(
         multiworld.get_location("Misery Mire - Compass Chest", player),
