@@ -121,8 +121,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "BattlefieldItem"
+            "locked": true
           }
         ],
         "id": 220
@@ -232,8 +231,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "BattlefieldItem"
+            "locked": true
           }
         ],
         "id": 221
@@ -303,8 +301,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "BattlefieldItem"
+            "locked": true
           }
         ],
         "id": 223
@@ -414,8 +411,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "BattlefieldItem"
+            "locked": true
           },
           {
             "name": "Mine Battlefield",
@@ -429,8 +425,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "BattlefieldItem"
+            "locked": true
           }
         ],
         "id": 224
@@ -770,8 +765,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Doom Castle B2 - Bone Ledge Box",
@@ -785,8 +779,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Doom Castle B2 - Hook Platform Box",
@@ -803,8 +796,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 1
@@ -833,8 +825,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           }
         ],
         "id": 2
@@ -956,8 +947,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 6
@@ -1096,8 +1086,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           }
         ],
         "id": 10
@@ -1147,8 +1136,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Focus Tower 2F - Venus Chest",
@@ -1181,8 +1169,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "NPC"
+            "locked": true
           }
         ],
         "id": 12
@@ -1218,8 +1205,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 13
@@ -1278,8 +1264,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Level Forest - Northeast Box",
@@ -1302,8 +1287,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Level Forest - Middle Box",
@@ -1317,8 +1301,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Level Forest - Southwest Box",
@@ -1341,8 +1324,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Level Forest - Southeast Box",
@@ -1365,8 +1347,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Minotaur",
@@ -1384,8 +1365,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           },
           {
             "name": "Level Forest - Old Man",
@@ -1399,8 +1379,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "NPC"
+            "locked": true
           },
           {
             "name": "Level Forest - Kaeli",
@@ -1420,8 +1399,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "NPC"
+            "locked": true
           }
         ],
         "id": 15
@@ -1487,8 +1465,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 16
@@ -1517,8 +1494,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Kaeli Companion",
@@ -1536,8 +1512,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           },
           {
             "name": "Kaeli 2",
@@ -1559,8 +1534,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 17
@@ -1623,8 +1597,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Old Man Barrel",
@@ -1639,8 +1612,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 19
@@ -1669,8 +1641,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 20
@@ -1702,8 +1673,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 21
@@ -1735,8 +1705,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 22
@@ -1768,8 +1737,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Alive Forest - Mobius Treehouse East Box",
@@ -1783,8 +1751,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 23
@@ -1814,8 +1781,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 24
@@ -1851,8 +1817,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Bone Dungeon 1F - Entrance Room Middle Box",
@@ -1866,8 +1831,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Bone Dungeon 1F - Entrance Room East Box",
@@ -1881,8 +1845,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 25
@@ -1934,8 +1897,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Bone Dungeon B1 - Tristam",
@@ -1952,8 +1914,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "NPC"
+            "locked": true
           },
           {
             "name": "Tristam Bone Dungeon Item Given",
@@ -1971,8 +1932,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 26
@@ -2016,8 +1976,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 28
@@ -2046,8 +2005,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 29
@@ -2086,8 +2044,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Long Spine",
@@ -2110,8 +2067,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 30
@@ -2163,8 +2119,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Short Spine",
@@ -2187,8 +2142,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 31
@@ -2241,8 +2195,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 33
@@ -2271,8 +2224,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           }
         ],
         "id": 34
@@ -2311,8 +2263,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Skull 1",
@@ -2335,8 +2286,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 35
@@ -2394,8 +2344,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 36
@@ -2463,8 +2412,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Bone Dungeon B2 - South Box",
@@ -2478,8 +2426,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Bone Dungeon B2 - Flamerus Rex Chest",
@@ -2493,8 +2440,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Bone Dungeon B2 - Tristam's Treasure Chest",
@@ -2508,8 +2454,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Flamerus Rex",
@@ -2524,8 +2469,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 38
@@ -2564,8 +2508,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Phoebe Companion",
@@ -2580,8 +2523,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 39
@@ -2655,8 +2597,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 40
@@ -2685,8 +2626,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 41
@@ -2722,8 +2662,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "NPC"
+            "locked": true
           },
           {
             "name": "Aquaria - Vendor House Box",
@@ -2737,8 +2676,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 42
@@ -2831,8 +2769,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Wintry Cave 1F - Entrance Box",
@@ -2846,8 +2783,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Wintry Cave 1F - Slippery Cliff Box",
@@ -2868,8 +2804,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Wintry Cave 1F - Phoebe",
@@ -2886,8 +2821,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "NPC"
+            "locked": true
           }
         ],
         "id": 45
@@ -2944,8 +2878,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 46
@@ -3017,8 +2950,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Wintry Cave 2F - West Right Box",
@@ -3032,8 +2964,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Wintry Cave 2F - East Left Box",
@@ -3047,8 +2978,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Wintry Cave 2F - East Right Box",
@@ -3062,8 +2992,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 48
@@ -3092,8 +3021,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Wintry Cave 3F - East Box",
@@ -3107,8 +3035,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 49
@@ -3140,8 +3067,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Phanquid",
@@ -3156,8 +3082,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           },
           {
             "name": "Wintry Cave 3F - Before Boss Box",
@@ -3171,8 +3096,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 50
@@ -3211,8 +3135,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Life Temple - Mysterious Man",
@@ -3226,8 +3149,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "NPC"
+            "locked": true
           }
         ],
         "id": 51
@@ -3259,8 +3181,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Freezer Crab",
@@ -3275,8 +3196,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           },
           {
             "name": "Falls Basin - Box",
@@ -3290,8 +3210,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 52
@@ -3320,8 +3239,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Ice Pyramid B1 - West Box",
@@ -3335,8 +3253,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid B1 - North Box",
@@ -3350,8 +3267,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid B1 - East Box",
@@ -3365,8 +3281,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 53
@@ -3414,8 +3329,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 54
@@ -3482,8 +3396,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 1F - Sandwiched Alcove Box",
@@ -3497,8 +3410,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 1F - Southwest Left Box",
@@ -3512,8 +3424,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 1F - Southwest Right Box",
@@ -3527,8 +3438,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 55
@@ -3572,8 +3482,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 2F - South Side East Box",
@@ -3587,8 +3496,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 56
@@ -3617,8 +3525,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 57
@@ -3647,8 +3554,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 58
@@ -3685,8 +3591,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 59
@@ -3730,8 +3635,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 60
@@ -3760,8 +3664,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 3F - Staircase Dead End Right Box",
@@ -3775,8 +3678,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 61
@@ -3815,8 +3717,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 3F - Inner Room South Box",
@@ -3830,8 +3731,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 3F - East Alcove Box",
@@ -3845,8 +3745,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 3F - Leapfrog Box",
@@ -3860,8 +3759,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 3F Statue",
@@ -3884,8 +3782,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 62
@@ -3972,8 +3869,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 4F - Northwest Box",
@@ -3987,8 +3883,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 4F - West Left Box",
@@ -4002,8 +3897,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 4F - West Right Box",
@@ -4017,8 +3911,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 4F - South Left Box",
@@ -4032,8 +3925,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 4F - South Right Box",
@@ -4047,8 +3939,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 4F - East Left Box",
@@ -4062,8 +3953,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 4F - East Right Box",
@@ -4077,8 +3967,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 4F Statue",
@@ -4101,8 +3990,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 65
@@ -4182,8 +4070,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 5F - West Ledge Box",
@@ -4197,8 +4084,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 5F - South Shelf Box",
@@ -4212,8 +4098,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 5F - South Leapfrog Box",
@@ -4227,8 +4112,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 5F - Glass Door Right Box",
@@ -4245,8 +4129,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Ice Pyramid 5F - North Box",
@@ -4260,8 +4143,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 66
@@ -4313,8 +4195,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 67
@@ -4409,8 +4290,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Ice Golem",
@@ -4425,8 +4305,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 70
@@ -4490,8 +4369,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Spencer's Cave - Spencer",
@@ -4505,8 +4383,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "NPC"
+            "locked": true
           },
           {
             "name": "Spencer's Cave - Locked Chest",
@@ -4523,8 +4400,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "NPC"
+            "locked": true
           }
         ],
         "id": 72
@@ -4567,8 +4443,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 73
@@ -4676,8 +4551,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 204
@@ -4768,8 +4642,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           }
         ],
         "id": 207
@@ -4815,8 +4688,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Wintry Temple - North Box",
@@ -4830,8 +4702,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 75
@@ -4926,8 +4797,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 208
@@ -4959,8 +4829,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "NPC"
+            "locked": true
           },
           {
             "name": "Reuben Companion",
@@ -4975,8 +4844,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           },
           {
             "name": "Fireburg - Reuben's House Box",
@@ -4990,8 +4858,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 77
@@ -5030,8 +4897,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "NPC"
+            "locked": true
           }
         ],
         "id": 78
@@ -5088,8 +4954,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "NPC"
+            "locked": true
           }
         ],
         "id": 80
@@ -5152,8 +5017,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "NPC"
+            "locked": true
           }
         ],
         "id": 82
@@ -5364,8 +5228,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 87
@@ -5401,8 +5264,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Mine - Parallel Room East Box",
@@ -5423,8 +5285,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 88
@@ -5453,8 +5314,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           }
         ],
         "id": 89
@@ -5490,8 +5350,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 90
@@ -5520,8 +5379,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Mine - Cliff Northwest Box",
@@ -5535,8 +5393,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Mine - Cliff Northeast Box",
@@ -5550,8 +5407,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Mine - Cliff Southeast Box",
@@ -5565,8 +5421,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Mine - Reuben",
@@ -5583,8 +5438,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "NPC"
+            "locked": true
           },
           {
             "name": "Reuben's dad Saved",
@@ -5602,8 +5456,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 91
@@ -5642,8 +5495,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Sealed Temple - East Box",
@@ -5657,8 +5509,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 92
@@ -5701,8 +5552,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Volcano - Base West Box",
@@ -5716,8 +5566,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Volcano - Base East Left Box",
@@ -5731,8 +5580,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Volcano - Base East Right Box",
@@ -5746,8 +5594,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 93
@@ -5779,8 +5626,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Medusa",
@@ -5795,8 +5641,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           },
           {
             "name": "Volcano - Behind Medusa Box",
@@ -5810,8 +5655,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 94
@@ -5840,8 +5684,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Volcano - Top of the Volcano Right Box",
@@ -5855,8 +5698,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 95
@@ -5885,8 +5727,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 96
@@ -5929,8 +5770,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 98
@@ -5987,8 +5827,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 209
@@ -6045,8 +5884,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - Exterior South Cliff Box",
@@ -6060,8 +5898,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 100
@@ -6104,8 +5941,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 101
@@ -6135,8 +5971,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 102
@@ -6266,8 +6101,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 106
@@ -6310,8 +6144,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - Gold Maze Southwest Box",
@@ -6325,8 +6158,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - Gold Maze Northeast Box",
@@ -6340,8 +6172,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - Gold Maze North Box",
@@ -6355,8 +6186,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - Gold Maze Center Box",
@@ -6370,8 +6200,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - Gold Maze Southeast Box",
@@ -6385,8 +6214,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 107
@@ -6443,8 +6271,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - Bare Maze Leapfrog Alcove South Box",
@@ -6458,8 +6285,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - Bare Maze Center Box",
@@ -6473,8 +6299,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - Bare Maze Southwest Box",
@@ -6488,8 +6313,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 109
@@ -6539,8 +6363,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - U-Bend Room South Box",
@@ -6554,8 +6377,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 111
@@ -6584,8 +6406,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Lava Dome - Beyond River Room Box",
@@ -6599,8 +6420,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 112
@@ -6629,8 +6449,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 113
@@ -6676,8 +6495,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           }
         ],
         "id": 114
@@ -6720,8 +6538,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - Gold Bar Room Leapfrog Alcove Box East",
@@ -6735,8 +6552,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 115
@@ -6782,8 +6598,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - Lava River Room East Box",
@@ -6797,8 +6612,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - Lava River Room South Box",
@@ -6812,8 +6626,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 116
@@ -6878,8 +6691,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 118
@@ -6936,8 +6748,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - Caldera Stairway West Right Box",
@@ -6951,8 +6762,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - Caldera Stairway East Left Box",
@@ -6966,8 +6776,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - Caldera Stairway East Right Box",
@@ -6981,8 +6790,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 120
@@ -7024,8 +6832,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Dualhead Hydra",
@@ -7040,8 +6847,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           },
           {
             "name": "Lava Dome - Hydra Room Northwest Box",
@@ -7055,8 +6861,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Lava Dome - Hydra Room Southweast Box",
@@ -7070,8 +6875,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 121
@@ -7114,8 +6918,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Rope Bridge - East Box",
@@ -7129,8 +6932,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 123
@@ -7274,8 +7076,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Alive Forest - Near Entrance Box",
@@ -7298,8 +7099,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Alive Forest - After Bridge Box",
@@ -7322,8 +7122,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Alive Forest - Gemini Stump Box",
@@ -7346,8 +7145,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 124
@@ -7386,8 +7184,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Giant Tree 1F - Southwest Box",
@@ -7401,8 +7198,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Giant Tree 1F - Center Box",
@@ -7416,8 +7212,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Giant Tree 1F - East Box",
@@ -7431,8 +7226,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 125
@@ -7529,8 +7323,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 127
@@ -7577,8 +7370,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 128
@@ -7628,8 +7420,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 129
@@ -7725,8 +7516,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           }
         ],
         "id": 132
@@ -7800,8 +7590,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Giant Tree 2F - Mushroom Tunnel East Box",
@@ -7824,8 +7613,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 133
@@ -7878,8 +7666,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 135
@@ -7929,8 +7716,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Giant Tree 3F - Center West Box",
@@ -7944,8 +7730,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 136
@@ -8013,8 +7798,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 138
@@ -8205,8 +7989,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Giant Tree 3F - Worm Room South Box",
@@ -8229,8 +8012,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 142
@@ -8340,8 +8122,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Giant Tree 4F - Highest Platform South Box",
@@ -8355,8 +8136,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 144
@@ -8424,8 +8204,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Giant Tree 4F - Hook Ledge Southwest Box",
@@ -8439,8 +8218,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 146
@@ -8478,8 +8256,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 147
@@ -8592,8 +8369,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 149
@@ -8643,8 +8419,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Giant Tree 5F - Northwest Right Box",
@@ -8658,8 +8433,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Giant Tree 5F - South Left Box",
@@ -8673,8 +8447,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Giant Tree 5F - South Right Box",
@@ -8688,8 +8461,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 150
@@ -8732,8 +8504,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 151
@@ -8807,8 +8578,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 153
@@ -8837,8 +8607,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 154
@@ -8873,8 +8642,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Dullahan",
@@ -8901,8 +8669,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           },
           {
             "name": "Mount Gale - East Box",
@@ -8919,8 +8686,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Mount Gale - West Box",
@@ -8934,8 +8700,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 155
@@ -9024,8 +8789,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 157
@@ -9054,8 +8818,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 158
@@ -9157,8 +8920,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Windia - Mobius Basement East Box",
@@ -9172,8 +8934,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 162
@@ -9223,8 +8984,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Windia - Inn Bedroom South Box",
@@ -9238,8 +8998,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Windia - Kaeli",
@@ -9256,8 +9015,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "NPC"
+            "locked": true
           }
         ],
         "id": 164
@@ -9286,8 +9044,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "NPC"
+            "locked": true
           }
         ],
         "id": 165
@@ -9330,8 +9087,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 166
@@ -9368,8 +9124,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Pazuzu's Tower 1F - Descent Bomb Wall Center Box",
@@ -9391,8 +9146,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Pazuzu's Tower 1F - Descent Bomb Wall East Box",
@@ -9414,8 +9168,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Pazuzu's Tower 1F - Descent Box",
@@ -9429,8 +9182,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 167
@@ -9504,8 +9256,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Pazuzu's Tower 2F - East Room East Box",
@@ -9519,8 +9270,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Pazuzu 2F Lock",
@@ -9544,8 +9294,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           },
           {
             "name": "Pazuzu 2F",
@@ -9568,8 +9317,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 169
@@ -9605,8 +9353,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Pazuzu's Tower 3F - Guest Room East Box",
@@ -9620,8 +9367,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Pazuzu 3F",
@@ -9636,8 +9382,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 170
@@ -9710,8 +9455,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 172
@@ -9769,8 +9513,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Pazuzu's Tower 4F - Elevator East Box",
@@ -9792,8 +9535,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Pazuzu's Tower 4F - East Storage Room Chest",
@@ -9807,8 +9549,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Pazuzu 4F Lock",
@@ -9832,8 +9573,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           },
           {
             "name": "Pazuzu 4F",
@@ -9856,8 +9596,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 173
@@ -9894,8 +9633,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 174
@@ -9931,8 +9669,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Pazuzu's Tower 5F - South Box",
@@ -9946,8 +9683,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 175
@@ -9997,8 +9733,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Pazuzu's Tower 6F - Chest",
@@ -10012,8 +9747,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Pazuzu 6F Lock",
@@ -10053,8 +9787,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           },
           {
             "name": "Pazuzu 6F",
@@ -10077,8 +9810,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 176
@@ -10186,8 +9918,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Pazuzu",
@@ -10215,8 +9946,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 179
@@ -10360,8 +10090,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 185
@@ -10401,8 +10130,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 186
@@ -10460,8 +10188,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           },
           {
             "name": "Mac's Ship Deck - North Box",
@@ -10475,8 +10202,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Mac's Ship Deck - Center Box",
@@ -10490,8 +10216,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Mac's Ship Deck - South Box",
@@ -10505,8 +10230,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 187
@@ -10566,8 +10290,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Mac's Ship B1 - Center Hook Platform Box",
@@ -10584,8 +10307,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 188
@@ -10649,8 +10371,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 190
@@ -10721,8 +10442,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Mac's Ship B2 - Barrel Room North Box",
@@ -10736,8 +10456,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Mac's Ship B2 - Southwest Room Box",
@@ -10751,8 +10470,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Mac's Ship B2 - Southeast Room Box",
@@ -10766,8 +10484,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           }
         ],
         "id": 193
@@ -10796,8 +10513,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Chest"
+            "locked": true
           },
           {
             "name": "Captain Mac",
@@ -10815,8 +10531,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 194
@@ -10922,8 +10637,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Doom Castle 4F - Southwest Room Box",
@@ -10956,8 +10670,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Doom Castle 4F - Northeast Room Box",
@@ -10979,8 +10692,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Doom Castle 4F - Southeast Room Box",
@@ -11013,8 +10725,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Stone Golem",
@@ -11048,8 +10759,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 196
@@ -11081,8 +10791,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Doom Castle 5F - North Right Box",
@@ -11099,8 +10808,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Doom Castle 5F - South Left Box",
@@ -11117,8 +10825,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Doom Castle 5F - South Right Box",
@@ -11135,8 +10842,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Twinhead Wyvern",
@@ -11154,8 +10860,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 197
@@ -11191,8 +10896,7 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Doom Castle 6F - East Box",
@@ -11206,8 +10910,7 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true,
-            "type": "Box"
+            "locked": true
           },
           {
             "name": "Zuh",
@@ -11225,8 +10928,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 198
@@ -11277,8 +10979,7 @@
               "type": "None"
             },
             "locked": true,
-            "event": true,
-            "type": "Trigger"
+            "event": true
           }
         ],
         "id": 200
@@ -11302,10 +11003,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tree Wither": {
         "name": "Tree Wither",
@@ -11314,10 +11015,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Wakewater": {
         "name": "Wakewater",
@@ -11326,10 +11027,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Venus Key": {
         "name": "Venus Key",
@@ -11338,10 +11039,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Multi Key": {
         "name": "Multi Key",
@@ -11350,10 +11051,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mask": {
         "name": "Mask",
@@ -11362,10 +11063,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Magic Mirror": {
         "name": "Magic Mirror",
@@ -11374,10 +11075,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Thunder Rock": {
         "name": "Thunder Rock",
@@ -11386,10 +11087,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Captain's Cap": {
         "name": "Captain's Cap",
@@ -11398,10 +11099,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Libra Crest": {
         "name": "Libra Crest",
@@ -11410,10 +11111,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Gemini Crest": {
         "name": "Gemini Crest",
@@ -11422,10 +11123,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mobius Crest": {
         "name": "Mobius Crest",
@@ -11434,10 +11135,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sand Coin": {
         "name": "Sand Coin",
@@ -11447,10 +11148,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "River Coin": {
         "name": "River Coin",
@@ -11460,10 +11161,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sun Coin": {
         "name": "Sun Coin",
@@ -11473,10 +11174,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Sky Coin": {
         "name": "Sky Coin",
@@ -11486,10 +11187,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cure Potion": {
         "name": "Cure Potion",
@@ -11498,10 +11199,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 61,
-        "classification": "filler"
+        "max_count": 61
       },
       "Heal Potion": {
         "name": "Heal Potion",
@@ -11510,10 +11211,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 52,
-        "classification": "filler"
+        "max_count": 52
       },
       "Seed": {
         "name": "Seed",
@@ -11522,10 +11223,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "filler"
+        "max_count": 2
       },
       "Refresher": {
         "name": "Refresher",
@@ -11534,10 +11235,10 @@
           "Consumables",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 17,
-        "classification": "filler"
+        "max_count": 17
       },
       "Exit Book": {
         "name": "Exit Book",
@@ -11546,10 +11247,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Cure Book": {
         "name": "Cure Book",
@@ -11558,10 +11259,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Heal Book": {
         "name": "Heal Book",
@@ -11570,10 +11271,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Life Book": {
         "name": "Life Book",
@@ -11582,10 +11283,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Quake Book": {
         "name": "Quake Book",
@@ -11594,10 +11295,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Blizzard Book": {
         "name": "Blizzard Book",
@@ -11606,10 +11307,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Fire Book": {
         "name": "Fire Book",
@@ -11618,10 +11319,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Aero Book": {
         "name": "Aero Book",
@@ -11630,10 +11331,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Thunder Seal": {
         "name": "Thunder Seal",
@@ -11642,10 +11343,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "White Seal": {
         "name": "White Seal",
@@ -11654,10 +11355,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Meteor Seal": {
         "name": "Meteor Seal",
@@ -11666,10 +11367,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Flare Seal": {
         "name": "Flare Seal",
@@ -11678,10 +11379,10 @@
           "Everything",
           "Spells"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Steel Sword": {
         "name": "Steel Sword",
@@ -11691,10 +11392,10 @@
           "Swords",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Knight Sword": {
         "name": "Knight Sword",
@@ -11704,10 +11405,10 @@
           "Swords",
           "Weapons"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Excalibur": {
         "name": "Excalibur",
@@ -11717,10 +11418,10 @@
           "Swords",
           "Weapons"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Axe": {
         "name": "Axe",
@@ -11730,10 +11431,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Battle Axe": {
         "name": "Battle Axe",
@@ -11743,10 +11444,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Giant's Axe": {
         "name": "Giant's Axe",
@@ -11756,10 +11457,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cat Claw": {
         "name": "Cat Claw",
@@ -11769,10 +11470,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Charm Claw": {
         "name": "Charm Claw",
@@ -11782,10 +11483,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dragon Claw": {
         "name": "Dragon Claw",
@@ -11795,10 +11496,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Bomb": {
         "name": "Bomb",
@@ -11808,10 +11509,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Jumbo Bomb": {
         "name": "Jumbo Bomb",
@@ -11821,10 +11522,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Mega Grenade": {
         "name": "Mega Grenade",
@@ -11834,10 +11535,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Steel Helm": {
         "name": "Steel Helm",
@@ -11846,10 +11547,10 @@
           "Everything",
           "Helms"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Moon Helm": {
         "name": "Moon Helm",
@@ -11858,10 +11559,10 @@
           "Everything",
           "Helms"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Apollo Helm": {
         "name": "Apollo Helm",
@@ -11870,10 +11571,10 @@
           "Everything",
           "Helms"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Steel Armor": {
         "name": "Steel Armor",
@@ -11882,10 +11583,10 @@
           "Armors",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Noble Armor": {
         "name": "Noble Armor",
@@ -11894,10 +11595,10 @@
           "Armors",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Gaia's Armor": {
         "name": "Gaia's Armor",
@@ -11906,10 +11607,10 @@
           "Armors",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Steel Shield": {
         "name": "Steel Shield",
@@ -11918,10 +11619,10 @@
           "Everything",
           "Shields"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Venus Shield": {
         "name": "Venus Shield",
@@ -11930,10 +11631,10 @@
           "Everything",
           "Shields"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Aegis Shield": {
         "name": "Aegis Shield",
@@ -11942,10 +11643,10 @@
           "Everything",
           "Shields"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Charm": {
         "name": "Charm",
@@ -11954,10 +11655,10 @@
           "Accessories",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Magic Ring": {
         "name": "Magic Ring",
@@ -11966,10 +11667,10 @@
           "Accessories",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Cupid Locket": {
         "name": "Cupid Locket",
@@ -11978,10 +11679,10 @@
           "Accessories",
           "Everything"
         ],
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Bomb Refill": {
         "name": "Bomb Refill",
@@ -11990,10 +11691,10 @@
           "Everything",
           "Refills"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 19,
-        "classification": "filler"
+        "max_count": 19
       },
       "Projectile Refill": {
         "name": "Projectile Refill",
@@ -12002,10 +11703,10 @@
           "Everything",
           "Refills"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 50,
-        "classification": "filler"
+        "max_count": 50
       },
       "Sky Fragment": {
         "name": "Sky Fragment",
@@ -12014,10 +11715,10 @@
           "Everything",
           "Key Items"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
@@ -12027,10 +11728,10 @@
           "Swords",
           "Weapons"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Axe": {
         "name": "Progressive Axe",
@@ -12040,10 +11741,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Claw": {
         "name": "Progressive Claw",
@@ -12053,10 +11754,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Bomb": {
         "name": "Progressive Bomb",
@@ -12066,10 +11767,10 @@
           "Everything",
           "Weapons"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Helm": {
         "name": "Progressive Helm",
@@ -12078,10 +11779,10 @@
           "Everything",
           "Helms"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Armor": {
         "name": "Progressive Armor",
@@ -12090,10 +11791,10 @@
           "Armors",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
@@ -12102,10 +11803,10 @@
           "Everything",
           "Shields"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Progressive Accessory": {
         "name": "Progressive Accessory",
@@ -12114,10 +11815,10 @@
           "Accessories",
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Minotaur": {
         "name": "Minotaur",
@@ -12125,10 +11826,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Kaeli 1": {
         "name": "Kaeli 1",
@@ -12136,10 +11837,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Kaeli 2": {
         "name": "Kaeli 2",
@@ -12147,10 +11848,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Barrel Pushed": {
         "name": "Barrel Pushed",
@@ -12158,10 +11859,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tristam": {
         "name": "Tristam",
@@ -12169,10 +11870,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Tristam Bone Item Given": {
         "name": "Tristam Bone Item Given",
@@ -12180,10 +11881,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Long Spine Bombed": {
         "name": "Long Spine Bombed",
@@ -12191,10 +11892,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Short Spine Bombed": {
         "name": "Short Spine Bombed",
@@ -12202,10 +11903,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Skull 1 Bombed": {
         "name": "Skull 1 Bombed",
@@ -12213,10 +11914,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Skull 2 Bombed": {
         "name": "Skull 2 Bombed",
@@ -12224,10 +11925,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Flamerus Rex": {
         "name": "Flamerus Rex",
@@ -12235,10 +11936,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Phoebe 1": {
         "name": "Phoebe 1",
@@ -12246,10 +11947,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Summer Aquaria": {
         "name": "Summer Aquaria",
@@ -12257,10 +11958,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Phanquid": {
         "name": "Phanquid",
@@ -12268,10 +11969,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Freezer Crab": {
         "name": "Freezer Crab",
@@ -12279,10 +11980,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice Pyramid 1F Statue": {
         "name": "Ice Pyramid 1F Statue",
@@ -12290,10 +11991,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice Pyramid 3F Statue": {
         "name": "Ice Pyramid 3F Statue",
@@ -12301,10 +12002,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice Pyramid 4F Statue": {
         "name": "Ice Pyramid 4F Statue",
@@ -12312,10 +12013,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice Pyramid 5F Statue": {
         "name": "Ice Pyramid 5F Statue",
@@ -12323,10 +12024,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice Golem": {
         "name": "Ice Golem",
@@ -12334,10 +12035,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ship Liberated": {
         "name": "Ship Liberated",
@@ -12345,10 +12046,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spencer Cave Libra Block Bombed": {
         "name": "Spencer Cave Libra Block Bombed",
@@ -12356,10 +12057,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Reuben 1": {
         "name": "Reuben 1",
@@ -12367,10 +12068,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Jinn": {
         "name": "Jinn",
@@ -12378,10 +12079,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Reuben Dad Saved": {
         "name": "Reuben Dad Saved",
@@ -12389,10 +12090,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Medusa": {
         "name": "Medusa",
@@ -12400,10 +12101,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Lava Dome Plate": {
         "name": "Lava Dome Plate",
@@ -12411,10 +12112,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dualhead Hydra": {
         "name": "Dualhead Hydra",
@@ -12422,10 +12123,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Gidrah": {
         "name": "Gidrah",
@@ -12433,10 +12134,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dullahan": {
         "name": "Dullahan",
@@ -12444,10 +12145,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rainbow Bridge": {
         "name": "Rainbow Bridge",
@@ -12455,10 +12156,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 1F": {
         "name": "Pazuzu 1F",
@@ -12466,10 +12167,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 2F Lock": {
         "name": "Pazuzu 2F Lock",
@@ -12477,10 +12178,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 2F": {
         "name": "Pazuzu 2F",
@@ -12488,10 +12189,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 3F": {
         "name": "Pazuzu 3F",
@@ -12499,10 +12200,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 4F Lock": {
         "name": "Pazuzu 4F Lock",
@@ -12510,10 +12211,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 4F": {
         "name": "Pazuzu 4F",
@@ -12521,10 +12222,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 5F": {
         "name": "Pazuzu 5F",
@@ -12532,10 +12233,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 6F Lock": {
         "name": "Pazuzu 6F Lock",
@@ -12543,10 +12244,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu 6F": {
         "name": "Pazuzu 6F",
@@ -12554,10 +12255,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pazuzu": {
         "name": "Pazuzu",
@@ -12565,10 +12266,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ship Dock Access": {
         "name": "Ship Dock Access",
@@ -12576,10 +12277,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ship Steering Wheel": {
         "name": "Ship Steering Wheel",
@@ -12587,10 +12288,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ship Loaned": {
         "name": "Ship Loaned",
@@ -12598,10 +12299,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Stone Golem": {
         "name": "Stone Golem",
@@ -12609,10 +12310,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Twinhead Wyvern": {
         "name": "Twinhead Wyvern",
@@ -12620,10 +12321,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Zuh": {
         "name": "Zuh",
@@ -12631,10 +12332,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dark King": {
         "name": "Dark King",
@@ -12642,10 +12343,10 @@
         "groups": [
           "Event"
         ],
+        "classification": "progression",
         "event": true,
         "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       }
     }
   },
