@@ -4295,6 +4295,7 @@ class HelperCodeGenerator:
             'f_string': self._expr_f_string,
             'formatted_value': self._expr_formatted_value,
             'generator_expression': self._expr_generator_expression,
+            'region_reference': self._expr_region_reference,
         }
 
         handler = handlers.get(expr_type)
@@ -4453,7 +4454,6 @@ class HelperCodeGenerator:
             # Handle AST_function_call - try to simplify or preserve structure
             if rule_type == 'AST_function_call':
                 # This represents complex function call patterns
-                # For now, return the result if we can evaluate it, otherwise True
                 args = expr.get('args', {})
                 function = args.get('function', {})
                 # Try to generate the function call expression
@@ -4461,6 +4461,25 @@ class HelperCodeGenerator:
                     func_expr = self._generate_expression(function)
                     call_args = args.get('call_args', [])
                     arg_exprs = [self._generate_expression(a) for a in call_args]
+
+                    # Special case: can_defeat() needs state as first argument
+                    # The original ALTTP Boss.can_defeat(state) takes state as parameter
+                    if func_expr.endswith('.can_defeat') and not arg_exprs:
+                        arg_exprs = ['state']
+
+                    # Special case: can_reach() on Region objects needs state as first argument
+                    # Region.can_reach(state) takes state as parameter
+                    if func_expr.endswith('.can_reach') and not arg_exprs:
+                        arg_exprs = ['state']
+
+                    # Special case: .to_bool() calls on options
+                    # Original ALTTP code uses option.to_bool() but Archipelago options don't have this method.
+                    # Convert to checking the option's truthiness by wrapping in bool().
+                    if func_expr.endswith('.to_bool') and not arg_exprs:
+                        # Remove '.to_bool' from the end and wrap in bool()
+                        obj_expr = func_expr[:-8]  # len('.to_bool') == 8
+                        return f'bool({obj_expr})'
+
                     return f'{func_expr}({", ".join(arg_exprs)})'
                 return 'True'
 
@@ -5088,8 +5107,21 @@ class HelperCodeGenerator:
 
     def _expr_subscript(self, expr: Dict[str, Any]) -> str:
         """Generate subscript/index expression."""
-        value = self._generate_expression(expr.get('value', expr.get('object', {})))
-        index = self._generate_expression(expr.get('index', {}))
+        value_expr = expr.get('value', expr.get('object', {}))
+        index_expr = expr.get('index', {})
+
+        # Special case: world.worlds[N] pattern
+        # In original ALTTP code, 'world' is the multiworld and world.worlds[N] accesses player N's world.
+        # Convert to state.multiworld.worlds[player] (using player variable, not hardcoded index).
+        if isinstance(value_expr, dict) and value_expr.get('type') == 'attribute':
+            obj = value_expr.get('object', {})
+            attr = value_expr.get('attr', '')
+            if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'world' and attr == 'worlds':
+                # This is world.worlds[N] - convert to state.multiworld.worlds[player]
+                return 'state.multiworld.worlds[player]'
+
+        value = self._generate_expression(value_expr)
+        index = self._generate_expression(index_expr)
         return f"{value}[{index}]"
 
     def _expr_attribute(self, expr: Dict[str, Any]) -> str:
@@ -5188,6 +5220,14 @@ class HelperCodeGenerator:
                 func.get('attr') == 'can_reach' and len(arg_exprs) == 0):
             arg_exprs.append('state')
 
+        # Special handling for .to_bool() calls on options
+        # Original ALTTP code uses option.to_bool() but Archipelago options don't have this method.
+        # Convert to checking the option's truthiness by wrapping in bool().
+        if (isinstance(func, dict) and func.get('type') == 'attribute' and
+                func.get('attr') == 'to_bool' and len(arg_exprs) == 0):
+            obj_code = self._generate_expression(func.get('object', {}))
+            return f"bool({obj_code})"
+
         return f"{func_code}({', '.join(arg_exprs)})"
 
     def _expr_method_call(self, expr: Dict[str, Any]) -> str:
@@ -5226,6 +5266,15 @@ class HelperCodeGenerator:
         """Generate unary negation."""
         operand = self._generate_expression(expr.get('operand', {}))
         return f"-({operand})"
+
+    def _expr_region_reference(self, expr: Dict[str, Any]) -> str:
+        """Generate code to get a region object reference.
+
+        Used when rules reference a region object (e.g., for calling .can_reach() on it).
+        Returns: state.multiworld.get_region('region_name', player)
+        """
+        region = expr.get('region', '')
+        return f"state.multiworld.get_region({repr(region)}, player)"
 
     def _expr_can_reach(self, expr: Dict[str, Any]) -> str:
         """Generate state.can_reach() for region."""
