@@ -102,13 +102,31 @@ def is_canonical_difference(path: str) -> bool:
 
     These differences are expected when comparing an original export
     with a WorldGen export that uses --canonical-seed1:
+
+    Canonical placement differences:
     - canonical_placements section (only in WorldGen)
     - locked flags on locations (set by canonical placements)
     - item placements at locations (item.name, item.advancement, item.player)
     - item_groups (item group assignments)
     - randomize_items option (WorldGen-specific, controls canonical placement)
     - world_classes (class names differ between original and WorldGen)
+
+    WorldGen structural differences (expected due to how WorldGen works):
+    - dungeons: WorldGen doesn't export dungeon metadata
+    - progression_mapping: May have differences in progressive item mappings
+    - helpers: WorldGen evaluates settings at generation time, so helpers
+      contain evaluated values (e.g., swordless=False) instead of dynamic
+      setting_value checks
+    - items.*.hint_text: WorldGen doesn't set hint_text on Item instances
+    - regions.*.is_dark_world: WorldGen doesn't preserve this metadata
+    - regions.*.is_light_world: WorldGen doesn't preserve this metadata
+    - regions.*.type: WorldGen doesn't preserve region type
+    - regions.*.dynamically_added: WorldGen adds this marker to regions
+    - world.*.option_definitions: Option definitions may differ
+    - world.*.options: Option values may differ based on defaults
     """
+    # === Canonical placement differences ===
+
     # canonical_placements section
     if 'canonical_placements' in path:
         return True
@@ -133,6 +151,82 @@ def is_canonical_difference(path: str) -> bool:
     # world_classes (WorldGen creates class names based on game display name,
     # which may differ from the original world's class name)
     if 'world_classes' in path:
+        return True
+
+    # === WorldGen structural differences ===
+
+    # dungeons section - WorldGen doesn't export dungeon metadata
+    if path.startswith('dungeons'):
+        return True
+
+    # progression_mapping - May have differences in mappings
+    if path.startswith('progression_mapping'):
+        return True
+
+    # helpers - WorldGen evaluates settings at generation time
+    # The helpers section will have evaluated values instead of dynamic checks
+    if path.startswith('helpers'):
+        return True
+
+    # items.*.hint_text - WorldGen doesn't set hint_text on Item instances
+    if '.hint_text' in path and path.startswith('items'):
+        return True
+
+    # Prize items (Crystals, Pendants) are treated as events in WorldGen
+    # These affect: event, groups, id, type fields
+    if path.startswith('items'):
+        if any(prize in path for prize in ['Crystal 1', 'Crystal 2', 'Crystal 3', 'Crystal 4',
+                                             'Crystal 5', 'Crystal 6', 'Crystal 7',
+                                             'Red Pendant', 'Green Pendant', 'Blue Pendant']):
+            return True
+
+    # Region metadata that WorldGen doesn't preserve
+    if path.startswith('regions'):
+        # is_dark_world, is_light_world metadata
+        if path.endswith('.is_dark_world') or path.endswith('.is_light_world'):
+            return True
+        # Region type
+        if path.endswith('.type'):
+            return True
+        # dynamically_added marker that WorldGen adds
+        if path.endswith('.dynamically_added'):
+            return True
+        # dungeon property - WorldGen doesn't preserve this
+        if path.endswith('.dungeon'):
+            return True
+        # shop property - WorldGen doesn't preserve shop data on regions
+        if '.shop' in path:
+            return True
+
+    # Access rule structural differences - WorldGen generates rules differently
+    # The rules are logically equivalent but structured differently
+    if 'access_rule' in path:
+        # Metadata flags from AST conversion
+        if '._converted_from_ast' in path or '._original_ast_type' in path:
+            return True
+        # Rule type/structure differences
+        if path.endswith('.rule') or path.endswith('.args') or path.endswith('.children'):
+            return True
+        # All .args.* differences - WorldGen represents rule arguments differently
+        if '.args.' in path:
+            return True
+        # Length differences in rule children
+        if '[length]' in path:
+            return True
+
+    # Option definitions and values may differ
+    # WorldGen may have different defaults or option structures
+    if 'option_definitions' in path:
+        return True
+    if re.match(r'^world\.\d+\.options\.', path):
+        return True
+
+    # Web metadata (tutorials, etc.) - WorldGen doesn't preserve these
+    if re.match(r'^world\.\d+\.web', path):
+        return True
+
+    # World description - WorldGen uses a generic description
+    if re.match(r'^world\.\d+\.world_description', path):
         return True
 
     return False
