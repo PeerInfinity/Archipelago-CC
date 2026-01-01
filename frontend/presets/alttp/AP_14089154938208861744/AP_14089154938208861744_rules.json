@@ -3305,29 +3305,10 @@
                               "_converted_from_ast": true
                             },
                             "op": "==",
-                            "right": {
-                              "rule": "Tuple",
-                              "args": {
-                                "value": [
-                                  {
-                                    "rule": "Constant",
-                                    "args": {
-                                      "value": "Big Key (Eastern Palace)"
-                                    },
-                                    "_converted_from_ast": true
-                                  },
-                                  {
-                                    "rule": "Constant",
-                                    "args": {
-                                      "value": 1
-                                    },
-                                    "_converted_from_ast": true
-                                  }
-                                ],
-                                "_original_ast_type": "tuple"
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": [
+                              "Big Key (Eastern Palace)",
+                              1
+                            ],
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -3737,37 +3718,12 @@
                     {
                       "rule": "Compare",
                       "args": {
-                        "left": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": 1
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "left": 1,
                         "op": "in",
-                        "right": {
-                          "rule": "Tuple",
-                          "args": {
-                            "value": [
-                              {
-                                "rule": "Constant",
-                                "args": {
-                                  "value": "easy"
-                                },
-                                "_converted_from_ast": true
-                              },
-                              {
-                                "rule": "Constant",
-                                "args": {
-                                  "value": "default"
-                                },
-                                "_converted_from_ast": true
-                              }
-                            ],
-                            "_original_ast_type": "tuple"
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": [
+                          "easy",
+                          "default"
+                        ],
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -3950,13 +3906,7 @@
                           "_converted_from_ast": true
                         },
                         "op": "==",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "standard"
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": "standard",
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -3973,13 +3923,7 @@
                           "_converted_from_ast": true
                         },
                         "op": "==",
-                        "right": {
-                          "rule": "Constant",
-                          "args": {
-                            "value": "universal"
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": "universal",
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -5557,29 +5501,10 @@
                           "_converted_from_ast": true
                         },
                         "op": "==",
-                        "right": {
-                          "rule": "Tuple",
-                          "args": {
-                            "value": [
-                              {
-                                "rule": "Constant",
-                                "args": {
-                                  "value": "Small Key (Tower of Hera)"
-                                },
-                                "_converted_from_ast": true
-                              },
-                              {
-                                "rule": "Constant",
-                                "args": {
-                                  "value": 1
-                                },
-                                "_converted_from_ast": true
-                              }
-                            ],
-                            "_original_ast_type": "tuple"
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": [
+                          "Small Key (Tower of Hera)",
+                          1
+                        ],
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -8486,29 +8411,10 @@
                               "_converted_from_ast": true
                             },
                             "op": "in",
-                            "right": {
-                              "rule": "Tuple",
-                              "args": {
-                                "value": [
-                                  {
-                                    "rule": "Constant",
-                                    "args": {
-                                      "value": "easy"
-                                    },
-                                    "_converted_from_ast": true
-                                  },
-                                  {
-                                    "rule": "Constant",
-                                    "args": {
-                                      "value": "default"
-                                    },
-                                    "_converted_from_ast": true
-                                  }
-                                ],
-                                "_original_ast_type": "tuple"
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": [
+                              "easy",
+                              "default"
+                            ],
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -8807,29 +8713,10 @@
                           "_converted_from_ast": true
                         },
                         "op": "==",
-                        "right": {
-                          "rule": "Tuple",
-                          "args": {
-                            "value": [
-                              {
-                                "rule": "Constant",
-                                "args": {
-                                  "value": "Big Key (Swamp Palace)"
-                                },
-                                "_converted_from_ast": true
-                              },
-                              {
-                                "rule": "Constant",
-                                "args": {
-                                  "value": 1
-                                },
-                                "_converted_from_ast": true
-                              }
-                            ],
-                            "_original_ast_type": "tuple"
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": [
+                          "Big Key (Swamp Palace)",
+                          1
+                        ],
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -9332,29 +9219,10 @@
                               "_converted_from_ast": true
                             },
                             "op": "==",
-                            "right": {
-                              "rule": "Tuple",
-                              "args": {
-                                "value": [
-                                  {
-                                    "rule": "Constant",
-                                    "args": {
-                                      "value": "Small Key (Thieves Town)"
-                                    },
-                                    "_converted_from_ast": true
-                                  },
-                                  {
-                                    "rule": "Constant",
-                                    "args": {
-                                      "value": 1
-                                    },
-                                    "_converted_from_ast": true
-                                  }
-                                ],
-                                "_original_ast_type": "tuple"
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": [
+                              "Small Key (Thieves Town)",
+                              1
+                            ],
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -9816,29 +9684,10 @@
                           "_converted_from_ast": true
                         },
                         "op": "==",
-                        "right": {
-                          "rule": "Tuple",
-                          "args": {
-                            "value": [
-                              {
-                                "rule": "Constant",
-                                "args": {
-                                  "value": "Big Key (Skull Woods)"
-                                },
-                                "_converted_from_ast": true
-                              },
-                              {
-                                "rule": "Constant",
-                                "args": {
-                                  "value": 1
-                                },
-                                "_converted_from_ast": true
-                              }
-                            ],
-                            "_original_ast_type": "tuple"
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": [
+                          "Big Key (Skull Woods)",
+                          1
+                        ],
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -10800,38 +10649,12 @@
                           "_converted_from_ast": true
                         },
                         "op": "in",
-                        "right": {
-                          "rule": "List",
-                          "args": {
-                            "value": [
-                              {
-                                "rule": "Tuple",
-                                "args": {
-                                  "value": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Big Key (Misery Mire)"
-                                      },
-                                      "_converted_from_ast": true
-                                    },
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 1
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ],
-                                  "_original_ast_type": "tuple"
-                                },
-                                "_converted_from_ast": true
-                              }
-                            ],
-                            "_original_ast_type": "list"
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": [
+                          [
+                            "Big Key (Misery Mire)",
+                            1
+                          ]
+                        ],
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -10848,38 +10671,12 @@
                           "_converted_from_ast": true
                         },
                         "op": "in",
-                        "right": {
-                          "rule": "List",
-                          "args": {
-                            "value": [
-                              {
-                                "rule": "Tuple",
-                                "args": {
-                                  "value": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Big Key (Misery Mire)"
-                                      },
-                                      "_converted_from_ast": true
-                                    },
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 1
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ],
-                                  "_original_ast_type": "tuple"
-                                },
-                                "_converted_from_ast": true
-                              }
-                            ],
-                            "_original_ast_type": "list"
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": [
+                          [
+                            "Big Key (Misery Mire)",
+                            1
+                          ]
+                        ],
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -11187,29 +10984,10 @@
                               "_converted_from_ast": true
                             },
                             "op": "==",
-                            "right": {
-                              "rule": "Tuple",
-                              "args": {
-                                "value": [
-                                  {
-                                    "rule": "Constant",
-                                    "args": {
-                                      "value": "Big Key (Misery Mire)"
-                                    },
-                                    "_converted_from_ast": true
-                                  },
-                                  {
-                                    "rule": "Constant",
-                                    "args": {
-                                      "value": 1
-                                    },
-                                    "_converted_from_ast": true
-                                  }
-                                ],
-                                "_original_ast_type": "tuple"
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": [
+                              "Big Key (Misery Mire)",
+                              1
+                            ],
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -11226,29 +11004,10 @@
                               "_converted_from_ast": true
                             },
                             "op": "==",
-                            "right": {
-                              "rule": "Tuple",
-                              "args": {
-                                "value": [
-                                  {
-                                    "rule": "Constant",
-                                    "args": {
-                                      "value": "Big Key (Misery Mire)"
-                                    },
-                                    "_converted_from_ast": true
-                                  },
-                                  {
-                                    "rule": "Constant",
-                                    "args": {
-                                      "value": 1
-                                    },
-                                    "_converted_from_ast": true
-                                  }
-                                ],
-                                "_original_ast_type": "tuple"
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": [
+                              "Big Key (Misery Mire)",
+                              1
+                            ],
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -11265,29 +11024,10 @@
                               "_converted_from_ast": true
                             },
                             "op": "==",
-                            "right": {
-                              "rule": "Tuple",
-                              "args": {
-                                "value": [
-                                  {
-                                    "rule": "Constant",
-                                    "args": {
-                                      "value": "Big Key (Misery Mire)"
-                                    },
-                                    "_converted_from_ast": true
-                                  },
-                                  {
-                                    "rule": "Constant",
-                                    "args": {
-                                      "value": 1
-                                    },
-                                    "_converted_from_ast": true
-                                  }
-                                ],
-                                "_original_ast_type": "tuple"
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": [
+                              "Big Key (Misery Mire)",
+                              1
+                            ],
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -12675,38 +12415,12 @@
                               "_converted_from_ast": true
                             },
                             "op": "in",
-                            "right": {
-                              "rule": "List",
-                              "args": {
-                                "value": [
-                                  {
-                                    "rule": "Tuple",
-                                    "args": {
-                                      "value": [
-                                        {
-                                          "rule": "Constant",
-                                          "args": {
-                                            "value": "Small Key (Palace of Darkness)"
-                                          },
-                                          "_converted_from_ast": true
-                                        },
-                                        {
-                                          "rule": "Constant",
-                                          "args": {
-                                            "value": 1
-                                          },
-                                          "_converted_from_ast": true
-                                        }
-                                      ],
-                                      "_original_ast_type": "tuple"
-                                    },
-                                    "_converted_from_ast": true
-                                  }
-                                ],
-                                "_original_ast_type": "list"
-                              },
-                              "_converted_from_ast": true
-                            },
+                            "right": [
+                              [
+                                "Small Key (Palace of Darkness)",
+                                1
+                              ]
+                            ],
                             "_original_ast_type": "compare"
                           },
                           "_converted_from_ast": true
@@ -12935,38 +12649,12 @@
                           "_converted_from_ast": true
                         },
                         "op": "in",
-                        "right": {
-                          "rule": "List",
-                          "args": {
-                            "value": [
-                              {
-                                "rule": "Tuple",
-                                "args": {
-                                  "value": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Small Key (Palace of Darkness)"
-                                      },
-                                      "_converted_from_ast": true
-                                    },
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 1
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ],
-                                  "_original_ast_type": "tuple"
-                                },
-                                "_converted_from_ast": true
-                              }
-                            ],
-                            "_original_ast_type": "list"
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": [
+                          [
+                            "Small Key (Palace of Darkness)",
+                            1
+                          ]
+                        ],
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
@@ -14109,38 +13797,12 @@
                           "_converted_from_ast": true
                         },
                         "op": "in",
-                        "right": {
-                          "rule": "List",
-                          "args": {
-                            "value": [
-                              {
-                                "rule": "Tuple",
-                                "args": {
-                                  "value": [
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": "Big Key (Ganons Tower)"
-                                      },
-                                      "_converted_from_ast": true
-                                    },
-                                    {
-                                      "rule": "Constant",
-                                      "args": {
-                                        "value": 1
-                                      },
-                                      "_converted_from_ast": true
-                                    }
-                                  ],
-                                  "_original_ast_type": "tuple"
-                                },
-                                "_converted_from_ast": true
-                              }
-                            ],
-                            "_original_ast_type": "list"
-                          },
-                          "_converted_from_ast": true
-                        },
+                        "right": [
+                          [
+                            "Big Key (Ganons Tower)",
+                            1
+                          ]
+                        ],
                         "_original_ast_type": "compare"
                       },
                       "_converted_from_ast": true
