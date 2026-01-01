@@ -538,34 +538,38 @@ class ASTToRuleBuilder:
         AST: {"type": "and", "conditions": [...]}
         RB: {"rule": "And", "options": [], "children": [...]}
 
-        Optimization: If all conditions are simple item_check rules with count=1,
-        convert to HasAll for cleaner output.
+        Optimization: Collects simple item_check rules with count=1 and combines
+        them into HasAll, even when mixed with other conditions. This matches
+        the Rule Builder's _simplify_and behavior for consistent output.
         """
         conditions = rule.get('conditions', [])
 
         if not conditions:
             return self._make_rule('True_', {})
 
-        # Check if all conditions are simple item_check rules with count=1
-        # If so, we can optimize to HasAll
+        # Separate simple item checks (count=1) from other conditions
+        # This partial optimization matches Rule Builder's _simplify_and
         simple_item_checks = []
-        all_simple = True
+        other_conditions = []
         for cond in conditions:
             if cond.get('type') == 'item_check':
                 count = cond.get('count', 1)
-                if count == 1:
-                    item = cond.get('item', '')
-                    if isinstance(item, str) and item:
-                        simple_item_checks.append(item)
-                        continue
-            all_simple = False
-            break
+                item = cond.get('item', '')
+                if count == 1 and isinstance(item, str) and item:
+                    simple_item_checks.append(item)
+                else:
+                    other_conditions.append(cond)
+            else:
+                other_conditions.append(cond)
 
-        if all_simple and len(simple_item_checks) >= 2:
-            # Optimize to HasAll
-            return self._make_rule('HasAll', {'items': simple_item_checks})
+        # Convert other conditions
+        converted_children = [self._convert_rule(cond) for cond in other_conditions]
 
-        converted_children = [self._convert_rule(cond) for cond in conditions]
+        # Add simple item checks as HasAll (if 2+) or Has (if 1)
+        if len(simple_item_checks) >= 2:
+            converted_children.append(self._make_rule('HasAll', {'items': simple_item_checks}))
+        elif len(simple_item_checks) == 1:
+            converted_children.append(self._make_rule('Has', {'item_name': simple_item_checks[0]}))
 
         if len(converted_children) == 1:
             return converted_children[0]
