@@ -850,6 +850,21 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
             # Fallback to empty dict (game name is in world[player].game)
             export_data['game_info'][player_str] = {}
 
+        # Filter accumulator targets from itempool_counts
+        # These are precollected for generation purposes but shouldn't be in
+        # the exported itempool_counts - the frontend uses accumulator_rules instead
+        game_info = export_data['game_info'].get(player_str, {})
+        accumulator_targets = set()
+        for rule in game_info.get('accumulator_rules', []):
+            if rule.get('target'):
+                accumulator_targets.add(rule['target'])
+        if accumulator_targets:
+            itempool_counts = {
+                item: count for item, count in itempool_counts.items()
+                if item not in accumulator_targets
+            }
+            logger.info(f"Filtered out accumulator target items from itempool_counts for player {player}: {accumulator_targets}")
+
         # Store the pre-calculated itempool counts
         export_data['itempool_counts'][player_str] = itempool_counts
 

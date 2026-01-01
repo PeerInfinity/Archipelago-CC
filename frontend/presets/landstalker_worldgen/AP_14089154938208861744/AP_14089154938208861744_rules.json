@@ -23,7 +23,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "code": "menu"
       },
       "Massan": {
         "name": "Massan",
@@ -73,7 +74,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Massan: chest in house nearest to elder house",
@@ -87,7 +90,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Massan: chest in middle house",
@@ -101,7 +106,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Massan: chest in house farthest from elder house",
@@ -115,7 +122,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Massan: Shop item #1",
@@ -129,7 +138,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 20,
+            "type_string": "shop"
           },
           {
             "name": "Massan: Shop item #2",
@@ -143,7 +154,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 200,
+            "type_string": "shop"
           },
           {
             "name": "Massan: Shop item #3",
@@ -157,7 +170,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 800,
+            "type_string": "shop"
           },
           {
             "name": "event_visited_massan",
@@ -172,9 +187,12 @@
               "type": "None"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "price": 0,
+            "type_string": "event"
           }
-        ]
+        ],
+        "code": "massan"
       },
       "Massan Cave": {
         "name": "Massan Cave",
@@ -207,7 +225,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Massan Cave: left chest",
@@ -221,7 +241,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Massan Cave: item on ground in treasure room",
@@ -235,9 +257,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           }
-        ]
+        ],
+        "code": "massan_cave"
       },
       "Route between Massan and Gumi": {
         "name": "Route between Massan and Gumi",
@@ -288,9 +313,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "route_massan_gumi"
       },
       "Waterfall Shrine": {
         "name": "Waterfall Shrine",
@@ -317,7 +345,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Waterfall Shrine: chest near Prospero",
@@ -331,7 +361,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Waterfall Shrine: chest on right branch of biggest room",
@@ -345,7 +377,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Waterfall Shrine: upstairs chest",
@@ -359,9 +393,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "waterfall_shrine"
       },
       "Swamp Shrine": {
         "name": "Swamp Shrine",
@@ -391,7 +428,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Swamp Shrine (0F): chest in carpet room",
@@ -405,7 +444,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Swamp Shrine (0F): chest in left hallway (accessed by falling from upstairs)",
@@ -419,7 +460,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Swamp Shrine (0F): falling chest after beating orc",
@@ -433,7 +476,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Swamp Shrine (0F): chest in room visible from second entrance",
@@ -447,7 +492,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Swamp Shrine (1F): lower chest in wooden bridges room",
@@ -461,7 +508,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Swamp Shrine (2F): upper chest in wooden bridges room",
@@ -475,7 +524,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Swamp Shrine (2F): chest on spiked floor room balcony",
@@ -489,7 +540,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Swamp Shrine (3F): chest in boss arena",
@@ -503,7 +556,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "event_visited_swamp_shrine",
@@ -518,9 +573,12 @@
               "type": "None"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "price": 0,
+            "type_string": "event"
           }
-        ]
+        ],
+        "code": "swamp_shrine"
       },
       "Massan (after Swamp Shrine)": {
         "name": "Massan (after Swamp Shrine)",
@@ -539,9 +597,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "reward"
           }
-        ]
+        ],
+        "code": "massan_after_swamp_shrine"
       },
       "Gumi (after Swamp Shrine)": {
         "name": "Gumi (after Swamp Shrine)",
@@ -560,9 +621,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "gumi_after_swamp_shrine"
       },
       "Gumi": {
         "name": "Gumi",
@@ -606,7 +670,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Gumi: item on furniture in elder's house",
@@ -620,7 +686,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "Gumi: Inn item #1",
@@ -634,7 +702,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 20,
+            "type_string": "shop"
           },
           {
             "name": "Gumi: Inn item #2",
@@ -648,9 +718,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 150,
+            "type_string": "shop"
           }
-        ]
+        ],
+        "code": "gumi"
       },
       "Route from Gumi to Ryuma": {
         "name": "Route from Gumi to Ryuma",
@@ -721,7 +794,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Route between Gumi and Ryuma: Swordsman Kado reward",
@@ -735,9 +810,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "reward"
           }
-        ]
+        ],
+        "code": "route_gumi_ryuma"
       },
       "Route from Gumi to Ryuma (Tibor tree)": {
         "name": "Route from Gumi to Ryuma (Tibor tree)",
@@ -751,7 +829,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "code": "tibor_tree"
       },
       "Route from Gumi to Ryuma (Mercator gate tree)": {
         "name": "Route from Gumi to Ryuma (Mercator gate tree)",
@@ -765,7 +844,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "code": "mercator_gate_tree"
       },
       "Tibor": {
         "name": "Tibor",
@@ -792,7 +872,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Tibor: chest in spike balls room",
@@ -806,7 +888,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Tibor: left chest on 2 chest group",
@@ -820,7 +904,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Tibor: right chest on 2 chest group",
@@ -834,9 +920,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "tibor"
       },
       "Ryuma": {
         "name": "Ryuma",
@@ -890,7 +979,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Ryuma: Inn item",
@@ -904,9 +995,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 20,
+            "type_string": "shop"
           }
-        ]
+        ],
+        "code": "ryuma"
       },
       "Ryuma (after Thieves Hideout)": {
         "name": "Ryuma (after Thieves Hideout)",
@@ -925,7 +1019,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 25,
+            "type_string": "shop"
           },
           {
             "name": "Ryuma: Shop item #2",
@@ -939,7 +1035,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 35,
+            "type_string": "shop"
           },
           {
             "name": "Ryuma: Shop item #3",
@@ -953,7 +1051,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 210,
+            "type_string": "shop"
           },
           {
             "name": "Ryuma: Shop item #4",
@@ -967,7 +1067,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 25,
+            "type_string": "shop"
           },
           {
             "name": "Ryuma: Shop item #5",
@@ -981,7 +1083,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 425,
+            "type_string": "shop"
           },
           {
             "name": "Ryuma: Mayor's first reward",
@@ -995,7 +1099,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "reward"
           },
           {
             "name": "Ryuma: Mayor's second reward",
@@ -1009,9 +1115,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "reward"
           }
-        ]
+        ],
+        "code": "ryuma_after_thieves_hideout"
       },
       "Ryuma (repaired lighthouse)": {
         "name": "Ryuma (repaired lighthouse)",
@@ -1041,7 +1150,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "event_visited_ryuma_lighthouse_repaired",
@@ -1056,9 +1167,12 @@
               "type": "None"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "price": 0,
+            "type_string": "event"
           }
-        ]
+        ],
+        "code": "ryuma_lighthouse_repaired"
       },
       "Thieves Hideout (before keydoor)": {
         "name": "Thieves Hideout (before keydoor)",
@@ -1095,7 +1209,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout: left chest in Pockets cell",
@@ -1109,7 +1225,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout: right chest in Pockets cell",
@@ -1123,7 +1241,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout: rolling boulder chest near entrance",
@@ -1137,7 +1257,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout: left chest in room on the way to goddess statue",
@@ -1151,7 +1273,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout: right chest in room on the way to goddess statue",
@@ -1165,9 +1289,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "thieves_hideout_pre_key"
       },
       "Thieves Hideout (after keydoor)": {
         "name": "Thieves Hideout (after keydoor)",
@@ -1194,7 +1321,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout (back): left chest after teal knight mini-boss",
@@ -1208,7 +1337,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout (back): second chest in hallway after quick climb trial",
@@ -1222,7 +1353,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout (back): first chest in hallway after quick climb trial",
@@ -1236,7 +1369,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout (back): chest in moving platforms room",
@@ -1250,7 +1385,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout (back): chest in falling platforms room",
@@ -1264,7 +1401,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout (back): reward chest after moving balls room",
@@ -1278,7 +1417,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout (back): left chest in room before boss",
@@ -1292,7 +1433,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout (back): right chest in room before boss",
@@ -1306,7 +1449,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout (back): chest #1 in boss reward room",
@@ -1320,7 +1465,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout (back): chest #2 in boss reward room",
@@ -1334,7 +1481,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout (back): chest #3 in boss reward room",
@@ -1348,7 +1497,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout (back): chest #4 in boss reward room",
@@ -1362,7 +1513,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Thieves Hideout (back): chest #5 in boss reward room",
@@ -1376,7 +1529,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "event_visited_thieves_hideout_post_key",
@@ -1391,9 +1546,12 @@
               "type": "None"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "price": 0,
+            "type_string": "event"
           }
-        ]
+        ],
+        "code": "thieves_hideout_post_key"
       },
       "Witch Helga's Hut": {
         "name": "Witch Helga's Hut",
@@ -1426,7 +1584,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Witch Helga's Hut: item on furniture",
@@ -1440,9 +1600,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           }
-        ]
+        ],
+        "code": "helga_hut"
       },
       "Mercator": {
         "name": "Mercator",
@@ -1533,7 +1696,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mercator: chest in special shop backroom",
@@ -1547,7 +1712,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mercator: chest in castle tower (ladder revealed by slashing armor)",
@@ -1561,7 +1728,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mercator: chest in Greenpea's house",
@@ -1575,7 +1744,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mercator: chest in grandma's house (pot shelving trial)",
@@ -1589,7 +1760,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mercator: falling item in castle court",
@@ -1603,7 +1776,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "Mercator: Shop item #1",
@@ -1617,7 +1792,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 20,
+            "type_string": "shop"
           },
           {
             "name": "Mercator: Shop item #2",
@@ -1631,7 +1808,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 40,
+            "type_string": "shop"
           },
           {
             "name": "Mercator: Shop item #3",
@@ -1645,7 +1824,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 160,
+            "type_string": "shop"
           },
           {
             "name": "Mercator: Shop item #4",
@@ -1659,7 +1840,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 25,
+            "type_string": "shop"
           },
           {
             "name": "Mercator: Shop item #5",
@@ -1673,7 +1856,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 270,
+            "type_string": "shop"
           },
           {
             "name": "Mercator: Shop item #6",
@@ -1687,7 +1872,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 20,
+            "type_string": "shop"
           },
           {
             "name": "Mercator: Arthur reward (in castle throne room)",
@@ -1701,7 +1888,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "reward"
           },
           {
             "name": "Mercator: Fahl's dojo challenge reward",
@@ -1724,9 +1913,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "reward"
           }
-        ]
+        ],
+        "code": "mercator"
       },
       "Mercator (docks with repaired lighthouse)": {
         "name": "Mercator (docks with repaired lighthouse)",
@@ -1753,7 +1945,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 25,
+            "type_string": "shop"
           },
           {
             "name": "Mercator: Docks shop item #2",
@@ -1767,7 +1961,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 310,
+            "type_string": "shop"
           },
           {
             "name": "Mercator: Docks shop item #3",
@@ -1781,9 +1977,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 125,
+            "type_string": "shop"
           }
-        ]
+        ],
+        "code": "mercator_repaired_docks"
       },
       "Mercator casino": {
         "name": "Mercator casino",
@@ -1812,9 +2011,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "mercator_casino"
       },
       "Mercator Dungeon": {
         "name": "Mercator Dungeon",
@@ -1840,7 +2042,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mercator Dungeon (-1F): chest in Moralis's cell",
@@ -1854,7 +2058,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mercator Dungeon (-1F): left chest in undeground double chest room",
@@ -1868,7 +2074,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mercator Dungeon (-1F): right chest in undeground double chest room",
@@ -1882,7 +2090,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mercator Dungeon (1F): left chest in tower double chest room",
@@ -1896,7 +2106,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mercator Dungeon (1F): right chest in tower double chest room",
@@ -1910,7 +2122,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mercator Dungeon (4F): chest in topmost tower room",
@@ -1924,9 +2138,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "mercator_dungeon"
       },
       "Crypt": {
         "name": "Crypt",
@@ -1953,7 +2170,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Crypt: reward chest",
@@ -1967,9 +2186,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "crypt"
       },
       "Mercator special shop": {
         "name": "Mercator special shop",
@@ -1999,7 +2221,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 540,
+            "type_string": "shop"
           },
           {
             "name": "Mercator: Special shop item #2",
@@ -2013,7 +2237,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 20,
+            "type_string": "shop"
           },
           {
             "name": "Mercator: Special shop item #3",
@@ -2027,7 +2253,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 270,
+            "type_string": "shop"
           },
           {
             "name": "Mercator: Special shop item #4",
@@ -2041,9 +2269,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 105,
+            "type_string": "shop"
           }
-        ]
+        ],
+        "code": "mercator_special_shop"
       },
       "Mir Tower sector": {
         "name": "Mir Tower sector",
@@ -2117,7 +2348,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Route between Mercator and Verla: chest on cliff next to blocked cave",
@@ -2131,7 +2364,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Route between Mercator and Verla: chest near Twinkle village",
@@ -2145,7 +2380,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Route to Mir Tower: chest on cliff accessed by pressing hidden switch",
@@ -2159,9 +2396,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "mir_tower_sector"
       },
       "Mir Tower sector (ledge behind sacred tree)": {
         "name": "Mir Tower sector (ledge behind sacred tree)",
@@ -2191,9 +2431,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "mir_tower_sector_tree_ledge"
       },
       "Mir Tower sector (coast behind sacred tree)": {
         "name": "Mir Tower sector (coast behind sacred tree)",
@@ -2223,9 +2466,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "mir_tower_sector_tree_coast"
       },
       "Twinkle village": {
         "name": "Twinkle village",
@@ -2252,7 +2498,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "Twinkle Village: second item on ground",
@@ -2266,7 +2514,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "Twinkle Village: third item on ground",
@@ -2280,9 +2530,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           }
-        ]
+        ],
+        "code": "twinkle_village"
       },
       "Mir Tower (pre-garlic)": {
         "name": "Mir Tower (pre-garlic)",
@@ -2319,7 +2572,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: chest after mimic room",
@@ -2333,7 +2588,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: mimic room chest #1",
@@ -2347,7 +2604,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: mimic room chest #2",
@@ -2361,7 +2620,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: mimic room chest #3",
@@ -2375,7 +2636,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: mimic room chest #4",
@@ -2389,7 +2652,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: chest in mushroom pit room",
@@ -2403,7 +2668,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: chest in room next to mummy switch room",
@@ -2417,9 +2684,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "mir_tower_pre_garlic"
       },
       "Mir Tower (post-garlic)": {
         "name": "Mir Tower (post-garlic)",
@@ -2453,7 +2723,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: hidden chest in room before library",
@@ -2467,7 +2739,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: chest in falling spikeballs room",
@@ -2481,7 +2755,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: chest in timed challenge room",
@@ -2495,7 +2771,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: chest in room where Miro closes the door",
@@ -2509,7 +2787,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: chest after room where Miro closes the door",
@@ -2523,7 +2803,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: reward chest",
@@ -2537,7 +2819,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: right chest in reward room",
@@ -2551,7 +2835,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: left chest in reward room",
@@ -2565,7 +2851,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: chest behind wall accessible after beating Mir",
@@ -2579,7 +2867,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mir Tower: Priest room item #1",
@@ -2593,7 +2883,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "Mir Tower: Priest room item #2",
@@ -2607,7 +2899,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "Mir Tower: Priest room item #3",
@@ -2621,9 +2915,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           }
-        ]
+        ],
+        "code": "mir_tower_post_garlic"
       },
       "Greenmaze (pre-whistle)": {
         "name": "Greenmaze (pre-whistle)",
@@ -2673,7 +2970,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Greenmaze: chest in mages room",
@@ -2687,7 +2986,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Greenmaze: left chest in elbow cave",
@@ -2701,7 +3002,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Greenmaze: right chest in elbow cave",
@@ -2715,7 +3018,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Greenmaze: chest in waterfall cave",
@@ -2729,7 +3034,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Greenmaze: left chest in hidden room behind waterfall",
@@ -2743,7 +3050,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Greenmaze: right chest in hidden room behind waterfall",
@@ -2757,7 +3066,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Greenmaze: dwarf hidden in the trees",
@@ -2771,9 +3082,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "reward"
           }
-        ]
+        ],
+        "code": "greenmaze_pre_whistle"
       },
       "Greenmaze (Cutter hidden sector)": {
         "name": "Greenmaze (Cutter hidden sector)",
@@ -2803,7 +3117,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Greenmaze: Cutter reward for saving Einstein",
@@ -2817,9 +3133,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "reward"
           }
-        ]
+        ],
+        "code": "greenmaze_cutter"
       },
       "Greenmaze (post-whistle)": {
         "name": "Greenmaze (post-whistle)",
@@ -2863,7 +3182,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Greenmaze: item behind trees requiring Cutter",
@@ -2877,9 +3198,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           }
-        ]
+        ],
+        "code": "greenmaze_post_whistle"
       },
       "Greenmaze (post-whistle tree)": {
         "name": "Greenmaze (post-whistle tree)",
@@ -2893,7 +3217,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "code": "greenmaze_post_whistle_tree"
       },
       "Verla shore": {
         "name": "Verla shore",
@@ -2944,7 +3269,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Verla Shore: chest behind cabin",
@@ -2958,9 +3285,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "verla_shore"
       },
       "Verla shore tree": {
         "name": "Verla shore tree",
@@ -2974,7 +3304,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "code": "verla_shore_tree"
       },
       "Verla shore cliff (accessible from Verla Mines)": {
         "name": "Verla shore cliff (accessible from Verla Mines)",
@@ -3008,9 +3339,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "verla_shore_cliff"
       },
       "Verla": {
         "name": "Verla",
@@ -3047,7 +3381,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 25,
+            "type_string": "shop"
           },
           {
             "name": "Verla: Shop item #2",
@@ -3061,7 +3397,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 30,
+            "type_string": "shop"
           },
           {
             "name": "Verla: Shop item #3",
@@ -3075,7 +3413,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 185,
+            "type_string": "shop"
           },
           {
             "name": "Verla: Shop item #4",
@@ -3089,9 +3429,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 310,
+            "type_string": "shop"
           }
-        ]
+        ],
+        "code": "verla"
       },
       "Verla (after mines)": {
         "name": "Verla (after mines)",
@@ -3121,7 +3464,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Verla: Shop item #5 (extra item after saving town)",
@@ -3135,9 +3480,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 330,
+            "type_string": "shop"
           }
-        ]
+        ],
+        "code": "verla_after_mines"
       },
       "Verla Mines": {
         "name": "Verla Mines",
@@ -3188,7 +3536,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Verla Mines: left chest in double chest room near entrance",
@@ -3202,7 +3552,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Verla Mines: chest on jar staircase room balcony",
@@ -3216,7 +3568,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Verla Mines: Dex reward chest",
@@ -3230,7 +3584,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Verla Mines: Slasher reward chest",
@@ -3244,7 +3600,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Verla Mines: left chest in 3-chests room near Slasher",
@@ -3258,7 +3616,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Verla Mines: middle chest in 3-chests room near Slasher",
@@ -3272,7 +3632,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Verla Mines: right chest in 3-chests room near Slasher",
@@ -3286,7 +3648,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Verla Mines: right chest in button room near elevator shaft leading to Marley",
@@ -3300,7 +3664,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Verla Mines: left chest in button room near elevator shaft leading to Marley",
@@ -3314,7 +3680,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Verla Mines: item in the corner of lava filled room",
@@ -3328,7 +3696,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "event_visited_verla_mines",
@@ -3343,9 +3713,12 @@
               "type": "None"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "price": 0,
+            "type_string": "event"
           }
-        ]
+        ],
+        "code": "verla_mines"
       },
       "Verla Mines (behind lava)": {
         "name": "Verla Mines (behind lava)",
@@ -3375,9 +3748,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "verla_mines_behind_lava"
       },
       "Route between Verla and Destel": {
         "name": "Route between Verla and Destel",
@@ -3404,7 +3780,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Route to Destel: chest in small platform elevator map",
@@ -3418,7 +3796,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Route to Destel: hidden chest in map right before Destel",
@@ -3432,7 +3812,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Route from Verla to Destel: Kelketo shop item #1",
@@ -3446,7 +3828,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 50,
+            "type_string": "shop"
           },
           {
             "name": "Route from Verla to Destel: Kelketo shop item #2",
@@ -3460,7 +3844,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 25,
+            "type_string": "shop"
           },
           {
             "name": "Route from Verla to Destel: Kelketo shop item #3",
@@ -3474,7 +3860,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 1000,
+            "type_string": "shop"
           },
           {
             "name": "Route from Verla to Destel: Kelketo shop item #4",
@@ -3488,7 +3876,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 310,
+            "type_string": "shop"
           },
           {
             "name": "Route from Verla to Destel: Kelketo shop item #5",
@@ -3502,9 +3892,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 90,
+            "type_string": "shop"
           }
-        ]
+        ],
+        "code": "route_verla_destel"
       },
       "Destel": {
         "name": "Destel",
@@ -3545,7 +3938,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Destel: Inn item",
@@ -3559,7 +3954,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 25,
+            "type_string": "shop"
           },
           {
             "name": "Destel: Shop item #1",
@@ -3573,7 +3970,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 90,
+            "type_string": "shop"
           },
           {
             "name": "Destel: Shop item #2",
@@ -3587,7 +3986,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 310,
+            "type_string": "shop"
           },
           {
             "name": "Destel: Shop item #3",
@@ -3601,7 +4002,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 125,
+            "type_string": "shop"
           },
           {
             "name": "Destel: Shop item #4",
@@ -3615,7 +4018,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 30,
+            "type_string": "shop"
           },
           {
             "name": "Destel: Shop item #5",
@@ -3629,9 +4034,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 25,
+            "type_string": "shop"
           }
-        ]
+        ],
+        "code": "destel"
       },
       "Route after Destel": {
         "name": "Route after Destel",
@@ -3658,7 +4066,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Route after Destel: hidden chest in map after seeing Duke raft",
@@ -3672,7 +4082,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Route after Destel: visible chest in map after seeing Duke raft",
@@ -3686,7 +4098,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Route after Destel: item on ground on the cliff",
@@ -3700,9 +4114,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           }
-        ]
+        ],
+        "code": "route_after_destel"
       },
       "Destel Well": {
         "name": "Destel Well",
@@ -3736,7 +4153,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Destel Well (1F): chest on small stairs",
@@ -3750,7 +4169,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Destel Well (1F): chest on narrow floating ground",
@@ -3764,7 +4185,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Destel Well (1F): chest in spiky hallway",
@@ -3778,7 +4201,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Destel Well (2F): chest in ghosts room",
@@ -3792,7 +4217,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Destel Well (2F): chest in falling platforms room",
@@ -3806,7 +4233,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Destel Well (2F): right chest in Pockets room",
@@ -3820,7 +4249,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Destel Well (2F): left chest in Pockets room",
@@ -3834,7 +4265,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Destel Well (3F): chest in first trapped arena",
@@ -3848,7 +4281,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Destel Well (3F): chest in trapped giants room",
@@ -3862,7 +4297,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Destel Well (3F): chest in second trapped arena",
@@ -3876,7 +4313,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Destel Well (4F): top chest in room before boss",
@@ -3890,7 +4329,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Destel Well (4F): left chest in room before boss",
@@ -3904,7 +4345,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Destel Well (4F): bottom chest in room before boss",
@@ -3918,7 +4361,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Destel Well (4F): right chest in room before boss",
@@ -3932,7 +4377,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Destel Well: item on platform revealed after beating Quake",
@@ -3946,9 +4393,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           }
-        ]
+        ],
+        "code": "destel_well"
       },
       "Route to Lake Shrine": {
         "name": "Route to Lake Shrine",
@@ -3985,7 +4435,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Route to Lake Shrine: right chest in volcano",
@@ -3999,7 +4451,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Route to Lake Shrine: left chest in volcano",
@@ -4013,7 +4467,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Route to Lake Shrine: Greedly's shop item #1",
@@ -4027,7 +4483,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 25,
+            "type_string": "shop"
           },
           {
             "name": "Route to Lake Shrine: Greedly's shop item #2",
@@ -4041,7 +4499,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 90,
+            "type_string": "shop"
           },
           {
             "name": "Route to Lake Shrine: Greedly's shop item #3",
@@ -4055,7 +4515,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 310,
+            "type_string": "shop"
           },
           {
             "name": "Route to Lake Shrine: Greedly's shop item #4",
@@ -4069,9 +4531,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 30,
+            "type_string": "shop"
           }
-        ]
+        ],
+        "code": "route_lake_shrine"
       },
       "Route to Lake Shrine cliff": {
         "name": "Route to Lake Shrine cliff",
@@ -4108,9 +4573,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "route_lake_shrine_cliff"
       },
       "Lake Shrine": {
         "name": "Lake Shrine",
@@ -4144,7 +4612,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Lake Shrine (-1F): chest in hallway with hole leading downstairs",
@@ -4158,7 +4628,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Lake Shrine (-1F): chest in spikeballs hallway near green golem spinner",
@@ -4172,7 +4644,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Lake Shrine (-1F): reward chest for golem hopping puzzle",
@@ -4186,7 +4660,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Lake Shrine (-2F): chest on room corner accessed by falling from above",
@@ -4200,7 +4676,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Lake Shrine (-2F): lower chest in throne room",
@@ -4214,7 +4692,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Lake Shrine (-2F): upper chest in throne room",
@@ -4228,7 +4708,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Lake Shrine (-3F): chest on floating platform in white golems room",
@@ -4242,7 +4724,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Lake Shrine (-3F): chest near Sword of Ice",
@@ -4256,7 +4740,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Lake Shrine (-3F): chest in snake trapping puzzle room",
@@ -4270,7 +4756,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Lake Shrine (-3F): chest on cube accessed by falling from upstairs",
@@ -4284,7 +4772,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Lake Shrine (-3F): chest in watery archway room",
@@ -4298,7 +4788,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Lake Shrine (-3F): left reward chest in boss room",
@@ -4312,7 +4804,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Lake Shrine (-3F): middle reward chest in boss room",
@@ -4326,7 +4820,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Lake Shrine (-3F): right reward chest in boss room",
@@ -4340,7 +4836,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Lake Shrine (-3F): chest near golden golems spinner",
@@ -4354,7 +4852,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Lake Shrine (-3F): item on ground at the SE exit of the golden golems roundabout",
@@ -4368,7 +4868,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "Lake Shrine (-3F): isolated item on ground requiring raised platform to reach",
@@ -4382,7 +4884,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "Lake Shrine (-2F): north item on ground in quadruple items room",
@@ -4396,7 +4900,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "Lake Shrine (-2F): south item on ground in quadruple items room",
@@ -4410,7 +4916,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "Lake Shrine (-2F): west item on ground in quadruple items room",
@@ -4424,7 +4932,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "Lake Shrine (-2F): east item on ground in quadruple items room",
@@ -4438,7 +4948,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "Lake Shrine: Mir reward after beating Duke",
@@ -4452,9 +4964,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "reward"
           }
-        ]
+        ],
+        "code": "lake_shrine"
       },
       "Mountainous Area": {
         "name": "Mountainous Area",
@@ -4511,7 +5026,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mountainous Area: chest on right side of map before the bridge",
@@ -4525,7 +5042,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mountainous Area: hidden chest in L-shaped path",
@@ -4539,7 +5058,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mountainous Area: hidden chest in uppermost path",
@@ -4553,7 +5074,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mountainous Area: isolated chest on cliff in bridge map",
@@ -4567,7 +5090,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mountainous Area: left chest on wall in bridge map",
@@ -4581,7 +5106,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mountainous Area: right chest on wall in bridge map",
@@ -4595,7 +5122,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mountainous Area: right chest in map before Zak arena",
@@ -4609,7 +5138,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mountainous Area: left chest in map before Zak arena",
@@ -4623,7 +5154,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mountainous Area: chest hidden under rocky arch",
@@ -4637,7 +5170,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mountainous Area: chest in map in front of bridge statue",
@@ -4651,7 +5186,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mountainous Area Cave: chest in small hidden room",
@@ -4665,7 +5202,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mountainous Area Cave: chest in small visible room",
@@ -4679,7 +5218,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "Mountainous Area cave: item on ground behind hidden path",
@@ -4693,7 +5234,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "Mountainous Area: Zak reward after fighting",
@@ -4707,9 +5250,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "reward"
           }
-        ]
+        ],
+        "code": "mountainous_area"
       },
       "Mountainous Area tree": {
         "name": "Mountainous Area tree",
@@ -4723,7 +5269,8 @@
             }
           }
         ],
-        "locations": []
+        "locations": [],
+        "code": "mountainous_area_tree"
       },
       "King Nole's Cave": {
         "name": "King Nole's Cave",
@@ -4776,7 +5323,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Cave: first chest in third room",
@@ -4790,7 +5339,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Cave: second chest in third room",
@@ -4804,7 +5355,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Cave: chest in isolated room",
@@ -4818,7 +5371,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Cave: chest in crate room",
@@ -4832,7 +5387,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Cave: boulder chase hallway chest",
@@ -4846,9 +5403,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "king_nole_cave"
       },
       "Kazalt": {
         "name": "Kazalt",
@@ -4882,7 +5442,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 30,
+            "type_string": "shop"
           },
           {
             "name": "Kazalt: Shop item #2",
@@ -4896,7 +5458,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 330,
+            "type_string": "shop"
           },
           {
             "name": "Kazalt: Shop item #3",
@@ -4910,7 +5474,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 165,
+            "type_string": "shop"
           },
           {
             "name": "Kazalt: Shop item #4",
@@ -4924,7 +5490,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 415,
+            "type_string": "shop"
           },
           {
             "name": "Kazalt: Shop item #5",
@@ -4938,9 +5506,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 415,
+            "type_string": "shop"
           }
-        ]
+        ],
+        "code": "kazalt"
       },
       "King Nole's Labyrinth (before door)": {
         "name": "King Nole's Labyrinth (before door)",
@@ -4987,7 +5558,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-1F): chest in 3-chest dark room (right side)",
@@ -5001,7 +5574,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-1F): upper chest in lantern room",
@@ -5015,7 +5590,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-1F): lower chest in lantern room",
@@ -5029,7 +5606,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-1F): chest in ice shortcut room",
@@ -5043,9 +5622,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "king_nole_labyrinth_pre_door"
       },
       "King Nole's Labyrinth (after door)": {
         "name": "King Nole's Labyrinth (after door)",
@@ -5105,7 +5687,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (0F): right chest in room after key door",
@@ -5119,7 +5703,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-1F): chest in maze room with healing tile",
@@ -5133,7 +5719,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-1F): right chest in 3-chest dark room (left side)",
@@ -5147,7 +5735,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-1F): left chest in 3-chest dark room (left side)",
@@ -5161,7 +5751,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-1F): chest in maze room with two buttons",
@@ -5175,7 +5767,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-2F): chest in save room",
@@ -5189,7 +5783,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-1F): chest in room with button and crates stairway",
@@ -5203,7 +5799,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-3F): first chest before Firedemon",
@@ -5217,7 +5815,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-3F): second chest before Firedemon",
@@ -5231,7 +5831,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-3F): reward chest for beating Firedemon",
@@ -5245,7 +5847,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-2F): chest in four buttons room",
@@ -5259,7 +5863,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-3F): chest in hands room",
@@ -5273,7 +5879,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-1F): item on ground in ninjas room",
@@ -5287,7 +5895,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "King Nole's Labyrinth (-3F): item on floating hands",
@@ -5301,7 +5911,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "King Nole's Labyrinth (-3F): item on ground climbing back from Firedemon",
@@ -5315,7 +5927,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "King Nole's Labyrinth (-3F): First item on ground before Firedemon",
@@ -5329,9 +5943,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           }
-        ]
+        ],
+        "code": "king_nole_labyrinth_post_door"
       },
       "King Nole's Labyrinth (exterior)": {
         "name": "King Nole's Labyrinth (exterior)",
@@ -5361,9 +5978,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "king_nole_labyrinth_exterior"
       },
       "King Nole's Labyrinth (fall from exterior)": {
         "name": "King Nole's Labyrinth (fall from exterior)",
@@ -5390,9 +6010,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           }
-        ]
+        ],
+        "code": "king_nole_labyrinth_fall_from_exterior"
       },
       "King Nole's Labyrinth (raft entrance)": {
         "name": "King Nole's Labyrinth (raft entrance)",
@@ -5430,9 +6053,12 @@
               "type": "None"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "price": 0,
+            "type_string": "event"
           }
-        ]
+        ],
+        "code": "king_nole_labyrinth_raft_entrance"
       },
       "King Nole's Labyrinth (raft)": {
         "name": "King Nole's Labyrinth (raft)",
@@ -5459,7 +6085,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-3F): left chest in room before Spinner",
@@ -5473,7 +6101,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-3F): right chest in room before Spinner",
@@ -5487,7 +6117,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-3F): reward chest for beating Spinner",
@@ -5501,7 +6133,9 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-3F): chest in room after Spinner",
@@ -5515,7 +6149,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-3F): item on ground behind waterfall after beating Spinner",
@@ -5529,9 +6165,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           }
-        ]
+        ],
+        "code": "king_nole_labyrinth_raft"
       },
       "King Nole's Labyrinth (sacred tree)": {
         "name": "King Nole's Labyrinth (sacred tree)",
@@ -5550,7 +6189,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           },
           {
             "name": "King Nole's Labyrinth (-2F): Right item dropped by sacred tree",
@@ -5564,9 +6205,12 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "ground"
           }
-        ]
+        ],
+        "code": "king_nole_labyrinth_sacred_tree"
       },
       "King Nole's Labyrinth (path to palace)": {
         "name": "King Nole's Labyrinth (path to palace)",
@@ -5600,7 +6244,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Labyrinth (-3F): reward chest for beating Miro",
@@ -5614,9 +6260,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "king_nole_labyrinth_path_to_palace"
       },
       "King Nole's Palace": {
         "name": "King Nole's Palace",
@@ -5657,7 +6306,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Palace: chest along central pit",
@@ -5671,7 +6322,9 @@
               "advancement": true,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           },
           {
             "name": "King Nole's Palace: chest in floating button room",
@@ -5685,9 +6338,12 @@
               "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": true,
+            "price": 0,
+            "type_string": "chest"
           }
-        ]
+        ],
+        "code": "king_nole_palace"
       },
       "The End": {
         "name": "The End",
@@ -5706,9 +6362,12 @@
               "type": "None"
             },
             "locked": true,
-            "event": true
+            "event": true,
+            "price": 0,
+            "type_string": "reward"
           }
-        ]
+        ],
+        "code": "end"
       }
     }
   },
