@@ -27,12 +27,25 @@ class TimespinnerGameExportHandler(GenericGameExportHandler):
     }
 
     # Export warp unlocks at top level (logic uses 'keys', world uses 'key')
+    # Handle both objects (original world) and dicts (WorldGen world)
     WORLD_ATTRIBUTES = {
-        'pyramid_keys_unlock': lambda w, m, p: getattr(getattr(w, 'precalculated_weights', None), 'pyramid_keys_unlock', None),
-        'present_keys_unlock': lambda w, m, p: getattr(getattr(w, 'precalculated_weights', None), 'present_key_unlock', None),
-        'past_keys_unlock': lambda w, m, p: getattr(getattr(w, 'precalculated_weights', None), 'past_key_unlock', None),
-        'time_keys_unlock': lambda w, m, p: getattr(getattr(w, 'precalculated_weights', None), 'time_key_unlock', None),
+        'pyramid_keys_unlock': lambda w, m, p: _get_pcw_attr(w, 'pyramid_keys_unlock'),
+        'present_keys_unlock': lambda w, m, p: _get_pcw_attr(w, 'present_key_unlock'),
+        'past_keys_unlock': lambda w, m, p: _get_pcw_attr(w, 'past_key_unlock'),
+        'time_keys_unlock': lambda w, m, p: _get_pcw_attr(w, 'time_key_unlock'),
     }
+
+
+def _get_pcw_attr(world, attr_name: str):
+    """Get attribute from precalculated_weights, handling both objects and dicts."""
+    pcw = getattr(world, 'precalculated_weights', None)
+    if pcw is None:
+        return None
+    # Handle dict-based precalculated_weights (from WorldGen worlds)
+    if isinstance(pcw, dict):
+        return pcw.get(attr_name)
+    # Handle object-based precalculated_weights (from original world)
+    return getattr(pcw, attr_name, None)
 
     def _is_common_helper_pattern(self, helper_name: str) -> bool:
         """Disable generic pattern expansion - helpers are exported as-is."""

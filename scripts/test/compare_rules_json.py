@@ -306,7 +306,8 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if '._converted_from_ast' in path or '._original_ast_type' in path:
             return True
         # Rule type/structure differences
-        if path.endswith('.rule') or path.endswith('.args') or path.endswith('.children'):
+        # .child is for unary rules like Not, .children is for composite rules like And/Or
+        if path.endswith('.rule') or path.endswith('.args') or path.endswith('.children') or path.endswith('.child'):
             return True
         # All .args.* differences - WorldGen represents rule arguments differently
         # This includes both property access (.args.setting) and array access (.args[0])
