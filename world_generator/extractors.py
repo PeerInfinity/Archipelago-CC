@@ -75,6 +75,7 @@ class LocationData:
     progress_type: Optional[str] = None  # 'EXCLUDED', 'PRIORITY', or None for DEFAULT
     show_in_spoiler: bool = True  # Whether to show in spoiler log
     access: Optional[Dict[str, Any]] = None  # Game-specific access data (e.g., Lingo AccessRequirements)
+    extra_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific attributes (e.g., type_string, price)
 
 
 @dataclass
@@ -94,7 +95,7 @@ class RegionData:
     exits: List[str] = field(default_factory=list)
     hint_text: Optional[str] = None  # Display name if different from name
     dynamically_added: bool = False  # True if region was added after sphere calculation
-    id: Optional[int] = None  # Optional region ID (game-specific, e.g., room_id in ffmq)
+    extra_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific attributes (e.g., code)
 
 
 def _param_is_used_in_body(param_name: str, body: Any) -> bool:
@@ -370,6 +371,12 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
 
     regions_data = json_data.get('regions', {}).get(player_id, {})
 
+    # Standard location keys that are handled explicitly
+    standard_location_keys = {
+        'name', 'id', 'access_rule', 'item_rule', 'item', 'locked',
+        'progress_type', 'show_in_spoiler', 'event', 'access'
+    }
+
     for region_name, region_info in regions_data.items():
         for loc_info in region_info.get('locations', []):
             loc_name = loc_info.get('name', '')
@@ -378,6 +385,12 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
             is_locked = loc_info.get('locked', False)
             progress_type = loc_info.get('progress_type')  # 'EXCLUDED', 'PRIORITY', or None
             show_in_spoiler = loc_info.get('show_in_spoiler', True)
+
+            # Extract extra attributes (game-specific fields like type_string, price)
+            extra_attrs = {
+                k: v for k, v in loc_info.items()
+                if k not in standard_location_keys and v is not None
+            }
 
             locations[loc_name] = LocationData(
                 name=loc_name,
@@ -389,6 +402,7 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
                 progress_type=progress_type,
                 show_in_spoiler=show_in_spoiler,
                 access=loc_info.get('access'),  # Game-specific access data (e.g., Lingo AccessRequirements)
+                extra_attributes=extra_attrs,
             )
 
             # Track original item placement for seed=1 mode
@@ -419,12 +433,17 @@ def extract_regions(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Di
 
     regions_data = json_data.get('regions', {}).get(player_id, {})
 
+    # Standard region keys that are handled explicitly
+    standard_region_keys = {
+        'name', 'locations', 'exits', 'entrances', 'hint_text',
+        'dynamically_added', 'shop', 'dungeon'
+    }
+
     for region_name, region_info in regions_data.items():
         location_names = [loc.get('name', '') for loc in region_info.get('locations', [])]
         exit_names = [exit_info.get('name', '') for exit_info in region_info.get('exits', [])]
         hint_text = region_info.get('hint_text')  # Only set if different from name
         dynamically_added = region_info.get('dynamically_added', False)
-        region_id = region_info.get('id')  # Optional region ID (e.g., room_id in ffmq)
 
         # Auto-mark regions with no locations and no exits as dynamically_added.
         # The original world may filter these out (e.g., shapez does this).
@@ -433,13 +452,19 @@ def extract_regions(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Di
         if not location_names and not exit_names:
             dynamically_added = True
 
+        # Extract extra attributes (game-specific fields like code)
+        extra_attrs = {
+            k: v for k, v in region_info.items()
+            if k not in standard_region_keys and v is not None
+        }
+
         regions[region_name] = RegionData(
             name=region_name,
             locations=location_names,
             exits=exit_names,
             hint_text=hint_text,
             dynamically_added=dynamically_added,
-            id=region_id,
+            extra_attributes=extra_attrs,
         )
 
         # Extract exits
