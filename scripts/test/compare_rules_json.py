@@ -210,6 +210,7 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     - regions.*.is_light_world: WorldGen doesn't preserve this metadata
     - regions.*.type: WorldGen doesn't preserve region type
     - regions.*.dynamically_added: WorldGen adds this marker to regions
+    - regions.*.dungeon_index: WorldGen doesn't preserve dungeon index (LADX)
     - world.*.option_definitions: Option definitions may differ
     - world.*.options: Option values may differ based on defaults
     - start_inventory_from_pool: May be omitted in WorldGen
@@ -287,8 +288,15 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         # dungeon property - WorldGen doesn't preserve this
         if path.endswith('.dungeon'):
             return True
+        # dungeon_index property - WorldGen doesn't preserve this (used for dungeon item placement)
+        if path.endswith('.dungeon_index'):
+            return True
         # shop property - WorldGen doesn't preserve shop data on regions
         if '.shop' in path:
+            return True
+        # Game-specific location attributes that WorldGen doesn't preserve
+        # Factorio uses: complexity, count, rel_cost, revealed
+        if any(path.endswith(f'.{attr}') for attr in ['complexity', 'count', 'rel_cost', 'revealed']):
             return True
 
     # Access rule structural differences - WorldGen generates rules differently
@@ -301,7 +309,8 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
         if path.endswith('.rule') or path.endswith('.args') or path.endswith('.children'):
             return True
         # All .args.* differences - WorldGen represents rule arguments differently
-        if '.args.' in path:
+        # This includes both property access (.args.setting) and array access (.args[0])
+        if '.args.' in path or '.args[' in path:
             return True
         # Length differences in rule children
         if '[length]' in path:
@@ -344,6 +353,25 @@ def is_canonical_difference(path: str, original_value: Any = None, worldgen_valu
     if 'relic_groups.Event' in path:
         return True
 
+    # Game-specific location attributes that are auto-discovered from the original
+    # world's Location subclass. These are client-specific metadata (e.g., which
+    # byte/bit in the game's save data tracks location completion) that WorldGen
+    # can't recreate since it uses generic Location objects.
+    # Known game-specific location attributes:
+    # - DKC3: progress_byte, progress_bit, inverted_bit
+    if path.startswith('regions') and 'locations[' in path:
+        location_metadata_attrs = ['progress_byte', 'progress_bit', 'inverted_bit']
+        for attr in location_metadata_attrs:
+            if path.endswith(f'.{attr}'):
+                return True
+
+    # game_info.*.variables: Game-specific variables like required_technologies
+    # These are computed from module-level data structures that may not be populated
+    # in worldgen contexts. For example, Factorio's required_technologies is a
+    # lazy KeyedDefaultDict that only populates when specific ingredients are accessed
+    # during normal world generation. WorldGen worlds don't trigger this population.
+    if re.match(r'^game_info\.\d+\.variables\.', path):
+        return True
 
     return False
 

@@ -45,21 +45,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -77,21 +69,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -109,21 +93,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -141,38 +117,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Citadel (E1M5)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Ethereal Crossbow",
+                      "The Citadel (E1M5)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gauntlets of the Necromancer"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Gauntlets of the Necromancer"
+                    ]
+                  }
                 }
               ]
             }
@@ -184,38 +144,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Cathedral (E1M6)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Ethereal Crossbow",
+                      "The Cathedral (E1M6)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gauntlets of the Necromancer"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Gauntlets of the Necromancer"
+                    ]
+                  }
                 }
               ]
             }
@@ -227,38 +171,22 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Crypts (E1M7)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Ethereal Crossbow",
+                      "The Crypts (E1M7)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gauntlets of the Necromancer"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Gauntlets of the Necromancer"
+                    ]
+                  }
                 }
               ]
             }
@@ -267,66 +195,30 @@
             "name": "Hub -> Hell's Maw (E1M8) Main",
             "connected_region": "Hell's Maw (E1M8) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon Claw"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ethereal Crossbow"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gauntlets of the Necromancer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hell's Maw (E1M8)"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dragon Claw",
+                  "Ethereal Crossbow",
+                  "Gauntlets of the Necromancer",
+                  "Hell's Maw (E1M8)"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> The Graveyard (E1M9) Main",
             "connected_region": "The Graveyard (E1M9) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon Claw"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ethereal Crossbow"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gauntlets of the Necromancer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Graveyard (E1M9)"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dragon Claw",
+                  "Ethereal Crossbow",
+                  "Gauntlets of the Necromancer",
+                  "The Graveyard (E1M9)"
+                ]
+              }
             }
           },
           {
@@ -346,21 +238,13 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -375,27 +259,14 @@
             "name": "Hub -> The River of Fire (E2M3) Main",
             "connected_region": "The River of Fire (E2M3) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon Claw"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ethereal Crossbow"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The River of Fire (E2M3)"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dragon Claw",
+                  "Ethereal Crossbow",
+                  "The River of Fire (E2M3)"
+                ]
+              }
             }
           },
           {
@@ -405,44 +276,23 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Ice Grotto (E2M4)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "The Ice Grotto (E2M4)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Firemace"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hellstaff"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Firemace",
+                      "Hellstaff"
+                    ]
+                  }
                 }
               ]
             }
@@ -454,56 +304,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gauntlets of the Necromancer"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Catacombs (E2M5)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "Gauntlets of the Necromancer",
+                      "The Catacombs (E2M5)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Firemace"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hellstaff"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Phoenix Rod"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Firemace",
+                      "Hellstaff",
+                      "Phoenix Rod"
+                    ]
+                  }
                 }
               ]
             }
@@ -515,56 +334,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gauntlets of the Necromancer"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Labyrinth (E2M6)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "Gauntlets of the Necromancer",
+                      "The Labyrinth (E2M6)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Firemace"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hellstaff"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Phoenix Rod"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Firemace",
+                      "Hellstaff",
+                      "Phoenix Rod"
+                    ]
+                  }
                 }
               ]
             }
@@ -576,56 +364,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Firemace"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gauntlets of the Necromancer"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Great Hall (E2M7)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "Firemace",
+                      "Gauntlets of the Necromancer",
+                      "The Great Hall (E2M7)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hellstaff"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Phoenix Rod"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Hellstaff",
+                      "Phoenix Rod"
+                    ]
+                  }
                 }
               ]
             }
@@ -634,51 +391,18 @@
             "name": "Hub -> The Portals of Chaos (E2M8) Main",
             "connected_region": "The Portals of Chaos (E2M8) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon Claw"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ethereal Crossbow"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Firemace"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gauntlets of the Necromancer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hellstaff"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Phoenix Rod"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Portals of Chaos (E2M8)"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dragon Claw",
+                  "Ethereal Crossbow",
+                  "Firemace",
+                  "Gauntlets of the Necromancer",
+                  "Hellstaff",
+                  "Phoenix Rod",
+                  "The Portals of Chaos (E2M8)"
+                ]
+              }
             }
           },
           {
@@ -688,56 +412,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Firemace"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gauntlets of the Necromancer"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Glacier (E2M9)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "Firemace",
+                      "Gauntlets of the Necromancer",
+                      "The Glacier (E2M9)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hellstaff"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Phoenix Rod"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Hellstaff",
+                      "Phoenix Rod"
+                    ]
+                  }
                 }
               ]
             }
@@ -756,39 +449,16 @@
             "name": "Hub -> The Cesspool (E3M2) Main",
             "connected_region": "The Cesspool (E3M2) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon Claw"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ethereal Crossbow"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Firemace"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hellstaff"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Cesspool (E3M2)"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dragon Claw",
+                  "Ethereal Crossbow",
+                  "Firemace",
+                  "Hellstaff",
+                  "The Cesspool (E3M2)"
+                ]
+              }
             }
           },
           {
@@ -798,56 +468,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Confluence (E3M3)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "The Confluence (E3M3)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Firemace"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gauntlets of the Necromancer"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hellstaff"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Phoenix Rod"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Firemace",
+                      "Gauntlets of the Necromancer",
+                      "Hellstaff",
+                      "Phoenix Rod"
+                    ]
+                  }
                 }
               ]
             }
@@ -859,56 +498,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hellstaff"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Azure Fortress (E3M4)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "Hellstaff",
+                      "The Azure Fortress (E3M4)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Firemace"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gauntlets of the Necromancer"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Phoenix Rod"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Firemace",
+                      "Gauntlets of the Necromancer",
+                      "Phoenix Rod"
+                    ]
+                  }
                 }
               ]
             }
@@ -920,56 +528,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hellstaff"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Ophidian Lair (E3M5)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "Hellstaff",
+                      "The Ophidian Lair (E3M5)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Firemace"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gauntlets of the Necromancer"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Phoenix Rod"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Firemace",
+                      "Gauntlets of the Necromancer",
+                      "Phoenix Rod"
+                    ]
+                  }
                 }
               ]
             }
@@ -981,56 +558,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Firemace"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hellstaff"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Halls of Fear (E3M6)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "Firemace",
+                      "Hellstaff",
+                      "The Halls of Fear (E3M6)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gauntlets of the Necromancer"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Phoenix Rod"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Gauntlets of the Necromancer",
+                      "Phoenix Rod"
+                    ]
+                  }
                 }
               ]
             }
@@ -1042,56 +588,25 @@
               "rule": "And",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Dragon Claw"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ethereal Crossbow"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Firemace"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Hellstaff"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "The Chasm (E3M7)"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Dragon Claw",
+                      "Ethereal Crossbow",
+                      "Firemace",
+                      "Hellstaff",
+                      "The Chasm (E3M7)"
+                    ]
+                  }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Gauntlets of the Necromancer"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Phoenix Rod"
-                      }
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "args": {
+                    "items": [
+                      "Gauntlets of the Necromancer",
+                      "Phoenix Rod"
+                    ]
+                  }
                 }
               ]
             }
@@ -1100,102 +615,36 @@
             "name": "Hub -> D'Sparil's Keep (E3M8) Main",
             "connected_region": "D'Sparil's Keep (E3M8) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "D'Sparil's Keep (E3M8)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon Claw"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ethereal Crossbow"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Firemace"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gauntlets of the Necromancer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hellstaff"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Phoenix Rod"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "D'Sparil's Keep (E3M8)",
+                  "Dragon Claw",
+                  "Ethereal Crossbow",
+                  "Firemace",
+                  "Gauntlets of the Necromancer",
+                  "Hellstaff",
+                  "Phoenix Rod"
+                ]
+              }
             }
           },
           {
             "name": "Hub -> The Aquifer (E3M9) Main",
             "connected_region": "The Aquifer (E3M9) Main",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dragon Claw"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Ethereal Crossbow"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Firemace"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Gauntlets of the Necromancer"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hellstaff"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Phoenix Rod"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Aquifer (E3M9)"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Dragon Claw",
+                  "Ethereal Crossbow",
+                  "Firemace",
+                  "Gauntlets of the Necromancer",
+                  "Hellstaff",
+                  "Phoenix Rod",
+                  "The Aquifer (E3M9)"
+                ]
+              }
             }
           }
         ],
@@ -4818,21 +4267,13 @@
             "name": "The Ice Grotto (E2M4) Yellow -> The Ice Grotto (E2M4) Magenta",
             "connected_region": "The Ice Grotto (E2M4) Magenta",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Ice Grotto (E2M4) - Blue key"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "The Ice Grotto (E2M4) - Green key"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "The Ice Grotto (E2M4) - Blue key",
+                  "The Ice Grotto (E2M4) - Green key"
+                ]
+              }
             }
           }
         ],

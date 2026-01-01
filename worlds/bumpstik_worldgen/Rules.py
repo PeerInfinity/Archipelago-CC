@@ -22,7 +22,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("To Level 1", player),
-        And(Has('Booster Bumper'), Has('Treasure Bumper', 8))
+        And(Has('Treasure Bumper', 8), Has('Booster Bumper'))
     )
 
     world.set_rule(
@@ -42,12 +42,12 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Bonus Booster 1", player),
-        Has('Booster Bumper')
+        Has('Booster Bumper', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Treasure Bumper 1", player),
-        Has('Treasure Bumper')
+        Has('Treasure Bumper', 1)
     )
 
     world.set_rule(

@@ -112,42 +112,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Home Waters, turtle room to The Veil top left area", player),
-        Has('Transturtle Veil top left')
+        Has('Transturtle Veil top left', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Home Waters, turtle room to The Veil top right area, left of temple", player),
-        Has('Transturtle Veil top right')
+        Has('Transturtle Veil top right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Home Waters, turtle room to Open Waters top right area, turtle room", player),
-        Has('Transturtle Open Waters top right')
+        Has('Transturtle Open Waters top right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Home Waters, turtle room to Kelp Forest bottom left area", player),
-        Has('Transturtle Kelp Forest bottom left')
+        Has('Transturtle Kelp Forest bottom left', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Home Waters, turtle room to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right')
+        Has('Transturtle Abyss right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Home Waters, turtle room to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss')
+        Has('Transturtle Final Boss', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Home Waters, turtle room to Simon Says area", player),
-        Has('Transturtle Simon Says')
+        Has('Transturtle Simon Says', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Home Waters, turtle room to Arnassi Ruins cave, transturtle area", player),
-        Has('Transturtle Arnassi Ruins')
+        Has('Transturtle Arnassi Ruins', 1)
     )
 
     world.set_rule(
@@ -207,42 +207,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Open Waters top right area, turtle room to The Veil top left area", player),
-        Has('Transturtle Veil top left')
+        Has('Transturtle Veil top left', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Open Waters top right area, turtle room to The Veil top right area, left of temple", player),
-        Has('Transturtle Veil top right')
+        Has('Transturtle Veil top right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Open Waters top right area, turtle room to Kelp Forest bottom left area", player),
-        Has('Transturtle Kelp Forest bottom left')
+        Has('Transturtle Kelp Forest bottom left', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Open Waters top right area, turtle room to Home Waters, turtle room", player),
-        Has('Transturtle Home Waters')
+        Has('Transturtle Home Waters', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Open Waters top right area, turtle room to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right')
+        Has('Transturtle Abyss right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Open Waters top right area, turtle room to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss')
+        Has('Transturtle Final Boss', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Open Waters top right area, turtle room to Simon Says area", player),
-        Has('Transturtle Simon Says')
+        Has('Transturtle Simon Says', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Open Waters top right area, turtle room to Arnassi Ruins cave, transturtle area", player),
-        Has('Transturtle Arnassi Ruins')
+        Has('Transturtle Arnassi Ruins', 1)
     )
 
     world.set_rule(
@@ -287,82 +287,82 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Arnassi Ruins cave, transturtle area to The Veil top left area", player),
-        Has('Transturtle Veil top left')
+        Has('Transturtle Veil top left', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Arnassi Ruins cave, transturtle area to The Veil top right area, left of temple", player),
-        Has('Transturtle Veil top right')
+        Has('Transturtle Veil top right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Open Waters top right area, turtle room", player),
-        Has('Transturtle Open Waters top right')
+        Has('Transturtle Open Waters top right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Kelp Forest bottom left area", player),
-        Has('Transturtle Kelp Forest bottom left')
+        Has('Transturtle Kelp Forest bottom left', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Home Waters, turtle room", player),
-        Has('Transturtle Home Waters')
+        Has('Transturtle Home Waters', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right')
+        Has('Transturtle Abyss right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Arnassi Ruins cave, transturtle area to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss')
+        Has('Transturtle Final Boss', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Arnassi Ruins cave, transturtle area to Simon Says area", player),
-        Has('Transturtle Simon Says')
+        Has('Transturtle Simon Says', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Simon Says area to The Veil top left area", player),
-        Has('Transturtle Veil top left')
+        Has('Transturtle Veil top left', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Simon Says area to The Veil top right area, left of temple", player),
-        Has('Transturtle Veil top right')
+        Has('Transturtle Veil top right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Simon Says area to Open Waters top right area, turtle room", player),
-        Has('Transturtle Open Waters top right')
+        Has('Transturtle Open Waters top right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Simon Says area to Kelp Forest bottom left area", player),
-        Has('Transturtle Kelp Forest bottom left')
+        Has('Transturtle Kelp Forest bottom left', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Simon Says area to Home Waters, turtle room", player),
-        Has('Transturtle Home Waters')
+        Has('Transturtle Home Waters', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Simon Says area to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right')
+        Has('Transturtle Abyss right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Simon Says area to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss')
+        Has('Transturtle Final Boss', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Simon Says area to Arnassi Ruins cave, transturtle area", player),
-        Has('Transturtle Arnassi Ruins')
+        Has('Transturtle Arnassi Ruins', 1)
     )
 
     world.set_rule(
@@ -512,42 +512,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Kelp Forest bottom left area to The Veil top left area", player),
-        Has('Transturtle Veil top left')
+        Has('Transturtle Veil top left', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Kelp Forest bottom left area to The Veil top right area, left of temple", player),
-        Has('Transturtle Veil top right')
+        Has('Transturtle Veil top right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Kelp Forest bottom left area to Open Waters top right area, turtle room", player),
-        Has('Transturtle Open Waters top right')
+        Has('Transturtle Open Waters top right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Kelp Forest bottom left area to Home Waters, turtle room", player),
-        Has('Transturtle Home Waters')
+        Has('Transturtle Home Waters', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Kelp Forest bottom left area to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right')
+        Has('Transturtle Abyss right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Kelp Forest bottom left area to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss')
+        Has('Transturtle Final Boss', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Kelp Forest bottom left area to Simon Says area", player),
-        Has('Transturtle Simon Says')
+        Has('Transturtle Simon Says', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Kelp Forest bottom left area to Arnassi Ruins cave, transturtle area", player),
-        Has('Transturtle Arnassi Ruins')
+        Has('Transturtle Arnassi Ruins', 1)
     )
 
     world.set_rule(
@@ -587,42 +587,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Veil top left area to The Veil top right area, left of temple", player),
-        Has('Transturtle Veil top right')
+        Has('Transturtle Veil top right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Veil top left area to Open Waters top right area, turtle room", player),
-        Has('Transturtle Open Waters top right')
+        Has('Transturtle Open Waters top right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Veil top left area to Kelp Forest bottom left area", player),
-        Has('Transturtle Kelp Forest bottom left')
+        Has('Transturtle Kelp Forest bottom left', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Veil top left area to Home Waters, turtle room", player),
-        Has('Transturtle Home Waters')
+        Has('Transturtle Home Waters', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Veil top left area to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right')
+        Has('Transturtle Abyss right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Veil top left area to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss')
+        Has('Transturtle Final Boss', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Veil top left area to Simon Says area", player),
-        Has('Transturtle Simon Says')
+        Has('Transturtle Simon Says', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Veil top left area to Arnassi Ruins cave, transturtle area", player),
-        Has('Transturtle Arnassi Ruins')
+        Has('Transturtle Arnassi Ruins', 1)
     )
 
     world.set_rule(
@@ -637,42 +637,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Veil top right area, left of temple to The Veil top left area", player),
-        Has('Transturtle Veil top left')
+        Has('Transturtle Veil top left', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Veil top right area, left of temple to Open Waters top right area, turtle room", player),
-        Has('Transturtle Open Waters top right')
+        Has('Transturtle Open Waters top right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Veil top right area, left of temple to Kelp Forest bottom left area", player),
-        Has('Transturtle Kelp Forest bottom left')
+        Has('Transturtle Kelp Forest bottom left', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Veil top right area, left of temple to Home Waters, turtle room", player),
-        Has('Transturtle Home Waters')
+        Has('Transturtle Home Waters', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Veil top right area, left of temple to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right')
+        Has('Transturtle Abyss right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Veil top right area, left of temple to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss')
+        Has('Transturtle Final Boss', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Veil top right area, left of temple to Simon Says area", player),
-        Has('Transturtle Simon Says')
+        Has('Transturtle Simon Says', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Veil top right area, left of temple to Arnassi Ruins cave, transturtle area", player),
-        Has('Transturtle Arnassi Ruins')
+        Has('Transturtle Arnassi Ruins', 1)
     )
 
     world.set_rule(
@@ -797,42 +797,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Abyss right area, transturtle to The Veil top left area", player),
-        Has('Transturtle Veil top left')
+        Has('Transturtle Veil top left', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Abyss right area, transturtle to The Veil top right area, left of temple", player),
-        Has('Transturtle Veil top right')
+        Has('Transturtle Veil top right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Abyss right area, transturtle to Open Waters top right area, turtle room", player),
-        Has('Transturtle Open Waters top right')
+        Has('Transturtle Open Waters top right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Abyss right area, transturtle to Kelp Forest bottom left area", player),
-        Has('Transturtle Kelp Forest bottom left')
+        Has('Transturtle Kelp Forest bottom left', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Abyss right area, transturtle to Home Waters, turtle room", player),
-        Has('Transturtle Home Waters')
+        Has('Transturtle Home Waters', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Abyss right area, transturtle to The Body, final boss area turtle room", player),
-        Has('Transturtle Final Boss')
+        Has('Transturtle Final Boss', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Abyss right area, transturtle to Simon Says area", player),
-        Has('Transturtle Simon Says')
+        Has('Transturtle Simon Says', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Abyss right area, transturtle to Arnassi Ruins cave, transturtle area", player),
-        Has('Transturtle Arnassi Ruins')
+        Has('Transturtle Arnassi Ruins', 1)
     )
 
     world.set_rule(
@@ -932,42 +932,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("The Body, final boss area turtle room to The Veil top left area", player),
-        Has('Transturtle Veil top left')
+        Has('Transturtle Veil top left', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Body, final boss area turtle room to The Veil top right area, left of temple", player),
-        Has('Transturtle Veil top right')
+        Has('Transturtle Veil top right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Body, final boss area turtle room to Open Waters top right area, turtle room", player),
-        Has('Transturtle Open Waters top right')
+        Has('Transturtle Open Waters top right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Body, final boss area turtle room to Kelp Forest bottom left area", player),
-        Has('Transturtle Kelp Forest bottom left')
+        Has('Transturtle Kelp Forest bottom left', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Body, final boss area turtle room to Home Waters, turtle room", player),
-        Has('Transturtle Home Waters')
+        Has('Transturtle Home Waters', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Body, final boss area turtle room to Abyss right area, transturtle", player),
-        Has('Transturtle Abyss right')
+        Has('Transturtle Abyss right', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Body, final boss area turtle room to Simon Says area", player),
-        Has('Transturtle Simon Says')
+        Has('Transturtle Simon Says', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("The Body, final boss area turtle room to Arnassi Ruins cave, transturtle area", player),
-        Has('Transturtle Arnassi Ruins')
+        Has('Transturtle Arnassi Ruins', 1)
     )
 
     world.set_rule(

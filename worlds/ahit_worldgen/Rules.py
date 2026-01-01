@@ -69,7 +69,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Telescope -> Mafia Town", player),
-        True_()
+        Has('Time Piece', 0)
     )
 
     world.set_rule(
@@ -329,22 +329,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Act 2", player),
-        Has("Snatcher's Contract - The Subcon Well")
+        Has("Snatcher's Contract - The Subcon Well", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Act 5", player),
-        Has("Snatcher's Contract - Mail Delivery Service")
+        Has("Snatcher's Contract - Mail Delivery Service", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Act 3", player),
-        Has("Snatcher's Contract - Toilet of Doom")
+        Has("Snatcher's Contract - Toilet of Doom", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Act 4", player),
-        Has("Snatcher's Contract - Queen Vanessa's Manor")
+        Has("Snatcher's Contract - Queen Vanessa's Manor", 1)
     )
 
     world.set_rule(
@@ -464,7 +464,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Curly Tail Trail Portal - Entrance 1", player),
-        Has('Windmill Cleared')
+        Has('Windmill Cleared', 1)
     )
 
     world.set_rule(
@@ -474,7 +474,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Twilight Bell Portal - Entrance 1", player),
-        Has('Twilight Bell Cleared')
+        Has('Twilight Bell Cleared', 1)
     )
 
     world.set_rule(

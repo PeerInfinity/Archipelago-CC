@@ -22,450 +22,450 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Breaking Dawn-0", player),
-        Has('Breaking Dawn')
+        Has('Breaking Dawn', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Breaking Dawn-1", player),
-        Has('Breaking Dawn')
+        Has('Breaking Dawn', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Best One feat.tooko-0", player),
-        Has('Best One feat.tooko')
+        Has('Best One feat.tooko', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Best One feat.tooko-1", player),
-        Has('Best One feat.tooko')
+        Has('Best One feat.tooko', 1)
     )
 
     world.set_rule(
         multiworld.get_location("I don't care about Christmas though-0", player),
-        Has("I don't care about Christmas though")
+        Has("I don't care about Christmas though", 1)
     )
 
     world.set_rule(
         multiworld.get_location("I don't care about Christmas though-1", player),
-        Has("I don't care about Christmas though")
+        Has("I don't care about Christmas though", 1)
     )
 
     world.set_rule(
         multiworld.get_location("Koi no Moonlight-0", player),
-        Has('Koi no Moonlight')
+        Has('Koi no Moonlight', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Koi no Moonlight-1", player),
-        Has('Koi no Moonlight')
+        Has('Koi no Moonlight', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Yuki no Shizuku Ame no Oto-0", player),
-        Has('Yuki no Shizuku Ame no Oto')
+        Has('Yuki no Shizuku Ame no Oto', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Yuki no Shizuku Ame no Oto-1", player),
-        Has('Yuki no Shizuku Ame no Oto')
+        Has('Yuki no Shizuku Ame no Oto', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Iyaiya-0", player),
-        Has('Iyaiya')
+        Has('Iyaiya', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Iyaiya-1", player),
-        Has('Iyaiya')
+        Has('Iyaiya', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Heart Message feat. Aoi Tokimori-0", player),
-        Has('Heart Message feat. Aoi Tokimori')
+        Has('Heart Message feat. Aoi Tokimori', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Heart Message feat. Aoi Tokimori-1", player),
-        Has('Heart Message feat. Aoi Tokimori')
+        Has('Heart Message feat. Aoi Tokimori', 1)
     )
 
     world.set_rule(
         multiworld.get_location("irregulyze-0", player),
-        Has('irregulyze')
+        Has('irregulyze', 1)
     )
 
     world.set_rule(
         multiworld.get_location("irregulyze-1", player),
-        Has('irregulyze')
+        Has('irregulyze', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Clock Room & Spiritual World-0", player),
-        Has('Clock Room & Spiritual World')
+        Has('Clock Room & Spiritual World', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Clock Room & Spiritual World-1", player),
-        Has('Clock Room & Spiritual World')
+        Has('Clock Room & Spiritual World', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Latitude-0", player),
-        Has('Latitude')
+        Has('Latitude', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Latitude-1", player),
-        Has('Latitude')
+        Has('Latitude', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Etude -Sunset--0", player),
-        Has('Etude -Sunset-')
+        Has('Etude -Sunset-', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Etude -Sunset--1", player),
-        Has('Etude -Sunset-')
+        Has('Etude -Sunset-', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Evolution-0", player),
-        Has('Evolution')
+        Has('Evolution', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Evolution-1", player),
-        Has('Evolution')
+        Has('Evolution', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Blackest Luxury Car-0", player),
-        Has('Blackest Luxury Car')
+        Has('Blackest Luxury Car', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Blackest Luxury Car-1", player),
-        Has('Blackest Luxury Car')
+        Has('Blackest Luxury Car', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Bass Telekinesis-0", player),
-        Has('Bass Telekinesis')
+        Has('Bass Telekinesis', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Bass Telekinesis-1", player),
-        Has('Bass Telekinesis')
+        Has('Bass Telekinesis', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Confession-0", player),
-        Has('Confession')
+        Has('Confession', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Confession-1", player),
-        Has('Confession')
+        Has('Confession', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Lys Tourbillon-0", player),
-        Has('Lys Tourbillon')
+        Has('Lys Tourbillon', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Lys Tourbillon-1", player),
-        Has('Lys Tourbillon')
+        Has('Lys Tourbillon', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Pancake is Love-0", player),
-        Has('Pancake is Love')
+        Has('Pancake is Love', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Pancake is Love-1", player),
-        Has('Pancake is Love')
+        Has('Pancake is Love', 1)
     )
 
     world.set_rule(
         multiworld.get_location("umpopoff-0", player),
-        Has('umpopoff')
+        Has('umpopoff', 1)
     )
 
     world.set_rule(
         multiworld.get_location("umpopoff-1", player),
-        Has('umpopoff')
+        Has('umpopoff', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Night Wander-0", player),
-        Has('Night Wander')
+        Has('Night Wander', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Night Wander-1", player),
-        Has('Night Wander')
+        Has('Night Wander', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Dolphin and Broadcast-0", player),
-        Has('Dolphin and Broadcast')
+        Has('Dolphin and Broadcast', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Dolphin and Broadcast-1", player),
-        Has('Dolphin and Broadcast')
+        Has('Dolphin and Broadcast', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Mezame Eurythmics-0", player),
-        Has('Mezame Eurythmics')
+        Has('Mezame Eurythmics', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Mezame Eurythmics-1", player),
-        Has('Mezame Eurythmics')
+        Has('Mezame Eurythmics', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Mujinku-Vacuum-0", player),
-        Has('Mujinku-Vacuum')
+        Has('Mujinku-Vacuum', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Mujinku-Vacuum-1", player),
-        Has('Mujinku-Vacuum')
+        Has('Mujinku-Vacuum', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Departure Road-0", player),
-        Has('Departure Road')
+        Has('Departure Road', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Departure Road-1", player),
-        Has('Departure Road')
+        Has('Departure Road', 1)
     )
 
     world.set_rule(
         multiworld.get_location("MilK-0", player),
-        Has('MilK')
+        Has('MilK', 1)
     )
 
     world.set_rule(
         multiworld.get_location("MilK-1", player),
-        Has('MilK')
+        Has('MilK', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Yume Ou Mono Yo-0", player),
-        Has('Yume Ou Mono Yo')
+        Has('Yume Ou Mono Yo', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Yume Ou Mono Yo-1", player),
-        Has('Yume Ou Mono Yo')
+        Has('Yume Ou Mono Yo', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Frost Land-0", player),
-        Has('Frost Land')
+        Has('Frost Land', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Frost Land-1", player),
-        Has('Frost Land')
+        Has('Frost Land', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Say! Fanfare!-0", player),
-        Has('Say! Fanfare!')
+        Has('Say! Fanfare!', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Say! Fanfare!-1", player),
-        Has('Say! Fanfare!')
+        Has('Say! Fanfare!', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Out of Sense-0", player),
-        Has('Out of Sense')
+        Has('Out of Sense', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Out of Sense-1", player),
-        Has('Out of Sense')
+        Has('Out of Sense', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Funkotsu Saishin Casino-0", player),
-        Has('Funkotsu Saishin Casino')
+        Has('Funkotsu Saishin Casino', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Funkotsu Saishin Casino-1", player),
-        Has('Funkotsu Saishin Casino')
+        Has('Funkotsu Saishin Casino', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Medicine of Sing-0", player),
-        Has('Medicine of Sing')
+        Has('Medicine of Sing', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Medicine of Sing-1", player),
-        Has('Medicine of Sing')
+        Has('Medicine of Sing', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Goodbye Boss-0", player),
-        Has('Goodbye Boss')
+        Has('Goodbye Boss', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Goodbye Boss-1", player),
-        Has('Goodbye Boss')
+        Has('Goodbye Boss', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Dohna Dohna no Uta-0", player),
-        Has('Dohna Dohna no Uta')
+        Has('Dohna Dohna no Uta', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Dohna Dohna no Uta-1", player),
-        Has('Dohna Dohna no Uta')
+        Has('Dohna Dohna no Uta', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Heart-Pounding Flight-0", player),
-        Has('Heart-Pounding Flight')
+        Has('Heart-Pounding Flight', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Heart-Pounding Flight-1", player),
-        Has('Heart-Pounding Flight')
+        Has('Heart-Pounding Flight', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Stargazer-0", player),
-        Has('Stargazer')
+        Has('Stargazer', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Stargazer-1", player),
-        Has('Stargazer')
+        Has('Stargazer', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Aqua Stars-0", player),
-        Has('Aqua Stars')
+        Has('Aqua Stars', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Aqua Stars-1", player),
-        Has('Aqua Stars')
+        Has('Aqua Stars', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ira-0", player),
-        Has('Ira')
+        Has('Ira', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ira-1", player),
-        Has('Ira')
+        Has('Ira', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Mopemope-0", player),
-        Has('Mopemope')
+        Has('Mopemope', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Mopemope-1", player),
-        Has('Mopemope')
+        Has('Mopemope', 1)
     )
 
     world.set_rule(
         multiworld.get_location("DISCO NIGHT-0", player),
-        Has('DISCO NIGHT')
+        Has('DISCO NIGHT', 1)
     )
 
     world.set_rule(
         multiworld.get_location("DISCO NIGHT-1", player),
-        Has('DISCO NIGHT')
+        Has('DISCO NIGHT', 1)
     )
 
     world.set_rule(
         multiworld.get_location("From the New World-0", player),
-        Has('From the New World')
+        Has('From the New World', 1)
     )
 
     world.set_rule(
         multiworld.get_location("From the New World-1", player),
-        Has('From the New World')
+        Has('From the New World', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Lights of Muse-0", player),
-        Has('Lights of Muse')
+        Has('Lights of Muse', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Lights of Muse-1", player),
-        Has('Lights of Muse')
+        Has('Lights of Muse', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Shenri Kuaira -repeat--0", player),
-        Has('Shenri Kuaira -repeat-')
+        Has('Shenri Kuaira -repeat-', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Shenri Kuaira -repeat--1", player),
-        Has('Shenri Kuaira -repeat-')
+        Has('Shenri Kuaira -repeat-', 1)
     )
 
     world.set_rule(
         multiworld.get_location("EXIST-0", player),
-        Has('EXIST')
+        Has('EXIST', 1)
     )
 
     world.set_rule(
         multiworld.get_location("EXIST-1", player),
-        Has('EXIST')
+        Has('EXIST', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Lian Ai Audio Navigation-0", player),
-        Has('Lian Ai Audio Navigation')
+        Has('Lian Ai Audio Navigation', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Lian Ai Audio Navigation-1", player),
-        Has('Lian Ai Audio Navigation')
+        Has('Lian Ai Audio Navigation', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Candy-coloured Love Theory-0", player),
-        Has('Candy-coloured Love Theory')
+        Has('Candy-coloured Love Theory', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Candy-coloured Love Theory-1", player),
-        Has('Candy-coloured Love Theory')
+        Has('Candy-coloured Love Theory', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Galaxy Striker-0", player),
-        Has('Galaxy Striker')
+        Has('Galaxy Striker', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Galaxy Striker-1", player),
-        Has('Galaxy Striker')
+        Has('Galaxy Striker', 1)
     )

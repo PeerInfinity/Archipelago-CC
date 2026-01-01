@@ -94,7 +94,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Placing belts", player),
-        Has('Belt')
+        Has('Belt', 1)
     )
 
     world.set_rule(
@@ -104,7 +104,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Using the wires layer", player),
-        Has('Wires')
+        Has('Wires', 1)
     )
 
     world.set_rule(
@@ -124,7 +124,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Rotating clockwise", player),
-        Has('Rotator')
+        Has('Rotator', 1)
     )
 
     world.set_rule(
@@ -134,12 +134,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Storing shapes", player),
-        Has('Storage')
+        Has('Storage', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Trashing shapes", player),
-        Has('Trash')
+        Has('Trash', 1)
     )
 
     world.set_rule(

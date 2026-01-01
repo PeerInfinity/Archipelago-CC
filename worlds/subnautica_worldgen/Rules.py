@@ -9,7 +9,7 @@ import math
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, Compare, Has, HelperCall
+from rule_builder import True_, False_, And, CanReachLocation, Compare, HasAll, HelperCall
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -849,7 +849,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Neptune Launch", player),
-        And(Compare(HelperCall(helper_func=_subnauticaworldgen_get_max_depth, helper_name="get_max_depth"), ">=", 1444), HelperCall(helper_func=_subnauticaworldgen_has_cyclops_shield, helper_name="has_cyclops_shield"), HelperCall(helper_func=_subnauticaworldgen_has_mobile_vehicle_bay, helper_name="has_mobile_vehicle_bay"), Has('Ion Battery'), Has('Ion Power Cell'), Has('Neptune Boosters'), Has('Neptune Cockpit'), Has('Neptune Fuel Reserve'), Has('Neptune Gantry'), Has('Neptune Launch Platform'))
+        And(Compare(HelperCall(helper_func=_subnauticaworldgen_get_max_depth, helper_name="get_max_depth"), ">=", 1444), HelperCall(helper_func=_subnauticaworldgen_has_cyclops_shield, helper_name="has_cyclops_shield"), HelperCall(helper_func=_subnauticaworldgen_has_mobile_vehicle_bay, helper_name="has_mobile_vehicle_bay"), HasAll('Ion Battery', 'Ion Power Cell', 'Neptune Boosters', 'Neptune Cockpit', 'Neptune Fuel Reserve', 'Neptune Gantry', 'Neptune Launch Platform'))
     )
 
     world.set_rule(

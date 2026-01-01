@@ -48,17 +48,17 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Volcanic entrance", player),
-        Has('Powered Blaster')
+        Has('Powered Blaster', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Arctic entrance", player),
-        Has('Powered Blaster')
+        Has('Powered Blaster', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Swamp entrance", player),
-        Has('Powered Blaster')
+        Has('Powered Blaster', 1)
     )
 
     world.set_rule(
@@ -73,12 +73,12 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Cave: Powered Blaster chest", player),
-        Has('Clip Extension')
+        Has('Clip Extension', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Cave: Guard (Boss)", player),
-        Has('Clip Extension')
+        Has('Clip Extension', 1)
     )
 
     world.set_rule(
@@ -98,7 +98,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Arctic: Under snow", player),
-        Has('Flamethrower')
+        Has('Flamethrower', 1)
     )
 
     world.set_rule(
@@ -108,7 +108,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Arctic: Jacket chest", player),
-        Has('Flamethrower')
+        Has('Flamethrower', 1)
     )
 
     world.set_rule(
@@ -118,12 +118,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hub: Hidden near Arctic", player),
-        Has('Powered Blaster')
+        Has('Powered Blaster', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Hub: Ninja scare (Boss?)", player),
-        Has('Cave Key')
+        Has('Cave Key', 1)
     )
 
     world.set_rule(
@@ -143,7 +143,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Electrical: Tesla orb", player),
-        Has('Volt Laser')
+        Has('Volt Laser', 1)
     )
 
     world.set_rule(

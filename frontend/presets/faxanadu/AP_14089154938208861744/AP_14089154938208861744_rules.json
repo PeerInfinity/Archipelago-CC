@@ -300,14 +300,14 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Deluge"
+                    "item_name": "Progressive Sword",
+                    "count": 2
                   }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Sword",
-                    "count": 2
+                    "item_name": "Deluge"
                   }
                 }
               ]
@@ -800,14 +800,14 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Key Queen"
+                    "item_name": "Red Potion",
+                    "count": 4
                   }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Red Potion",
-                    "count": 4
+                    "item_name": "Key Queen"
                   }
                 }
               ]
@@ -1071,14 +1071,14 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Deluge"
+                    "item_name": "Progressive Sword",
+                    "count": 2
                   }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Sword",
-                    "count": 2
+                    "item_name": "Deluge"
                   }
                 }
               ]

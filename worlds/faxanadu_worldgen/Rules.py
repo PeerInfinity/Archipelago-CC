@@ -37,22 +37,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Apolune -> Tower of Trunk", player),
-        Has('Key Jack')
+        Has('Key Jack', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Apolune -> Path to Forepaw", player),
-        Has('Mattock')
+        Has('Mattock', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Trunk -> Joker Spring", player),
-        Has('Key Joker')
+        Has('Key Joker', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Trunk -> Tower of Fortress", player),
-        Has('Key Jack')
+        Has('Key Jack', 1)
     )
 
     world.set_rule(
@@ -62,17 +62,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Path to Mascon -> Tower of Red Potion", player),
-        And(Has('Key Queen'), Has('Red Potion', 4))
+        And(Has('Red Potion', 4), Has('Key Queen'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Path to Victim -> Tower of Suffer", player),
-        Has('Key Queen')
+        Has('Key Queen', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Path to Victim -> Victim", player),
-        Has('Unlock Wingboots')
+        Has('Unlock Wingboots', 1)
     )
 
     world.set_rule(
@@ -82,32 +82,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mist -> Tower of Mist", player),
-        Has('Key King')
+        Has('Key King', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Mist -> Path to Conflate", player),
-        Has('Key Ace')
+        Has('Key Ace', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Path to Conflate -> Helm Branch", player),
-        Has('Key King')
+        Has('Key King', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Path to Conflate -> Branches", player),
-        Has('Key King')
+        Has('Key King', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Daybreak -> Dartmoor Castle", player),
-        Has('Ring of Dworf')
+        Has('Ring of Dworf', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Dartmoor Castle -> Evil Fortress", player),
-        Has('Demons Ring')
+        Has('Demons Ring', 1)
     )
     # Location rules
     world.set_rule(
@@ -137,22 +137,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Path to Apolune Magic Shield", player),
-        Has('Key King')
+        Has('Key King', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Path to Apolune Death", player),
-        Has('Key Ace')
+        Has('Key Ace', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Apolune Key Jack", player),
-        Has('Unlock Wingboots')
+        Has('Unlock Wingboots', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Tower of Trunk Hidden Mattock", player),
-        Or(Has('Deluge'), Has('Progressive Sword', 2))
+        Or(Has('Progressive Sword', 2), Has('Deluge'))
     )
 
     world.set_rule(
@@ -162,27 +162,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Trunk Red Potion", player),
-        Has('Unlock Wingboots')
+        Has('Unlock Wingboots', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Sky Spring", player),
-        Has('Unlock Wingboots')
+        Has('Unlock Wingboots', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Tower of Fortress Guru", player),
-        Has('Sky Spring Flow')
+        Has('Sky Spring Flow', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Tower of Fortress Spring", player),
-        Has('Spring Elixir')
+        Has('Spring Elixir', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Misty Shop Death", player),
-        Has('Unlock Wingboots')
+        Has('Unlock Wingboots', 1)
     )
 
     world.set_rule(
@@ -192,17 +192,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tower of Suffer Hidden Wingboots", player),
-        Or(Has('Deluge'), Has('Progressive Sword', 2))
+        Or(Has('Progressive Sword', 2), Has('Deluge'))
     )
 
     world.set_rule(
         multiworld.get_location("Victim Mattock", player),
-        Has('Unlock Wingboots')
+        Has('Unlock Wingboots', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Misty House", player),
-        Has('Black Onyx')
+        Has('Black Onyx', 1)
     )
 
     world.set_rule(
@@ -212,17 +212,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Branches Hidden Mattock", player),
-        Has('Unlock Wingboots')
+        Has('Unlock Wingboots', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Path to Daybreak Glove", player),
-        Has('Unlock Wingboots')
+        Has('Unlock Wingboots', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Dartmoor Castle Hidden Hourglass", player),
-        Has('Unlock Wingboots')
+        Has('Unlock Wingboots', 1)
     )
 
     world.set_rule(

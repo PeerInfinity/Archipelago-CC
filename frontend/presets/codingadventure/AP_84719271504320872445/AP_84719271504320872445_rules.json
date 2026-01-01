@@ -73,15 +73,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "CSS"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "HTML"
+                    "items": [
+                      "CSS",
+                      "HTML"
+                    ]
                   }
                 }
               ]

@@ -27,12 +27,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("ToFinishing", player),
-        Has('Cookie Dough')
+        Has('Cookie Dough', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("ToBaking", player),
-        Has('Shaped Cookies')
+        Has('Shaped Cookies', 1)
     )
     # Location rules
     world.set_rule(
@@ -42,27 +42,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Add Eggs", player),
-        Has('Butter Sugar Base')
+        Has('Butter Sugar Base', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Add Vanilla", player),
-        Has('Egg Mixture')
+        Has('Egg Mixture', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Measure Flour", player),
-        Has('Measuring Tools')
+        Has('Measuring Tools', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Add Baking Soda and Salt", player),
-        Has('Measured Flour')
+        Has('Measured Flour', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Fold in Chocolate Chips", player),
-        Has('Basic Dough')
+        Has('Basic Dough', 1)
     )
 
     world.set_rule(
@@ -77,5 +77,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Cool on Wire Rack", player),
-        Has('Baked Cookies')
+        Has('Baked Cookies', 1)
     )

@@ -60,52 +60,52 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Menu -> Act 2", player),
-        Has('Film Roll')
+        Has('Film Roll', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Act 3", player),
-        And(HasAll('Camera Replica', 'Pile Of Meat'), Has('Epitaph Piece', 9), Has('Film Roll'), Has('Monocle'))
+        And(HasAll('Camera Replica', 'Pile Of Meat'), Has('Epitaph Piece', 9), HasAll('Film Roll', 'Monocle'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Epilogue", player),
-        And(And(HasAll('Camera Replica', 'Pile Of Meat'), Has('Epitaph Piece', 9), Has('Film Roll'), Has('Monocle')), HasAll('Gems Module', 'Inspectometer Battery', 'Quill'))
+        And(And(HasAll('Camera Replica', 'Pile Of Meat'), Has('Epitaph Piece', 9), HasAll('Film Roll', 'Monocle')), HasAll('Gems Module', 'Inspectometer Battery', 'Quill'))
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Act 1 - Clock Main Compartment", player),
-        Has('Magnificus Eye')
+        Has('Magnificus Eye', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Act 1 - Dagger", player),
-        Has('Caged Wolf Card')
+        Has('Caged Wolf Card', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Act 1 - Wardrobe Drawer 1", player),
-        Has('Wardrobe Key')
+        Has('Wardrobe Key', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Act 1 - Wardrobe Drawer 2", player),
-        Has('Wardrobe Key')
+        Has('Wardrobe Key', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Act 1 - Wardrobe Drawer 3", player),
-        Has('Wardrobe Key')
+        Has('Wardrobe Key', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Act 1 - Wardrobe Drawer 4", player),
-        Has('Wardrobe Key')
+        Has('Wardrobe Key', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Act 1 - Magnificus Eye", player),
-        Has('Dagger')
+        Has('Dagger', 1)
     )
 
     world.set_rule(
@@ -250,17 +250,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 2 - Bone Lord Femur", player),
-        Has('Ancient Obol')
+        Has('Ancient Obol', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Bone Lord Horn", player),
-        Has('Ancient Obol')
+        Has('Ancient Obol', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Bone Lord Holo Key", player),
-        Has('Ancient Obol')
+        Has('Ancient Obol', 1)
     )
 
     world.set_rule(
@@ -275,7 +275,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Boss Photographer", player),
-        Has('Inspectometer Battery')
+        Has('Inspectometer Battery', 1)
     )
 
     world.set_rule(
@@ -310,17 +310,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Middle Holo Pelt", player),
-        Has('Inspectometer Battery')
+        Has('Inspectometer Battery', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Forest Holo Pelt", player),
-        Has('Inspectometer Battery')
+        Has('Inspectometer Battery', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Crypt Holo Pelt", player),
-        Has('Inspectometer Battery')
+        Has('Inspectometer Battery', 1)
     )
 
     world.set_rule(
@@ -360,7 +360,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Extra Battery", player),
-        Has('Inspectometer Battery')
+        Has('Inspectometer Battery', 1)
     )
 
     world.set_rule(
@@ -395,7 +395,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Gems Drone", player),
-        Has('Inspectometer Battery')
+        Has('Inspectometer Battery', 1)
     )
 
     world.set_rule(
@@ -405,5 +405,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Well", player),
-        Has('Inspectometer Battery')
+        Has('Inspectometer Battery', 1)
     )

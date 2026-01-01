@@ -22,12 +22,12 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Surrounded", player),
-        Has('Mage')
+        Has('Mage', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Darkest Knight", player),
-        Has('Mage')
+        Has('Mage', 1)
     )
 
     world.set_rule(
@@ -57,7 +57,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Tenri's Fall", player),
-        HasAny('Spearman', 'Spearman')
+        Has('Spearman', 1)
     )
 
     world.set_rule(
@@ -67,7 +67,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("A Ballista's Revenge", player),
-        Has('Archer')
+        Has('Archer', 1)
     )
 
     world.set_rule(
@@ -77,17 +77,17 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Dragon Freeway: Victory", player),
-        Has('Mage')
+        Has('Mage', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Deep Thicket: Find Sedge", player),
-        Has('Mage')
+        Has('Mage', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Deep Thicket: Victory", player),
-        Has('Mage')
+        Has('Mage', 1)
     )
 
     world.set_rule(
@@ -112,12 +112,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ambushed in the Middle: Victory (Blue)", player),
-        Has('Spearman')
+        Has('Spearman', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Ambushed in the Middle: Victory (Green)", player),
-        Has('Spearman')
+        Has('Spearman', 1)
     )
 
     world.set_rule(
@@ -132,7 +132,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Frigid Archery: Victory", player),
-        Has('Archer')
+        Has('Archer', 1)
     )
 
     world.set_rule(

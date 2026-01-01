@@ -11979,19 +11979,7 @@
     }
   },
   "game_info": {
-    "1": {
-      "accumulator_rules": [
-        {
-          "pattern": "^(\\d+) Scraps Reward$",
-          "extract_value": true,
-          "target": "SCRAPS REWARD",
-          "discriminator": null
-        }
-      ],
-      "prog_items_init": {
-        "SCRAPS REWARD": 0
-      }
-    }
+    "1": {}
   },
   "helpers": {}
 }

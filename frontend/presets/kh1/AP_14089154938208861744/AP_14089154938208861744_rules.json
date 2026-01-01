@@ -7896,15 +7896,12 @@
                           "_converted_from_ast": true
                         },
                         {
-                          "rule": "Has",
+                          "rule": "HasAny",
                           "args": {
-                            "item_name": "Combo Master"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "High Jump"
+                            "items": [
+                              "Combo Master",
+                              "High Jump"
+                            ]
                           }
                         }
                       ]
@@ -9482,15 +9479,12 @@
                       "rule": "False_"
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "High Jump"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Glide"
+                        "items": [
+                          "High Jump",
+                          "Progressive Glide"
+                        ]
                       }
                     }
                   ]
@@ -12135,15 +12129,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Green Trinity"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Glide"
+                    "items": [
+                      "Green Trinity",
+                      "Progressive Glide"
+                    ]
                   }
                 }
               ]
@@ -12178,15 +12169,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Green Trinity"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Glide"
+                    "items": [
+                      "Green Trinity",
+                      "Progressive Glide"
+                    ]
                   }
                 }
               ]
@@ -13273,15 +13261,12 @@
                       "rule": "False_"
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Progressive Glide"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Thunder"
+                        "items": [
+                          "Progressive Glide",
+                          "Progressive Thunder"
+                        ]
                       }
                     }
                   ]
@@ -15208,15 +15193,12 @@
                   "rule": "False_"
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "High Jump"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Glide"
+                    "items": [
+                      "High Jump",
+                      "Progressive Glide"
+                    ]
                   }
                 }
               ]
@@ -22796,14 +22778,14 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Destiny Islands"
+                            "item_name": "Raft Materials",
+                            "count": 10
                           }
                         },
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Raft Materials",
-                            "count": 10
+                            "item_name": "Destiny Islands"
                           }
                         }
                       ]

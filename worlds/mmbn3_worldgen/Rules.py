@@ -61,17 +61,17 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("ACDC Overworld -> SciLab Overworld", player),
-        Has('SubPET')
+        Has('SubPET', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("ACDC Overworld -> Yoka Overworld", player),
-        Has('Needle')
+        Has('Needle', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("ACDC Overworld -> Beach Overworld", player),
-        Has('PETCase')
+        Has('PETCase', 1)
     )
 
     world.set_rule(
@@ -96,12 +96,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("SciLab Overworld -> Yoka Overworld", player),
-        Has('Needle')
+        Has('Needle', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("SciLab Overworld -> Beach Overworld", player),
-        Has('PETCase')
+        Has('PETCase', 1)
     )
 
     world.set_rule(
@@ -121,12 +121,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Yoka Overworld -> SciLab Overworld", player),
-        Has('SubPET')
+        Has('SubPET', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Yoka Overworld -> Beach Overworld", player),
-        Has('PETCase')
+        Has('PETCase', 1)
     )
 
     world.set_rule(
@@ -146,12 +146,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Beach Overworld -> SciLab Overworld", player),
-        Has('SubPET')
+        Has('SubPET', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Beach Overworld -> Yoka Overworld", player),
-        Has('Needle')
+        Has('Needle', 1)
     )
 
     world.set_rule(
@@ -257,17 +257,17 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("ACDC SonicWav W Trade", player),
-        Has('SonicWav W')
+        Has('SonicWav W', 1)
     )
 
     world.set_rule(
         multiworld.get_location("ACDC Bubbler C Trade", player),
-        Has('Bubbler C')
+        Has('Bubbler C', 1)
     )
 
     world.set_rule(
         multiworld.get_location("ACDC Recov120 S Trade", player),
-        Has('Recov120 S')
+        Has('Recov120 S', 1)
     )
 
     world.set_rule(
@@ -397,7 +397,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("SciLab Shake1 S Trade", player),
-        Has('Shake1 S')
+        Has('Shake1 S', 1)
     )
 
     world.set_rule(
@@ -412,7 +412,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Job: My Navi is sick", player),
-        Has('Recov30 *')
+        Has('Recov30 *', 1)
     )
 
     world.set_rule(
@@ -542,12 +542,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("SciLab 1 WWW BMD", player),
-        Has('WWW ID')
+        Has('WWW ID', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Yoka FireSwrd P Trade", player),
-        Has('FireSwrd P')
+        Has('FireSwrd P', 1)
     )
 
     world.set_rule(
@@ -562,12 +562,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Comedian", player),
-        Has('Humor')
+        Has('Humor', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Yoka 1 WWW BMD", player),
-        Has('WWW ID')
+        Has('WWW ID', 1)
     )
 
     world.set_rule(
@@ -577,37 +577,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Yoka 2 Upper BMD", player),
-        Has('Press')
+        Has('Press', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Hospital DynaWav V Trade", player),
-        Has('DynaWave V')
+        Has('DynaWave V', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Beach DNN WideSwrd C Trade", player),
-        Has('WideSwrd C')
+        Has('WideSwrd C', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Beach DNN HoleMetr H Trade", player),
-        Has('HoleMetr H')
+        Has('HoleMetr H', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Beach DNN Shadow J Trade", player),
-        Has('Shadow J')
+        Has('Shadow J', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Hades GrabBack K Trade", player),
-        Has('GrabBack K')
+        Has('GrabBack K', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Hades South BMD", player),
-        Has('Press')
+        Has('Press', 1)
     )
 
     world.set_rule(
@@ -627,17 +627,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Beach 2 East BMD", player),
-        Has('Press')
+        Has('Press', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Villain", player),
-        Has('BlckMnd')
+        Has('BlckMnd', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Undernet 1 WWW BMD", player),
-        Has('WWW ID')
+        Has('WWW ID', 1)
     )
 
     world.set_rule(
@@ -647,10 +647,10 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Secret 3 Island BMD", player),
-        Has('Press')
+        Has('Press', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Secret 3 BugFrag BMD", player),
-        Has('Press')
+        Has('Press', 1)
     )

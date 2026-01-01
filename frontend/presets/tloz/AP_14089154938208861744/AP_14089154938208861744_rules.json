@@ -288,12 +288,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -322,6 +316,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -409,12 +409,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -443,6 +437,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -530,12 +530,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -564,6 +558,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -651,12 +651,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -685,6 +679,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -775,12 +775,6 @@
                             {
                               "rule": "Has",
                               "args": {
-                                "item_name": "Blue Ring"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
                                 "item_name": "Heart Container",
                                 "count": {
                                   "rule": "int",
@@ -809,6 +803,12 @@
                                     }
                                   ]
                                 }
+                              }
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Blue Ring"
                               }
                             }
                           ]
@@ -904,12 +904,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -938,6 +932,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1025,12 +1025,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -1059,6 +1053,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1146,12 +1146,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -1180,6 +1174,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1267,12 +1267,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -1301,6 +1295,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1388,12 +1388,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -1422,6 +1416,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1509,12 +1509,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -1543,6 +1537,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1630,12 +1630,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -1664,6 +1658,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1762,12 +1762,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -1796,6 +1790,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -1891,12 +1891,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -1925,6 +1919,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2013,12 +2013,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -2047,6 +2041,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2135,12 +2135,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -2169,6 +2163,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2257,12 +2257,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -2291,6 +2285,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2382,12 +2382,6 @@
                             {
                               "rule": "Has",
                               "args": {
-                                "item_name": "Blue Ring"
-                              }
-                            },
-                            {
-                              "rule": "Has",
-                              "args": {
                                 "item_name": "Heart Container",
                                 "count": {
                                   "rule": "int",
@@ -2416,6 +2410,12 @@
                                     }
                                   ]
                                 }
+                              }
+                            },
+                            {
+                              "rule": "Has",
+                              "args": {
+                                "item_name": "Blue Ring"
                               }
                             }
                           ]
@@ -2512,12 +2512,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -2546,6 +2540,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2634,12 +2634,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -2668,6 +2662,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2756,12 +2756,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -2790,6 +2784,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -2878,12 +2878,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -2912,6 +2906,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -3000,12 +3000,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -3034,6 +3028,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -3122,12 +3122,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -3156,6 +3150,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -3244,12 +3244,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -3278,6 +3272,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -3366,12 +3366,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -3400,6 +3394,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -3488,12 +3488,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -3522,6 +3516,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -3621,12 +3621,6 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Blue Ring"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
                             "item_name": "Heart Container",
                             "count": {
                               "rule": "int",
@@ -3655,6 +3649,12 @@
                                 }
                               ]
                             }
+                          }
+                        },
+                        {
+                          "rule": "Has",
+                          "args": {
+                            "item_name": "Blue Ring"
                           }
                         }
                       ]
@@ -3757,12 +3757,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -3791,6 +3785,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -3921,12 +3921,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -3955,6 +3949,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -4090,12 +4090,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -4124,6 +4118,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -4257,12 +4257,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -4291,6 +4285,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]
@@ -4454,12 +4454,6 @@
                                             {
                                               "rule": "Has",
                                               "args": {
-                                                "item_name": "Blue Ring"
-                                              }
-                                            },
-                                            {
-                                              "rule": "Has",
-                                              "args": {
                                                 "item_name": "Heart Container",
                                                 "count": {
                                                   "rule": "int",
@@ -4488,6 +4482,12 @@
                                                     }
                                                   ]
                                                 }
+                                              }
+                                            },
+                                            {
+                                              "rule": "Has",
+                                              "args": {
+                                                "item_name": "Blue Ring"
                                               }
                                             }
                                           ]
@@ -4650,12 +4650,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -4684,6 +4678,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -4811,12 +4811,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -4845,6 +4839,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -4972,12 +4972,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -5006,6 +5000,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -5136,12 +5136,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -5170,6 +5164,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -5316,12 +5316,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -5350,6 +5344,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -5485,12 +5485,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -5519,6 +5513,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -5643,12 +5643,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -5677,6 +5671,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -5801,12 +5801,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -5835,6 +5829,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -5962,12 +5962,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -5996,6 +5990,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -6134,12 +6134,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -6168,6 +6162,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]
@@ -6308,12 +6308,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -6342,6 +6336,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -6466,12 +6466,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -6500,6 +6494,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -6624,12 +6624,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -6658,6 +6652,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -6785,12 +6785,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -6819,6 +6813,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -6973,12 +6973,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -7007,6 +7001,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -7134,12 +7134,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -7168,6 +7162,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -7322,12 +7322,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -7356,6 +7350,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -7480,12 +7480,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -7514,6 +7508,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -7638,12 +7638,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -7672,6 +7666,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -7796,12 +7796,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -7830,6 +7824,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -7965,12 +7965,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -7999,6 +7993,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -8131,12 +8131,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -8165,6 +8159,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -8289,12 +8289,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -8323,6 +8317,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -8447,12 +8447,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -8481,6 +8475,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -8608,12 +8608,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -8642,6 +8636,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -8791,12 +8791,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -8825,6 +8819,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]
@@ -8976,12 +8976,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -9010,6 +9004,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -9134,12 +9134,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -9168,6 +9162,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -9292,12 +9292,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -9326,6 +9320,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -9450,12 +9450,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -9484,6 +9478,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -9608,12 +9608,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -9642,6 +9636,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -9766,12 +9766,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -9800,6 +9794,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -9924,12 +9924,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -9958,6 +9952,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -10093,12 +10093,6 @@
                                 {
                                   "rule": "Has",
                                   "args": {
-                                    "item_name": "Blue Ring"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
                                     "item_name": "Heart Container",
                                     "count": {
                                       "rule": "int",
@@ -10127,6 +10121,12 @@
                                         }
                                       ]
                                     }
+                                  }
+                                },
+                                {
+                                  "rule": "Has",
+                                  "args": {
+                                    "item_name": "Blue Ring"
                                   }
                                 }
                               ]
@@ -10265,12 +10265,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -10299,6 +10293,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]
@@ -10445,12 +10445,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -10479,6 +10473,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]
@@ -10622,12 +10622,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -10656,6 +10650,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -10794,12 +10794,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -10828,6 +10822,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]
@@ -10977,12 +10977,6 @@
                                             {
                                               "rule": "Has",
                                               "args": {
-                                                "item_name": "Blue Ring"
-                                              }
-                                            },
-                                            {
-                                              "rule": "Has",
-                                              "args": {
                                                 "item_name": "Heart Container",
                                                 "count": {
                                                   "rule": "int",
@@ -11011,6 +11005,12 @@
                                                     }
                                                   ]
                                                 }
+                                              }
+                                            },
+                                            {
+                                              "rule": "Has",
+                                              "args": {
+                                                "item_name": "Blue Ring"
                                               }
                                             }
                                           ]
@@ -11162,12 +11162,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -11196,6 +11190,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -11334,12 +11334,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -11368,6 +11362,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]
@@ -11511,12 +11511,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -11545,6 +11539,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -11680,12 +11680,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -11714,6 +11708,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -11849,12 +11849,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -11883,6 +11877,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -12018,12 +12018,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -12052,6 +12046,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -12187,12 +12187,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -12221,6 +12215,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -12359,12 +12359,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -12393,6 +12387,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]
@@ -12539,12 +12539,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -12573,6 +12567,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]
@@ -12719,12 +12719,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -12753,6 +12747,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]
@@ -12896,12 +12896,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -12930,6 +12924,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -13065,12 +13065,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -13099,6 +13093,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -13234,12 +13234,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -13268,6 +13262,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -13406,12 +13406,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -13440,6 +13434,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]
@@ -13594,12 +13594,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -13628,6 +13622,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -13777,12 +13777,6 @@
                                             {
                                               "rule": "Has",
                                               "args": {
-                                                "item_name": "Blue Ring"
-                                              }
-                                            },
-                                            {
-                                              "rule": "Has",
-                                              "args": {
                                                 "item_name": "Heart Container",
                                                 "count": {
                                                   "rule": "int",
@@ -13811,6 +13805,12 @@
                                                     }
                                                   ]
                                                 }
+                                              }
+                                            },
+                                            {
+                                              "rule": "Has",
+                                              "args": {
+                                                "item_name": "Blue Ring"
                                               }
                                             }
                                           ]
@@ -13984,12 +13984,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -14018,6 +14012,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -14153,12 +14153,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -14187,6 +14181,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -14322,12 +14322,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -14356,6 +14350,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -14494,12 +14494,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -14528,6 +14522,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]
@@ -14688,12 +14688,6 @@
                                             {
                                               "rule": "Has",
                                               "args": {
-                                                "item_name": "Blue Ring"
-                                              }
-                                            },
-                                            {
-                                              "rule": "Has",
-                                              "args": {
                                                 "item_name": "Heart Container",
                                                 "count": {
                                                   "rule": "int",
@@ -14722,6 +14716,12 @@
                                                     }
                                                   ]
                                                 }
+                                              }
+                                            },
+                                            {
+                                              "rule": "Has",
+                                              "args": {
+                                                "item_name": "Blue Ring"
                                               }
                                             }
                                           ]
@@ -14884,12 +14884,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -14918,6 +14912,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -15053,12 +15053,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -15087,6 +15081,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -15225,12 +15225,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -15259,6 +15253,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]
@@ -15427,12 +15427,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -15461,6 +15455,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]
@@ -15626,12 +15626,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -15660,6 +15654,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -15795,12 +15795,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -15829,6 +15823,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -15970,12 +15970,6 @@
                                             {
                                               "rule": "Has",
                                               "args": {
-                                                "item_name": "Blue Ring"
-                                              }
-                                            },
-                                            {
-                                              "rule": "Has",
-                                              "args": {
                                                 "item_name": "Heart Container",
                                                 "count": {
                                                   "rule": "int",
@@ -16004,6 +15998,12 @@
                                                     }
                                                   ]
                                                 }
+                                              }
+                                            },
+                                            {
+                                              "rule": "Has",
+                                              "args": {
+                                                "item_name": "Blue Ring"
                                               }
                                             }
                                           ]
@@ -16177,12 +16177,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -16211,6 +16205,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -16349,12 +16349,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -16383,6 +16377,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]
@@ -16548,12 +16548,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -16582,6 +16576,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -16717,12 +16717,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -16751,6 +16745,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -16886,12 +16886,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -16920,6 +16914,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -17066,12 +17066,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -17100,6 +17094,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -17243,12 +17243,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -17277,6 +17271,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -17424,12 +17424,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -17458,6 +17452,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -17605,12 +17605,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -17639,6 +17633,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -17786,12 +17786,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -17820,6 +17814,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -17967,12 +17967,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -18001,6 +17995,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -18148,12 +18148,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -18182,6 +18176,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -18329,12 +18329,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -18363,6 +18357,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -18510,12 +18510,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -18544,6 +18538,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -18691,12 +18691,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -18725,6 +18719,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -18872,12 +18872,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -18906,6 +18900,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -19053,12 +19053,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -19087,6 +19081,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -19234,12 +19234,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -19268,6 +19262,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -19415,12 +19415,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -19449,6 +19443,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -19596,12 +19596,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -19630,6 +19624,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -19777,12 +19777,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -19811,6 +19805,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -19958,12 +19958,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -19992,6 +19986,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -20139,12 +20139,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -20173,6 +20167,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -20320,12 +20320,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -20354,6 +20348,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -20501,12 +20501,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -20535,6 +20529,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -20682,12 +20682,6 @@
                                     {
                                       "rule": "Has",
                                       "args": {
-                                        "item_name": "Blue Ring"
-                                      }
-                                    },
-                                    {
-                                      "rule": "Has",
-                                      "args": {
                                         "item_name": "Heart Container",
                                         "count": {
                                           "rule": "int",
@@ -20716,6 +20710,12 @@
                                             }
                                           ]
                                         }
+                                      }
+                                    },
+                                    {
+                                      "rule": "Has",
+                                      "args": {
+                                        "item_name": "Blue Ring"
                                       }
                                     }
                                   ]
@@ -20866,12 +20866,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -20900,6 +20894,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]
@@ -21063,12 +21063,6 @@
                                         {
                                           "rule": "Has",
                                           "args": {
-                                            "item_name": "Blue Ring"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
                                             "item_name": "Heart Container",
                                             "count": {
                                               "rule": "int",
@@ -21097,6 +21091,12 @@
                                                 }
                                               ]
                                             }
+                                          }
+                                        },
+                                        {
+                                          "rule": "Has",
+                                          "args": {
+                                            "item_name": "Blue Ring"
                                           }
                                         }
                                       ]

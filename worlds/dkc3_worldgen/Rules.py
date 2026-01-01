@@ -22,7 +22,7 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Overworld 2", player),
-        Has('Progressive Boat Upgrade')
+        Has('Progressive Boat Upgrade', 1)
     )
 
     world.set_rule(

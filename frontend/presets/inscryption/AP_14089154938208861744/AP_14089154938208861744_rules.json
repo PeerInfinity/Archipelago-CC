@@ -55,15 +55,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Film Roll"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Monocle"
+                    "items": [
+                      "Film Roll",
+                      "Monocle"
+                    ]
                   }
                 }
               ]
@@ -95,15 +92,12 @@
                       }
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Film Roll"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Monocle"
+                        "items": [
+                          "Film Roll",
+                          "Monocle"
+                        ]
                       }
                     }
                   ]

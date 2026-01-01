@@ -2013,15 +2013,12 @@
                   "rule": "True_"
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Meteorite Bar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Post-Evil Boss"
+                    "items": [
+                      "Meteorite Bar",
+                      "Post-Evil Boss"
+                    ]
                   }
                 }
               ]
@@ -2061,15 +2058,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Meteor Staff"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Meteorite"
+                    "items": [
+                      "Meteor Staff",
+                      "Meteorite"
+                    ]
                   }
                 }
               ]
@@ -2176,15 +2170,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Hardmode"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hellstone Bar"
+                    "items": [
+                      "Hardmode",
+                      "Hellstone Bar"
+                    ]
                   }
                 }
               ]
@@ -3094,15 +3085,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Alchemy Table"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Dungeon"
+                    "items": [
+                      "Alchemy Table",
+                      "Dungeon"
+                    ]
                   }
                 }
               ]
@@ -3363,27 +3351,14 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Blade of Grass"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Evil Sword"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Fiery Greatsword"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Muramasa"
+                    "items": [
+                      "Blade of Grass",
+                      "Evil Sword",
+                      "Fiery Greatsword",
+                      "Muramasa"
+                    ]
                   }
                 }
               ]
@@ -3462,15 +3437,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Avenger Emblem"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Guide"
+                    "items": [
+                      "Avenger Emblem",
+                      "Guide"
+                    ]
                   }
                 }
               ]
@@ -3502,35 +3474,24 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Pixie Dust"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Soul of Light"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wire"
+                        "items": [
+                          "Pixie Dust",
+                          "Soul of Light",
+                          "Wire"
+                        ]
                       }
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Hardmode"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Trifold Map"
+                    "items": [
+                      "Hardmode",
+                      "Trifold Map"
+                    ]
                   }
                 }
               ]
@@ -3697,29 +3658,23 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Ancient Bone Dust"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Bone"
+                        "items": [
+                          "Ancient Bone Dust",
+                          "Bone"
+                        ]
                       }
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Hardmode"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Vitamins"
+                    "items": [
+                      "Hardmode",
+                      "Vitamins"
+                    ]
                   }
                 }
               ]
@@ -3804,29 +3759,23 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Cobalt Bar"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wire"
+                        "items": [
+                          "Cobalt Bar",
+                          "Wire"
+                        ]
                       }
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Hardmode"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Nazar"
+                    "items": [
+                      "Hardmode",
+                      "Nazar"
+                    ]
                   }
                 }
               ]
@@ -3858,29 +3807,23 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Crystal Shard"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Soul of Night"
+                        "items": [
+                          "Crystal Shard",
+                          "Soul of Night"
+                        ]
                       }
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Blindfold"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hardmode"
+                    "items": [
+                      "Blindfold",
+                      "Hardmode"
+                    ]
                   }
                 }
               ]
@@ -3912,29 +3855,23 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Soul of Light"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Soul of Night"
+                        "items": [
+                          "Soul of Light",
+                          "Soul of Night"
+                        ]
                       }
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Fast Clock"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hardmode"
+                    "items": [
+                      "Fast Clock",
+                      "Hardmode"
+                    ]
                   }
                 }
               ]
@@ -4202,21 +4139,13 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Cobalt Bar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hardmode"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mythril Ore"
+                    "items": [
+                      "Cobalt Bar",
+                      "Hardmode",
+                      "Mythril Ore"
+                    ]
                   }
                 }
               ]
@@ -4278,15 +4207,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Cobalt Ore"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hardmode"
+                    "items": [
+                      "Cobalt Ore",
+                      "Hardmode"
+                    ]
                   }
                 }
               ]
@@ -4333,15 +4259,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Hardmode"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Pocket Mirror"
+                    "items": [
+                      "Hardmode",
+                      "Pocket Mirror"
+                    ]
                   }
                 }
               ]
@@ -4395,29 +4318,23 @@
                       "_converted_from_ast": true
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAll",
                       "args": {
-                        "item_name": "Alchemy Table"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Blood Orb"
+                        "items": [
+                          "Alchemy Table",
+                          "Blood Orb"
+                        ]
                       }
                     }
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Armor Polish"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hardmode"
+                    "items": [
+                      "Armor Polish",
+                      "Hardmode"
+                    ]
                   }
                 }
               ]
@@ -4479,15 +4396,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Hardmode"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Megaphone"
+                    "items": [
+                      "Hardmode",
+                      "Megaphone"
+                    ]
                   }
                 }
               ]
@@ -4915,21 +4829,13 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Hallow"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Light Disc"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Meteor Staff"
+                    "items": [
+                      "Hallow",
+                      "Light Disc",
+                      "Meteor Staff"
+                    ]
                   }
                 }
               ]
@@ -5122,21 +5028,13 @@
                                           "_converted_from_ast": true
                                         },
                                         {
-                                          "rule": "Has",
+                                          "rule": "HasAll",
                                           "args": {
-                                            "item_name": "Essence of Sunlight"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Hardmode Anvil"
-                                          }
-                                        },
-                                        {
-                                          "rule": "Has",
-                                          "args": {
-                                            "item_name": "Lihzahrd Temple"
+                                            "items": [
+                                              "Essence of Sunlight",
+                                              "Hardmode Anvil",
+                                              "Lihzahrd Temple"
+                                            ]
                                           }
                                         }
                                       ]
@@ -5155,45 +5053,17 @@
                                   }
                                 },
                                 {
-                                  "rule": "Has",
+                                  "rule": "HasAny",
                                   "args": {
-                                    "item_name": "Hardmode"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Pixie Dust"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Post-Plantera"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Solar Eclipse"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Soul of Light"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Soul of Night"
-                                  }
-                                },
-                                {
-                                  "rule": "Has",
-                                  "args": {
-                                    "item_name": "Spectre Bar"
+                                    "items": [
+                                      "Hardmode",
+                                      "Pixie Dust",
+                                      "Post-Plantera",
+                                      "Solar Eclipse",
+                                      "Soul of Light",
+                                      "Soul of Night",
+                                      "Spectre Bar"
+                                    ]
                                   }
                                 }
                               ]
@@ -5205,12 +5075,6 @@
                               }
                             }
                           ]
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Pumpkin Moon"
-                          }
                         },
                         {
                           "rule": "Has",
@@ -5287,15 +5151,12 @@
                           ]
                         },
                         {
-                          "rule": "Has",
+                          "rule": "HasAll",
                           "args": {
-                            "item_name": "Hallow"
-                          }
-                        },
-                        {
-                          "rule": "Has",
-                          "args": {
-                            "item_name": "Hardmode"
+                            "items": [
+                              "Hallow",
+                              "Hardmode"
+                            ]
                           }
                         }
                       ]
@@ -5352,15 +5213,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Frost Moon"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Steampunker"
+                    "items": [
+                      "Frost Moon",
+                      "Steampunker"
+                    ]
                   }
                 }
               ]
@@ -5748,21 +5606,13 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Adamantite Ore"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hardmode"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mythril Bar"
+                    "items": [
+                      "Adamantite Ore",
+                      "Hardmode",
+                      "Mythril Bar"
+                    ]
                   }
                 }
               ]
@@ -5802,15 +5652,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Hardmode"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Mythril Ore"
+                    "items": [
+                      "Hardmode",
+                      "Mythril Ore"
+                    ]
                   }
                 }
               ]
@@ -5998,15 +5845,12 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Adamantite Bar"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Hardmode"
+                    "items": [
+                      "Adamantite Bar",
+                      "Hardmode"
+                    ]
                   }
                 }
               ]
@@ -6227,21 +6071,13 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Bone"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Light"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Soul of Night"
+                    "items": [
+                      "Bone",
+                      "Soul of Light",
+                      "Soul of Night"
+                    ]
                   }
                 }
               ]

@@ -367,7 +367,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> Overworld to Atoll Upper", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -417,7 +417,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> Overworld Swamp Upper Entry", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -457,7 +457,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Overworld -> Overworld Tunnel Turret", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -517,12 +517,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("East Overworld -> Overworld Special Shop Entry", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Overworld Special Shop Entry -> East Overworld", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -572,7 +572,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Overworld at Patrol Cave -> East Overworld", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -597,7 +597,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Overworld West Garden Laurels Entry -> Overworld Beach", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -622,7 +622,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Overworld Beach -> Overworld West Garden Laurels Entry", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -652,7 +652,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Overworld Temple Door -> Overworld above Patrol Cave", player),
-        Has('Magic Orb')
+        Has('Magic Orb', 1)
     )
 
     world.set_rule(
@@ -662,32 +662,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Furnace Fuse -> Furnace Walking Path", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Furnace Fuse -> Furnace Ladder Area", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Furnace Ladder Area -> Furnace Walking Path", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Furnace Ladder Area -> Furnace Fuse", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Furnace Walking Path -> Furnace Ladder Area", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Furnace Walking Path -> Furnace Fuse", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -697,7 +697,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Sealed Temple Rafters -> Sealed Temple", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -737,7 +737,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Guard House 1 West -> Guard House 1 East", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -837,12 +837,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("West Garden after Terry -> West Garden South Checkpoint", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("West Garden at Dagger House -> West Garden Laurels Exit Region", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -852,7 +852,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("West Garden South Checkpoint -> West Garden after Terry", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -862,12 +862,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("West Garden by Portal -> West Garden Portal Item", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("West Garden Portal Item -> West Garden by Portal", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -877,7 +877,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("West Garden Laurels Exit Region -> West Garden at Dagger House", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -972,7 +972,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Frog's Domain Main -> Frog's Domain Back", player),
-        Has('Magic Orb')
+        Has('Magic Orb', 1)
     )
 
     world.set_rule(
@@ -1077,7 +1077,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Fortress Exterior from Overworld -> Fortress Exterior from East Forest", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1112,7 +1112,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Fortress Courtyard -> Fortress Exterior from Overworld", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1162,7 +1162,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Fortress Grave Path by Grave -> Fortress Grave Path Dusty Entrance Region", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1172,7 +1172,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Fortress Grave Path Dusty Entrance Region -> Fortress Grave Path by Grave", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1217,7 +1217,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Quarry Back -> Quarry Monastery Entry", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1227,7 +1227,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Quarry Monastery Entry -> Quarry Back", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1267,7 +1267,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Rooted Ziggurat Upper Back -> Rooted Ziggurat Upper Front", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1342,7 +1342,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Back of Swamp -> Back of Swamp Laurels Area", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1352,7 +1352,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Back of Swamp Laurels Area -> Back of Swamp", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1367,22 +1367,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Cathedral Gauntlet -> Cathedral Gauntlet Exit", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Cathedral Gauntlet Exit -> Cathedral Gauntlet", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Far Shore -> Far Shore to Spawn Region", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Far Shore -> Far Shore to East Forest Region", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1407,12 +1407,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Far Shore to Spawn Region -> Far Shore", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Far Shore to East Forest Region -> Far Shore", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1442,17 +1442,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Overworld - [Southeast] Page on Pillar by Swamp", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_location("Overworld - [Southwest] Fountain Page", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_location("Overworld - [Northwest] Page on Pillar by Dark Tomb", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1497,12 +1497,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Overworld - [East] Grapple Chest", player),
-        Has('Magic Orb')
+        Has('Magic Orb', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Overworld - [Southwest] From West Garden", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1622,7 +1622,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("East Forest - Lower Grapple Chest", player),
-        Has('Magic Orb')
+        Has('Magic Orb', 1)
     )
 
     world.set_rule(
@@ -1647,7 +1647,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("West Garden - [North] Across From Page Pickup", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1657,12 +1657,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("West Garden - [Central Lowlands] Below Left Walkway", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_location("West Garden - [West] In Flooded Walkway", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1672,7 +1672,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("West Garden - [East Lowlands] Page Behind Ice Dagger House", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1682,7 +1682,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ruined Atoll - [West] Near Kevin Block", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1692,12 +1692,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ruined Atoll - [East] Locked Room Upper Chest", player),
-        Or(HelperCall(helper_func=_tunicworldgen_has_ice_grapple_logic, helper_name="has_ice_grapple_logic", args=(False, 2,)), Has("Hero's Laurels"), Has('Key', 2))
+        Or(HelperCall(helper_func=_tunicworldgen_has_ice_grapple_logic, helper_name="has_ice_grapple_logic", args=(False, 2,)), Has('Key', 2), Has("Hero's Laurels"))
     )
 
     world.set_rule(
         multiworld.get_location("Ruined Atoll - [East] Locked Room Lower Chest", player),
-        Or(HelperCall(helper_func=_tunicworldgen_has_ice_grapple_logic, helper_name="has_ice_grapple_logic", args=(False, 2,)), Has("Hero's Laurels"), Has('Key', 2))
+        Or(HelperCall(helper_func=_tunicworldgen_has_ice_grapple_logic, helper_name="has_ice_grapple_logic", args=(False, 2,)), Has('Key', 2), Has("Hero's Laurels"))
     )
 
     world.set_rule(
@@ -1762,7 +1762,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Beneath the Vault Fuse", player),
-        Has('Activate South and West Fortress Exterior Fuses')
+        Has('Activate South and West Fortress Exterior Fuses', 1)
     )
 
     world.set_rule(
@@ -1777,7 +1777,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Eastern Vault West Fuses", player),
-        Has('Activate Beneath the Vault Fuse')
+        Has('Activate Beneath the Vault Fuse', 1)
     )
 
     world.set_rule(
@@ -1792,7 +1792,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Fortress Arena - Hexagon Red", player),
-        Has('Fortress Vault Key')
+        Has('Fortress Vault Key', 1)
     )
 
     world.set_rule(
@@ -1807,7 +1807,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quarry Fuse", player),
-        Has('Activate Quarry Connector Fuse')
+        Has('Activate Quarry Connector Fuse', 1)
     )
 
     world.set_rule(
@@ -1827,7 +1827,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quarry - [Central] Above Ladder Dash Chest", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1857,12 +1857,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Swamp - [South Graveyard] Upper Walkway Dash Chest", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_location("Swamp - [Entrance] Above Entryway", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
@@ -1877,37 +1877,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Far Shore - Secret Chest", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_location("Hero's Grave - Flowers Relic", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_location("Hero's Grave - Ash Relic", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_location("Hero's Grave - Effigy Relic", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_location("Hero's Grave - Tooth Relic", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_location("Hero's Grave - Mushroom Relic", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(
         multiworld.get_location("Hero's Grave - Feathers Relic", player),
-        Has("Hero's Laurels")
+        Has("Hero's Laurels", 1)
     )
 
     world.set_rule(

@@ -22,17 +22,17 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("YellowCastlePort", player),
-        Has('Yellow Key')
+        Has('Yellow Key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("WhiteCastlePort", player),
-        Has('White Key')
+        Has('White Key', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("BlackCastlePort", player),
-        Has('Black Key')
+        Has('Black Key', 1)
     )
 
     world.set_rule(
@@ -42,7 +42,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("WhiteCastleSecretPassage", player),
-        Has('Bridge')
+        Has('Bridge', 1)
     )
 
     world.set_rule(
@@ -57,7 +57,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("CreditsToFarSide", player),
-        Has('Magnet')
+        Has('Magnet', 1)
     )
     # Location rules
     world.set_rule(

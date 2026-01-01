@@ -110,6 +110,10 @@
       "reason": "Temporarily excluded. The WorldGen spoiler test takes 261 seconds."
     },
     {
+      "name": "TUNIC.yaml",
+      "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
+    },
+    {
       "name": "Yacht Dice.yaml",
       "reason": "Temporarily excluded. Supporting this game through WorldGen might not be possible."
     }

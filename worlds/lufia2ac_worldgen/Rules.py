@@ -27,27 +27,27 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Blue chest 6", player),
-        Has('Progressive chest access')
+        Has('Progressive chest access', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Blue chest 7", player),
-        Has('Progressive chest access')
+        Has('Progressive chest access', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Blue chest 8", player),
-        Has('Progressive chest access')
+        Has('Progressive chest access', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Blue chest 9", player),
-        Has('Progressive chest access')
+        Has('Progressive chest access', 1)
     )
 
     world.set_rule(
         multiworld.get_location("Blue chest 10", player),
-        Has('Progressive chest access')
+        Has('Progressive chest access', 1)
     )
 
     world.set_rule(
@@ -127,7 +127,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Chest access 11-15", player),
-        Has('Progressive chest access')
+        Has('Progressive chest access', 1)
     )
 
     world.set_rule(

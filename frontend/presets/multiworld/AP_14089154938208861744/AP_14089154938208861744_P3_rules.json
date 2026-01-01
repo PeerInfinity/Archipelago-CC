@@ -1211,14 +1211,14 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Bucket"
+                        "item_name": "Golden Feather",
+                        "count": 0
                       }
                     },
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Golden Feather",
-                        "count": 0
+                        "item_name": "Bucket"
                       }
                     }
                   ]
@@ -1952,14 +1952,14 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Bucket"
+                            "item_name": "Golden Feather",
+                            "count": 0
                           }
                         },
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Golden Feather",
-                            "count": 0
+                            "item_name": "Bucket"
                           }
                         }
                       ]
@@ -2048,14 +2048,14 @@
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Bucket"
+                            "item_name": "Golden Feather",
+                            "count": 0
                           }
                         },
                         {
                           "rule": "Has",
                           "args": {
-                            "item_name": "Golden Feather",
-                            "count": 0
+                            "item_name": "Bucket"
                           }
                         }
                       ]
@@ -2092,21 +2092,13 @@
               "rule": "Or",
               "children": [
                 {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Bucket"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Golden Feather"
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "args": {
+                    "items": [
+                      "Bucket",
+                      "Golden Feather"
+                    ]
+                  }
                 },
                 {
                   "rule": "Has",
@@ -2137,14 +2129,14 @@
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Bucket"
+                        "item_name": "Golden Feather",
+                        "count": 0
                       }
                     },
                     {
                       "rule": "Has",
                       "args": {
-                        "item_name": "Golden Feather",
-                        "count": 0
+                        "item_name": "Bucket"
                       }
                     }
                   ]

@@ -2935,15 +2935,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Progressive Hoe"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Watering Can"
+                    "items": [
+                      "Progressive Hoe",
+                      "Progressive Watering Can"
+                    ]
                   }
                 }
               ]
@@ -3853,15 +3850,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Progressive Hoe"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Watering Can"
+                    "items": [
+                      "Progressive Hoe",
+                      "Progressive Watering Can"
+                    ]
                   }
                 }
               ]
@@ -9455,15 +9449,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Shipping Bin"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Special Order Board"
+                    "items": [
+                      "Shipping Bin",
+                      "Special Order Board"
+                    ]
                   }
                 }
               ]
@@ -10821,21 +10812,13 @@
                   ]
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAny",
                   "args": {
-                    "item_name": "Fall"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spring"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Summer"
+                    "items": [
+                      "Fall",
+                      "Spring",
+                      "Summer"
+                    ]
                   }
                 }
               ]
@@ -10877,21 +10860,13 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Fall"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spring"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Summer"
+                        "items": [
+                          "Fall",
+                          "Spring",
+                          "Summer"
+                        ]
                       }
                     }
                   ]
@@ -10941,21 +10916,13 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Fall"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spring"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Summer"
+                        "items": [
+                          "Fall",
+                          "Spring",
+                          "Summer"
+                        ]
                       }
                     }
                   ]
@@ -11012,21 +10979,13 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Fall"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spring"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Summer"
+                        "items": [
+                          "Fall",
+                          "Spring",
+                          "Summer"
+                        ]
                       }
                     }
                   ]
@@ -11083,21 +11042,13 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Fall"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spring"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Summer"
+                        "items": [
+                          "Fall",
+                          "Spring",
+                          "Summer"
+                        ]
                       }
                     }
                   ]
@@ -11711,15 +11662,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Shipping Bin"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Special Order Board"
+                    "items": [
+                      "Shipping Bin",
+                      "Special Order Board"
+                    ]
                   }
                 }
               ]
@@ -11765,20 +11713,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Island Resort"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Received Progression Percent",
                     "count": 16
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Special Order Board"
+                    "items": [
+                      "Island Resort",
+                      "Special Order Board"
+                    ]
                   }
                 }
               ]
@@ -11856,15 +11801,12 @@
                   "rule": "True_"
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Fall"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Summer"
+                    "items": [
+                      "Fall",
+                      "Summer"
+                    ]
                   }
                 }
               ]
@@ -12090,12 +12032,9 @@
             "name": "Granny's Gift",
             "id": 717542,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Spring",
-                  "Spring"
-                ]
+                "item_name": "Spring"
               }
             },
             "item": {
@@ -13406,21 +13345,13 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Fall"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spring"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Summer"
+                        "items": [
+                          "Fall",
+                          "Spring",
+                          "Summer"
+                        ]
                       }
                     }
                   ]
@@ -13886,15 +13817,12 @@
                   "rule": "True_"
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Received Progression Percent"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shipping Bin"
+                    "items": [
+                      "Received Progression Percent",
+                      "Shipping Bin"
+                    ]
                   }
                 }
               ]
@@ -13928,20 +13856,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Barn"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Received Progression Percent",
                     "count": 3
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Shipping Bin"
+                    "items": [
+                      "Progressive Barn",
+                      "Shipping Bin"
+                    ]
                   }
                 }
               ]
@@ -14057,20 +13982,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Coop"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Received Progression Percent",
                     "count": 2
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Shipping Bin"
+                    "items": [
+                      "Progressive Coop",
+                      "Shipping Bin"
+                    ]
                   }
                 }
               ]
@@ -14152,15 +14074,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Progressive Fishing Rod"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Shipping Bin"
+                    "items": [
+                      "Progressive Fishing Rod",
+                      "Shipping Bin"
+                    ]
                   }
                 }
               ]
@@ -14271,20 +14190,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Shed"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Received Progression Percent",
                     "count": 5
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Shipping Bin"
+                    "items": [
+                      "Progressive Shed",
+                      "Shipping Bin"
+                    ]
                   }
                 }
               ]
@@ -14357,20 +14273,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Iridium Bar (Logic event)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Received Progression Percent",
                     "count": 2
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Shipping Bin"
+                    "items": [
+                      "Iridium Bar (Logic event)",
+                      "Shipping Bin"
+                    ]
                   }
                 }
               ]
@@ -14403,20 +14316,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Iron Bar (Logic event)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Received Progression Percent",
                     "count": 2
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Shipping Bin"
+                    "items": [
+                      "Iron Bar (Logic event)",
+                      "Shipping Bin"
+                    ]
                   }
                 }
               ]
@@ -14665,20 +14575,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive House"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Received Progression Percent",
                     "count": 16
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Shipping Bin"
+                    "items": [
+                      "Progressive House",
+                      "Shipping Bin"
+                    ]
                   }
                 }
               ]
@@ -19683,12 +19590,6 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Fall"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Foraging Level",
                     "count": 9
                   }
@@ -19701,27 +19602,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Winter"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Winter"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Winter"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Winter"
+                    "items": [
+                      "Fall",
+                      "Winter"
+                    ]
                   }
                 }
               ]
@@ -19950,14 +19836,9 @@
             "name": "Winter Foraging Bundle",
             "id": 717004,
             "access_rule": {
-              "rule": "HasAll",
+              "rule": "Has",
               "args": {
-                "items": [
-                  "Winter",
-                  "Winter",
-                  "Winter",
-                  "Winter"
-                ]
+                "item_name": "Winter"
               }
             },
             "item": {
@@ -23623,20 +23504,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Backpack"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Received Progression Percent",
                     "count": 2
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Shipping Bin"
+                    "items": [
+                      "Progressive Backpack",
+                      "Shipping Bin"
+                    ]
                   }
                 }
               ]
@@ -24271,21 +24149,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Special Order Board"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spring"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spring"
+                    "items": [
+                      "Special Order Board",
+                      "Spring"
+                    ]
                   }
                 }
               ]
@@ -24459,15 +24328,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Special Order Board"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Spring"
+                    "items": [
+                      "Special Order Board",
+                      "Spring"
+                    ]
                   }
                 }
               ]
@@ -41869,21 +41735,13 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Fall"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spring"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Summer"
+                        "items": [
+                          "Fall",
+                          "Spring",
+                          "Summer"
+                        ]
                       }
                     }
                   ]
@@ -41941,21 +41799,13 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Fall"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spring"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Summer"
+                        "items": [
+                          "Fall",
+                          "Spring",
+                          "Summer"
+                        ]
                       }
                     }
                   ]
@@ -42013,21 +41863,13 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Fall"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spring"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Summer"
+                        "items": [
+                          "Fall",
+                          "Spring",
+                          "Summer"
+                        ]
                       }
                     }
                   ]
@@ -42085,21 +41927,13 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Fall"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spring"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Summer"
+                        "items": [
+                          "Fall",
+                          "Spring",
+                          "Summer"
+                        ]
                       }
                     }
                   ]
@@ -42157,21 +41991,13 @@
                       ]
                     },
                     {
-                      "rule": "Has",
+                      "rule": "HasAny",
                       "args": {
-                        "item_name": "Fall"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Spring"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Summer"
+                        "items": [
+                          "Fall",
+                          "Spring",
+                          "Summer"
+                        ]
                       }
                     }
                   ]
@@ -42796,14 +42622,14 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Dwarvish Translation Guide"
+                    "item_name": "Progressive Pickaxe",
+                    "count": 2
                   }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Pickaxe",
-                    "count": 2
+                    "item_name": "Dwarvish Translation Guide"
                   }
                 }
               ]
@@ -45164,20 +44990,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Gold Bar (Logic event)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Received Progression Percent",
                     "count": 2
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Shipping Bin"
+                    "items": [
+                      "Gold Bar (Logic event)",
+                      "Shipping Bin"
+                    ]
                   }
                 }
               ]
@@ -45301,20 +45124,17 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Iridium Bar (Logic event)"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Received Progression Percent",
                     "count": 6
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Shipping Bin"
+                    "items": [
+                      "Iridium Bar (Logic event)",
+                      "Shipping Bin"
+                    ]
                   }
                 }
               ]
@@ -45587,14 +45407,14 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Fishing Level"
+                    "item_name": "Progressive Fishing Rod",
+                    "count": 3
                   }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Progressive Fishing Rod",
-                    "count": 3
+                    "item_name": "Fishing Level"
                   }
                 }
               ]
@@ -49408,15 +49228,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Progressive Fishing Rod"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Summer"
+                    "items": [
+                      "Progressive Fishing Rod",
+                      "Summer"
+                    ]
                   }
                 }
               ]
@@ -49443,15 +49260,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Progressive Fishing Rod"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Summer"
+                    "items": [
+                      "Progressive Fishing Rod",
+                      "Summer"
+                    ]
                   }
                 }
               ]
@@ -49478,15 +49292,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Progressive Fishing Rod"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Summer"
+                    "items": [
+                      "Progressive Fishing Rod",
+                      "Summer"
+                    ]
                   }
                 }
               ]
@@ -51824,15 +51635,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Island North Turtle"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Slingshot"
+                    "items": [
+                      "Island North Turtle",
+                      "Progressive Slingshot"
+                    ]
                   }
                 }
               ]
@@ -52182,20 +51990,8 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Island Farmhouse"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Mining Level",
                     "count": 8
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Open Professor Snail Cave"
                   }
                 },
                 {
@@ -52213,9 +52009,13 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Progressive Slingshot"
+                    "items": [
+                      "Island Farmhouse",
+                      "Open Professor Snail Cave",
+                      "Progressive Slingshot"
+                    ]
                   }
                 }
               ]
@@ -52706,12 +52506,6 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Open Professor Snail Cave"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Progressive Fishing Rod",
                     "count": 4
                   }
@@ -52724,9 +52518,12 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Progressive Slingshot"
+                    "items": [
+                      "Open Professor Snail Cave",
+                      "Progressive Slingshot"
+                    ]
                   }
                 }
               ]
@@ -53160,20 +52957,8 @@
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Island Mailbox"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
                     "item_name": "Mining Level",
                     "count": 8
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Open Professor Snail Cave"
                   }
                 },
                 {
@@ -53191,9 +52976,13 @@
                   }
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Progressive Slingshot"
+                    "items": [
+                      "Island Mailbox",
+                      "Open Professor Snail Cave",
+                      "Progressive Slingshot"
+                    ]
                   }
                 }
               ]
@@ -53637,15 +53426,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Island West Turtle"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Slingshot"
+                    "items": [
+                      "Island West Turtle",
+                      "Progressive Slingshot"
+                    ]
                   }
                 }
               ]
@@ -53793,15 +53579,12 @@
                   "_converted_from_ast": true
                 },
                 {
-                  "rule": "Has",
+                  "rule": "HasAll",
                   "args": {
-                    "item_name": "Island Farmhouse"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Slingshot"
+                    "items": [
+                      "Island Farmhouse",
+                      "Progressive Slingshot"
+                    ]
                   }
                 }
               ]

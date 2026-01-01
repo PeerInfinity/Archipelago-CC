@@ -24265,21 +24265,13 @@
             "name": "To Level 2",
             "connected_region": "Ripple Field",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Level 1 Boss Defeated"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Level 1 Boss Purified"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Level 1 Boss Defeated",
+                  "Level 1 Boss Purified"
+                ]
+              }
             }
           }
         ],
@@ -24341,21 +24333,13 @@
             "name": "To Level 3",
             "connected_region": "Sand Canyon",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Level 2 Boss Defeated"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Level 2 Boss Purified"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Level 2 Boss Defeated",
+                  "Level 2 Boss Purified"
+                ]
+              }
             }
           }
         ],
@@ -24417,21 +24401,13 @@
             "name": "To Level 4",
             "connected_region": "Cloudy Park",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Level 3 Boss Defeated"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Level 3 Boss Purified"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Level 3 Boss Defeated",
+                  "Level 3 Boss Purified"
+                ]
+              }
             }
           }
         ],
@@ -24493,21 +24469,13 @@
             "name": "To Level 5",
             "connected_region": "Iceberg",
             "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Level 4 Boss Defeated"
-                  }
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Level 4 Boss Purified"
-                  }
-                }
-              ]
+              "rule": "HasAll",
+              "args": {
+                "items": [
+                  "Level 4 Boss Defeated",
+                  "Level 4 Boss Purified"
+                ]
+              }
             }
           }
         ],

@@ -22,17 +22,17 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("#1 Iggy's Castle -> #1 Iggy's Castle - Normal Exit", player),
-        Has('Climb')
+        Has('Climb', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("#1 Iggy's Castle - Normal Exit -> Donut Plains 1 - Tile", player),
-        Has('Boss Token')
+        Has('Boss Token', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Donut Plains 1 -> Donut Plains 1 - Secret Exit", player),
-        And(Or(And(Has('Progressive Powerup', 3), Has('Run')), Has('Green Switch Palace'), Has('Yoshi')), Has('Carry'))
+        And(Or(And(Has('Progressive Powerup', 3), Has('Run')), HasAny('Green Switch Palace', 'Yoshi')), Has('Carry'))
     )
 
     world.set_rule(
@@ -42,7 +42,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Donut Secret 1 -> Donut Secret 1 - Normal Exit", player),
-        Has('Swim')
+        Has('Swim', 1)
     )
 
     world.set_rule(
@@ -62,12 +62,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Donut Secret House -> Donut Secret House - Normal Exit", player),
-        Has('P-Switch')
+        Has('P-Switch', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Donut Secret House -> Donut Secret House - Secret Exit", player),
-        And(Or(And(Has('Progressive Powerup', 3), Has('Run')), Has('Climb')), Has('Carry'), Has('P-Switch'))
+        And(Or(And(Has('Progressive Powerup', 3), Has('Run')), Has('Climb')), HasAll('Carry', 'P-Switch'))
     )
 
     world.set_rule(
@@ -92,12 +92,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Vanilla Dome 2 -> Vanilla Dome 2 - Secret Exit", player),
-        And(HasAny('Climb', 'Yoshi'), Has('Carry'), Has('P-Switch'), Has('Swim'))
+        And(HasAny('Climb', 'Yoshi'), HasAll('Carry', 'P-Switch', 'Swim'))
     )
 
     world.set_rule(
         multiworld.get_entrance("Vanilla Secret 1 -> Vanilla Secret 1 - Normal Exit", player),
-        Has('Climb')
+        Has('Climb', 1)
     )
 
     world.set_rule(
@@ -107,22 +107,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Vanilla Secret 3 -> Vanilla Secret 3 - Normal Exit", player),
-        Has('Swim')
+        Has('Swim', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Vanilla Ghost House -> Vanilla Ghost House - Normal Exit", player),
-        Has('P-Switch')
+        Has('P-Switch', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Vanilla Fortress -> Vanilla Fortress - Normal Exit", player),
-        Has('Swim')
+        Has('Swim', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Cheese Bridge -> Cheese Bridge - Normal Exit", player),
-        Has('Climb')
+        Has('Climb', 1)
     )
 
     world.set_rule(
@@ -132,7 +132,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Soda Lake -> Soda Lake - Normal Exit", player),
-        Has('Swim')
+        Has('Swim', 1)
     )
 
     world.set_rule(
@@ -152,7 +152,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Forest of Illusion 2 -> Forest of Illusion 2 - Normal Exit", player),
-        Has('Swim')
+        Has('Swim', 1)
     )
 
     world.set_rule(
@@ -172,17 +172,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Forest of Illusion 4 -> Forest of Illusion 4 - Secret Exit", player),
-        Has('Carry')
+        Has('Carry', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest Ghost House -> Forest Ghost House - Normal Exit", player),
-        Has('P-Switch')
+        Has('P-Switch', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Forest Ghost House -> Forest Ghost House - Secret Exit", player),
-        Has('P-Switch')
+        Has('P-Switch', 1)
     )
 
     world.set_rule(
@@ -192,12 +192,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Chocolate Island 1 -> Chocolate Island 1 - Normal Exit", player),
-        Has('P-Switch')
+        Has('P-Switch', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Chocolate Island 2 -> Chocolate Island 2 - Secret Exit", player),
-        Has('Carry')
+        Has('Carry', 1)
     )
 
     world.set_rule(
@@ -212,17 +212,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Chocolate Secret -> Chocolate Secret - Normal Exit", player),
-        Has('Run')
+        Has('Run', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("#6 Wendy's Castle -> #6 Wendy's Castle - Normal Exit", player),
-        Has('Progressive Powerup')
+        Has('Progressive Powerup', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Sunken Ghost Ship -> Sunken Ghost Ship - Normal Exit", player),
-        Has('Swim')
+        Has('Swim', 1)
     )
 
     world.set_rule(
@@ -232,12 +232,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Valley of Bowser 2 -> Valley of Bowser 2 - Secret Exit", player),
-        Has('Carry')
+        Has('Carry', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Valley of Bowser 4 -> Valley of Bowser 4 - Normal Exit", player),
-        Has('Climb')
+        Has('Climb', 1)
     )
 
     world.set_rule(
@@ -247,7 +247,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Valley Ghost House -> Valley Ghost House - Normal Exit", player),
-        Has('P-Switch')
+        Has('P-Switch', 1)
     )
 
     world.set_rule(
@@ -257,12 +257,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Valley Fortress -> Valley Fortress - Normal Exit", player),
-        Has('Progressive Powerup')
+        Has('Progressive Powerup', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Front Door -> Bowser - Region", player),
-        And(Compare(CountItem('Boss Token'), ">=", 7), Has('Climb'), Has('Progressive Powerup'), Has('Run'), Has('Swim'))
+        And(Compare(CountItem('Boss Token'), ">=", 7), HasAll('Climb', 'Progressive Powerup', 'Run', 'Swim'))
     )
 
     world.set_rule(
@@ -282,7 +282,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Star Road 2 -> Star Road 2 - Normal Exit", player),
-        Has('Swim')
+        Has('Swim', 1)
     )
 
     world.set_rule(
@@ -292,7 +292,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Star Road 3 -> Star Road 3 - Secret Exit", player),
-        Has('Carry')
+        Has('Carry', 1)
     )
 
     world.set_rule(
@@ -302,7 +302,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Star Road 5 -> Star Road 5 - Normal Exit", player),
-        Has('P-Switch')
+        Has('P-Switch', 1)
     )
 
     world.set_rule(
@@ -317,7 +317,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Tubular -> Tubular - Normal Exit", player),
-        Has('P-Balloon')
+        Has('P-Balloon', 1)
     )
 
     world.set_rule(
@@ -332,25 +332,25 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Groovy -> Groovy - Normal Exit", player),
-        Has('Progressive Powerup')
+        Has('Progressive Powerup', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Mondo -> Mondo - Normal Exit", player),
-        Has('Swim')
+        Has('Swim', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Outrageous -> Outrageous - Normal Exit", player),
-        Has('Progressive Powerup')
+        Has('Progressive Powerup', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("Funky -> Funky - Normal Exit", player),
-        Or(HasAll('Progressive Powerup', 'Spin Jump'), Has('Carry'), Has('Progressive Powerup', 3), Has('Yoshi'))
+        Or(HasAll('Progressive Powerup', 'Spin Jump'), Has('Progressive Powerup', 3), HasAny('Carry', 'Yoshi'))
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Bowser", player),
-        Has('Carry')
+        Has('Carry', 1)
     )
